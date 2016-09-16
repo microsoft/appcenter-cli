@@ -1,0 +1,19 @@
+{
+  "name": "sonoma-cli",
+  "version": "0.0.1",
+  "description": "Command line tool for Sonoma",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Microsoft/Sonoma-cli.git"
+  },
+  "author": "Microsoft",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Microsoft/Sonoma-cli/issues"
+  },
+  "homepage": "https://github.com/Microsoft/Sonoma-cli#readme"
+}
