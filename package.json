@@ -2,8 +2,9 @@
   "name": "sonoma-cli",
   "version": "0.0.1",
   "description": "Command line tool for Sonoma",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Microsoft/Sonoma-cli/issues"
   },
-  "homepage": "https://github.com/Microsoft/Sonoma-cli#readme"
+  "homepage": "https://github.com/Microsoft/Sonoma-cli#readme",
+  "devDependencies": {
+    "typescript": "^1.8.10"
+  }
 }
