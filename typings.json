@@ -1,0 +1,12 @@
+{
+  "globalDevDependencies": {
+    "chai": "registry:dt/chai#3.4.0+20160601211834",
+    "mocha": "registry:dt/mocha#2.2.5+20160720003353"
+  },
+  "globalDependencies": {
+    "node": "registry:dt/node#6.0.0+20160915134512"
+  },
+  "devDependencies": {
+    "nock": "registry:npm/nock#0.7.0+20160723033700"
+  }
+}
