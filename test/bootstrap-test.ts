@@ -1,5 +1,4 @@
 // Typescript test to verify that mocha/chai actually works
-
 import { expect } from "chai";
 
 describe("bootstrap", function () {
