@@ -3,15 +3,13 @@ import { Command } from "./command";
 
 const debug = require("debug")("sonoma-cli:util:commandline:command-loader");
 
-export class CommandLoader {
-  private finder: CommandFinder
+export interface CommandLoader {
+  (command: string[]): Command;
+}
 
-  constructor(finder: CommandFinder) {
-    this.finder = finder;
-  }
-
-  load(command: string[]): Command {
-    const commandPath = this.finder.find(command);
+export function loader(commandFinder: CommandFinder): CommandLoader {
+  return function commandLoader(command: string[]): Command {
+    const commandPath = commandFinder(command);
     if (commandPath === null) {
       return null;
     }
