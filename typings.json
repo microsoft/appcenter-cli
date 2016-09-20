@@ -8,5 +8,8 @@
   },
   "devDependencies": {
     "nock": "registry:npm/nock#0.7.0+20160723033700"
+  },
+  "dependencies": {
+    "debug": "registry:npm/debug#2.0.0+20160723033700"
   }
 }
