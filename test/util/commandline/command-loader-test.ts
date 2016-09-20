@@ -1,9 +1,9 @@
 import * as path from "path";
 
 import { expect } from "chai";
-import * as Sinon from "sinon";
+import * as sinon from "sinon";
 
-import { Command } from "../../../src/util/commandline/command";
+import { Command } from "../../../src/util/commandline";
 import { CommandLoader, loader } from "../../../src/util/commandline/command-loader";
 import { CommandFinder, finder } from "../../../src/util/commandline/command-finder";
 
@@ -22,7 +22,7 @@ describe("Loading commands", function () {
 
   it("should call loader to find command to load", function () {
     let commandFinder = finder(path.join(__dirname, "sample-commands"));
-    let findSpy = Sinon.spy(commandFinder);
+    let findSpy = sinon.spy(commandFinder);
     let commandLoader = loader(findSpy);
     commandLoader(["cmd1"]);
 
