@@ -6,7 +6,7 @@ import * as makeDebug from "debug";
 
 const debug = makeDebug("sonoma-cli:commandline:dispatcher");
 
-export class Dispatcher {
+export class CommandFinder {
   private dispatchRoot: string;
 
   constructor(rootPath: string) {
@@ -67,7 +67,7 @@ export class Dispatcher {
 
   private isLegalCommandName(commandName: string): boolean {
     debug(`Checking legality of '${commandName}'`);
-    return Dispatcher.legalCommandRegex.test(commandName);
+    return CommandFinder.legalCommandRegex.test(commandName);
   }
 
   private isDir(pathParts: string[]): boolean {
