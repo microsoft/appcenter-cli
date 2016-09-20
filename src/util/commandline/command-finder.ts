@@ -2,9 +2,8 @@
 
 import * as path from "path";
 import * as fs from "fs";
-import * as makeDebug from "debug";
 
-const debug = makeDebug("sonoma-cli:commandline:dispatcher");
+const debug = require("debug")("sonoma-cli:util:commandline:command-finder");
 
 export class CommandFinder {
   private dispatchRoot: string;
@@ -17,7 +16,7 @@ export class CommandFinder {
     }
   }
 
-  findCommand(command: string[]): string {
+  find(command: string[]): string {
     this.validateCommand(command);
     command = this.normalizeCommandNames(command);
 

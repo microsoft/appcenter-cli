@@ -10,16 +10,16 @@ describe("Finding commands", function () {
   });
 
   it("should return null if no such command exists", function () {
-    const commandPath: string = finder.findCommand(["no", "such", "command"]);
+    const commandPath: string = finder.find(["no", "such", "command"]);
     expect(commandPath).to.be.null;
   });
 
   it("should return path to require for existing command", function () {
-    const commandPath = finder.findCommand(["cmd1"]);
+    const commandPath = finder.find(["cmd1"]);
     expect(commandPath).to.equal(path.join(__dirname, "sample-commands", "cmd1.ts"));
   });
 
   it("should fail if command includes '.' or '..'", function () {
-    expect(() => finder.findCommand(["sample-commands", "..", "disatcher-test"])).to.throw(Error);
+    expect(() => finder.find(["sample-commands", "..", "disatcher-test"])).to.throw(Error);
   });
 });
