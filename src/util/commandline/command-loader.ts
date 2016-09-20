@@ -16,6 +16,9 @@ export class CommandLoader {
       return null;
     }
     const cmd = require(commandPath).default as Command;
+    if(cmd === null) {
+      debug(`Loaded command from ${commandPath} but module has no default export`);
+    }
     return cmd;
   }
 }

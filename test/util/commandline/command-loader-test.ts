@@ -26,7 +26,6 @@ describe("Loading commands", function () {
     let loader = new CommandLoader(finder);
     loader.load(["cmd1"]);
 
-    console.log(`FindSpy called ${findSpy.callCount} times`);
     expect(findSpy.calledOnce).to.be.true;
     expect(findSpy.firstCall.args).to.have.lengthOf(1);
     let args = findSpy.firstCall.args[0];
