@@ -1,7 +1,7 @@
 // logic that reads a command line, extracts the actual command, and loads it.
 
 import { Command } from "./command";
-import { CommandResult, notFound } from "./command-result";
+import { CommandResult, exception, illegal, notFound } from "./command-result";
 import * as Finder from "./command-finder";
 import * as Loader from "./command-loader";
 
@@ -21,15 +21,27 @@ function runner(arg: any): CommandRunner {
 
   return async function commandRunner(command: string[]): Promise<CommandResult> {
     // TODO: Parse out the actual command string
-    const factory = loader(command);
+    let factory: typeof Command;
+    try {
+      factory = loader(command);
 
-    if (factory === null) {
-      return notFound(command.join(' '));
+      if (factory === null) {
+        return notFound(command.join(' '));
+      }
+    }
+    catch (ex) {
+      // If we got an exception here, it was an illegal command
+      return illegal(command.join(' '));
     }
 
-    const commandObj = new factory(command);
+    try {
+      const commandObj = new factory(command);
 
-    return await commandObj.run();
+      return await commandObj.run();
+    }
+    catch (ex) {
+      return exception(command.join(' '), ex);
+    }
   }
 }
 
