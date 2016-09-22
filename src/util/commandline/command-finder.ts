@@ -57,8 +57,16 @@ function isLegalCommandName(commandName: string): boolean {
   return legalCommandRegex.test(commandName);
 }
 
+export interface CommandFinderResult {
+  // File path to command to load
+  commandPath: string;
+
+  // Args that were not used to build the path.
+  unusedArgs: string[];
+}
+
 export interface CommandFinder {
-  (command: string[]): string;
+  (command: string[]): CommandFinderResult;
 }
 
 export function finder(dispatchRoot: string): CommandFinder {
@@ -66,7 +74,7 @@ export function finder(dispatchRoot: string): CommandFinder {
     throw new Error("Invalid dispatch root");
   }
 
-  return function commandFinder(command: string[]):string {
+  return function commandFinder(command: string[]): CommandFinderResult {
     validateCommand(command);
     command = normalizeCommandNames(command);
 
@@ -94,6 +102,9 @@ export function finder(dispatchRoot: string): CommandFinder {
       return null;
     }
 
-    return toFullPath(dispatchRoot, commandDir.concat([matching[0]]));
-  };
+    return {
+      commandPath: toFullPath(dispatchRoot, commandDir.concat([matching[0]])),
+      unusedArgs: []
+    };
+  }
 }

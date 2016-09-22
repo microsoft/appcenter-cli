@@ -10,13 +10,13 @@ export interface CommandLoader {
 
 export function loader(commandFinder: CommandFinder): CommandLoader {
   return function commandLoader(command: string[]): typeof Command {
-    const commandPath = commandFinder(command);
-    if (commandPath === null) {
+    const findResult = commandFinder(command);
+    if (findResult === null) {
       return null;
     }
-    const cmd = require(commandPath).default as typeof Command;
+    const cmd = require(findResult.commandPath).default as typeof Command;
     if(cmd === null) {
-      debug(`Loaded command from ${commandPath} but module has no default export`);
+      debug(`Loaded command from ${findResult.commandPath} but module has no default export`);
     }
     return cmd;
   }
