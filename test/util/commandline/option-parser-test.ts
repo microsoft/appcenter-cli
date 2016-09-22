@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { parseOptions, OptionsDescription } from "../../../src/util/commandline/option-parser";
+import { parseOptions, OptionsDescription, PositionalOptionsDescription } from "../../../src/util/commandline/option-parser";
 
 describe("Command line option parsing", function() {
 
@@ -142,6 +142,124 @@ describe("Command line option parsing", function() {
       let target: any = {};
       expect(() => parseOptions(opts, target, "--out foo.txt".split(" ")))
         .to.throw(/missing required option i/i);
+    });
+  });
+
+  describe("positional options", function () {
+
+    it("should parse single positional argument", function () {
+      const opts: PositionalOptionsDescription = [
+        {
+          name: "inputFile",
+          propertyName: "file",
+          position: 0,
+          required: true
+        }
+      ];
+
+      let target: any = {};
+      parseOptions({}, opts, target, "input.txt".split(" "));
+      expect(target).to.have.property("file", "input.txt");
+    });
+
+    it ("should throw when required positional argument is missing", function () {
+      const opts: PositionalOptionsDescription = [
+        {
+          name: "inputFile",
+          propertyName: "file",
+          position: 0,
+          required: true
+        }
+      ];
+
+      let target: any = {};
+      expect(() => parseOptions({}, opts, target, []))
+        .to.throw(/missing required positional argument inputFile/i);
+    });
+
+    it ("should populate rest option", function () {
+      const opts: PositionalOptionsDescription = [
+        {
+          name: "inputFile",
+          propertyName: "file",
+          position: 0
+        },
+        {
+          name: "moreFiles",
+          propertyName: "moreFiles",
+          position: null
+        }
+      ];
+
+      let target: any = {};
+      parseOptions({}, opts, target, "a.txt b.txt c.txt".split(" "));
+
+      expect(target).to.have.property("file", "a.txt");
+      expect(target).to.have.property("moreFiles")
+        .and.to.be.instanceof(Array)
+        .and.to.have.lengthOf(2);
+      expect(target.moreFiles[0]).to.equal("b.txt");
+      expect(target.moreFiles[1]).to.equal("c.txt");
+    });
+
+    it("should not assign missing optional positionals", function () {
+      const opts: PositionalOptionsDescription = [
+        {
+          name: "file",
+          propertyName: "file",
+          position: 0,
+          required: true
+        },
+        {
+          name: "moreFiles",
+          propertyName: "moreFiles",
+          position: 1,
+          required: false
+        }
+      ];
+
+      let target: any = {};
+      parseOptions({}, opts, target, "a.txt".split(" "));
+
+      expect(target).to.have.property("file", "a.txt");
+      expect(target).to.not.have.property("moreFiles");
+    });
+  });
+
+  describe("flags and positional together", function () {
+    it("should parse as expected", function () {
+      let flagOpts: OptionsDescription = {
+        "verbose": {
+          shortName: "v",
+          longName: "verbose"
+        },
+        "format": {
+          shortName: "f",
+          longName: "format",
+          hasArg: true
+        }
+      };
+
+      let positionOpts: PositionalOptionsDescription = [
+        {
+          name: "inputFile",
+          propertyName: "inputFile",
+          position: 0          
+        },
+        {
+          name: "configFile",
+          propertyName: "configFile",
+          position: 1
+        }
+      ];
+
+      let target: any = {};
+      parseOptions(flagOpts, positionOpts, target, "in.txt -v conf.json --format=csv".split(" "));
+
+      expect(target).to.have.property("verbose", true);
+      expect(target).to.have.property("format", "csv");
+      expect(target).to.have.property("inputFile", "in.txt");
+      expect(target).to.have.property("configFile", "conf.json");
     });
   });
 });
