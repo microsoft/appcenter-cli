@@ -60,13 +60,14 @@ export function parseOptions(options: OptionsDescription,
   const minimistOptions = descriptionToMinimistOpts(options);
   const parsed = minimist(args, minimistOptions);
 
- debug(`Raw parsed command line= ${util.inspect(parsed)}`);
+ debug(`Raw parsed command line = ${util.inspect(parsed)}`);
 
   Object.keys(options).forEach(targetPropertyName => {
     const option = options[targetPropertyName];
     const optKey = optionKey(option);
 
     if (option.required && !parsed[optKey]) {
+      // TODO: Replace this with auto-prompting
       throw new Error(`Missing required option ${optKey}`);
     }
     target[targetPropertyName] = parsed[optKey];

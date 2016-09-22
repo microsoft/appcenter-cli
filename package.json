@@ -9,6 +9,7 @@
   "scripts": {
     "build": "tsc",
     "test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s",
+    "watch-test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s --watch",
     "clean": "rimraf dist"
   },
   "repository": {

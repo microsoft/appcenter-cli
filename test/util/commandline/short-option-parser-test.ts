@@ -80,4 +80,68 @@ describe("Command line option parsing", function() {
         .to.throw(/missing required option/i);
     });
   });
+
+  describe("option with default value", function () {
+    const opts: OptionsDescription = {
+      "def": {
+        shortName: "d",
+        defaultValue: "defined",
+        hasArg: true,
+      }
+    };
+
+    it("should take command line option if given", function () {
+      let target: any = {};
+      parseOptions(opts, target, "-d specificValue".split(" "));
+      expect(target).to.have.property("def", "specificValue");
+    });
+
+    it("should return default value if not in arguments", function () {
+      let target: any = {};
+      parseOptions(opts, target, []);
+      expect(target).to.have.property("def", "defined");
+    });
+  });
+
+  describe("multiple options", function () {
+    const opts: OptionsDescription = {
+      "flag": {
+        shortName: "f",
+        longName: "flag"
+      },
+      "input": {
+        shortName: "i",
+        longName: "input",
+        required: true,
+        hasArg: true
+      },
+      "output": {
+        longName: "out",
+        hasArg: true,
+        defaultValue: "out.dat"
+      }
+    };
+
+    it("should parse all options if all present", function () {
+      let target: any = {};
+      parseOptions(opts, target, "-i in.txt -f --out=myFile.txt".split(" "));
+      expect(target).to.have.property("flag", true);
+      expect(target).to.have.property("input", "in.txt");
+      expect(target).to.have.property("output", "myFile.txt");
+    });
+
+    it("should return default values for options not present", function () {
+      let target: any = {};
+      parseOptions(opts, target, "-f --input myfile.txt".split(" "));
+      expect(target).to.have.property("flag", true);
+      expect(target).to.have.property("input", "myfile.txt");
+      expect(target).to.have.property("output", "out.dat");
+    });
+
+    it("should throw if required option missing", function () {
+      let target: any = {};
+      expect(() => parseOptions(opts, target, "--out foo.txt".split(" ")))
+        .to.throw(/missing required option i/i);
+    });
+  });
 });
