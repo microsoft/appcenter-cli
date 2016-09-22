@@ -1,50 +1,74 @@
+import * as minimist from "minimist";
+import * as util from "util";
+
+const debug = require("debug")("sonoma-cli:util:commandline:option-parser");
 
 export interface OptionDescription {
-  shortName: string; // Short flag for option, single character
-  longName?: string; // long name for option
-  required?: boolean; // Is this is a required parameter, if not present defaults to false
+  shortName?: string;    // Short flag for option, single character
+  longName?: string;     // long name for option
+  required?: boolean;    // Is this is a required parameter, if not present defaults to false
+  defaultValue?: string; // Default value for this option if it's not present
+  hasArg?: boolean;      // Does this option take an argument?
 }
 
 export interface OptionsDescription {
   [field: string]: OptionDescription;
 }
 
-export function parseOptions(options: OptionsDescription,
-    target: any, args: string[]): string[] {
-  const optKeys = Object.keys(options);
-  let errors: string[] = [];
-  optKeys.forEach(key => {
-    errors = errors.concat(parseFlagOption(key, options[key], target, args))
-  });
-  return errors.length === 0 ? null : errors;
+function optionKey(option: OptionDescription): string {
+  return option.shortName || option.longName;
 }
 
-// Look for a single option in the command line that doesn't take an argument.
-function parseFlagOption(optionKey: string, option: OptionDescription, target: any, args: string[]): string[] {
-  let errors: string[] = [];
-  for(let i = 0; i < args.length; ++i) {
-    let arg = args[i];
-    if (arg.slice(2) === "--") {
-      // handle long option
-    } else if (arg.charAt(0) === '-') {
-      // handle possible short option
-      let optIndex = arg.indexOf(option.shortName);
-      if (optIndex !== -1) {
-        // Got it, set flag
-        target[optionKey] = true;
+function descriptionToMinimistOpts(options: OptionsDescription): minimist.Options {
 
-        // Remove flag from args instance - supports grouping per posix commandline spec
-        arg = arg.slice(0, optIndex) + arg.slice(optIndex + 1);
-        if (arg !== "-") {
-          args[i] = arg;
-        } else {
-          // all args parsed from this element, remove it from the array
-          args.splice(i, 1);
-          // Back up one element - the array is shorter now.
-          --i;
-        }
-      }
+  let parseOpts: minimist.Options = {
+    "boolean": <string[]>[],
+    "string": <string[]>[],
+    alias: {},
+    default: {},
+    unknown: (arg: string): boolean => { throw new Error(`Unknown argument ${arg}`); }
+  };
+
+  Object.keys(options)
+    .map(key => options[key])
+    .forEach(option => {
+    const key = optionKey(option);
+
+    // Is option a boolean or has a value?
+    if (option.hasArg) {
+      (<string[]>parseOpts.string).push(key);
+    } else {
+      (<string[]>parseOpts.boolean).push(key);
     }
-  }
-  return errors;
+
+    // If both names are given, set up alias
+    if(option.shortName && option.longName) {
+      parseOpts.alias[option.shortName] = option.longName;
+    }
+
+    if(option.defaultValue !== undefined) {
+      parseOpts.default[key] = option.defaultValue;
+    }
+
+  });
+  return parseOpts;
+}
+
+export function parseOptions(options: OptionsDescription,
+    target: any, args: string[]) {
+
+  const minimistOptions = descriptionToMinimistOpts(options);
+  const parsed = minimist(args, minimistOptions);
+
+ debug(`Raw parsed command line= ${util.inspect(parsed)}`);
+
+  Object.keys(options).forEach(targetPropertyName => {
+    const option = options[targetPropertyName];
+    const optKey = optionKey(option);
+
+    if (option.required && !parsed[optKey]) {
+      throw new Error(`Missing required option ${optKey}`);
+    }
+    target[targetPropertyName] = parsed[optKey];
+  });
 }
