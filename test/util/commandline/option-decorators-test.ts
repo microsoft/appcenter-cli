@@ -62,5 +62,29 @@ describe("Command line option parsing", function () {
       expect(anotherOpt.required).to.be.true;
       expect(anotherOpt.hasArg).to.be.true;
     });
+
+    it("should return all args for base classes", function () {
+      class BaseSample {
+        @shortName("h")
+        @longName("help")
+        public help: boolean;
+
+        @shortName("v")
+        @longName("verbose")
+        @hasArg
+        public logLevel: string;
+      }
+
+      class Sample extends BaseSample {
+        @longName("input")
+        @hasArg
+        public input: string;
+      }
+
+      let opts = getOptionsDescription(Sample.prototype);
+      expect(Object.keys(opts)).to.include("help")
+        .and.to.include("logLevel")
+        .and.to.include("input");
+    });
   });
 });
