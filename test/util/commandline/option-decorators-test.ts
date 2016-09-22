@@ -1,7 +1,7 @@
 import { expect } from "chai";
 
 import { OptionsDescription, OptionDescription } from "../../../src/util/commandline/option-parser";
-import { optionParametersKey, positionalParametersKey, getOptionsDescription, shortName, longName, defaultValue, required, hasArg } from "../../../src/util/commandline/option-decorators";
+import { getOptionsDescription, shortName, longName, defaultValue, required, hasArg } from "../../../src/util/commandline/option-decorators";
 
 describe("Command line option parsing", function () {
   describe("Options decorators", function() {
@@ -28,13 +28,13 @@ describe("Command line option parsing", function () {
 
     it("should return correct descriptions for multiple parameters", function () {
       class Sample {
-        @shortName("f")
         @required
+        @shortName("f")
         public flag: boolean;
 
+        @defaultValue("this is the default")
         @shortName("v")
         @longName("value")
-        @defaultValue("this is the default")
         public value: string;
 
         @longName("another")

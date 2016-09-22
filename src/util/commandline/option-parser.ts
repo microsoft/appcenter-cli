@@ -124,6 +124,9 @@ export function parseOptions(...params: any[]): void {
     if (positionalArgs.length - 1 < opt.position) {
       if (opt.required) {
         throw new Error(`Missing required positional argument ${opt.name}`);
+      } else if (opt.defaultValue) {
+        target[opt.propertyName] = opt.defaultValue;
+        return;
       } else {
         return;
       }
