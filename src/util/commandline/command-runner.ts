@@ -5,6 +5,8 @@ import { CommandResult, exception, illegal, notFound } from "./command-result";
 import * as Finder from "./command-finder";
 import * as Loader from "./command-loader";
 
+const debug = require("debug")("sonoma-cli:util:commandline:command-runner");
+
 export interface CommandRunner {
   (command: string[]): Promise<CommandResult>;
 }
@@ -22,12 +24,14 @@ function runner(arg: any): CommandRunner {
   return async function commandRunner(command: string[]): Promise<CommandResult> {
     // TODO: Parse out the actual command string
     let factory: typeof Command;
+    let newCommand: string[];
     try {
-      factory = loader(command);
+      let result = loader(command);
 
-      if (factory === null) {
+      if (result === null) {
         return notFound(command.join(' '));
       }
+      [factory, newCommand] = result;
     }
     catch (ex) {
       // If we got an exception here, it was an illegal command
@@ -35,7 +39,7 @@ function runner(arg: any): CommandRunner {
     }
 
     try {
-      const commandObj = new factory(command);
+      const commandObj = new factory(newCommand);
 
       return await commandObj.run();
     }

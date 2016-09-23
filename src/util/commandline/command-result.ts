@@ -24,7 +24,9 @@ export enum ErrorCodes {
   // Command was legal, but not found
   NoSuchCommand,
   // Unhandled exception occurred
-  Exception
+  Exception,
+  // A parameter is invalid
+  InvalidParameter
 }
 
 // Cache this, we only ever need one

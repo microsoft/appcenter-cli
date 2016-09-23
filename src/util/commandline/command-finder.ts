@@ -77,6 +77,7 @@ export function finder(dispatchRoot: string): CommandFinder {
     }
 
     function findFile(commandDir: string[], commandName: string): string {
+      debug(`Lodking for '${commandName}' in directory '${toFullPath(dispatchRoot, commandDir)}'`);
       if (commandDir.length > 0 && !isDir(dispatchRoot, commandDir)) {
         return null;
       }

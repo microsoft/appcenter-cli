@@ -10,7 +10,7 @@ import { CommandFinder, finder } from "../../../src/util/commandline/command-fin
 describe("Loading commands", function () {
   it("should return class when the command exists", function () {
     let commandLoader = loader(finder(path.join(__dirname, "sample-commands")));
-    let command = commandLoader(["cmd1"]);
+    let [command, _] = commandLoader(["cmd1"]);
     expect(command).to.be.a("function")
       .and.property("name", "Command1");
   });
@@ -31,5 +31,13 @@ describe("Loading commands", function () {
     let args = findSpy.firstCall.args[0];
     expect(Array.isArray(args)).to.be.true;
     expect(args[0]).to.equal("cmd1");
+  });
+
+  it("should look through subdirs to load", function () {
+    let commandLoader = loader(finder(path.join(__dirname, "sample-commands")));
+    let [command, remainingArgs] = commandLoader(["subcommands", "cmd2"]);
+    expect(command).to.be.a("function")
+      .and.property("name", "Command2");
+    expect(remainingArgs).to.deep.equal([]);
   });
 });
