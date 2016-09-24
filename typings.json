@@ -4,7 +4,9 @@
     "mocha": "registry:dt/mocha#2.2.5+20160720003353"
   },
   "globalDependencies": {
-    "node": "registry:dt/node#6.0.0+20160915134512"
+    "node": "registry:dt/node#6.0.0+20160915134512",
+    "node-fetch": "registry:dt/node-fetch#0.0.0+20160711094047",
+    "promptly": "registry:dt/promptly#1.1.1+20160316155526"
   },
   "devDependencies": {
     "nock": "registry:npm/nock#0.7.0+20160723033700",
