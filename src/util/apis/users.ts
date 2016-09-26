@@ -3,7 +3,7 @@
 //
 
 import * as fetch from "node-fetch";
-import { FetchFunc, FetchFilter, chainFilters, httpFailedFilter, noop as noopFilter, sonomaAuthFilter } from "../http";
+import { FetchFunc, FetchFilter, chainFilters, httpFailedFilter, noop as noopFilter, logFilter, sonomaAuthFilter } from "../http";
 
 export interface GetUserResponse {
   id: string;
@@ -20,7 +20,7 @@ export class UserClient {
 
   constructor(endpoint: string, token: string, filters: FetchFilter = noopFilter) {
     this.endpoint = endpoint;
-    this.fetch = chainFilters(filters, sonomaAuthFilter(token), httpFailedFilter)(fetch);
+    this.fetch = chainFilters(filters, sonomaAuthFilter(token), httpFailedFilter, logFilter)(fetch);
   }
 
   async getUser(): Promise<GetUserResponse> {

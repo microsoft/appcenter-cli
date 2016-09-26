@@ -14,7 +14,7 @@ interface EnvironmentsFile {
 }
 
 // Loaded data from file
-const environmentsData: EnvironmentsFile = require("./environments.json");
+const environmentsData: EnvironmentsFile = require("./environment-info.json");
 
 export function environments(environmentName: string = environmentsData.defaultEnvironment): EnvironmentInfo {
   return environmentsData.environments[environmentName];

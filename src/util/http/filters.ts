@@ -2,6 +2,10 @@
 // over the fetch API.
 
 import { Request, isRequest, RequestInit, Response, Headers, isHeaders, HeaderInit, FetchFunc, fetch } from "./fetch-api";
+import { inspect } from "util";
+import { isDebug } from "../interaction";
+
+const debug = require("debug")("sonoma-cli:util:http:filters");
 
 export interface FetchFilter {
   (next: FetchFunc): FetchFunc;
@@ -15,8 +19,9 @@ export function noop(next: FetchFunc): FetchFunc {
 }
 
 function headersFromDictionary(headers: {[header: string]: string}): Headers {
-  const result = new Headers();
+  const result = new fetch.Headers();
   Object.keys(headers).forEach(header => {
+    debug("Setting header ${header} to ${headers[header]}")
     result.set(header, headers[header]);
   });
   return result;
@@ -33,18 +38,23 @@ function headersFromDictionary(headers: {[header: string]: string}): Headers {
 export function normalizedRequest(input: string | Request, init?: RequestInit): [string | Request, RequestInit, Headers] {
     let headers: Headers;
     if (typeof input === "string") {
+      debug("Normalizing headers from string input");
       init = init || {};
       if (!init.headers) {
-        init.headers = new Headers();
+        debug("No headers in input, creating empty headers object");
+        init.headers = new fetch.Headers();
       }
       let x = init.headers;
       if (isHeaders(x)) {
+        debug("Headers object exists in init");
         headers = x;
       } else {
+        debug("Initializing headers object in init from plain object");
         init.headers = headersFromDictionary(<{[key:string]:string}>init.headers);
         headers = <Headers>init.headers;
       }
     } else if (isRequest(input)) {
+      debug("Normalizing headers from Request object");
       headers = input.headers;
     }
     return [input, init, headers];
@@ -95,8 +105,10 @@ export function chainFilters(...args: any[]): FetchFilter {
 //
 export function httpFailedFilter(next: FetchFunc): FetchFunc {
   return function translatorFetch(input: string | Request, init?: RequestInit): Promise<Response> {
+    debug("Running error translation filter request processing");
     return next(input, init)
       .then(response => {
+        debug("Running error translation filter response processing");
         if (!response.ok) {
           throw new TypeError(`Request failed with ${response.status} ${response.statusText}`);
         }
@@ -104,4 +116,23 @@ export function httpFailedFilter(next: FetchFunc): FetchFunc {
       }
     );
   };
+}
+
+export function logFilter(next: FetchFunc): FetchFunc {
+  if (isDebug()) {
+    return function loggingFetch(input: string | Request, init?: RequestInit): Promise<Response> {
+      console.log(`Sending request to: ${inspect(input, {depth: null})} init = ${inspect(init, {depth: null})}`);
+      return next(input, init)
+        .then(response => {
+          console.log(`Response: ${inspect(response)}`);
+          return response;
+        })
+        .catch(ex => {
+          console.log(`Fetch failed with error: ${inspect(ex)}`);
+          throw ex;
+        });
+    }
+  } else {
+    return next;
+  }
 }

@@ -7,6 +7,10 @@ import { AuthTokenClient, PostAuthTokenRequest, CreateAuthTokenResponse } from "
 import { UserClient, GetUserResponse } from "../util/apis/users";
 import { basicAuthFilter } from "../util/http/basic-auth-filter";
 
+import { inspect } from "util";
+
+const debug = require("debug")("sonoma-cli:commands:login");
+
 export default class LoginCommand extends Command {
   constructor(command: string[]) {
     super(command);
@@ -47,6 +51,8 @@ export default class LoginCommand extends Command {
     const tokenClient = new AuthTokenClient(endpoint, this.userName, this.password);
 
     let token = await out.progress("Logging in ...", tokenClient.createToken());
+
+    debug(`Got response = ${inspect(token)}`);
 
     let userClient = new UserClient(endpoint, token.api_token);
     let user = await out.progress("Getting user info ...", userClient.getUser());
