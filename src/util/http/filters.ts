@@ -7,6 +7,13 @@ export interface FetchFilter {
   (next: FetchFunc): FetchFunc;
 }
 
+//
+// Null filter that doesn't filter anything
+//
+export function noop(next: FetchFunc): FetchFunc {
+  return next;
+}
+
 function headersFromDictionary(headers: {[header: string]: string}): Headers {
   const result = new Headers();
   Object.keys(headers).forEach(header => {
@@ -80,4 +87,21 @@ export function chainFilters(...args: any[]): FetchFilter {
   return function(next: FetchFunc): FetchFunc {
     return allFilters.reduceRight((fetcher, filter) => filter(fetcher), next);
   }
+}
+
+//
+// Default filter that is used to translate failed HTTP responses to
+// exceptions so everything surfaces as a TypeError, not just network errors.
+//
+export function httpFailedFilter(next: FetchFunc): FetchFunc {
+  return function translatorFetch(input: string | Request, init?: RequestInit): Promise<Response> {
+    return next(input, init)
+      .then(response => {
+        if (!response.ok) {
+          throw new TypeError(`Request failed with ${response.status} ${response.statusText}`);
+        }
+        return response;
+      }
+    );
+  };
 }

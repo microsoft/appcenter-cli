@@ -77,7 +77,7 @@ export function finder(dispatchRoot: string): CommandFinder {
     }
 
     function findFile(commandDir: string[], commandName: string): string {
-      debug(`Lodking for '${commandName}' in directory '${toFullPath(dispatchRoot, commandDir)}'`);
+      debug(`Looking for '${commandName}' in directory '${toFullPath(dispatchRoot, commandDir)}'`);
       if (commandDir.length > 0 && !isDir(dispatchRoot, commandDir)) {
         return null;
       }
@@ -111,6 +111,7 @@ export function finder(dispatchRoot: string): CommandFinder {
 
       // Not found, push the last arg in command name into unused pile.
       args.unshift(command.pop());
+      debug(`Not found, unused args = ${args}, new command = ${command}`);
     }
 
     // Got here, nothing found

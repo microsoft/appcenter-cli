@@ -1,0 +1,8 @@
+{
+    "defaultEnvironment": "int",
+    "environments": {
+        "int": {
+            "endpoint": "https://bifrost-int.trafficmanager.net"
+        }
+    }
+}

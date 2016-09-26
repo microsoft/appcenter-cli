@@ -34,6 +34,7 @@ function runner(arg: any): CommandRunner {
       [factory, newCommand] = result;
     }
     catch (ex) {
+      debug(`Command loading failed, exception = ${ex}`);
       // If we got an exception here, it was an illegal command
       return illegal(command.join(' '));
     }

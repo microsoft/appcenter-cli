@@ -18,3 +18,7 @@ export function progress<T>(title: string, action: Promise<T>): Promise<T> {
     throw ex;
   });
 }
+
+export function text(t: string): void {
+  console.log(t);
+}
