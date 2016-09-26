@@ -21,6 +21,12 @@ function optionKey(option: OptionDescription): string {
   return option.shortName || option.longName;
 }
 
+function optionDisplayName(options: OptionDescription): string {
+  const short = options.shortName ? '-' + options.shortName : null;
+  const long = options.longName ? '--' + options.longName : null;
+  return [ short, long ].filter(x => !!x).join(' / ');
+}
+
 // Positional arguments
 
 export interface PositionalOptionDescription {
@@ -40,7 +46,7 @@ function descriptionToMinimistOpts(options: OptionsDescription): minimist.Option
     "string": <string[]>[],
     alias: {},
     default: {},
-    unknown: (arg: string): boolean => { 
+    unknown: (arg: string): boolean => {
       if(arg.charAt(0) === "-") {
         throw new Error(`Unknown argument ${arg}`);
       }
@@ -73,7 +79,7 @@ function descriptionToMinimistOpts(options: OptionsDescription): minimist.Option
   return parseOpts;
 }
 
-export function parseOptions(flagOptions: OptionsDescription,     
+export function parseOptions(flagOptions: OptionsDescription,
   positionalOptions: PositionalOptionsDescription,
   target: any, args: string[]): void;
 export function parseOptions(flagOptions: OptionsDescription, target: any, args: string[]): void;
@@ -102,7 +108,7 @@ export function parseOptions(...params: any[]): void {
 
     if (option.required && !parsed[optKey]) {
       // TODO: Replace this with auto-prompting
-      throw new Error(`Missing required option ${optKey}`);
+      throw new Error(`Missing required option ${optionDisplayName(option)}`);
     }
     target[targetPropertyName] = parsed[optKey];
   });
