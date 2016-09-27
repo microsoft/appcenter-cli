@@ -1,13 +1,8 @@
 import * as fetch from "node-fetch";
-import { FetchFunc, FetchFilter, chainFilters, basicAuthFilter, httpFailedFilter, noop as noopFilter, logFilter } from "../http";
+import { FetchFunc, FetchFilter, chainFilters, basicAuthFilter, sonomaAuthFilter, httpFailedFilter, noop as noopFilter, logFilter } from "../http";
 
-export interface GetAuthTokenResponse {
-  id: string;
-  description: string;
-  created_at: string;
-}
 
-export interface PostAuthTokenRequest {
+interface PostAuthTokenRequest {
   "description": string;
 }
 
@@ -15,14 +10,40 @@ export interface CreateAuthTokenResponse extends GetAuthTokenResponse {
   api_token: string;
 }
 
+export interface GetAuthTokenResponse {
+  id: string;
+  description: string;
+  created_at: string;
+}
+
+export interface DeleteAuthTokenResponse {
+
+}
+
 export class AuthTokenClient {
 
   private endpoint: string;
   private fetch: FetchFunc;
 
-  constructor(endpoint: string, username: string, password: string, filters: FetchFilter = noopFilter) {
-    this.endpoint = endpoint;
-    this.fetch = chainFilters(filters, basicAuthFilter(username, password), httpFailedFilter, logFilter)(fetch);
+  constructor(endpoint: string, username: string, password: string, filters?: FetchFilter);
+  constructor(endpoint: string, accessToken: string, filters?: FetchFilter);
+  constructor(...args: any[])
+  {
+    let endpoint: string;
+    let authFilter: FetchFilter;
+    let filters: FetchFilter;
+
+    this.endpoint = args[0];
+
+    if(args.length === 3) {
+      authFilter = sonomaAuthFilter(args[1]);
+      filters = args[2] || noopFilter;
+    } else {
+      authFilter = basicAuthFilter(args[1], args[2]);
+      filters = args[3] || noopFilter;
+    }
+
+    this.fetch = chainFilters(filters, authFilter, httpFailedFilter, logFilter)(fetch);
   }
 
   async createToken(): Promise<CreateAuthTokenResponse> {
@@ -39,5 +60,11 @@ export class AuthTokenClient {
       .then(response => {
         return response.json();
       });
+  }
+
+  async deleteToken(tokenId: string): Promise<DeleteAuthTokenResponse> {
+    return await this.fetch(`${this.endpoint}/v0.1/auth_tokens/${tokenId}`, {
+      method: "DELETE",
+    });
   }
 }

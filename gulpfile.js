@@ -10,7 +10,7 @@ gulp.task('compile', () => {
 });
 
 gulp.task('copyAssets', () => {
-  gulp.src('./src/**/*.json')
+  return gulp.src('./src/**/*.json')
     .pipe(gulp.dest('./dist'));
 });
 

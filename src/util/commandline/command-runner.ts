@@ -4,7 +4,7 @@ import { Command } from "./command";
 import { CommandResult, exception, illegal, notFound } from "./command-result";
 import * as Finder from "./command-finder";
 import * as Loader from "./command-loader";
-import { setDebug } from "../interaction";
+import { setDebug, isDebug } from "../interaction";
 
 const debug = require("debug")("sonoma-cli:util:commandline:command-runner");
 
@@ -49,7 +49,9 @@ function runner(arg: any): CommandRunner {
       return await commandObj.run();
     }
     catch (ex) {
-      console.log(`Command Failure at ${ex.stack}`);
+      if(isDebug()) {
+        console.log(`Command Failure at ${ex.stack}`);
+      }
       return exception(command.join(' '), ex);
     }
   }
