@@ -141,7 +141,7 @@ describe("Command line option parsing", function() {
     it("should throw if required option missing", function () {
       let target: any = {};
       expect(() => parseOptions(opts, target, "--out foo.txt".split(" ")))
-        .to.throw(/missing required option i/i);
+        .to.throw(/missing required option -i \/ --input/i);
     });
   });
 
@@ -244,7 +244,7 @@ describe("Command line option parsing", function() {
         {
           name: "inputFile",
           propertyName: "inputFile",
-          position: 0          
+          position: 0
         },
         {
           name: "configFile",

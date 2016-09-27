@@ -15,7 +15,7 @@ describe("Running commands", function () {
       });
   });
 
-  it("Should fail with not found error if not found", function () {
+  it("should fail with not found error if not found", function () {
     return run(["not", "a", "command"])
       .then((result:CommandResult) => {
         expect(failed(result)).to.be.true;

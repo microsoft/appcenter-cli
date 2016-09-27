@@ -2,6 +2,7 @@
 
 import { Command, CommandResult, ErrorCodes, success, failure } from "../util/commandline";
 import { shortName, longName, required, hasArg } from "../util/commandline";
+import { out } from "../util/interaction";
 
 export default class WaitCommand extends Command {
   constructor(args: string[]) {
@@ -20,9 +21,9 @@ export default class WaitCommand extends Command {
       return failure(ErrorCodes.InvalidParameter, `delay must be a number`);
     }
 
-    console.log(`Waiting for ${delayMs} milliseconds...`);
-
-    await new Promise(resolve => setTimeout(resolve, delayMs));
+    await out.progress(`Waiting for ${delayMs} milliseconds... `,
+      new Promise(resolve => setTimeout(resolve, delayMs)));
+    console.log("Done!");
     return success();
   }
 }

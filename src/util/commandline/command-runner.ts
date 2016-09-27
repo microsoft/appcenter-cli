@@ -4,6 +4,7 @@ import { Command } from "./command";
 import { CommandResult, exception, illegal, notFound } from "./command-result";
 import * as Finder from "./command-finder";
 import * as Loader from "./command-loader";
+import { setDebug, isDebug } from "../interaction";
 
 const debug = require("debug")("sonoma-cli:util:commandline:command-runner");
 
@@ -34,16 +35,23 @@ function runner(arg: any): CommandRunner {
       [factory, newCommand] = result;
     }
     catch (ex) {
+      debug(`Command loading failed, exception = ${ex}`);
       // If we got an exception here, it was an illegal command
       return illegal(command.join(' '));
     }
 
     try {
       const commandObj = new factory(newCommand);
+      if (commandObj.debug) {
+        setDebug();
+      }
 
       return await commandObj.run();
     }
     catch (ex) {
+      if(isDebug()) {
+        console.log(`Command Failure at ${ex.stack}`);
+      }
       return exception(command.join(' '), ex);
     }
   }

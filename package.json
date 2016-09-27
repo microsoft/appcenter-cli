@@ -32,7 +32,11 @@
     "typescript": "^1.8.10"
   },
   "dependencies": {
+    "cli-spinner": "^0.2.5",
     "debug": "^2.2.0",
-    "minimist": "^1.2.0"
+    "minimist": "^1.2.0",
+    "mkdirp": "^0.5.1",
+    "node-fetch": "^1.6.1",
+    "promptly": "^2.1.0"
   }
 }
