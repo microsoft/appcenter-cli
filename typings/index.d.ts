@@ -8,3 +8,4 @@
 /// <reference path="modules/mkdirp/index.d.ts" />
 /// <reference path="modules/nock/index.d.ts" />
 /// <reference path="modules/sinon/index.d.ts" />
+/// <reference path="modules/wordwrap/index.d.ts" />
