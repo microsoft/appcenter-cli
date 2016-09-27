@@ -13,9 +13,15 @@ interface EnvironmentsFile {
   };
 }
 
-// Loaded data from file
-const environmentsData: EnvironmentsFile = require("./environment-info.json");
-
+// Default environment data
+const environmentsData: EnvironmentsFile = {
+  defaultEnvironment: "int",
+  environments: {
+    int: {
+      endpoint: "https://bifrost-int.trafficmanager.net"
+    }
+  }
+}
 export function environments(environmentName: string = environmentsData.defaultEnvironment): EnvironmentInfo {
   return environmentsData.environments[environmentName];
 }
