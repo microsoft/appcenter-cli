@@ -30,7 +30,7 @@ function fileExists(filename: string): boolean {
     return fs.statSync(filename).isFile();
   }
   catch (err) {
-    if (err.code !== "E_NOENT") {
+    if (err.code !== "ENOENT") {
       throw err;
     }
   }

@@ -35,12 +35,26 @@ export class AuthTokenClient {
 
     this.endpoint = args[0];
 
-    if(args.length === 3) {
-      authFilter = sonomaAuthFilter(args[1]);
-      filters = args[2] || noopFilter;
-    } else {
-      authFilter = basicAuthFilter(args[1], args[2]);
-      filters = args[3] || noopFilter;
+    switch(args.length) {
+      case 2:
+        authFilter = sonomaAuthFilter(args[1]);
+        filters = noopFilter;
+        break;
+
+      case 3:
+        if (typeof args[2] !== "string") {
+          authFilter = sonomaAuthFilter(args[1]);
+          filters = args[2];
+        } else {
+          authFilter = basicAuthFilter(args[1], args[2]);
+          filters = noopFilter;
+        }
+        break;
+
+      case 4:
+        authFilter = basicAuthFilter(args[1], args[2]);
+        filters = args[3];
+        break;
     }
 
     this.fetch = chainFilters(filters, authFilter, httpFailedFilter, logFilter)(fetch);
@@ -51,7 +65,7 @@ export class AuthTokenClient {
       description: "Created by sonoma-cli login",
     };
 
-    return await this.fetch(`${this.endpoint}/v0.1/auth_tokens`, { 
+    return await this.fetch(`${this.endpoint}/v0.1/auth_tokens`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
