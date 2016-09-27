@@ -1,0 +1,10 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/types/npm-wordwrap/c5852a5a23954e721246001d4bc47d19c283cd33/typings.json",
+    "raw": "registry:npm/wordwrap#1.0.0+20160723033700",
+    "main": "index.d.ts",
+    "name": "wordwrap",
+    "type": "typings"
+  }
+}

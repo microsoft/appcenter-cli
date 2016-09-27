@@ -13,7 +13,9 @@ import { environments } from "./environments";
 
 export class Profile {
   userId: string;
+  userName: string;
   displayName: string;
+  email: string;
   environment: string;
   accessTokenId: string;
   accessToken: string;
@@ -74,8 +76,10 @@ export function getUser(): Profile {
 export function saveUser(user: GetUserResponse, token: CreateAuthTokenResponse, environment: string): void {
   let profile = {
     userId: user.id,
+    userName: user.name,
     displayName: user.display_name,
     environment,
+    email: user.email,
     accessTokenId: token.id,
     accessToken: token.api_token
   };
@@ -85,5 +89,12 @@ export function saveUser(user: GetUserResponse, token: CreateAuthTokenResponse, 
 }
 
 export function deleteUser() {
-  fs.unlinkSync(getProfileFilename());
+  try {
+    fs.unlinkSync(getProfileFilename());
+  } catch (err) {
+    if (err.code !== "ENOENT") {
+      // File not found is fine, anything else pass on the error
+      throw err;
+    }
+  }
 }

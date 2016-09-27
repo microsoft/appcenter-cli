@@ -67,11 +67,13 @@ export default class LoginCommand extends Command {
   }
 
   private async removeLoggedInUser(): Promise<void> {
-    // TODO: Finish this out
+    // TODO: Can't currently delete existing token off server since
+    // you have to have a password at the moment to manage api keys.
+    // Server is changing, finish this stuff then.
+
     const currentUser = getUser();
     if (currentUser !== null) {
-      const tokenClient = new AuthTokenClient(currentUser.endpoint, currentUser.accessToken);
-
+      // TODO: remove existing token
 
     }
   }

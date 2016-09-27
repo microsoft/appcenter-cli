@@ -3,6 +3,7 @@
 
 export interface EnvironmentInfo {
   endpoint: string;
+  description?: string;
 }
 
 // File format for json file
@@ -18,10 +19,15 @@ const environmentsData: EnvironmentsFile = {
   defaultEnvironment: "int",
   environments: {
     int: {
-      endpoint: "https://bifrost-int.trafficmanager.net"
+      endpoint: "https://bifrost-int.trafficmanager.net",
+      description: "Integration"
     }
   }
 }
 export function environments(environmentName: string = environmentsData.defaultEnvironment): EnvironmentInfo {
   return environmentsData.environments[environmentName];
+}
+
+export function allEnvironments(): EnvironmentsFile {
+  return environmentsData;
 }
