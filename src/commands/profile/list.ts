@@ -1,8 +1,9 @@
 // profile list command
 
 import { Command, CommandResult, success } from "../../util/commandline";
-import { Profile, getUser } from "../../util/profile";
+import { Profile, getUser, environments } from "../../util/profile";
 import { out } from "../../util/interaction";
+import { GetUserResponse, UserClient } from "../../util/apis/users";
 
 export default class ProfileListCommand extends Command {
   constructor(command: string[]) {
@@ -10,13 +11,16 @@ export default class ProfileListCommand extends Command {
   }
 
   async run(): Promise<CommandResult> {
-    const user = getUser();
-    out.report([
-      ["Username", "userName" ],
-      [ "Display Name", "displayName" ],
-      [ "Email", "email"]
-    ], "No logged in user. Use 'sonoma login' command to log in.",
-    user);
+    const currentUser = getUser();
+    const client = new UserClient(currentUser.endpoint, currentUser.accessToken);
+    const userInfo = await out.progress("Getting user information ...", client.getUser());
+
+    out.report(
+      [
+        ["Username", "name" ],
+        [ "Display Name", "display_name" ],
+        [ "Email", "email"]
+      ], userInfo);
 
     return success();
   }
