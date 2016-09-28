@@ -14,6 +14,15 @@ export interface GetUserResponse {
   can_change_password: boolean;
 }
 
+export interface UpdateUserRequest {
+  display_name?: string;
+}
+
+export interface UpdateUserResponse extends GetUserResponse {
+  // No extra fields, but this gives us a separate type name
+  // in case the return types diverge in the future.
+}
+
 export class UserClient {
   endpoint: string;
   fetch: FetchFunc;
@@ -28,5 +37,17 @@ export class UserClient {
       .then(response => {
           return response.json();
       });
+  }
+
+  async updateUser(update: UpdateUserRequest): Promise<UpdateUserResponse> {
+    return this.fetch(`${this.endpoint}/v0.1/user`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(update)
+      })
+    .then(response => {
+      return response.json();
+    });
   }
 }

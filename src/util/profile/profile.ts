@@ -11,7 +11,7 @@ import { CreateAuthTokenResponse } from "../apis/auth-token";
 import { GetUserResponse } from "../apis/users";
 import { environments } from "./environments";
 
-export class Profile {
+export interface Profile {
   userId: string;
   userName: string;
   displayName: string;
@@ -19,10 +19,7 @@ export class Profile {
   environment: string;
   accessTokenId: string;
   accessToken: string;
-
-  get endpoint(): string {
-    return environments(this.environment).endpoint;
-  }
+  endpoint: string;
 }
 
 let currentProfile: Profile = null;
@@ -69,6 +66,9 @@ function loadProfile(): Profile {
 export function getUser(): Profile {
   if (!currentProfile) {
     currentProfile = loadProfile();
+    if (!currentProfile.endpoint) {
+      currentProfile.endpoint = environments(currentProfile.environment).endpoint;
+    }
   }
   return currentProfile;
 }
@@ -81,7 +81,8 @@ export function saveUser(user: GetUserResponse, token: CreateAuthTokenResponse, 
     environment,
     email: user.email,
     accessTokenId: token.id,
-    accessToken: token.api_token
+    accessToken: token.api_token,
+    endpoint: environments(environment).endpoint
   };
 
   mkdirp.sync(getProfileDir());

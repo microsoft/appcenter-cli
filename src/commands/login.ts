@@ -32,12 +32,31 @@ export default class LoginCommand extends Command {
   environmentName: string;
 
   async run(): Promise<CommandResult> {
-    if (!this.userName) {
-      this.userName = await prompt("Username: ");
+    let questions: any[] = [
+      {
+        name: "userName",
+        message: "Username: "
+      },
+      {
+        type: "password",
+        name: "password",
+        message: "Password: "
+      }
+    ];
+
+    if (this.password) {
+      questions.splice(1, 1);
     }
 
-    if (!this.password) {
-      this.password = await prompt.password("Password: ");
+    if (this.userName) {
+      questions.splice(0, 1);
+    }
+
+    if (questions.length > 0) {
+      let answers = await prompt.question(questions);
+      Object.keys(answers).forEach(key => {
+        (<any>this)[key] = answers[key];
+      });
     }
 
     await this.doLogin();

@@ -26,7 +26,9 @@ export enum ErrorCodes {
   // Unhandled exception occurred
   Exception,
   // A parameter is invalid
-  InvalidParameter
+  InvalidParameter,
+  // Command requires logged in user
+  NotLoggedIn
 }
 
 // Cache this, we only ever need one

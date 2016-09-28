@@ -1,0 +1,20 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/types/npm-inquirer/5da55e45ae8248194cfebc8191d540f2202ad8cb/typings.json",
+    "raw": "registry:npm/inquirer#1.0.0+20160723033700",
+    "main": "lib/inquirer.d.ts",
+    "version": "^1.0.0",
+    "dependencies": {
+      "es6-promise": {
+        "src": "https://raw.githubusercontent.com/typed-typings/npm-es6-promise/fb04188767acfec1defd054fc8024fafa5cd4de7/typings.json",
+        "raw": "registry:npm/es6-promise#3.0.0+20160211003958",
+        "main": "dist/es6-promise.d.ts",
+        "name": "es6-promise",
+        "type": "typings"
+      }
+    },
+    "name": "inquirer",
+    "type": "typings"
+  }
+}
