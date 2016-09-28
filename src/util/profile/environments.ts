@@ -21,9 +21,14 @@ const environmentsData: EnvironmentsFile = {
     int: {
       endpoint: "https://bifrost-int.trafficmanager.net",
       description: "Integration"
+    },
+    prod: {
+      "endpoint": "https://api.sonoma.hockeyapp.com",
+      description: "Production"
     }
   }
-}
+};
+
 export function environments(environmentName: string = environmentsData.defaultEnvironment): EnvironmentInfo {
   return environmentsData.environments[environmentName];
 }
