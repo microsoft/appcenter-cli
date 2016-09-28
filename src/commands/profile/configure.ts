@@ -3,7 +3,7 @@
 import { Command, CommandResult, success, failure, ErrorCodes } from "../../util/commandline";
 import { prompt, out } from "../../util/interaction";
 import { getUser } from "../../util/profile";
-import { UserClient } from "../../util/apis/users";
+import { UserClient } from "../../util/apis";
 
 export default class ProfileConfigureCommand extends Command {
   constructor(command: string[]) {
