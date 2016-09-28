@@ -3,7 +3,8 @@
 //
 
 import * as fetch from "node-fetch";
-import { FetchFunc, FetchFilter, chainFilters, httpFailedFilter, noop as noopFilter, logFilter, sonomaAuthFilter } from "../http";
+import { FetchFilter, sonomaAuthFilter } from "../http";
+import { ClientBase } from "./client-base";
 
 export interface GetUserResponse {
   id: string;
@@ -23,24 +24,20 @@ export interface UpdateUserResponse extends GetUserResponse {
   // in case the return types diverge in the future.
 }
 
-export class UserClient {
-  endpoint: string;
-  fetch: FetchFunc;
-
-  constructor(endpoint: string, token: string, filters: FetchFilter = noopFilter) {
-    this.endpoint = endpoint;
-    this.fetch = chainFilters(filters, sonomaAuthFilter(token), httpFailedFilter, logFilter)(fetch);
+export class UserClient extends ClientBase {
+  constructor(endpoint: string, token: string, filters?: FetchFilter) {
+    super(endpoint, "/v0.1/user", sonomaAuthFilter(token), filters);
   }
 
   async getUser(): Promise<GetUserResponse> {
-    return this.fetch(`${this.endpoint}/v0.1/user`)
+    return this.fetch(this.rootEndpoint)
       .then(response => {
           return response.json();
       });
   }
 
   async updateUser(update: UpdateUserRequest): Promise<UpdateUserResponse> {
-    return this.fetch(`${this.endpoint}/v0.1/user`,
+    return this.fetch(this.rootEndpoint,
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },

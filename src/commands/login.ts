@@ -3,9 +3,8 @@
 import { Command, CommandResult, success, failure, shortName, longName, required, hasArg } from "../util/commandline";
 import { environments, getUser, saveUser, deleteUser } from "../util/profile";
 import { prompt, out } from "../util/interaction";
-import { AuthTokenClient, CreateAuthTokenResponse } from "../util/apis/auth-token";
-import { UserClient, GetUserResponse } from "../util/apis/users";
-import { basicAuthFilter } from "../util/http/basic-auth-filter";
+import { AuthTokenClient, CreateAuthTokenResponse } from "../util/apis";
+import { UserClient, GetUserResponse } from "../util/apis";
 
 import { inspect } from "util";
 
