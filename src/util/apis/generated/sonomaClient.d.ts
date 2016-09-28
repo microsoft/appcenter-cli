@@ -5,7 +5,6 @@
  */
 
 import { ServiceClientOptions, RequestOptions, ServiceCallback } from 'ms-rest';
-import * as models from "./models";
 import * as operations from "./operations";
 
 declare class SonomaClient {
@@ -155,207 +154,25 @@ declare class SonomaClient {
     // Operation groups
     invitations: operations.Invitations;
     users: operations.Users;
-    apps: operations.Apps;
-    branches: operations.Branches;
-    builds: operations.Builds;
+    xcodeVersions: operations.XcodeVersions;
     versionsOperations: operations.VersionsOperations;
+    apps: operations.Apps;
+    symbols: operations.Symbols;
+    symbolUploads: operations.SymbolUploads;
+    symbolUpLoadsOperations: operations.SymbolUpLoadsOperations;
+    symbolUploadOperations: operations.SymbolUploadOperations;
+    repositories: operations.Repositories;
+    packages: operations.Packages;
+    packageModel: operations.PackageModel;
+    packageUpload: operations.PackageUpload;
+    crashOperations: operations.CrashOperations;
+    commits: operations.Commits;
+    builds: operations.Builds;
+    branches: operations.Branches;
     sessions: operations.Sessions;
     devices: operations.Devices;
     available: operations.Available;
     apiTokens: operations.ApiTokens;
-
-            /**
-         * @summary Gets a list of application versions
-         *
-         * Gets a list of application versions
-         *
-         * @param {object} [options] Optional Parameters.
-         * 
-         * @param {object} [options.customHeaders] Headers that will be added to the
-         * request
-         * 
-         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-         * doc in ms-rest index.d.ts for details
-         */
-        getAppVersions(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppVersion[]>): void;
-        getAppVersions(callback: ServiceCallback<models.AppVersion[]>): void;
-
-        /**
-         * Return the details for this package.
-         *
-         * @param {string} packageId The ID of the package
-         * 
-         * @param {object} [options] Optional Parameters.
-         * 
-         * @param {object} [options.customHeaders] Headers that will be added to the
-         * request
-         * 
-         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-         * doc in ms-rest index.d.ts for details
-         */
-        getPackageInfo(packageId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PackageDetails>): void;
-        getPackageInfo(packageId: string, callback: ServiceCallback<models.PackageDetails>): void;
-
-        /**
-         * @param {object} [options] Optional Parameters.
-         * 
-         * @param {string} [options.crashGroupId] Filter by group. Can be empty
-         * 
-         * @param {object} [options.customHeaders] Headers that will be added to the
-         * request
-         * 
-         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-         * doc in ms-rest index.d.ts for details
-         */
-        getHistogramPlatforms(options: { crashGroupId? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Segmentation>): void;
-        getHistogramPlatforms(callback: ServiceCallback<models.Segmentation>): void;
-
-        /**
-         * @param {object} [options] Optional Parameters.
-         * 
-         * @param {string} [options.crashGroupId] Filter by group. Can be empty
-         * 
-         * @param {object} [options.customHeaders] Headers that will be added to the
-         * request
-         * 
-         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-         * doc in ms-rest index.d.ts for details
-         */
-        getHistogramDevices(options: { crashGroupId? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Segmentation>): void;
-        getHistogramDevices(callback: ServiceCallback<models.Segmentation>): void;
-
-        /**
-         * Crash Histogram. Returns the total number of crashes.
-         *
-         * @param {object} [options] Optional Parameters.
-         * 
-         * @param {string} [options.crashGroupId] Filter by group. Can be empty
-         * 
-         * @param {object} [options.customHeaders] Headers that will be added to the
-         * request
-         * 
-         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-         * doc in ms-rest index.d.ts for details
-         */
-        getHistogramCrashes(options: { crashGroupId? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Histogram>): void;
-        getHistogramCrashes(callback: ServiceCallback<models.Histogram>): void;
-
-        /**
-         * @param {object} [options] Optional Parameters.
-         * 
-         * @param {string} [options.crashGroupId] Filter by group. Can be empty
-         * 
-         * @param {object} [options.customHeaders] Headers that will be added to the
-         * request
-         * 
-         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-         * doc in ms-rest index.d.ts for details
-         */
-        getHistogramCrashFreeUsers(options: { crashGroupId? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Histogram>): void;
-        getHistogramCrashFreeUsers(callback: ServiceCallback<models.Histogram>): void;
-
-        /**
-         * Gets a stacktrace for a specific error
-         *
-         * @param {object} [options] Optional Parameters.
-         * 
-         * @param {object} [options.customHeaders] Headers that will be added to the
-         * request
-         * 
-         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-         * doc in ms-rest index.d.ts for details
-         */
-        getGroupStacktrace(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Stacktrace>): void;
-        getGroupStacktrace(callback: ServiceCallback<models.Stacktrace>): void;
-
-        /**
-         * Gets a stacktrace for a specific error
-         *
-         * @param {object} [options] Optional Parameters.
-         * 
-         * @param {object} [options.customHeaders] Headers that will be added to the
-         * request
-         * 
-         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-         * doc in ms-rest index.d.ts for details
-         */
-        getErrorStacktrace(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Stacktrace>): void;
-        getErrorStacktrace(callback: ServiceCallback<models.Stacktrace>): void;
-
-        /**
-         * Gets a specific error for an app
-         *
-         * @param {object} [options] Optional Parameters.
-         * 
-         * @param {object} [options.customHeaders] Headers that will be added to the
-         * request
-         * 
-         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-         * doc in ms-rest index.d.ts for details
-         */
-        getCrash(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Crash>): void;
-        getCrash(callback: ServiceCallback<models.Crash>): void;
-
-        /**
-         * Gets all crashes of the app
-         *
-         * @param {object} [options] Optional Parameters.
-         * 
-         * @param {object} [options.customHeaders] Headers that will be added to the
-         * request
-         * 
-         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-         * doc in ms-rest index.d.ts for details
-         */
-        getCrashes(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Crash[]>): void;
-        getCrashes(callback: ServiceCallback<models.Crash[]>): void;
-
-        /**
-         * Gets a specific group
-         *
-         * @param {object} [options] Optional Parameters.
-         * 
-         * @param {object} [options.customHeaders] Headers that will be added to the
-         * request
-         * 
-         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-         * doc in ms-rest index.d.ts for details
-         */
-        getCrashGroup(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroup>): void;
-        getCrashGroup(callback: ServiceCallback<models.CrashGroup>): void;
-
-        /**
-         * Updates a group
-         *
-         * @param {object} [options] Optional Parameters.
-         * 
-         * @param {string} [options.status] Possible values include: 'Open', 'Closed',
-         * 'Ignored'
-         * 
-         * @param {object} [options.customHeaders] Headers that will be added to the
-         * request
-         * 
-         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-         * doc in ms-rest index.d.ts for details
-         */
-        patchCrashGroup(options: { status? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroup>): void;
-        patchCrashGroup(callback: ServiceCallback<models.CrashGroup>): void;
-
-        /**
-         * @summary Gets a list of crashes
-         *
-         * Gets a list of crashes
-         *
-         * @param {object} [options] Optional Parameters.
-         * 
-         * @param {object} [options.customHeaders] Headers that will be added to the
-         * request
-         * 
-         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-         * doc in ms-rest index.d.ts for details
-         */
-        getCrashGroups(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroup[]>): void;
-        getCrashGroups(callback: ServiceCallback<models.CrashGroup[]>): void;
-}
+    }
 
 export = SonomaClient;

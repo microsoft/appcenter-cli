@@ -51,6 +51,64 @@ export interface Invitations {
      */
     accept(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
     accept(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorResponse>): void;
+
+    /**
+     * Invites a new or existing user to an app
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The slug name of the app
+     * 
+     * @param {string} userEmail The email of the user to Invites
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    create(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    create(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<models.ErrorResponse>): void;
+
+    /**
+     * Removes a user's invitation to an app
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The slug name of the app
+     * 
+     * @param {string} userEmail The email of the user to Invites
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deleteMethod(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    deleteMethod(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<models.ErrorResponse>): void;
+
+    /**
+     * Gets the pending invitations for the app
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The slug name of the app
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    list(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 }
 
 /**
@@ -95,11 +153,11 @@ export interface Users {
 
 /**
  * @class
- * Apps
+ * XcodeVersions
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the SonomaClient.
  */
-export interface Apps {
+export interface XcodeVersions {
 
     /**
      * Gets the Xcode versions available to this app
@@ -112,8 +170,56 @@ export interface Apps {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    xcodeVersions(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    xcodeVersions(callback: ServiceCallback<any>): void;
+    list(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    list(callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * VersionsOperations
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the SonomaClient.
+ */
+export interface VersionsOperations {
+
+    /**
+     * @summary Gets a list of application versions
+     *
+     * Gets a list of application versions
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    get(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppVersion[]>): void;
+    get(callback: ServiceCallback<models.AppVersion[]>): void;
+
+    /**
+     * Count of active versions in the time range ordered by version.
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    counts(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Versions>): void;
+    counts(callback: ServiceCallback<models.Versions>): void;
+}
+
+/**
+ * @class
+ * Apps
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the SonomaClient.
+ */
+export interface Apps {
 
     /**
      * Removes the user from the app
@@ -155,322 +261,6 @@ export interface Apps {
     listUsers(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
-     * Returns a particular symbol by id (uuid) for the provided application
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getSymbolById(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getSymbolById(callback: ServiceCallback<any>): void;
-
-    /**
-     * Returns the list of all symbols for the provided application
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    listSymbols(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    listSymbols(callback: ServiceCallback<any>): void;
-
-    /**
-     * Gets a symbol upload by id for the specified application
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getSymbolUploadById(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getSymbolUploadById(callback: ServiceCallback<any>): void;
-
-    /**
-     * Commits or aborts the symbol upload process for a new set of symbols for
-     * the specified application
-     *
-     * @param {string} status The desired operation for the symbol upload.
-     * Possible values include: 'committed', 'aborted'
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    commitOrAbortSymbolUpload(status: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    commitOrAbortSymbolUpload(status: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * Deletes a symbol upload by id for the specified application
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    deleteSymbolUpload(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    deleteSymbolUpload(callback: ServiceCallback<any>): void;
-
-    /**
-     * Gets a list of all uploads for the specified application
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    listSymbolUploads(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    listSymbolUploads(callback: ServiceCallback<any>): void;
-
-    /**
-     * Begins the symbol upload process for a new set of symbols for the specified
-     * application
-     *
-     * @param {string} symbolType The type of the symbol for the current symbol
-     * upload. Possible values include: 'Apple', 'AndroidNative', 'AndroidJava',
-     * 'Windows'
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {string} [options.clientCallback] The callback URL that the client
-     * can optionally provide to get status updates for the current symbol upload
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    beginSymbolUpload(symbolType: string, options: { clientCallback? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    beginSymbolUpload(symbolType: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * Gets the repositories available from the source code host
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    listRepositories(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    listRepositories(callback: ServiceCallback<any>): void;
-
-    /**
-     * Returns the repository build configuration status of the app
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getRepositoryConfigurationStatus(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getRepositoryConfigurationStatus(callback: ServiceCallback<any>): void;
-
-    /**
-     * Configures the repository for build
-     *
-     * @param {string} repoUrl The repository url
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    configureBuildRepository(repoUrl: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    configureBuildRepository(repoUrl: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * Removes the configuration for the respository
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    deleteRepositoryConfiguration(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    deleteRepositoryConfiguration(callback: ServiceCallback<any>): void;
-
-    /**
-     * Updates a package.
-     *
-     * @param {string} packageId The ID of the package
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {string} [options.status] The package state.<br>
-     * <b>available</b>: The uploaded package has been distributed.<br>
-     * <b>unavailable</b>: The uploaded package is not visible to the user. <br>
-     * . Possible values include: 'available', 'unavailable'
-     * 
-     * @param {string} [options.releaseNotes] Release notes for this package.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    updatePackage(packageId: string, options: { status? : string, releaseNotes? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    updatePackage(packageId: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * Return detailed information about available packages.
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {string} [options.filter] An OData style filter. Currently only
-     * support the 'eq' comparision type. E.g. ?$filter=status eq 'Availabe'
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    listPackages(options: { filter? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PackageDetails[]>): void;
-    listPackages(callback: ServiceCallback<models.PackageDetails[]>): void;
-
-    /**
-     * Commits or aborts the upload process for a package for the specified
-     * application
-     *
-     * @param {string} uploadId The ID of the upload
-     * 
-     * @param {string} status The desired operation for the upload. Possible
-     * values include: 'committed', 'aborted'
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    commitOrAbortPackageUpload(uploadId: string, status: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    commitOrAbortPackageUpload(uploadId: string, status: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * Begins the upload process for a new package for the specified application
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    beginPackageUpload(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    beginPackageUpload(callback: ServiceCallback<any>): void;
-
-    /**
-     * Invites a new or existing user to an app
-     *
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The slug name of the app
-     * 
-     * @param {string} userEmail The email of the user to Invites
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    inviteUser(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
-    inviteUser(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<models.ErrorResponse>): void;
-
-    /**
-     * Removes a user's invitation to an app
-     *
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The slug name of the app
-     * 
-     * @param {string} userEmail The email of the user to Invites
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    deleteInvitation(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
-    deleteInvitation(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<models.ErrorResponse>): void;
-
-    /**
-     * Gets the pending invitations for the app
-     *
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The slug name of the app
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    listInvitations(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    listInvitations(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * Returns commit information for a batch of shas
-     *
-     * @param {string} shaCollection A collection of commit SHAs comma-delimited
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    listCommits(shaCollection: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Branch[]>): void;
-    listCommits(shaCollection: string, callback: ServiceCallback<models.Branch[]>): void;
-
-    /**
      * Downloads an artifact of the build
      *
      * @param {string} downloadType The download type. Possible values include:
@@ -486,36 +276,6 @@ export interface Apps {
      */
     downloadArtifact(downloadType: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
     downloadArtifact(downloadType: string, callback: ServiceCallback<void>): void;
-
-    /**
-     * Returns the build detail for the given build ID
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getBuildDetails(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Build>): void;
-    getBuildDetails(callback: ServiceCallback<models.Build>): void;
-
-    /**
-     * Updates the build properties
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {string} [options.status] The build status
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    updateBuildProperties(options: { status? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Build>): void;
-    updateBuildProperties(callback: ServiceCallback<models.Build>): void;
 
     /**
      * Return a specific app with the given app name which belongs to the given
@@ -602,6 +362,598 @@ export interface Apps {
      */
     list(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     list(callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * Symbols
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the SonomaClient.
+ */
+export interface Symbols {
+
+    /**
+     * Returns a particular symbol by id (uuid) for the provided application
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getById(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getById(callback: ServiceCallback<any>): void;
+
+    /**
+     * Returns the list of all symbols for the provided application
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    list(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    list(callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * SymbolUploads
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the SonomaClient.
+ */
+export interface SymbolUploads {
+
+    /**
+     * Gets a symbol upload by id for the specified application
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    get(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    get(callback: ServiceCallback<any>): void;
+
+    /**
+     * Deletes a symbol upload by id for the specified application
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deleteMethod(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    deleteMethod(callback: ServiceCallback<any>): void;
+
+    /**
+     * Gets a list of all uploads for the specified application
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    list(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    list(callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * SymbolUpLoadsOperations
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the SonomaClient.
+ */
+export interface SymbolUpLoadsOperations {
+
+    /**
+     * Commits or aborts the symbol upload process for a new set of symbols for
+     * the specified application
+     *
+     * @param {string} status The desired operation for the symbol upload.
+     * Possible values include: 'committed', 'aborted'
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    commitOrAbort(status: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    commitOrAbort(status: string, callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * SymbolUploadOperations
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the SonomaClient.
+ */
+export interface SymbolUploadOperations {
+
+    /**
+     * Begins the symbol upload process for a new set of symbols for the specified
+     * application
+     *
+     * @param {string} symbolType The type of the symbol for the current symbol
+     * upload. Possible values include: 'Apple', 'AndroidNative', 'AndroidJava',
+     * 'Windows'
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.clientCallback] The callback URL that the client
+     * can optionally provide to get status updates for the current symbol upload
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    begin(symbolType: string, options: { clientCallback? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    begin(symbolType: string, callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * Repositories
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the SonomaClient.
+ */
+export interface Repositories {
+
+    /**
+     * Gets the repositories available from the source code host
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    list(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    list(callback: ServiceCallback<any>): void;
+
+    /**
+     * Returns the repository build configuration status of the app
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getBuildConfigurationStatus(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getBuildConfigurationStatus(callback: ServiceCallback<any>): void;
+
+    /**
+     * Configures the repository for build
+     *
+     * @param {string} repoUrl The repository url
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    configureBuild(repoUrl: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    configureBuild(repoUrl: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Removes the configuration for the respository
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deleteConfiguration(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    deleteConfiguration(callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * Packages
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the SonomaClient.
+ */
+export interface Packages {
+
+    /**
+     * Return the details for this package.
+     *
+     * @param {string} packageId The ID of the package
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    get(packageId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PackageDetails>): void;
+    get(packageId: string, callback: ServiceCallback<models.PackageDetails>): void;
+
+    /**
+     * Return detailed information about available packages.
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.filter] An OData style filter. Currently only
+     * support the 'eq' comparision type. E.g. ?$filter=status eq 'Availabe'
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    list(options: { filter? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PackageDetails[]>): void;
+    list(callback: ServiceCallback<models.PackageDetails[]>): void;
+}
+
+/**
+ * @class
+ * PackageModel
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the SonomaClient.
+ */
+export interface PackageModel {
+
+    /**
+     * Updates a package.
+     *
+     * @param {string} packageId The ID of the package
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.status] The package state.<br>
+     * <b>available</b>: The uploaded package has been distributed.<br>
+     * <b>unavailable</b>: The uploaded package is not visible to the user. <br>
+     * . Possible values include: 'available', 'unavailable'
+     * 
+     * @param {string} [options.releaseNotes] Release notes for this package.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    update(packageId: string, options: { status? : string, releaseNotes? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    update(packageId: string, callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * PackageUpload
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the SonomaClient.
+ */
+export interface PackageUpload {
+
+    /**
+     * Commits or aborts the upload process for a package for the specified
+     * application
+     *
+     * @param {string} uploadId The ID of the upload
+     * 
+     * @param {string} status The desired operation for the upload. Possible
+     * values include: 'committed', 'aborted'
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    commitOrAbort(uploadId: string, status: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    commitOrAbort(uploadId: string, status: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Begins the upload process for a new package for the specified application
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    begin(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    begin(callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * CrashOperations
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the SonomaClient.
+ */
+export interface CrashOperations {
+
+    /**
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.crashGroupId] Filter by group. Can be empty
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getHistogramPlatforms(options: { crashGroupId? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Segmentation>): void;
+    getHistogramPlatforms(callback: ServiceCallback<models.Segmentation>): void;
+
+    /**
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.crashGroupId] Filter by group. Can be empty
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getHistogramDevices(options: { crashGroupId? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Segmentation>): void;
+    getHistogramDevices(callback: ServiceCallback<models.Segmentation>): void;
+
+    /**
+     * Crash Histogram. Returns the total number of crashes.
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.crashGroupId] Filter by group. Can be empty
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getHistogramCrashes(options: { crashGroupId? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Histogram>): void;
+    getHistogramCrashes(callback: ServiceCallback<models.Histogram>): void;
+
+    /**
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.crashGroupId] Filter by group. Can be empty
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getHistogramCrashFreeUsers(options: { crashGroupId? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Histogram>): void;
+    getHistogramCrashFreeUsers(callback: ServiceCallback<models.Histogram>): void;
+
+    /**
+     * Gets a stacktrace for a specific error
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getGroupStacktrace(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Stacktrace>): void;
+    getGroupStacktrace(callback: ServiceCallback<models.Stacktrace>): void;
+
+    /**
+     * Gets a stacktrace for a specific error
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getErrorStacktrace(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Stacktrace>): void;
+    getErrorStacktrace(callback: ServiceCallback<models.Stacktrace>): void;
+
+    /**
+     * Gets a specific error for an app
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getCrash(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Crash>): void;
+    getCrash(callback: ServiceCallback<models.Crash>): void;
+
+    /**
+     * Gets all crashes of the app
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getCrashes(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Crash[]>): void;
+    getCrashes(callback: ServiceCallback<models.Crash[]>): void;
+
+    /**
+     * Gets a specific group
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getCrashGroup(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroup>): void;
+    getCrashGroup(callback: ServiceCallback<models.CrashGroup>): void;
+
+    /**
+     * Updates a group
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.status] Possible values include: 'Open', 'Closed',
+     * 'Ignored'
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    patchCrashGroup(options: { status? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroup>): void;
+    patchCrashGroup(callback: ServiceCallback<models.CrashGroup>): void;
+
+    /**
+     * @summary Gets a list of crashes
+     *
+     * Gets a list of crashes
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getCrashGroups(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroup[]>): void;
+    getCrashGroups(callback: ServiceCallback<models.CrashGroup[]>): void;
+}
+
+/**
+ * @class
+ * Commits
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the SonomaClient.
+ */
+export interface Commits {
+
+    /**
+     * Returns commit information for a batch of shas
+     *
+     * @param {string} shaCollection A collection of commit SHAs comma-delimited
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    list(shaCollection: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Branch[]>): void;
+    list(shaCollection: string, callback: ServiceCallback<models.Branch[]>): void;
+}
+
+/**
+ * @class
+ * Builds
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the SonomaClient.
+ */
+export interface Builds {
+
+    /**
+     * Returns the build detail for the given build ID
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    get(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Build>): void;
+    get(callback: ServiceCallback<models.Build>): void;
+
+    /**
+     * Updates the build properties
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.status] The build status
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    update(options: { status? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Build>): void;
+    update(callback: ServiceCallback<models.Build>): void;
+
+    /**
+     * Returns the list of builds for the branch
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    list(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Build[]>): void;
+    list(callback: ServiceCallback<models.Build[]>): void;
+
+    /**
+     * Create a build
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    create(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Build[]>): void;
+    create(callback: ServiceCallback<models.Build[]>): void;
 }
 
 /**
@@ -695,66 +1047,6 @@ export interface Branches {
      */
     list(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     list(callback: ServiceCallback<any>): void;
-}
-
-/**
- * @class
- * Builds
- * __NOTE__: An instance of this class is automatically created for an
- * instance of the SonomaClient.
- */
-export interface Builds {
-
-    /**
-     * Returns the list of builds for the branch
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    list(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Build[]>): void;
-    list(callback: ServiceCallback<models.Build[]>): void;
-
-    /**
-     * Create a build
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    create(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Build[]>): void;
-    create(callback: ServiceCallback<models.Build[]>): void;
-}
-
-/**
- * @class
- * VersionsOperations
- * __NOTE__: An instance of this class is automatically created for an
- * instance of the SonomaClient.
- */
-export interface VersionsOperations {
-
-    /**
-     * Count of active versions in the time range ordered by version.
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    counts(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Versions>): void;
-    counts(callback: ServiceCallback<models.Versions>): void;
 }
 
 /**

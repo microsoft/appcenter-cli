@@ -25,6 +25,287 @@ function Builds(client) {
 }
 
 /**
+ * Returns the build detail for the given build ID
+ *
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *                      See {@link Build} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Builds.prototype.get = function (options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (this.client.buildId === null || this.client.buildId === undefined || typeof this.client.buildId !== 'number') {
+      throw new Error('this.client.buildId cannot be null or undefined and it must be of type number.');
+    }
+    if (this.client.buildId !== null && this.client.buildId !== undefined) {
+      if (this.client.buildId <= 0)
+      {
+        throw new Error('"this.client.buildId" should satisfy the constraint - "ExclusiveMinimum": 0');
+      }
+    }
+    if (this.client.ownerName === null || this.client.ownerName === undefined || typeof this.client.ownerName.valueOf() !== 'string') {
+      throw new Error('this.client.ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (this.client.appName === null || this.client.appName === undefined || typeof this.client.appName.valueOf() !== 'string') {
+      throw new Error('this.client.appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var requestUrl = this.client.baseUri +
+                   '//v0.1/apps/{owner_name}/{app_name}/builds/{build_id}';
+  requestUrl = requestUrl.replace('{build_id}', encodeURIComponent(this.client.buildId.toString()));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(this.client.ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(this.client.appName));
+  // trim all duplicate forward slashes in the url
+  var regex = /([^:]\/)\/+/gi;
+  requestUrl = requestUrl.replace(regex, '$1');
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['Build']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * Updates the build properties
+ *
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {string} [options.status] The build status
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *                      See {@link Build} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Builds.prototype.update = function (options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  var status = (options && options.status !== undefined) ? options.status : undefined;
+  // Validate
+  try {
+    if (this.client.buildId === null || this.client.buildId === undefined || typeof this.client.buildId !== 'number') {
+      throw new Error('this.client.buildId cannot be null or undefined and it must be of type number.');
+    }
+    if (this.client.buildId !== null && this.client.buildId !== undefined) {
+      if (this.client.buildId <= 0)
+      {
+        throw new Error('"this.client.buildId" should satisfy the constraint - "ExclusiveMinimum": 0');
+      }
+    }
+    if (this.client.ownerName === null || this.client.ownerName === undefined || typeof this.client.ownerName.valueOf() !== 'string') {
+      throw new Error('this.client.ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (this.client.appName === null || this.client.appName === undefined || typeof this.client.appName.valueOf() !== 'string') {
+      throw new Error('this.client.appName cannot be null or undefined and it must be of type string.');
+    }
+    if (status !== null && status !== undefined && typeof status.valueOf() !== 'string') {
+      throw new Error('status must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  var properties;
+  if (status !== null && status !== undefined) {
+      properties = new client.models['BuildPatch']();
+      properties.status = status;
+  }
+
+  // Construct URL
+  var requestUrl = this.client.baseUri +
+                   '//v0.1/apps/{owner_name}/{app_name}/builds/{build_id}';
+  requestUrl = requestUrl.replace('{build_id}', encodeURIComponent(this.client.buildId.toString()));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(this.client.ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(this.client.appName));
+  // trim all duplicate forward slashes in the url
+  var regex = /([^:]\/)\/+/gi;
+  requestUrl = requestUrl.replace(regex, '$1');
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'PATCH';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (properties !== null && properties !== undefined) {
+      var requestModelMapper = new client.models['BuildPatch']().mapper();
+      requestModel = client.serialize(requestModelMapper, properties, 'properties');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(properties, {depth: null})));
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['Build']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
  * Returns the list of builds for the branch
  *
  * @param {object} [options] Optional Parameters.

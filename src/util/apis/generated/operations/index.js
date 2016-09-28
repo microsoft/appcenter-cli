@@ -12,10 +12,21 @@
 
 exports.Invitations = require('./invitations');
 exports.Users = require('./users');
-exports.Apps = require('./apps');
-exports.Branches = require('./branches');
-exports.Builds = require('./builds');
+exports.XcodeVersions = require('./xcodeVersions');
 exports.VersionsOperations = require('./versionsOperations');
+exports.Apps = require('./apps');
+exports.Symbols = require('./symbols');
+exports.SymbolUploads = require('./symbolUploads');
+exports.SymbolUpLoadsOperations = require('./symbolUpLoadsOperations');
+exports.SymbolUploadOperations = require('./symbolUploadOperations');
+exports.Repositories = require('./repositories');
+exports.Packages = require('./packages');
+exports.PackageModel = require('./packageModel');
+exports.PackageUpload = require('./packageUpload');
+exports.CrashOperations = require('./crashOperations');
+exports.Commits = require('./commits');
+exports.Builds = require('./builds');
+exports.Branches = require('./branches');
 exports.Sessions = require('./sessions');
 exports.Devices = require('./devices');
 exports.Available = require('./available');
