@@ -60,12 +60,16 @@ export class AuthTokenClient {
     this.fetch = chainFilters(filters, authFilter, httpFailedFilter, logFilter)(fetch);
   }
 
+  rootEndpoint(): string {
+    return `${this.endpoint}/v0.1/api_tokens`;
+  }
+
   async createToken(): Promise<CreateAuthTokenResponse> {
     const request: PostAuthTokenRequest = {
       description: "Created by sonoma-cli login",
     };
 
-    return await this.fetch(`${this.endpoint}/v0.1/auth_tokens`, {
+    return await this.fetch(this.rootEndpoint(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -77,7 +81,7 @@ export class AuthTokenClient {
   }
 
   async deleteToken(tokenId: string): Promise<DeleteAuthTokenResponse> {
-    return await this.fetch(`${this.endpoint}/v0.1/auth_tokens/${tokenId}`, {
+    return await this.fetch(`${this.rootEndpoint()}/${tokenId}`, {
       method: "DELETE",
     });
   }
