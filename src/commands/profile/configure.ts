@@ -2,7 +2,6 @@
 
 import { Command, CommandResult, success, failure, ErrorCodes } from "../../util/commandline";
 import { prompt, out } from "../../util/interaction";
-import * as inquirer from "inquirer";
 import { getUser } from "../../util/profile";
 import { UserClient } from "../../util/apis/users";
 
@@ -21,7 +20,7 @@ export default class ProfileConfigureCommand extends Command {
     const userClient = new UserClient(currentUser.endpoint, currentUser.accessToken);
     let profile = await out.progress("Getting current user profile...", userClient.getUser());
 
-    const questions: inquirer.Questions = [
+    const questions: any[] = [
       {
         type: "input",
         name: "display_name",
@@ -30,7 +29,7 @@ export default class ProfileConfigureCommand extends Command {
       }
     ];
 
-    const answers = await inquirer.prompt(questions);
+    const answers = await prompt.question(questions);
     const anyChanged = Object.keys(answers).some(k => answers[k] !== (<any>profile)[k]);
 
     if (anyChanged) {
