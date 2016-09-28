@@ -7,7 +7,10 @@ const ts = require('gulp-typescript');
 let tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('clean', function (done) {
-  rimraf('dist', done);
+  rimraf('dist', function (err) {
+    if (err) { return done(err); }
+    rimraf('src/apis/generated', done);
+  });
 });
 
 gulp.task('build-ts', function () {

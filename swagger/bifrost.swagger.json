@@ -4531,6 +4531,7 @@
     },
     "parameters": {
         "app_name": {
+            "x-ms-parameter-location": "method",
             "name": "app_name",
             "type": "string",
             "in": "path",
@@ -4538,6 +4539,7 @@
             "required": true
         },
         "owner_name": {
+            "x-ms-parameter-location": "method",
             "name": "owner_name",
             "type": "string",
             "in": "path",
@@ -4545,6 +4547,7 @@
             "required": true
         },
         "build_id": {
+            "x-ms-parameter-location": "method",
             "name": "build_id",
             "in": "path",
             "description": "The build ID",
@@ -4554,6 +4557,7 @@
             "exclusiveMinimum": true
         },
         "branch": {
+            "x-ms-parameter-location": "method",
             "name": "branch",
             "in": "path",
             "description": "The branch name",
@@ -4561,6 +4565,7 @@
             "type": "string"
         },
         "sha": {
+            "x-ms-parameter-location": "method",
             "name": "sha",
             "in": "path",
             "description": "The SHA hash",
@@ -4569,6 +4574,7 @@
             "pattern": "^[0-9a-f]{5,40}$"
         },
         "form": {
+            "x-ms-parameter-location": "method",
             "name": "form",
             "in": "query",
             "description": "The selected form of the object",
@@ -4580,6 +4586,7 @@
             ]
         },
         "path_symbol_upload_id": {
+            "x-ms-parameter-location": "method",
             "name": "symbol_upload_id",
             "type": "string",
             "in": "path",
@@ -4587,6 +4594,7 @@
             "required": true
         },
         "path_symbol_id": {
+            "x-ms-parameter-location": "method",
             "name": "symbol_id",
             "type": "string",
             "in": "path",
@@ -4594,6 +4602,7 @@
             "required": true
         },
         "path_crash_group_id": {
+            "x-ms-parameter-location": "method",
             "name": "crash_group_id",
             "in": "path",
             "required": true,
@@ -4601,6 +4610,7 @@
             "type": "string"
         },
         "path_crash_id": {
+            "x-ms-parameter-location": "method",
             "name": "crash_id",
             "in": "path",
             "required": true,
@@ -4608,6 +4618,7 @@
             "type": "string"
         },
         "app_version": {
+            "x-ms-parameter-location": "method",
             "name": "app_version",
             "in": "query",
             "type": "string",
@@ -4615,6 +4626,7 @@
             "required": false
         },
         "date_from": {
+            "x-ms-parameter-location": "method",
             "name": "date_from",
             "in": "query",
             "type": "string",
@@ -4623,6 +4635,7 @@
             "required": false
         },
         "date_to": {
+            "x-ms-parameter-location": "method",
             "name": "date_to",
             "in": "query",
             "type": "string",
@@ -4631,6 +4644,7 @@
             "required": false
         },
         "last_occurrence_from": {
+            "x-ms-parameter-location": "method",
             "name": "last_occurrence_from",
             "in": "query",
             "type": "string",
@@ -4639,6 +4653,7 @@
             "required": false
         },
         "last_occurrence_to": {
+            "x-ms-parameter-location": "method",
             "name": "last_occurrence_to",
             "in": "query",
             "type": "string",
@@ -4647,6 +4662,7 @@
             "required": false
         },
         "error_type": {
+            "x-ms-parameter-location": "method",
             "name": "error_type",
             "in": "query",
             "type": "string",
@@ -4657,6 +4673,7 @@
             ]
         },
         "group_type": {
+            "x-ms-parameter-location": "method",
             "name": "group_type",
             "in": "query",
             "type": "string",
@@ -4667,6 +4684,7 @@
             ]
         },
         "group_status": {
+            "x-ms-parameter-location": "method",
             "name": "group_status",
             "in": "query",
             "type": "string",
@@ -4678,6 +4696,7 @@
             ]
         },
         "include_report": {
+            "x-ms-parameter-location": "method",
             "name": "include_report",
             "in": "query",
             "type": "boolean",
@@ -4686,6 +4705,7 @@
             "description": "true if the error should include the raw error report. Default is false"
         },
         "include_log": {
+            "x-ms-parameter-location": "method",
             "name": "include_log",
             "in": "query",
             "type": "boolean",
@@ -4694,6 +4714,7 @@
             "description": "true if the error should include the custom log report. Default is false"
         },
         "group_text_search": {
+            "x-ms-parameter-location": "method",
             "name": "group_text_search",
             "in": "query",
             "type": "string",
@@ -4701,6 +4722,7 @@
             "description": "A freetext search that matches in error, error types, error stack_traces and error user"
         },
         "StartParameter": {
+            "x-ms-parameter-location": "method",
             "name": "start",
             "in": "query",
             "description": "Start date time in data in ISO 8601 date time format",
@@ -4709,6 +4731,7 @@
             "format": "date-time"
         },
         "EndParameter": {
+            "x-ms-parameter-location": "method",
             "name": "end",
             "in": "query",
             "description": "Last date time in data in ISO 8601 date time format.",
@@ -4717,6 +4740,7 @@
             "format": "date-time"
         },
         "IntervalParameter": {
+            "x-ms-parameter-location": "method",
             "name": "interval",
             "in": "query",
             "description": "Size of interval in ISO 8601 duration format. (PnYnMnDTnHnMnS|PnW|P<date>T<time>). The valid durations are 1 day (P1D), 1 week (P1W), and 30 days (P30D).",
@@ -4725,6 +4749,7 @@
             "format": "Timespan"
         },
         "VersionsParameter": {
+            "x-ms-parameter-location": "method",
             "name": "versions",
             "in": "query",
             "required": false,
@@ -4735,6 +4760,7 @@
             "collectionFormat": "pipes"
         },
         "CountParameter": {
+            "x-ms-parameter-location": "method",
             "name": "count",
             "in": "query",
             "description": "The number of results to return",
@@ -4743,6 +4769,7 @@
             "format": "int64"
         },
         "TopParameter": {
+            "x-ms-parameter-location": "method",
             "name": "$top",
             "in": "query",
             "description": "The maximum number of results to return.",
@@ -4754,6 +4781,7 @@
             "format": "int64"
         },
         "SkipParameter": {
+            "x-ms-parameter-location": "method",
             "name": "$skip",
             "in": "query",
             "description": "The offset (starting at 0) of the first result to return. This parameter along with limit is used to perform pagination.",
@@ -4764,6 +4792,7 @@
             "format": "int64"
         },
         "FilterParameter": {
+            "x-ms-parameter-location": "method",
             "name": "$filter",
             "in": "query",
             "description": "A filter as specified in https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.",
@@ -4772,6 +4801,7 @@
             "format": "string"
         },
         "InlineCountParameter": {
+            "x-ms-parameter-location": "method",
             "name": "$inlinecount",
             "in": "query",
             "description": "Controls whether or not to include a count of all the items accross all pages.",
