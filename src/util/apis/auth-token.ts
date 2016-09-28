@@ -25,7 +25,7 @@ export class AuthTokenClient extends ClientBase {
   constructor(endpoint: string, accessToken: string, filters?: FetchFilter);
   constructor(...args: any[])
   {
-    let endpoint: string;
+    let endpoint: string = args[0];
     let authFilter: FetchFilter;
     let filters: FetchFilter;
 

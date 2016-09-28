@@ -1,6 +1,6 @@
 // Base class for all command handlers
 import * as Result from "./command-result";
-import { longName, getOptionsDescription, getPositionalOptionsDescription } from "./option-decorators";
+import { longName, hasArg, getOptionsDescription, getPositionalOptionsDescription } from "./option-decorators";
 import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "./option-parser";
 
 export class Command {
@@ -12,9 +12,13 @@ export class Command {
   }
 
   // Default arguments supported by every command
-  
+
   @longName("debug")
   public debug: boolean;
+
+  @longName("format")
+  @hasArg
+  public format: string;
 
   run(): Promise<Result.CommandResult> {
     throw new Error("Dev error, should be overridden!");

@@ -4,7 +4,7 @@ import { Command } from "./command";
 import { CommandResult, exception, illegal, notFound } from "./command-result";
 import * as Finder from "./command-finder";
 import * as Loader from "./command-loader";
-import { setDebug, isDebug } from "../interaction";
+import { setDebug, isDebug, setFormatJson } from "../interaction";
 
 const debug = require("debug")("sonoma-cli:util:commandline:command-runner");
 
@@ -44,6 +44,20 @@ function runner(arg: any): CommandRunner {
       const commandObj = new factory(newCommand);
       if (commandObj.debug) {
         setDebug();
+      }
+
+      if(commandObj.format) {
+        switch(commandObj.format) {
+          case null:
+          case "":
+            break;
+          case "json":
+            setFormatJson();
+            break;
+
+          default:
+            throw new Error(`Unknown output format ${commandObj.format}`);
+        }
       }
 
       return await commandObj.run();
