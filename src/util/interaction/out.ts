@@ -29,6 +29,14 @@ export function progress<T>(title: string, action: Promise<T>): Promise<T> {
 }
 
 //
+// Output an array of items, passing each item through a formatting
+// function.
+//
+export function list<T>(formatter: {(item: T): string}, items: T[]): void {
+  items.map(formatter).forEach(text => console.log(text));
+}
+
+//
 // Export a line of plain text.
 //
 export function text(t: string): void {

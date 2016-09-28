@@ -61,6 +61,11 @@ export function notFound(command: string): CommandResult {
     `Command ${command} not found`);
 }
 
+export function notLoggedIn(command: string): CommandResult {
+  return failure(ErrorCodes.NotLoggedIn,
+    `Command '${command}' requires a logged in user. Use the 'sonoma login' command to log in.`);
+}
+
 export function exception(command: string, ex: Error): CommandResult {
   return {
     succeeded: false,
