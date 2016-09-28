@@ -3,7 +3,7 @@ const debug = require("debug")("sonoma-cli:util:interaction:out");
 import { inspect } from "util";
 
 // TODO: Support format setting, debug flag
-import { isDebug } from "./debug";
+import { isDebug, formatIsJson } from "./io-options";
 
 import * as os from "os";
 import * as wrap from "wordwrap";
@@ -15,6 +15,7 @@ const Spinner = require("cli-spinner").Spinner;
 // to complete.
 //
 export function progress<T>(title: string, action: Promise<T>): Promise<T> {
+  if (!formatIsJson()) {
     const spinner = new Spinner(title);
     spinner.start();
     return action.then(result => {
@@ -25,7 +26,9 @@ export function progress<T>(title: string, action: Promise<T>): Promise<T> {
       spinner.stop(true);
       throw ex;
     });
-
+  }  else {
+    return action;
+  }
 }
 
 //
@@ -33,14 +36,20 @@ export function progress<T>(title: string, action: Promise<T>): Promise<T> {
 // function.
 //
 export function list<T>(formatter: {(item: T): string}, items: T[]): void {
-  items.map(formatter).forEach(text => console.log(text));
+  if (!formatIsJson()) {
+    items.map(formatter).forEach(text => console.log(text));
+  } else {
+    console.log(JSON.stringify(items));
+  }
 }
 
 //
 // Export a line of plain text.
 //
 export function text(t: string): void {
-  console.log(t);
+  if (!formatIsJson()) {
+    console.log(t);
+  }
 }
 
 //
@@ -232,10 +241,14 @@ function makeReport(...args: any[]): void {
     nullMessage = "No data available";
   }
 
-  if (data === null || data === undefined) {
-    console.log(nullMessage);
+  if (!formatIsJson()) {
+    if (data === null || data === undefined) {
+      console.log(nullMessage);
+    } else {
+      doReport(0, reportFormat, data, console.log);
+    }
   } else {
-    doReport(0, reportFormat, data, console.log);
+     console.log(JSON.stringify(data));
   }
 }
 

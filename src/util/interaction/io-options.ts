@@ -6,5 +6,10 @@
 let debug: boolean = false;
 
 export function isDebug(): boolean { return debug; }
-
 export function setDebug(): void { debug = true; }
+
+
+let format: string = "list";
+
+export function formatIsJson(): boolean { return format === "json"; };
+export function setFormatJson(): void{ format = "json"; }
