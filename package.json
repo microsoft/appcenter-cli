@@ -7,9 +7,10 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "build": "gulp build",
+    "build": "tsc",
     "test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s",
     "watch-test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s --watch",
+    "autorest": "autorest -i swagger/bifrost.swagger.json -AddCredentials true -ClientName SonomaClient -CodeGenerator NodeJS -OutputDirectory ./src/util/apis/generated -ft 3",
     "clean": "gulp clean"
   },
   "repository": {
@@ -39,6 +40,7 @@
     "inquirer": "^1.1.3",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
+    "ms-rest": "^1.15.0",
     "node-fetch": "^1.6.1",
     "wordwrap": "^1.0.0"
   }
