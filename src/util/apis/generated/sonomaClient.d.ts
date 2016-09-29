@@ -4,8 +4,12 @@
  * regenerated.
  */
 
-import { ServiceClientOptions, RequestOptions, ServiceCallback } from 'ms-rest';
+import { ServiceClientOptions, RequestOptions, ServiceCallback, WebResource } from 'ms-rest';
 import * as operations from "./operations";
+
+declare interface ServiceClientCredentials {
+    signRequest: { (webResource: WebResource, callback:{(err: Error): void } ) : void };
+}
 
 declare class SonomaClient {
     /**
