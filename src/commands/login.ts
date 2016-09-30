@@ -9,6 +9,9 @@ import { UserClient, GetUserResponse } from "../util/apis";
 import { inspect } from "util";
 
 import SonomaClient = require("../util/apis/generated/SonomaClient");
+import { ApiTokensPostResponse, UserProfileResponse } from "../util/apis/generated/models";
+import { ApiTokens, Users } from "../util/apis/generated/operations";
+
 import { ServiceClientCredentials } from "ms-rest";
 import { SonomaClientCredentials } from "../util/apis/sonoma-client-credentials";
 const BasicAuthenticationCredentials = require("ms-rest").BasicAuthenticationCredentials;
@@ -90,17 +93,16 @@ export default class LoginCommand extends Command {
     return user;
   }
 
-  private async doLoginAutorest(): Promise<GetUserResponse> {
-    let token = await out.progress("Logging in ...", this.createAuthTokenAutorest());
+  private async doLoginAutorest(): Promise<void> {
+    let token: ApiTokensPostResponse = await out.progress("Logging in ...", this.createAuthTokenAutorest());
     debug(`Got response = ${inspect(token)}`);
-    let user = await out.progress("Getting user info ...", this.getUserInfoAutorest(token.apiToken));
+    let user: UserProfileResponse = await out.progress("Getting user info ...", this.getUserInfoAutorest(token.apiToken));
     debug(`Got response = ${inspect(user)}`);
     saveUser(user, token, this.environmentName);
     out.text(`Loggin in as ${user.name}`);
-    return user;
   }
 
-  private createAuthTokenAutorest(): Promise<any> {
+  private createAuthTokenAutorest(): Promise<ApiTokensPostResponse> {
     const endpoint = environments(this.environmentName).endpoint;
     const creds: ServiceClientCredentials = new BasicAuthenticationCredentials(this.userName, this.password);
     const client = new SonomaClient(creds, endpoint, {});
@@ -116,7 +118,7 @@ export default class LoginCommand extends Command {
     });
   }
 
-  private getUserInfoAutorest(token: string): Promise<any> {
+  private getUserInfoAutorest(token: string): Promise<UserProfileResponse> {
     const endpoint = environments(this.environmentName).endpoint;
     const creds: ServiceClientCredentials = new SonomaClientCredentials(token);
     const client = new SonomaClient(creds, endpoint, {});

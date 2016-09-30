@@ -73,7 +73,7 @@ export function getUser(): Profile {
   return currentProfile;
 }
 
-export function saveUser(user: any, token: any, environment: string): void {
+export function saveUser(user: any, token: any, environment: string): Profile {
   let profile = {
     userId: user.id,
     userName: user.name,
@@ -87,6 +87,7 @@ export function saveUser(user: any, token: any, environment: string): void {
 
   mkdirp.sync(getProfileDir());
   fs.writeFileSync(getProfileFilename(), JSON.stringify(profile), { encoding: "utf8" });
+  return profile;
 }
 
 export function deleteUser() {
