@@ -8,6 +8,11 @@ import { UserClient, GetUserResponse } from "../util/apis";
 
 import { inspect } from "util";
 
+import SonomaClient = require("../util/apis/generated/SonomaClient");
+import { ServiceClientCredentials } from "ms-rest";
+import { SonomaClientCredentials } from "../util/apis/sonoma-client-credentials";
+const BasicAuthenticationCredentials = require("ms-rest").BasicAuthenticationCredentials;
+
 const debug = require("debug")("sonoma-cli:commands:login");
 
 @help("Log in to the sonoma system.")
@@ -63,10 +68,11 @@ export default class LoginCommand extends Command {
     }
 
     await this.removeLoggedInUser();
-    await this.doLogin();
+    await this.doLoginAutorest();
 
     return success();
   }
+
 
   private async doLogin(): Promise<GetUserResponse> {
     const endpoint = environments(this.environmentName).endpoint;
@@ -82,6 +88,48 @@ export default class LoginCommand extends Command {
 
     out.text(`Logged in as ${user.name}`);
     return user;
+  }
+
+  private async doLoginAutorest(): Promise<GetUserResponse> {
+    let token = await out.progress("Logging in ...", this.createAuthTokenAutorest());
+    debug(`Got response = ${inspect(token)}`);
+    let user = await out.progress("Getting user info ...", this.getUserInfoAutorest(token.apiToken));
+    debug(`Got response = ${inspect(user)}`);
+    saveUser(user, token, this.environmentName);
+    out.text(`Loggin in as ${user.name}`);
+    return user;
+  }
+
+  private createAuthTokenAutorest(): Promise<any> {
+    const endpoint = environments(this.environmentName).endpoint;
+    const creds: ServiceClientCredentials = new BasicAuthenticationCredentials(this.userName, this.password);
+    const client = new SonomaClient(creds, endpoint, {});
+
+    return new Promise((resolve, reject) => {
+      client.apiTokens.create({description: "Created from sonoma cli"}, function (err, result) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  }
+
+  private getUserInfoAutorest(token: string): Promise<any> {
+    const endpoint = environments(this.environmentName).endpoint;
+    const creds: ServiceClientCredentials = new SonomaClientCredentials(token);
+    const client = new SonomaClient(creds, endpoint, {});
+
+    return new Promise((resolve, reject) => {
+      client.users.get(function (err, result) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
   }
 
   private async removeLoggedInUser(): Promise<void> {

@@ -27,9 +27,6 @@ function ApiTokens(client) {
 /**
  * Delete the api_token object with the specific id
  *
- * @param {string} authorization The basic auth header including the
- * base64-encoded username or email and password
- * 
  * @param {string} apiTokenId The unique ID (UUID) of the api token
  * 
  * @param {object} [options] Optional Parameters.
@@ -49,7 +46,7 @@ function ApiTokens(client) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-ApiTokens.prototype.deleteMethod = function (authorization, apiTokenId, options, callback) {
+ApiTokens.prototype.deleteMethod = function (apiTokenId, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -60,9 +57,6 @@ ApiTokens.prototype.deleteMethod = function (authorization, apiTokenId, options,
   }
   // Validate
   try {
-    if (authorization === null || authorization === undefined || typeof authorization.valueOf() !== 'string') {
-      throw new Error('authorization cannot be null or undefined and it must be of type string.');
-    }
     if (apiTokenId === null || apiTokenId === undefined || typeof apiTokenId.valueOf() !== 'string') {
       throw new Error('apiTokenId cannot be null or undefined and it must be of type string.');
     }
@@ -84,9 +78,6 @@ ApiTokens.prototype.deleteMethod = function (authorization, apiTokenId, options,
   httpRequest.headers = {};
   httpRequest.url = requestUrl;
   // Set Headers
-  if (authorization !== undefined && authorization !== null) {
-    httpRequest.headers['Authorization'] = authorization;
-  }
   if(options) {
     for(var headerName in options['customHeaders']) {
       if (options['customHeaders'].hasOwnProperty(headerName)) {
@@ -185,9 +176,6 @@ ApiTokens.prototype.deleteMethod = function (authorization, apiTokenId, options,
 /**
  * Returns api tokens for the authenticated user
  *
- * @param {string} authorization The basic auth header including the
- * base64-encoded username or email and password
- * 
  * @param {object} [options] Optional Parameters.
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
@@ -205,7 +193,7 @@ ApiTokens.prototype.deleteMethod = function (authorization, apiTokenId, options,
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-ApiTokens.prototype.list = function (authorization, options, callback) {
+ApiTokens.prototype.list = function (options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -213,14 +201,6 @@ ApiTokens.prototype.list = function (authorization, options, callback) {
   }
   if (!callback) {
     throw new Error('callback cannot be null.');
-  }
-  // Validate
-  try {
-    if (authorization === null || authorization === undefined || typeof authorization.valueOf() !== 'string') {
-      throw new Error('authorization cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
   }
 
   // Construct URL
@@ -236,9 +216,6 @@ ApiTokens.prototype.list = function (authorization, options, callback) {
   httpRequest.headers = {};
   httpRequest.url = requestUrl;
   // Set Headers
-  if (authorization !== undefined && authorization !== null) {
-    httpRequest.headers['Authorization'] = authorization;
-  }
   if(options) {
     for(var headerName in options['customHeaders']) {
       if (options['customHeaders'].hasOwnProperty(headerName)) {
@@ -337,9 +314,6 @@ ApiTokens.prototype.list = function (authorization, options, callback) {
 /**
  * Creates a new API token
  *
- * @param {string} authorization The basic auth header including the
- * base64-encoded username or email and password
- * 
  * @param {object} [options] Optional Parameters.
  * 
  * @param {string} [options.description] The description of the token
@@ -359,7 +333,7 @@ ApiTokens.prototype.list = function (authorization, options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-ApiTokens.prototype.create = function (authorization, options, callback) {
+ApiTokens.prototype.create = function (options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -371,9 +345,6 @@ ApiTokens.prototype.create = function (authorization, options, callback) {
   var description = (options && options.description !== undefined) ? options.description : undefined;
   // Validate
   try {
-    if (authorization === null || authorization === undefined || typeof authorization.valueOf() !== 'string') {
-      throw new Error('authorization cannot be null or undefined and it must be of type string.');
-    }
     if (description !== null && description !== undefined && typeof description.valueOf() !== 'string') {
       throw new Error('description must be of type string.');
     }
@@ -399,9 +370,6 @@ ApiTokens.prototype.create = function (authorization, options, callback) {
   httpRequest.headers = {};
   httpRequest.url = requestUrl;
   // Set Headers
-  if (authorization !== undefined && authorization !== null) {
-    httpRequest.headers['Authorization'] = authorization;
-  }
   if(options) {
     for(var headerName in options['customHeaders']) {
       if (options['customHeaders'].hasOwnProperty(headerName)) {

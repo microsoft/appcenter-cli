@@ -2866,13 +2866,6 @@
                 "description": "Delete the api_token object with the specific id",
                 "parameters": [
                     {
-                        "name": "Authorization",
-                        "type": "string",
-                        "in": "header",
-                        "description": "The basic auth header including the base64-encoded username or email and password",
-                        "required": true
-                    },
-                    {
                         "name": "api_token_id",
                         "type": "string",
                         "in": "path",
@@ -2912,13 +2905,6 @@
                 "operationId": "ApiTokens_List",
                 "description": "Returns api tokens for the authenticated user",
                 "parameters": [
-                    {
-                        "name": "Authorization",
-                        "type": "string",
-                        "in": "header",
-                        "description": "The basic auth header including the base64-encoded username or email and password",
-                        "required": true
-                    }
                 ],
                 "responses": {
                     "200": {
@@ -2950,13 +2936,6 @@
                 "operationId": "ApiTokens_Create",
                 "description": "Creates a new API token",
                 "parameters": [
-                    {
-                        "name": "Authorization",
-                        "type": "string",
-                        "in": "header",
-                        "description": "The basic auth header including the base64-encoded username or email and password",
-                        "required": true
-                    },
                     {
                         "name": "description",
                         "in": "body",

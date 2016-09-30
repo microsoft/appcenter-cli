@@ -1660,9 +1660,6 @@ export interface ApiTokens {
     /**
      * Delete the api_token object with the specific id
      *
-     * @param {string} authorization The basic auth header including the
-     * base64-encoded username or email and password
-     * 
      * @param {string} apiTokenId The unique ID (UUID) of the api token
      * 
      * @param {object} [options] Optional Parameters.
@@ -1673,15 +1670,12 @@ export interface ApiTokens {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    deleteMethod(authorization: string, apiTokenId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    deleteMethod(authorization: string, apiTokenId: string, callback: ServiceCallback<any>): void;
+    deleteMethod(apiTokenId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    deleteMethod(apiTokenId: string, callback: ServiceCallback<any>): void;
 
     /**
      * Returns api tokens for the authenticated user
      *
-     * @param {string} authorization The basic auth header including the
-     * base64-encoded username or email and password
-     * 
      * @param {object} [options] Optional Parameters.
      * 
      * @param {object} [options.customHeaders] Headers that will be added to the
@@ -1690,15 +1684,12 @@ export interface ApiTokens {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    list(authorization: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    list(authorization: string, callback: ServiceCallback<any>): void;
+    list(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    list(callback: ServiceCallback<any>): void;
 
     /**
      * Creates a new API token
      *
-     * @param {string} authorization The basic auth header including the
-     * base64-encoded username or email and password
-     * 
      * @param {object} [options] Optional Parameters.
      * 
      * @param {string} [options.description] The description of the token
@@ -1709,6 +1700,6 @@ export interface ApiTokens {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    create(authorization: string, options: { description? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    create(authorization: string, callback: ServiceCallback<any>): void;
+    create(options: { description? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    create(callback: ServiceCallback<any>): void;
 }
