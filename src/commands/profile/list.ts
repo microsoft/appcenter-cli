@@ -12,16 +12,19 @@ export default class ProfileListCommand extends Command {
 
   async run(): Promise<CommandResult> {
     const currentUser = getUser();
-    const client = new UserClient(currentUser.endpoint, currentUser.accessToken);
-    const userInfo = await out.progress("Getting user information ...", client.getUser());
+    if (currentUser !== null) {
+      const client = new UserClient(currentUser.endpoint, currentUser.accessToken);
+      const userInfo = await out.progress("Getting user information ...", client.getUser());
 
-    out.report(
-      [
-        ["Username", "name" ],
-        [ "Display Name", "display_name" ],
-        [ "Email", "email"]
-      ], userInfo);
-
+      out.report(
+        [
+          ["Username", "name" ],
+          [ "Display Name", "display_name" ],
+          [ "Email", "email"]
+        ], userInfo);
+    } else {
+      out.text("Not logged in.");
+    }
     return success();
   }
 }

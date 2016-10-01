@@ -58,26 +58,22 @@ export default class LoginCommand extends Command {
       });
     }
 
+    await this.removeLoggedInUser();
     await this.doLogin();
 
     return success();
   }
 
   private async doLogin(): Promise<GetUserResponse> {
-    if (getUser() !== null) {
-
-    }
-
     const endpoint = environments(this.environmentName).endpoint;
-
     const tokenClient = new AuthTokenClient(endpoint, this.userName, this.password);
 
     let token = await out.progress("Logging in ...", tokenClient.createToken());
-
     debug(`Got response = ${inspect(token)}`);
 
     let userClient = new UserClient(endpoint, token.api_token);
     let user = await out.progress("Getting user info ...", userClient.getUser());
+
     saveUser(user, token, this.environmentName);
 
     out.text(`Logged in as ${user.name}`);
@@ -85,14 +81,14 @@ export default class LoginCommand extends Command {
   }
 
   private async removeLoggedInUser(): Promise<void> {
-    // TODO: Can't currently delete existing token off server since
-    // you have to have a password at the moment to manage api keys.
-    // Server is changing, finish this stuff then.
-
     const currentUser = getUser();
     if (currentUser !== null) {
-      // TODO: remove existing token
-
+      debug(`Currently logged in as ${currentUser.userName}, removing token id ${currentUser.accessTokenId}`);
+      const tokenClient = new AuthTokenClient(currentUser.endpoint, currentUser.accessToken);
+      await out.progress("Cleaning up existing user...",
+        tokenClient.deleteToken(currentUser.accessTokenId));
+      debug(`Token has been removed`);
+      deleteUser();
     }
   }
 }

@@ -66,7 +66,7 @@ function loadProfile(): Profile {
 export function getUser(): Profile {
   if (!currentProfile) {
     currentProfile = loadProfile();
-    if (!currentProfile.endpoint) {
+    if (currentProfile && !currentProfile.endpoint) {
       currentProfile.endpoint = environments(currentProfile.environment).endpoint;
     }
   }
