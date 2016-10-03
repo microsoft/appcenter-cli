@@ -11,6 +11,7 @@ export interface OptionDescription {
   required?: boolean;    // Is this is a required parameter, if not present defaults to false
   defaultValue?: string; // Default value for this option if it's not present
   hasArg?: boolean;      // Does this option take an argument?
+  helpText?: string;     // Help text for this parameter
 }
 
 export interface OptionsDescription {
@@ -35,6 +36,7 @@ export interface PositionalOptionDescription {
   position: number;      // if null, is the "rest" argument and consumes any leftover positional args
   required?: boolean;    // Is this a required parameter?
   defaultValue?: string; // Default value for this arg if not present
+  helpText?: string;     // Help text for this parameter
 }
 
 export type PositionalOptionsDescription = PositionalOptionDescription[];
