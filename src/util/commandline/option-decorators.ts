@@ -1,10 +1,14 @@
 import { OptionsDescription, OptionDescription, PositionalOptionsDescription, PositionalOptionDescription } from "./option-parser";
+import { inspect } from "util";
+
+const debug = require("debug")("sonoma-cli:util:commandline:option-decorators");
 
 const optionDescriptionKey = Symbol("OptionParameters");
 const positionalDescriptionKey = Symbol("PositionalParameters");
 const unknownRequiredsKey = Symbol("UnknownRequireds");
 const unknownDefaultValueKey = Symbol("UnknownDefaultValues");
 const unknownHelpTextKey = Symbol("UnknownDescription");
+
 
 export const classHelpTextKey = Symbol("ClassHelpText");
 
@@ -143,32 +147,23 @@ export function defaultValue(value: string): PropertyDecorator {
   };
 }
 
-
-// Helptext decorator for parameters
-function parameterHelpText(help: string): PropertyDecorator {
-  return function parameterHelpTextDecorator(proto: any, propertyKey: string | Symbol): void {
-    saveDecoratedValue(proto, propertyKey, "helpText", help, unknownHelpTextKey);
-  };
-}
-
-// Helptext decorator for class
-function classHelpText(help: string): ClassDecorator {
-  return function classHelpTextDecorator(target: any): any {
-    target[classHelpTextKey] = help;
-    return target;
-  };
-}
-
 // Decorator factory to give a consolidated helptext API across class & parameter
 export function help(helpText: string) : {(...args: any[]): any} {
   return function helpDecoratorFactory(...args: any[]): any {
-    switch(args.length) {
-      case 1:
-        return classHelpText.apply(helpText);
-      case 2:
-        return parameterHelpText(helpText);
-      default:
-        throw new Error("@help not valid in this location");
-    };
+    debug(`@help decorator called with ${args.length} arguments: ${inspect(args)}`);
+    if (args.length === 1) {
+      let ctor = args[0];
+      ctor[classHelpTextKey] = helpText;
+      return ctor;
+    }
+
+    // Typescript docs are incorrect - property decorators get three args, and the last one is
+    // undefined
+    if (args.length === 3 && typeof args[0] === "object" && args[2] === undefined) {
+      let proto = args[0];
+      let propertyName = <string>args[1];
+      return saveDecoratedValue(proto, propertyName, "helpText", help, unknownHelpTextKey);
+    }
+    throw new Error("@help not valid in this location");
   };
 }

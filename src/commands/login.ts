@@ -1,7 +1,7 @@
 // Implementation of Sonoma login command
 
-import { Command, CommandResult, success, failure, shortName, longName, required, hasArg } from "../util/commandline";
-import { environments, getUser, saveUser, deleteUser } from "../util/profile";
+import { Command, CommandResult, success, failure, help, shortName, longName, required, hasArg } from "../util/commandline";
+import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser } from "../util/profile";
 import { prompt, out } from "../util/interaction";
 import { AuthTokenClient, CreateAuthTokenResponse } from "../util/apis";
 import { UserClient, GetUserResponse } from "../util/apis";
@@ -10,21 +10,25 @@ import { inspect } from "util";
 
 const debug = require("debug")("sonoma-cli:commands:login");
 
+@help("Log in to the sonoma system.")
 export default class LoginCommand extends Command {
   constructor(command: string[]) {
     super(command);
   }
 
+  @help("user name to log in as")
   @shortName("u")
   @longName("user")
   @hasArg
   userName: string;
 
+  @help("password to log in with")
   @shortName("p")
   @longName("password")
   @hasArg
   password: string;
 
+  @help(`environment to log into (defaults to ${defaultEnvironmentName()})`)
   @shortName("e")
   @longName("env")
   @hasArg
