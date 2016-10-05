@@ -27,13 +27,39 @@ or Matt Gibbs (matt.gibbs@microsoft.com or @mattgi on Xamarin slack) to get adde
 The repo is set up so that once you've got node and the repo, everything you need to do will work. However, it is
 convenient to install some tools globally in addition.
 
+#### Node Version Management
 
 If you need multiple versions of node on your machine at the same time, consider a node version manager.
 For Mac or Linux, try [nvm](https://github.com/creationix/nvm). For Windows machines, [nodist](https://github.com/marcelklehr/nodist)
 works well.
 
+#### Typescript compiler and Typings
+
+The typescript compilation can be run via the `npm run build` command, but if you want the Typescript compiler available directly,
+install it on you machine by doing `npm install -g typescript`.
+
+The Typings tool is useful if you're bringing in a new exteral Javascript library and want to get access to type definitions
+for that library. The typings files are checked into the repo, but if you want to download and add new ones, you'll need to
+install typings: `npm install -g typings`.
+
+#### ts-node
+
+By default, to run the CLI you need to compile the typescript explicitly first. The `ts-node` command line tool will let you run
+`.ts` files directly from the command line. Install it with `npm install -g ts-node`.
+
+## Troubleshooting
+
 If you are running on a Mac and have to use `sudo` to install global npm modules (for example, `npm install -g typescript`),
 the please check out [this tutorial](https://docs.npmjs.com/getting-started/fixing-npm-permissions).
 
+# Building
+
+After installing node and cloning the repo, do:
+
+ 1. `npm install`
+ 2. `npm run build`
+
+To run the test suite, do:
+ 3. `npm test`
 
 
