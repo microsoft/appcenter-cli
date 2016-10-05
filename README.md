@@ -80,12 +80,12 @@ If you've installed `ts-node` as mentioned above, you can skip the build step an
 # Scripts
 
 There are a bunch of scripts in package.json file. Here's what they are and what they do:
-| Script command | What it does
-|----------------|-------------
-| `npm run build`| Compiles the typescript into javascript, creates `dist` directory
-| `npm run test` | Runs the test suite. Can also be run with `npm test`
-| `npm run watch-test`| Runs a watcher on the test file that will rerun tests automatically on save
-| `npm run clean` | Cleans up any compilation output
+| Script command | What it does |
+|----------------|------------- |
+| `npm run build`| Compiles the typescript into javascript, creates `dist` directory |
+| `npm run test` | Runs the test suite. Can also be run with `npm test` |
+| `npm run watch-test`| Runs a watcher on the test file that will rerun tests automatically on save |
+| `npm run clean` | Cleans up any compilation output |
 
 There will be more over time.
 
