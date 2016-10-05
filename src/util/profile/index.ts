@@ -1,2 +1,2 @@
-export { environments, EnvironmentInfo } from "./environments";
+export { environments, defaultEnvironmentName, EnvironmentInfo } from "./environments";
 export * from "./profile";

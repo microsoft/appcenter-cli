@@ -36,3 +36,7 @@ export function environments(environmentName: string = environmentsData.defaultE
 export function allEnvironments(): EnvironmentsFile {
   return environmentsData;
 }
+
+export function defaultEnvironmentName(): string {
+  return environmentsData.defaultEnvironment;
+}
