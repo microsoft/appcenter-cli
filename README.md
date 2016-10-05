@@ -94,7 +94,7 @@ There will be more over time.
 
 ## General design principles
 
-Use promises for async operations. Use `async`\`await` in Typescript for handling typical promises.
+Use promises for async operations. Use `async`/`await` in Typescript for handling typical promises.
 
 If you've got a bunch of related code, export the library as a whole in a single import using an `index.ts` file.
 For example, the `profile` library includes files `environment.ts` and `profile.ts`, but users of the module
