@@ -7,9 +7,13 @@ local CI configurations).
 
 ## Technologies Used
 
-sonoma cli is written using Node.js version 6 and Typescript. Wrappers over the Bifrost HTTP api are
+sonoma cli is written using Node.js version 6 and [Typescript](http://typescriptlang.org). Wrappers over the Bifrost HTTP api are
 generated using the [AutoRest][https://github.com/Azure/autorest] code generator. And the usual
 plethora of npm modules.
+
+We use [mocha](https://http://mochajs.org/) for a test runner / framework. [Chai](http://http://chaijs.com/) is
+the assertion library. [Sinonn](http://sinonjs.org) is the general mocking library, and [nock](https://github.com/node-nock/nock)
+will be used to record and playback mock http traffic. [Note: this isn't set up yet.]
 
 # Setting Up
 
@@ -62,4 +66,47 @@ After installing node and cloning the repo, do:
 To run the test suite, do:
  3. `npm test`
 
+# Running the cli in development
+
+If you're using node directly, do:
+
+ 1. `npm run build`
+ 2. `node dist/index.js <command...> <args...>`
+
+If you've installed `ts-node` as mentioned above, you can skip the build step and do:
+
+ 1. `ts-node src/index.ts <command...> <args...>`
+
+# Scripts
+
+There are a bunch of scripts in package.json file. Here's what they are and what they do:
+| Script command | What it does
+|----------------|-------------
+| `npm run build`| Compiles the typescript into javascript, creates `dist` directory
+| `npm run test` | Runs the test suite. Can also be run with `npm test`
+| `npm run watch-test`| Runs a watcher on the test file that will rerun tests automatically on save
+| `npm run clean` | Cleans up any compilation output
+
+There will be more over time.
+
+# Touring the codebase
+
+## General design principles
+
+Use promises for async operations. Use `async`\`await` in Typescript for handling typical promises.
+
+If you've got a bunch of related code, export the library as a whole in a single import using an `index.ts` file.
+For example, the `profile` library includes files `environment.ts` and `profile.ts`, but users of the module
+just needs to do `import { stuff } from "../util/profile"`
+
+Don't overuse objects or inheritance. In many cases global functions or modules can do just as well and be easier to consume.
+
+### Directory structure
+
+#### src
+
+This is where the source code for the CLI lives.
+## Util
+
+The `util` directory is a place to put shared utility code
 
