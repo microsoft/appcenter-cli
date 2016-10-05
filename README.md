@@ -104,10 +104,75 @@ Don't overuse objects or inheritance. In many cases global functions or modules 
 
 ### Directory structure
 
+#### dist
+
+Created by the `npm run build` command, contains the compiled-to-javascript code.
+
 #### src
 
 This is where the source code for the CLI lives.
-## Util
 
-The `util` directory is a place to put shared utility code
+#### src/commands
+
+The implementation of each command is in this directory. Each category (distribute, build, app, etc) will be a subdirectory of this directory. Each command lives in an individual source file with the same name as the command.
+
+For example:
+
+| Command | Source File |
+| ------- | ----------- |
+| `sonoma login` | src/commands/login.ts |
+| `sonoma profile configure` | src/commands/profile/configure.ts |
+| `sonoma apps list` | src/commands/apps/list.ts |
+
+The command line parser and dispatcher uses the directory structure and file names to determine which
+code to run, so the naming conventions are important.
+
+(Coming Soon, planned but not yet implemented)
+If you have shared code across commands in your category, you can add a directory named `lib` in category's directory and put that code there. The command line dispatcher will explicitly ignore
+this directory and not try to accidentally run your utility code from the commadn line.
+
+#### src/util
+
+This contains framework and utility code used across all the commands. See readme files in each directory for specific details of each one. (Working on these.)
+
+#### src/util/apis
+
+Http client wrappers. Right now this is a set of hand coded utilities, will be replaced by Autorest generated code.
+
+#### src/util/commandline
+
+The command line parser and dispatching code, along with base class and decorators for implementing commands.
+
+#### src/util/http
+
+Helper code for implementing hand-rolled Http clients. Will be going away once Autorest clients are working.
+
+#### src/util/interaction
+
+Central point for all user I/O done by commands. Use `interaction.prompt` to get input from a user, and
+`interaction.out` to output various forms of results.
+
+Commands should use these rather than directly using `console.log` because the interaction library handles output formats (the `--format` switch) and the `--quiet` switch transparently to the command author.
+
+#### src/util/profile
+
+Code for storing and retrieving information about the current logged in user.
+
+#### test
+
+Test code lives here. For new tests create a subdirectory structure corresponding to the `src` folder. Test code will be automatically run if you name the file `<testname>-test.ts` or `<testname>-test.js`. We recommend using Typescript for you tests to keep things consistent across the entire codebase.
+
+#### typings
+
+Stores type definitions for the external Javascript libraries used. These are checked in rather than dynamically downloaded in case we need to edit them.
+
+# Development Processes
+
+We follow the standard github flow. Each person working on the cli should create their own fork of the repo. Work in your own repo (preferably on a feature branch). When ready, send a pull request to the master Microsoft/sonoma-cli repo against the master brtanch. After review, the pull request will be merged.
+
+Issue tracking is TBD based on overall group discussions. For now let's just do it in github in the Microsoft/sonoma-cli repo.
+
+# Building Installers
+
+TBD. We'll need builds for a Mac installer, Windows MSI, and at least one format of Linux package, plus be able to push to NPM.
 
