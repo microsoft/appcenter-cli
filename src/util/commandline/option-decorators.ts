@@ -26,6 +26,10 @@ export function getPositionalOptionsDescription(target: any): PositionalOptionsD
   return target[positionalDescriptionKey];
 }
 
+export function getClassHelpText(target: any): string {
+  return target[classHelpTextKey];
+}
+
 interface PropertyDecorator {
   (proto: any, propertyKey: string | Symbol): void;
 }
