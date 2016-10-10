@@ -9,9 +9,19 @@ describe("Finding commands", function () {
     commandFinder = finder(path.join(__dirname, "sample-commands"));
   });
 
-  it("should return null if no such command exists", function () {
-    const result = commandFinder(["no", "such", "command"]);
-    expect(result).to.be.null;
+  it("should return not found if no such command exists", function () {
+    const commandLine = "no such command".split(' ');
+    const result = commandFinder(commandLine);
+    expect(result).to.have.property("found", false);
+  });
+
+  it("should command parts that were not found if no command exists", function () {
+    const commandLine = "no such command".split(' ');
+    const result = commandFinder(commandLine);
+    expect(result.commandParts).to.have.lengthOf(3);
+    commandLine.forEach((part, index) => {
+      expect(result.commandParts[index]).to.equal(part);
+    });
   });
 
   it("should return path to require for existing command", function () {
@@ -20,13 +30,22 @@ describe("Finding commands", function () {
   });
 
   it("should fail if command includes '.' or '..'", function () {
-    const result = commandFinder(["sample-commands", "..", "disatcher-test"]);
-    expect(result).to.be.null;
+    const commandLine = "sample-commands .. disatcher-test".split(" ");
+    const result = commandFinder(commandLine);
+    expect(result).to.have.property("found", false);
+    expect(result.commandParts).to.have.lengthOf(commandLine.length);
+    commandLine.forEach((part, index) => { expect(result.commandParts[index]).to.equal(part); });
   });
 
   it("should ignore additional illegal parameters until finding command", function () {
     const result = commandFinder("cmd1 file.txt other/txt".split(" "));
     expect(result.commandPath).to.equal(path.join(__dirname, "sample-commands", "cmd1.ts"));
+  });
+
+  it("should fail if flags are in command line before command", function () {
+    const commandLine = "-h cmd1 -f stuff".split(" ");
+    const result = commandFinder(commandLine);
+    expect(result).to.have.property("found", false);
   });
 
   it("should return command line flags without command name", function () {

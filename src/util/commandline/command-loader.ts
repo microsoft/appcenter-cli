@@ -11,7 +11,7 @@ export interface CommandLoader {
 export function loader(commandFinder: CommandFinder): CommandLoader {
   return function commandLoader(command: string[]): [typeof Command, string[]] {
     const findResult = commandFinder(command);
-    if (findResult === null) {
+    if (!findResult.found) {
       return null;
     }
     const cmd = require(findResult.commandPath).default as typeof Command;

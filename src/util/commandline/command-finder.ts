@@ -2,6 +2,7 @@
 
 import * as path from "path";
 import * as fs from "fs";
+import { inspect } from "util";
 
 const debug = require("debug")("sonoma-cli:util:commandline:command-finder");
 
@@ -54,8 +55,14 @@ function splitCommandLine(command: string[]): [string[], string[]] {
 }
 
 export interface CommandFinderResult {
+  // was a command path found at all?
+  found: boolean;
+
   // File path to command to load
   commandPath: string;
+
+  // Parts used to build command path
+  commandParts: string[];
 
   // Args that were not used to build the path.
   unusedArgs: string[];
@@ -71,9 +78,15 @@ export function finder(dispatchRoot: string): CommandFinder {
   }
 
   return function commandFinder(commandLineArgs: string[]): CommandFinderResult {
+    debug(`Looking for command ${inspect(commandLineArgs)}`);
     let [command, args] = splitCommandLine(commandLineArgs);
     if (command.length === 0) {
-      throw new Error("Missing command name to dispatch");
+      return {
+        found: false,
+        commandPath: null,
+        commandParts: [],
+        unusedArgs: []
+      };
     }
 
     function findFile(commandDir: string[], commandName: string): string {
@@ -106,7 +119,7 @@ export function finder(dispatchRoot: string): CommandFinder {
 
       const result = findFile(commandDir, commandName);
       if (result !== null) {
-        return { commandPath: result, unusedArgs: args };
+        return { found: true, commandPath: result, commandParts: [], unusedArgs: args };
       }
 
       // Not found, push the last arg in command name into unused pile.
@@ -115,6 +128,11 @@ export function finder(dispatchRoot: string): CommandFinder {
     }
 
     // Got here, nothing found
-    return null;
+    return {
+      found: false,
+      commandParts: args,
+      commandPath: null,
+      unusedArgs: []
+    };
   }
 }
