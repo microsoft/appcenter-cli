@@ -4,8 +4,8 @@ import { getUser, deleteUser } from "../util/profile";
 import { out } from "../util/interaction";
 
 export default class LogoutCommand extends Command {
-  constructor(command: string[]) {
-    super(command);
+  constructor(command: string[], args: string[]) {
+    super(command, args);
   }
 
   async run(): Promise<CommandResult> {

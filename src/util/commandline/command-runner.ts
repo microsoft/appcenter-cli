@@ -26,13 +26,14 @@ function runner(arg: any): CommandRunner {
     // TODO: Parse out the actual command string
     let factory: typeof Command;
     let newCommand: string[];
+    let args: string[];
     try {
       let result = loader(command);
 
       if (result === null) {
         return notFound(command.join(' '));
       }
-      [factory, newCommand] = result;
+      [factory, newCommand, args] = result;
     }
     catch (ex) {
       debug(`Command loading failed, exception = ${ex}`);
@@ -41,7 +42,7 @@ function runner(arg: any): CommandRunner {
     }
 
     try {
-      const commandObj = new factory(newCommand);
+      const commandObj = new factory(newCommand, args);
       if (commandObj.debug) {
         setDebug();
       }

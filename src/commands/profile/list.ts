@@ -6,8 +6,8 @@ import { out } from "../../util/interaction";
 import { GetUserResponse, UserClient } from "../../util/apis";
 
 export default class ProfileListCommand extends Command {
-  constructor(command: string[]) {
-    super(command);
+  constructor(command: string[], args: string[]) {
+    super(command, args);
   }
 
   async run(): Promise<CommandResult> {

@@ -65,4 +65,13 @@ describe("Finding commands", function () {
       expect(result.unusedArgs[i]).to.equal(commandLine[i + 1]);
     }
   });
+
+  it("should return category found if command is directory", function () {
+    const commandLine = ["subcommands"];
+    const result = commandFinder(commandLine);
+    expect(result.found).to.be.true;
+    expect(result.isCategory).to.be.true;
+    expect(result.commandParts).to.have.lengthOf(1);
+    expect(result.commandParts[0]).to.equal("subcommands");
+  });
 });

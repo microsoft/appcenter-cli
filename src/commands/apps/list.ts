@@ -4,8 +4,8 @@ import { getUser } from "../../util/profile";
 import { AppsClient, AppResponse } from "../../util/apis";
 
 export default class AppsListCommand extends Command {
-  constructor(command: string[]) {
-    super(command);
+  constructor(command: string[], args: string[]) {
+    super(command, args);
   }
 
   formatApp(app: AppResponse): string {

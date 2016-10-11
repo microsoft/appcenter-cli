@@ -12,8 +12,8 @@ const debug = require("debug")("sonoma-cli:commands:login");
 
 @help("Log in to the sonoma system.")
 export default class LoginCommand extends Command {
-  constructor(command: string[]) {
-    super(command);
+  constructor(command: string[], args: string[]) {
+    super(command, args);
   }
 
   @help("user name to log in as")

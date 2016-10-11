@@ -35,7 +35,7 @@ describe("Loading commands", function () {
 
   it("should look through subdirs to load", function () {
     let commandLoader = loader(finder(path.join(__dirname, "sample-commands")));
-    let [command, remainingArgs] = commandLoader(["subcommands", "cmd2"]);
+    let [command, commandParts, remainingArgs] = commandLoader(["subcommands", "cmd2"]);
     expect(command).to.be.a("function")
       .and.property("name", "Command2");
     expect(remainingArgs).to.deep.equal([]);

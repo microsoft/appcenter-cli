@@ -58,6 +58,9 @@ export interface CommandFinderResult {
   // was a command path found at all?
   found: boolean;
 
+  // Is this a category rather than a command?
+  isCategory: boolean;
+
   // File path to command to load
   commandPath: string;
 
@@ -66,6 +69,40 @@ export interface CommandFinderResult {
 
   // Args that were not used to build the path.
   unusedArgs: string[];
+}
+
+// Helper functions to construct results
+function commandNotFound(commandParts: string[]): CommandFinderResult {
+  debug(`No command found at '${commandParts.join(' ')}'`);
+  return {
+    found: false,
+    isCategory: false,
+    commandPath: null,
+    commandParts,
+    unusedArgs: []
+  }
+};
+
+function commandFound(commandPath: string, commandParts: string[], unusedArgs: string[]): CommandFinderResult {
+  debug(`Command '${commandParts.join(' ')}' found at ${commandPath}`);
+  return {
+    found: true,
+    isCategory: false,
+    commandPath,
+    commandParts,
+    unusedArgs
+  };
+}
+
+function categoryFound(commandPath: string, commandParts: string[], unusedArgs: string[]): CommandFinderResult {
+  debug(`Category '${commandParts.join(' ')}' found at ${commandPath}`);
+  return {
+    found: true,
+    isCategory: true,
+    commandPath,
+    commandParts,
+    unusedArgs
+  };
 }
 
 export interface CommandFinder {
@@ -81,19 +118,20 @@ export function finder(dispatchRoot: string): CommandFinder {
     debug(`Looking for command ${inspect(commandLineArgs)}`);
     let [command, args] = splitCommandLine(commandLineArgs);
     if (command.length === 0) {
-      return {
-        found: false,
-        commandPath: null,
-        commandParts: [],
-        unusedArgs: []
-      };
+      return commandNotFound(commandLineArgs);
     }
 
-    function findFile(commandDir: string[], commandName: string): string {
+    function findFile(commandDir: string[], commandName: string): [string, string[], boolean] {
       debug(`Looking for '${commandName}' in directory '${toFullPath(dispatchRoot, commandDir)}'`);
       if (commandDir.length > 0 && !isDir(dispatchRoot, commandDir)) {
         return null;
       }
+
+      let fullCommand = commandDir.concat([commandName]);
+      if (checkStats(dispatchRoot, fullCommand, stats => stats.isDirectory())) {
+        return [toFullPath(dispatchRoot, fullCommand), fullCommand, false];
+      }
+
       // Have to look through the directory so that we
       // can ignore any potential file extensions.
       const files = fs.readdirSync(toFullPath(dispatchRoot, commandDir));
@@ -109,7 +147,9 @@ export function finder(dispatchRoot: string): CommandFinder {
         return null;
       }
 
-      return toFullPath(dispatchRoot, commandDir.concat([matching[0]]));
+      let commandParts = commandDir.concat([matching[0]]);
+      let commandPath = toFullPath(dispatchRoot, commandDir.concat([matching[0]]));
+      return [commandPath, commandParts, true];
     }
 
     while (command.length > 0) {
@@ -119,7 +159,10 @@ export function finder(dispatchRoot: string): CommandFinder {
 
       const result = findFile(commandDir, commandName);
       if (result !== null) {
-        return { found: true, commandPath: result, commandParts: [], unusedArgs: args };
+        if (result[2]) {
+          return commandFound(result[0], result[1], args);
+        }
+        return categoryFound(result[0], result[1], args);
       }
 
       // Not found, push the last arg in command name into unused pile.
@@ -128,11 +171,6 @@ export function finder(dispatchRoot: string): CommandFinder {
     }
 
     // Got here, nothing found
-    return {
-      found: false,
-      commandParts: args,
-      commandPath: null,
-      unusedArgs: []
-    };
+    return commandNotFound(commandLineArgs);
   }
 }

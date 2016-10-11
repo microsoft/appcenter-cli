@@ -4,11 +4,11 @@ import { shortName, longName, help, hasArg, getOptionsDescription, getPositional
 import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "./option-parser";
 
 export class Command {
-  constructor(command: string[]) {
+  constructor(command: string[], args: string[]) {
     const proto = Object.getPrototypeOf(this);
     const flags = getOptionsDescription(proto);
     const positionals = getPositionalOptionsDescription(proto);
-    parseOptions(flags, positionals, this, command);
+    parseOptions(flags, positionals, this, args);
   }
 
   // Default arguments supported by every command

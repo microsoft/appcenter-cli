@@ -2,8 +2,8 @@ import { Command, CommandResult, success } from "../../../../src/util/commandlin
 
 
 export default class Command1 extends Command {
-  constructor(commandArgs: string[]) {
-    super(commandArgs);
+  constructor(command: string[], args: string[]) {
+    super(command, args);
   }
 
   async run(): Promise<CommandResult> {

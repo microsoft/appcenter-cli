@@ -5,8 +5,8 @@ import { shortName, longName, required, hasArg } from "../util/commandline";
 import { out } from "../util/interaction";
 
 export default class WaitCommand extends Command {
-  constructor(args: string[]) {
-    super(args);
+  constructor(command: string[], args: string[]) {
+    super(command, args);
   }
 
   @shortName("d")
