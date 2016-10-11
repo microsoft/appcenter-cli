@@ -44,25 +44,7 @@ function runner(arg: any): CommandRunner {
 
     try {
       const commandObj = new factory({ command: newCommand, args, commandPath });
-      if (commandObj.debug) {
-        setDebug();
-      }
-
-      if(commandObj.format) {
-        switch(commandObj.format) {
-          case null:
-          case "":
-            break;
-          case "json":
-            setFormatJson();
-            break;
-
-          default:
-            throw new Error(`Unknown output format ${commandObj.format}`);
-        }
-      }
-
-      return await commandObj.run();
+      return await commandObj.execute();
     }
     catch (ex) {
       if(isDebug()) {
