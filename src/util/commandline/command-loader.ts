@@ -4,29 +4,37 @@ import { CategoryCommand } from "./category-command";
 
 const debug = require("debug")("sonoma-cli:util:commandline:command-loader");
 
+export interface LoaderResult {
+  commandFactory: typeof Command;
+  commandParts: string[];
+  args: string[];
+  commandPath: string;
+}
 
 export interface CommandLoader {
-  (command: string[]): [typeof Command, string[], string[]];
+  (command: string[]): LoaderResult;
 }
 
 export function loader(commandFinder: CommandFinder): CommandLoader {
-  return function commandLoader(command: string[]): [typeof Command, string[], string[]] {
+  return function commandLoader(command: string[]): LoaderResult {
     const findResult = commandFinder(command);
     if (!findResult.found) {
       return null;
     }
-    let cmd: typeof Command;
+    let commandFactory: typeof Command;
     let commandParts: string[] = findResult.commandParts;
-    let args: string[] = findResult.unusedArgs;;
+    let args: string[] = findResult.unusedArgs;
+    let commandPath = findResult.commandPath;
+
     if (!findResult.isCategory) {
-      cmd = require(findResult.commandPath).default as typeof Command;
+      commandFactory = require(findResult.commandPath).default as typeof Command;
     } else {
-      cmd = CategoryCommand;
+      commandFactory = CategoryCommand;
     }
 
-    if(cmd === null) {
+    if(commandFactory === null) {
       debug(`Loaded command from ${findResult.commandPath} but module has no default export`);
     }
-    return [cmd, commandParts, args];
+    return { commandFactory, commandParts, args, commandPath };
   }
 }

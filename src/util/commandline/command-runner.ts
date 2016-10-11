@@ -27,13 +27,14 @@ function runner(arg: any): CommandRunner {
     let factory: typeof Command;
     let newCommand: string[];
     let args: string[];
+    let commandPath: string;
     try {
       let result = loader(command);
 
       if (result === null) {
         return notFound(command.join(' '));
       }
-      [factory, newCommand, args] = result;
+      ({ commandFactory: factory, commandParts: newCommand, args, commandPath } = result);
     }
     catch (ex) {
       debug(`Command loading failed, exception = ${ex}`);
