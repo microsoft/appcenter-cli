@@ -43,7 +43,7 @@ function runner(arg: any): CommandRunner {
     }
 
     try {
-      const commandObj = new factory(newCommand, args);
+      const commandObj = new factory({ command: newCommand, args, commandPath });
       if (commandObj.debug) {
         setDebug();
       }

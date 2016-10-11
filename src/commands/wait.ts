@@ -1,12 +1,12 @@
 // First example command
 
-import { Command, CommandResult, ErrorCodes, success, failure } from "../util/commandline";
+import { Command, CommandArgs, CommandResult, ErrorCodes, success, failure } from "../util/commandline";
 import { shortName, longName, required, hasArg } from "../util/commandline";
 import { out } from "../util/interaction";
 
 export default class WaitCommand extends Command {
-  constructor(command: string[], args: string[]) {
-    super(command, args);
+  constructor(args: CommandArgs) {
+    super(args);
   }
 
   @shortName("d")

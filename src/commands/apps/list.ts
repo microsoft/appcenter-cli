@@ -1,11 +1,11 @@
-import { Command, CommandResult, success, failure, notLoggedIn } from "../../util/commandline";
+import { Command, CommandArgs, CommandResult, success, failure, notLoggedIn } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { getUser } from "../../util/profile";
 import { AppsClient, AppResponse } from "../../util/apis";
 
 export default class AppsListCommand extends Command {
-  constructor(command: string[], args: string[]) {
-    super(command, args);
+  constructor(args: CommandArgs) {
+    super(args);
   }
 
   formatApp(app: AppResponse): string {

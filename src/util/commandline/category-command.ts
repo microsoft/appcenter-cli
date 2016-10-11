@@ -1,4 +1,4 @@
-import { Command } from "./command";
+import { Command, CommandArgs } from "./command";
 import { CommandResult, success } from "./command-result";
 import { out } from "../interaction";
 
@@ -6,10 +6,10 @@ import { out } from "../interaction";
 export class CategoryCommand extends Command {
   private category: string[];
 
-  constructor(category: string[]) {
+  constructor(args: CommandArgs) {
     // Don't pass to base class, nothing to parse
-    super([], []);
-    this.category = category;
+    super({ commandPath: null, command: [], args: []});
+    this.category = args.command;
   }
 
   async run(): Promise<CommandResult> {
