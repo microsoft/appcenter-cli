@@ -10,7 +10,7 @@ import { CommandFinder, finder } from "../../../src/util/commandline/command-fin
 describe("Loading commands", function () {
   it("should return class when the command exists", function () {
     let commandLoader = loader(finder(path.join(__dirname, "sample-commands")));
-    let [command, _] = commandLoader(["cmd1"]);
+    let { commandFactory: command } = commandLoader(["cmd1"]);
     expect(command).to.be.a("function")
       .and.property("name", "Command1");
   });
@@ -35,7 +35,7 @@ describe("Loading commands", function () {
 
   it("should look through subdirs to load", function () {
     let commandLoader = loader(finder(path.join(__dirname, "sample-commands")));
-    let [command, remainingArgs] = commandLoader(["subcommands", "cmd2"]);
+    let { commandFactory: command, commandParts, args: remainingArgs } = commandLoader(["subcommands", "cmd2"]);
     expect(command).to.be.a("function")
       .and.property("name", "Command2");
     expect(remainingArgs).to.deep.equal([]);

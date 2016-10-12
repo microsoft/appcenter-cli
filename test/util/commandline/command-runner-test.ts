@@ -31,7 +31,7 @@ describe("Running commands", function () {
       .then((result: CommandResult) => {
         expect(failed(result)).to.be.true;
         if (failed(result)) {
-          expect(result.errorCode).to.equal(ErrorCodes.IllegalCommand);
+          expect(result.errorCode).to.equal(ErrorCodes.NoSuchCommand);
         }
       });
   });

@@ -26,13 +26,15 @@ function runner(arg: any): CommandRunner {
     // TODO: Parse out the actual command string
     let factory: typeof Command;
     let newCommand: string[];
+    let args: string[];
+    let commandPath: string;
     try {
       let result = loader(command);
 
       if (result === null) {
         return notFound(command.join(' '));
       }
-      [factory, newCommand] = result;
+      ({ commandFactory: factory, commandParts: newCommand, args, commandPath } = result);
     }
     catch (ex) {
       debug(`Command loading failed, exception = ${ex}`);
@@ -41,26 +43,8 @@ function runner(arg: any): CommandRunner {
     }
 
     try {
-      const commandObj = new factory(newCommand);
-      if (commandObj.debug) {
-        setDebug();
-      }
-
-      if(commandObj.format) {
-        switch(commandObj.format) {
-          case null:
-          case "":
-            break;
-          case "json":
-            setFormatJson();
-            break;
-
-          default:
-            throw new Error(`Unknown output format ${commandObj.format}`);
-        }
-      }
-
-      return await commandObj.run();
+      const commandObj = new factory({ command: newCommand, args, commandPath });
+      return await commandObj.execute();
     }
     catch (ex) {
       if(isDebug()) {

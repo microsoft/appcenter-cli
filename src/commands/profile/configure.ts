@@ -1,13 +1,14 @@
 // Implementation of profile configure command
 
-import { Command, CommandResult, success, failure, ErrorCodes } from "../../util/commandline";
+import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes } from "../../util/commandline";
 import { prompt, out } from "../../util/interaction";
 import { getUser } from "../../util/profile";
 import { UserClient } from "../../util/apis";
 
+@help("Update user information")
 export default class ProfileConfigureCommand extends Command {
-  constructor(command: string[]) {
-    super(command);
+  constructor(args: CommandArgs) {
+    super(args);
   }
 
   async run(): Promise<CommandResult> {

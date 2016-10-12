@@ -1,8 +1,8 @@
-import { Command, CommandResult } from "../../../../src/util/commandline";
+import { Command, CommandArgs, CommandResult } from "../../../../src/util/commandline";
 
 export default class AlwaysFailCommand extends Command {
-  constructor(command: string[]) {
-    super(command);
+  constructor(args: CommandArgs) {
+    super(args);
   }
 
   async run(): Promise<CommandResult> {

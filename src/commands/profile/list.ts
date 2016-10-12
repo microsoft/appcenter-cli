@@ -1,13 +1,14 @@
 // profile list command
 
-import { Command, CommandResult, success } from "../../util/commandline";
+import { Command, CommandArgs, CommandResult, help, success } from "../../util/commandline";
 import { Profile, getUser, environments } from "../../util/profile";
 import { out } from "../../util/interaction";
 import { GetUserResponse, UserClient } from "../../util/apis";
 
+@help("Get information about logged in user")
 export default class ProfileListCommand extends Command {
-  constructor(command: string[]) {
-    super(command);
+  constructor(args: CommandArgs) {
+    super(args);
   }
 
   async run(): Promise<CommandResult> {

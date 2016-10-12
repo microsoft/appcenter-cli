@@ -44,6 +44,22 @@ export function list<T>(formatter: {(item: T): string}, items: T[]): void {
 }
 
 //
+// Export a line of help text
+//
+export function help(t: string): void;
+export function help(): void;
+export function help(...args: any[]) : void
+{
+  let t: string;
+  if (args.length === 0) {
+    t = "";
+  } else {
+    t = args[0];
+  }
+  console.log(t);
+}
+
+//
 // Export a line of plain text.
 //
 export function text(t: string): void {
