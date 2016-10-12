@@ -101,13 +101,10 @@ Devices.prototype.places = function (start, ownerName, appName, options, callbac
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/analytics/places';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/places';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
   if (end !== null && end !== undefined) {
@@ -271,13 +268,10 @@ Devices.prototype.oSes = function (start, ownerName, appName, options, callback)
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/analytics/oses';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/oses';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
   if (end !== null && end !== undefined) {
@@ -441,13 +435,10 @@ Devices.prototype.models = function (start, ownerName, appName, options, callbac
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/analytics/models';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/models';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
   if (end !== null && end !== undefined) {
@@ -611,13 +602,10 @@ Devices.prototype.languages = function (start, ownerName, appName, options, call
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/analytics/languages';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/languages';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
   if (end !== null && end !== undefined) {
@@ -775,13 +763,10 @@ Devices.prototype.activeCounts = function (start, ownerName, appName, options, c
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/analytics/active_device_counts';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/active_device_counts';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
   if (end !== null && end !== undefined) {

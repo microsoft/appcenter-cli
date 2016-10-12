@@ -102,13 +102,10 @@ Sessions.prototype.countsPerDevice = function (start, interval, ownerName, appNa
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/analytics/sessions_per_device';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/sessions_per_device';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
   if (end !== null && end !== undefined) {
@@ -265,13 +262,10 @@ Sessions.prototype.durationDistribution = function (start, ownerName, appName, o
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/analytics/session_durations_distribution';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/session_durations_distribution';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
   if (end !== null && end !== undefined) {
@@ -433,13 +427,10 @@ Sessions.prototype.counts = function (start, interval, ownerName, appName, optio
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/analytics/session_counts';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/session_counts';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
   if (end !== null && end !== undefined) {

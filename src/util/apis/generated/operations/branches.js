@@ -75,14 +75,11 @@ Branches.prototype.listProjects = function (branch, ownerName, appName, options,
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/branches/{branch}/projects';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/branches/{branch}/projects';
   requestUrl = requestUrl.replace('{branch}', encodeURIComponent(branch));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -216,14 +213,11 @@ Branches.prototype.getConfig = function (branch, ownerName, appName, options, ca
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/branches/{branch}/config';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/branches/{branch}/config';
   requestUrl = requestUrl.replace('{branch}', encodeURIComponent(branch));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -361,14 +355,11 @@ Branches.prototype.configure = function (branch, ownerName, appName, options, ca
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/branches/{branch}/config';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/branches/{branch}/config';
   requestUrl = requestUrl.replace('{branch}', encodeURIComponent(branch));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -489,14 +480,11 @@ Branches.prototype.reconfigure = function (branch, ownerName, appName, options, 
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/branches/{branch}/config';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/branches/{branch}/config';
   requestUrl = requestUrl.replace('{branch}', encodeURIComponent(branch));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -617,14 +605,11 @@ Branches.prototype.deleteConfig = function (branch, ownerName, appName, options,
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/branches/{branch}/config';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/branches/{branch}/config';
   requestUrl = requestUrl.replace('{branch}', encodeURIComponent(branch));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -739,13 +724,10 @@ Branches.prototype.list = function (ownerName, appName, options, callback) {
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/branches';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/branches';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();

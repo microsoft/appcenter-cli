@@ -4,7 +4,7 @@
  * regenerated.
  */
 
-import { ServiceClientOptions, ServiceClientCredentials, RequestOptions, ServiceCallback } from 'ms-rest';
+import { ServiceClientOptions, RequestOptions, ServiceCallback, ServiceClientCredentials } from 'ms-rest';
 import * as operations from "./operations";
 
 declare class SonomaClient {

@@ -76,14 +76,11 @@ Packages.prototype.get = function (packageId, ownerName, appName, options, callb
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/packages/{package_id}';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/packages/{package_id}';
   requestUrl = requestUrl.replace('{package_id}', encodeURIComponent(packageId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -205,13 +202,10 @@ Packages.prototype.list = function (ownerName, appName, options, callback) {
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/packages';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/packages';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   if (filter !== null && filter !== undefined) {
     queryParameters.push('$filter=' + encodeURIComponent(filter));

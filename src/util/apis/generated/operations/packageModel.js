@@ -96,14 +96,11 @@ PackageModel.prototype.update = function (packageId, ownerName, appName, options
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/packages/{package_id}';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/packages/{package_id}';
   requestUrl = requestUrl.replace('{package_id}', encodeURIComponent(packageId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();

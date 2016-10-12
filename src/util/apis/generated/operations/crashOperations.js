@@ -111,13 +111,10 @@ CrashOperations.prototype.getHistogramPlatforms = function (ownerName, appName, 
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/crash_histograms/platforms';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_histograms/platforms';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   if (crashGroupId !== null && crashGroupId !== undefined) {
     queryParameters.push('crash_group_id=' + encodeURIComponent(crashGroupId));
@@ -299,13 +296,10 @@ CrashOperations.prototype.getHistogramDevices = function (ownerName, appName, op
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/crash_histograms/devices';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_histograms/devices';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   if (crashGroupId !== null && crashGroupId !== undefined) {
     queryParameters.push('crash_group_id=' + encodeURIComponent(crashGroupId));
@@ -489,13 +483,10 @@ CrashOperations.prototype.getHistogramCrashes = function (ownerName, appName, op
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/crash_histograms/crashes';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_histograms/crashes';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   if (crashGroupId !== null && crashGroupId !== undefined) {
     queryParameters.push('crash_group_id=' + encodeURIComponent(crashGroupId));
@@ -677,13 +668,10 @@ CrashOperations.prototype.getHistogramCrashFreeUsers = function (ownerName, appN
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/crash_histograms/crash_free_users';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_histograms/crash_free_users';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   if (crashGroupId !== null && crashGroupId !== undefined) {
     queryParameters.push('crash_group_id=' + encodeURIComponent(crashGroupId));
@@ -830,14 +818,11 @@ CrashOperations.prototype.getGroupStacktrace = function (crashGroupId, ownerName
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/stacktrace';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/stacktrace';
   requestUrl = requestUrl.replace('{crash_group_id}', encodeURIComponent(crashGroupId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -967,15 +952,12 @@ CrashOperations.prototype.getErrorStacktrace = function (crashGroupId, crashId, 
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes/{crash_id}/stacktrace';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes/{crash_id}/stacktrace';
   requestUrl = requestUrl.replace('{crash_group_id}', encodeURIComponent(crashGroupId));
   requestUrl = requestUrl.replace('{crash_id}', encodeURIComponent(crashId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -1119,15 +1101,12 @@ CrashOperations.prototype.getCrash = function (crashGroupId, crashId, ownerName,
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes/{crash_id}';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes/{crash_id}';
   requestUrl = requestUrl.replace('{crash_group_id}', encodeURIComponent(crashGroupId));
   requestUrl = requestUrl.replace('{crash_id}', encodeURIComponent(crashId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   if (includeReport !== null && includeReport !== undefined) {
     queryParameters.push('include_report=' + encodeURIComponent(includeReport.toString()));
@@ -1302,14 +1281,11 @@ CrashOperations.prototype.getCrashes = function (crashGroupId, ownerName, appNam
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes';
   requestUrl = requestUrl.replace('{crash_group_id}', encodeURIComponent(crashGroupId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   if (includeReport !== null && includeReport !== undefined) {
     queryParameters.push('include_report=' + encodeURIComponent(includeReport.toString()));
@@ -1470,14 +1446,11 @@ CrashOperations.prototype.getCrashGroup = function (crashGroupId, ownerName, app
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}';
   requestUrl = requestUrl.replace('{crash_group_id}', encodeURIComponent(crashGroupId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -1614,14 +1587,11 @@ CrashOperations.prototype.patchCrashGroup = function (crashGroupId, ownerName, a
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}';
   requestUrl = requestUrl.replace('{crash_group_id}', encodeURIComponent(crashGroupId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -1799,13 +1769,10 @@ CrashOperations.prototype.getCrashGroups = function (ownerName, appName, options
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/crash_groups';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_groups';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   if (lastOccurrenceFrom !== null && lastOccurrenceFrom !== undefined) {
     queryParameters.push('last_occurrence_from=' + encodeURIComponent(client.serializeObject(lastOccurrenceFrom)));

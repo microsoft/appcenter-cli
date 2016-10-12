@@ -82,14 +82,11 @@ Commits.prototype.list = function (shaCollection, ownerName, appName, options, c
   }
 
   // Construct URL
-  var requestUrl = this.client.baseUri +
-                   '//v0.1/apps/{owner_name}/{app_name}/commits/batch/{sha_collection}';
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/commits/batch/{sha_collection}';
   requestUrl = requestUrl.replace('{sha_collection}', encodeURIComponent(shaCollection));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  // trim all duplicate forward slashes in the url
-  var regex = /([^:]\/)\/+/gi;
-  requestUrl = requestUrl.replace(regex, '$1');
   var queryParameters = [];
   if (form !== null && form !== undefined) {
     queryParameters.push('form=' + encodeURIComponent(form));

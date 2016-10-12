@@ -3,8 +3,13 @@
 const gulp = require('gulp');
 const rimraf = require('rimraf');
 const ts = require('gulp-typescript');
+const autorest = require('./scripts/autorest');
 
 let tsProject = ts.createProject('tsconfig.json');
+
+//
+// General compile
+//
 
 gulp.task('clean', function (done) {
   rimraf('dist', done);
@@ -28,6 +33,25 @@ gulp.task('copy-generated-client', function () {
 });
 
 gulp.task('build', [ 'build-ts', 'copy-assets', 'copy-generated-client' ]);
+
+//
+// Client code generation. Requires mono to be installed on the machine
+// on a mac or linux machine
+//
+const generatedSource = './src/util/apis/generated';
+
+gulp.task('clean-autorest', function (done) {
+  rimraf(generatedSource, done);
+});
+
+gulp.task('autorest', ['clean-autorest'], function () {
+  return autorest.downloadTools()
+    .then(() => autorest.generateCode('./swagger/bifrost.swagger.json', generatedSource, 'SonomaClient'));
+});
+
+//
+// Default task - build the code
+//
 
 gulp.task('default', [ 'build' ]);
 

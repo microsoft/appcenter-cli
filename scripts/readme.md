@@ -1,0 +1,1 @@
+This directory contains files used to support the build process. It is not needed at runtime.
