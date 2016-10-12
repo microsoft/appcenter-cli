@@ -7,10 +7,7 @@ const ts = require('gulp-typescript');
 let tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('clean', function (done) {
-  rimraf('dist', function (err) {
-    if (err) { return done(err); }
-    rimraf('src/apis/generated', done);
-  });
+  rimraf('dist', done);
 });
 
 gulp.task('build-ts', function () {
@@ -25,7 +22,12 @@ gulp.task('copy-assets', function () {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('build', [ 'build-ts', 'copy-assets' ]);
+gulp.task('copy-generated-client', function () {
+  return gulp.src('src/util/apis/generated/**/*.[tj]s')
+    .pipe(gulp.dest('dist/util/apis/generated'));
+});
+
+gulp.task('build', [ 'build-ts', 'copy-assets', 'copy-generated-client' ]);
 
 gulp.task('default', [ 'build' ]);
 

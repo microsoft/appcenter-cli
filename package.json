@@ -7,7 +7,7 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "gulp build",
     "test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s",
     "watch-test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s --watch",
     "autorest": "autorest -i swagger/bifrost.swagger.json -AddCredentials true -ClientName SonomaClient -CodeGenerator NodeJS -OutputDirectory ./src/util/apis/generated -ft 3",

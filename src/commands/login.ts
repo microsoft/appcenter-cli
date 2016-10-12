@@ -99,7 +99,7 @@ export default class LoginCommand extends Command {
     let user: UserProfileResponse = await out.progress("Getting user info ...", this.getUserInfoAutorest(token.apiToken));
     debug(`Got response = ${inspect(user)}`);
     saveUser(user, token, this.environmentName);
-    out.text(`Loggin in as ${user.name}`);
+    out.text(`Logged in as ${user.name}`);
   }
 
   private createAuthTokenAutorest(): Promise<ApiTokensPostResponse> {
