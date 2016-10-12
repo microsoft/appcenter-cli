@@ -1,7 +1,7 @@
 import { expect } from "chai";
 
 import { OptionsDescription, OptionDescription } from "../../../src/util/commandline/option-parser";
-import { getOptionsDescription, shortName, longName, defaultValue, required, hasArg } from "../../../src/util/commandline/option-decorators";
+import { getOptionsDescription, getClassHelpText, shortName, longName, defaultValue, required, hasArg, help } from "../../../src/util/commandline/option-decorators";
 
 describe("Command line option parsing", function () {
   describe("Options decorators", function() {
@@ -86,5 +86,14 @@ describe("Command line option parsing", function () {
         .and.to.include("logLevel")
         .and.to.include("input");
     });
+
+  it("should return help string for command", function () {
+
+    @help("This is the help text")
+    class SampleWithHelp {
+    }
+
+    const text = getClassHelpText(SampleWithHelp.prototype);
+    expect(text).to.equal("This is the help text");
   });
 });

@@ -1,25 +1,34 @@
 // Help system - displays help for categories and commands
 
-import { getClassHelpText, getOptionsDescription, getPositionalOptionsDescription } from "./option-decorators";
+import {
+  getClassHelpText, getOptionsDescription, getPositionalOptionsDescription
+} from "./option-decorators";
 
 import {
   OptionDescription, OptionsDescription, PositionalOptionDescription, PositionalOptionsDescription
 } from "./option-parser";
 
+import { out } from "../interaction";
+
 // TODO: update this with the real name of the
-const scriptName = "sonoma";
+export const scriptName = "sonoma";
 
 export function runHelp(commandPrototype: any, commandObj: any): void {
   const commandExample: string = getCommandExample(commandPrototype, commandObj);
-  const commandHelp: string = getCommandHelp(commandPrototype);
+  const commandHelp: string = getCommandHelp(commandObj);
   const optionsHelp: string[] = getOptionsHelp(commandPrototype);
+
+  out.help(commandExample);
+  out.help();
+  out.help(commandHelp);
+  out.help();
+  optionsHelp.forEach(h => out.help(h));
 }
 
-function getCommandHelp(commandPrototype: any): string {
-  const helpString = getClassHelpText(commandPrototype);
+function getCommandHelp(commandObj: any): string {
+  const helpString = getClassHelpText(commandObj.constructor);
   return !!helpString ? helpString : "No help text for command. Dev, fix it!";
 }
-
 
 function getOptionsHelp(commandPrototype: any): string[] {
   return [
@@ -30,5 +39,14 @@ function getOptionsHelp(commandPrototype: any): string[] {
 }
 
 function getCommandExample(commandPrototype: any, commandObj: any): string {
-  return "Help text in progress";
+  let commandParts: string[] = commandObj.command;
+
+  let script = commandParts[commandParts.length - 1];
+  let extIndex = script.lastIndexOf(".");
+  if (extIndex > -1) {
+    script = script.slice(0, extIndex);
+  }
+  commandParts[commandParts.length - 1] = script;
+
+  return `${scriptName} ${commandObj.command.join(" ")}`;
 }

@@ -1,10 +1,11 @@
 // Implementation of profile configure command
 
-import { Command, CommandArgs, CommandResult, success, failure, ErrorCodes } from "../../util/commandline";
+import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes } from "../../util/commandline";
 import { prompt, out } from "../../util/interaction";
 import { getUser } from "../../util/profile";
 import { UserClient } from "../../util/apis";
 
+@help("Update user information")
 export default class ProfileConfigureCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);

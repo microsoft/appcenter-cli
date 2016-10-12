@@ -1,10 +1,11 @@
 // profile list command
 
-import { Command, CommandArgs, CommandResult, success } from "../../util/commandline";
+import { Command, CommandArgs, CommandResult, help, success } from "../../util/commandline";
 import { Profile, getUser, environments } from "../../util/profile";
 import { out } from "../../util/interaction";
 import { GetUserResponse, UserClient } from "../../util/apis";
 
+@help("Get information about logged in user")
 export default class ProfileListCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);

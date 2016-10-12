@@ -3,6 +3,7 @@ import * as Result from "./command-result";
 import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription } from "./option-decorators";
 import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "./option-parser";
 import { setDebug, isDebug, setFormatJson } from "../interaction";
+import { runHelp } from "./help";
 
 export interface CommandArgs {
   command: string[];
@@ -21,8 +22,8 @@ export class Command {
   }
 
   // Used by help system to generate help messages
-  private command: string[];
-  private commandPath: string;
+  protected command: string[];
+  protected commandPath: string;
 
   // Default arguments supported by every command
 
@@ -41,7 +42,12 @@ export class Command {
   public help: boolean;
 
   // Entry point for runner. DO NOT override in command definition!
-  execute(): Promise<Result.CommandResult> {
+  async execute(): Promise<Result.CommandResult> {
+
+    if (this.help) {
+      runHelp(Object.getPrototypeOf(this), this);
+      return Result.success();
+    }
 
     if (this.debug) {
       setDebug();
