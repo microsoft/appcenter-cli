@@ -87,13 +87,14 @@ describe("Command line option parsing", function () {
         .and.to.include("input");
     });
 
-  it("should return help string for command", function () {
+    it("should return help string for command", function () {
 
-    @help("This is the help text")
-    class SampleWithHelp {
-    }
+      @help("This is the help text")
+      class SampleWithHelp {
+      }
 
-    const text = getClassHelpText(SampleWithHelp.prototype);
-    expect(text).to.equal("This is the help text");
+      const text = getClassHelpText(SampleWithHelp);
+      expect(text).to.equal("This is the help text");
+    });
   });
 });
