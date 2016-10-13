@@ -3115,7 +3115,6 @@
             }
           }
         },
-        "operationId": "getApp",
         "security": [
           {
             "APIToken": []
@@ -3160,7 +3159,6 @@
             }
           }
         },
-        "operationId": "updateApp",
         "security": [
           {
             "APIToken": []
@@ -3212,7 +3210,6 @@
             }
           }
         },
-        "operationId": "createApp",
         "security": [
           {
             "APIToken": []
@@ -3249,7 +3246,6 @@
             }
           }
         },
-        "operationId": "getApps",
         "security": [
           {
             "APIToken": []
@@ -3293,7 +3289,6 @@
             }
           }
         },
-        "operationId": "deleteApiToken",
         "security": [
           {
             "Basic": []
@@ -3331,7 +3326,6 @@
             }
           }
         },
-        "operationId": "getApiTokens",
         "security": [
           {
             "Basic": []
@@ -3348,13 +3342,6 @@
         "description": "Creates a new API token",
         "operationId": "account_createApiToken",
         "parameters": [
-          {
-            "name": "Authorization",
-            "type": "string",
-            "in": "header",
-            "description": "The basic auth header including the base64-encoded username or email and password",
-            "required": true
-          },
           {
             "name": "description",
             "in": "body",
@@ -3384,7 +3371,6 @@
             }
           }
         },
-        "operationId": "createApiToken",
         "security": [
           {
             "Basic": []

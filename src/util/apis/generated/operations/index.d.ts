@@ -179,6 +179,138 @@ export interface Account {
      */
     getAppInvitations(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     getAppInvitations(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Return a specific app with the given app name which belongs to the given
+     * owner.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The slug name of the app
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getApp(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getApp(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Partially updates a single app
+     *
+     * @param {string} appName The slug name of the app
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.description] A short text describing the app
+     * 
+     * @param {string} [options.displayName] The display name of the app
+     * 
+     * @param {string} [options.name] The name of the app used in URLs
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    updateApp(appName: string, ownerName: string, options: { description? : string, displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+    updateApp(appName: string, ownerName: string, callback: ServiceCallback<models.AppResponse>): void;
+
+    /**
+     * Creates a new app and returns it to the caller
+     *
+     * @param {object} app The data for the app
+     * 
+     * @param {string} [app.description] A short text describing the app
+     * 
+     * @param {string} app.displayName The full name of the user. Might for
+     * example be first and last name
+     * 
+     * @param {string} [app.language] The primary programming language used in the
+     * app
+     * 
+     * @param {string} [app.name] The name of the app used in URLs
+     * 
+     * @param {string} app.platform The platform of the app. Possible values
+     * include: 'iOS', 'Android'
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    createApp(app: models.AppRequest, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    createApp(app: models.AppRequest, callback: ServiceCallback<any>): void;
+
+    /**
+     * Returns a list of apps
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getApps(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getApps(callback: ServiceCallback<any>): void;
+
+    /**
+     * Delete the api_token object with the specific id
+     *
+     * @param {string} apiTokenId The unique ID (UUID) of the api token
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deleteApiToken(apiTokenId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    deleteApiToken(apiTokenId: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Returns api tokens for the authenticated user
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getApiTokens(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getApiTokens(callback: ServiceCallback<any>): void;
+
+    /**
+     * Creates a new API token
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.description] The description of the token
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    createApiToken(options: { description? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    createApiToken(callback: ServiceCallback<any>): void;
 }
 
 /**
