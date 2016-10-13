@@ -7,8 +7,6 @@ import * as path from "path";
 import * as os from "os";
 import * as mkdirp from "mkdirp";
 
-import { CreateAuthTokenResponse } from "../apis/auth-token";
-import { GetUserResponse } from "../apis/users";
 import { environments } from "./environments";
 
 export interface Profile {

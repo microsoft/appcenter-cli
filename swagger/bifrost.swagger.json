@@ -3276,6 +3276,12 @@
               "$ref": "#/definitions/ApiTokenResponse"
             }
           },
+          "204": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ApiTokenResponse"
+            }
+          },
           "400": {
             "description": "Error",
             "schema": {

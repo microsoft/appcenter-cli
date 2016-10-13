@@ -3,13 +3,9 @@
 import { Command, CommandArgs, CommandResult, success, failure, help, shortName, longName, required, hasArg } from "../util/commandline";
 import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser } from "../util/profile";
 import { prompt, out } from "../util/interaction";
-import { AuthTokenClient, CreateAuthTokenResponse } from "../util/apis";
-import { UserClient, GetUserResponse } from "../util/apis";
+import { SonomaClient, models, createSonomaClient, UserClient, GetUserResponse } from "../util/apis";
 
 import { inspect } from "util";
-
-import SonomaClient = require("../util/apis/generated/SonomaClient");
-import { ApiTokensPostResponse, UserProfileResponse } from "../util/apis/generated/models";
 
 import { ServiceClientCredentials } from "ms-rest";
 import { SonomaClientCredentials } from "../util/apis/sonoma-client-credentials";
@@ -69,42 +65,25 @@ export default class LoginCommand extends Command {
       });
     }
 
-    await this.removeLoggedInUserAutorest();
-    await this.doLoginAutorest();
+    await this.removeLoggedInUser();
+    await this.doLogin();
 
     return success();
   }
 
-
-  private async doLogin(): Promise<GetUserResponse> {
-    const endpoint = environments(this.environmentName).endpoint;
-    const tokenClient = new AuthTokenClient(endpoint, this.userName, this.password);
-
-    let token = await out.progress("Logging in ...", tokenClient.createToken());
+  private async doLogin(): Promise<void> {
+    let token: models.ApiTokensPostResponse = await out.progress("Logging in ...", this.createAuthToken());
     debug(`Got response = ${inspect(token)}`);
-
-    let userClient = new UserClient(endpoint, token.api_token);
-    let user = await out.progress("Getting user info ...", userClient.getUser());
-
-    saveUser(user, token, this.environmentName);
-
-    out.text(`Logged in as ${user.name}`);
-    return user;
-  }
-
-  private async doLoginAutorest(): Promise<void> {
-    let token: ApiTokensPostResponse = await out.progress("Logging in ...", this.createAuthTokenAutorest());
-    debug(`Got response = ${inspect(token)}`);
-    let user: UserProfileResponse = await out.progress("Getting user info ...", this.getUserInfoAutorest(token.apiToken));
+    let user: models.UserProfileResponse = await out.progress("Getting user info ...", this.getUserInfo(token.apiToken));
     debug(`Got response = ${inspect(user)}`);
     saveUser(user, token, this.environmentName);
     out.text(`Logged in as ${user.name}`);
   }
 
-  private createAuthTokenAutorest(): Promise<ApiTokensPostResponse> {
+  private createAuthToken(): Promise<models.ApiTokensPostResponse> {
     const endpoint = environments(this.environmentName).endpoint;
-    const creds: ServiceClientCredentials = new BasicAuthenticationCredentials(this.userName, this.password);
-    const client = new SonomaClient(creds, endpoint, {});
+    // const creds: ServiceClientCredentials = new BasicAuthenticationCredentials(this.userName, this.password);
+    const client = createSonomaClient(this.userName, this.password, endpoint); //new SonomaClient(creds, endpoint, {});
 
     return new Promise((resolve, reject) => {
       client.account.createApiToken({description: "Created from sonoma cli"}, function (err, result) {
@@ -117,10 +96,9 @@ export default class LoginCommand extends Command {
     });
   }
 
-  private getUserInfoAutorest(token: string): Promise<UserProfileResponse> {
+  private getUserInfo(token: string): Promise<models.UserProfileResponse> {
     const endpoint = environments(this.environmentName).endpoint;
-    const creds: ServiceClientCredentials = new SonomaClientCredentials(token);
-    const client = new SonomaClient(creds, endpoint, {});
+    const client = createSonomaClient(token, endpoint);
 
     return new Promise((resolve, reject) => {
       client.account.getUserProfile(function (err, result) {
@@ -137,20 +115,8 @@ export default class LoginCommand extends Command {
     const currentUser = getUser();
     if (currentUser !== null) {
       debug(`Currently logged in as ${currentUser.userName}, removing token id ${currentUser.accessTokenId}`);
-      const tokenClient = new AuthTokenClient(currentUser.endpoint, currentUser.accessToken);
-      await out.progress("Cleaning up existing user...",
-        tokenClient.deleteToken(currentUser.accessTokenId));
-      debug(`Token has been removed`);
-      deleteUser();
-    }
-  }
-
-  private async removeLoggedInUserAutorest(): Promise<void> {
-    const currentUser = getUser();
-    if (currentUser !== null) {
-      debug(`Currently logged in as ${currentUser.userName}, removing token id ${currentUser.accessTokenId}`);
-      const creds = new SonomaClientCredentials(currentUser.accessToken);
-      const client = new SonomaClient(creds, currentUser.endpoint, {});
+      //const creds = new SonomaClientCredentials(currentUser.accessToken);
+      const client = createSonomaClient(currentUser);
       await out.progress("Cleaning up existing user...",
         new Promise((resolve, reject) => client.account.deleteApiToken(currentUser.accessTokenId, function (err, result) {
           if (err) { reject(err); }
