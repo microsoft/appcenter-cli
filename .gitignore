@@ -20,6 +20,8 @@ lib-cov
 coverage
 
 dist
+packages
+tools
 
 # Dependency directory
 # Commenting this out is preferred by some people, see

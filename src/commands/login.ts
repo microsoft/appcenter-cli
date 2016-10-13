@@ -3,8 +3,7 @@
 import { Command, CommandArgs, CommandResult, success, failure, help, shortName, longName, required, hasArg } from "../util/commandline";
 import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser } from "../util/profile";
 import { prompt, out } from "../util/interaction";
-import { AuthTokenClient, CreateAuthTokenResponse } from "../util/apis";
-import { UserClient, GetUserResponse } from "../util/apis";
+import { models, createSonomaClient } from "../util/apis";
 
 import { inspect } from "util";
 
@@ -28,7 +27,7 @@ export default class LoginCommand extends Command {
   @hasArg
   password: string;
 
-  @help(`environment to log into (defaults to ${defaultEnvironmentName()})`)
+  //@help(`environment to log into (defaults to ${defaultEnvironmentName()})`)
   @shortName("e")
   @longName("env")
   @hasArg
@@ -68,29 +67,57 @@ export default class LoginCommand extends Command {
     return success();
   }
 
-  private async doLogin(): Promise<GetUserResponse> {
-    const endpoint = environments(this.environmentName).endpoint;
-    const tokenClient = new AuthTokenClient(endpoint, this.userName, this.password);
-
-    let token = await out.progress("Logging in ...", tokenClient.createToken());
+  private async doLogin(): Promise<void> {
+    let token: models.ApiTokensPostResponse = await out.progress("Logging in ...", this.createAuthToken());
     debug(`Got response = ${inspect(token)}`);
-
-    let userClient = new UserClient(endpoint, token.api_token);
-    let user = await out.progress("Getting user info ...", userClient.getUser());
-
+    let user: models.UserProfileResponse = await out.progress("Getting user info ...", this.getUserInfo(token.apiToken));
+    debug(`Got response = ${inspect(user)}`);
     saveUser(user, token, this.environmentName);
-
     out.text(`Logged in as ${user.name}`);
-    return user;
+  }
+
+  private createAuthToken(): Promise<models.ApiTokensPostResponse> {
+    const endpoint = environments(this.environmentName).endpoint;
+    // const creds: ServiceClientCredentials = new BasicAuthenticationCredentials(this.userName, this.password);
+    const client = createSonomaClient(this.userName, this.password, endpoint); //new SonomaClient(creds, endpoint, {});
+
+    return new Promise((resolve, reject) => {
+      client.account.createApiToken({description: "Created from sonoma cli"}, function (err, result) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  }
+
+  private getUserInfo(token: string): Promise<models.UserProfileResponse> {
+    const endpoint = environments(this.environmentName).endpoint;
+    const client = createSonomaClient(token, endpoint);
+
+    return new Promise((resolve, reject) => {
+      client.account.getUserProfile(function (err, result) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
   }
 
   private async removeLoggedInUser(): Promise<void> {
     const currentUser = getUser();
     if (currentUser !== null) {
       debug(`Currently logged in as ${currentUser.userName}, removing token id ${currentUser.accessTokenId}`);
-      const tokenClient = new AuthTokenClient(currentUser.endpoint, currentUser.accessToken);
+      //const creds = new SonomaClientCredentials(currentUser.accessToken);
+      const client = createSonomaClient(currentUser);
       await out.progress("Cleaning up existing user...",
-        tokenClient.deleteToken(currentUser.accessTokenId));
+        new Promise((resolve, reject) => client.account.deleteApiToken(currentUser.accessTokenId, function (err, result) {
+          if (err) { reject(err); }
+          else { resolve(result); }
+        })));
       debug(`Token has been removed`);
       deleteUser();
     }

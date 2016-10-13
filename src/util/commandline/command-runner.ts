@@ -29,7 +29,9 @@ function runner(arg: any): CommandRunner {
     let args: string[];
     let commandPath: string;
     try {
+      debug(`Loading command ${command}`);
       let result = loader(command);
+      debug(`Command loading completed`);
 
       if (result === null) {
         return notFound(command.join(' '));

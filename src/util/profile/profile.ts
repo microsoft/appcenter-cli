@@ -7,8 +7,6 @@ import * as path from "path";
 import * as os from "os";
 import * as mkdirp from "mkdirp";
 
-import { CreateAuthTokenResponse } from "../apis/auth-token";
-import { GetUserResponse } from "../apis/users";
 import { environments } from "./environments";
 
 export interface Profile {
@@ -73,20 +71,21 @@ export function getUser(): Profile {
   return currentProfile;
 }
 
-export function saveUser(user: GetUserResponse, token: CreateAuthTokenResponse, environment: string): void {
+export function saveUser(user: any, token: any, environment: string): Profile {
   let profile = {
     userId: user.id,
     userName: user.name,
-    displayName: user.display_name,
+    displayName: user.display_name || user.displayName,
     environment,
     email: user.email,
     accessTokenId: token.id,
-    accessToken: token.api_token,
+    accessToken: token.api_token || token.apiToken,
     endpoint: environments(environment).endpoint
   };
 
   mkdirp.sync(getProfileDir());
   fs.writeFileSync(getProfileFilename(), JSON.stringify(profile), { encoding: "utf8" });
+  return profile;
 }
 
 export function deleteUser() {
