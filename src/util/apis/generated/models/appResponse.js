@@ -18,6 +18,8 @@ var models = require('./index');
  * in communication with the ingestion endpoint for crash reporting and
  * analytics
  * 
+ * @member {string} [description] The description of the app
+ * 
  * @member {string} displayName The display name of the app
  * 
  * @member {string} name The name of the app used in URLs
@@ -73,6 +75,13 @@ AppResponse.prototype.mapper = function () {
         appSecret: {
           required: true,
           serializedName: 'app_secret',
+          type: {
+            name: 'String'
+          }
+        },
+        description: {
+          required: false,
+          serializedName: 'description',
           type: {
             name: 'String'
           }

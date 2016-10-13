@@ -29,6 +29,38 @@ export interface Failure {
 
 /**
  * @class
+ * Initializes a new instance of the ErrorResponse class.
+ * @constructor
+ * @member {object} error
+ * 
+ * @member {string} [error.code] Possible values include: 'BadRequest',
+ * 'Conflict', 'NotAcceptable', 'NotAuthorized', 'NotFound',
+ * 'InternalServerError'
+ * 
+ * @member {string} [error.message]
+ * 
+ */
+export interface ErrorResponse {
+  error: ErrorDetails;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorDetails class.
+ * @constructor
+ * @member {string} code Possible values include: 'BadRequest', 'Conflict',
+ * 'NotAcceptable', 'NotAuthorized', 'NotFound', 'InternalServerError'
+ * 
+ * @member {string} message
+ * 
+ */
+export interface ErrorDetails {
+  code: string;
+  message: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the ApiTokensPostResponse class.
  * @constructor
  * @member {string} id The unique id (UUID) of the api token
@@ -132,38 +164,6 @@ export interface UserUpdateRequest {
 
 /**
  * @class
- * Initializes a new instance of the ErrorResponse class.
- * @constructor
- * @member {object} error
- * 
- * @member {string} [error.code] Possible values include: 'BadRequest',
- * 'Conflict', 'NotAcceptable', 'NotAuthorized', 'NotFound',
- * 'InternalServerError'
- * 
- * @member {string} [error.message]
- * 
- */
-export interface ErrorResponse {
-  error: ErrorDetails;
-}
-
-/**
- * @class
- * Initializes a new instance of the ErrorDetails class.
- * @constructor
- * @member {string} code Possible values include: 'BadRequest', 'Conflict',
- * 'NotAcceptable', 'NotAuthorized', 'NotFound', 'InternalServerError'
- * 
- * @member {string} message
- * 
- */
-export interface ErrorDetails {
-  code: string;
-  message: string;
-}
-
-/**
- * @class
  * Initializes a new instance of the AppResponse class.
  * @constructor
  * @member {string} id The unique ID (UUID) of the app
@@ -171,6 +171,8 @@ export interface ErrorDetails {
  * @member {string} appSecret A unique and secret key used to identify the app
  * in communication with the ingestion endpoint for crash reporting and
  * analytics
+ * 
+ * @member {string} [description] The description of the app
  * 
  * @member {string} displayName The display name of the app
  * 
@@ -203,6 +205,7 @@ export interface ErrorDetails {
 export interface AppResponse {
   id: string;
   appSecret: string;
+  description?: string;
   displayName: string;
   name: string;
   platform: string;
@@ -309,6 +312,70 @@ export interface SourceRepository {
 export interface Project {
   name: string;
   path: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the XcodeScheme class.
+ * @constructor
+ * @member {string} name Scheme name
+ * 
+ * @member {boolean} hasTestAction Does scheme have a test action?
+ * 
+ */
+export interface XcodeScheme {
+  name: string;
+  hasTestAction: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the XcodeSchemeContainer class.
+ * @constructor
+ * @member {string} path Path to project
+ * 
+ * @member {array} sharedSchemes Project schemes
+ * 
+ * @member {string} [podfilePath] Path to CococaPods file, if present
+ * 
+ */
+export interface XcodeSchemeContainer {
+  path: string;
+  sharedSchemes: XcodeScheme[];
+  podfilePath?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the XamarinSolution class.
+ * @constructor
+ * @member {string} path Path to solution
+ * 
+ * @member {array} configurations Solution configurations
+ * 
+ */
+export interface XamarinSolution {
+  path: string;
+  configurations: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ToolsetProjects class.
+ * @constructor
+ * A collection of projects for each type of toolset
+ *
+ * @member {array} [xcode] Xcode projects, with their schemes
+ * 
+ * @member {array} [javascript] package.json filess
+ * 
+ * @member {array} [xamarin] Xamarin solutions
+ * 
+ */
+export interface ToolsetProjects {
+  xcode?: XcodeSchemeContainer[];
+  javascript?: string[];
+  xamarin?: XamarinSolution[];
 }
 
 /**
@@ -457,12 +524,195 @@ export interface Commit {
  * 
  * @member {boolean} [signed]
  * 
+ * @member {object} [toolsets]
+ * 
+ * @member {object} [toolsets.xcode]
+ * 
+ * @member {string} [toolsets.xcode.projectOrWorkspacePath] Xcode
+ * project/workspace path
+ * 
+ * @member {string} [toolsets.xcode.podfilePath] Path to CococaPods file, if
+ * present
+ * 
+ * @member {string} [toolsets.xcode.provisioningProfileEncoded]
+ * 
+ * @member {string} [toolsets.xcode.certificateEncoded]
+ * 
+ * @member {string} [toolsets.xcode.certificatePassword]
+ * 
+ * @member {string} [toolsets.xcode.scheme]
+ * 
+ * @member {string} [toolsets.xcode.xcodeVersion]
+ * 
+ * @member {string} [toolsets.xcode.provisioningProfileFilename]
+ * 
+ * @member {string} [toolsets.xcode.certificateFilename]
+ * 
+ * @member {object} [toolsets.javascript]
+ * 
+ * @member {string} [toolsets.javascript.packageJsonPath] Path to package.json
+ * file for the main project, e.g. "package.json" or "myapp/package.json"
+ * 
+ * @member {object} [toolsets.xamarin]
+ * 
+ * @member {string} [toolsets.xamarin.slnPath]
+ * 
+ * @member {string} [toolsets.xamarin.isSimBuild]
+ * 
+ * @member {string} [toolsets.xamarin.args]
+ * 
+ * @member {string} [toolsets.xamarin.configuration]
+ * 
+ * @member {string} [toolsets.xamarin.p12File]
+ * 
+ * @member {string} [toolsets.xamarin.p12Pwd]
+ * 
+ * @member {string} [toolsets.xamarin.provProfile]
+ * 
  */
 export interface BranchConfiguration {
   id: number;
   trigger?: string;
   testsEnabled?: boolean;
   signed?: boolean;
+  toolsets?: BranchConfigurationToolsets;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the BranchConfigurationToolsets class.
+ * @constructor
+ * The branch build configuration for each toolset
+ *
+ * @member {object} [xcode]
+ * 
+ * @member {string} [xcode.projectOrWorkspacePath] Xcode project/workspace path
+ * 
+ * @member {string} [xcode.podfilePath] Path to CococaPods file, if present
+ * 
+ * @member {string} [xcode.provisioningProfileEncoded]
+ * 
+ * @member {string} [xcode.certificateEncoded]
+ * 
+ * @member {string} [xcode.certificatePassword]
+ * 
+ * @member {string} [xcode.scheme]
+ * 
+ * @member {string} [xcode.xcodeVersion]
+ * 
+ * @member {string} [xcode.provisioningProfileFilename]
+ * 
+ * @member {string} [xcode.certificateFilename]
+ * 
+ * @member {object} [javascript]
+ * 
+ * @member {string} [javascript.packageJsonPath] Path to package.json file for
+ * the main project, e.g. "package.json" or "myapp/package.json"
+ * 
+ * @member {object} [xamarin]
+ * 
+ * @member {string} [xamarin.slnPath]
+ * 
+ * @member {string} [xamarin.isSimBuild]
+ * 
+ * @member {string} [xamarin.args]
+ * 
+ * @member {string} [xamarin.configuration]
+ * 
+ * @member {string} [xamarin.p12File]
+ * 
+ * @member {string} [xamarin.p12Pwd]
+ * 
+ * @member {string} [xamarin.provProfile]
+ * 
+ */
+export interface BranchConfigurationToolsets {
+  xcode?: XcodeBranchConfigurationProperties;
+  javascript?: JavaScriptBranchConfigurationProperties;
+  xamarin?: XamarinBranchConfigurationProperties;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the XcodeBranchConfigurationProperties class.
+ * @constructor
+ * Build configuration when Xcode is part of the build steps
+ *
+ * @member {string} projectOrWorkspacePath Xcode project/workspace path
+ * 
+ * @member {string} [podfilePath] Path to CococaPods file, if present
+ * 
+ * @member {string} [provisioningProfileEncoded]
+ * 
+ * @member {string} [certificateEncoded]
+ * 
+ * @member {string} [certificatePassword]
+ * 
+ * @member {string} scheme
+ * 
+ * @member {string} xcodeVersion
+ * 
+ * @member {string} [provisioningProfileFilename]
+ * 
+ * @member {string} [certificateFilename]
+ * 
+ */
+export interface XcodeBranchConfigurationProperties {
+  projectOrWorkspacePath: string;
+  podfilePath?: string;
+  provisioningProfileEncoded?: string;
+  certificateEncoded?: string;
+  certificatePassword?: string;
+  scheme: string;
+  xcodeVersion: string;
+  provisioningProfileFilename?: string;
+  certificateFilename?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the JavaScriptBranchConfigurationProperties class.
+ * @constructor
+ * Build configuration when React Native, or other JavaScript tech, is part of
+ * the build steps
+ *
+ * @member {string} packageJsonPath Path to package.json file for the main
+ * project, e.g. "package.json" or "myapp/package.json"
+ * 
+ */
+export interface JavaScriptBranchConfigurationProperties {
+  packageJsonPath: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the XamarinBranchConfigurationProperties class.
+ * @constructor
+ * Build configuration for Xamarin projects
+ *
+ * @member {string} slnPath
+ * 
+ * @member {string} isSimBuild
+ * 
+ * @member {string} args
+ * 
+ * @member {string} configuration
+ * 
+ * @member {string} p12File
+ * 
+ * @member {string} p12Pwd
+ * 
+ * @member {string} provProfile
+ * 
+ */
+export interface XamarinBranchConfigurationProperties {
+  slnPath: string;
+  isSimBuild: string;
+  args: string;
+  configuration: string;
+  p12File: string;
+  p12Pwd: string;
+  provProfile: string;
 }
 
 /**
@@ -1115,6 +1365,34 @@ export interface HistogramDataItem {
 
 /**
  * @class
+ * Initializes a new instance of the CrashCounts class.
+ * @constructor
+ * @member {number} [totalCount]
+ * 
+ * @member {array} [crashes] the total crash count for day
+ * 
+ */
+export interface CrashCounts {
+  totalCount?: number;
+  crashes?: DateTimeCounts[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DateTimeCounts class.
+ * @constructor
+ * @member {string} [datetime] the ISO 8601 datetime
+ * 
+ * @member {number} [count] count of the object
+ * 
+ */
+export interface DateTimeCounts {
+  datetime?: string;
+  count?: number;
+}
+
+/**
+ * @class
  * Initializes a new instance of the ActiveDeviceCounts class.
  * @constructor
  * @member {array} [daily] the active device count for each interval
@@ -1130,20 +1408,6 @@ export interface ActiveDeviceCounts {
   daily?: DateTimeCounts[];
   weekly?: DateTimeCounts[];
   monthly?: DateTimeCounts[];
-}
-
-/**
- * @class
- * Initializes a new instance of the DateTimeCounts class.
- * @constructor
- * @member {string} [datetime] the ISO 8601 datetime
- * 
- * @member {number} [count] count of the object
- * 
- */
-export interface DateTimeCounts {
-  datetime?: string;
-  count?: number;
 }
 
 /**
@@ -1440,4 +1704,159 @@ export interface OS {
 export interface AvailableVersions {
   versions?: string[];
   totalCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashFreeDevicePercentages class.
+ * @constructor
+ * @member {number} [overtimePercentage]
+ * 
+ * @member {array} [dailyPercentages] the crash-free percentage for day
+ * 
+ */
+export interface CrashFreeDevicePercentages {
+  overtimePercentage?: number;
+  dailyPercentages?: DateTimePercentages[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DateTimePercentages class.
+ * @constructor
+ * @member {string} [datetime] the ISO 8601 datetime
+ * 
+ * @member {number} [percentage] percentage of the object
+ * 
+ */
+export interface DateTimePercentages {
+  datetime?: string;
+  percentage?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashesOverallItem class.
+ * @constructor
+ * @member {string} [crashGroupId]
+ * 
+ * @member {string} [appVersion]
+ * 
+ * @member {object} [overall]
+ * 
+ * @member {number} [overall.crashCount]
+ * 
+ * @member {number} [overall.deviceCount]
+ * 
+ */
+export interface CrashesOverallItem {
+  crashGroupId?: string;
+  appVersion?: string;
+  overall?: CrashOverall;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashOverall class.
+ * @constructor
+ * @member {number} [crashCount]
+ * 
+ * @member {number} [deviceCount]
+ * 
+ */
+export interface CrashOverall {
+  crashCount?: number;
+  deviceCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroupModels class.
+ * @constructor
+ * @member {number} [total]
+ * 
+ * @member {array} [models]
+ * 
+ */
+export interface CrashGroupModels {
+  total?: number;
+  models?: CrashGroupModel[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroupModel class.
+ * @constructor
+ * @member {string} [modelName] model's name
+ * 
+ * @member {number} [count] count of model
+ * 
+ */
+export interface CrashGroupModel {
+  modelName?: string;
+  count?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroupOSes class.
+ * @constructor
+ * @member {number} [total]
+ * 
+ * @member {array} [oses]
+ * 
+ */
+export interface CrashGroupOSes {
+  total?: number;
+  oses?: CrashGroupOS[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroupOS class.
+ * @constructor
+ * @member {string} [osName] OS name
+ * 
+ * @member {number} [count] count of OS
+ * 
+ */
+export interface CrashGroupOS {
+  osName?: string;
+  count?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroupContainer class.
+ * @constructor
+ * @member {array} crashgroups
+ * 
+ */
+export interface CrashGroupContainer {
+  crashgroups: CrashgroupModelModel[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashgroupModelModel class.
+ * @constructor
+ * @member {string} [crashGroupId]
+ * 
+ * @member {string} [appVersion]
+ * 
+ */
+export interface CrashgroupModelModel {
+  crashGroupId?: string;
+  appVersion?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Crashgroups class.
+ * @constructor
+ * @member {array} crashgroupsProperty
+ * 
+ */
+export interface Crashgroups {
+  crashgroupsProperty: CrashgroupModelModel[];
 }

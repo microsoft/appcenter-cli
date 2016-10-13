@@ -6,6 +6,8 @@
 
 'use strict';
 
+var models = require('./index');
+
 /**
  * @class
  * Initializes a new instance of the BranchConfiguration class.
@@ -19,6 +21,51 @@
  * @member {boolean} [testsEnabled]
  * 
  * @member {boolean} [signed]
+ * 
+ * @member {object} [toolsets]
+ * 
+ * @member {object} [toolsets.xcode]
+ * 
+ * @member {string} [toolsets.xcode.projectOrWorkspacePath] Xcode
+ * project/workspace path
+ * 
+ * @member {string} [toolsets.xcode.podfilePath] Path to CococaPods file, if
+ * present
+ * 
+ * @member {string} [toolsets.xcode.provisioningProfileEncoded]
+ * 
+ * @member {string} [toolsets.xcode.certificateEncoded]
+ * 
+ * @member {string} [toolsets.xcode.certificatePassword]
+ * 
+ * @member {string} [toolsets.xcode.scheme]
+ * 
+ * @member {string} [toolsets.xcode.xcodeVersion]
+ * 
+ * @member {string} [toolsets.xcode.provisioningProfileFilename]
+ * 
+ * @member {string} [toolsets.xcode.certificateFilename]
+ * 
+ * @member {object} [toolsets.javascript]
+ * 
+ * @member {string} [toolsets.javascript.packageJsonPath] Path to package.json
+ * file for the main project, e.g. "package.json" or "myapp/package.json"
+ * 
+ * @member {object} [toolsets.xamarin]
+ * 
+ * @member {string} [toolsets.xamarin.slnPath]
+ * 
+ * @member {string} [toolsets.xamarin.isSimBuild]
+ * 
+ * @member {string} [toolsets.xamarin.args]
+ * 
+ * @member {string} [toolsets.xamarin.configuration]
+ * 
+ * @member {string} [toolsets.xamarin.p12File]
+ * 
+ * @member {string} [toolsets.xamarin.p12Pwd]
+ * 
+ * @member {string} [toolsets.xamarin.provProfile]
  * 
  */
 function BranchConfiguration() {
@@ -64,6 +111,14 @@ BranchConfiguration.prototype.mapper = function () {
           serializedName: 'signed',
           type: {
             name: 'Boolean'
+          }
+        },
+        toolsets: {
+          required: false,
+          serializedName: 'toolsets',
+          type: {
+            name: 'Composite',
+            className: 'BranchConfigurationToolsets'
           }
         }
       }

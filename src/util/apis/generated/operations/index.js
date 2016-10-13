@@ -10,24 +10,8 @@
 
 'use strict';
 
-exports.Invitations = require('./invitations');
-exports.Users = require('./users');
-exports.XcodeVersions = require('./xcodeVersions');
-exports.VersionsOperations = require('./versionsOperations');
-exports.Apps = require('./apps');
-exports.Symbols = require('./symbols');
-exports.SymbolUploads = require('./symbolUploads');
-exports.SymbolUpLoadsOperations = require('./symbolUpLoadsOperations');
-exports.SymbolUploadOperations = require('./symbolUploadOperations');
-exports.Repositories = require('./repositories');
-exports.Packages = require('./packages');
-exports.PackageModel = require('./packageModel');
-exports.PackageUpload = require('./packageUpload');
+exports.Account = require('./account');
+exports.BuildOperations = require('./buildOperations');
 exports.CrashOperations = require('./crashOperations');
-exports.Commits = require('./commits');
-exports.Builds = require('./builds');
-exports.Branches = require('./branches');
-exports.Sessions = require('./sessions');
-exports.Devices = require('./devices');
-exports.Available = require('./available');
-exports.ApiTokens = require('./apiTokens');
+exports.Distribute = require('./distribute');
+exports.Analytics = require('./analytics');
