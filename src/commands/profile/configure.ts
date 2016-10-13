@@ -3,7 +3,7 @@
 import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes } from "../../util/commandline";
 import { prompt, out } from "../../util/interaction";
 import { getUser } from "../../util/profile";
-import { createSonomaClient, models } from "../../util/apis";
+import { SonomaClient, models } from "../../util/apis";
 
 @help("Update user information")
 export default class ProfileConfigureCommand extends Command {
@@ -11,14 +11,7 @@ export default class ProfileConfigureCommand extends Command {
     super(args);
   }
 
-  async run(): Promise<CommandResult> {
-    const currentUser = getUser();
-    if (!currentUser) {
-      out.text(`Not logged in, use 'sonoma login' command to log in.`);
-      return failure(ErrorCodes.NotLoggedIn, "No logged in user");
-    }
-
-    const client = createSonomaClient(currentUser);
+  async run(client: SonomaClient): Promise<CommandResult> {
     let profile = await out.progress("Getting current user profile...",
       new Promise<models.UserProfileResponse>((resolve, reject) => {
         client.account.getUserProfile((err, result) => {

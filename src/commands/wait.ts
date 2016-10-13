@@ -15,7 +15,7 @@ export default class WaitCommand extends Command {
   @hasArg
   public delay: string;
 
-  async run(): Promise<CommandResult> {
+  async runNoClient(): Promise<CommandResult> {
     let delayMs: number = parseInt(this.delay);
     if (Number.isNaN(delayMs)) {
       return failure(ErrorCodes.InvalidParameter, `delay must be a number`);

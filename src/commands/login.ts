@@ -33,7 +33,7 @@ export default class LoginCommand extends Command {
   @hasArg
   environmentName: string;
 
-  async run(): Promise<CommandResult> {
+  async runNoClient(): Promise<CommandResult> {
     let questions: any[] = [
       {
         name: "userName",

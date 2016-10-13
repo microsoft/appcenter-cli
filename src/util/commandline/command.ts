@@ -4,6 +4,8 @@ import { shortName, longName, help, hasArg, getOptionsDescription, getPositional
 import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "./option-parser";
 import { setDebug, isDebug, setFormatJson } from "../interaction";
 import { runHelp } from "./help";
+import { getUser } from "../profile";
+import { SonomaClient, createSonomaClient } from "../apis";
 
 export interface CommandArgs {
   command: string[];
@@ -66,11 +68,22 @@ export class Command {
             throw new Error(`Unknown output format ${this.format}`);
         }
     }
-    return this.run();
+    return this.runNoClient();
+  }
+
+  // Entry point to load sonoma client.
+  // Override this if your command needs to do something special with login - typically just
+  // the login command
+  protected runNoClient(): Promise<Result.CommandResult> {
+    var user = getUser();
+    if (user) {
+      return this.run(createSonomaClient(user));
+    }
+    return Promise.resolve(Result.notLoggedIn("You are not logged in. Use the 'sonoma login' command to log in."));
   }
 
   // Entry point for command author - override this!
-  run(): Promise<Result.CommandResult> {
+  protected run(client: SonomaClient): Promise<Result.CommandResult> {
     throw new Error("Dev error, should be overridden!");
   }
 }
