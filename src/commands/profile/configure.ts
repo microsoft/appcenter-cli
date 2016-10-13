@@ -3,7 +3,7 @@
 import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes } from "../../util/commandline";
 import { prompt, out } from "../../util/interaction";
 import { getUser } from "../../util/profile";
-import { UserClient } from "../../util/apis";
+import { createSonomaClient, models } from "../../util/apis";
 
 @help("Update user information")
 export default class ProfileConfigureCommand extends Command {
@@ -18,27 +18,40 @@ export default class ProfileConfigureCommand extends Command {
       return failure(ErrorCodes.NotLoggedIn, "No logged in user");
     }
 
-    const userClient = new UserClient(currentUser.endpoint, currentUser.accessToken);
-    let profile = await out.progress("Getting current user profile...", userClient.getUser());
+    const client = createSonomaClient(currentUser);
+    let profile = await out.progress("Getting current user profile...",
+      new Promise<models.UserProfileResponse>((resolve, reject) => {
+        client.account.getUserProfile((err, result) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+        });
+      }));
 
     const questions: any[] = [
       {
         type: "input",
-        name: "display_name",
+        name: "displayName",
         message: "Display name",
-        default: profile.display_name
+        default: profile.displayName
       }
     ];
 
-    const answers = await prompt.question(questions);
+    const answers: any = await prompt.question(questions);
     const anyChanged = Object.keys(answers).some(k => answers[k] !== (<any>profile)[k]);
 
     if (anyChanged) {
-      const updated = await out.progress("Updating user profile...", userClient.updateUser(answers));
+      const updated = await out.progress("Updating user profile...",
+        new Promise<models.UserProfileResponse>((resolve, reject) => {
+          client.account.updateUserProfile({ displayName: answers.displayName }, (err, result) => {
+            if (err) { reject(err); }
+            else { resolve(result); }
+          });
+        }));
+
       out.report(
         [
           ["Username", "name" ],
-          [ "Display Name", "display_name" ],
+          [ "Display Name", "displayName" ],
           [ "Email", "email"]
         ], updated);
     } else {

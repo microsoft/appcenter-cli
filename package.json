@@ -41,7 +41,6 @@
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "ms-rest": "^1.15.0",
-    "node-fetch": "^1.6.1",
     "wordwrap": "^1.0.0"
   }
 }

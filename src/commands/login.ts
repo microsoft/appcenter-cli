@@ -3,13 +3,9 @@
 import { Command, CommandArgs, CommandResult, success, failure, help, shortName, longName, required, hasArg } from "../util/commandline";
 import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser } from "../util/profile";
 import { prompt, out } from "../util/interaction";
-import { SonomaClient, models, createSonomaClient, UserClient, GetUserResponse } from "../util/apis";
+import { models, createSonomaClient } from "../util/apis";
 
 import { inspect } from "util";
-
-import { ServiceClientCredentials } from "ms-rest";
-import { SonomaClientCredentials } from "../util/apis/sonoma-client-credentials";
-const BasicAuthenticationCredentials = require("ms-rest").BasicAuthenticationCredentials;
 
 const debug = require("debug")("sonoma-cli:commands:login");
 

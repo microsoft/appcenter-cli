@@ -1,7 +1,7 @@
 import { Command, CommandArgs, CommandResult, help, success, failure, notLoggedIn } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { getUser } from "../../util/profile";
-import { AppsClient, AppResponse } from "../../util/apis";
+import { createSonomaClient, models } from "../../util/apis";
 
 @help("Get list of configured applications")
 export default class AppsListCommand extends Command {
@@ -9,7 +9,7 @@ export default class AppsListCommand extends Command {
     super(args);
   }
 
-  formatApp(app: AppResponse): string {
+  formatApp(app: models.AppResponse): string {
     return `  ${app.owner.name}/${app.name}`;
   }
 
@@ -19,8 +19,13 @@ export default class AppsListCommand extends Command {
       return notLoggedIn('apps list');
     }
 
-    const client = new AppsClient(currentUser.endpoint, currentUser.accessToken);
-    const apps = await out.progress("Getting app list ...", client.list());
+    const client = createSonomaClient(currentUser);;
+    const apps = await out.progress("Getting app list ...", new Promise<models.AppResponse[]>((resolve, reject) => {
+      client.account.getApps((err, result) => {
+        if (err) { reject(err); }
+        else { resolve(result); }
+      });
+    }));
 
     out.list(this.formatApp, apps);
 
