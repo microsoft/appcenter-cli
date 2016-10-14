@@ -23,7 +23,8 @@ Install the latese version of Node 6 from [here](https://nodejs.org). If you are
 a 64-bit version.
 
 Also have a working git installation. You will need access to this [repo](https://github.com/Microsoft/sonoma-cli).
-At this time, repo access is managed manually, please contact Chris Tavares (ctavares@microsoft.com or @ctavares-ms on Xamarin slack)
+At this time, repo access is managed manually. Everyone in the sonoma group should have read access. If not, please
+contact Chris Tavares (ctavares@microsoft.com or @ctavares-ms on Xamarin slack)
 or Matt Gibbs (matt.gibbs@microsoft.com or @mattgi on Xamarin slack) to get added to the repo.
 
 ### Optional Tools
@@ -46,10 +47,20 @@ The Typings tool is useful if you're bringing in a new exteral Javascript librar
 for that library. The typings files are checked into the repo, but if you want to download and add new ones, you'll need to
 install typings: `npm install -g typings`.
 
+#### gulp
+
+gulp is used as a task runner to get everything built and in the right place. Everything is hooked up through NPM scripts, but if you
+want to save some characters at the command line, install `npm install -g gulp-cli`.
+
 #### ts-node
 
 By default, to run the CLI you need to compile the typescript explicitly first. The `ts-node` command line tool will let you run
 `.ts` files directly from the command line. Install it with `npm install -g ts-node`.
+
+#### mono
+
+If you want to regenerate the HTTP client code from a non-Windows machine, you'll need mono installed and on your path.
+see the [Mono download page](http://www.mono-project.com/download/) for downloads and installation instructions.
 
 ## Troubleshooting
 
@@ -87,8 +98,24 @@ There are a bunch of scripts in package.json file. Here's what they are and what
 | `npm run test` | Runs the test suite. Can also be run with `npm test` |
 | `npm run watch-test` | Runs a watcher on the test file that will rerun tests automatically on save |
 | `npm run clean` | Cleans up any compilation output |
+| `npm run autorest` | Regenerate the HTTP client libraries. Downloads required tools as part of this process |
 
 There will be more over time.
+
+## Gulp targets
+
+The gulpfile.js file contains the following targets that can be called manually if you desire
+
+| Target | npm script |What it does |
+|--------|------------|-------------|
+| `clean`  | `clean` | Deletes the dist folder |
+| `build-ts` | | Runs typesscript compiler, using settings in tsconfig.json |
+| `copy-assets` | | Copies .txt files from src to dist (category descriptions) |
+| `copy-generated-client` | | Copies the generated HTTP client code to dist |
+| `build` | `build` | Runs the build (build-ts, copy-assets, copy-generated-clients) |
+| `clean-autorest` | | Deleted all generated code from src directory |
+| `autorest` | `autorest` | Regenerate client code from swagger/bifrost.swagger.json file |
+| `default` | | Runs the build task |
 
 # Touring the codebase
 
@@ -124,8 +151,10 @@ For example:
 | `sonoma profile configure` | src/commands/profile/configure.ts |
 | `sonoma apps list` | src/commands/apps/list.ts |
 
-The command line parser and dispatcher uses the directory structure and file names to determine which
-code to run, so the naming conventions are important.
+The command line parser and dispatcher uses the directory structure and file names to determine which code to run, so the naming conventions are important.
+
+In addition, place a `category.txt` file in your category directory. The contents of
+this file will be displayed by the help system when getting help for the category.
 
 (Coming Soon, planned but not yet implemented)
 If you have shared code across commands in your category, you can add a directory named `lib` in category's directory and put that code there. The command line dispatcher will explicitly ignore
@@ -137,15 +166,15 @@ This contains framework and utility code used across all the commands. See readm
 
 #### src/util/apis
 
-Http client wrappers. Right now this is a set of hand coded utilities, will be replaced by Autorest generated code.
+Http client wrappers and utility code for handling HTTP communication with Bifrost.
+
+#### src/util/apis/generated
+
+Autorest-generated client code for talking to Bifrost.
 
 #### src/util/commandline
 
 The command line parser and dispatching code, along with base class and decorators for implementing commands.
-
-#### src/util/http
-
-Helper code for implementing hand-rolled Http clients. Will be going away once Autorest clients are working.
 
 #### src/util/interaction
 
@@ -157,6 +186,10 @@ Commands should use these rather than directly using `console.log` because the i
 #### src/util/profile
 
 Code for storing and retrieving information about the current logged in user.
+
+#### scripts
+
+Support files for build and packaging.
 
 #### test
 
