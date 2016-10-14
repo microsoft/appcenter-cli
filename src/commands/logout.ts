@@ -10,7 +10,8 @@ export default class LogoutCommand extends Command {
 
   async run(client: SonomaClient): Promise<CommandResult> {
     const currentUser = getUser();
-    await out.progress("Removing access token ...", new Promise((resolve, reject) => {
+    await out.progress("Removing access token ...",
+     new Promise((resolve, reject) => {
       client.account.deleteApiToken(currentUser.accessTokenId, (err) => {
         if (err) { reject(err); }
         else { resolve(); }

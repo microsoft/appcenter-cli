@@ -7,6 +7,9 @@ import { runHelp } from "./help";
 import { getUser } from "../profile";
 import { SonomaClient, createSonomaClient } from "../apis";
 
+import { inspect } from "util";
+const debug = require("debug")("sonoma-cli:util:commandline:command");
+
 export interface CommandArgs {
   command: string[];
   commandPath: string;
