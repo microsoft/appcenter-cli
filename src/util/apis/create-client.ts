@@ -4,6 +4,8 @@ const debug = require("debug")("sonoma-cli:util:apis:create-client");
 import SonomaClient = require("./generated/SonomaClient");
 import { SonomaClientCredentials } from "./sonoma-client-credentials";
 const BasicAuthenticationCredentials = require("ms-rest").BasicAuthenticationCredentials;
+import { ServiceCallback } from "ms-rest";
+
 const createLogger = require('ms-rest').LogFilter.create;
 
 import { isDebug } from "../interaction";
@@ -47,4 +49,14 @@ function createSonomaAuthClient(user: Profile): SonomaClient {
   }
   debug(`Creating client from user for endpoint ${user.endpoint}`);
   return new SonomaClient(new SonomaClientCredentials(user.accessToken), user.endpoint, createClientOptions());
+}
+
+// Helper function to wrap client calls into promises while maintaining some type safety.
+export function clientCall<T>(action: {(cb: ServiceCallback<any>): void}): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    action((err: Error, result: T) => {
+      if (err) { reject(err); }
+      else { resolve(result); }
+    });
+  });
 }

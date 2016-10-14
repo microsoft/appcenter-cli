@@ -3,7 +3,7 @@
 import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes } from "../../util/commandline";
 import { prompt, out } from "../../util/interaction";
 import { getUser } from "../../util/profile";
-import { SonomaClient, models } from "../../util/apis";
+import { SonomaClient, models, clientCall } from "../../util/apis";
 
 @help("Update user information")
 export default class ProfileConfigureCommand extends Command {
@@ -13,12 +13,7 @@ export default class ProfileConfigureCommand extends Command {
 
   async run(client: SonomaClient): Promise<CommandResult> {
     let profile = await out.progress("Getting current user profile...",
-      new Promise<models.UserProfileResponse>((resolve, reject) => {
-        client.account.getUserProfile((err, result) => {
-          if (err) { reject(err); }
-          else { resolve(result); }
-        });
-      }));
+      clientCall(cb => client.account.getUserProfile(cb)));
 
     const questions: any[] = [
       {
@@ -34,12 +29,7 @@ export default class ProfileConfigureCommand extends Command {
 
     if (anyChanged) {
       const updated = await out.progress("Updating user profile...",
-        new Promise<models.UserProfileResponse>((resolve, reject) => {
-          client.account.updateUserProfile({ displayName: answers.displayName }, (err, result) => {
-            if (err) { reject(err); }
-            else { resolve(result); }
-          });
-        }));
+        clientCall(cb => client.account.updateUserProfile({ displayName: answers.displayName }, cb));
 
       out.report(
         [

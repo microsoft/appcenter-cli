@@ -3,7 +3,7 @@ import * as Result from "./command-result";
 import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription } from "./option-decorators";
 import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "./option-parser";
 import { setDebug, isDebug, setFormatJson } from "../interaction";
-import { runHelp } from "./help";
+import { runHelp, scriptName } from "./help";
 import { getUser } from "../profile";
 import { SonomaClient, createSonomaClient } from "../apis";
 
@@ -79,7 +79,7 @@ export class Command {
     if (user) {
       return this.run(createSonomaClient(user));
     }
-    return Promise.resolve(Result.notLoggedIn("You are not logged in. Use the 'sonoma login' command to log in."));
+    return Promise.resolve(Result.notLoggedIn(`You are not logged in. Use the '${scriptName} login' command to log in.`));
   }
 
   // Entry point for command author - override this!

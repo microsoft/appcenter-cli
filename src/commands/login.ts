@@ -3,7 +3,7 @@
 import { Command, CommandArgs, CommandResult, success, failure, help, shortName, longName, required, hasArg } from "../util/commandline";
 import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser } from "../util/profile";
 import { prompt, out } from "../util/interaction";
-import { models, createSonomaClient } from "../util/apis";
+import { models, createSonomaClient, clientCall } from "../util/apis";
 
 import { inspect } from "util";
 
@@ -80,44 +80,22 @@ export default class LoginCommand extends Command {
     const endpoint = environments(this.environmentName).endpoint;
     // const creds: ServiceClientCredentials = new BasicAuthenticationCredentials(this.userName, this.password);
     const client = createSonomaClient(this.userName, this.password, endpoint); //new SonomaClient(creds, endpoint, {});
-
-    return new Promise((resolve, reject) => {
-      client.account.createApiToken({description: "Created from sonoma cli"}, function (err, result) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-    });
+    return clientCall<models.ApiTokensPostResponse>(cb => client.account.createApiToken({ description: "Created from sonoma cli"}, cb));
   }
 
   private getUserInfo(token: string): Promise<models.UserProfileResponse> {
     const endpoint = environments(this.environmentName).endpoint;
     const client = createSonomaClient(token, endpoint);
-
-    return new Promise((resolve, reject) => {
-      client.account.getUserProfile(function (err, result) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-    });
+    return clientCall<models.UserProfileResponse>(cb => client.account.getUserProfile(cb));
   }
 
   private async removeLoggedInUser(): Promise<void> {
     const currentUser = getUser();
     if (currentUser !== null) {
       debug(`Currently logged in as ${currentUser.userName}, removing token id ${currentUser.accessTokenId}`);
-      //const creds = new SonomaClientCredentials(currentUser.accessToken);
       const client = createSonomaClient(currentUser);
       await out.progress("Cleaning up existing user...",
-        new Promise((resolve, reject) => client.account.deleteApiToken(currentUser.accessTokenId, function (err, result) {
-          if (err) { reject(err); }
-          else { resolve(result); }
-        })));
+        clientCall<void>(cb => client.account.deleteApiToken(currentUser.accessTokenId, cb)));
       debug(`Token has been removed`);
       deleteUser();
     }
