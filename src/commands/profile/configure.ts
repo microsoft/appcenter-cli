@@ -2,8 +2,9 @@
 
 import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes } from "../../util/commandline";
 import { prompt, out } from "../../util/interaction";
-import { getUser } from "../../util/profile";
+import { Profile, getUser } from "../../util/profile";
 import { SonomaClient, models, clientCall } from "../../util/apis";
+import { reportProfile } from "./lib/format-profile";
 
 @help("Update user information")
 export default class ProfileConfigureCommand extends Command {
@@ -13,7 +14,7 @@ export default class ProfileConfigureCommand extends Command {
 
   async run(client: SonomaClient): Promise<CommandResult> {
     let profile = await out.progress("Getting current user profile...",
-      clientCall(cb => client.account.getUserProfile(cb)));
+      clientCall<Profile>(cb => client.account.getUserProfile(cb)));
 
     const questions: any[] = [
       {
@@ -29,14 +30,10 @@ export default class ProfileConfigureCommand extends Command {
 
     if (anyChanged) {
       const updated = await out.progress("Updating user profile...",
-        clientCall(cb => client.account.updateUserProfile({ displayName: answers.displayName }, cb));
+        clientCall<models.UserProfileResponse>(cb => client.account.updateUserProfile({ displayName: answers.displayName }, cb))
+      );
 
-      out.report(
-        [
-          ["Username", "name" ],
-          [ "Display Name", "displayName" ],
-          [ "Email", "email"]
-        ], updated);
+      reportProfile(updated);
     } else {
       out.text("No changes to profile");
     }

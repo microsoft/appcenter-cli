@@ -43,7 +43,7 @@ const legalCommandRegex = /^[a-zA-Z0-9_-]+$/;
 
 function isLegalCommandName(commandName: string): boolean {
   debug(`Checking legality of '${commandName}'`);
-  return legalCommandRegex.test(commandName);
+  return legalCommandRegex.test(commandName) && commandName !== "lib";
 }
 
 function splitCommandLine(command: string[]): [string[], string[]] {
