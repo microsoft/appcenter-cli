@@ -15,7 +15,7 @@ export default class AppsListCommand extends Command {
 
   async run(client: SonomaClient): Promise<CommandResult> {
     const apps = await out.progress("Getting app list ...",
-      clientCall(cb => client.account.getApps(cb));
+      clientCall<models.AppResponse[]>(cb => client.account.getApps(cb)));
 
     out.list(this.formatApp, apps);
 

@@ -4,6 +4,7 @@ import { Command, CommandArgs, CommandResult, success, failure, help, shortName,
 import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser } from "../util/profile";
 import { prompt, out } from "../util/interaction";
 import { models, createSonomaClient, clientCall } from "../util/apis";
+import { logout } from "./lib/logout";
 
 import { inspect } from "util";
 
@@ -93,11 +94,9 @@ export default class LoginCommand extends Command {
     const currentUser = getUser();
     if (currentUser !== null) {
       debug(`Currently logged in as ${currentUser.userName}, removing token id ${currentUser.accessTokenId}`);
+
       const client = createSonomaClient(currentUser);
-      await out.progress("Cleaning up existing user...",
-        clientCall<void>(cb => client.account.deleteApiToken(currentUser.accessTokenId, cb)));
-      debug(`Token has been removed`);
-      deleteUser();
+      await logout(client, currentUser);
     }
   }
 }

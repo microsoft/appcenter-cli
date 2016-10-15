@@ -156,9 +156,7 @@ The command line parser and dispatcher uses the directory structure and file nam
 In addition, place a `category.txt` file in your category directory. The contents of
 this file will be displayed by the help system when getting help for the category.
 
-(Coming Soon, planned but not yet implemented)
-If you have shared code across commands in your category, you can add a directory named `lib` in category's directory and put that code there. The command line dispatcher will explicitly ignore
-this directory and not try to accidentally run your utility code from the commadn line.
+If you have shared code across commands in your category, you can add a directory named `lib` in your category's directory and put that code there. The command line dispatcher will explicitly ignore this directory and not try to accidentally run your utility code from the command line.
 
 #### src/util
 

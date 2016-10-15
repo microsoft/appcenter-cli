@@ -74,4 +74,13 @@ describe("Finding commands", function () {
     expect(result.commandParts).to.have.lengthOf(1);
     expect(result.commandParts[0]).to.equal("subcommands");
   });
+
+  it("should not find command if in lib directory", function () {
+    const commandLine = "subcommands lib nogood".split(" ");
+    const result = commandFinder(commandLine);
+    expect(result.found).to.be.true;
+    expect(result.isCategory).to.be.true;
+    expect(result.commandParts).to.have.lengthOf(1);
+    expect(result.commandParts[0]).to.equal(commandLine[0]);
+  });
 });
