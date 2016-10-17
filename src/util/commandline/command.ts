@@ -79,7 +79,7 @@ export class Command {
     if (user) {
       return this.run(createSonomaClient(user));
     }
-    return Promise.resolve(Result.notLoggedIn(`You are not logged in. Use the '${scriptName} login' command to log in.`));
+    return Promise.resolve(Result.notLoggedIn(`${scriptName} ${this.command.join(" ")}`));
   }
 
   // Entry point for command author - override this!

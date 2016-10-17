@@ -27,6 +27,14 @@ function checkStats(dispatchRoot: string, pathParts: string[], check: {(stats: f
   }
 }
 
+function stripExtension(name: string): string {
+  let extLen = path.extname(name).length;
+  if (extLen > 0) {
+    return name.slice(0, -extLen);
+  }
+  return name;
+}
+
 function isDir(dispatchRoot: string, pathParts: string[]): boolean {
   return checkStats(dispatchRoot, pathParts, s => s.isDirectory());
 }
@@ -89,7 +97,7 @@ function commandFound(commandPath: string, commandParts: string[], unusedArgs: s
     found: true,
     isCategory: false,
     commandPath,
-    commandParts,
+    commandParts: commandParts.map(stripExtension),
     unusedArgs
   };
 }
