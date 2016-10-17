@@ -6,6 +6,10 @@ export default class AlwaysFailCommand extends Command {
     super(args);
   }
 
+  async runNoClient(): Promise<CommandResult> {
+    throw new Error("Failed on purpose");
+  }
+
   async run(client: SonomaClient): Promise<CommandResult> {
     throw new Error("Failed on purpose");
   }
