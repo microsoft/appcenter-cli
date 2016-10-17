@@ -7,6 +7,10 @@ export default class Command1 extends Command {
     super(args);
   }
 
+  async runNoClient(): Promise<CommandResult> {
+    return success();
+  }
+
   async run(client: SonomaClient): Promise<CommandResult> {
     return success();
   }
