@@ -126,7 +126,7 @@ export function finder(dispatchRoot: string): CommandFinder {
     debug(`Looking for command ${inspect(commandLineArgs)}`);
     let [command, args] = splitCommandLine(commandLineArgs);
     if (command.length === 0) {
-      return commandNotFound(commandLineArgs);
+      return categoryFound(toFullPath(dispatchRoot, []), [], commandLineArgs);
     }
 
     function findFile(commandDir: string[], commandName: string): [string, string[], boolean] {

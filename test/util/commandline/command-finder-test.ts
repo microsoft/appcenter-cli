@@ -83,4 +83,12 @@ describe("Finding commands", function () {
     expect(result.commandParts).to.have.lengthOf(1);
     expect(result.commandParts[0]).to.equal(commandLine[0]);
   });
+
+  it("should return category command for root if no command given", function () {
+    const commandLine = "".split(" ");
+    const result = commandFinder(commandLine);
+    expect(result.found).to.be.true;
+    expect(result.isCategory).to.be.true;
+    expect(result.commandParts).to.have.lengthOf(0);
+  });
 });

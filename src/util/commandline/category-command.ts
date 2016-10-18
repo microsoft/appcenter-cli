@@ -7,6 +7,8 @@ import { out } from "../interaction";
 import { scriptName } from "./help";
 import { getClassHelpText } from "./option-decorators";
 
+const debug = require("debug")("sonoma-cli:util:commandline:category-command");
+
 // "filler" command used to display category help
 export class CategoryCommand extends Command {
   constructor(args: CommandArgs) {
@@ -14,7 +16,7 @@ export class CategoryCommand extends Command {
     super({ commandPath: args.commandPath, command: args.command, args: []});
   }
 
-  async run(): Promise<CommandResult> {
+  async runNoClient(): Promise<CommandResult> {
     out.help(`${scriptName} ${this.command.join(" ")}`);
     out.help();
     out.help(this.categoryHelp());
@@ -27,8 +29,9 @@ export class CategoryCommand extends Command {
     return success();
   }
 
-  categoryHelp(): string {
-    const helpPath = path.join(this.commandPath, "category.txt");
+  categoryHelp(category: string = ""): string {
+    debug(`Looking for category description in directory ${this.commandPath}`);
+    const helpPath = path.join(this.commandPath, category, "category.txt");
     try {
       const helpText = fs.readFileSync(helpPath, "utf8");
       return helpText;
@@ -51,7 +54,7 @@ export class CategoryCommand extends Command {
     return contents.filter(item => item[1].isDirectory())
       .filter(item => item[0] !== "lib")
       .map(item => {
-        return `\t${scriptName} ${this.command.join(' ')} ${item}`;
+        return `\t${scriptName} ${this.command.join(' ')}${item[0]} ${this.categoryHelp(item[0])}`;
       }).join(os.EOL);
   }
 
@@ -68,7 +71,15 @@ export class CategoryCommand extends Command {
     const fullCommandPath = path.join(this.commandPath, commandFile);
     try {
       const cmd = require(fullCommandPath).default;
-      return `${scriptName} ${this.command} ${commandName} ${getClassHelpText(cmd)}`;
+      let commandScript: string[];
+      if (this.command.length > 0) {
+        commandScript = [scriptName].concat(this.command).concat([commandName]);
+      }
+      else {
+        commandScript = [scriptName, commandName];
+      }
+
+      return `\t${commandScript.join(" ")} ${getClassHelpText(cmd)}`;
     } catch(err) {
       return `Unable to load ${fullCommandPath} to read help`;
     }

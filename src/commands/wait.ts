@@ -1,9 +1,10 @@
 // First example command
 
-import { Command, CommandArgs, CommandResult, ErrorCodes, success, failure } from "../util/commandline";
+import { Command, CommandArgs, CommandResult, ErrorCodes, success, failure, help } from "../util/commandline";
 import { shortName, longName, required, hasArg } from "../util/commandline";
 import { out } from "../util/interaction";
 
+@help("Dumb sample command that should be removed")
 export default class WaitCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);
