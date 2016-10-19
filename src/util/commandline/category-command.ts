@@ -7,6 +7,7 @@ import { out } from "../interaction";
 import { scriptName } from "./help";
 import { getClassHelpText } from "./option-decorators";
 
+const Table = require("cli-table2");
 const debug = require("debug")("sonoma-cli:util:commandline:category-command");
 
 // "filler" command used to display category help
@@ -51,35 +52,43 @@ export class CategoryCommand extends Command {
   }
 
   subCategories(contents: [string, fs.Stats][]): string {
-    return contents.filter(item => item[1].isDirectory())
-      .filter(item => item[0] !== "lib")
-      .map(item => {
-        return `\t${scriptName} ${this.command.join(' ')}${item[0]} ${this.categoryHelp(item[0])}`;
-      }).join(os.EOL);
+    const helpTable = new Table(out.noTableBorders);
+    contents.filter(item => item[1].isDirectory() && item[0] !== "lib")
+      .forEach(item => {
+        helpTable.push([ `    ${scriptName} ${this.command.join(" ")}${item[0]}`, this.categoryHelp(item[0])]);
+      });
+
+    return helpTable.toString();
   }
 
   categoryCommands(contents: [string, fs.Stats][]): string {
     // Locate commands in category directory
-    return contents.filter(item => item[1].isFile())
-      .filter(item => /\.[tj]s$/.test(item[0]))
-      .map(item => this.getCommandHelp(item[0]))
-      .join(os.EOL);
+    const helpTable = new Table(out.noTableBorders);
+    contents.filter(item => item[1].isFile() && /\.[tj]s$/.test(item[0]))
+      .forEach(item => {
+        helpTable.push([`    ${this.commandName(item)}`, this.commandHelp(item)]);
+      });
+    return helpTable.toString();
   }
 
-  getCommandHelp(commandFile: string): string {
-    const commandName = path.basename(commandFile, path.extname(commandFile));
-    const fullCommandPath = path.join(this.commandPath, commandFile);
+  commandName(item: [string, fs.Stats]): string {
+    const commandName = path.basename(item[0], path.extname(item[0]));
+    let commandScript: string[];
+    if (this.command.length > 0) {
+      commandScript = [scriptName].concat(this.command).concat([commandName]);
+    }
+    else {
+      commandScript = [scriptName, commandName];
+    }
+
+    return commandScript.join(" ");
+  }
+
+  commandHelp(item: [string, fs.Stats]): string {
+    const fullCommandPath = path.join(this.commandPath, item[0]);
     try {
       const cmd = require(fullCommandPath).default;
-      let commandScript: string[];
-      if (this.command.length > 0) {
-        commandScript = [scriptName].concat(this.command).concat([commandName]);
-      }
-      else {
-        commandScript = [scriptName, commandName];
-      }
-
-      return `\t${commandScript.join(" ")} ${getClassHelpText(cmd)}`;
+      return getClassHelpText(cmd);
     } catch(err) {
       return `Unable to load ${fullCommandPath} to read help`;
     }

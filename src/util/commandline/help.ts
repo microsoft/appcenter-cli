@@ -3,6 +3,9 @@
 import { inspect } from "util";
 const debug = require("debug")("sonoma-cli:util:commandline:help");
 
+import { values, identity } from "lodash";
+const Table = require("cli-table2");
+
 import {
   getClassHelpText, getOptionsDescription, getPositionalOptionsDescription
 } from "./option-decorators";
@@ -69,11 +72,13 @@ function getOptionsHelp(commandPrototype: any): string[] {
 }
 
 function getSwitchOptionsHelp(commandPrototype: any): string[] {
-  const options = mapObj(toSwitchOptionHelp, getOptionsDescription(commandPrototype));
+  const options = values(getOptionsDescription(commandPrototype)).map(toSwitchOptionHelp);
 
-  let switches = formatSwitchesHelp(options);
-  let maxSwitchLen = maxFieldLen(s => s, switches);
-  return switches.map((s, idx) => `${padRight(maxSwitchLen, s)} ${options[idx].helpText}`);
+  const helpTable = new Table(out.noTableBorders);
+  options.forEach(optionHelp => {
+    helpTable.push(["    " + switchText(optionHelp), optionHelp.helpText])
+  });
+  return [ helpTable.toString() ];
 }
 
 interface PositionalOptionHelp {
@@ -89,10 +94,13 @@ function toPositionalOptionHelp(option: PositionalOptionDescription): Positional
 }
 
 function getPositionalOptionsHelp(commandPrototype: any): string[] {
-  const options = mapObj(toPositionalOptionHelp, getPositionalOptionsDescription(commandPrototype));
-  const maxNameLen = maxFieldLen(opt => opt.name, options);
+  const options = values(getPositionalOptionsDescription(commandPrototype)).map(toPositionalOptionHelp);
 
-  return options.map(option => `\t[${padRight(maxNameLen, option.name)}] ${option.helpText}`);
+  const helpTable = new Table(out.noTableBorders);
+  options.forEach(opt => {
+    helpTable.push(["    " + opt.name, opt.helpText]);
+  });
+  return [helpTable.toString()];
 }
 
 function getCommandExample(commandPrototype: any, commandObj: any): string {
@@ -108,7 +116,7 @@ function getCommandExample(commandPrototype: any, commandObj: any): string {
   return `${scriptName} ${commandObj.command.join(" ")}`;
 }
 
-function formatSwitchesHelp(options: SwitchOptionHelp[]): string[] {
+function switchText(switchOption: SwitchOptionHelp): string {
   // Desired formats look like:
   //
   //  -x
@@ -117,29 +125,9 @@ function formatSwitchesHelp(options: SwitchOptionHelp[]): string[] {
   //  -y <arg>
   //  -y|--yopt <arg>
   //     --yopt <arg>
-
-  const maxShortNameLen = maxFieldLen(opt => opt.shortName, options);
-
-  const switches = options.map(option => formatSwitchHelp(maxShortNameLen, option));
-  const maxSwitchLen = maxFieldLen(opt => opt, switches);
-  return switches.map(line => padRight(maxSwitchLen + 1, line));
-}
-
-function formatSwitchHelp(maxShortNameLen: number, option: SwitchOptionHelp): string {
-  const short = padLeft(maxShortNameLen, option.shortName);
-  const separator = (!!option.shortName && !!option.longName) ? "|" : " ";
-
-  return `\t${short}${separator}${option.longName}${!!option.argName ? " " + option.argName : ""}`;
-}
-
-//
-// Generic helper formatting functions
-//
-
-function mapObj<TOut>(mapper: {(item: any): TOut}, items: any): TOut[] {
-  return Object.keys(items).map((key: string) => mapper(items[key]));
-}
-
-function maxFieldLen(selector: {(option: any): string}, options: any[]) {
-  return options.reduce((prev, option) => Math.max(prev, selector(option).length), -1);
+  const start = switchOption.shortName ? [ switchOption.shortName ] : [ "  " ];
+  const sep = switchOption.shortName && switchOption.longName ? [ "|" ] : [ " " ];
+  const long = switchOption.longName ? [ switchOption.longName ] : [];
+  const arg = switchOption.argName ? [ " " + switchOption.argName ] : [];
+  return start.concat(sep).concat(long).concat(arg).join("");
 }

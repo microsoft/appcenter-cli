@@ -15,6 +15,7 @@
   "dependencies": {
     "debug": "registry:npm/debug#2.0.0+20160723033700",
     "inquirer": "registry:npm/inquirer#1.0.0+20160723033700",
+    "lodash": "registry:npm/lodash#4.0.0+20161015015725",
     "minimist": "registry:npm/minimist#1.0.0+20160723033700",
     "mkdirp": "registry:npm/mkdirp#0.5.0+20160723033700",
     "wordwrap": "registry:npm/wordwrap#1.0.0+20160723033700"

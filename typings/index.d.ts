@@ -5,6 +5,7 @@
 /// <reference path="globals/promptly/index.d.ts" />
 /// <reference path="modules/debug/index.d.ts" />
 /// <reference path="modules/inquirer/index.d.ts" />
+/// <reference path="modules/lodash/index.d.ts" />
 /// <reference path="modules/minimist/index.d.ts" />
 /// <reference path="modules/mkdirp/index.d.ts" />
 /// <reference path="modules/nock/index.d.ts" />

@@ -1,0 +1,11 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/types/npm-lodash/6557c3cd628ef6b39abfdc826b27ea1f06d8af89/typings.json",
+    "raw": "registry:npm/lodash#4.0.0+20161015015725",
+    "main": "index.d.ts",
+    "version": "4.0.0",
+    "name": "lodash",
+    "type": "typings"
+  }
+}
