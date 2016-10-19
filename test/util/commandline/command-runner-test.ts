@@ -6,8 +6,6 @@ import { inspect } from "util";
 
 import { Command, CommandResult, ErrorCodes, runner, failed, succeeded } from "../../../src/util/commandline";
 
-const categoryCommand = require("../../../src/util/commandline/category-command");
-
 describe("Running commands", function () {
   const run = runner(path.join(__dirname, "sample-commands"));
 
@@ -30,11 +28,8 @@ describe("Running commands", function () {
   });
 
   it("should show root category command if command has invalid characters", function () {
-    let spy: any = sinon.spy(categoryCommand, "CategoryCommand");
     return run(["..", "command-finder-test"])
       .then((result: CommandResult) => {
-        console.log(inspect(result));
-        expect(spy.calledWithNew()).to.be.true;
         expect(succeeded(result)).to.be.true;
         if (failed(result)) {
           expect(result.errorCode).to.equal(ErrorCodes.NoSuchCommand);

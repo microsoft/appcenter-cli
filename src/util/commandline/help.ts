@@ -15,7 +15,6 @@ import {
 } from "./option-parser";
 
 import { out, padLeft, padRight, setDebug } from "../interaction";
-setDebug();
 
 // TODO: update this with the real name of the
 export const scriptName = "sonoma";
