@@ -166,7 +166,7 @@ export function help(helpText: string) : {(...args: any[]): any} {
     if (args.length === 3 && typeof args[0] === "object" && args[2] === undefined) {
       let proto = args[0];
       let propertyName = <string>args[1];
-      return saveDecoratedValue(proto, propertyName, "helpText", help, unknownHelpTextKey);
+      return saveDecoratedValue(proto, propertyName, "helpText", helpText, unknownHelpTextKey);
     }
     throw new Error("@help not valid in this location");
   };
