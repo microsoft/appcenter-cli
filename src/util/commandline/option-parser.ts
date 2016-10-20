@@ -92,12 +92,15 @@ export function parseOptions(...params: any[]): void {
   let args: string[];
 
   if (params.length === 4) {
+    debug(`Parser called with 4 args: ${util.inspect(params)}`);
     [flagOptions, positionalOptions, target, args] = params;
   } else {
+    debug(`Parser called with 3 args: ${util.inspect(params)}`);
     [flagOptions, target, args] = params;
     positionalOptions = [];
   }
 
+  debug(`Parsing command line ${args.join(" ")}`);
   const minimistOptions = descriptionToMinimistOpts(flagOptions);
   const parsed = minimist(args, minimistOptions);
 
@@ -123,8 +126,6 @@ export function parseOptions(...params: any[]): void {
     if (b.position === null) { return -1; }
     return b.position - a.position;
   });
-
-  let restArg = positionalOptions.find(opt => opt.position === null);
 
   positionalOptions.forEach((opt, index) => {
     debug(`Checking for ${opt.required ? "required" : "optional" } option ${opt.name} at position ${opt.position}`);

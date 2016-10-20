@@ -1,5 +1,6 @@
 import { OptionsDescription, OptionDescription, PositionalOptionsDescription, PositionalOptionDescription } from "./option-parser";
 import { inspect } from "util";
+import { assign } from "lodash";
 
 const debug = require("debug")("sonoma-cli:util:commandline:option-decorators");
 
@@ -13,14 +14,38 @@ const unknownHelpTextKey = Symbol("UnknownDescription");
 export const classHelpTextKey = Symbol("ClassHelpText");
 
 export function getOptionsDescription(target: any): OptionsDescription {
-  if (target[optionDescriptionKey] === undefined) {
+  function getRecursive(accumulator: OptionsDescription, target: any): OptionsDescription {
+    if (!target || !target.hasOwnProperty(optionDescriptionKey)) {
+      return accumulator;
+    }
+
+    assign(accumulator, target[optionDescriptionKey]);
+    return getRecursive(accumulator, Object.getPrototypeOf(target));
+  }
+
+  return getRecursive({}, target);
+}
+
+function getLocalOptionsDescription(target: any): OptionsDescription {
+  if (!target.hasOwnProperty(optionDescriptionKey)) {
     target[optionDescriptionKey] = {};
   }
   return target[optionDescriptionKey];
 }
 
 export function getPositionalOptionsDescription(target: any): PositionalOptionsDescription {
-  if (target[positionalDescriptionKey] === undefined) {
+
+  function getRecursive(accumulator: PositionalOptionsDescription, target: any): PositionalOptionsDescription {
+    if (!target || !target.hasOwnProperty(positionalDescriptionKey)) {
+      return accumulator;
+    }
+    return getRecursive(target[positionalDescriptionKey].concat(accumulator), Object.getPrototypeOf(target));
+  }
+  return getRecursive([], target);
+}
+
+function getLocalPositionalOptionsDescription(target: any): PositionalOptionsDescription {
+  if (!target.hasOwnProperty(positionalDescriptionKey)) {
     target[positionalDescriptionKey] = [];
   }
   return target[positionalDescriptionKey];
@@ -70,7 +95,7 @@ function updateUnknowns(option: OptionDescription | PositionalOptionDescription,
 function makeStringDecorator(descriptionFieldName: string): PropertyDecoratorBuilder<string> {
   return function decoratorBuilder(name: string): PropertyDecorator {
     return function paramDecorator(proto: any, propertyKey: string): void {
-      let optionsDescription = getOptionsDescription(proto);
+      let optionsDescription = getLocalOptionsDescription(proto);
       let option = optionsDescription[propertyKey] || {};
       (<any>option)[descriptionFieldName] = name;
       updateUnknowns(option, propertyKey, proto);
@@ -81,7 +106,7 @@ function makeStringDecorator(descriptionFieldName: string): PropertyDecoratorBui
 
 function makeBoolDecorator(descriptionFieldName: string): PropertyDecorator {
   return function paramDecorator(proto: any, propertyKey: string): void {
-      let optionsDescription = getOptionsDescription(proto);
+      let optionsDescription = getLocalOptionsDescription(proto);
       let option = optionsDescription[propertyKey] || {};
       (<any>option)[descriptionFieldName] = true;
       updateUnknowns(option, propertyKey, proto);
@@ -98,7 +123,7 @@ export const hasArg = makeBoolDecorator("hasArg");
 function makePositionalDecorator<T>(descriptionFieldName: string): PropertyDecoratorBuilder<T> {
   return function positionalDecoratorBuilder(value: T): PropertyDecorator {
     return function positionalDecorator(proto: any, propertyKey: string): void {
-      let optionsDescription = getPositionalOptionsDescription(proto);
+      let optionsDescription = getLocalPositionalOptionsDescription(proto);
       let option = optionsDescription.find(opt => opt.propertyName === propertyKey);
       if (option === undefined) {
         option = { propertyName: propertyKey, name: "", position: -1 };
@@ -119,13 +144,13 @@ export const name = makePositionalDecorator<string>("name");
 // know which one the parameter is until a later decorator runs.
 //
 function saveDecoratedValue(proto: any, propertyKey: string | Symbol, descriptionProperty: string, value: any, unknownFieldKey: Symbol) {
-    let flagOpts: any = getOptionsDescription(proto);
+    let flagOpts: any = getLocalOptionsDescription(proto);
     if (flagOpts.hasOwnProperty(propertyKey.toString())) {
       flagOpts[propertyKey.toString()][descriptionProperty] = value;
       return;
     }
 
-    let positionalOpts: any[] = getPositionalOptionsDescription(proto);
+    let positionalOpts: any[] = getLocalPositionalOptionsDescription(proto);
     let opt = positionalOpts.find(opt => opt.propertyName === propertyKey);
     if (opt !== undefined) {
       opt[descriptionProperty] = value;

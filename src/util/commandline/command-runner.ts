@@ -7,6 +7,7 @@ import * as Loader from "./command-loader";
 import { setDebug, isDebug, setFormatJson } from "../interaction";
 
 const debug = require("debug")("sonoma-cli:util:commandline:command-runner");
+import { inspect } from "util";
 
 export interface CommandRunner {
   (command: string[]): Promise<CommandResult>;
@@ -23,7 +24,6 @@ function runner(arg: any): CommandRunner {
   }
 
   return async function commandRunner(command: string[]): Promise<CommandResult> {
-    // TODO: Parse out the actual command string
     let factory: typeof Command;
     let newCommand: string[];
     let args: string[];
@@ -31,7 +31,7 @@ function runner(arg: any): CommandRunner {
     try {
       debug(`Loading command ${command}`);
       let result = loader(command);
-      debug(`Command loading completed`);
+      debug(`Command loading completed, result = ${inspect(result)}`);
 
       if (result === null) {
         return notFound(command.join(' '));
