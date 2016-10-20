@@ -1,10 +1,13 @@
 import { expect } from "chai";
 
-import { OptionsDescription, OptionDescription } from "../../../src/util/commandline/option-parser";
-import { getOptionsDescription, getClassHelpText, shortName, longName, defaultValue, required, hasArg, help } from "../../../src/util/commandline/option-decorators";
+import { OptionsDescription, OptionDescription, PositionalOptionsDescription, PositionalOptionDescription } from "../../../src/util/commandline/option-parser";
+import {
+  getOptionsDescription, getPositionalOptionsDescription, getClassHelpText,
+  shortName, longName, name, defaultValue, required, hasArg, help, position
+} from "../../../src/util/commandline/option-decorators";
 
 describe("Command line option parsing", function () {
-  describe("Options decorators", function() {
+  describe("options decorators", function() {
     it("should return empty description for class without decorators", function () {
       class Sample {
         public value: string;
@@ -95,6 +98,17 @@ describe("Command line option parsing", function () {
 
       const text = getClassHelpText(SampleWithHelp);
       expect(text).to.equal("This is the help text");
+    });
+
+    it("should create correct description for rest option", function () {
+      class Sample {
+        @name("rest")
+        @position(null)
+        public rest: string[];
+      }
+
+      let opts = getPositionalOptionsDescription(Sample.prototype);
+      expect(opts).to.be.instanceof(Array).and.to.have.lengthOf(1);
     });
   });
 });

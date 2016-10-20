@@ -2,12 +2,12 @@
 const debug = require("debug")("sonoma-cli:util:interaction:out");
 import { inspect } from "util";
 
-// TODO: Support format setting, debug flag
 import { isDebug, formatIsJson } from "./io-options";
 
 import * as os from "os";
 import * as wrap from "wordwrap";
 
+const Table = require("cli-table2");
 const Spinner = require("cli-spinner").Spinner;
 
 //
@@ -44,7 +44,7 @@ export function list<T>(formatter: {(item: T): string}, items: T[]): void {
 }
 
 //
-// Export a line of help text
+// Output a line of help text
 //
 export function help(t: string): void;
 export function help(): void;
@@ -60,13 +60,55 @@ export function help(...args: any[]) : void
 }
 
 //
-// Export a line of plain text.
+// Output a line of plain text.
 //
 export function text(t: string): void {
   if (!formatIsJson()) {
     console.log(t);
   }
 }
+
+//
+// Output tabular data.
+// By default, does a simple default table using cli-table2.
+// If you want to, you can pass in explicit table initialization
+// options. See https://github.com/jamestalmage/cli-table2 for docs
+// on the module.
+//
+export function table(options: any, data: any[]): void;
+export function table(data: any[]): void;
+export function table(...args: any[]): void {
+  let options: any;
+  let data: any[];
+  [options, data] = args;
+
+  if (!data) {
+    data = options;
+    options = undefined;
+  }
+
+  if(!formatIsJson()) {
+    let cliTable = new Table(options);
+    data.forEach(item => cliTable.push(item));
+    console.log(cliTable.toString());
+  } else {
+    console.log(JSON.stringify(data));
+  }
+}
+
+//
+// Formatting helper for cli-table2 - no table outlines. Used by
+// help commands for formatting lists of options, commands, etc.
+//
+export const noTableBorders = {
+  chars: {
+    "top": "", "top-mid": "", "top-left": "", "top-right": "",
+    "bottom": "", "bottom-mid": "", "bottom-left": "", "bottom-right": "",
+    "left": "", "left-mid": "", "mid": "", "mid-mid": "",
+    "right": "", "right-mid": "", "middle": " "
+  },
+  style: { "padding-left": 0, "padding-right": 0 }
+};
 
 //
 // Output a "report", which is a formatted output of a single object
@@ -289,17 +331,4 @@ report.asDate = function (data: any): string {
 
 report.inspect = function (data: any): string {
   return inspect(data, {depth: null});
-};
-
-//
-// Formatting helper for cli-table2 - no table outlines
-//
-export const noTableBorders = {
-  chars: {
-    "top": "", "top-mid": "", "top-left": "", "top-right": "",
-    "bottom": "", "bottom-mid": "", "bottom-left": "", "bottom-right": "",
-    "left": "", "left-mid": "", "mid": "", "mid-mid": "",
-    "right": "", "right-mid": "", "middle": " "
-  },
-  style: { "padding-left": 0, "padding-right": 0 }
 };

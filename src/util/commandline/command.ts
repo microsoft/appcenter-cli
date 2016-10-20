@@ -7,6 +7,9 @@ import { runHelp, scriptName } from "./help";
 import { getUser } from "../profile";
 import { SonomaClient, createSonomaClient } from "../apis";
 
+const debug = require("debug")("sonoma-cli:util:commandline:command");
+import { inspect } from "util";
+
 export interface CommandArgs {
   command: string[];
   commandPath: string;
@@ -45,8 +48,9 @@ export class Command {
 
   // Entry point for runner. DO NOT override in command definition!
   async execute(): Promise<Result.CommandResult> {
-
+    debug(`Initial execution of command`);
     if (this.help) {
+      debug(`help switch detected, displaying help for command`);
       runHelp(Object.getPrototypeOf(this), this);
       return Result.success();
     }
@@ -75,8 +79,10 @@ export class Command {
   // Override this if your command needs to do something special with login - typically just
   // the login command
   protected runNoClient(): Promise<Result.CommandResult> {
+    debug(`Creating sonoma client for command`);
     var user = getUser();
     if (user) {
+      debug(`running commmand logic`);
       return this.run(createSonomaClient(user));
     }
     return Promise.resolve(Result.notLoggedIn(`${scriptName} ${this.command.join(" ")}`));

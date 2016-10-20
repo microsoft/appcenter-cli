@@ -15,7 +15,6 @@ import {
 } from "./option-parser";
 
 import { out, padLeft, padRight, setDebug } from "../interaction";
-setDebug();
 
 // TODO: update this with the real name of the
 export const scriptName = "sonoma";
@@ -73,7 +72,8 @@ function getOptionsHelp(commandPrototype: any): string[] {
 
 function getSwitchOptionsHelp(commandPrototype: any): string[] {
   const options = values(getOptionsDescription(commandPrototype)).map(toSwitchOptionHelp);
-
+  debug(`Command has ${options.length} switch options:`);
+  debug(options.map(o => `${o.shortName}|${o.longName}`).join("/"));
   const helpTable = new Table(out.noTableBorders);
   options.forEach(optionHelp => {
     helpTable.push(["    " + switchText(optionHelp), optionHelp.helpText])
@@ -94,7 +94,10 @@ function toPositionalOptionHelp(option: PositionalOptionDescription): Positional
 }
 
 function getPositionalOptionsHelp(commandPrototype: any): string[] {
-  const options = values(getPositionalOptionsDescription(commandPrototype)).map(toPositionalOptionHelp);
+  const options: PositionalOptionHelp[] = getPositionalOptionsDescription(commandPrototype).map(toPositionalOptionHelp);
+
+  debug(`Command has ${options.length} positional options:`);
+  debug(options.map(o => o.name).join("/"));
 
   const helpTable = new Table(out.noTableBorders);
   options.forEach(opt => {
