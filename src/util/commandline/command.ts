@@ -36,7 +36,7 @@ export class Command {
   @help("Output additional debug information for this command")
   public debug: boolean;
 
-  @longName("format")
+  @longName("output")
   @hasArg
   @help("Format of output for this command: json")
   public format: string;
