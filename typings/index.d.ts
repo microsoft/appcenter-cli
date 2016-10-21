@@ -4,6 +4,7 @@
 /// <reference path="globals/node/index.d.ts" />
 /// <reference path="globals/promptly/index.d.ts" />
 /// <reference path="modules/debug/index.d.ts" />
+/// <reference path="modules/glob/index.d.ts" />
 /// <reference path="modules/inquirer/index.d.ts" />
 /// <reference path="modules/lodash/index.d.ts" />
 /// <reference path="modules/minimist/index.d.ts" />

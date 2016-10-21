@@ -1,0 +1,1 @@
+This is a sample TXT file used by manifest path resolving tests.
