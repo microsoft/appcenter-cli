@@ -17,6 +17,24 @@ export interface CommandFailedResult {
 
 export type CommandResult = CommandSucceededResult | CommandFailedResult;
 
+export class ResultOrValue<T> {
+  value: T;
+  result: CommandResult;
+
+  private constructor(value: T, result: CommandResult) {
+    this.value = value;
+    this.result = result;
+  }
+
+  public static fromValue<T>(value: T): ResultOrValue<T> {
+    return new ResultOrValue<T>(value, null);
+  }
+
+  public static fromResult<T>(result: CommandResult): ResultOrValue<T> {
+    return new ResultOrValue<T>(null, result);
+  }
+}
+
 export enum ErrorCodes {
   Succeeded = 0,
   // Command given contained illegal characters/names

@@ -60,11 +60,25 @@ export function help(...args: any[]) : void
 }
 
 //
-// Output a line of plain text.
+// Output a line of plain text. Only outputs if the format is regular text.
+// If passing a converter, then the raw data is output in json format instead.
 //
-export function text(t: string): void {
+export function text(converter: {(data: any): string}, data: any): void;
+export function text(t: string): void;
+export function text(...args: any[]): void {
+  let converter: {(data: any): string};
+  let data: any;
+  if (args.length === 1) {
+    converter = s => s;
+    data = args[0];
+  } else {
+    [converter, data] = args;
+  }
+
   if (!formatIsJson()) {
-    console.log(t);
+    console.log(converter(data));
+  } else {
+    console.log(JSON.stringify(data));
   }
 }
 
@@ -195,7 +209,7 @@ export const noTableBorders = {
 //
 // The resulting output looks like this:
 //
-//   Email: ctavares@microsoft.com
+//   Email: not.giving@real.email.here
 //   Names:
 //          User Name:    christav-yngr
 //          Display Name: christav

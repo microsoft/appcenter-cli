@@ -1,5 +1,5 @@
 import { Command, CommandArgs } from "./command";
-import { CommandResult, failure, ErrorCodes } from "./command-result";
+import { CommandResult, failure, ErrorCodes, ResultOrValue } from "./command-result";
 import { help, longName } from "./option-decorators";
 import { Profile, DefaultApp, toDefaultApp, getUser } from "../profile";
 import { scriptName } from "./help";
@@ -46,22 +46,22 @@ export class AppCommand extends Command {
   }
 }
 
-export function getCurrentApp(optValue: string): DefaultApp | CommandResult {
+export function getCurrentApp(optValue: string): ResultOrValue<DefaultApp> {
   let result: DefaultApp;
   // Explicit command line
   if (optValue) {
     result = toDefaultApp(optValue);
     if (!result) {
-      return failure(ErrorCodes.InvalidParameter,
-        `'${optValue}' is not a valid application id`);
+      return ResultOrValue.fromResult<DefaultApp>(failure(ErrorCodes.InvalidParameter,
+        `'${optValue}' is not a valid application id`));
     }
   }
   // Environment variable
   if (process.env[currentAppVar]) {
     result = toDefaultApp(process.env[currentAppVar]);
     if (!result) {
-      return failure(ErrorCodes.InvalidParameter,
-        `'${process.env[currentAppVar]}' (read from ${currentAppVar}) is not a valid application id`);
+      return ResultOrValue.fromResult<DefaultApp>(failure(ErrorCodes.InvalidParameter,
+        `'${process.env[currentAppVar]}' (read from ${currentAppVar}) is not a valid application id`));
     }
   }
 
@@ -71,8 +71,8 @@ export function getCurrentApp(optValue: string): DefaultApp | CommandResult {
     result = profile.defaultApp;
   // Couldn't find one, fail.
   } else {
-    return failure(ErrorCodes.InvalidParameter,
-      `Could not find application to work on. Specify the '--app' switch, use '${scriptName} apps set-current', or set the ${currentAppVar} environment variable.`);
+    return ResultOrValue.fromResult<DefaultApp>(failure(ErrorCodes.InvalidParameter,
+      `Could not find application to work on. Specify the '--app' switch, use '${scriptName} apps set-current', or set the ${currentAppVar} environment variable.`));
   }
-  return result;
+  return ResultOrValue.fromValue(result);
 }

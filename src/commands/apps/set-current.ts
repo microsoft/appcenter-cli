@@ -10,8 +10,9 @@ export default class SetCurrentAppCommand extends Command {
   }
 
   @name("app")
-  @position(1)
+  @position(0)
   @help("owner/app to set as default")
+  @required
   appId: string;
 
   async run(client: SonomaClient): Promise<CommandResult> {

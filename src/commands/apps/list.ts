@@ -15,7 +15,7 @@ export default class AppsListCommand extends Command {
 
   async run(client: SonomaClient): Promise<CommandResult> {
     let currentApp = getCurrentApp(null);
-    if (failed(currentApp)) {
+    if (failed(currentApp.result)) {
       currentApp = null;
     }
 

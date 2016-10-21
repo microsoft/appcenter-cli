@@ -201,7 +201,7 @@ Stores type definitions for the external Javascript libraries used. These are ch
 
 We follow the standard GitHub flow. Each person working on the cli should create their own fork of the repo. Work in your own repo (preferably on a feature branch). When ready, send a pull request to the master Microsoft/sonoma-cli repo against the master branch. After review, the pull request will be merged.
 
-Issue tracking is TBD based on overall group discussions. For now let's just do it in GitHub in the Microsoft/sonoma-cli repo.
+Issue tracking will be done on [VSO](https://mseng.visualstudio.com/Mobile%20DevOps/Command%20Line%20Interface/).
 
 # Building Installers
 
