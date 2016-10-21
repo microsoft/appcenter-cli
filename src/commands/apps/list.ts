@@ -1,4 +1,4 @@
-import { Command, CommandArgs, CommandResult, help, success, failure, notLoggedIn } from "../../util/commandline";
+import { Command, CommandArgs, CommandResult, help, success, failure, failed, notLoggedIn, getCurrentApp } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { getUser } from "../../util/profile";
 import { SonomaClient, models, clientCall } from "../../util/apis";
@@ -14,6 +14,11 @@ export default class AppsListCommand extends Command {
   }
 
   async run(client: SonomaClient): Promise<CommandResult> {
+    let currentApp = getCurrentApp(null);
+    if (failed(currentApp.result)) {
+      currentApp = null;
+    }
+
     const apps = await out.progress("Getting app list ...",
       clientCall<models.AppResponse[]>(cb => client.account.getApps(cb)));
 
