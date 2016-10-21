@@ -1,0 +1,36 @@
+import { Command, CommandArgs, CommandResult, success, failure, name, help, position, required, ErrorCodes } from "../../util/commandline";
+import { SonomaClient, models, clientCall } from "../../util/apis";
+import { out } from "../../util/interaction";
+import { Profile, DefaultApp, toDefaultApp, getUser, saveProfile } from "../../util/profile";
+
+@help("Set the default application for commands")
+export default class SetCurrentAppCommand extends Command {
+  constructor(args: CommandArgs) {
+    super(args);
+  }
+
+  @name("app")
+  @position(1)
+  @help("owner/app to set as default")
+  appId: string;
+
+  async run(client: SonomaClient): Promise<CommandResult> {
+    let newDefault = toDefaultApp(this.appId);
+    if (!newDefault) {
+      return failure(ErrorCodes.InvalidParameter, `'${this.appId}' is not a valid application.`);
+    }
+
+    let apps = await out.progress("Reading available apps...",
+      clientCall<models.AppResponse[]>(cb => client.account.getApps(cb)));
+
+    let found = apps.find(app => app.name === newDefault.appName && app.owner.name === newDefault.ownerName);
+    if (!found) {
+      return failure(ErrorCodes.InvalidParameter, `You either do not have access to '${this.appId}' or there is no such application.`);
+    }
+
+    let profile = getUser();
+    profile.defaultApp = newDefault;
+    saveProfile(profile);
+    return success();
+  }
+}

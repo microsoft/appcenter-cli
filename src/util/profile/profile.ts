@@ -18,6 +18,25 @@ export interface Profile {
   accessTokenId: string;
   accessToken: string;
   endpoint: string;
+  defaultApp?: DefaultApp;
+}
+
+export interface DefaultApp {
+  ownerName: string;
+  appName: string;
+}
+
+const validApp = /^([a-zA-Z0-9-_]{3,100})\/([a-zA-Z0-9-_]{3,100})$/;
+
+export function toDefaultApp(app: string): DefaultApp {
+  const matches = app.match(validApp);
+  if (matches !== null) {
+    return {
+      ownerName: matches[1],
+      appName: matches[2]
+    };
+  }
+  return null;
 }
 
 let currentProfile: Profile = null;
@@ -71,7 +90,7 @@ export function getUser(): Profile {
   return currentProfile;
 }
 
-export function saveUser(user: any, token: any, environment: string): Profile {
+export function saveUser(user: any, token: any, environment: string, ): Profile {
   let profile = {
     userId: user.id,
     userName: user.name,
@@ -83,6 +102,10 @@ export function saveUser(user: any, token: any, environment: string): Profile {
     endpoint: environments(environment).endpoint
   };
 
+  return saveProfile(profile);
+}
+
+export function saveProfile(profile: Profile): Profile {
   mkdirp.sync(getProfileDir());
   fs.writeFileSync(getProfileFilename(), JSON.stringify(profile), { encoding: "utf8" });
   return profile;

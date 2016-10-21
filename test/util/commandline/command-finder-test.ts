@@ -91,4 +91,14 @@ describe("Finding commands", function () {
     expect(result.isCategory).to.be.true;
     expect(result.commandParts).to.have.lengthOf(0);
   });
+
+  it("should find command for command with dash in name", function () {
+    const commandLine = "subcommands dashed-command".split(" ");
+    const result = commandFinder(commandLine);
+    expect(result.found).to.be.true;
+    expect(result.isCategory).to.be.false;
+    expect(result.commandParts).to.have.lengthOf(2);
+    expect(result.commandParts[0]).to.equal("subcommands");
+    expect(result.commandParts[1]).to.equal("dashed-command");
+  });
 });
