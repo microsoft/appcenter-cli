@@ -1,6 +1,6 @@
-import { TestFile } from "../../../src/commands/test-cloud/test-file";
+import { TestFile } from "../../../src/commands/test-cloud/test-manifest";
 import { expect } from "chai";
-const path = require('path');
+import * as path from "path";
 
 describe("TestFile.create", function() {
   it("should set all properties", async () => {

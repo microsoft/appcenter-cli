@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as _ from "lodash";
 
 export class PathResolver {
-  private workspace: string;
+  readonly workspace: string;
 
   constructor(workspace: string) {
     this.workspace = workspace;
@@ -15,7 +15,6 @@ export class PathResolver {
       return this.resolveSinglePattern(pattern);
     }
     
-    debugger;
     let allFiles = await Promise.all(pattern.map(p => this.resolveSinglePattern(p)));
     return _.union.apply(_, allFiles).sort();
   }
