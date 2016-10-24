@@ -1,4 +1,4 @@
-import { TestFile, TestFrameworkData, TestCloudManifest } from "./test-manifest";
+import { TestFile, TestFrameworkData, TestManifest } from "./test-manifest";
 import { PathResolver } from "./path-resolver";
 import * as path from "path";
 import * as _ from "lodash";
@@ -32,10 +32,10 @@ export class TestManifestReader {
     this.pathResolver = pathResolver;
   }
 
-  public async readManifest(json: ITestCloudManifestJson): Promise<TestCloudManifest> {
+  public async readManifest(json: ITestCloudManifestJson): Promise<TestManifest> {
     let files = await this.readTestFiles(json.files);
     
-    return new TestCloudManifest(
+    return new TestManifest(
       json.schemaVersion,
       files,
       new TestFrameworkData(

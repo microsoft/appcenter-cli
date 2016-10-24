@@ -1,4 +1,4 @@
-import { TestFile } from "../../../src/commands/test-cloud/test-manifest";
+import { TestFile } from "../../../src/commands/test-cloud/lib/test-manifest";
 import { expect } from "chai";
 import * as path from "path";
 

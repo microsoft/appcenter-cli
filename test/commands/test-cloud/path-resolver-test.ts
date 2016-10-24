@@ -1,4 +1,4 @@
-import { PathResolver } from "../../../src/commands/test-cloud/path-resolver";
+import { PathResolver } from "../../../src/commands/test-cloud/lib/path-resolver";
 import { expect } from "chai";
 const path = require('path');
 

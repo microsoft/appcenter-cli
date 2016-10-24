@@ -54,7 +54,7 @@ export class TestFrameworkData {
   }
 };
 
-export class TestCloudManifest {
+export class TestManifest {
   readonly version: string;
   readonly files: TestFile[];
   readonly testFramework: TestFrameworkData;

@@ -1,12 +1,12 @@
-import { TestFile, TestCloudManifest, TestFrameworkData } from "../../../src/commands/test-cloud/test-manifest";
-import { PathResolver } from "../../../src/commands/test-cloud/path-resolver";
-import { TestManifestReader } from "../../../src/commands/test-cloud/test-manifest-reader";
+import { TestFile, TestManifest, TestFrameworkData } from "../../../src/commands/test-cloud/lib/test-manifest";
+import { PathResolver } from "../../../src/commands/test-cloud/lib/path-resolver";
+import { TestManifestReader } from "../../../src/commands/test-cloud/lib/test-manifest-reader";
 import { expect } from "chai";
 import * as path from "path";
 import * as _ from "lodash";
 
 describe("TestManifestReader.readManifest", function() {
-  let expectedManifest = new TestCloudManifest(
+  let expectedManifest = new TestManifest(
     "1.0.0",
     [
       new TestFile("test/commands/test-cloud/sample-test-workspace/lib/tests.rb", "index.rb", "Ignored"),
@@ -36,7 +36,7 @@ describe("TestManifestReader.readManifest", function() {
       }
     ));
 
-  function normalizeManifest(manifest: TestCloudManifest) {
+  function normalizeManifest(manifest: TestManifest) {
     return {
       "schemaVersion": manifest.version,
       "testFramework": manifest.testFramework,
