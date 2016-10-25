@@ -1,4 +1,4 @@
-import { PathResolver } from "../../../src/commands/test-cloud/lib/path-resolver";
+import { PathResolver } from "../../../src/commands/tests/lib/path-resolver";
 import { expect } from "chai";
 const path = require('path');
 
@@ -16,7 +16,7 @@ describe("Resolving paths", function() {
   let pathResolver: PathResolver;
 
   before(() => {
-    pathResolver = new PathResolver("./test/commands/test-cloud/sample-test-workspace");
+    pathResolver = new PathResolver("./test/commands/tests/sample-test-workspace");
   });
 
   it("should resolve single file", async () => {

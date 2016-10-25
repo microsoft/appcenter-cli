@@ -14,10 +14,8 @@ const debug = require("debug")("somona-cli:commands:submit-tests");
 
 @help("Submits tests to Sonoma")
 export default class SubmitTestsCommand extends Command {
-  @shortName("a")
-  @longName("applicationPath")
   @position(null)
-  @help("Path of the application file")
+  @help("Application file")
   @required
   applicationPath: string;
 
@@ -27,8 +25,8 @@ export default class SubmitTestsCommand extends Command {
   @required
   devices: string;
 
-  @shortName("mp")
-  @longName("manifestPath")
+  @shortName("m")
+  @longName("manifest")
   @hasArg
   @required
   manifestPath: string;
@@ -39,30 +37,8 @@ export default class SubmitTestsCommand extends Command {
 
   async run(client: SonomaClient): Promise<CommandResult> {
     out.text("Parsing manifest");
-    let manifest = await this.readManifest();
+    let manifest = await TestManifestReader.readFromFile(this.manifestPath);
     out.text(`Test framework: ${manifest.testFramework.name}`);
     return success();
-  }
-
-  async readManifest(): Promise<TestManifest> {
-    let workspaceDir = path.dirname(this.manifestPath);
-    let pathResolver = new PathResolver(workspaceDir);
-    let manifestJson = await this.getManifestJson();
-    let manifestReader = new TestManifestReader(pathResolver);
-
-    return await manifestReader.readManifest(manifestJson);
-  }
-
-  async getManifestJson(): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      fs.readFile(this.manifestPath, "utf8", (error, data) => {
-        if (error) {
-          reject(error);
-        }
-        else {
-          resolve(JSON.parse(data));
-        }
-      });
-    });
   }
 }

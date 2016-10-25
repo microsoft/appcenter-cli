@@ -1,5 +1,6 @@
 import { TestFile, TestFrameworkData, TestManifest } from "./test-manifest";
 import { PathResolver } from "./path-resolver";
+import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
 
@@ -25,7 +26,29 @@ export interface ITestCloudManifestJson {
 export class TestManifestReader {
   private pathResolver: PathResolver;
 
-  constructor(pathResolver: PathResolver) {
+  static async readFromFile(filePath: string): Promise<TestManifest> {
+    let workspace = path.dirname(filePath);
+    let resolver = new PathResolver(workspace);
+    let readerInstance = new TestManifestReader(resolver);
+    let json = await TestManifestReader.readJsonFromFile(filePath);
+
+    return await readerInstance.readManifest(json);
+  } 
+
+  private static async readJsonFromFile(filePath: string): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      fs.readFile(filePath, "utf8", (error, data) => {
+        if (error) {
+          reject(error);
+        }
+        else {
+          resolve(JSON.parse(data));
+        }
+      });
+    });
+  }
+
+  private constructor(pathResolver: PathResolver) {
     if (!pathResolver)
       throw new Error("Argument pathResolver is required");
 
@@ -46,7 +69,7 @@ export class TestManifestReader {
     );
   }
 
-  async readTestFiles(json: (string | IFileDescriptionJson)[]): Promise<TestFile[]> {
+  private async readTestFiles(json: (string | IFileDescriptionJson)[]): Promise<TestFile[]> {
     let resolvedPaths = { };
     let result: TestFile[] = [];
     
@@ -59,7 +82,7 @@ export class TestManifestReader {
     );
   }
 
-  async readFilePatterns(patterns: string[]): Promise<TestFile[]> {
+  private async readFilePatterns(patterns: string[]): Promise<TestFile[]> {
     let filePaths = await this.pathResolver.resolve(patterns);
     
     return await Promise.all(filePaths.map(relativePath => {
@@ -68,11 +91,11 @@ export class TestManifestReader {
     }));
   }
 
-  async readFileDescriptions(descriptions: IFileDescriptionJson[]): Promise<TestFile[]> {
+  private async readFileDescriptions(descriptions: IFileDescriptionJson[]): Promise<TestFile[]> {
     return await Promise.all(descriptions.map(d => this.readFileDescription(d)));
   }
 
-  async readFileDescription(description: IFileDescriptionJson): Promise<TestFile> {
+  private async readFileDescription(description: IFileDescriptionJson): Promise<TestFile> {
     let inputFiles = await this.pathResolver.resolve(description.sourcePath);
     if (inputFiles.length == 0) {
       throw new Error(`Pattern ${description.sourcePath} did not resolve to any existing file`);
