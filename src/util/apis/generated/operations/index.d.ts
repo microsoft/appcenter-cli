@@ -5,6 +5,7 @@
 */
 
 import { ServiceClientOptions, RequestOptions, ServiceCallback } from 'ms-rest';
+import * as stream from 'stream';
 import * as models from '../models';
 
 

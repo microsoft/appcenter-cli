@@ -5,7 +5,9 @@
  */
 
 import { ServiceClientOptions, RequestOptions, ServiceCallback, ServiceClientCredentials } from 'ms-rest';
+import * as models from "./models";
 import * as operations from "./operations";
+import * as stream from "stream";
 
 declare class SonomaClient {
     /**
@@ -37,6 +39,259 @@ declare class SonomaClient {
     crashOperations: operations.CrashOperations;
     distribute: operations.Distribute;
     analytics: operations.Analytics;
-    }
+
+            /**
+         * Deletes a single test series
+         *
+         * @param {string} testSeriesSlug The slug of the test series
+         * 
+         * @param {string} ownerName The name of the owner
+         * 
+         * @param {string} appName The name of the application
+         * 
+         * @param {object} [options] Optional Parameters.
+         * 
+         * @param {object} [options.customHeaders] Headers that will be added to the
+         * request
+         * 
+         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+         * doc in ms-rest index.d.ts for details
+         */
+        deleteTestSeries(testSeriesSlug: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+        deleteTestSeries(testSeriesSlug: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+        /**
+         * Updates name and slug of a test series
+         *
+         * @param {string} testSeriesSlug The slug of the test series
+         * 
+         * @param {string} name New name of the new test series
+         * 
+         * @param {string} ownerName The name of the owner
+         * 
+         * @param {string} appName The name of the application
+         * 
+         * @param {object} [options] Optional Parameters.
+         * 
+         * @param {object} [options.customHeaders] Headers that will be added to the
+         * request
+         * 
+         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+         * doc in ms-rest index.d.ts for details
+         */
+        patchTestSeries(testSeriesSlug: string, name: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestSeries>): void;
+        patchTestSeries(testSeriesSlug: string, name: string, ownerName: string, appName: string, callback: ServiceCallback<models.TestSeries>): void;
+
+        /**
+         * Returns list of all test series for an application
+         *
+         * @param {string} ownerName The name of the owner
+         * 
+         * @param {string} appName The name of the application
+         * 
+         * @param {object} [options] Optional Parameters.
+         * 
+         * @param {object} [options.customHeaders] Headers that will be added to the
+         * request
+         * 
+         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+         * doc in ms-rest index.d.ts for details
+         */
+        getAllTestSeries(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestSeries[]>): void;
+        getAllTestSeries(ownerName: string, appName: string, callback: ServiceCallback<models.TestSeries[]>): void;
+
+        /**
+         * Creates new test series for an application
+         *
+         * @param {string} name Name of the new test series
+         * 
+         * @param {string} ownerName The name of the owner
+         * 
+         * @param {string} appName The name of the application
+         * 
+         * @param {object} [options] Optional Parameters.
+         * 
+         * @param {object} [options.customHeaders] Headers that will be added to the
+         * request
+         * 
+         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+         * doc in ms-rest index.d.ts for details
+         */
+        createTestSeries(name: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+        createTestSeries(name: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+        /**
+         * Uploads test file for a test run
+         *
+         * @param {string} testRunId The ID of the test run
+         * 
+         * @param {string} ownerName The name of the owner
+         * 
+         * @param {string} appName The name of the application
+         * 
+         * @param {object} [options] Optional Parameters.
+         * 
+         * @param {string} [options.relativePath] Relative (to the manifest file /
+         * test workspace) path of the test file
+         * 
+         * @param {object} [options.file] New uploaded file
+         * 
+         * @param {string} [options.hashValue] SHA256 hash of an existing file
+         * 
+         * @param {string} [options.byteRange] Requested byte range used as additional
+         * SHA256 hash verification
+         * 
+         * @param {object} [options.customHeaders] Headers that will be added to the
+         * request
+         * 
+         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+         * doc in ms-rest index.d.ts for details
+         */
+        uploadTestFile(testRunId: string, ownerName: string, appName: string, options: { relativePath? : string, file? : stream.Readable, hashValue? : string, byteRange? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+        uploadTestFile(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+        /**
+         * Starts test run
+         *
+         * @param {string} testRunId The ID of the test run
+         * 
+         * @param {string} testFramework Test framework used by tests.
+         * 
+         * @param {string} deviceSelection Device selection string.
+         * 
+         * @param {string} ownerName The name of the owner
+         * 
+         * @param {string} appName The name of the application
+         * 
+         * @param {object} [options] Optional Parameters.
+         * 
+         * @param {string} [options.locale] Locale that should be used to run tests.
+         * 
+         * @param {string} [options.testSeries] Name of the test series.
+         * 
+         * @param {string} [options.testParameters] A JSON dictionary with additional
+         * test parameters
+         * 
+         * @param {object} [options.customHeaders] Headers that will be added to the
+         * request
+         * 
+         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+         * doc in ms-rest index.d.ts for details
+         */
+        startTestRun(testRunId: string, testFramework: string, deviceSelection: string, ownerName: string, appName: string, options: { locale? : string, testSeries? : string, testParameters? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestCloudStartTestRunResult>): void;
+        startTestRun(testRunId: string, testFramework: string, deviceSelection: string, ownerName: string, appName: string, callback: ServiceCallback<models.TestCloudStartTestRunResult>): void;
+
+        /**
+         * Uploads dSym file for a test run
+         *
+         * @param {string} testRunId The ID of the test run
+         * 
+         * @param {string} ownerName The name of the owner
+         * 
+         * @param {string} appName The name of the application
+         * 
+         * @param {object} [options] Optional Parameters.
+         * 
+         * @param {string} [options.relativePath] Name of the dSym file
+         * 
+         * @param {object} [options.file] New uploaded file
+         * 
+         * @param {string} [options.hashValue] SHA256 hash of an existing file
+         * 
+         * @param {string} [options.byteRange] Requested byte range used as additional
+         * SHA256 hash verification
+         * 
+         * @param {object} [options.customHeaders] Headers that will be added to the
+         * request
+         * 
+         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+         * doc in ms-rest index.d.ts for details
+         */
+        uploadDSymFile(testRunId: string, ownerName: string, appName: string, options: { relativePath? : string, file? : stream.Readable, hashValue? : string, byteRange? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+        uploadDSymFile(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+        /**
+         * Uploads application file for a test run
+         *
+         * @param {string} testRunId The ID of the test run
+         * 
+         * @param {string} ownerName The name of the owner
+         * 
+         * @param {string} appName The name of the application
+         * 
+         * @param {object} [options] Optional Parameters.
+         * 
+         * @param {string} [options.relativePath] Name of the application file
+         * 
+         * @param {object} [options.file] New uploaded file
+         * 
+         * @param {string} [options.hashValue] SHA256 hash of an existing file
+         * 
+         * @param {string} [options.byteRange] Requested byte range used as additional
+         * SHA256 hash verification
+         * 
+         * @param {object} [options.customHeaders] Headers that will be added to the
+         * request
+         * 
+         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+         * doc in ms-rest index.d.ts for details
+         */
+        uploadApplicationFile(testRunId: string, ownerName: string, appName: string, options: { relativePath? : string, file? : stream.Readable, hashValue? : string, byteRange? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+        uploadApplicationFile(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+        /**
+         * Returns a list of test runs
+         *
+         * @param {string} ownerName The name of the owner
+         * 
+         * @param {string} appName The name of the application
+         * 
+         * @param {object} [options] Optional Parameters.
+         * 
+         * @param {object} [options.customHeaders] Headers that will be added to the
+         * request
+         * 
+         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+         * doc in ms-rest index.d.ts for details
+         */
+        getTestRuns(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestRun[]>): void;
+        getTestRuns(ownerName: string, appName: string, callback: ServiceCallback<models.TestRun[]>): void;
+
+        /**
+         * Creates a new test run
+         *
+         * @param {string} ownerName The name of the owner
+         * 
+         * @param {string} appName The name of the application
+         * 
+         * @param {object} [options] Optional Parameters.
+         * 
+         * @param {object} [options.customHeaders] Headers that will be added to the
+         * request
+         * 
+         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+         * doc in ms-rest index.d.ts for details
+         */
+        createTestRun(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+        createTestRun(ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+        /**
+         * Returns a list of available devices
+         *
+         * @param {string} ownerName The name of the owner
+         * 
+         * @param {string} appName The name of the application
+         * 
+         * @param {object} [options] Optional Parameters.
+         * 
+         * @param {object} [options.customHeaders] Headers that will be added to the
+         * request
+         * 
+         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+         * doc in ms-rest index.d.ts for details
+         */
+        getDeviceConfigurations(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeviceConfiguration[]>): void;
+        getDeviceConfigurations(ownerName: string, appName: string, callback: ServiceCallback<models.DeviceConfiguration[]>): void;
+}
 
 export = SonomaClient;

@@ -25,6 +25,10 @@ const environmentsData: EnvironmentsFile = {
     prod: {
       "endpoint": "https://api.sonoma.hockeyapp.com",
       description: "Production"
+    },
+    testCloudLocalDev: {
+      "endpoint": "http://localhost:1700",
+      description: "Test Cloud local dev box development"
     }
   }
 };

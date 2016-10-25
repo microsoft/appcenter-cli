@@ -28,14 +28,14 @@ function Account(client) {
  * Rejects a pending invitation for the specified user
  *
  * @param {string} ownerName The name of the owner
- *
+ * 
  * @param {string} appName The slug name of the app
- *
+ * 
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -112,7 +112,7 @@ Account.prototype.rejectInvitation = function (ownerName, appName, options, call
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -181,14 +181,14 @@ Account.prototype.rejectInvitation = function (ownerName, appName, options, call
  * Accepts a pending invitation for the specified user
  *
  * @param {string} ownerName The name of the owner
- *
+ * 
  * @param {string} appName The slug name of the app
- *
+ * 
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -265,7 +265,7 @@ Account.prototype.acceptInvitation = function (ownerName, appName, options, call
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -334,10 +334,10 @@ Account.prototype.acceptInvitation = function (ownerName, appName, options, call
  * Returns the user profile data
  *
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -400,7 +400,7 @@ Account.prototype.getUserProfile = function (options, callback) {
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -469,13 +469,13 @@ Account.prototype.getUserProfile = function (options, callback) {
  * Updates the user profile and returns the updated user data
  *
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {string} [options.displayName] The full name of the user. Might for
  * example be first and last name
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -540,7 +540,7 @@ Account.prototype.updateUserProfile = function (options, callback) {
       requestContent = JSON.stringify(requestModel);
     }
   } catch (error) {
-    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
         'payload - "%s"', error.message, util.inspect(user, {depth: null})));
     return callback(serializationError);
   }
@@ -566,7 +566,7 @@ Account.prototype.updateUserProfile = function (options, callback) {
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -652,16 +652,16 @@ Account.prototype.updateUserProfile = function (options, callback) {
  * Removes the user from the app
  *
  * @param {string} ownerName The name of the owner
- *
+ * 
  * @param {string} appName The slug name of the app
- *
+ * 
  * @param {string} userEmail The email of the user to Invites
- *
+ * 
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -742,7 +742,7 @@ Account.prototype.deleteAppUser = function (ownerName, appName, userEmail, optio
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -812,14 +812,14 @@ Account.prototype.deleteAppUser = function (ownerName, appName, userEmail, optio
  * which belongs to the given owner.
  *
  * @param {string} ownerName The name of the owner
- *
+ * 
  * @param {string} appName The slug name of the app
- *
+ * 
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -895,7 +895,7 @@ Account.prototype.getAppUsers = function (ownerName, appName, options, callback)
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -978,16 +978,16 @@ Account.prototype.getAppUsers = function (ownerName, appName, options, callback)
  * Invites a new or existing user to an app
  *
  * @param {string} ownerName The name of the owner
- *
+ * 
  * @param {string} appName The slug name of the app
- *
+ * 
  * @param {string} userEmail The email of the user to Invites
- *
+ * 
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -1068,7 +1068,7 @@ Account.prototype.inviteAppUser = function (ownerName, appName, userEmail, optio
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -1154,16 +1154,16 @@ Account.prototype.inviteAppUser = function (ownerName, appName, userEmail, optio
  * Removes a user's invitation to an app
  *
  * @param {string} ownerName The name of the owner
- *
+ * 
  * @param {string} appName The slug name of the app
- *
+ * 
  * @param {string} userEmail The email of the user to Invites
- *
+ * 
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -1244,7 +1244,7 @@ Account.prototype.deleteAppInvitation = function (ownerName, appName, userEmail,
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -1313,14 +1313,14 @@ Account.prototype.deleteAppInvitation = function (ownerName, appName, userEmail,
  * Gets the pending invitations for the app
  *
  * @param {string} ownerName The name of the owner
- *
+ * 
  * @param {string} appName The slug name of the app
- *
+ * 
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -1396,7 +1396,7 @@ Account.prototype.getAppInvitations = function (ownerName, appName, options, cal
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -1449,14 +1449,14 @@ Account.prototype.getAppInvitations = function (ownerName, appName, options, cal
  * owner.
  *
  * @param {string} ownerName The name of the owner
- *
+ * 
  * @param {string} appName The slug name of the app
- *
+ * 
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -1532,7 +1532,7 @@ Account.prototype.getApp = function (ownerName, appName, options, callback) {
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -1601,20 +1601,20 @@ Account.prototype.getApp = function (ownerName, appName, options, callback) {
  * Partially updates a single app
  *
  * @param {string} appName The slug name of the app
- *
+ * 
  * @param {string} ownerName The name of the owner
- *
+ * 
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {string} [options.description] A short text describing the app
- *
+ * 
  * @param {string} [options.displayName] The display name of the app
- *
+ * 
  * @param {string} [options.name] The name of the app used in URLs
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -1698,7 +1698,7 @@ Account.prototype.updateApp = function (appName, ownerName, options, callback) {
       requestContent = JSON.stringify(requestModel);
     }
   } catch (error) {
-    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
         'payload - "%s"', error.message, util.inspect(app, {depth: null})));
     return callback(serializationError);
   }
@@ -1724,7 +1724,7 @@ Account.prototype.updateApp = function (appName, ownerName, options, callback) {
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -1759,25 +1759,25 @@ Account.prototype.updateApp = function (appName, ownerName, options, callback) {
  * Creates a new app and returns it to the caller
  *
  * @param {object} app The data for the app
- *
+ * 
  * @param {string} [app.description] A short text describing the app
- *
+ * 
  * @param {string} app.displayName The full name of the user. Might for
  * example be first and last name
- *
+ * 
  * @param {string} [app.language] The primary programming language used in the
  * app
- *
+ * 
  * @param {string} [app.name] The name of the app used in URLs
- *
+ * 
  * @param {string} app.platform The platform of the app. Possible values
  * include: 'iOS', 'Android'
- *
+ * 
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -1836,7 +1836,7 @@ Account.prototype.createApp = function (app, options, callback) {
       requestContent = JSON.stringify(requestModel);
     }
   } catch (error) {
-    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
         'payload - "%s"', error.message, util.inspect(app, {depth: null})));
     return callback(serializationError);
   }
@@ -1862,7 +1862,7 @@ Account.prototype.createApp = function (app, options, callback) {
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -1948,10 +1948,10 @@ Account.prototype.createApp = function (app, options, callback) {
  * Returns a list of apps
  *
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -2014,7 +2014,7 @@ Account.prototype.getApps = function (options, callback) {
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -2097,12 +2097,12 @@ Account.prototype.getApps = function (options, callback) {
  * Delete the api_token object with the specific id
  *
  * @param {string} apiTokenId The unique ID (UUID) of the api token
- *
+ * 
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -2174,7 +2174,7 @@ Account.prototype.deleteApiToken = function (apiTokenId, options, callback) {
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -2260,10 +2260,10 @@ Account.prototype.deleteApiToken = function (apiTokenId, options, callback) {
  * Returns api tokens for the authenticated user
  *
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -2326,7 +2326,7 @@ Account.prototype.getApiTokens = function (options, callback) {
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -2395,12 +2395,12 @@ Account.prototype.getApiTokens = function (options, callback) {
  * Creates a new API token
  *
  * @param {object} [options] Optional Parameters.
- *
+ * 
  * @param {string} [options.description] The description of the token
- *
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- *
+ * 
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -2465,7 +2465,7 @@ Account.prototype.createApiToken = function (options, callback) {
       requestContent = JSON.stringify(requestModel);
     }
   } catch (error) {
-    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
         'payload - "%s"', error.message, util.inspect(description1, {depth: null})));
     return callback(serializationError);
   }
@@ -2491,7 +2491,7 @@ Account.prototype.createApiToken = function (options, callback) {
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }

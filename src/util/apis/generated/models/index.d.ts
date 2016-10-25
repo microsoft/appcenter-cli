@@ -1852,6 +1852,252 @@ export interface CrashgroupModelModel {
 
 /**
  * @class
+ * Initializes a new instance of the DeviceConfiguration class.
+ * @constructor
+ * @member {string} [name] The name of the device model and OS version
+ * 
+ * @member {uuid} [id] The unique id of the device configuration
+ * 
+ * @member {number} [tier] The tier
+ * 
+ * @member {string} [frame]
+ * 
+ * @member {object} [model]
+ * 
+ * @member {string} [model.name]
+ * 
+ * @member {string} [model.manufacturer]
+ * 
+ * @member {string} [model.model]
+ * 
+ * @member {string} [model.releaseDate]
+ * 
+ * @member {string} [model.platform]
+ * 
+ * @member {string} [os]
+ * 
+ * @member {string} [osName]
+ * 
+ * @member {number} [marketShare]
+ * 
+ */
+export interface DeviceConfiguration {
+  name?: string;
+  id?: string;
+  tier?: number;
+  frame?: string;
+  model?: DeviceModel;
+  os?: string;
+  osName?: string;
+  marketShare?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DeviceModel class.
+ * @constructor
+ * @member {string} [name]
+ * 
+ * @member {string} [manufacturer]
+ * 
+ * @member {string} [model]
+ * 
+ * @member {string} [releaseDate]
+ * 
+ * @member {string} [platform]
+ * 
+ */
+export interface DeviceModel {
+  name?: string;
+  manufacturer?: string;
+  model?: string;
+  releaseDate?: string;
+  platform?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestRun class.
+ * @constructor
+ * @summary Test Run
+ *
+ * Summary single test run on Xamarin Test Cloud
+ *
+ * @member {uuid} [id] The unique id of the test upload
+ * 
+ * @member {string} [date] The date and time the test was uploaded
+ * 
+ * @member {string} [appVersion] The compiled version of the app binary
+ * 
+ * @member {string} [testSeries] The name of the test series with which this
+ * test upload is associated
+ * 
+ * @member {string} [platform] The device platform targeted by the test.
+ * Possible values are 'ios' or 'android'
+ * 
+ * @member {string} [state] The current status of the test run, in relation to
+ * the various phases
+ * 
+ * @member {string} [status] The passed/failed state
+ * 
+ * @member {string} [description] Human readable explanation of the current
+ * test status
+ * 
+ * @member {object} [stats]
+ * 
+ * @member {number} [stats.devices] Number of devices running the test
+ * 
+ * @member {number} [stats.total] Number of tests in total
+ * 
+ * @member {number} [stats.passed] Number of passed tests
+ * 
+ * @member {number} [stats.failed] Number of failed tests
+ * 
+ * @member {number} [stats.peakMemory] The max amount of MB used during the
+ * test run
+ * 
+ * @member {number} [stats.totalDeviceMinutes] The number of minutes of device
+ * time the test has been runnign
+ * 
+ * @member {string} [testType] The name of the test framework used to run this
+ * test
+ * 
+ */
+export interface TestRun {
+  id?: string;
+  date?: string;
+  appVersion?: string;
+  testSeries?: string;
+  platform?: string;
+  state?: string;
+  status?: string;
+  description?: string;
+  stats?: TestRunStatistics;
+  testType?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestRunStatistics class.
+ * @constructor
+ * @summary Test Run Statistics
+ *
+ * Summary single test run on Xamarin Test Cloud
+ *
+ * @member {number} [devices] Number of devices running the test
+ * 
+ * @member {number} [total] Number of tests in total
+ * 
+ * @member {number} [passed] Number of passed tests
+ * 
+ * @member {number} [failed] Number of failed tests
+ * 
+ * @member {number} [peakMemory] The max amount of MB used during the test run
+ * 
+ * @member {number} [totalDeviceMinutes] The number of minutes of device time
+ * the test has been runnign
+ * 
+ */
+export interface TestRunStatistics {
+  devices?: number;
+  total?: number;
+  passed?: number;
+  failed?: number;
+  peakMemory?: number;
+  totalDeviceMinutes?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestSeries class.
+ * @constructor
+ * @summary TestSeries
+ *
+ * Summary of a single test series
+ *
+ * @member {string} slug Unique, human-readable identifier of the test series
+ * 
+ * @member {string} name Name of the test series
+ * 
+ * @member {string} [mostRecentActivity] Date of the latest test run that used
+ * this test series
+ * 
+ * @member {array} [testRuns] Most recent test runs
+ * 
+ */
+export interface TestSeries {
+  slug: string;
+  name: string;
+  mostRecentActivity?: string;
+  testRuns?: TestRunSummary[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestRunSummary class.
+ * @constructor
+ * @summary TestRunSummary
+ *
+ * Most important information about a test run.
+ *
+ * @member {string} [date] Date of the test run.
+ * 
+ * @member {string} [statusDescription] Human-readable status of the test run.
+ * 
+ * @member {number} [failed] Number of failed tests
+ * 
+ * @member {number} [passed] Number of passed tests
+ * 
+ * @member {boolean} [completed] Tells whether the test run has completed
+ * 
+ */
+export interface TestRunSummary {
+  date?: string;
+  statusDescription?: string;
+  failed?: number;
+  passed?: number;
+  completed?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestCloudErrorDetails class.
+ * @constructor
+ * @summary TestCloudErrorDetails
+ *
+ * Details of a failed operation
+ *
+ * @member {string} status Status of the operation
+ * 
+ * @member {string} message Human-readable message that describes the error
+ * 
+ */
+export interface TestCloudErrorDetails {
+  status: string;
+  message: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestCloudStartTestRunResult class.
+ * @constructor
+ * @summary TestCloudStartTestRunResult
+ *
+ * Result of starting a test run
+ *
+ * @member {array} [acceptedDevices] List with names of accepted devices
+ * 
+ * @member {array} [rejectedDevices] List with names and descriptions of
+ * rejected devices
+ * 
+ */
+export interface TestCloudStartTestRunResult {
+  acceptedDevices?: string[];
+  rejectedDevices?: string[];
+}
+
+/**
+ * @class
  * Initializes a new instance of the Crashgroups class.
  * @constructor
  * @member {array} crashgroupsProperty

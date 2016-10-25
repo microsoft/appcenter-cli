@@ -3386,6 +3386,550 @@
           "account"
         ]
       }
+    },
+     "/v0.1/apps/{owner_name}/{app_name}/test_series/{test_series_slug}": {
+      "delete": {
+        "description": "Deletes a single test series",
+        "operationId": "deleteTestSeries",
+        "parameters": [
+          {
+            "name": "test_series_slug",
+            "type": "string",
+            "in": "path",
+            "description": "The slug of the test series",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test series was successfully removed"
+          },
+          "404": {
+            "description": "The test series was not found"
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      },
+      "patch": {
+        "description": "Updates name and slug of a test series",
+        "operationId": "patchTestSeries",
+        "parameters": [
+          {
+            "name": "test_series_slug",
+            "type": "string",
+            "in": "path",
+            "description": "The slug of the test series",
+            "required": true
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "in": "formData",
+            "description": "New name of the new test series",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test series was successfully patched",
+            "schema": {
+              "$ref": "#/definitions/TestSeries"
+            }
+          },
+          "400": {
+            "description": "The new test series name is incorrect"
+          },
+          "404": {
+            "description": "Test series with the given slug name was not found"
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_series": {
+      "get": {
+        "description": "Returns list of all test series for an application",
+        "operationId": "getAllTestSeries",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestSeries"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      },
+      "post": {
+        "description": "Creates new test series for an application",
+        "operationId": "createTestSeries",
+        "parameters": [
+          {
+            "name": "name",
+            "type": "string",
+            "in": "formData",
+            "description": "Name of the new test series",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TestSeries"
+            }
+          },
+          "400": {
+            "description": "Invalid test series name",
+            "schema": {
+              "$ref": "#/definitions/TestCloudErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/test_files": {
+      "post": {
+        "description": "Uploads test file for a test run",
+        "operationId": "uploadTestFile",
+        "parameters": [
+          {
+            "name": "test_run_id",
+            "type": "string",
+            "in": "path",
+            "description": "The ID of the test run",
+            "required": true
+          },
+          {
+            "name": "relative_path",
+            "type": "string",
+            "in": "formData",
+            "description": "Relative (to the manifest file / test workspace) path of the test file"
+          },
+          {
+            "name": "file",
+            "type": "file",
+            "in": "formData",
+            "description": "New uploaded file",
+            "required": false
+          },
+          {
+            "name": "hash_value",
+            "type": "string",
+            "in": "formData",
+            "description": "SHA256 hash of an existing file",
+            "required": false
+          },
+          {
+            "name": "byte_range",
+            "type": "string",
+            "in": "formData",
+            "description": "Requested byte range used as additional SHA256 hash verification"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Byte range verification required for given SHA256 hash",
+            "headers": {
+              "X-Challenge-Bytes": {
+                "description": "Byte range required to authenticate the request",
+                "type": "string"
+              }
+            }
+          },
+          "412": {
+            "description": "File with given SHA256 hash doesn't exist and must be uploaded"
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/start": {
+      "post": {
+        "description": "Starts test run",
+        "operationId": "startTestRun",
+        "parameters": [
+          {
+            "name": "test_run_id",
+            "type": "string",
+            "in": "path",
+            "description": "The ID of the test run",
+            "required": true
+          },
+          {
+            "name": "test_framework",
+            "type": "string",
+            "in": "formData",
+            "description": "Test framework used by tests.",
+            "required": true
+          },
+          {
+            "name": "device_selection",
+            "type": "string",
+            "in": "formData",
+            "description": "Device selection string.",
+            "required": true
+          },
+          {
+            "name": "locale",
+            "type": "string",
+            "description": "Locale that should be used to run tests.",
+            "in": "formData",
+            "required": false
+          },
+          {
+            "name": "test_series",
+            "type": "string",
+            "description": "Name of the test series.",
+            "in": "formData",
+            "required": false
+          },
+          {
+            "name": "test_parameters",
+            "type": "string",
+            "description": "A JSON dictionary with additional test parameters",
+            "in": "formData",
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TestCloudStartTestRunResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/dsym_files": {
+      "post": {
+        "description": "Uploads dSym file for a test run",
+        "operationId": "uploadDSymFile",
+        "parameters": [
+          {
+            "name": "test_run_id",
+            "type": "string",
+            "in": "path",
+            "description": "The ID of the test run",
+            "required": true
+          },
+          {
+            "name": "relative_path",
+            "type": "string",
+            "in": "formData",
+            "description": "Name of the dSym file"
+          },
+          {
+            "name": "file",
+            "type": "file",
+            "in": "formData",
+            "description": "New uploaded file",
+            "required": false
+          },
+          {
+            "name": "hash_value",
+            "type": "string",
+            "in": "formData",
+            "description": "SHA256 hash of an existing file",
+            "required": false
+          },
+          {
+            "name": "byte_range",
+            "type": "string",
+            "in": "formData",
+            "description": "Requested byte range used as additional SHA256 hash verification"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Byte range verification required for given SHA256 hash",
+            "headers": {
+              "X-Challenge-Bytes": {
+                "description": "Byte range required to authenticate the request",
+                "type": "string"
+              }
+            }
+          },
+          "412": {
+            "description": "File with given SHA256 hash doesn't exist and must be uploaded"
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/app_files": {
+      "post": {
+        "description": "Uploads application file for a test run",
+        "operationId": "uploadApplicationFile",
+        "parameters": [
+          {
+            "name": "test_run_id",
+            "type": "string",
+            "in": "path",
+            "description": "The ID of the test run",
+            "required": true
+          },
+          {
+            "name": "relative_path",
+            "type": "string",
+            "in": "formData",
+            "description": "Name of the application file"
+          },
+          {
+            "name": "file",
+            "type": "file",
+            "in": "formData",
+            "description": "New uploaded file",
+            "required": false
+          },
+          {
+            "name": "hash_value",
+            "type": "string",
+            "in": "formData",
+            "description": "SHA256 hash of an existing file",
+            "required": false
+          },
+          {
+            "name": "byte_range",
+            "type": "string",
+            "in": "formData",
+            "description": "Requested byte range used as additional SHA256 hash verification"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Byte range verification required for given SHA256 hash",
+            "headers": {
+              "X-Challenge-Bytes": {
+                "description": "Byte range required to authenticate the request",
+                "type": "string"
+              }
+            }
+          },
+          "412": {
+            "description": "File with given SHA256 hash doesn't exist and must be uploaded"
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs": {
+      "get": {
+        "description": "Returns a list of test runs",
+        "operationId": "getTestRuns",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestRun"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      },
+      "post": {
+        "description": "Creates a new test run",
+        "operationId": "createTestRun",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {
+              "Location": {
+                "description": "Relative URL that points to the test run",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/device_configurations": {
+      "get": {
+        "description": "Returns a list of available devices",
+        "operationId": "getDeviceConfigurations",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DeviceConfiguration"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
     }
   },
   "definitions": {
@@ -5274,6 +5818,234 @@
         "appVersion": {
           "type": "string",
           "format": "string"
+        }
+      }
+    },
+    "DeviceConfiguration": {
+      "properties": {
+        "name": {
+          "description": "The name of the device model and OS version",
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The unique id of the device configuration"
+        },
+        "tier": {
+          "description": "The tier",
+          "type": "number"
+        },
+        "frame": {
+          "type": "string"
+        },
+        "model": {
+          "$ref": "#/definitions/DeviceModel"
+        },
+        "os": {
+          "type": "string"
+        },
+        "osName": {
+          "type": "string"
+        },
+        "marketShare": {
+          "type": "number"
+        }
+      }
+    },
+    "DeviceModel": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "manufacturer": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "releaseDate": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        }
+      }
+    },
+    "TestRun": {
+      "title": "Test Run",
+      "description": "Summary single test run on Xamarin Test Cloud",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The unique id of the test upload"
+        },
+        "date": {
+          "description": "The date and time the test was uploaded",
+          "type": "string"
+        },
+        "appVersion": {
+          "description": "The compiled version of the app binary",
+          "type": "string"
+        },
+        "testSeries": {
+          "description": "The name of the test series with which this test upload is associated",
+          "type": "string"
+        },
+        "platform": {
+          "description": "The device platform targeted by the test. Possible values are 'ios' or 'android'",
+          "type": "string"
+        },
+        "state": {
+          "description": "The current status of the test run, in relation to the various phases",
+          "type": "string"
+        },
+        "status": {
+          "description": "The passed/failed state",
+          "type": "string"
+        },
+        "description": {
+          "description": "Human readable explanation of the current test status",
+          "type": "string"
+        },
+        "stats": {
+          "$ref": "#/definitions/TestRunStatistics"
+        },
+        "testType": {
+          "description": "The name of the test framework used to run this test",
+          "type": "string"
+        }
+      }
+    },
+    "TestRunStatistics": {
+      "title": "Test Run Statistics",
+      "description": "Summary single test run on Xamarin Test Cloud",
+      "type": "object",
+      "properties": {
+        "devices": {
+          "description": "Number of devices running the test",
+          "type": "number"
+        },
+        "total": {
+          "description": "Number of tests in total",
+          "type": "number"
+        },
+        "passed": {
+          "description": "Number of passed tests",
+          "type": "number"
+        },
+        "failed": {
+          "description": "Number of failed tests",
+          "type": "number"
+        },
+        "peakMemory": {
+          "description": "The max amount of MB used during the test run",
+          "type": "number"
+        },
+        "totalDeviceMinutes": {
+          "description": "The number of minutes of device time the test has been runnign",
+          "type": "number"
+        }
+      }
+    },
+    "TestSeries": {
+      "title": "TestSeries",
+      "description": "Summary of a single test series",
+      "type": "object",
+      "properties": {
+        "slug": {
+          "description": "Unique, human-readable identifier of the test series",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the test series",
+          "type": "string"
+        },
+        "mostRecentActivity": {
+          "description": "Date of the latest test run that used this test series",
+          "type": "string",
+          "format": "dateTime"
+        },
+        "testRuns": {
+          "description": "Most recent test runs",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestRunSummary"
+          }
+        }
+      },
+      "required": [
+        "slug",
+        "name"
+      ]
+    },
+    "TestRunSummary": {
+      "title": "TestRunSummary",
+      "description": "Most important information about a test run.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "description": "Date of the test run.",
+          "type": "string",
+          "format": "dateTime"
+        },
+        "statusDescription": {
+          "description": "Human-readable status of the test run.",
+          "type": "string"
+        },
+        "failed": {
+          "description": "Number of failed tests",
+          "type": "number"
+        },
+        "passed": {
+          "description": "Number of passed tests",
+          "type": "number"
+        },
+        "completed": {
+          "description": "Tells whether the test run has completed",
+          "type": "boolean"
+        }
+      }
+    },
+    "TestCloudErrorDetails": {
+      "title": "TestCloudErrorDetails",
+      "description": "Details of a failed operation",
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "Status of the operation",
+          "type": "string"
+        },
+        "message": {
+          "description": "Human-readable message that describes the error",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "message"
+      ]
+    },
+    "TestCloudStartTestRunResult": {
+      "title": "TestCloudStartTestRunResult",
+      "description": "Result of starting a test run",
+      "type": "object",
+      "properties": {
+        "accepted_devices": {
+          "description": "List with names of accepted devices",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rejected_devices": {
+          "description": "List with names and descriptions of rejected devices",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     }
