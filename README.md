@@ -8,7 +8,7 @@ local CI configurations).
 ## Technologies Used
 
 sonoma cli is written using Node.js version 6 and [Typescript](http://typescriptlang.org). Wrappers over the Bifrost HTTP API are
-generated using the [AutoRest][https://github.com/Azure/autorest] code generator. And the usual
+generated using the [AutoRest](https://github.com/Azure/autorest) code generator. And the usual
 plethora of npm modules.
 
 We use [mocha](https://http://mochajs.org/) for a test runner / framework. [Chai](http://http://chaijs.com/) is
