@@ -1,6 +1,6 @@
 import { PathResolver } from "../../../src/commands/tests/lib/path-resolver";
 import { expect } from "chai";
-const path = require('path');
+import * as path from "path";
 
 function normalizePaths(paths: string[]): string[] {    
   return paths.map(p => p.replace(new RegExp("/", 'g'), path.sep)).sort();
@@ -12,7 +12,7 @@ function verifyResult(actual: string[], expected: string[]) {
   expect(normalizedActual).to.eql(normalizedExpected);
 }
 
-describe("Resolving paths", function() {
+describe("Resolving paths", () => {
   let pathResolver: PathResolver;
 
   before(() => {

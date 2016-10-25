@@ -1,9 +1,11 @@
 {
   "globalDevDependencies": {
     "chai": "registry:dt/chai#3.4.0+20160601211834",
-    "mocha": "registry:dt/mocha#2.2.5+20160720003353"
+    "mocha": "registry:dt/mocha#2.2.5+20160720003353",
+    "temp": "registry:dt/temp#0.8.3+20160105142454"
   },
   "globalDependencies": {
+    "adm-zip": "registry:dt/adm-zip#0.0.0+20160317120654",
     "node": "registry:dt/node#6.0.0+20161019125345",
     "node-fetch": "registry:dt/node-fetch#0.0.0+20160711094047",
     "promptly": "registry:dt/promptly#1.1.1+20160316155526"
