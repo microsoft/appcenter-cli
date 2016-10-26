@@ -7,7 +7,6 @@
 import { ServiceClientOptions, RequestOptions, ServiceCallback, ServiceClientCredentials } from 'ms-rest';
 import * as models from "./models";
 import * as operations from "./operations";
-import * as stream from "stream";
 
 declare class SonomaClient {
     /**
@@ -35,19 +34,16 @@ declare class SonomaClient {
 
     // Operation groups
     account: operations.Account;
-    buildOperations: operations.BuildOperations;
-    crashOperations: operations.CrashOperations;
-    distribute: operations.Distribute;
-    analytics: operations.Analytics;
+    apps: operations.Apps;
+    temp: operations.Temp;
+    tests: operations.Tests;
 
             /**
-         * Deletes a single test series
+         * Rejects a pending invitation for the specified user
          *
-         * @param {string} testSeriesSlug The slug of the test series
-         * 
          * @param {string} ownerName The name of the owner
          * 
-         * @param {string} appName The name of the application
+         * @param {string} appName The slug name of the app
          * 
          * @param {object} [options] Optional Parameters.
          * 
@@ -57,19 +53,15 @@ declare class SonomaClient {
          * @param {ServiceCallback} [callback] callback function; see ServiceCallback
          * doc in ms-rest index.d.ts for details
          */
-        deleteTestSeries(testSeriesSlug: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-        deleteTestSeries(testSeriesSlug: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+        rejectInvitation(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+        rejectInvitation(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorResponse>): void;
 
         /**
-         * Updates name and slug of a test series
+         * Accepts a pending invitation for the specified user
          *
-         * @param {string} testSeriesSlug The slug of the test series
-         * 
-         * @param {string} name New name of the new test series
-         * 
          * @param {string} ownerName The name of the owner
          * 
-         * @param {string} appName The name of the application
+         * @param {string} appName The slug name of the app
          * 
          * @param {object} [options] Optional Parameters.
          * 
@@ -79,15 +71,17 @@ declare class SonomaClient {
          * @param {ServiceCallback} [callback] callback function; see ServiceCallback
          * doc in ms-rest index.d.ts for details
          */
-        patchTestSeries(testSeriesSlug: string, name: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestSeries>): void;
-        patchTestSeries(testSeriesSlug: string, name: string, ownerName: string, appName: string, callback: ServiceCallback<models.TestSeries>): void;
+        acceptInvitation(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+        acceptInvitation(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorResponse>): void;
 
         /**
-         * Returns list of all test series for an application
+         * Removes the user from the app
          *
          * @param {string} ownerName The name of the owner
          * 
-         * @param {string} appName The name of the application
+         * @param {string} appName The slug name of the app
+         * 
+         * @param {string} userEmail The email of the user to Invites
          * 
          * @param {object} [options] Optional Parameters.
          * 
@@ -97,17 +91,16 @@ declare class SonomaClient {
          * @param {ServiceCallback} [callback] callback function; see ServiceCallback
          * doc in ms-rest index.d.ts for details
          */
-        getAllTestSeries(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestSeries[]>): void;
-        getAllTestSeries(ownerName: string, appName: string, callback: ServiceCallback<models.TestSeries[]>): void;
+        deleteAppUser(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+        deleteAppUser(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<models.ErrorResponse>): void;
 
         /**
-         * Creates new test series for an application
+         * Returns the users associated with the app specified with the given app name
+         * which belongs to the given owner.
          *
-         * @param {string} name Name of the new test series
-         * 
          * @param {string} ownerName The name of the owner
          * 
-         * @param {string} appName The name of the application
+         * @param {string} appName The slug name of the app
          * 
          * @param {object} [options] Optional Parameters.
          * 
@@ -117,13 +110,13 @@ declare class SonomaClient {
          * @param {ServiceCallback} [callback] callback function; see ServiceCallback
          * doc in ms-rest index.d.ts for details
          */
-        createTestSeries(name: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-        createTestSeries(name: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+        getAppUsers(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+        getAppUsers(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
         /**
-         * Uploads test file for a test run
+         * Return the details for this package.
          *
-         * @param {string} testRunId The ID of the test run
+         * @param {string} packageId The ID of the package
          * 
          * @param {string} ownerName The name of the owner
          * 
@@ -131,46 +124,25 @@ declare class SonomaClient {
          * 
          * @param {object} [options] Optional Parameters.
          * 
-         * @param {string} [options.relativePath] Relative (to the manifest file /
-         * test workspace) path of the test file
-         * 
-         * @param {object} [options.file] New uploaded file
-         * 
-         * @param {string} [options.hashValue] SHA256 hash of an existing file
-         * 
-         * @param {string} [options.byteRange] Requested byte range used as additional
-         * SHA256 hash verification
-         * 
          * @param {object} [options.customHeaders] Headers that will be added to the
          * request
          * 
          * @param {ServiceCallback} [callback] callback function; see ServiceCallback
          * doc in ms-rest index.d.ts for details
          */
-        uploadTestFile(testRunId: string, ownerName: string, appName: string, options: { relativePath? : string, file? : stream.Readable, hashValue? : string, byteRange? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-        uploadTestFile(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+        getPackageInfo(packageId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PackageDetails>): void;
+        getPackageInfo(packageId: string, ownerName: string, appName: string, callback: ServiceCallback<models.PackageDetails>): void;
 
         /**
-         * Starts test run
+         * Invites a new or existing user to an app
          *
-         * @param {string} testRunId The ID of the test run
-         * 
-         * @param {string} testFramework Test framework used by tests.
-         * 
-         * @param {string} deviceSelection Device selection string.
-         * 
          * @param {string} ownerName The name of the owner
          * 
-         * @param {string} appName The name of the application
+         * @param {string} appName The slug name of the app
+         * 
+         * @param {string} userEmail The email of the user to Invites
          * 
          * @param {object} [options] Optional Parameters.
-         * 
-         * @param {string} [options.locale] Locale that should be used to run tests.
-         * 
-         * @param {string} [options.testSeries] Name of the test series.
-         * 
-         * @param {string} [options.testParameters] A JSON dictionary with additional
-         * test parameters
          * 
          * @param {object} [options.customHeaders] Headers that will be added to the
          * request
@@ -178,28 +150,19 @@ declare class SonomaClient {
          * @param {ServiceCallback} [callback] callback function; see ServiceCallback
          * doc in ms-rest index.d.ts for details
          */
-        startTestRun(testRunId: string, testFramework: string, deviceSelection: string, ownerName: string, appName: string, options: { locale? : string, testSeries? : string, testParameters? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestCloudStartTestRunResult>): void;
-        startTestRun(testRunId: string, testFramework: string, deviceSelection: string, ownerName: string, appName: string, callback: ServiceCallback<models.TestCloudStartTestRunResult>): void;
+        inviteAppUser(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+        inviteAppUser(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<models.ErrorResponse>): void;
 
         /**
-         * Uploads dSym file for a test run
+         * Removes a user's invitation to an app
          *
-         * @param {string} testRunId The ID of the test run
-         * 
          * @param {string} ownerName The name of the owner
          * 
-         * @param {string} appName The name of the application
+         * @param {string} appName The slug name of the app
+         * 
+         * @param {string} userEmail The email of the user to Invites
          * 
          * @param {object} [options] Optional Parameters.
-         * 
-         * @param {string} [options.relativePath] Name of the dSym file
-         * 
-         * @param {object} [options.file] New uploaded file
-         * 
-         * @param {string} [options.hashValue] SHA256 hash of an existing file
-         * 
-         * @param {string} [options.byteRange] Requested byte range used as additional
-         * SHA256 hash verification
          * 
          * @param {object} [options.customHeaders] Headers that will be added to the
          * request
@@ -207,28 +170,17 @@ declare class SonomaClient {
          * @param {ServiceCallback} [callback] callback function; see ServiceCallback
          * doc in ms-rest index.d.ts for details
          */
-        uploadDSymFile(testRunId: string, ownerName: string, appName: string, options: { relativePath? : string, file? : stream.Readable, hashValue? : string, byteRange? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-        uploadDSymFile(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+        deleteAppInvitation(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+        deleteAppInvitation(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<models.ErrorResponse>): void;
 
         /**
-         * Uploads application file for a test run
+         * Gets the pending invitations for the app
          *
-         * @param {string} testRunId The ID of the test run
-         * 
          * @param {string} ownerName The name of the owner
          * 
-         * @param {string} appName The name of the application
+         * @param {string} appName The slug name of the app
          * 
          * @param {object} [options] Optional Parameters.
-         * 
-         * @param {string} [options.relativePath] Name of the application file
-         * 
-         * @param {object} [options.file] New uploaded file
-         * 
-         * @param {string} [options.hashValue] SHA256 hash of an existing file
-         * 
-         * @param {string} [options.byteRange] Requested byte range used as additional
-         * SHA256 hash verification
          * 
          * @param {object} [options.customHeaders] Headers that will be added to the
          * request
@@ -236,15 +188,16 @@ declare class SonomaClient {
          * @param {ServiceCallback} [callback] callback function; see ServiceCallback
          * doc in ms-rest index.d.ts for details
          */
-        uploadApplicationFile(testRunId: string, ownerName: string, appName: string, options: { relativePath? : string, file? : stream.Readable, hashValue? : string, byteRange? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-        uploadApplicationFile(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+        getAppInvitations(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+        getAppInvitations(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
         /**
-         * Returns a list of test runs
+         * Return a specific app with the given app name which belongs to the given
+         * owner.
          *
          * @param {string} ownerName The name of the owner
          * 
-         * @param {string} appName The name of the application
+         * @param {string} appName The slug name of the app
          * 
          * @param {object} [options] Optional Parameters.
          * 
@@ -254,17 +207,23 @@ declare class SonomaClient {
          * @param {ServiceCallback} [callback] callback function; see ServiceCallback
          * doc in ms-rest index.d.ts for details
          */
-        getTestRuns(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestRun[]>): void;
-        getTestRuns(ownerName: string, appName: string, callback: ServiceCallback<models.TestRun[]>): void;
+        getApp(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+        getApp(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
         /**
-         * Creates a new test run
+         * Partially updates a single app
          *
+         * @param {string} appName The slug name of the app
+         * 
          * @param {string} ownerName The name of the owner
          * 
-         * @param {string} appName The name of the application
-         * 
          * @param {object} [options] Optional Parameters.
+         * 
+         * @param {string} [options.description] A short text describing the app
+         * 
+         * @param {string} [options.displayName] The display name of the app
+         * 
+         * @param {string} [options.name] The name of the app used in URLs
          * 
          * @param {object} [options.customHeaders] Headers that will be added to the
          * request
@@ -272,15 +231,15 @@ declare class SonomaClient {
          * @param {ServiceCallback} [callback] callback function; see ServiceCallback
          * doc in ms-rest index.d.ts for details
          */
-        createTestRun(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-        createTestRun(ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+        updateApp(appName: string, ownerName: string, options: { description? : string, displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+        updateApp(appName: string, ownerName: string, callback: ServiceCallback<models.AppResponse>): void;
 
         /**
-         * Returns a list of available devices
+         * Delete an app
          *
-         * @param {string} ownerName The name of the owner
+         * @param {string} appName The slug name of the app
          * 
-         * @param {string} appName The name of the application
+         * @param {string} ownerName The name of the owner
          * 
          * @param {object} [options] Optional Parameters.
          * 
@@ -290,8 +249,51 @@ declare class SonomaClient {
          * @param {ServiceCallback} [callback] callback function; see ServiceCallback
          * doc in ms-rest index.d.ts for details
          */
-        getDeviceConfigurations(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeviceConfiguration[]>): void;
-        getDeviceConfigurations(ownerName: string, appName: string, callback: ServiceCallback<models.DeviceConfiguration[]>): void;
+        deleteApp(appName: string, ownerName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+        deleteApp(appName: string, ownerName: string, callback: ServiceCallback<models.ErrorResponse>): void;
+
+        /**
+         * Creates a new app and returns it to the caller
+         *
+         * @param {object} app The data for the app
+         * 
+         * @param {string} [app.description] A short text describing the app
+         * 
+         * @param {string} app.displayName The full name of the user. Might for
+         * example be first and last name
+         * 
+         * @param {string} [app.language] The primary programming language used in the
+         * app
+         * 
+         * @param {string} [app.name] The name of the app used in URLs
+         * 
+         * @param {string} app.platform The platform of the app. Possible values
+         * include: 'iOS', 'Android'
+         * 
+         * @param {object} [options] Optional Parameters.
+         * 
+         * @param {object} [options.customHeaders] Headers that will be added to the
+         * request
+         * 
+         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+         * doc in ms-rest index.d.ts for details
+         */
+        createApp(app: models.AppRequest, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+        createApp(app: models.AppRequest, callback: ServiceCallback<any>): void;
+
+        /**
+         * Returns api tokens for the authenticated user
+         *
+         * @param {object} [options] Optional Parameters.
+         * 
+         * @param {object} [options.customHeaders] Headers that will be added to the
+         * request
+         * 
+         * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+         * doc in ms-rest index.d.ts for details
+         */
+        getApiTokens(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+        getApiTokens(callback: ServiceCallback<any>): void;
 }
 
 export = SonomaClient;

@@ -22,6 +22,12 @@ var util = require('util');
  * 
  * @member {array} [xamarin] Xamarin solutions
  * 
+ * @member {object} [android]
+ * 
+ * @member {array} [android.modules] Gradle modules for the project
+ * 
+ * @member {string} [android.gradleWrapperPath]
+ * 
  */
 function ToolsetProjects() {
 }
@@ -82,6 +88,14 @@ ToolsetProjects.prototype.mapper = function () {
                   className: 'XamarinSolution'
                 }
             }
+          }
+        },
+        android: {
+          required: false,
+          serializedName: 'android',
+          type: {
+            name: 'Composite',
+            className: 'AndroidProject'
           }
         }
       }

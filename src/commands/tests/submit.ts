@@ -14,8 +14,17 @@ const debug = require("debug")("somona-cli:commands:submit-tests");
 
 @help("Submits tests to Sonoma")
 export default class SubmitTestsCommand extends Command {
-  @position(null)
-  @help("Application file")
+  @help("Application name")
+  @shortName("an")
+  @longName("appName")
+  @hasArg
+  @required
+  applicationName: string;
+
+  @help("Application file path")
+  @shortName("ap")
+  @longName("appPath")
+  @hasArg
   @required
   applicationPath: string;
 
@@ -36,9 +45,14 @@ export default class SubmitTestsCommand extends Command {
   }
 
   async run(client: SonomaClient): Promise<CommandResult> {
-    out.text("Parsing manifest");
+    debug("Parsing manifest");
     let manifest = await TestManifestReader.readFromFile(this.manifestPath);
-    out.text(`Test framework: ${manifest.testFramework.name}`);
+    debug(`Test framework: ${manifest.testFramework.name}`);
+
+    await clientCall(cb => {
+      return client.tests.createTestRun(getUser().userName, this.applicationName, cb);
+    });
+
     return success();
   }
 }

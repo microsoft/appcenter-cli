@@ -11,7 +11,6 @@
 'use strict';
 
 exports.Account = require('./account');
-exports.BuildOperations = require('./buildOperations');
-exports.CrashOperations = require('./crashOperations');
-exports.Distribute = require('./distribute');
-exports.Analytics = require('./analytics');
+exports.Apps = require('./apps');
+exports.Temp = require('./temp');
+exports.Tests = require('./tests');

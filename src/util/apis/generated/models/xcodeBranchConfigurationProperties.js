@@ -30,6 +30,10 @@
  * 
  * @member {string} [certificateFilename]
  * 
+ * @member {string} [teamId]
+ * 
+ * @member {boolean} [automaticSigning]
+ * 
  */
 function XcodeBranchConfigurationProperties() {
 }
@@ -109,6 +113,20 @@ XcodeBranchConfigurationProperties.prototype.mapper = function () {
           serializedName: 'certificateFilename',
           type: {
             name: 'String'
+          }
+        },
+        teamId: {
+          required: false,
+          serializedName: 'teamId',
+          type: {
+            name: 'String'
+          }
+        },
+        automaticSigning: {
+          required: false,
+          serializedName: 'automaticSigning',
+          type: {
+            name: 'Boolean'
           }
         }
       }
