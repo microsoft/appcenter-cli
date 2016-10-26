@@ -1,7 +1,10 @@
 import { Command, CommandArgs, CommandResult, help, success, failure, failed, notLoggedIn, getCurrentApp } from "../../util/commandline";
 import { out } from "../../util/interaction";
-import { getUser } from "../../util/profile";
+import { DefaultApp, getUser } from "../../util/profile";
 import { SonomaClient, models, clientCall } from "../../util/apis";
+
+const debug = require("debug")("sonoma-cli:commands:apps:list");
+import { inspect } from "util";
 
 @help("Get list of configured applications")
 export default class AppsListCommand extends Command {
@@ -9,20 +12,23 @@ export default class AppsListCommand extends Command {
     super(args);
   }
 
-  formatApp(app: models.AppResponse): string {
-    return `  ${app.owner.name}/${app.name}`;
+  formatApp(defaultApp: DefaultApp, app: models.AppResponse): string {
+    let prefix = "  ";
+    let suffix = "";
+    if (defaultApp && (defaultApp.appName === app.name && defaultApp.ownerName === app.owner.name)) {
+      prefix = "* ";
+      suffix = " (current app)";
+    }
+    return `${prefix}${app.owner.name}/${app.name}${suffix}`;
   }
 
   async run(client: SonomaClient): Promise<CommandResult> {
-    let currentApp = getCurrentApp(null);
-    if (failed(currentApp.result)) {
-      currentApp = null;
-    }
-
     const apps = await out.progress("Getting app list ...",
       clientCall<models.AppResponse[]>(cb => client.account.getApps(cb)));
 
-    out.list(this.formatApp, apps);
+    const defaultApp = getCurrentApp(null);
+    debug(`Current app = ${inspect(defaultApp)}`);
+    out.list(app => this.formatApp(defaultApp.value, app), apps);
 
     return success();
   }
