@@ -63,6 +63,7 @@ export function getCurrentApp(optValue: string): ResultOrValue<DefaultApp> {
       return ResultOrValue.fromResult<DefaultApp>(failure(ErrorCodes.InvalidParameter,
         `'${process.env[currentAppVar]}' (read from ${currentAppVar}) is not a valid application id`));
     }
+    return ResultOrValue.fromValue(result);
   }
 
   // Default app in profile
