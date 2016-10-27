@@ -11,7 +11,6 @@ export interface IFileDescriptionJson {
 
 export interface ITestFrameworkJson {
   name: string;
-  version: string;
   data: any;
 };
 
@@ -63,7 +62,6 @@ export class TestManifestReader {
       files,
       new TestFrameworkData(
         json.testFramework.name,
-        json.testFramework.version,
         json.testFramework.data
       )
     );

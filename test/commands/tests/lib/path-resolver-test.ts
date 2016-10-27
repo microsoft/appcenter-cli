@@ -1,4 +1,4 @@
-import { PathResolver } from "../../../src/commands/tests/lib/path-resolver";
+import { PathResolver } from "../../../../src/commands/tests/lib/path-resolver";
 import { expect } from "chai";
 import * as path from "path";
 

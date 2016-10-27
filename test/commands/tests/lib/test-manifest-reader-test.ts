@@ -1,6 +1,6 @@
-import { TestFile, TestManifest, TestFrameworkData } from "../../../src/commands/tests/lib/test-manifest";
-import { PathResolver } from "../../../src/commands/tests/lib/path-resolver";
-import { TestManifestReader } from "../../../src/commands/tests/lib/test-manifest-reader";
+import { TestFile, TestManifest, TestFrameworkData } from "../../../../src/commands/tests/lib/test-manifest";
+import { PathResolver } from "../../../../src/commands/tests/lib/path-resolver";
+import { TestManifestReader } from "../../../../src/commands/tests/lib/test-manifest-reader";
 import { expect } from "chai";
 import * as path from "path";
 import * as _ from "lodash";
@@ -16,7 +16,6 @@ describe("TestManifestReader.readManifest", function() {
     ],
     new TestFrameworkData(
       "uiTest",
-      "1.0.0",
       {
         "testFixtures": [
           {

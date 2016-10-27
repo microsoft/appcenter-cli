@@ -39,17 +39,13 @@ export class TestFile {
 }
 export class TestFrameworkData {
   readonly name: string;
-  readonly schemaVersion: string;
   readonly data: any;
   
-  constructor(name: string, version: string, data: any) {
+  constructor(name: string, data: any) {
     if (!name)
       throw new Error("Argument name is required");
-    if (!version)
-      throw new Error("Argument version is required");
 
     this.name = name;
-    this.schemaVersion = version;
     this.data = data;
   }
 };
