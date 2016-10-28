@@ -712,7 +712,7 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/files/{file_type}": {
+      "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/files/{file_type}": {
       "post": {
         "description": "Uploads file for a test run",
         "operationId": "tests_uploadFile",
@@ -740,14 +740,6 @@
             ]
           },
           {
-            "name": "file",
-            "schema": {
-              "$ref": "#/definitions/TestCloudJsonFileUpload"
-            },
-            "in": "body",
-            "description": "The file to upload"
-          },
-          {
             "$ref": "#/parameters/owner_name"
           },
           {
@@ -756,7 +748,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Redirect to the correct endpoint",
+            "headers": {
+              "Location": {
+                "description": "Relative URL that points to the upload endpoint",
+                "type": "string"
+              }
+            }
           },
           "400": {
             "description": "Bad request"
@@ -3451,21 +3449,6 @@
         "status",
         "message"
       ]
-    },
-    "TestCloudJsonFileUpload": {
-      "title": "TestCloudJsonFileUpload",
-      "description": "File uploaded in JSON payload",
-      "type": "object",
-      "properties": {
-        "content": {
-          "description": "Base64 encoded file content",
-          "type": "string"
-        },
-        "relative_path": {
-          "description": "Relative path of the file",
-          "type": "string"
-        }
-      }
     },
     "TestCloudStartTestRunOptions": {
       "title": "TestCloudStartTestRunOptions",

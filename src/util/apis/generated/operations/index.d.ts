@@ -775,17 +775,13 @@ export interface Tests {
      * 
      * @param {object} [options] Optional Parameters.
      * 
-     * @param {string} [options.content] Base64 encoded file content
-     * 
-     * @param {string} [options.relativePath] Relative path of the file
-     * 
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      * 
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    uploadFile(testRunId: string, fileType: string, ownerName: string, appName: string, options: { content? : string, relativePath? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    uploadFile(testRunId: string, fileType: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
     uploadFile(testRunId: string, fileType: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**

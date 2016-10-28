@@ -984,10 +984,6 @@ Tests.prototype.uploadHash = function (testRunId, fileType, checksum, relativePa
  * 
  * @param {object} [options] Optional Parameters.
  * 
- * @param {string} [options.content] Base64 encoded file content
- * 
- * @param {string} [options.relativePath] Relative path of the file
- * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  * 
@@ -1012,8 +1008,6 @@ Tests.prototype.uploadFile = function (testRunId, fileType, ownerName, appName, 
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  var content = (options && options.content !== undefined) ? options.content : undefined;
-  var relativePath = (options && options.relativePath !== undefined) ? options.relativePath : undefined;
   // Validate
   try {
     if (testRunId === null || testRunId === undefined || typeof testRunId.valueOf() !== 'string') {
@@ -1028,20 +1022,8 @@ Tests.prototype.uploadFile = function (testRunId, fileType, ownerName, appName, 
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
-    if (content !== null && content !== undefined && typeof content.valueOf() !== 'string') {
-      throw new Error('content must be of type string.');
-    }
-    if (relativePath !== null && relativePath !== undefined && typeof relativePath.valueOf() !== 'string') {
-      throw new Error('relativePath must be of type string.');
-    }
   } catch (error) {
     return callback(error);
-  }
-  var file;
-  if ((content !== null && content !== undefined) || (relativePath !== null && relativePath !== undefined)) {
-      file = new client.models['TestCloudJsonFileUpload']();
-      file.content = content;
-      file.relativePath = relativePath;
   }
 
   // Construct URL
@@ -1066,21 +1048,7 @@ Tests.prototype.uploadFile = function (testRunId, fileType, ownerName, appName, 
     }
   }
   httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  // Serialize Request
-  var requestContent = null;
-  var requestModel = null;
-  try {
-    if (file !== null && file !== undefined) {
-      var requestModelMapper = new client.models['TestCloudJsonFileUpload']().mapper();
-      requestModel = client.serialize(requestModelMapper, file, 'file');
-      requestContent = JSON.stringify(requestModel);
-    }
-  } catch (error) {
-    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
-        'payload - "%s"', error.message, util.inspect(file, {depth: null})));
-    return callback(serializationError);
-  }
-  httpRequest.body = requestContent;
+  httpRequest.body = null;
   // Send Request
   return client.pipeline(httpRequest, function (err, response, responseBody) {
     if (err) {

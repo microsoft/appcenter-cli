@@ -46,6 +46,7 @@
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "ms-rest": "^1.15.0",
+    "request": "^2.76.0",
     "wordwrap": "^1.0.0"
   }
 }

@@ -1248,24 +1248,6 @@ export interface TestCloudErrorDetails {
 
 /**
  * @class
- * Initializes a new instance of the TestCloudJsonFileUpload class.
- * @constructor
- * @summary TestCloudJsonFileUpload
- *
- * File uploaded in JSON payload
- *
- * @member {string} [content] Base64 encoded file content
- * 
- * @member {string} [relativePath] Relative path of the file
- * 
- */
-export interface TestCloudJsonFileUpload {
-  content?: string;
-  relativePath?: string;
-}
-
-/**
- * @class
  * Initializes a new instance of the TestCloudStartTestRunOptions class.
  * @constructor
  * @summary TestCloudStartTestRunOptions

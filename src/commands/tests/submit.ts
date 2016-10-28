@@ -12,6 +12,8 @@ import * as path from "path";
 import * as fs from "fs";
 import * as http from 'http';
 import * as _ from "lodash";
+import * as url from "url";
+import * as request from "request";
 
 const debug = require("debug")("somona-cli:commands:submit-tests");
 
@@ -85,8 +87,9 @@ export default class SubmitTestsCommand extends Command {
 
     debug("Uploading app file");
 
-    await this.uploadHashOrNewFile(client, testRunId, appFile);
-    await Promise.all(manifest.files.map(f => this.uploadHashOrNewFile(client, testRunId, f)));
+    let appFileUrl = await this.uploadHashOrNewFile(client, testRunId, appFile);
+    out.text("App file upload URL: " + appFileUrl);
+    //await Promise.all(manifest.files.map(f => this.uploadHashOrNewFile(client, testRunId, f)));
     await this.startTestRun(client, testRunId, manifest);
 
     return success();
@@ -112,7 +115,7 @@ export default class SubmitTestsCommand extends Command {
 
   private async uploadHashOrNewFile(client: SonomaClient, testRunId: string, file: TestRunFile): Promise<void> {
     if (!await this.tryUploadFileHash(client, testRunId, file)) {
-      await this.uploadNewFile(client, testRunId, file);
+      await this.uploadFile(client, testRunId, file);
     }
   }
 
@@ -120,8 +123,64 @@ export default class SubmitTestsCommand extends Command {
     return false;
   }
 
-  private uploadNewFile(client: SonomaClient, testRunId: string, file: TestRunFile): Promise<void> {
-    return;    
+  private async uploadFile(client: SonomaClient, testRunId: string, file: TestRunFile): Promise<void> {
+    let directUrl = await this.getDirectUploadUrl(client, testRunId, file);
+    out.text(`Direct upload: uploading file ${file.sourcePath} to URL ${directUrl}`);
+    await this.makeDirectUpload(directUrl, file);
+  }
+
+
+  private getDirectUploadUrl(client: SonomaClient, testRunId: string, file: TestRunFile): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      client.tests.uploadFile(
+        testRunId,
+        file.fileType,
+        getUser().userName,
+        this.applicationName,
+        (err, _result, _request, response) => {
+          if (err) {
+            reject(err);
+          }
+          else {
+            let location: string = response.headers["location"];
+            resolve(location);
+          }
+        }
+      );
+    });
+  }
+
+  private async makeDirectUpload(directUrl: string, file: TestRunFile): Promise<void> {
+    debug(`Direct upload: uploading file ${file.sourcePath} to URL ${directUrl}`);
+
+    return new Promise<void>((resolve, reject) => {
+      try {
+        let formData = {
+          relative_path: file.targetRelativePath,
+          file: fs.createReadStream(file.sourcePath)
+        };
+
+        request.post({
+            url: directUrl,
+            formData: formData
+          },
+          (err, response, body) => {
+            if (err) {
+              reject(err);
+            }
+            else if (response.statusCode >= 400) {
+              reject(new Error(`Cannot upload file. Response: ${response.statusCode}; Message: ${body}`));              
+            }
+            else {
+              resolve();
+            }
+          }
+        );
+      }
+      catch (err) {
+        reject(err);
+      }
+    });    
   }
 
   private startTestRun(client: SonomaClient, testRunId: string, manifest: TestManifest): Promise<void> {
