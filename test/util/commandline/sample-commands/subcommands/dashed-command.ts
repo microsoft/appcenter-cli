@@ -1,4 +1,4 @@
-import { Command, CommandArgs, CommandResult, succeeded } from "../../../../../util/commandline";
+import { Command, CommandArgs, CommandResult, success } from "../../../../../src/util/commandline";
 
 export default class CommandWithDashes extends Command {
   constructor(args: CommandArgs) {
@@ -6,6 +6,6 @@ export default class CommandWithDashes extends Command {
   }
 
   runNoClient(): Promise<CommandResult> {
-    return Promise.resolve(succeeded());
+    return Promise.resolve(success());
   }
 }

@@ -1,4 +1,4 @@
-import { Command, CommandArgs, failed } from "../../../../../../src/util/commandline";
+import { Command, CommandArgs, CommandResult, failure } from "../../../../../../src/util/commandline";
 import { SonomaClient } from "../../../../../../src/util/apis";
 
 export default class NoGoodCommand extends Command {
@@ -7,6 +7,6 @@ export default class NoGoodCommand extends Command {
   }
 
   run(client: SonomaClient): Promise<CommandResult> {
-    return Promise.resolve(failed("this shouldn't get called"));
+    return Promise.resolve(failure(5, "this shouldn't get called"));
   }
 }
