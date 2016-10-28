@@ -5,13 +5,11 @@
     "raw": "registry:npm/debug#2.0.0+20160723033700",
     "main": "node.d.ts",
     "browser": "browser.d.ts",
-    "global": false,
     "dependencies": {
       "ms": {
         "src": "https://raw.githubusercontent.com/typed-typings/npm-ms/f40c81c7f45bc35e970de851117c29fc959220b2/typings.json",
         "raw": "github:typed-typings/npm-ms#f40c81c7f45bc35e970de851117c29fc959220b2",
         "main": "index.d.ts",
-        "global": false,
         "name": "ms",
         "type": "typings"
       }
