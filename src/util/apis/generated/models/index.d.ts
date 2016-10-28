@@ -1248,6 +1248,52 @@ export interface TestCloudErrorDetails {
 
 /**
  * @class
+ * Initializes a new instance of the TestCloudJsonFileUpload class.
+ * @constructor
+ * @summary TestCloudJsonFileUpload
+ *
+ * File uploaded in JSON payload
+ *
+ * @member {string} [content] Base64 encoded file content
+ * 
+ * @member {string} [relativePath] Relative path of the file
+ * 
+ */
+export interface TestCloudJsonFileUpload {
+  content?: string;
+  relativePath?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestCloudStartTestRunOptions class.
+ * @constructor
+ * @summary TestCloudStartTestRunOptions
+ *
+ * Options required to start the test run
+ *
+ * @member {string} testFramework Test framework used by tests.
+ * 
+ * @member {string} deviceSelection Device selection string.
+ * 
+ * @member {string} [locale] Locale that should be used to run tests.
+ * 
+ * @member {string} [testSeries] Name of the test series.
+ * 
+ * @member {object} [testParameters] A JSON dictionary with additional test
+ * parameters
+ * 
+ */
+export interface TestCloudStartTestRunOptions {
+  testFramework: string;
+  deviceSelection: string;
+  locale?: string;
+  testSeries?: string;
+  testParameters?: any;
+}
+
+/**
+ * @class
  * Initializes a new instance of the TestCloudStartTestRunResult class.
  * @constructor
  * @summary TestCloudStartTestRunResult

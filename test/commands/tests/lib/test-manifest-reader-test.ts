@@ -1,4 +1,4 @@
-import { TestFile, TestManifest, TestFrameworkData } from "../../../../src/commands/tests/lib/test-manifest";
+import { TestRunFile, TestManifest, TestFrameworkData } from "../../../../src/commands/tests/lib/test-manifest";
 import { PathResolver } from "../../../../src/commands/tests/lib/path-resolver";
 import { TestManifestReader } from "../../../../src/commands/tests/lib/test-manifest-reader";
 import { expect } from "chai";
@@ -9,10 +9,26 @@ describe("TestManifestReader.readManifest", function() {
   let expectedManifest = new TestManifest(
     "1.0.0",
     [
-      new TestFile("test/commands/tests/sample-test-workspace/lib/tests.rb", "index.rb", "Ignored"),
-      new TestFile("test/commands/tests/sample-test-workspace/resources/messages.csv", "resources/messages.csv", "Ignored"),
-      new TestFile("test/commands/tests/sample-test-workspace/resources/pl-PL/messages.csv", "resources/pl-PL/messages.csv", "Ignored"),
-      new TestFile("test/commands/tests/sample-test-workspace/resources/ReadMe.txt", "resources/ReadMe.txt", "Ignored"),
+      new TestRunFile(
+        "test/commands/tests/sample-test-workspace/lib/tests.rb", 
+        "index.rb", 
+        "Ignored", 
+        "test-file"),
+      new TestRunFile(
+        "test/commands/tests/sample-test-workspace/resources/messages.csv", 
+        "resources/messages.csv", 
+        "Ignored", 
+        "test-file"),
+      new TestRunFile(
+        "test/commands/tests/sample-test-workspace/resources/pl-PL/messages.csv", 
+        "resources/pl-PL/messages.csv", 
+        "Ignored", 
+        "test-file"),
+      new TestRunFile(
+        "test/commands/tests/sample-test-workspace/resources/ReadMe.txt", 
+        "resources/ReadMe.txt", 
+        "Ignored", 
+        "test-file"),
     ],
     new TestFrameworkData(
       "uiTest",

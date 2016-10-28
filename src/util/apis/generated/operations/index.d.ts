@@ -5,7 +5,6 @@
 */
 
 import { ServiceClientOptions, RequestOptions, ServiceCallback } from 'ms-rest';
-import * as stream from 'stream';
 import * as models from '../models';
 
 
@@ -702,43 +701,23 @@ export interface Tests {
     createTestSeries(name: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
-     * Uploads test file for a test run
-     *
-     * @param {string} testRunId The ID of the test run
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {string} [options.relativePath] Relative (to the manifest file /
-     * test workspace) path of the test file
-     * 
-     * @param {object} [options.file] New uploaded file
-     * 
-     * @param {string} [options.hashValue] SHA256 hash of an existing file
-     * 
-     * @param {string} [options.byteRange] Requested byte range used as additional
-     * SHA256 hash verification
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    uploadTestFile(testRunId: string, ownerName: string, appName: string, options: { relativePath? : string, file? : stream.Readable, hashValue? : string, byteRange? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-    uploadTestFile(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
-
-    /**
      * Starts test run
      *
      * @param {string} testRunId The ID of the test run
      * 
-     * @param {string} testFramework Test framework used by tests.
+     * @param {object} startOptions Option required to start the test run
      * 
-     * @param {string} deviceSelection Device selection string.
+     * @param {string} startOptions.testFramework Test framework used by tests.
+     * 
+     * @param {string} startOptions.deviceSelection Device selection string.
+     * 
+     * @param {string} [startOptions.locale] Locale that should be used to run
+     * tests.
+     * 
+     * @param {string} [startOptions.testSeries] Name of the test series.
+     * 
+     * @param {object} [startOptions.testParameters] A JSON dictionary with
+     * additional test parameters
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -746,41 +725,32 @@ export interface Tests {
      * 
      * @param {object} [options] Optional Parameters.
      * 
-     * @param {string} [options.locale] Locale that should be used to run tests.
-     * 
-     * @param {string} [options.testSeries] Name of the test series.
-     * 
-     * @param {string} [options.testParameters] A JSON dictionary with additional
-     * test parameters
-     * 
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      * 
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    startTestRun(testRunId: string, testFramework: string, deviceSelection: string, ownerName: string, appName: string, options: { locale? : string, testSeries? : string, testParameters? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestCloudStartTestRunResult>): void;
-    startTestRun(testRunId: string, testFramework: string, deviceSelection: string, ownerName: string, appName: string, callback: ServiceCallback<models.TestCloudStartTestRunResult>): void;
+    startTestRun(testRunId: string, startOptions: models.TestCloudStartTestRunOptions, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestCloudStartTestRunResult>): void;
+    startTestRun(testRunId: string, startOptions: models.TestCloudStartTestRunOptions, ownerName: string, appName: string, callback: ServiceCallback<models.TestCloudStartTestRunResult>): void;
 
     /**
-     * Uploads dSym file for a test run
+     * Adds file with the given hash to a test run
      *
      * @param {string} testRunId The ID of the test run
      * 
+     * @param {string} fileType Type of the file. Possible values include:
+     * 'dsym-file', 'app-file', 'test-file'
+     * 
+     * @param {string} checksum SHA256 hash of the file
+     * 
+     * @param {string} relativePath Relative path of the file
+     * 
      * @param {string} ownerName The name of the owner
      * 
      * @param {string} appName The name of the application
      * 
      * @param {object} [options] Optional Parameters.
-     * 
-     * @param {string} [options.relativePath] Name of the dSym file
-     * 
-     * @param {object} [options.file] New uploaded file
-     * 
-     * @param {string} [options.hashValue] SHA256 hash of an existing file
-     * 
-     * @param {string} [options.byteRange] Requested byte range used as additional
-     * SHA256 hash verification
      * 
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -788,28 +758,26 @@ export interface Tests {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    uploadDSymFile(testRunId: string, ownerName: string, appName: string, options: { relativePath? : string, file? : stream.Readable, hashValue? : string, byteRange? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-    uploadDSymFile(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+    uploadHash(testRunId: string, fileType: string, checksum: string, relativePath: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    uploadHash(testRunId: string, fileType: string, checksum: string, relativePath: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
-     * Uploads application file for a test run
+     * Uploads file for a test run
      *
      * @param {string} testRunId The ID of the test run
      * 
+     * @param {string} fileType Type of the file. Possible values include:
+     * 'dsym-file', 'app-file', 'test-file'
+     * 
      * @param {string} ownerName The name of the owner
      * 
      * @param {string} appName The name of the application
      * 
      * @param {object} [options] Optional Parameters.
      * 
-     * @param {string} [options.relativePath] Name of the application file
+     * @param {string} [options.content] Base64 encoded file content
      * 
-     * @param {object} [options.file] New uploaded file
-     * 
-     * @param {string} [options.hashValue] SHA256 hash of an existing file
-     * 
-     * @param {string} [options.byteRange] Requested byte range used as additional
-     * SHA256 hash verification
+     * @param {string} [options.relativePath] Relative path of the file
      * 
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -817,8 +785,8 @@ export interface Tests {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    uploadApplicationFile(testRunId: string, ownerName: string, appName: string, options: { relativePath? : string, file? : stream.Readable, hashValue? : string, byteRange? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-    uploadApplicationFile(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+    uploadFile(testRunId: string, fileType: string, ownerName: string, appName: string, options: { content? : string, relativePath? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    uploadFile(testRunId: string, fileType: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
      * Returns a single test runs

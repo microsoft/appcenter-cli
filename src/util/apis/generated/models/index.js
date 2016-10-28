@@ -61,4 +61,6 @@ exports.TestRunStatistics = require('./testRunStatistics');
 exports.TestSeries = require('./testSeries');
 exports.TestRunSummary = require('./testRunSummary');
 exports.TestCloudErrorDetails = require('./testCloudErrorDetails');
+exports.TestCloudJsonFileUpload = require('./testCloudJsonFileUpload');
+exports.TestCloudStartTestRunOptions = require('./testCloudStartTestRunOptions');
 exports.TestCloudStartTestRunResult = require('./testCloudStartTestRunResult');

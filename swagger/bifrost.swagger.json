@@ -591,78 +591,6 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/test_files": {
-      "post": {
-        "description": "Uploads test file for a test run",
-        "operationId": "tests_uploadTestFile",
-        "parameters": [
-          {
-            "name": "test_run_id",
-            "type": "string",
-            "in": "path",
-            "description": "The ID of the test run",
-            "required": true
-          },
-          {
-            "name": "relative_path",
-            "type": "string",
-            "in": "formData",
-            "description": "Relative (to the manifest file / test workspace) path of the test file"
-          },
-          {
-            "name": "file",
-            "type": "file",
-            "in": "formData",
-            "description": "New uploaded file",
-            "required": false
-          },
-          {
-            "name": "hash_value",
-            "type": "string",
-            "in": "formData",
-            "description": "SHA256 hash of an existing file",
-            "required": false
-          },
-          {
-            "name": "byte_range",
-            "type": "string",
-            "in": "formData",
-            "description": "Requested byte range used as additional SHA256 hash verification"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Byte range verification required for given SHA256 hash",
-            "headers": {
-              "X-Challenge-Bytes": {
-                "description": "Byte range required to authenticate the request",
-                "type": "string"
-              }
-            }
-          },
-          "412": {
-            "description": "File with given SHA256 hash doesn't exist and must be uploaded"
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "test"
-        ]
-      }
-    },
     "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/start": {
       "post": {
         "description": "Starts test run",
@@ -676,39 +604,13 @@
             "required": true
           },
           {
-            "name": "test_framework",
-            "type": "string",
-            "in": "formData",
-            "description": "Test framework used by tests.",
+            "name": "startOptions",
+            "schema": {
+              "$ref": "#/definitions/TestCloudStartTestRunOptions"
+            },
+            "in": "body",
+            "description": "Option required to start the test run",
             "required": true
-          },
-          {
-            "name": "device_selection",
-            "type": "string",
-            "in": "formData",
-            "description": "Device selection string.",
-            "required": true
-          },
-          {
-            "name": "locale",
-            "type": "string",
-            "description": "Locale that should be used to run tests.",
-            "in": "formData",
-            "required": false
-          },
-          {
-            "name": "test_series",
-            "type": "string",
-            "description": "Name of the test series.",
-            "in": "formData",
-            "required": false
-          },
-          {
-            "name": "test_parameters",
-            "type": "string",
-            "description": "A JSON dictionary with additional test parameters",
-            "in": "formData",
-            "required": false
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -735,10 +637,13 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/dsym_files": {
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/hashes/{file_type}": {
       "post": {
-        "description": "Uploads dSym file for a test run",
-        "operationId": "tests_uploadDSymFile",
+        "description": "Adds file with the given hash to a test run",
+        "operationId": "tests_uploadHash",
+        "consumes": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "test_run_id",
@@ -748,30 +653,30 @@
             "required": true
           },
           {
+            "name": "file_type",
+            "type": "string",
+            "in": "path",
+            "description": "Type of the file.",
+            "required": true,
+            "enum": [
+              "dsym-file",
+              "app-file",
+              "test-file"
+            ]
+          },
+          {
+            "name": "checksum",
+            "type": "string",
+            "in": "formData",
+            "description": "SHA256 hash of the file",
+            "required": true
+          },
+          {
             "name": "relative_path",
             "type": "string",
             "in": "formData",
-            "description": "Name of the dSym file"
-          },
-          {
-            "name": "file",
-            "type": "file",
-            "in": "formData",
-            "description": "New uploaded file",
-            "required": false
-          },
-          {
-            "name": "hash_value",
-            "type": "string",
-            "in": "formData",
-            "description": "SHA256 hash of an existing file",
-            "required": false
-          },
-          {
-            "name": "byte_range",
-            "type": "string",
-            "in": "formData",
-            "description": "Requested byte range used as additional SHA256 hash verification"
+            "description": "Relative path of the file",
+            "required": true
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -807,10 +712,13 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/app_files": {
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/files/{file_type}": {
       "post": {
-        "description": "Uploads application file for a test run",
-        "operationId": "tests_uploadApplicationFile",
+        "description": "Uploads file for a test run",
+        "operationId": "tests_uploadFile",
+        "consumes": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "test_run_id",
@@ -820,30 +728,24 @@
             "required": true
           },
           {
-            "name": "relative_path",
+            "name": "file_type",
             "type": "string",
-            "in": "formData",
-            "description": "Name of the application file"
+            "in": "path",
+            "description": "Type of the file.",
+            "required": true,
+            "enum": [
+              "dsym-file",
+              "app-file",
+              "test-file"
+            ]
           },
           {
             "name": "file",
-            "type": "file",
-            "in": "formData",
-            "description": "New uploaded file",
-            "required": false
-          },
-          {
-            "name": "hash_value",
-            "type": "string",
-            "in": "formData",
-            "description": "SHA256 hash of an existing file",
-            "required": false
-          },
-          {
-            "name": "byte_range",
-            "type": "string",
-            "in": "formData",
-            "description": "Requested byte range used as additional SHA256 hash verification"
+            "schema": {
+              "$ref": "#/definitions/TestCloudJsonFileUpload"
+            },
+            "in": "body",
+            "description": "The file to upload"
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -856,17 +758,8 @@
           "200": {
             "description": "OK"
           },
-          "401": {
-            "description": "Byte range verification required for given SHA256 hash",
-            "headers": {
-              "X-Challenge-Bytes": {
-                "description": "Byte range required to authenticate the request",
-                "type": "string"
-              }
-            }
-          },
-          "412": {
-            "description": "File with given SHA256 hash doesn't exist and must be uploaded"
+          "400": {
+            "description": "Bad request"
           }
         },
         "security": [
@@ -3557,6 +3450,52 @@
       "required": [
         "status",
         "message"
+      ]
+    },
+    "TestCloudJsonFileUpload": {
+      "title": "TestCloudJsonFileUpload",
+      "description": "File uploaded in JSON payload",
+      "type": "object",
+      "properties": {
+        "content": {
+          "description": "Base64 encoded file content",
+          "type": "string"
+        },
+        "relative_path": {
+          "description": "Relative path of the file",
+          "type": "string"
+        }
+      }
+    },
+    "TestCloudStartTestRunOptions": {
+      "title": "TestCloudStartTestRunOptions",
+      "description": "Options required to start the test run",
+      "type": "object",
+      "properties": {
+        "test_framework": {
+          "type": "string",
+          "description": "Test framework used by tests."
+        },
+        "device_selection": {
+          "type": "string",
+          "description": "Device selection string."
+        },
+        "locale": {
+          "type": "string",
+          "description": "Locale that should be used to run tests."
+        },
+        "test_series": {
+          "type": "string",
+          "description": "Name of the test series."
+        },
+        "test_parameters": {
+          "type": "object",
+          "description": "A JSON dictionary with additional test parameters"
+        }
+      },
+      "required": [
+        "test_framework",
+        "device_selection"
       ]
     },
     "TestCloudStartTestRunResult": {

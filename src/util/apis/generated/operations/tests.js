@@ -682,173 +682,29 @@ Tests.prototype.createTestSeries = function (name, ownerName, appName, options, 
 };
 
 /**
- * Uploads test file for a test run
- *
- * @param {string} testRunId The ID of the test run
- * 
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {string} [options.relativePath] Relative (to the manifest file /
- * test workspace) path of the test file
- * 
- * @param {object} [options.file] New uploaded file
- * 
- * @param {string} [options.hashValue] SHA256 hash of an existing file
- * 
- * @param {string} [options.byteRange] Requested byte range used as additional
- * SHA256 hash verification
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {null} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Tests.prototype.uploadTestFile = function (testRunId, ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  var relativePath = (options && options.relativePath !== undefined) ? options.relativePath : undefined;
-  var file = (options && options.file !== undefined) ? options.file : undefined;
-  var hashValue = (options && options.hashValue !== undefined) ? options.hashValue : undefined;
-  var byteRange = (options && options.byteRange !== undefined) ? options.byteRange : undefined;
-  // Validate
-  try {
-    if (testRunId === null || testRunId === undefined || typeof testRunId.valueOf() !== 'string') {
-      throw new Error('testRunId cannot be null or undefined and it must be of type string.');
-    }
-    if (relativePath !== null && relativePath !== undefined && typeof relativePath.valueOf() !== 'string') {
-      throw new Error('relativePath must be of type string.');
-    }
-    if (file !== null && file !== undefined && typeof file.valueOf() !== 'object') {
-      throw new Error('file must be of type object.');
-    }
-    if (hashValue !== null && hashValue !== undefined && typeof hashValue.valueOf() !== 'string') {
-      throw new Error('hashValue must be of type string.');
-    }
-    if (byteRange !== null && byteRange !== undefined && typeof byteRange.valueOf() !== 'string') {
-      throw new Error('byteRange must be of type string.');
-    }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/test_files';
-  requestUrl = requestUrl.replace('{test_run_id}', encodeURIComponent(testRunId));
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'POST';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  // Serialize Request  
-  var formData = {};  
-  if (relativePath !== undefined && relativePath !== null) {
-    formData['relative_path'] = relativePath;
-  }
-  if (file !== undefined && file !== null) {
-    formData['file'] = file;  
-  }
-  if (hashValue !== undefined && hashValue !== null) {
-    formData['hash_value'] = hashValue;
-  }
-  if (byteRange !== undefined && byteRange !== null) {
-    formData['byte_range'] = byteRange;
-  }
-  httpRequest.formData = formData;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 401 && statusCode !== 412) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
  * Starts test run
  *
  * @param {string} testRunId The ID of the test run
  * 
- * @param {string} testFramework Test framework used by tests.
+ * @param {object} startOptions Option required to start the test run
  * 
- * @param {string} deviceSelection Device selection string.
+ * @param {string} startOptions.testFramework Test framework used by tests.
+ * 
+ * @param {string} startOptions.deviceSelection Device selection string.
+ * 
+ * @param {string} [startOptions.locale] Locale that should be used to run
+ * tests.
+ * 
+ * @param {string} [startOptions.testSeries] Name of the test series.
+ * 
+ * @param {object} [startOptions.testParameters] A JSON dictionary with
+ * additional test parameters
  * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
  * 
  * @param {object} [options] Optional Parameters.
- * 
- * @param {string} [options.locale] Locale that should be used to run tests.
- * 
- * @param {string} [options.testSeries] Name of the test series.
- * 
- * @param {string} [options.testParameters] A JSON dictionary with additional
- * test parameters
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -867,7 +723,7 @@ Tests.prototype.uploadTestFile = function (testRunId, ownerName, appName, option
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Tests.prototype.startTestRun = function (testRunId, testFramework, deviceSelection, ownerName, appName, options, callback) {
+Tests.prototype.startTestRun = function (testRunId, startOptions, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -876,28 +732,13 @@ Tests.prototype.startTestRun = function (testRunId, testFramework, deviceSelecti
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  var locale = (options && options.locale !== undefined) ? options.locale : undefined;
-  var testSeries = (options && options.testSeries !== undefined) ? options.testSeries : undefined;
-  var testParameters = (options && options.testParameters !== undefined) ? options.testParameters : undefined;
   // Validate
   try {
     if (testRunId === null || testRunId === undefined || typeof testRunId.valueOf() !== 'string') {
       throw new Error('testRunId cannot be null or undefined and it must be of type string.');
     }
-    if (testFramework === null || testFramework === undefined || typeof testFramework.valueOf() !== 'string') {
-      throw new Error('testFramework cannot be null or undefined and it must be of type string.');
-    }
-    if (deviceSelection === null || deviceSelection === undefined || typeof deviceSelection.valueOf() !== 'string') {
-      throw new Error('deviceSelection cannot be null or undefined and it must be of type string.');
-    }
-    if (locale !== null && locale !== undefined && typeof locale.valueOf() !== 'string') {
-      throw new Error('locale must be of type string.');
-    }
-    if (testSeries !== null && testSeries !== undefined && typeof testSeries.valueOf() !== 'string') {
-      throw new Error('testSeries must be of type string.');
-    }
-    if (testParameters !== null && testParameters !== undefined && typeof testParameters.valueOf() !== 'string') {
-      throw new Error('testParameters must be of type string.');
+    if (startOptions === null || startOptions === undefined) {
+      throw new Error('startOptions cannot be null or undefined.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -930,24 +771,21 @@ Tests.prototype.startTestRun = function (testRunId, testFramework, deviceSelecti
     }
   }
   httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  // Serialize Request  
-  var formData = {};  
-  if (testFramework !== undefined && testFramework !== null) {
-    formData['test_framework'] = testFramework;
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (startOptions !== null && startOptions !== undefined) {
+      var requestModelMapper = new client.models['TestCloudStartTestRunOptions']().mapper();
+      requestModel = client.serialize(requestModelMapper, startOptions, 'startOptions');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(startOptions, {depth: null})));
+    return callback(serializationError);
   }
-  if (deviceSelection !== undefined && deviceSelection !== null) {
-    formData['device_selection'] = deviceSelection;
-  }
-  if (locale !== undefined && locale !== null) {
-    formData['locale'] = locale;
-  }
-  if (testSeries !== undefined && testSeries !== null) {
-    formData['test_series'] = testSeries;
-  }
-  if (testParameters !== undefined && testParameters !== null) {
-    formData['test_parameters'] = testParameters;
-  }
-  httpRequest.formData = formData;
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, function (err, response, responseBody) {
     if (err) {
@@ -1001,24 +839,22 @@ Tests.prototype.startTestRun = function (testRunId, testFramework, deviceSelecti
 };
 
 /**
- * Uploads dSym file for a test run
+ * Adds file with the given hash to a test run
  *
  * @param {string} testRunId The ID of the test run
+ * 
+ * @param {string} fileType Type of the file. Possible values include:
+ * 'dsym-file', 'app-file', 'test-file'
+ * 
+ * @param {string} checksum SHA256 hash of the file
+ * 
+ * @param {string} relativePath Relative path of the file
  * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
  * 
  * @param {object} [options] Optional Parameters.
- * 
- * @param {string} [options.relativePath] Name of the dSym file
- * 
- * @param {object} [options.file] New uploaded file
- * 
- * @param {string} [options.hashValue] SHA256 hash of an existing file
- * 
- * @param {string} [options.byteRange] Requested byte range used as additional
- * SHA256 hash verification
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1035,7 +871,7 @@ Tests.prototype.startTestRun = function (testRunId, testFramework, deviceSelecti
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Tests.prototype.uploadDSymFile = function (testRunId, ownerName, appName, options, callback) {
+Tests.prototype.uploadHash = function (testRunId, fileType, checksum, relativePath, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1044,26 +880,19 @@ Tests.prototype.uploadDSymFile = function (testRunId, ownerName, appName, option
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  var relativePath = (options && options.relativePath !== undefined) ? options.relativePath : undefined;
-  var file = (options && options.file !== undefined) ? options.file : undefined;
-  var hashValue = (options && options.hashValue !== undefined) ? options.hashValue : undefined;
-  var byteRange = (options && options.byteRange !== undefined) ? options.byteRange : undefined;
   // Validate
   try {
     if (testRunId === null || testRunId === undefined || typeof testRunId.valueOf() !== 'string') {
       throw new Error('testRunId cannot be null or undefined and it must be of type string.');
     }
-    if (relativePath !== null && relativePath !== undefined && typeof relativePath.valueOf() !== 'string') {
-      throw new Error('relativePath must be of type string.');
+    if (fileType === null || fileType === undefined || typeof fileType.valueOf() !== 'string') {
+      throw new Error('fileType cannot be null or undefined and it must be of type string.');
     }
-    if (file !== null && file !== undefined && typeof file.valueOf() !== 'object') {
-      throw new Error('file must be of type object.');
+    if (checksum === null || checksum === undefined || typeof checksum.valueOf() !== 'string') {
+      throw new Error('checksum cannot be null or undefined and it must be of type string.');
     }
-    if (hashValue !== null && hashValue !== undefined && typeof hashValue.valueOf() !== 'string') {
-      throw new Error('hashValue must be of type string.');
-    }
-    if (byteRange !== null && byteRange !== undefined && typeof byteRange.valueOf() !== 'string') {
-      throw new Error('byteRange must be of type string.');
+    if (relativePath === null || relativePath === undefined || typeof relativePath.valueOf() !== 'string') {
+      throw new Error('relativePath cannot be null or undefined and it must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -1077,8 +906,9 @@ Tests.prototype.uploadDSymFile = function (testRunId, ownerName, appName, option
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/dsym_files';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/hashes/{file_type}';
   requestUrl = requestUrl.replace('{test_run_id}', encodeURIComponent(testRunId));
+  requestUrl = requestUrl.replace('{file_type}', encodeURIComponent(fileType));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -1098,17 +928,11 @@ Tests.prototype.uploadDSymFile = function (testRunId, ownerName, appName, option
   httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
   // Serialize Request  
   var formData = {};  
+  if (checksum !== undefined && checksum !== null) {
+    formData['checksum'] = checksum;
+  }
   if (relativePath !== undefined && relativePath !== null) {
     formData['relative_path'] = relativePath;
-  }
-  if (file !== undefined && file !== null) {
-    formData['file'] = file;  
-  }
-  if (hashValue !== undefined && hashValue !== null) {
-    formData['hash_value'] = hashValue;
-  }
-  if (byteRange !== undefined && byteRange !== null) {
-    formData['byte_range'] = byteRange;
   }
   httpRequest.formData = formData;
   // Send Request
@@ -1147,9 +971,12 @@ Tests.prototype.uploadDSymFile = function (testRunId, ownerName, appName, option
 };
 
 /**
- * Uploads application file for a test run
+ * Uploads file for a test run
  *
  * @param {string} testRunId The ID of the test run
+ * 
+ * @param {string} fileType Type of the file. Possible values include:
+ * 'dsym-file', 'app-file', 'test-file'
  * 
  * @param {string} ownerName The name of the owner
  * 
@@ -1157,14 +984,9 @@ Tests.prototype.uploadDSymFile = function (testRunId, ownerName, appName, option
  * 
  * @param {object} [options] Optional Parameters.
  * 
- * @param {string} [options.relativePath] Name of the application file
+ * @param {string} [options.content] Base64 encoded file content
  * 
- * @param {object} [options.file] New uploaded file
- * 
- * @param {string} [options.hashValue] SHA256 hash of an existing file
- * 
- * @param {string} [options.byteRange] Requested byte range used as additional
- * SHA256 hash verification
+ * @param {string} [options.relativePath] Relative path of the file
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1181,7 +1003,7 @@ Tests.prototype.uploadDSymFile = function (testRunId, ownerName, appName, option
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Tests.prototype.uploadApplicationFile = function (testRunId, ownerName, appName, options, callback) {
+Tests.prototype.uploadFile = function (testRunId, fileType, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1190,26 +1012,15 @@ Tests.prototype.uploadApplicationFile = function (testRunId, ownerName, appName,
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  var content = (options && options.content !== undefined) ? options.content : undefined;
   var relativePath = (options && options.relativePath !== undefined) ? options.relativePath : undefined;
-  var file = (options && options.file !== undefined) ? options.file : undefined;
-  var hashValue = (options && options.hashValue !== undefined) ? options.hashValue : undefined;
-  var byteRange = (options && options.byteRange !== undefined) ? options.byteRange : undefined;
   // Validate
   try {
     if (testRunId === null || testRunId === undefined || typeof testRunId.valueOf() !== 'string') {
       throw new Error('testRunId cannot be null or undefined and it must be of type string.');
     }
-    if (relativePath !== null && relativePath !== undefined && typeof relativePath.valueOf() !== 'string') {
-      throw new Error('relativePath must be of type string.');
-    }
-    if (file !== null && file !== undefined && typeof file.valueOf() !== 'object') {
-      throw new Error('file must be of type object.');
-    }
-    if (hashValue !== null && hashValue !== undefined && typeof hashValue.valueOf() !== 'string') {
-      throw new Error('hashValue must be of type string.');
-    }
-    if (byteRange !== null && byteRange !== undefined && typeof byteRange.valueOf() !== 'string') {
-      throw new Error('byteRange must be of type string.');
+    if (fileType === null || fileType === undefined || typeof fileType.valueOf() !== 'string') {
+      throw new Error('fileType cannot be null or undefined and it must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -1217,14 +1028,27 @@ Tests.prototype.uploadApplicationFile = function (testRunId, ownerName, appName,
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
+    if (content !== null && content !== undefined && typeof content.valueOf() !== 'string') {
+      throw new Error('content must be of type string.');
+    }
+    if (relativePath !== null && relativePath !== undefined && typeof relativePath.valueOf() !== 'string') {
+      throw new Error('relativePath must be of type string.');
+    }
   } catch (error) {
     return callback(error);
+  }
+  var file;
+  if ((content !== null && content !== undefined) || (relativePath !== null && relativePath !== undefined)) {
+      file = new client.models['TestCloudJsonFileUpload']();
+      file.content = content;
+      file.relativePath = relativePath;
   }
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/app_files';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/files/{file_type}';
   requestUrl = requestUrl.replace('{test_run_id}', encodeURIComponent(testRunId));
+  requestUrl = requestUrl.replace('{file_type}', encodeURIComponent(fileType));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -1242,28 +1066,28 @@ Tests.prototype.uploadApplicationFile = function (testRunId, ownerName, appName,
     }
   }
   httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  // Serialize Request  
-  var formData = {};  
-  if (relativePath !== undefined && relativePath !== null) {
-    formData['relative_path'] = relativePath;
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (file !== null && file !== undefined) {
+      var requestModelMapper = new client.models['TestCloudJsonFileUpload']().mapper();
+      requestModel = client.serialize(requestModelMapper, file, 'file');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(file, {depth: null})));
+    return callback(serializationError);
   }
-  if (file !== undefined && file !== null) {
-    formData['file'] = file;  
-  }
-  if (hashValue !== undefined && hashValue !== null) {
-    formData['hash_value'] = hashValue;
-  }
-  if (byteRange !== undefined && byteRange !== null) {
-    formData['byte_range'] = byteRange;
-  }
-  httpRequest.formData = formData;
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, function (err, response, responseBody) {
     if (err) {
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 401 && statusCode !== 412) {
+    if (statusCode !== 200 && statusCode !== 400) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
