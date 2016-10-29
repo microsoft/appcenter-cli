@@ -1,4 +1,5 @@
 /// <reference path="globals/chai/index.d.ts" />
+/// <reference path="globals/event-stream/index.d.ts" />
 /// <reference path="globals/mocha/index.d.ts" />
 /// <reference path="globals/node-fetch/index.d.ts" />
 /// <reference path="globals/node/index.d.ts" />

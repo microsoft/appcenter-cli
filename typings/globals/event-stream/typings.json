@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/14ba891ee5f5bf86d76c0dee99cbafc892febaf8/event-stream/event-stream.d.ts",
+    "raw": "registry:dt/event-stream#0.0.0+20160216030252",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/14ba891ee5f5bf86d76c0dee99cbafc892febaf8/event-stream/event-stream.d.ts"
+  }
+}
