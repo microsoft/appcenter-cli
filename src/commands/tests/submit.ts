@@ -87,9 +87,11 @@ export default class SubmitTestsCommand extends Command {
 
     debug("Uploading app file");
 
-    let appFileUrl = await this.uploadHashOrNewFile(client, testRunId, appFile);
-    out.text("App file upload URL: " + appFileUrl);
-    await Promise.all(manifest.files.map(f => this.uploadHashOrNewFile(client, testRunId, f)));
+    this.uploadHashOrNewFile(client, testRunId, appFile);
+    for (let i = 0; i < manifest.files.length; i++) {
+      await this.uploadHashOrNewFile(client, testRunId, manifest.files[i]);
+    }
+    
     await this.startTestRun(client, testRunId, manifest);
 
     return success();
@@ -114,21 +116,52 @@ export default class SubmitTestsCommand extends Command {
   }
 
   private async uploadHashOrNewFile(client: SonomaClient, testRunId: string, file: TestRunFile): Promise<void> {
-    if (!await this.tryUploadFileHash(client, testRunId, file)) {
+    if (await this.tryUploadFileHash(client, testRunId, file)) {
+      out.text(`File ${file.sourcePath}: hash upload`);
+    }
+    else {
       await this.uploadFile(client, testRunId, file);
+      out.text(`File ${file.sourcePath}: direct upload`);
     }
   }
 
   private async tryUploadFileHash(client: SonomaClient, testRunId: string, file: TestRunFile, byteRange: string = null): Promise<boolean> {
-    return false;
+    let response = await new Promise<http.IncomingMessage>((resolve, reject) => {
+      client.test.uploadHash(
+        testRunId, 
+        {
+          checksum: file.sha256,
+          fileType: file.fileType,
+          relativePath: file.targetRelativePath,
+          byteRange: byteRange
+        },
+        getUser().userName,
+        this.applicationName,
+        (err, result, request, response) => {
+          if (err) {
+            reject(err);
+          }
+          else {
+            resolve(response);
+          }
+        })
+    });
+
+    if (response.statusCode === 201) {
+      return true;
+    }
+    else if (response.statusCode === 401 && !byteRange) {
+      return await this.tryUploadFileHash(client, testRunId, file, "TODO");
+    }
+    else {
+      return false;
+    } 
   }
 
   private async uploadFile(client: SonomaClient, testRunId: string, file: TestRunFile): Promise<void> {
     let directUrl = await this.getDirectUploadUrl(client, testRunId, file);
-    out.text(`Direct upload: uploading file ${file.sourcePath} to URL ${directUrl}`);
     await this.makeDirectUpload(directUrl, file);
   }
-
 
   private getDirectUploadUrl(client: SonomaClient, testRunId: string, file: TestRunFile): Promise<string> {
     return new Promise<string>((resolve, reject) => {
@@ -150,8 +183,6 @@ export default class SubmitTestsCommand extends Command {
   }
 
   private async makeDirectUpload(directUrl: string, file: TestRunFile): Promise<void> {
-    debug(`Direct upload: uploading file ${file.sourcePath} to URL ${directUrl}`);
-
     return new Promise<void>((resolve, reject) => {
       try {
         let formData = {

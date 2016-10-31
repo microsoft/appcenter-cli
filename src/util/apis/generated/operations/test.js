@@ -945,7 +945,7 @@ Test.prototype.uploadHash = function (testRunId, fileInfo, ownerName, appName, o
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 401 && statusCode !== 412) {
+    if (statusCode !== 201 && statusCode !== 401 && statusCode !== 412) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
