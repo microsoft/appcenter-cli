@@ -18,7 +18,7 @@ import * as request from "request";
 const debug = require("debug")("somona-cli:commands:submit-tests");
 
 @help("Submits tests to Sonoma")
-export default class SubmitTestsCommand extends Command {
+export default class RunTestsCommand extends Command {
   @help("Application name")
   @shortName("an")
   @longName("app-name")
