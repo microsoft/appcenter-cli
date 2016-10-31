@@ -89,7 +89,7 @@ export default class SubmitTestsCommand extends Command {
 
     let appFileUrl = await this.uploadHashOrNewFile(client, testRunId, appFile);
     out.text("App file upload URL: " + appFileUrl);
-    //await Promise.all(manifest.files.map(f => this.uploadHashOrNewFile(client, testRunId, f)));
+    await Promise.all(manifest.files.map(f => this.uploadHashOrNewFile(client, testRunId, f)));
     await this.startTestRun(client, testRunId, manifest);
 
     return success();
@@ -97,7 +97,7 @@ export default class SubmitTestsCommand extends Command {
 
   private createTestRun(client: SonomaClient): Promise<string> {
      return new Promise<string>((resolve, reject) => {
-       client.tests.createTestRun(
+       client.test.createTestRun(
          getUser().userName, 
          this.applicationName, 
          (err: Error, _result: any, _request: any, response: http.IncomingMessage) => {
@@ -132,9 +132,8 @@ export default class SubmitTestsCommand extends Command {
 
   private getDirectUploadUrl(client: SonomaClient, testRunId: string, file: TestRunFile): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      client.tests.uploadFile(
+      client.test.startUploadingFile(
         testRunId,
-        file.fileType,
         getUser().userName,
         this.applicationName,
         (err, _result, _request, response) => {
@@ -157,7 +156,8 @@ export default class SubmitTestsCommand extends Command {
       try {
         let formData = {
           relative_path: file.targetRelativePath,
-          file: fs.createReadStream(file.sourcePath)
+          file: fs.createReadStream(file.sourcePath),
+          file_type: file.fileType
         };
 
         request.post({
@@ -193,7 +193,7 @@ export default class SubmitTestsCommand extends Command {
     };
 
     return clientCall(cb => {
-      client.tests.startTestRun(
+      client.test.startTestRun(
         testRunId, 
         startOptions,
         getUser().userName,

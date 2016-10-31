@@ -13,4 +13,5 @@
 exports.Account = require('./account');
 exports.Apps = require('./apps');
 exports.Temp = require('./temp');
+exports.Test = require('./test');
 exports.Tests = require('./tests');

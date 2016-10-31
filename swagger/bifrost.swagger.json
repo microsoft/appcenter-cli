@@ -392,10 +392,10 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/test_series/{test_series_slug}/test_runs": {
+ "/v0.1/apps/{owner_name}/{app_name}/test_series/{test_series_slug}/test_runs": {
       "get": {
         "description": "Returns list of all test runs for a given test series",
-        "operationId": "tests_getAllTestRunsForSeries",
+        "operationId": "test_getAllTestRunsForSeries",
         "parameters": [
           {
             "name": "test_series_slug",
@@ -435,7 +435,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/test_series/{test_series_slug}": {
       "delete": {
         "description": "Deletes a single test series",
-        "operationId": "tests_deleteTestSeries",
+        "operationId": "test_deleteTestSeries",
         "parameters": [
           {
             "name": "test_series_slug",
@@ -470,7 +470,7 @@
       },
       "patch": {
         "description": "Updates name and slug of a test series",
-        "operationId": "tests_patchTestSeries",
+        "operationId": "test_patchTestSeries",
         "parameters": [
           {
             "name": "test_series_slug",
@@ -520,7 +520,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/test_series": {
       "get": {
         "description": "Returns list of all test series for an application",
-        "operationId": "tests_getAllTestSeries",
+        "operationId": "test_getAllTestSeries",
         "parameters": [
           {
             "$ref": "#/parameters/owner_name"
@@ -551,7 +551,7 @@
       },
       "post": {
         "description": "Creates new test series for an application",
-        "operationId": "tests_createTestSeries",
+        "operationId": "test_createTestSeries",
         "parameters": [
           {
             "name": "name",
@@ -594,7 +594,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/start": {
       "post": {
         "description": "Starts test run",
-        "operationId": "tests_startTestRun",
+        "operationId": "test_startTestRun",
         "parameters": [
           {
             "name": "test_run_id",
@@ -637,10 +637,10 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/hashes/{file_type}": {
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/hashes": {
       "post": {
         "description": "Adds file with the given hash to a test run",
-        "operationId": "tests_uploadHash",
+        "operationId": "test_uploadHash",
         "consumes": [
           "application/json"
         ],
@@ -653,29 +653,12 @@
             "required": true
           },
           {
-            "name": "file_type",
-            "type": "string",
-            "in": "path",
-            "description": "Type of the file.",
-            "required": true,
-            "enum": [
-              "dsym-file",
-              "app-file",
-              "test-file"
-            ]
-          },
-          {
-            "name": "checksum",
-            "type": "string",
-            "in": "formData",
-            "description": "SHA256 hash of the file",
-            "required": true
-          },
-          {
-            "name": "relative_path",
-            "type": "string",
-            "in": "formData",
-            "description": "Relative path of the file",
+            "name": "file_info",
+            "schema": {
+              "$ref": "#/definitions/TestCloudFileHash"
+            },
+            "in": "body",
+            "description": "File hash information",
             "required": true
           },
           {
@@ -712,10 +695,10 @@
         ]
       }
     },
-      "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/files/{file_type}": {
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/files": {
       "post": {
         "description": "Uploads file for a test run",
-        "operationId": "tests_uploadFile",
+        "operationId": "test_startUploadingFile",
         "consumes": [
           "application/json"
         ],
@@ -728,18 +711,6 @@
             "required": true
           },
           {
-            "name": "file_type",
-            "type": "string",
-            "in": "path",
-            "description": "Type of the file.",
-            "required": true,
-            "enum": [
-              "dsym-file",
-              "app-file",
-              "test-file"
-            ]
-          },
-          {
             "$ref": "#/parameters/owner_name"
           },
           {
@@ -748,7 +719,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Redirect to the correct endpoint",
+            "description": "File was created and can be uploaded",
             "headers": {
               "Location": {
                 "description": "Relative URL that points to the upload endpoint",
@@ -773,7 +744,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}": {
       "get": {
         "description": "Returns a single test runs",
-        "operationId": "tests_getTestRun",
+        "operationId": "test_getTestRun",
         "parameters": [
           {
             "name": "test_run_id",
@@ -811,7 +782,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/test_runs": {
       "get": {
         "description": "Returns a list of test runs",
-        "operationId": "tests_getTestRuns",
+        "operationId": "test_getTestRuns",
         "parameters": [
           {
             "$ref": "#/parameters/owner_name"
@@ -842,7 +813,7 @@
       },
       "post": {
         "description": "Creates a new test run",
-        "operationId": "tests_createTestRun",
+        "operationId": "test_createTestRun",
         "parameters": [
           {
             "$ref": "#/parameters/owner_name"
@@ -3448,6 +3419,39 @@
       "required": [
         "status",
         "message"
+      ]
+    },
+    "TestCloudFileHash": {
+      "title": "TestCloudFileHash",
+      "description": "Hash, type, path and byte range of a file that is required in test run",
+      "type": "object",
+      "properties": {
+        "file_type": {
+          "type": "string",
+          "description": "Type of the file",
+          "enum": [
+            "dsym-file",
+            "app-file",
+            "test-file"
+          ]
+        },
+        "checksum": {
+          "type": "string",
+          "description": "SHA256 hash of the file"
+        },
+        "relative_path": {
+          "type": "string",
+          "description": "Relative path of the file"
+        },
+        "byte_range": {
+          "type": "string",
+          "description": "Range of bytes required to verify ownership of the file"
+        }
+      },
+      "required": [
+        "file_type",
+        "checksum",
+        "relative_path"
       ]
     },
     "TestCloudStartTestRunOptions": {

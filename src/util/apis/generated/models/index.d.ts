@@ -1248,6 +1248,32 @@ export interface TestCloudErrorDetails {
 
 /**
  * @class
+ * Initializes a new instance of the TestCloudFileHash class.
+ * @constructor
+ * @summary TestCloudFileHash
+ *
+ * Hash, type, path and byte range of a file that is required in test run
+ *
+ * @member {string} fileType Type of the file. Possible values include:
+ * 'dsym-file', 'app-file', 'test-file'
+ * 
+ * @member {string} checksum SHA256 hash of the file
+ * 
+ * @member {string} relativePath Relative path of the file
+ * 
+ * @member {string} [byteRange] Range of bytes required to verify ownership of
+ * the file
+ * 
+ */
+export interface TestCloudFileHash {
+  fileType: string;
+  checksum: string;
+  relativePath: string;
+  byteRange?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the TestCloudStartTestRunOptions class.
  * @constructor
  * @summary TestCloudStartTestRunOptions

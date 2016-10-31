@@ -54,6 +54,7 @@ function SonomaClient(credentials, baseUri, options) {
   this.account = new operations.Account(this);
   this.apps = new operations.Apps(this);
   this.temp = new operations.Temp(this);
+  this.test = new operations.Test(this);
   this.tests = new operations.Tests(this);
   this.models = models;
   msRest.addSerializationMixin(this);

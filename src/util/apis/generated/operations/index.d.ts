@@ -594,11 +594,11 @@ export interface Temp {
 
 /**
  * @class
- * Tests
+ * Test
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the SonomaClient.
  */
-export interface Tests {
+export interface Test {
 
     /**
      * Returns list of all test runs for a given test series
@@ -739,12 +739,17 @@ export interface Tests {
      *
      * @param {string} testRunId The ID of the test run
      * 
-     * @param {string} fileType Type of the file. Possible values include:
-     * 'dsym-file', 'app-file', 'test-file'
+     * @param {object} fileInfo File hash information
      * 
-     * @param {string} checksum SHA256 hash of the file
+     * @param {string} fileInfo.fileType Type of the file. Possible values
+     * include: 'dsym-file', 'app-file', 'test-file'
      * 
-     * @param {string} relativePath Relative path of the file
+     * @param {string} fileInfo.checksum SHA256 hash of the file
+     * 
+     * @param {string} fileInfo.relativePath Relative path of the file
+     * 
+     * @param {string} [fileInfo.byteRange] Range of bytes required to verify
+     * ownership of the file
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -758,17 +763,14 @@ export interface Tests {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    uploadHash(testRunId: string, fileType: string, checksum: string, relativePath: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-    uploadHash(testRunId: string, fileType: string, checksum: string, relativePath: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+    uploadHash(testRunId: string, fileInfo: models.TestCloudFileHash, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    uploadHash(testRunId: string, fileInfo: models.TestCloudFileHash, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
      * Uploads file for a test run
      *
      * @param {string} testRunId The ID of the test run
      * 
-     * @param {string} fileType Type of the file. Possible values include:
-     * 'dsym-file', 'app-file', 'test-file'
-     * 
      * @param {string} ownerName The name of the owner
      * 
      * @param {string} appName The name of the application
@@ -781,8 +783,8 @@ export interface Tests {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    uploadFile(testRunId: string, fileType: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-    uploadFile(testRunId: string, fileType: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+    startUploadingFile(testRunId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    startUploadingFile(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
      * Returns a single test runs
@@ -839,6 +841,15 @@ export interface Tests {
      */
     createTestRun(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
     createTestRun(ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+}
+
+/**
+ * @class
+ * Tests
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the SonomaClient.
+ */
+export interface Tests {
 
     /**
      * Returns a list of available devices

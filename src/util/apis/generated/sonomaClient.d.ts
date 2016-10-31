@@ -36,6 +36,7 @@ declare class SonomaClient {
     account: operations.Account;
     apps: operations.Apps;
     temp: operations.Temp;
+    test: operations.Test;
     tests: operations.Tests;
 
             /**
