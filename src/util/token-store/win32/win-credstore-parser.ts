@@ -87,8 +87,8 @@ class WinCredStoreParsingStream extends Transform {
   }
 }
 
-function createParsingStream() {
-  return pipeline(split(), new WinCredStoreParsingStream());
+function createParsingStream(): NodeJS.ReadWriteStream {
+  return <NodeJS.ReadWriteStream>pipeline(split(), new WinCredStoreParsingStream());
 }
 
 namespace createParsingStream {
