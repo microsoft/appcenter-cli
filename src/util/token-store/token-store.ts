@@ -3,10 +3,23 @@
 //
 import { Observable } from "rx";
 
+//
+// Object used as token keys.
+// Right now just a string, prepping for when we hook up to
+// AAD and have to use ADAL tokens.
+//
+export type TokenKeyType = string;
+
+//
+// And the type for the access tokens. Similarly, prepping for
+// when the token expands.
+//
+export type TokenValueType = string;
+
 // Information stored about in each token
 export interface TokenEntry {
-  key: string;
-  accessToken: string;
+  key: TokenKeyType;
+  accessToken: TokenValueType;
 }
 
 // Interface defining a token store
@@ -15,11 +28,11 @@ export interface TokenStore {
   list(): Observable<TokenEntry>;
 
   // Get a specific token
-  get(key: string): Promise<TokenEntry>;
+  get(key: TokenKeyType): Promise<TokenEntry>;
 
   // Add or update a token
-  set(key: string, token: string): Promise<void>;
+  set(key: TokenKeyType, token: TokenValueType): Promise<void>;
 
   // Remove a token
-  remove(key: string): Promise<void>;
+  remove(key: TokenKeyType): Promise<void>;
 }

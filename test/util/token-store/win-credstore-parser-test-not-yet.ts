@@ -24,19 +24,32 @@ import * as es from "event-stream";
 import * as os from "os";
 import * as util from "util";
 import { expect } from "chai";
+import { createParsingStream } from "../../../src/util/token-store/win32/win-credstore-parser";
 
-//let credStore = require('../../../srcb/util/token-store/win-32/win-credstore');
-let credStoreParser = require('../../../src/util/token-store/win32//win-credstore-parser');
-
-let entries = require('../../data/win-credstore-entries');
+// Dummy data for parsing tests
+const entries = {
+  entry1:
+`Target Name: AzureXplatCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/
+Type: Generic
+User Name: creds.exe`,
+  entry2:
+`Target Name: AzureXplatCli:target=userId:someotheruser@domain.example::resourceId:https\\://management.core.windows.net/
+Type: Generic
+User Name: creds.exe`,
+  entry1WithCredential:
+`Target Name: AzureXplatCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/
+Type: Generic
+User Name: creds.exe
+Credential: 00010203AABBCCDD`
+};
 
 describe('credstore output parsing', function () {
-  let parsingResult: any;
+  let parsingResult: any[];
 
   function parseEntries(entryString: string, done: {(err?: Error): void}): void {
     parsingResult = [];
     let dataSource = es.through();
-    let parser = dataSource.pipe(credStoreParser.createParsingStream());
+    let parser = dataSource.pipe(createParsingStream());
     parser.on('data', function (data: any): void {
       parsingResult.push(data);
     });
@@ -110,21 +123,21 @@ describe('Parsing output of creds child process', function () {
   }
 
   let parseResults: string[] = [];
-  let expectedEntry = null;
+  let expectedEntry:any = null;
 
   let testTargetName='userId:xplattest@org.example::resourceId:https\\://management.core.windows.net/::tenantId:some-guid';
   let testPassword = 'Sekret!';
 
   before(function (done) {
-    addExpectedEntry(function (err) {
+    addExpectedEntry(function (err: Error) {
       if (err) { return done(err); }
-      runAndParseOutput(function (err) {
+      runAndParseOutput(function (err: Error) {
         done(err);
       });
     });
   });
 
-  after(function (done) {
+  after(function (done: {(err?: Error): void}) {
     removeExpectedEntry(done);
   });
 
