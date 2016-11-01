@@ -135,5 +135,8 @@ declare module 'event-stream'
      */
     export function wait(callback: Function): stream.Stream;
 
-    export function pipeline(...streams: stream.Stream[]): stream.Stream;
+    export function pipeline(...streams: stream.Stream[]): NodeJS.Duplex;
+
+    export function through(write?: {(data: any): void}, end?: {(): void}, options?: { autoDestroy?: boolean }): NodeJS.Duplex;
+
 }
