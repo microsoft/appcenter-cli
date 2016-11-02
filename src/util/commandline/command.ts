@@ -70,7 +70,9 @@ export class Command {
             break;
 
           default:
-            throw new Error(`Unknown output format ${this.format}`);
+            return Promise.resolve(
+              Result.failure(Result.ErrorCodes.InvalidParameter, `Unknown output format ${this.format}`)
+            );
         }
     }
     return this.runNoClient();

@@ -9,6 +9,7 @@ import * as mkdirp from "mkdirp";
 
 import { environments } from "./environments";
 import { profileFile, getProfileDir } from "../misc";
+import { TokenValueType } from "../token-store";
 
 const debug = require("debug")("sonoma-cli:util:profile:profile");
 
@@ -19,7 +20,7 @@ export interface Profile {
   email: string;
   environment: string;
   accessTokenId: string;
-  accessToken: string;
+  readonly accessToken: Promise<TokenValueType>;
   endpoint: string;
   defaultApp?: DefaultApp;
 }
@@ -71,7 +72,9 @@ function loadProfile(): Profile {
 
   debug("Profile file loaded");
   let profileContents = fs.readFileSync(profilePath, "utf8");
-  return JSON.parse(profileContents) as Profile;
+  let profile: any = JSON.parse(profileContents);
+  profile.accessToken = Promise.resolve(profile.accessToken);
+  return profile as Profile;
 }
 
 export function getUser(): Profile {

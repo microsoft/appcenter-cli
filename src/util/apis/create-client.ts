@@ -39,7 +39,7 @@ function createBasicAuthClient(userName: string, password: string, endpoint: str
   return new SonomaClient(new BasicAuthenticationCredentials(userName, password), endpoint, createClientOptions());
 }
 
-function createSonomaAuthClientFromToken(token: string, endpoint: string): SonomaClient {
+function createSonomaAuthClientFromToken(token: Promise<string>, endpoint: string): SonomaClient {
   debug(`Creating client from token for endpoint ${endpoint}`);
   return new SonomaClient(new SonomaClientCredentials(token), endpoint, createClientOptions());
 }

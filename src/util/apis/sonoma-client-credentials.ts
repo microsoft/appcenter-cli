@@ -5,14 +5,16 @@
 import { WebResource } from "ms-rest";
 
 export class SonomaClientCredentials {
-  private token: string;
+  private token: Promise<string>;
 
-  constructor(token: string) {
+  constructor(token: Promise<string>) {
     this.token = token;
   }
 
   signRequest(request: WebResource, callback: {(err: Error): void}): void {
-    request.withHeader("x-api-token",this.token);
-    callback(null);
+    this.token.then(token => {
+      request.withHeader("x-api-token", token);
+      callback(null);
+    });
   }
 }
