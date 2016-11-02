@@ -8,6 +8,9 @@ import * as os from "os";
 import * as mkdirp from "mkdirp";
 
 import { environments } from "./environments";
+import { profileFile, getProfileDir } from "../misc";
+
+const debug = require("debug")("sonoma-cli:util:profile:profile");
 
 export interface Profile {
   userId: string;
@@ -53,35 +56,28 @@ function fileExists(filename: string): boolean {
   return false;
 }
 
-function getProfileDir(): string {
-  let profileDir: string;
-  if (os.platform() === "win32") {
-    profileDir = process.env.AppData;
-  } else {
-    profileDir = os.homedir();
-  }
-
-  profileDir = path.join(profileDir, ".sonomacli");
-  return profileDir;
-}
-
 function getProfileFilename(): string {
   const profileDir = getProfileDir();
-  return path.join(profileDir, "profile.json");
+  return path.join(profileDir, profileFile);
 }
 
 function loadProfile(): Profile {
   const profilePath = getProfileFilename();
+  debug(`Loading profile from ${profilePath}`);
   if (!fileExists(profilePath)) {
+    debug("No profile file exists");
     return null;
   }
 
+  debug("Profile file loaded");
   let profileContents = fs.readFileSync(profilePath, "utf8");
   return JSON.parse(profileContents) as Profile;
 }
 
 export function getUser(): Profile {
+  debug("Getting current user from profile");
   if (!currentProfile) {
+    debug("No current user, loading from file");
     currentProfile = loadProfile();
     if (currentProfile && !currentProfile.endpoint) {
       currentProfile.endpoint = environments(currentProfile.environment).endpoint;
