@@ -14,7 +14,10 @@ export type TokenKeyType = string;
 // And the type for the access tokens. Similarly, prepping for
 // when the token expands.
 //
-export type TokenValueType = string;
+export interface TokenValueType {
+  id: string;
+  token: string;
+}
 
 // Information stored about in each token
 export interface TokenEntry {

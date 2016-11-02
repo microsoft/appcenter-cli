@@ -73,14 +73,13 @@ export default class LoginCommand extends Command {
     debug(`Got response = ${inspect(token)}`);
     let user: models.UserProfileResponse = await out.progress("Getting user info ...", this.getUserInfo(token.apiToken));
     debug(`Got response = ${inspect(user)}`);
-    saveUser(user, token, this.environmentName);
+    saveUser(user, { id: token.id, token: token.apiToken }, this.environmentName);
     out.text(`Logged in as ${user.name}`);
   }
 
   private createAuthToken(): Promise<models.ApiTokensPostResponse> {
     const endpoint = environments(this.environmentName).endpoint;
-    // const creds: ServiceClientCredentials = new BasicAuthenticationCredentials(this.userName, this.password);
-    const client = createSonomaClient(this.userName, this.password, endpoint); //new SonomaClient(creds, endpoint, {});
+    const client = createSonomaClient(this.userName, this.password, endpoint);
     return clientCall<models.ApiTokensPostResponse>(cb => client.account.createApiToken({ description: "Created from sonoma cli"}, cb));
   }
 

@@ -9,25 +9,95 @@ import * as mkdirp from "mkdirp";
 
 import { environments } from "./environments";
 import { profileFile, getProfileDir } from "../misc";
-import { TokenValueType } from "../token-store";
+import { TokenValueType, tokenStore } from "../token-store";
 
 const debug = require("debug")("sonoma-cli:util:profile:profile");
 
-export interface Profile {
+export interface UpdatableProfile {
   userId: string;
   userName: string;
   displayName: string;
   email: string;
   environment: string;
-  accessTokenId: string;
-  readonly accessToken: Promise<TokenValueType>;
-  endpoint: string;
+  readonly accessTokenId: Promise<string>;
+  readonly endpoint: string;
   defaultApp?: DefaultApp;
+}
+
+export interface Profile extends UpdatableProfile {
+  readonly accessToken: Promise<TokenValueType>;
+  save(): Profile;
+  logout(): Promise<void>;
 }
 
 export interface DefaultApp {
   ownerName: string;
   appName: string;
+}
+
+class ProfileImpl implements Profile {
+  userId: string;
+  userName: string;
+  displayName: string;
+  email: string;
+  environment: string;
+  defaultApp?: DefaultApp;
+
+  get accessTokenId(): Promise<string> {
+    return tokenStore.get(this.userName)
+      .then(entry => entry.accessToken.id);
+  }
+
+  get accessToken(): Promise<string> {
+    return tokenStore.get(this.userName)
+      .then(entry => entry.accessToken.token);
+  }
+
+  get endpoint(): string {
+    return environments(this.environment).endpoint;
+  }
+
+  constructor(fileContents: any) {
+    // This is slightly convoluted since file and API use different field names
+    // TODO: Normalize to match them up?
+    this.userId = fileContents.userId || fileContents.id;
+    this.userName = fileContents.userName || fileContents.name;
+    this.displayName = fileContents.displayName;
+    this.email = fileContents.email;
+    this.environment = fileContents.environment;
+    this.defaultApp = fileContents.defaultApp;
+  }
+
+  save(): Profile {
+    let profile: any = {
+      userId: this.userId,
+      userName: this.userName,
+      displayName: this.displayName,
+      email: this.email,
+      environment: this.environment,
+      defaultApp: this.defaultApp
+    };
+
+    mkdirp.sync(getProfileDir());
+    fs.writeFileSync(getProfileFilename(), JSON.stringify(profile), { encoding: "utf8" });
+    return this;
+  }
+
+  setAccessToken(token: TokenValueType): Promise<Profile> {
+    return tokenStore.set(this.userName, token).then(() => this);
+  }
+
+  async logout(): Promise<void> {
+    await tokenStore.remove(this.userName);
+    try {
+      fs.unlinkSync(getProfileFilename());
+    } catch (err) {
+      if (err.code !== "ENOENT") {
+        // File not found is fine, anything else pass on the error
+        throw err;
+      }
+    }
+  }
 }
 
 const validApp = /^([a-zA-Z0-9-_]{3,100})\/([a-zA-Z0-9-_]{3,100})$/;
@@ -73,8 +143,7 @@ function loadProfile(): Profile {
   debug("Profile file loaded");
   let profileContents = fs.readFileSync(profilePath, "utf8");
   let profile: any = JSON.parse(profileContents);
-  profile.accessToken = Promise.resolve(profile.accessToken);
-  return profile as Profile;
+  return new ProfileImpl(profile);
 }
 
 export function getUser(): Profile {
@@ -82,41 +151,22 @@ export function getUser(): Profile {
   if (!currentProfile) {
     debug("No current user, loading from file");
     currentProfile = loadProfile();
-    if (currentProfile && !currentProfile.endpoint) {
-      currentProfile.endpoint = environments(currentProfile.environment).endpoint;
-    }
   }
   return currentProfile;
 }
 
-export function saveUser(user: any, token: any, environment: string, ): Profile {
-  let profile = {
-    userId: user.id,
-    userName: user.name,
-    displayName: user.display_name || user.displayName,
-    environment,
-    email: user.email,
-    accessTokenId: token.id,
-    accessToken: token.api_token || token.apiToken,
-    endpoint: environments(environment).endpoint
-  };
-
-  return saveProfile(profile);
+export function saveUser(user: any, token: TokenValueType, environment: string ): Promise<Profile> {
+  return tokenStore.set(user.name, token)
+    .then(() => {
+      let profile = new ProfileImpl(user);
+      profile.save();
+      return profile;
+    });
 }
 
-export function saveProfile(profile: Profile): Profile {
-  mkdirp.sync(getProfileDir());
-  fs.writeFileSync(getProfileFilename(), JSON.stringify(profile), { encoding: "utf8" });
-  return profile;
-}
-
-export function deleteUser() {
-  try {
-    fs.unlinkSync(getProfileFilename());
-  } catch (err) {
-    if (err.code !== "ENOENT") {
-      // File not found is fine, anything else pass on the error
-      throw err;
-    }
+export async function deleteUser(): Promise<void> {
+  let profile = getUser();
+  if (profile) {
+    return profile.logout();
   }
 }
