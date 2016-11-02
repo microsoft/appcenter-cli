@@ -3,6 +3,7 @@ const debug = require("debug")("sonoma-cli:util:apis:create-client");
 
 import SonomaClient = require("./generated/SonomaClient");
 import { SonomaClientCredentials } from "./sonoma-client-credentials";
+import { userAgentFilter } from "./user-agent-filter";
 const BasicAuthenticationCredentials = require("ms-rest").BasicAuthenticationCredentials;
 import { ServiceCallback } from "ms-rest";
 
@@ -26,8 +27,9 @@ export function createSonomaClient(...args: any[]): SonomaClient {
 
 function createClientOptions(): any {
   debug(`Creating client options, isDebug = ${isDebug()}`);
+  const filters = [ userAgentFilter ];
   return {
-    filters: isDebug() ? [createLogger()] : []
+    filters: isDebug() ? [createLogger()].concat(filters) : filters
   };
 }
 

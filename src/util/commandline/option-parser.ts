@@ -111,7 +111,8 @@ export function parseOptions(...params: any[]): void {
     const option = flagOptions[targetPropertyName];
     const optKey = optionKey(option);
 
-    if (option.required && !parsed[optKey]) {
+    // Skip required args if help has been invoked
+    if (!parsed["help"] && option.required && !parsed[optKey]) {
       // TODO: Replace this with auto-prompting
       throw new Error(`Missing required option ${optionDisplayName(option)}`);
     }
@@ -131,7 +132,7 @@ export function parseOptions(...params: any[]): void {
     debug(`Checking for ${opt.required ? "required" : "optional" } option ${opt.name} at position ${opt.position}`);
 
     if (positionalArgs.length - 1 < opt.position) {
-      if (opt.required) {
+      if (!parsed["help"] && opt.required) {
         throw new Error(`Missing required positional argument ${opt.name}`);
       } else if (opt.defaultValue) {
         target[opt.propertyName] = opt.defaultValue;

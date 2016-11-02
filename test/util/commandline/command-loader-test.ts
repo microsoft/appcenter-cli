@@ -3,7 +3,10 @@ import * as path from "path";
 import { expect } from "chai";
 import * as sinon from "sinon";
 
-import { Command } from "../../../src/util/commandline";
+// Force require of Commandline module to avoid weird circular-reference crash that
+// only occurs when running from tests. Very strange.
+require("../../../src/util/commandline");
+
 import { CommandLoader, loader } from "../../../src/util/commandline/command-loader";
 import { CommandFinder, finder } from "../../../src/util/commandline/command-finder";
 

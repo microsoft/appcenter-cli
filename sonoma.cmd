@@ -1,1 +1,1 @@
-@ts-node dist/index.js %*
+@node %~dp0/dist/index.js %*

@@ -15,11 +15,12 @@ export const classHelpTextKey = Symbol("ClassHelpText");
 
 export function getOptionsDescription(target: any): OptionsDescription {
   function getRecursive(accumulator: OptionsDescription, target: any): OptionsDescription {
-    if (!target || !target.hasOwnProperty(optionDescriptionKey)) {
+    if (!target) {
       return accumulator;
     }
-
-    assign(accumulator, target[optionDescriptionKey]);
+    if (target.hasOwnProperty(optionDescriptionKey)) {
+      assign(accumulator, target[optionDescriptionKey]);
+    }
     return getRecursive(accumulator, Object.getPrototypeOf(target));
   }
 
@@ -39,7 +40,12 @@ export function getPositionalOptionsDescription(target: any): PositionalOptionsD
     if (!target || !target.hasOwnProperty(positionalDescriptionKey)) {
       return accumulator;
     }
-    return getRecursive(target[positionalDescriptionKey].concat(accumulator), Object.getPrototypeOf(target));
+
+    let newOpts: any = [];
+    if (target.hasOwnProperty(positionalDescriptionKey)) {
+      newOpts = target[positionalDescriptionKey];
+    }
+    return getRecursive(newOpts.concat(accumulator), Object.getPrototypeOf(target));
   }
   return getRecursive([], target);
 }

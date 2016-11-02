@@ -1,18 +1,18 @@
 # Sonoma CLI - command line for Sonoma
 (Kind of obvious from the name, really)
 
-Sonoma CLI is a command command line interface to interact with the Sonoma services. It's intended
+Sonoma CLI is a command line interface to interact with the Sonoma services. It's intended
 for use by mobile developers and people building scripts that need to interact with Sonoma (for example,
 local CI configurations).
 
 ## Technologies Used
 
-sonoma cli is written using Node.js version 6 and [Typescript](http://typescriptlang.org). Wrappers over the Bifrost HTTP api are
-generated using the [AutoRest][https://github.com/Azure/autorest] code generator. And the usual
+sonoma cli is written using Node.js version 6 and [Typescript](http://typescriptlang.org). Wrappers over the Bifrost HTTP API are
+generated using the [AutoRest](https://github.com/Azure/autorest) code generator. And the usual
 plethora of npm modules.
 
 We use [mocha](https://http://mochajs.org/) for a test runner / framework. [Chai](http://http://chaijs.com/) is
-the assertion library. [Sinonn](http://sinonjs.org) is the general mocking library, and [nock](https://github.com/node-nock/nock)
+the assertion library. [Sinon](http://sinonjs.org) is the general mocking library, and [nock](https://github.com/node-nock/nock)
 will be used to record and playback mock http traffic. [Note: this isn't set up yet.]
 
 # Setting Up
@@ -199,9 +199,9 @@ Stores type definitions for the external Javascript libraries used. These are ch
 
 # Development Processes
 
-We follow the standard github flow. Each person working on the cli should create their own fork of the repo. Work in your own repo (preferably on a feature branch). When ready, send a pull request to the master Microsoft/sonoma-cli repo against the master brtanch. After review, the pull request will be merged.
+We follow the standard GitHub flow. Each person working on the cli should create their own fork of the repo. Work in your own repo (preferably on a feature branch). When ready, send a pull request to the master Microsoft/sonoma-cli repo against the master branch. After review, the pull request will be merged.
 
-Issue tracking is TBD based on overall group discussions. For now let's just do it in github in the Microsoft/sonoma-cli repo.
+Issue tracking will be done on [VSO](https://mseng.visualstudio.com/Mobile%20DevOps/Command%20Line%20Interface/).
 
 # Building Installers
 
