@@ -1178,6 +1178,28 @@ export interface TestRunStatistics {
 
 /**
  * @class
+ * Initializes a new instance of the TestRunState class.
+ * @constructor
+ * @summary TestRunState
+ *
+ * Current status of a test run
+ *
+ * @member {array} [message] Multi-line message that describes the status
+ * 
+ * @member {number} [waitTime] Time (in seconds) that the client should wait
+ * for before checking the status again
+ * 
+ * @member {number} [exitCode] Exit code for the client
+ * 
+ */
+export interface TestRunState {
+  message?: string[];
+  waitTime?: number;
+  exitCode?: number;
+}
+
+/**
+ * @class
  * Initializes a new instance of the TestSeries class.
  * @constructor
  * @summary TestSeries

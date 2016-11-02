@@ -58,6 +58,7 @@ exports.DeviceConfiguration = require('./deviceConfiguration');
 exports.DeviceModel = require('./deviceModel');
 exports.TestRun = require('./testRun');
 exports.TestRunStatistics = require('./testRunStatistics');
+exports.TestRunState = require('./testRunState');
 exports.TestSeries = require('./testSeries');
 exports.TestRunSummary = require('./testRunSummary');
 exports.TestCloudErrorDetails = require('./testCloudErrorDetails');

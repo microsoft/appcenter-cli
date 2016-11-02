@@ -591,6 +591,43 @@
         ]
       }
     },
+     "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/state": {
+      "get": {
+        "description": "Gets state of the test run",
+        "operationId": "test_getTestRunState",
+        "parameters": [
+          {
+            "name": "test_run_id",
+            "type": "string",
+            "in": "path",
+            "description": "The ID of the test run",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TestRunState"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/start": {
       "post": {
         "description": "Starts test run",
@@ -3340,6 +3377,28 @@
         "totalDeviceMinutes": {
           "description": "The number of minutes of device time the test has been runnign",
           "type": "number"
+        }
+      }
+    },
+     "TestRunState": {
+      "title": "TestRunState",
+      "description": "Current status of a test run",
+      "type": "object",
+      "properties": {
+        "message": {
+          "description": "Multi-line message that describes the status",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "wait_time": {
+          "description": "Time (in seconds) that the client should wait for before checking the status again",
+          "type": "integer"
+        },
+        "exit_code": {
+          "description": "Exit code for the client",
+          "type": "integer"
         }
       }
     },

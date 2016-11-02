@@ -20,35 +20,30 @@ const debug = require("debug")("somona-cli:commands:submit-tests");
 @help("Submits tests to Sonoma")
 export default class RunTestsCommand extends Command {
   @help("Application name")
-  @shortName("an")
   @longName("app-name")
   @hasArg
   @required
   applicationName: string;
 
   @help("Application file path")
-  @shortName("ap")
   @longName("app-path")
   @hasArg
   @required
   applicationPath: string;
 
   @help("Selected devices slug")
-  @shortName("d")
   @longName("devices")
   @hasArg
   @required
   devices: string;
 
   @help("Path to manifest file")
-  @shortName("m")
   @longName("manifest-path")
   @hasArg
   @required
   manifestPath: string;
 
   @help("Path to dSym files")
-  @shortName("s")
   @longName("dsym-path")
   @hasArg
   dSymPath: string;
@@ -83,16 +78,16 @@ export default class RunTestsCommand extends Command {
 
     debug("Creating new TestRun");
     let testRunId = await this.createTestRun(client);
-    out.text(`Test run id: ${testRunId}`);
 
     debug("Uploading app file");
 
-    this.uploadHashOrNewFile(client, testRunId, appFile);
+    await this.uploadHashOrNewFile(client, testRunId, appFile);
     for (let i = 0; i < manifest.files.length; i++) {
       await this.uploadHashOrNewFile(client, testRunId, manifest.files[i]);
     }
     
     await this.startTestRun(client, testRunId, manifest);
+    out.text(`Test run with id "${testRunId}" was successfully started`);
 
     return success();
   }
@@ -117,11 +112,11 @@ export default class RunTestsCommand extends Command {
 
   private async uploadHashOrNewFile(client: SonomaClient, testRunId: string, file: TestRunFile): Promise<void> {
     if (await this.tryUploadFileHash(client, testRunId, file)) {
-      out.text(`File ${file.sourcePath}: hash upload`);
+      debug(`File ${file.sourcePath}: hash upload`);
     }
     else {
       await this.uploadFile(client, testRunId, file);
-      out.text(`File ${file.sourcePath}: direct upload`);
+      debug(`File ${file.sourcePath}: direct upload`);
     }
   }
 
@@ -230,6 +225,17 @@ export default class RunTestsCommand extends Command {
         getUser().userName,
         this.applicationName,
         cb);
+    });
+  }
+
+  private getTestRunState(client: SonomaClient, testRunId: string): Promise<any> {
+    return clientCall(cb => {
+      client.test.getTestRunState(
+        testRunId,
+        getUser().userName,
+        this.applicationName,
+        cb
+      );
     });
   }
 

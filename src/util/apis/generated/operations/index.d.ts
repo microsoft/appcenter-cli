@@ -701,6 +701,26 @@ export interface Test {
     createTestSeries(name: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
+     * Gets state of the test run
+     *
+     * @param {string} testRunId The ID of the test run
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getTestRunState(testRunId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestRunState>): void;
+    getTestRunState(testRunId: string, ownerName: string, appName: string, callback: ServiceCallback<models.TestRunState>): void;
+
+    /**
      * Starts test run
      *
      * @param {string} testRunId The ID of the test run
