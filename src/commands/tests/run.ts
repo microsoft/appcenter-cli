@@ -69,27 +69,65 @@ export default class RunTestsCommand extends Command {
   }
 
   async run(client: SonomaClient): Promise<CommandResult> {
-    debug("Validating application file");
-    await AppValidator.validate(this.applicationPath);
-    
-    debug("Parsing manifest");
-    let manifest = await TestManifestReader.readFromFile(this.manifestPath);
+    let manifest = await out.progress<TestManifest>("Validating arguments...", this.validateAndParseManifest());
     let appFile = await TestRunFile.create(this.applicationPath, path.basename(this.applicationPath), "app-file");
+    out.text("Validating arguments... done.");
 
-    debug("Creating new TestRun");
-    let testRunId = await this.createTestRun(client);
+    let testRunId = await out.progress("Creating new test run...", this.createTestRun(client));
+    out.text("Creating new test run... done.");
 
-    debug("Uploading app file");
-
-    await this.uploadHashOrNewFile(client, testRunId, appFile);
-    for (let i = 0; i < manifest.files.length; i++) {
-      await this.uploadHashOrNewFile(client, testRunId, manifest.files[i]);
-    }
+    await out.progress("Uploading application file...", this.uploadHashOrNewFile(client, testRunId, appFile));
+    out.text("Uploading application file... done.");
     
-    await this.startTestRun(client, testRunId, manifest);
+    await out.progress("Uploading test files...", this.uploadAllTestFiles(client, testRunId, manifest.files));
+    out.text("Uploading test files... done.");
+
+    await out.progress("Starting test run...", this.startTestRun(client, testRunId, manifest));
     out.text(`Test run with id "${testRunId}" was successfully started`);
 
     return success();
+  }
+
+  private async validateAndParseManifest(): Promise<TestManifest> {
+    await AppValidator.validate(this.applicationPath);
+    
+    return await TestManifestReader.readFromFile(this.manifestPath);
+  };
+
+ private createTestParameters(): any {
+    let result: any = {};
+    if (this.testParameters) {
+      if (typeof this.testParameters === "string") {
+        this.testParameters = [this.testParameters];
+      }
+      this.testParameters.forEach(p => {
+        let parsedParameter = this.parseTestParameter(p);
+        result[parsedParameter.key] = result[parsedParameter.value];
+      });
+    }
+    return result;
+  }
+
+  private parseTestParameter(testParameter: string) {
+    let colonIndex = testParameter.indexOf(":");
+    if (colonIndex !== -1) {
+      return {
+        key: testParameter.substr(0, colonIndex),
+        value: testParameter.substr(colonIndex + 1, testParameter.length - colonIndex - 1)
+      }
+    }
+    else {
+      return {
+        key: testParameter,
+        value: null
+      }
+    }
+  }
+
+  private async uploadAllTestFiles(client: SonomaClient, testRunId: string, files: TestRunFile[]): Promise<void> {
+    for (let i = 0; i < files.length; i++) {
+      await this.uploadHashOrNewFile(client, testRunId, files[i]);
+    }
   }
 
   private createTestRun(client: SonomaClient): Promise<string> {
@@ -237,35 +275,5 @@ export default class RunTestsCommand extends Command {
         cb
       );
     });
-  }
-
-  private createTestParameters(): any {
-    let result: any = {};
-    if (this.testParameters) {
-      if (typeof this.testParameters === "string") {
-        this.testParameters = [this.testParameters];
-      }
-      this.testParameters.forEach(p => {
-        let parsedParameter = this.parseTestParameter(p);
-        result[parsedParameter.key] = result[parsedParameter.value];
-      });
-    }
-    return result;
-  }
-
-  private parseTestParameter(testParameter: string) {
-    let colonIndex = testParameter.indexOf(":");
-    if (colonIndex !== -1) {
-      return {
-        key: testParameter.substr(0, colonIndex),
-        value: testParameter.substr(colonIndex + 1, testParameter.length - colonIndex - 1)
-      }
-    }
-    else {
-      return {
-        key: testParameter,
-        value: null
-      }
-    }
   }
 }
