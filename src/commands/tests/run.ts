@@ -2,6 +2,7 @@ import { Command, CommandArgs, CommandResult,
          help, success, name, shortName, longName, required, hasArg,
          position, failure, notLoggedIn } from "../../util/commandLine";
 import { out } from "../../util/interaction";
+import * as outExtensions from "./lib/interaction";
 import { getUser } from "../../util/profile";
 import { SonomaClient, models, clientCall } from "../../util/apis";
 import { PathResolver } from "./lib/path-resolver";
@@ -75,26 +76,39 @@ export default class RunTestsCommand extends Command {
   }
 
   async run(client: SonomaClient): Promise<CommandResult> {
-    let manifest = await out.progress<TestManifest>("Validating arguments...", this.validateAndParseManifest());
+    let manifest = await outExtensions.progressWithResult<TestManifest>(
+      "Validating arguments", 
+      this.validateAndParseManifest());
+    
     let appFile = await TestRunFile.create(this.applicationPath, path.basename(this.applicationPath), "app-file");
-    out.text("Validating arguments... done.");
 
     let testRunId = this.testRunId;
     if (!testRunId) {
-      testRunId = await out.progress("Creating new test run...", this.createTestRun(client));
-      out.text("Creating new test run... done.");
-      out.text(`Test run id: ${testRunId}`);
+      testRunId = await outExtensions.progressWithResult(
+        "Creating new test run", 
+        this.createTestRun(client));
+      debug(`Test run id: ${testRunId}`);
 
-      await out.progress("Uploading application file...", this.uploadHashOrNewFile(client, testRunId, appFile));
-      out.text("Uploading application file... done.");
+      await outExtensions.progressWithResult(
+        "Uploading application file", 
+        this.uploadHashOrNewFile(client, testRunId, appFile));
       
-      await out.progress("Uploading test files...", this.uploadAllTestFiles(client, testRunId, manifest.files));
-      out.text("Uploading test files... done.");
+      await outExtensions.progressWithResult(
+        "Uploading test files", 
+        this.uploadAllTestFiles(client, testRunId, manifest.files));
     }
 
-    await out.progress("Starting test run...", this.startTestRun(client, testRunId, manifest));
-    out.text(`Test run with id "${testRunId}" was successfully started`);
+    let startRunResult = await outExtensions.progressWithResult("Starting test run", this.startTestRun(client, testRunId, manifest));
 
+    out.text(`Test run id: "${testRunId}"`);
+    out.text("Accepted devices: ");
+    out.list(item => `  - ${item}`, startRunResult.acceptedDevices);
+    
+    if (startRunResult.rejectedDevices && startRunResult.rejectedDevices.length > 0) {
+      out.text("Rejected devices: ");
+      out.list(item => `  - ${item}`, startRunResult.rejectedDevices);
+    }
+    
     return success();
   }
 
@@ -276,7 +290,7 @@ export default class RunTestsCommand extends Command {
     });    
   }
 
-  private startTestRun(client: SonomaClient, testRunId: string, manifest: TestManifest): Promise<void> {
+  private startTestRun(client: SonomaClient, testRunId: string, manifest: TestManifest): Promise<models.TestCloudStartTestRunResult> {
     let startOptions: models.TestCloudStartTestRunOptions = {
       testFramework: manifest.testFramework.name,
       deviceSelection: this.devices,
