@@ -64,6 +64,10 @@ export default class RunTestsCommand extends Command {
   @hasArg
   testSeries: string;
 
+  @longName("test-run-id")
+  @hasArg
+  testRunId: string;
+
   constructor(args: CommandArgs) {
     super(args);
   }
@@ -73,14 +77,18 @@ export default class RunTestsCommand extends Command {
     let appFile = await TestRunFile.create(this.applicationPath, path.basename(this.applicationPath), "app-file");
     out.text("Validating arguments... done.");
 
-    let testRunId = await out.progress("Creating new test run...", this.createTestRun(client));
-    out.text("Creating new test run... done.");
+    let testRunId = this.testRunId;
+    if (!testRunId) {
+      testRunId = await out.progress("Creating new test run...", this.createTestRun(client));
+      out.text("Creating new test run... done.");
+      out.text(`Test run id: ${testRunId}`);
 
-    await out.progress("Uploading application file...", this.uploadHashOrNewFile(client, testRunId, appFile));
-    out.text("Uploading application file... done.");
-    
-    await out.progress("Uploading test files...", this.uploadAllTestFiles(client, testRunId, manifest.files));
-    out.text("Uploading test files... done.");
+      await out.progress("Uploading application file...", this.uploadHashOrNewFile(client, testRunId, appFile));
+      out.text("Uploading application file... done.");
+      
+      await out.progress("Uploading test files...", this.uploadAllTestFiles(client, testRunId, manifest.files));
+      out.text("Uploading test files... done.");
+    }
 
     await out.progress("Starting test run...", this.startTestRun(client, testRunId, manifest));
     out.text(`Test run with id "${testRunId}" was successfully started`);
