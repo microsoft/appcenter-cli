@@ -42,8 +42,8 @@ class WinCredStoreParsingStream extends Transform {
       if (this.currentEntry) {
         this.push(this.currentEntry);
         this.currentEntry = null;
-        return callback();
       }
+      return callback();
     }
 
     this.currentEntry = this.currentEntry || {};
