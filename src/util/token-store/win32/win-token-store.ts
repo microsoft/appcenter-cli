@@ -3,24 +3,22 @@
 // Uses included "creds.exe" program to access the credential store.
 //
 
-//
-// Wrapper module around Windows credential store.
-// Uses the creds.exe program.
-//
-
-import * as _ from "lodash";
 import * as childProcess from "child_process";
+import { Observable } from "rx";
+import * as stream from "stream";
 import * as es from "event-stream";
 import * as path from "path";
 import * as parser from "./win-credstore-parser";
 
+import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../token-store";
+
 type ReadableStream = NodeJS.ReadableStream;
 type WritableStream = NodeJS.WritableStream;
-type ReadWriteStream = NodeJS.ReadWriteStream;
+type Duplex = stream.Duplex;
 
-var credExePath = path.join(__dirname, '../../../bin/windows/creds.exe');
+const credExePath = path.join(__dirname, '../../../../bin/windows/creds.exe');
 
-var targetNamePrefix = 'AzureXplatCli:target=';
+const targetNamePrefix = 'SonomaCli:target=';
 
 function ensurePrefix(targetName: string): string {
   if (targetName.slice(targetNamePrefix.length) !== targetNamePrefix) {
@@ -33,6 +31,32 @@ function removePrefix(targetName: string): string {
   return targetName.slice(targetNamePrefix.length);
 }
 
+function removePrefixFromCred(cred: any): any {
+  if (cred.targetName) {
+    cred.targetName = removePrefix(cred.targetName);
+  }
+  return cred;
+}
+
+function encodeTokenValueAsHex(token: TokenValueType): string {
+  const tokenValueAsString = JSON.stringify(token);
+  return Buffer.from(tokenValueAsString, "utf8").toString("hex");
+}
+
+function decodeTokenValueFromHex(token: string): TokenValueType {
+  return JSON.parse(Buffer.from(token, "hex").toString("utf8"));
+}
+
+function credToTokenEntry(cred: any): TokenEntry {
+  // Assumes credential comes in with prefixes on target skipped, and
+  // Credential object in hexidecimal
+  return {
+    key: cred.target,
+    accessToken: decodeTokenValueFromHex(cred.credential)
+  };
+}
+
+export class WinTokenStore implements TokenStore {
 /**
  * list the contents of the credential store, parsing each value.
  *
@@ -40,109 +64,103 @@ function removePrefix(targetName: string): string {
  * for target names starting with the target name prefix.
  *
  *
- * @return {Stream} object mode stream of credentials.
+ * @return {Observable<TokenEntry>} stream of credentials.
  */
-function list(): ReadableStream {
-  var credsProcess = childProcess.spawn(credExePath,['-s', '-g', '-t', targetNamePrefix + '*']);
-  return credsProcess.stdout
-    .pipe(parser.createParsingStream() as any as ReadWriteStream)
-    .pipe(es.mapSync(function (cred: any): any {
-      cred.targetName = removePrefix(cred.targetName);
-      return cred;
-    }) as any as WritableStream) as any as ReadableStream;
-}
+  list(): Observable<TokenEntry> {
+    return Observable.create<TokenEntry>(observer => {
+      let credsProcess = childProcess.spawn(credExePath, ['-s', '-g', '-t', `${targetNamePrefix}*`]);
+      credsProcess.stdout
+        .pipe(parser.createParsingStream as any as Duplex)
+        .pipe(es.mapSync(removePrefixFromCred) as any as Duplex)
+        .on("data", (cred: any) => {
+          observer.onNext(credToTokenEntry(cred));
+        })
+        .on("end", () => observer.onCompleted())
+        .on("error", (err: Error) => observer.onError(err));
+    });
+  }
 
 /**
  * Get details for a specific credential. Assumes generic credential.
  *
- * @param {string} targetName target name for credential
- * @param {function (err, credential)} callback callback function that receives
- *                                              returned credential.
+ * @param {tokenKeyType} key target name for credential
+ * @return {Promise<TokenEntry>} Returned credential or null if not found.
  */
-function get(targetName: string, callback: {(err: Error, credential?: any): void}): void {
-  var args = [
-    '-s',
-    '-t', ensurePrefix(targetName)
-  ];
+  get(key: TokenKeyType): Promise<TokenEntry> {
+    let args = [ "-s", "-t", ensurePrefix(key) ];
 
-  var credsProcess = childProcess.spawn(credExePath, args);
-  var result: any = null;
-  var errors: string[] = [];
+    let credsProcess = childProcess.spawn(credExePath, args);
+    let result: any = null;
+    let errors: string[] = [];
 
-  credsProcess.stdout.pipe(parser.createParsingStream())
-    .on('data', function (credential: any): void {
-      result = credential;
-      result.targetName = removePrefix(result.targetName);
+    return new Promise<TokenEntry>((resolve, reject) => {
+      credsProcess.stdout.pipe(parser.createParsingStream())
+        .pipe(es.mapSync(removePrefixFromCred) as any as Duplex)
+        .on("data", (credential: any) => {
+          result = credential;
+          result.targetName = removePrefix(result.targetName)
+        });
+
+      credsProcess.stderr.pipe(es.split() as any as Duplex)
+        .on("data", (line: string) => {
+          errors.push(line);
+        });
+
+      credsProcess.on("exit", (code: number) => {
+        if (code === 0) {
+          return resolve(credToTokenEntry(result));
+        };
+        return reject(new Error(`Getting credential failed, exit code ${code}: ${errors.join(", ")}`));
+      });
     });
-
-  credsProcess.stderr.pipe(es.split() as any as WritableStream)
-    .on('data', function (line: string): void {
-      errors.push(line);
-    });
-
-  credsProcess.on('exit', function (code: number): void {
-    if (code === 0) {
-      callback(null, result);
-    } else {
-      callback(new Error(`Getting credential failed, exit code ${code}: ${errors.join(', ')}`));
-    }
-  });
-}
-
-/**
- * Set the credential for a given key in the credential store.
- * Creates or updates, assumes generic credential.
- * If credential is buffer, stores buffer contents as binary directly.
- * If credential is string, stores UTF-8 encoded binary.
- *
- * @param {String} targetName target name for entry
- * @param {Buffer|String} credential the credential
- * @param {Function(err)} callback completion callback
- */
- function set(targetName: string, credential: Buffer | string, callback: {(err: Error): void}): void {
-  if (_.isString(credential)) {
-    credential = new Buffer(credential, 'utf8');
   }
-  var args = [
-    '-a',
-    '-t', ensurePrefix(targetName),
-    '-p', credential.toString('hex')
-  ];
 
-  childProcess.execFile(credExePath, args,
-    function (err) {
-      callback(err);
-    });
- }
+  /**
+   * Set the credential for a given key in the credential store.
+   * Creates or updates, assumes generic credential.
+   *
+   * @param {TokenKeyType} key key for entry (string user name for now)
+   * @param {TokenValueType} credential the credential to be encrypted
+   *
+   * @return {Promise<void>} Promise that completes when update has finished
+   * @param {Function(err)} callback completion callback
+   */
+  set(key: TokenKeyType, credential: TokenValueType): Promise<void> {
+    let args = [ "-a", "-t", ensurePrefix(key), "-p", encodeTokenValueAsHex(credential) ];
+
+    return new Promise<void>((resolve, reject) => {
+      childProcess.execFile(credExePath, args,
+        function (err) {
+          if (err) {
+            return reject(err);
+          }
+          return resolve();
+        });
+     });
+  }
 
  /**
   * Remove the given key from the credential store.
   *
-  * @param {string} targetName target name to remove.
+  * @param {TokenKeyType} key  target name to remove.
   *                            if ends with "*" character,
   *                            will delete all targets
   *                            starting with that prefix
   * @param {Function(err)} callback completion callback
   */
-function remove(targetName: string, callback: {(err: Error): void}): void {
-  var args = [
-    '-d',
-    '-t', ensurePrefix(targetName)
-  ];
+  remove(key: TokenKeyType): Promise<void> {
+    let args = [ "-d", "-t", ensurePrefix(key) ];
 
-  if (targetName.slice(-1) === '*') {
-    args.push('-g');
-  }
+    if (key.slice(-1) === '*') {
+      args.push('-g');
+    }
 
-  childProcess.execFile(credExePath, args,
-    function (err) {
-      callback(err);
+    return new Promise((resolve, reject) => {
+      childProcess.execFile(credExePath, args,
+        function (err) {
+          if (err) { return reject(err); }
+          resolve();
+        });
     });
+  }
 }
-
-_.extend(exports, {
-  list: list,
-  set: set,
-  get: get,
-  remove: remove
-});
