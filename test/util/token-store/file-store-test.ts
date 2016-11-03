@@ -25,8 +25,8 @@ describe("File token store", function () {
 
     before(function () {
       store = createFileTokenStore(storePath) as FileTokenStore;
-      store.set("user1", "token1");
-      store.set("user2", "a different token");
+      store.set("user1", { id: "123", token: "token1"} );
+      store.set("user2", { id: "234", token: "a different token" });
     });
 
     it("should create token file", function () {
@@ -37,7 +37,7 @@ describe("File token store", function () {
       return store.get("user1")
         .then((token: TokenEntry) => {
           expect(token).to.not.be.null;
-          expect(token.accessToken).to.equal("token1");
+          expect(token.accessToken.token).to.equal("token1");
         });
     });
 

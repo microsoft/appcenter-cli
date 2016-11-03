@@ -25,11 +25,17 @@ import * as os from "os";
 import * as util from "util";
 import { expect } from "chai";
 import { createParsingStream } from "../../../src/util/token-store/win32/win-credstore-parser";
+import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../../../src/util/token-store";
+import { WinTokenStore } from "../../../src/util/token-store/win32/win-token-store";
+
+interface DoneFunc {
+  (err?: Error): void;
+}
 
 // Dummy data for parsing tests
 const entries = {
   entry1:
-`Target Name: AzureXplatCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/
+`Target Name: SonomaCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/
 Type: Generic
 User Name: creds.exe`,
   entry2:
@@ -62,7 +68,7 @@ describe('credstore output parsing', function () {
   }
 
   describe('one entry without password', function () {
-    before(function (done) {
+    before(function (done: DoneFunc) {
       parseEntries(entries.entry1, done);
     });
 
@@ -122,47 +128,49 @@ describe('Parsing output of creds child process', function () {
     return;
   }
 
-  let parseResults: string[] = [];
-  let expectedEntry:any = null;
+  let parseResults: TokenEntry[] = [];
+  let expectedEntry: TokenEntry = null;
 
-  let testTargetName='userId:xplattest@org.example::resourceId:https\\://management.core.windows.net/::tenantId:some-guid';
-  let testPassword = 'Sekret!';
+  const testTargetName='sonomaTest@org.example';
+  const testToken = { id: "id1", token: "Sekret!" };
+  const credStore = new WinTokenStore();
 
-  before(function (done) {
-    addExpectedEntry(function (err: Error) {
-      if (err) { return done(err); }
-      runAndParseOutput(function (err: Error) {
-        done(err);
+  before(function () {
+    return credStore.set(testTargetName, testToken)
+      .then(() => {
+        return runAndParseOutput();
       });
-    });
   });
 
-  after(function (done: {(err?: Error): void}) {
-    removeExpectedEntry(done);
+  after(function () {
+    return removeExpectedEntry();
   });
 
   //
   // Helper functions to do each stage of the setup
   //
-  function addExpectedEntry(done) {
-    credStore.set(testTargetName, testPassword, done);
+  function addExpectedEntry(): Promise<void> {
+    return credStore.set(testTargetName, testToken);
   }
 
-  function runAndParseOutput(done) {
+  function runAndParseOutput(): Promise<void> {
+    return new Promise((resolve, reject) => {
     credStore.list()
-      .on('data', function (credential) {
-        parseResults.push(credential);
-        if (credential.targetName === testTargetName) {
-          expectedEntry = credential;
-        }
-      })
-      .on('end', function () {
-        done();
+      .subscribe({
+        onNext: (entry: TokenEntry) => {
+          parseResults.push(entry);
+          if (entry.key === testTargetName) {
+            expectedEntry = entry;
+          }
+        },
+        onCompleted: () => { resolve(); },
+        onError: (err: Error) => { reject(err); }
       });
+    });
   }
 
-  function removeExpectedEntry(done) {
-    credStore.remove(testTargetName, done);
+  function removeExpectedEntry(): Promise<void> {
+    return credStore.remove(testTargetName);
   }
 
   it('should have entries', function () {
@@ -173,8 +181,11 @@ describe('Parsing output of creds child process', function () {
     expectedEntry.should.not.be.null;
   });
 
-  it('should have binary encoded password', function () {
-    let decodedCredential = new Buffer(expectedEntry.credential, 'hex').toString('utf8');
-    decodedCredential.should.equal(testPassword);
+  it('should have expected credential id', function () {
+    expect(expectedEntry.accessToken.id).to.equal(testToken.id);
   });
+
+  it ('should have expected credential token', function () {
+    expect(expectedEntry.accessToken.token).to.equal(testToken.token);
+  })
 });
