@@ -23,14 +23,8 @@ function fieldNameToPropertyName(fieldName: string): string {
 }
 
 //
-// Simple streaming parser. It's in one of two states:
-// 0 - Waiting for an entry
-// 1 - in an entry
+// Simple streaming parser, splits lines, collects them into single objects.
 //
-// At the ending blank line (each entry has one) we output
-// the accumulated object.
-//
-
 class WinCredStoreParsingStream extends Transform {
   currentEntry: any;
 
@@ -44,38 +38,20 @@ class WinCredStoreParsingStream extends Transform {
     let line = chunk.toString();
     let count = 0;
 
-    while (line !== null) {
-      ++count;
-      if (count > 2) {
-        return callback(new Error(`Multiple passes attempting to parse line ${line}. Possible bug in parser and infinite loop`));
-      }
-
-      if (this.currentEntry === null) {
-        if (line !== "") {
-          this.currentEntry = {};
-          // Loop back around to process this line
-          continue;
-        }
-        // Skip blank lines between items.
-        line = null;
-      }
-
+    if (line === "") {
       if (this.currentEntry) {
-        if (line !== "") {
-          let match = fieldRe.exec(line);
-          let key = fieldNameToPropertyName(match[1]);
-          let value = match[2];
-          this.currentEntry[key] = value;
-          line = null;
-        } else {
-          // Blank line ends an entry
-          this.currentEntry = null;
-          line = null;
-        }
+        this.push(this.currentEntry);
+        this.currentEntry = null;
+        return callback();
       }
     }
 
-    callback();
+    this.currentEntry = this.currentEntry || {};
+    const match = fieldRe.exec(line);
+    const key = fieldNameToPropertyName(match[1]);
+    const value = match[2];
+    this.currentEntry[key] = value;
+    return callback();
   }
 
   _flush(callback: {(err?: Error): void}): void {

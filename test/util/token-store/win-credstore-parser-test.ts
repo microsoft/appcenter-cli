@@ -28,6 +28,8 @@ import { createParsingStream } from "../../../src/util/token-store/win32/win-cre
 import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../../../src/util/token-store";
 import { WinTokenStore } from "../../../src/util/token-store/win32/win-token-store";
 
+import { inspect } from "util";
+
 interface DoneFunc {
   (err?: Error): void;
 }
@@ -52,24 +54,26 @@ Credential: 00010203AABBCCDD`
 describe('credstore output parsing', function () {
   let parsingResult: any[];
 
-  function parseEntries(entryString: string, done: DoneFunc): void {
+  function parseEntries(entryString: string): Promise<void> {
     parsingResult = [];
     let dataSource = es.through();
-    let parser = dataSource.pipe(createParsingStream());
-    parser.on('data', function (data: any): void {
-      parsingResult.push(data);
-    });
-    parser.on('end', function (): void {
-      done();
-    });
+    return new Promise<void>((resolve, reject) => {
+      let parser = dataSource.pipe(createParsingStream());
+      parser.on('data', function (data: any): void {
+        parsingResult.push(data);
+      });
+      parser.on('end', function (): void {
+        resolve();
+      });
 
-    dataSource.push(entryString);
-    dataSource.push(null);
+      dataSource.push(entryString);
+      dataSource.push(null);
+    });
   }
 
   describe('one entry without password', function () {
-    before(function (done: DoneFunc) {
-      parseEntries(entries.entry1, done);
+    before(function () {
+      return parseEntries(entries.entry1 + os.EOL);
     });
 
     it('should have one result', function () {
@@ -95,8 +99,8 @@ describe('credstore output parsing', function () {
   });
 
   describe('two entries without passwords', function () {
-    before(function (done) {
-      parseEntries(entries.entry1 + os.EOL + entries.entry2, done);
+    before(function () {
+      return parseEntries(entries.entry1 + os.EOL + os.EOL + entries.entry2);
     });
 
     it('should have two results', function () {
@@ -105,15 +109,15 @@ describe('credstore output parsing', function () {
 
     it('should have expected targets', function () {
       expect(parsingResult[0].targetName).to
-        .equal('AzureXplatCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/');
+        .equal('SonomaCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/');
       expect(parsingResult[1].targetName).to
         .equal('AzureXplatCli:target=userId:someotheruser@domain.example::resourceId:https\\://management.core.windows.net/');
     });
   });
 
   describe('one entry with credential', function () {
-    before(function (done) {
-      parseEntries(entries.entry1WithCredential + os.EOL, done);
+    before(function () {
+      return parseEntries(entries.entry1WithCredential + os.EOL);
     });
 
     it('should have expected credential', function () {
