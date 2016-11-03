@@ -5,6 +5,7 @@
 /// <reference path="globals/node/index.d.ts" />
 /// <reference path="globals/promptly/index.d.ts" />
 /// <reference path="globals/temp/index.d.ts" />
+/// <reference path="modules/async/index.d.ts" />
 /// <reference path="modules/debug/index.d.ts" />
 /// <reference path="modules/glob/index.d.ts" />
 /// <reference path="modules/inquirer/index.d.ts" />

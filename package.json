@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "adm-zip": "^0.4.7",
+    "async": "^2.1.2",
     "cli-spinner": "^0.2.5",
     "cli-table2": "^0.2.0",
     "debug": "^2.2.0",

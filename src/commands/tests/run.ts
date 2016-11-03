@@ -14,8 +14,10 @@ import * as http from 'http';
 import * as _ from "lodash";
 import * as url from "url";
 import * as request from "request";
+import * as async from "async";
 
 const debug = require("debug")("somona-cli:commands:submit-tests");
+const paralleRequests = 10;
 
 @help("Submits tests to Sonoma")
 export default class RunTestsCommand extends Command {
@@ -133,9 +135,28 @@ export default class RunTestsCommand extends Command {
   }
 
   private async uploadAllTestFiles(client: SonomaClient, testRunId: string, files: TestRunFile[]): Promise<void> {
-    for (let i = 0; i < files.length; i++) {
-      await this.uploadHashOrNewFile(client, testRunId, files[i]);
-    }
+    return new Promise<void>((resolve, reject) => {
+      async.mapLimit(
+        files, 
+        paralleRequests,
+        async (file, callback) => {
+          try {
+            await this.uploadHashOrNewFile(client, testRunId, file);
+            callback(null, null);
+          }
+          catch (err) {
+            callback(err, null);
+          }
+        },
+        (err, _) => {
+          if (err) {
+            reject(err);
+          }
+          else {
+            resolve();
+          }
+        })
+    });
   }
 
   private createTestRun(client: SonomaClient): Promise<string> {

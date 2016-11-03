@@ -15,6 +15,7 @@
     "sinon": "registry:npm/sinon#1.16.0+20160723033700"
   },
   "dependencies": {
+    "async": "registry:npm/async#2.0.1+20160815105832",
     "debug": "registry:npm/debug#2.0.0+20160723033700",
     "glob": "registry:npm/glob#6.0.0+20160723033700",
     "inquirer": "registry:npm/inquirer#1.0.0+20160723033700",
