@@ -132,8 +132,6 @@ describe('Parsing output of creds child process', function () {
     return;
   }
 
-  return;
-  /*
   let parseResults: TokenEntry[] = [];
   let expectedEntry: TokenEntry = null;
 
@@ -144,6 +142,7 @@ describe('Parsing output of creds child process', function () {
   before(function () {
     return credStore.set(testTargetName, testToken)
       .then(() => {
+        console.log("credential set, checking contents");
         return runAndParseOutput();
       });
   });
@@ -161,17 +160,19 @@ describe('Parsing output of creds child process', function () {
 
   function runAndParseOutput(): Promise<void> {
     return new Promise((resolve, reject) => {
-    credStore.list()
-      .subscribe({
-        onNext: (entry: TokenEntry) => {
-          parseResults.push(entry);
-          if (entry.key === testTargetName) {
-            expectedEntry = entry;
-          }
-        },
-        onCompleted: () => { resolve(); },
-        onError: (err: Error) => { reject(err); }
-      });
+      console.log("Listing credstore contents");
+      credStore.list()
+        .subscribe({
+          onNext: (entry: TokenEntry) => {
+            parseResults.push(entry);
+            console.log(`got entry ${inspect(entry)}`);
+            if (entry.key === testTargetName) {
+              expectedEntry = entry;
+            }
+          },
+          onCompleted: () => { resolve(); },
+          onError: (err: Error) => { reject(err); }
+        });
     });
   }
 
@@ -180,11 +181,11 @@ describe('Parsing output of creds child process', function () {
   }
 
   it('should have entries', function () {
-    parseResults.length.should.be.greaterThan(0);
+    expect(parseResults).to.have.length.above(0);
   });
 
   it('should have expected entry', function () {
-    expectedEntry.should.not.be.null;
+    expect(expectedEntry).to.not.be.null;
   });
 
   it('should have expected credential id', function () {
@@ -194,5 +195,4 @@ describe('Parsing output of creds child process', function () {
   it ('should have expected credential token', function () {
     expect(expectedEntry.accessToken.token).to.equal(testToken.token);
   })
-  */
 });

@@ -4,13 +4,16 @@
 //
 
 import * as childProcess from "child_process";
-import { Observable } from "rx";
+import { Observable, Observer } from "rx";
 import * as stream from "stream";
 import * as es from "event-stream";
 import * as path from "path";
 import * as parser from "./win-credstore-parser";
 
 import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../token-store";
+
+const debug = require("debug")("sonoma-cli:util:token-store:win32:win-token-store");
+import { inspect } from "util";
 
 type ReadableStream = NodeJS.ReadableStream;
 type WritableStream = NodeJS.WritableStream;
@@ -50,8 +53,9 @@ function decodeTokenValueFromHex(token: string): TokenValueType {
 function credToTokenEntry(cred: any): TokenEntry {
   // Assumes credential comes in with prefixes on target skipped, and
   // Credential object in hexidecimal
+  debug(`Converting credential ${inspect(cred)} to TokenEntry`);
   return {
-    key: cred.target,
+    key: cred.targetName,
     accessToken: decodeTokenValueFromHex(cred.credential)
   };
 }
@@ -67,16 +71,24 @@ export class WinTokenStore implements TokenStore {
  * @return {Observable<TokenEntry>} stream of credentials.
  */
   list(): Observable<TokenEntry> {
-    return Observable.create<TokenEntry>(observer => {
+    return Observable.create<TokenEntry>((observer: Observer<TokenEntry>) => {
       let credsProcess = childProcess.spawn(credExePath, ['-s', '-g', '-t', `${targetNamePrefix}*`]);
-      credsProcess.stdout
-        .pipe(parser.createParsingStream as any as Duplex)
-        .pipe(es.mapSync(removePrefixFromCred) as any as Duplex)
-        .on("data", (cred: any) => {
+
+      debug("Creds process started for list, monitoring output");
+      let credStream = credsProcess.stdout
+        .pipe(parser.createParsingStream())
+        .pipe(es.mapSync(removePrefixFromCred) as any as Duplex);
+
+        credStream.on("data", (cred: any) => {
+          debug(`Got data from creds: ${cred}`);
           observer.onNext(credToTokenEntry(cred));
-        })
-        .on("end", () => observer.onCompleted())
-        .on("error", (err: Error) => observer.onError(err));
+        });
+        credStream.on("end", () => {
+          debug(`output list completed`);
+          observer.onCompleted();
+        });
+
+        credStream.on("error", (err: Error) => observer.onError(err));
     });
   }
 
