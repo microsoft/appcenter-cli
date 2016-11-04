@@ -77,7 +77,6 @@ export default class PrepareAppiumCommand extends Command {
   private hasClassFile(rootPath: string): boolean {
     let entries = fs.readdirSync(rootPath);
     for (let i = 0; i < entries.length; i++) {
-      debugger;
       
       let entry = entries[i];
       let stats = fs.statSync(path.join(rootPath, entry));
