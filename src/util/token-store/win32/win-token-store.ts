@@ -21,7 +21,7 @@ type Duplex = stream.Duplex;
 
 const credExePath = path.join(__dirname, '../../../../bin/windows/creds.exe');
 
-const targetNamePrefix = 'SonomaCli:target=';
+const targetNamePrefix = 'MobileCenterCli:target=';
 
 function ensurePrefix(targetName: string): string {
   if (targetName.slice(targetNamePrefix.length) !== targetNamePrefix) {
