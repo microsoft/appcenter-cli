@@ -42,7 +42,6 @@ describe("Preparing Appium workspace", () => {
     };
 
     command = new PrepareAppiumCommand(commandArgs);
-
   });
 
   afterEach(() => {
