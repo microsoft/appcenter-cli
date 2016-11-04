@@ -1,5 +1,6 @@
 // Helper function to create client objects
 const debug = require("debug")("sonoma-cli:util:apis:create-client");
+import { inspect } from "util";
 
 import SonomaClient = require("./generated/SonomaClient");
 import { SonomaClientCredentials } from "./sonoma-client-credentials";
@@ -13,13 +14,17 @@ import { isDebug } from "../interaction";
 import { Profile } from "../profile";
 
 export function createSonomaClient(userName: string, password: string, endpoint: string): SonomaClient;
-export function createSonomaClient(token: string, endpoint:string): SonomaClient;
+export function createSonomaClient(token: Promise<string>, endpoint:string): SonomaClient;
+export function createSonomaClient(token: string, endpoint: string): SonomaClient;
 export function createSonomaClient(user: Profile): SonomaClient;
 export function createSonomaClient(...args: any[]): SonomaClient {
   if (args.length === 3) {
     return createBasicAuthClient(args[0], args[1], args[2]);
   }
   else if (args.length === 2) {
+    if (typeof args[0] === 'string') {
+      return createSonomaAuthClientFromToken(Promise.resolve(args[0]), args[1]);
+    }
     return createSonomaAuthClientFromToken(args[0], args[1]);
   }
   return createSonomaAuthClient(args[0]);
@@ -39,7 +44,7 @@ function createBasicAuthClient(userName: string, password: string, endpoint: str
   return new SonomaClient(new BasicAuthenticationCredentials(userName, password), endpoint, createClientOptions());
 }
 
-function createSonomaAuthClientFromToken(token: string, endpoint: string): SonomaClient {
+function createSonomaAuthClientFromToken(token: Promise<string>, endpoint: string): SonomaClient {
   debug(`Creating client from token for endpoint ${endpoint}`);
   return new SonomaClient(new SonomaClientCredentials(token), endpoint, createClientOptions());
 }
@@ -49,7 +54,7 @@ function createSonomaAuthClient(user: Profile): SonomaClient {
     debug(`No current user, not creating client`);
     return null;
   }
-  debug(`Creating client from user for endpoint ${user.endpoint}`);
+  debug(`Creating client from user for user ${inspect(user)}`);
   return new SonomaClient(new SonomaClientCredentials(user.accessToken), user.endpoint, createClientOptions());
 }
 

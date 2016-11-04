@@ -3,7 +3,8 @@ import * as Result from "./command-result";
 import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription } from "./option-decorators";
 import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "./option-parser";
 import { setDebug, isDebug, setFormatJson } from "../interaction";
-import { runHelp, scriptName } from "./help";
+import { runHelp } from "./help";
+import { scriptName } from "../misc";
 import { getUser } from "../profile";
 import { SonomaClient, createSonomaClient } from "../apis";
 
@@ -69,7 +70,9 @@ export class Command {
             break;
 
           default:
-            throw new Error(`Unknown output format ${this.format}`);
+            return Promise.resolve(
+              Result.failure(Result.ErrorCodes.InvalidParameter, `Unknown output format ${this.format}`)
+            );
         }
     }
     return this.runNoClient();

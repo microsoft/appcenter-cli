@@ -16,8 +16,7 @@ import {
 
 import { out, padLeft, padRight, setDebug } from "../interaction";
 
-// TODO: update this with the real name of the
-export const scriptName = "sonoma";
+import { scriptName } from "../misc";
 
 export function runHelp(commandPrototype: any, commandObj: any): void {
   const commandExample: string = getCommandExample(commandPrototype, commandObj);

@@ -1,7 +1,7 @@
 import { Command, CommandArgs, CommandResult, success, failure, name, help, position, required, ErrorCodes } from "../../util/commandline";
 import { SonomaClient, models, clientCall } from "../../util/apis";
 import { out } from "../../util/interaction";
-import { Profile, DefaultApp, toDefaultApp, getUser, saveProfile } from "../../util/profile";
+import { Profile, DefaultApp, toDefaultApp, getUser } from "../../util/profile";
 
 @help("Set the default application for commands")
 export default class SetCurrentAppCommand extends Command {
@@ -31,7 +31,7 @@ export default class SetCurrentAppCommand extends Command {
 
     let profile = getUser();
     profile.defaultApp = newDefault;
-    saveProfile(profile);
+    profile.save();
     return success();
   }
 }
