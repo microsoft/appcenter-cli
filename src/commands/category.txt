@@ -1,9 +1,4 @@
-    |=|
-    |-|
-    | |     SONOMA
-  .'~~~'.   Microsoft Mobile Devops tools
-  |.___.|
-  | Son |
-  | oma |
-  |.___.|
-  :_____:
+
+    mobile-center
+    Microsoft mobile dev stuff?
+

@@ -1,7 +1,7 @@
 {
-  "name": "sonoma-cli",
+  "name": "mobile-center-cli",
   "version": "0.0.1",
-  "description": "Command line tool for Sonoma",
+  "description": "Command line tool for Microsoft Mobile Center",
   "engine": {
     "node": ">= 6.3.0"
   },
