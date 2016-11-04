@@ -1,4 +1,7 @@
 {
+  // Use IntelliSense to find out which attributes exist for node debugging
+  // Use hover for the description of the existing attributes
+  // For further information visit https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
@@ -32,8 +35,27 @@
       "outFiles": []
     },
     {
+      "name": "Launch with sourcemaps",
+      "type": "node2",
+      "console": "integratedTerminal",
+      "request": "launch",
+      "program": "${workspaceRoot}/src/index.ts",
+      "cwd": "${workspaceRoot}",
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "args": [
+        // Add your Mobile Center CLI command
+      ],
+      "outFiles": [
+        "${workspaceRoot}/dist/**/*.js"
+      ],
+      "sourceMaps": true,
+      "preLaunchTask": "build"
+    },
+    {
       "name": "Attach",
-      "type": "node",
+      "type": "node2",
       "request": "attach",
       "port": 5858,
       "address": "localhost",
@@ -45,7 +67,7 @@
     },
     {
       "name": "Attach to Process",
-      "type": "node",
+      "type": "node2",
       "request": "attach",
       "processId": "${command.PickProcess}",
       "port": 5858,
@@ -58,7 +80,15 @@
       "request": "launch",
       "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
       "stopOnEntry": false,
-      "args": ["--debug-brk", "--no-timeouts", "--colors", "--compilers", "ts:ts-node/register", "--recursive", "./test/**/*-test.[tj]s"], //you can specify paths to specific tests here
+      "args": [
+        "--debug-brk",
+        "--no-timeouts",
+        "--colors",
+        "--compilers",
+        "ts:ts-node/register",
+        "--recursive",
+        "./test/**/*-test.[tj]s"
+      ], //you can specify paths to specific tests here
       "cwd": "${workspaceRoot}",
       "runtimeExecutable": null,
       "env": {
