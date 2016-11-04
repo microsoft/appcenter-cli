@@ -36,7 +36,7 @@ export class TestRunFile {
       throw new Error("Argument sha256 is required");
 
     this.sourcePath = sourcePath;
-    this.targetRelativePath = targetRelativePath;
+    this.targetRelativePath = targetRelativePath.replace(new RegExp(/\\/, 'g'), "/");
     this.sha256 = sha256;
     this.fileType = fileType;
   }
