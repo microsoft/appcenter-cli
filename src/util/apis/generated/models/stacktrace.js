@@ -33,7 +33,7 @@ var util = require('util');
  * 
  * @member {boolean} [exception.relevant] relevant exception (crashed)
  * 
- * @member {array} [exception.innerException]
+ * @member {array} [exception.innerExceptions]
  * 
  */
 function Stacktrace() {

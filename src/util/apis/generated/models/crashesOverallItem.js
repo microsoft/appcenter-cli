@@ -42,14 +42,14 @@ CrashesOverallItem.prototype.mapper = function () {
       modelProperties: {
         crashGroupId: {
           required: false,
-          serializedName: 'crashGroupId',
+          serializedName: 'crash_group_id',
           type: {
             name: 'String'
           }
         },
         appVersion: {
           required: false,
-          serializedName: 'appVersion',
+          serializedName: 'app_version',
           type: {
             name: 'String'
           }

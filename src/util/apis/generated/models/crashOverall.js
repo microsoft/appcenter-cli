@@ -34,14 +34,14 @@ CrashOverall.prototype.mapper = function () {
       modelProperties: {
         crashCount: {
           required: false,
-          serializedName: 'crashCount',
+          serializedName: 'crash_count',
           type: {
             name: 'Number'
           }
         },
         deviceCount: {
           required: false,
-          serializedName: 'deviceCount',
+          serializedName: 'device_count',
           type: {
             name: 'Number'
           }

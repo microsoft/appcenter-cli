@@ -32,7 +32,7 @@ var util = require('util');
  * 
  * @member {boolean} [exception.relevant] relevant exception (crashed)
  * 
- * @member {array} [exception.innerException]
+ * @member {array} [exception.innerExceptions]
  * 
  * @member {boolean} [relevant] Shows if a thread is relevant or not. Is false
  * if all frames are non relevant, otherwise true

@@ -1444,8 +1444,8 @@ CrashOperations.prototype.postSymbolUpload = function (ownerName, appName, symbo
  * 
  * @param {string} [options.appVersion] version
  * 
- * @param {string} [options.groupStatus] Possible values include: 'Open',
- * 'Closed', 'Ignored'
+ * @param {string} [options.groupStatus] Possible values include: 'open',
+ * 'closed', 'ignored'
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1629,8 +1629,8 @@ CrashOperations.prototype.getHistogramPlatforms = function (ownerName, appName, 
  * 
  * @param {string} [options.appVersion] version
  * 
- * @param {string} [options.groupStatus] Possible values include: 'Open',
- * 'Closed', 'Ignored'
+ * @param {string} [options.groupStatus] Possible values include: 'open',
+ * 'closed', 'ignored'
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1816,8 +1816,8 @@ CrashOperations.prototype.getHistogramDevices = function (ownerName, appName, op
  * 
  * @param {string} [options.appVersion] version
  * 
- * @param {string} [options.groupStatus] Possible values include: 'Open',
- * 'Closed', 'Ignored'
+ * @param {string} [options.groupStatus] Possible values include: 'open',
+ * 'closed', 'ignored'
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -2001,8 +2001,8 @@ CrashOperations.prototype.getHistogramCrashes = function (ownerName, appName, op
  * 
  * @param {string} [options.appVersion] version
  * 
- * @param {string} [options.groupStatus] Possible values include: 'Open',
- * 'Closed', 'Ignored'
+ * @param {string} [options.groupStatus] Possible values include: 'open',
+ * 'closed', 'ignored'
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -2934,8 +2934,7 @@ CrashOperations.prototype.getCrashGroup = function (crashGroupId, ownerName, app
  * 
  * @param {object} [options] Optional Parameters.
  * 
- * @param {string} [options.status] Possible values include: 'Open', 'Closed',
- * 'Ignored'
+ * @param {object} [options.status]
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -2974,8 +2973,8 @@ CrashOperations.prototype.patchCrashGroup = function (crashGroupId, ownerName, a
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
-    if (status !== null && status !== undefined && typeof status.valueOf() !== 'string') {
-      throw new Error('status must be of type string.');
+    if (status !== null && status !== undefined && typeof status !== 'object') {
+      throw new Error('status must be of type object.');
     }
   } catch (error) {
     return callback(error);
@@ -3100,8 +3099,8 @@ CrashOperations.prototype.patchCrashGroup = function (crashGroupId, ownerName, a
  * @param {string} [options.groupType] Possible values include: 'GroupType1',
  * 'GroupType2'
  * 
- * @param {string} [options.groupStatus] Possible values include: 'Open',
- * 'Closed', 'Ignored'
+ * @param {string} [options.groupStatus] Possible values include: 'open',
+ * 'closed', 'ignored'
  * 
  * @param {string} [options.groupTextSearch] A freetext search that matches in
  * error, error types, error stack_traces and error user

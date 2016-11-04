@@ -18,7 +18,7 @@ var models = require('./index');
  * 
  * @member {string} appVersion
  * 
- * @member {string} status Possible values include: 'Open', 'Closed', 'Ignored'
+ * @member {string} status Possible values include: 'open', 'closed', 'ignored'
  * 
  * @member {number} count
  * 
@@ -34,8 +34,6 @@ var models = require('./index');
  * 
  * @member {object} [reasonFrame]
  * 
- * @member {string} [reasonFrame.address] address of the frame
- * 
  * @member {string} [reasonFrame.className] name of the class
  * 
  * @member {string} [reasonFrame.method] name of the method
@@ -50,13 +48,11 @@ var models = require('./index');
  * 
  * @member {string} [reasonFrame.frameworkName] Name of the framework
  * 
- * @member {string} [reasonFrame.codeRaw] Raw frame string
- * 
  * @member {string} [reasonFrame.codeFormatted] Formatted frame string
  * 
  * @member {string} [reasonFrame.language] programming language of the frame
  * 
- * @member {boolean} [reasonFrame.relevant] frame should be shown always
+ * @member {string} [reasonFrame.methodParams] parameters of the frames method
  * 
  * @member {boolean} fatal Crash or handled exception
  * 
@@ -153,7 +149,7 @@ CrashGroup.prototype.mapper = function () {
           serializedName: 'reason_frame',
           type: {
             name: 'Composite',
-            className: 'StackFrame'
+            className: 'ReasonStackFrame'
           }
         },
         fatal: {

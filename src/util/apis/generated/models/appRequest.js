@@ -15,12 +15,13 @@
  * @member {string} displayName The full name of the user. Might for example
  * be first and last name
  * 
- * @member {string} [language] The primary programming language used in the app
- * 
  * @member {string} [name] The name of the app used in URLs
  * 
+ * @member {string} os The OS the app will be running on. Possible values
+ * include: 'iOS', 'Android'
+ * 
  * @member {string} platform The platform of the app. Possible values include:
- * 'iOS', 'Android'
+ * 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
  * 
  */
 function AppRequest() {
@@ -54,16 +55,16 @@ AppRequest.prototype.mapper = function () {
             name: 'String'
           }
         },
-        language: {
+        name: {
           required: false,
-          serializedName: 'language',
+          serializedName: 'name',
           type: {
             name: 'String'
           }
         },
-        name: {
-          required: false,
-          serializedName: 'name',
+        os: {
+          required: true,
+          serializedName: 'os',
           type: {
             name: 'String'
           }

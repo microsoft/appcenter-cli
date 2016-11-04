@@ -34,6 +34,10 @@ var models = require('./index');
  * 
  * @member {string} [xcode.certificateFilename]
  * 
+ * @member {string} [xcode.teamId]
+ * 
+ * @member {boolean} [xcode.automaticSigning]
+ * 
  * @member {object} [javascript]
  * 
  * @member {string} [javascript.packageJsonPath] Path to package.json file for
@@ -54,6 +58,17 @@ var models = require('./index');
  * @member {string} [xamarin.p12Pwd]
  * 
  * @member {string} [xamarin.provProfile]
+ * 
+ * @member {object} [android]
+ * 
+ * @member {string} [android.gradleWrapperPath] Path to the Gradle wrapper
+ * script
+ * 
+ * @member {string} [android.gradleTasks] The Gradle tasks to perform
+ * 
+ * @member {string} [android.module] The Gradle module to build
+ * 
+ * @member {string} [android.variant] The Android build variant to build
  * 
  */
 function BranchConfigurationToolsets() {
@@ -95,6 +110,14 @@ BranchConfigurationToolsets.prototype.mapper = function () {
           type: {
             name: 'Composite',
             className: 'XamarinBranchConfigurationProperties'
+          }
+        },
+        android: {
+          required: false,
+          serializedName: 'android',
+          type: {
+            name: 'Composite',
+            className: 'AndroidBranchConfigurationProperties'
           }
         }
       }

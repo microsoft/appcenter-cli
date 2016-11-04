@@ -12,29 +12,29 @@ var util = require('util');
 
 /**
  * @class
- * Initializes a new instance of the CrashGroupOSes class.
+ * Initializes a new instance of the AnalyticsModels class.
  * @constructor
  * @member {number} [total]
  * 
- * @member {array} [oses]
+ * @member {array} [models]
  * 
  */
-function CrashGroupOSes() {
+function AnalyticsModels() {
 }
 
 /**
- * Defines the metadata of CrashGroupOSes
+ * Defines the metadata of AnalyticsModels
  *
- * @returns {object} metadata of CrashGroupOSes
+ * @returns {object} metadata of AnalyticsModels
  *
  */
-CrashGroupOSes.prototype.mapper = function () {
+AnalyticsModels.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'CrashGroupOSes',
+    serializedName: 'AnalyticsModels',
     type: {
       name: 'Composite',
-      className: 'CrashGroupOSes',
+      className: 'AnalyticsModels',
       modelProperties: {
         total: {
           required: false,
@@ -43,17 +43,17 @@ CrashGroupOSes.prototype.mapper = function () {
             name: 'Number'
           }
         },
-        oses: {
+        models: {
           required: false,
-          serializedName: 'oses',
+          serializedName: 'models',
           type: {
             name: 'Sequence',
             element: {
                 required: false,
-                serializedName: 'CrashGroupOSElementType',
+                serializedName: 'ModelElementType',
                 type: {
                   name: 'Composite',
-                  className: 'CrashGroupOS'
+                  className: 'Model'
                 }
             }
           }
@@ -63,4 +63,4 @@ CrashGroupOSes.prototype.mapper = function () {
   };
 };
 
-module.exports = CrashGroupOSes;
+module.exports = AnalyticsModels;

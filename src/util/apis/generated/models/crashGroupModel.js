@@ -12,7 +12,7 @@
  * @constructor
  * @member {string} [modelName] model's name
  * 
- * @member {number} [count] count of model
+ * @member {number} [crashCount] count of model
  * 
  */
 function CrashGroupModel() {
@@ -34,14 +34,14 @@ CrashGroupModel.prototype.mapper = function () {
       modelProperties: {
         modelName: {
           required: false,
-          serializedName: 'modelName',
+          serializedName: 'model_name',
           type: {
             name: 'String'
           }
         },
-        count: {
+        crashCount: {
           required: false,
-          serializedName: 'count',
+          serializedName: 'crash_count',
           type: {
             name: 'Number'
           }

@@ -14,7 +14,7 @@ var util = require('util');
  * @class
  * Initializes a new instance of the Versions class.
  * @constructor
- * @member {array} [versionsProperty]
+ * @member {array} [versionsProperty] list of version count
  * 
  * @member {number} [total] the total count of versions
  * 

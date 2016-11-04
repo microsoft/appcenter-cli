@@ -46,6 +46,10 @@ var models = require('./index');
  * 
  * @member {string} [toolsets.xcode.certificateFilename]
  * 
+ * @member {string} [toolsets.xcode.teamId]
+ * 
+ * @member {boolean} [toolsets.xcode.automaticSigning]
+ * 
  * @member {object} [toolsets.javascript]
  * 
  * @member {string} [toolsets.javascript.packageJsonPath] Path to package.json
@@ -66,6 +70,18 @@ var models = require('./index');
  * @member {string} [toolsets.xamarin.p12Pwd]
  * 
  * @member {string} [toolsets.xamarin.provProfile]
+ * 
+ * @member {object} [toolsets.android]
+ * 
+ * @member {string} [toolsets.android.gradleWrapperPath] Path to the Gradle
+ * wrapper script
+ * 
+ * @member {string} [toolsets.android.gradleTasks] The Gradle tasks to perform
+ * 
+ * @member {string} [toolsets.android.module] The Gradle module to build
+ * 
+ * @member {string} [toolsets.android.variant] The Android build variant to
+ * build
  * 
  */
 function BranchConfiguration() {

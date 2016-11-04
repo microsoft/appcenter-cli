@@ -12,31 +12,31 @@ var util = require('util');
 
 /**
  * @class
- * Initializes a new instance of the Crashgroups class.
+ * Initializes a new instance of the CrashGroups class.
  * @constructor
- * @member {array} crashgroupsProperty
+ * @member {array} crashGroupsProperty
  * 
  */
-function Crashgroups() {
+function CrashGroups() {
 }
 
 /**
- * Defines the metadata of Crashgroups
+ * Defines the metadata of CrashGroups
  *
- * @returns {object} metadata of Crashgroups
+ * @returns {object} metadata of CrashGroups
  *
  */
-Crashgroups.prototype.mapper = function () {
+CrashGroups.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'crashgroups',
+    serializedName: 'crash_groups',
     type: {
       name: 'Composite',
-      className: 'Crashgroups',
+      className: 'CrashGroups',
       modelProperties: {
-        crashgroupsProperty: {
+        crashGroupsProperty: {
           required: true,
-          serializedName: 'crashgroups',
+          serializedName: 'crash_groups',
           constraints: {
             MinItems: 1
           },
@@ -44,10 +44,10 @@ Crashgroups.prototype.mapper = function () {
             name: 'Sequence',
             element: {
                 required: false,
-                serializedName: 'CrashgroupModelModelElementType',
+                serializedName: 'CrashGroupAndVersionElementType',
                 type: {
                   name: 'Composite',
-                  className: 'CrashgroupModelModel'
+                  className: 'CrashGroupAndVersion'
                 }
             }
           }
@@ -57,4 +57,4 @@ Crashgroups.prototype.mapper = function () {
   };
 };
 
-module.exports = Crashgroups;
+module.exports = CrashGroups;

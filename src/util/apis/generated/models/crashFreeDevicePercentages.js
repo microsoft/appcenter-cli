@@ -14,9 +14,9 @@ var util = require('util');
  * @class
  * Initializes a new instance of the CrashFreeDevicePercentages class.
  * @constructor
- * @member {number} [overtimePercentage]
+ * @member {number} [averagePercentage] Average percentage
  * 
- * @member {array} [dailyPercentages] the crash-free percentage for day
+ * @member {array} [dailyPercentages] The crash-free percentage per day.
  * 
  */
 function CrashFreeDevicePercentages() {
@@ -36,16 +36,16 @@ CrashFreeDevicePercentages.prototype.mapper = function () {
       name: 'Composite',
       className: 'CrashFreeDevicePercentages',
       modelProperties: {
-        overtimePercentage: {
+        averagePercentage: {
           required: false,
-          serializedName: 'overtimePercentage',
+          serializedName: 'average_percentage',
           type: {
             name: 'Number'
           }
         },
         dailyPercentages: {
           required: false,
-          serializedName: 'dailyPercentages',
+          serializedName: 'daily_percentages',
           type: {
             name: 'Sequence',
             element: {

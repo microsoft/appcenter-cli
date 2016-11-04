@@ -12,50 +12,50 @@ var util = require('util');
 
 /**
  * @class
- * Initializes a new instance of the Models class.
+ * Initializes a new instance of the Events class.
  * @constructor
- * @member {number} [total]
+ * @member {array} [eventsProperty]
  * 
- * @member {array} [modelsProperty]
+ * @member {number} [total] the total count of events
  * 
  */
-function Models() {
+function Events() {
 }
 
 /**
- * Defines the metadata of Models
+ * Defines the metadata of Events
  *
- * @returns {object} metadata of Models
+ * @returns {object} metadata of Events
  *
  */
-Models.prototype.mapper = function () {
+Events.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'Models',
+    serializedName: 'Events',
     type: {
       name: 'Composite',
-      className: 'Models',
+      className: 'Events',
       modelProperties: {
+        eventsProperty: {
+          required: false,
+          serializedName: 'events',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'EventElementType',
+                type: {
+                  name: 'Composite',
+                  className: 'Event'
+                }
+            }
+          }
+        },
         total: {
           required: false,
           serializedName: 'total',
           type: {
             name: 'Number'
-          }
-        },
-        modelsProperty: {
-          required: false,
-          serializedName: 'models',
-          type: {
-            name: 'Sequence',
-            element: {
-                required: false,
-                serializedName: 'ModelElementType',
-                type: {
-                  name: 'Composite',
-                  className: 'Model'
-                }
-            }
           }
         }
       }
@@ -63,4 +63,4 @@ Models.prototype.mapper = function () {
   };
 };
 
-module.exports = Models;
+module.exports = Events;

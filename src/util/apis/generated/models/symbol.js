@@ -15,7 +15,8 @@ var util = require('util');
  * @member {string} symbolId The unique id for this symbol (uuid)
  * 
  * @member {string} type The type of the symbol for the current symbol upload.
- * Possible values include: 'Apple', 'AndroidNative', 'AndroidJava', 'Windows'
+ * Possible values include: 'Apple', 'AndroidNative', 'AndroidJava',
+ * 'JavaScript', 'Windows'
  * 
  * @member {string} appId The application that this symbol belongs to
  * 
