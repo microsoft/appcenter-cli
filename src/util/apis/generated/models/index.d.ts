@@ -134,20 +134,69 @@ export interface AppPatchRequest {
  * @member {string} displayName The full name of the user. Might for example
  * be first and last name
  * 
- * @member {string} [language] The primary programming language used in the app
- * 
  * @member {string} [name] The name of the app used in URLs
  * 
+ * @member {string} os The OS the app will be running on. Possible values
+ * include: 'iOS', 'Android'
+ * 
  * @member {string} platform The platform of the app. Possible values include:
- * 'iOS', 'Android'
+ * 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
  * 
  */
 export interface AppRequest {
   description?: string;
   displayName: string;
-  language?: string;
   name?: string;
+  os: string;
   platform: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the FeatureNameResponse class.
+ * @constructor
+ * @member {string} name The unique name of the feature
+ * 
+ */
+export interface FeatureNameResponse {
+  name: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the FeatureRequestResponse class.
+ * @constructor
+ * @member {string} name The unique name of the feature
+ * 
+ * @member {string} displayName The full (friendly) name of the feature.
+ * 
+ * @member {number} [state] The state of the feature
+ * 
+ * @member {string} [description] The friendly name of the feature
+ * 
+ */
+export interface FeatureRequestResponse {
+  name: string;
+  displayName: string;
+  state?: number;
+  description?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the FeaturePatchRequest class.
+ * @constructor
+ * @member {string} [displayName] The full (friendly) name of the feature.
+ * 
+ * @member {number} [state] The state of the feature
+ * 
+ * @member {string} [description] The friendly name of the feature
+ * 
+ */
+export interface FeaturePatchRequest {
+  displayName?: string;
+  state?: number;
+  description?: string;
 }
 
 /**
@@ -178,9 +227,11 @@ export interface UserUpdateRequest {
  * 
  * @member {string} name The name of the app used in URLs
  * 
- * @member {string} platform The platform of the app
+ * @member {string} os The OS the app will be running on. Possible values
+ * include: 'iOS', 'Android'
  * 
- * @member {string} [language] The primary programming language used in the app
+ * @member {string} [platform] The platform of the app. Possible values
+ * include: 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
  * 
  * @member {string} [iconUrl] The string representation of the URL pointing to
  * the app's icon
@@ -201,6 +252,9 @@ export interface UserUpdateRequest {
  * @member {string} [owner.type] The owner type. Can either be 'org' or
  * 'user'. Possible values include: 'org', 'user'
  * 
+ * @member {string} [azureSubscriptionId] The unique ID (UUID) of the Azure
+ * subscription associate with the app
+ * 
  */
 export interface AppResponse {
   id: string;
@@ -208,10 +262,11 @@ export interface AppResponse {
   description?: string;
   displayName: string;
   name: string;
-  platform: string;
-  language?: string;
+  os: string;
+  platform?: string;
   iconUrl?: string;
   owner: Owner;
+  azureSubscriptionId?: string;
 }
 
 /**
@@ -241,6 +296,26 @@ export interface Owner {
   displayName: string;
   name: string;
   type: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the FeatureResponse class.
+ * @constructor
+ * @member {string} name The unique name of the feature
+ * 
+ * @member {string} displayName The friendly name of the feature
+ * 
+ * @member {string} [description] The description of the feature
+ * 
+ * @member {number} state The state (unset, enabled, disabled) of the feature
+ * 
+ */
+export interface FeatureResponse {
+  name: string;
+  displayName: string;
+  description?: string;
+  state: number;
 }
 
 /**
@@ -283,6 +358,74 @@ export interface UserProfileResponse {
 export interface InvitationDetailResponse {
   id: string;
   email: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupResponse class.
+ * @constructor
+ * @member {string} id The unique ID of the distribution group
+ * 
+ * @member {string} name The name of the distribution group used in URLs
+ * 
+ * @member {string} [displayName] The display name of the distribution group
+ * 
+ * @member {array} [users] The distribution group users
+ * 
+ * @member {number} [totalUserCount] The count of users in the distribution
+ * group
+ * 
+ */
+export interface DistributionGroupResponse {
+  id: string;
+  name: string;
+  displayName?: string;
+  users?: UserProfileResponse[];
+  totalUserCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupRequest class.
+ * @constructor
+ * @member {string} name The name of the distribution group
+ * 
+ */
+export interface DistributionGroupRequest {
+  name: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupPatchRequest class.
+ * @constructor
+ * @member {string} [name] The name of the distribution group
+ * 
+ */
+export interface DistributionGroupPatchRequest {
+  name?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupUserRequest class.
+ * @constructor
+ * @member {array} userIds The list of unique ID (UUID) of the users
+ * 
+ */
+export interface DistributionGroupUserRequest {
+  userIds: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupUserResponse class.
+ * @constructor
+ * @member {array} userIds The list of unique ID (UUID) of the users
+ * 
+ */
+export interface DistributionGroupUserResponse {
+  userIds: string[];
 }
 
 /**
@@ -943,16 +1086,90 @@ export interface PackageUploadEndResponse {
  * A request containing information pertaining to distributing a package.
  *
  * @member {string} [status] The package state.<br>
- * <b>available</b>: The uploaded package has been distributed.<br>
+ * <b>available</b>: The uploaded package has been distributed. When changing
+ * to available a distribution group name or id must be set.<br>
  * <b>unavailable</b>: The uploaded package is not visible to the user. <br>
  * . Possible values include: 'available', 'unavailable'
+ * 
+ * @member {string} [destributionGroupName] Name of a distribution group. The
+ * package will be distributed to this distribution group. If the
+ * distribution group doesn't exist a 400 is returned. If both, distribution
+ * group name and id, are passed a 400 is returned.
+ * 
+ * @member {string} [destributionGroupId] Id of a distribution group. The
+ * package will be distributed to this distribution group. If the
+ * distribution group doesn't exist a 400 is returned. If both, distribution
+ * group name and id, are passed a 400 is returned.
  * 
  * @member {string} [releaseNotes] Release notes for this package.
  * 
  */
 export interface PackageUpdateRequest {
   status?: string;
+  destributionGroupName?: string;
+  destributionGroupId?: string;
   releaseNotes?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the PackageUpdateResponse class.
+ * @constructor
+ * Package has successfully updated.
+ *
+ * @member {object} [packageDetails]
+ * 
+ * @member {string} [packageDetails.packageId] ID identifying this unique
+ * package.
+ * 
+ * @member {string} [packageDetails.status] The package state.<br>
+ * <b>available</b>: The uploaded package has been distributed.<br>
+ * <b>unavailable</b>: The uploaded package is not visible to the user. <br>
+ * . Possible values include: 'available', 'unavailable'
+ * 
+ * @member {string} [packageDetails.appName] The app's name (extracted from
+ * the uploaded package).
+ * 
+ * @member {string} [packageDetails.version] The package's version.<br>
+ * For iOS: CFBundleVersion from info.plist.
+ * For Android: android:versionCode from AppManifest.xml.
+ * 
+ * @member {string} [packageDetails.shortVersion] The package's short
+ * version.<br>
+ * For iOS: CFBundleShortVersionString from info.plist.
+ * For Android: android:versionName from AppManifest.xml.
+ * 
+ * @member {string} [packageDetails.releaseNotes] The package's release notes.
+ * 
+ * @member {string} [packageDetails.provisioningProfileName] The package's
+ * release notes.
+ * 
+ * @member {number} [packageDetails.size] The package's size in bytes.
+ * 
+ * @member {string} [packageDetails.minOs] The package's minimum required
+ * operating system.
+ * 
+ * @member {string} [packageDetails.fingerprint] MD5 checksum of the package
+ * binary.
+ * 
+ * @member {string} [packageDetails.uploadedAt] UTC time in ISO 8601 format of
+ * the uploaded time.
+ * 
+ * @member {string} [packageDetails.downloadUrl] The URL that hosts the binary
+ * for this package.
+ * 
+ * @member {string} [packageDetails.appIconUrl] A URL to the app's icon.
+ * 
+ * @member {string} [packageDetails.installUrl] The href required to install a
+ * package on a mobile device. On iOS devices will be prefixed with
+ * `itms-services://?action=download-manifest&url=`
+ * 
+ * @member {array} [packageDetails.distributionGroups] a list of distribution
+ * groups that are associated with this package.
+ * 
+ */
+export interface PackageUpdateResponse {
+  packageDetails?: PackageDetails;
 }
 
 /**
@@ -1001,6 +1218,9 @@ export interface PackageUpdateRequest {
  * mobile device. On iOS devices will be prefixed with
  * `itms-services://?action=download-manifest&url=`
  * 
+ * @member {array} [distributionGroups] a list of distribution groups that are
+ * associated with this package.
+ * 
  */
 export interface PackageDetails {
   packageId?: string;
@@ -1017,6 +1237,1253 @@ export interface PackageDetails {
   downloadUrl?: string;
   appIconUrl?: string;
   installUrl?: string;
+  distributionGroups?: DistributionGroup[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroup class.
+ * @constructor
+ * @member {string} [id] ID identifying a unique distribution group.
+ * 
+ * @member {string} [name] A name identifying a unique distribution group.
+ * 
+ * @member {boolean} [isLatest] Is the containing package the latest one in
+ * this distribution group.
+ * 
+ */
+export interface DistributionGroup {
+  id?: string;
+  name?: string;
+  isLatest?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the BasicPackageDetails class.
+ * @constructor
+ * Basic information on a pacakge
+ *
+ * @member {string} [packageId] ID identifying this unique package.
+ * 
+ * @member {string} [version] The package's version.<br>
+ * For iOS: CFBundleVersion from info.plist.
+ * For Android: android:versionCode from AppManifest.xml.
+ * 
+ * @member {string} [shortVersion] The package's short version.<br>
+ * For iOS: CFBundleShortVersionString from info.plist.
+ * For Android: android:versionName from AppManifest.xml.
+ * 
+ * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
+ * time.
+ * 
+ * @member {array} [distributionGroups] a list of distribution groups that are
+ * associated with this package.
+ * 
+ */
+export interface BasicPackageDetails {
+  packageId?: string;
+  version?: string;
+  shortVersion?: string;
+  uploadedAt?: string;
+  distributionGroups?: DistributionGroup[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Symbol class.
+ * @constructor
+ * @member {string} symbolId The unique id for this symbol (uuid)
+ * 
+ * @member {string} type The type of the symbol for the current symbol upload.
+ * Possible values include: 'Apple', 'AndroidNative', 'AndroidJava',
+ * 'JavaScript', 'Windows'
+ * 
+ * @member {string} appId The application that this symbol belongs to
+ * 
+ * @member {string} platform The platform that this symbol is for
+ * 
+ * @member {string} url The URL at which the client may download the symbol
+ * file
+ * 
+ * @member {string} origin The origin of the symbol file. Possible values
+ * include: 'System', 'User'
+ * 
+ * @member {array} alternateSymbolIds The other symbols in the same file
+ * 
+ */
+export interface Symbol {
+  symbolId: string;
+  type: string;
+  appId: string;
+  platform: string;
+  url: string;
+  origin: string;
+  alternateSymbolIds: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SymbolUpload class.
+ * @constructor
+ * A single symbol upload entity
+ *
+ * @member {string} symbolUploadId The id for the current symbol upload
+ * 
+ * @member {string} appId The application that this symbol upload belongs to
+ * 
+ * @member {string} status The current status for the symbol upload. Possible
+ * values include: 'created', 'committed', 'aborted', 'processing',
+ * 'indexed', 'failed'
+ * 
+ * @member {string} symbolType The type of the symbol for the current symbol
+ * upload. Possible values include: 'Apple', 'AndroidNative', 'AndroidJava',
+ * 'Windows'
+ * 
+ * @member {array} [symbols] The symbol ids
+ * 
+ * @member {string} [origin] The origin of the symbol upload. Possible values
+ * include: 'User', 'System'
+ * 
+ */
+export interface SymbolUpload {
+  symbolUploadId: string;
+  appId: string;
+  status: string;
+  symbolType: string;
+  symbols?: Symbol[];
+  origin?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SymbolUploadBeginRequest class.
+ * @constructor
+ * A request containing information pertaining to starting a symbol upload
+ * process
+ *
+ * @member {string} symbolType The type of the symbol for the current symbol
+ * upload. Possible values include: 'Apple', 'AndroidNative', 'AndroidJava',
+ * 'Windows'
+ * 
+ * @member {string} [clientCallback] The callback URL that the client can
+ * optionally provide to get status updates for the current symbol upload
+ * 
+ */
+export interface SymbolUploadBeginRequest {
+  symbolType: string;
+  clientCallback?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SymbolUploadBeginResponse class.
+ * @constructor
+ * A response containing information pertaining to starting a symbol upload
+ * process
+ *
+ * @member {string} symbolUploadId The id for the current upload
+ * 
+ * @member {string} uploadUrl The URL where the client needs to upload the
+ * symbol blob to
+ * 
+ * @member {date} expirationDate Describes how long the upload_url is valid
+ * 
+ */
+export interface SymbolUploadBeginResponse {
+  symbolUploadId: string;
+  uploadUrl: string;
+  expirationDate: Date;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SymbolUploadEndRequest class.
+ * @constructor
+ * A request containing information pertaining to completing a symbol upload
+ * process
+ *
+ * @member {string} status The desired operation for the symbol upload.
+ * Possible values include: 'committed', 'aborted'
+ * 
+ */
+export interface SymbolUploadEndRequest {
+  status: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppVersion class.
+ * @constructor
+ * @member {string} appVersionId
+ * 
+ * @member {string} appId
+ * 
+ * @member {string} displayName
+ * 
+ * @member {string} appVersionProperty
+ * 
+ * @member {string} [buildNumber]
+ * 
+ */
+export interface AppVersion {
+  appVersionId: string;
+  appId: string;
+  displayName: string;
+  appVersionProperty: string;
+  buildNumber?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Stacktrace class.
+ * @constructor
+ * a stacktrace in a processed and prettyfied way
+ *
+ * @member {string} [title]
+ * 
+ * @member {string} [reason]
+ * 
+ * @member {array} [threads]
+ * 
+ * @member {object} [exception]
+ * 
+ * @member {string} [exception.reason] Reason of the exception
+ * 
+ * @member {string} [exception.type] Type of the exception
+ * (NSSomethingException, NullPointerException)
+ * 
+ * @member {array} [exception.frames] frames of the excetpion
+ * 
+ * @member {boolean} [exception.relevant] relevant exception (crashed)
+ * 
+ * @member {array} [exception.innerExceptions]
+ * 
+ */
+export interface Stacktrace {
+  title?: string;
+  reason?: string;
+  threads?: Thread[];
+  exception?: Exception;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Thread class.
+ * @constructor
+ * a thread representation
+ *
+ * @member {string} title name of the thread
+ * 
+ * @member {array} frames frames of that thread
+ * 
+ * @member {object} [exception] potential additional exception happened in
+ * that thread (Last Exception Backtrace)
+ * 
+ * @member {string} [exception.reason] Reason of the exception
+ * 
+ * @member {string} [exception.type] Type of the exception
+ * (NSSomethingException, NullPointerException)
+ * 
+ * @member {array} [exception.frames] frames of the excetpion
+ * 
+ * @member {boolean} [exception.relevant] relevant exception (crashed)
+ * 
+ * @member {array} [exception.innerExceptions]
+ * 
+ * @member {boolean} [relevant] Shows if a thread is relevant or not. Is false
+ * if all frames are non relevant, otherwise true
+ * 
+ */
+export interface Thread {
+  title: string;
+  frames: StackFrame[];
+  exception?: Exception;
+  relevant?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the StackFrame class.
+ * @constructor
+ * a single frame of a stack trace
+ *
+ * @member {string} [address] address of the frame
+ * 
+ * @member {string} [className] name of the class
+ * 
+ * @member {string} [method] name of the method
+ * 
+ * @member {boolean} [classMethod] is a class method
+ * 
+ * @member {string} [file] name of the file
+ * 
+ * @member {number} [line] line number
+ * 
+ * @member {boolean} appCode this line isn't from any framework
+ * 
+ * @member {string} [frameworkName] Name of the framework
+ * 
+ * @member {string} codeRaw Raw frame string
+ * 
+ * @member {string} codeFormatted Formatted frame string
+ * 
+ * @member {string} [language] programming language of the frame
+ * 
+ * @member {boolean} [relevant] frame should be shown always
+ * 
+ * @member {string} [methodParams] parameters of the frames method
+ * 
+ */
+export interface StackFrame {
+  address?: string;
+  className?: string;
+  method?: string;
+  classMethod?: boolean;
+  file?: string;
+  line?: number;
+  appCode: boolean;
+  frameworkName?: string;
+  codeRaw: string;
+  codeFormatted: string;
+  language?: string;
+  relevant?: boolean;
+  methodParams?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Exception class.
+ * @constructor
+ * a exception
+ *
+ * @member {string} [reason] Reason of the exception
+ * 
+ * @member {string} [type] Type of the exception (NSSomethingException,
+ * NullPointerException)
+ * 
+ * @member {array} frames frames of the excetpion
+ * 
+ * @member {boolean} [relevant] relevant exception (crashed)
+ * 
+ * @member {array} [innerExceptions]
+ * 
+ */
+export interface Exception {
+  reason?: string;
+  type?: string;
+  frames: StackFrame[];
+  relevant?: boolean;
+  innerExceptions?: Exception[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReasonStackFrame class.
+ * @constructor
+ * frame belonging to the reason of the crash
+ *
+ * @member {string} [className] name of the class
+ * 
+ * @member {string} [method] name of the method
+ * 
+ * @member {boolean} [classMethod] is a class method
+ * 
+ * @member {string} [file] name of the file
+ * 
+ * @member {number} [line] line number
+ * 
+ * @member {boolean} [appCode] this line isn't from any framework
+ * 
+ * @member {string} [frameworkName] Name of the framework
+ * 
+ * @member {string} [codeFormatted] Formatted frame string
+ * 
+ * @member {string} [language] programming language of the frame
+ * 
+ * @member {string} [methodParams] parameters of the frames method
+ * 
+ */
+export interface ReasonStackFrame {
+  className?: string;
+  method?: string;
+  classMethod?: boolean;
+  file?: string;
+  line?: number;
+  appCode?: boolean;
+  frameworkName?: string;
+  codeFormatted?: string;
+  language?: string;
+  methodParams?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroup class.
+ * @constructor
+ * @member {string} crashGroupId
+ * 
+ * @member {string} displayId
+ * 
+ * @member {string} appVersion
+ * 
+ * @member {string} status Possible values include: 'open', 'closed', 'ignored'
+ * 
+ * @member {number} count
+ * 
+ * @member {number} [impactedUsers]
+ * 
+ * @member {date} firstOccurrence
+ * 
+ * @member {date} lastOccurrence
+ * 
+ * @member {string} [exception]
+ * 
+ * @member {string} errorReason
+ * 
+ * @member {object} [reasonFrame]
+ * 
+ * @member {string} [reasonFrame.className] name of the class
+ * 
+ * @member {string} [reasonFrame.method] name of the method
+ * 
+ * @member {boolean} [reasonFrame.classMethod] is a class method
+ * 
+ * @member {string} [reasonFrame.file] name of the file
+ * 
+ * @member {number} [reasonFrame.line] line number
+ * 
+ * @member {boolean} [reasonFrame.appCode] this line isn't from any framework
+ * 
+ * @member {string} [reasonFrame.frameworkName] Name of the framework
+ * 
+ * @member {string} [reasonFrame.codeFormatted] Formatted frame string
+ * 
+ * @member {string} [reasonFrame.language] programming language of the frame
+ * 
+ * @member {string} [reasonFrame.methodParams] parameters of the frames method
+ * 
+ * @member {boolean} fatal Crash or handled exception
+ * 
+ */
+export interface CrashGroup {
+  crashGroupId: string;
+  displayId: string;
+  appVersion: string;
+  status: string;
+  count: number;
+  impactedUsers?: number;
+  firstOccurrence: Date;
+  lastOccurrence: Date;
+  exception?: string;
+  errorReason: string;
+  reasonFrame?: ReasonStackFrame;
+  fatal: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroupChange class.
+ * @constructor
+ * @member {object} [status]
+ * 
+ */
+export interface CrashGroupChange {
+  status?: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Crash class.
+ * @constructor
+ * @member {string} crashId
+ * 
+ * @member {string} [displayId]
+ * 
+ * @member {date} timestamp
+ * 
+ * @member {string} version
+ * 
+ * @member {string} build
+ * 
+ * @member {string} device
+ * 
+ * @member {string} osVersion
+ * 
+ * @member {string} userName
+ * 
+ * @member {string} [userEmail]
+ * 
+ */
+export interface Crash {
+  crashId: string;
+  displayId?: string;
+  timestamp: Date;
+  version: string;
+  build: string;
+  device: string;
+  osVersion: string;
+  userName: string;
+  userEmail?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Segmentation class.
+ * @constructor
+ * @member {array} [data]
+ * 
+ */
+export interface Segmentation {
+  data?: SegmentationDataItem[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SegmentationDataItem class.
+ * @constructor
+ * @member {string} [name]
+ * 
+ * @member {number} [count]
+ * 
+ */
+export interface SegmentationDataItem {
+  name?: string;
+  count?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Histogram class.
+ * @constructor
+ * @member {number} [aggregate]
+ * 
+ * @member {array} [data]
+ * 
+ */
+export interface Histogram {
+  aggregate?: number;
+  data?: HistogramDataItem[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the HistogramDataItem class.
+ * @constructor
+ * @member {date} [date]
+ * 
+ * @member {number} [count]
+ * 
+ */
+export interface HistogramDataItem {
+  date?: Date;
+  count?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashCounts class.
+ * @constructor
+ * @member {number} [count] total crash count
+ * 
+ * @member {array} [crashes] the total crash count for day
+ * 
+ */
+export interface CrashCounts {
+  count?: number;
+  crashes?: DateTimeCounts[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DateTimeCounts class.
+ * @constructor
+ * @member {string} [datetime] the ISO 8601 datetime
+ * 
+ * @member {number} [count] count of the object
+ * 
+ */
+export interface DateTimeCounts {
+  datetime?: string;
+  count?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ActiveDeviceCounts class.
+ * @constructor
+ * @member {array} [daily] the active device count for each interval
+ * 
+ * @member {array} [weekly] the active device count for each interval with a
+ * week's retention
+ * 
+ * @member {array} [monthly] the active device count for each interval with a
+ * month's retention
+ * 
+ */
+export interface ActiveDeviceCounts {
+  daily?: DateTimeCounts[];
+  weekly?: DateTimeCounts[];
+  monthly?: DateTimeCounts[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Places class.
+ * @constructor
+ * Places and count during the time range in descending order
+ *
+ * @member {number} [total]
+ * 
+ * @member {array} [placesProperty]
+ * 
+ */
+export interface Places {
+  total?: number;
+  placesProperty?: Place[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Place class.
+ * @constructor
+ * The place code and the count
+ *
+ * @member {string} [code] the place code
+ * 
+ * @member {number} [count] the count of the this place
+ * 
+ * @member {number} [previousCount] the count of previous time range of the
+ * place
+ * 
+ */
+export interface Place {
+  code?: string;
+  count?: number;
+  previousCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorModel class.
+ * @constructor
+ * Error
+ *
+ * @member {object} [error]
+ * 
+ * @member {number} [error.code] The status code return by the API. It can be
+ * 400 or 403 or 500.
+ * 
+ * @member {string} [error.message] The reason for the request failed
+ * 
+ */
+export interface ErrorModel {
+  error?: ErrorError;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorError class.
+ * @constructor
+ * @member {number} [code] The status code return by the API. It can be 400 or
+ * 403 or 500.
+ * 
+ * @member {string} [message] The reason for the request failed
+ * 
+ */
+export interface ErrorError {
+  code?: number;
+  message?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SessionDurationsDistribution class.
+ * @constructor
+ * @member {array} [distribution] the count of sessions in these buckets
+ * 
+ * @member {string} [previousAverageDuration] the previous average session
+ * duration for previous time range
+ * 
+ * @member {string} [averageDuration] the average session duration for current
+ * time range
+ * 
+ */
+export interface SessionDurationsDistribution {
+  distribution?: SessionDurationsDistributionDistributionItem[];
+  previousAverageDuration?: string;
+  averageDuration?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SessionDurationsDistributionDistributionItem class.
+ * @constructor
+ * @member {string} [bucket] the bucket name
+ * 
+ * @member {number} [count] the count of sessions in current bucket
+ * 
+ */
+export interface SessionDurationsDistributionDistributionItem {
+  bucket?: string;
+  count?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Versions class.
+ * @constructor
+ * @member {array} [versionsProperty] list of version count
+ * 
+ * @member {number} [total] the total count of versions
+ * 
+ */
+export interface Versions {
+  versionsProperty?: Version[];
+  total?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Version class.
+ * @constructor
+ * @member {string} [versionProperty] version
+ * 
+ * @member {number} [count] version count
+ * 
+ * @member {number} [previousCount] the count of previous time range of the
+ * version
+ * 
+ */
+export interface Version {
+  versionProperty?: string;
+  count?: number;
+  previousCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SessionCounts class.
+ * @constructor
+ * @member {number} [totalCount] total session count
+ * 
+ * @member {number} [previousTotalCount] previous total session count
+ * 
+ * @member {array} [sessions] the total session count for each interval
+ * 
+ */
+export interface SessionCounts {
+  totalCount?: number;
+  previousTotalCount?: number;
+  sessions?: DateTimeCounts[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SessionsPerDevice class.
+ * @constructor
+ * @member {number} [averageSessionsPerUser] average seesion per user
+ * 
+ * @member {number} [previousAverageSessionsPerUser] previous average session
+ * per user
+ * 
+ * @member {number} [totalCount] total session per device count
+ * 
+ * @member {number} [previousTotalCount] previous total count
+ * 
+ * @member {array} [sessionsPerUser] the session count for each interval per
+ * device
+ * 
+ */
+export interface SessionsPerDevice {
+  averageSessionsPerUser?: number;
+  previousAverageSessionsPerUser?: number;
+  totalCount?: number;
+  previousTotalCount?: number;
+  sessionsPerUser?: SessionsPerDeviceSessionsPerUserItem[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SessionsPerDeviceSessionsPerUserItem class.
+ * @constructor
+ * @member {string} [datetime] the ISO 8601 datetime
+ * 
+ * @member {number} [count] count
+ * 
+ */
+export interface SessionsPerDeviceSessionsPerUserItem {
+  datetime?: string;
+  count?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AnalyticsModels class.
+ * @constructor
+ * @member {number} [total]
+ * 
+ * @member {array} [models]
+ * 
+ */
+export interface AnalyticsModels {
+  total?: number;
+  models?: Model[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Model class.
+ * @constructor
+ * @member {string} [modelName] model's name
+ * 
+ * @member {number} [count] count current of model
+ * 
+ * @member {number} [previousCount] count of previous model
+ * 
+ */
+export interface Model {
+  modelName?: string;
+  count?: number;
+  previousCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Languages class.
+ * @constructor
+ * @member {number} [total]
+ * 
+ * @member {array} [languagesProperty]
+ * 
+ */
+export interface Languages {
+  total?: number;
+  languagesProperty?: Language[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Language class.
+ * @constructor
+ * @member {string} [languageName] language's name
+ * 
+ * @member {number} [count] count current of language
+ * 
+ * @member {number} [previousCount] count of previous lanugage
+ * 
+ */
+export interface Language {
+  languageName?: string;
+  count?: number;
+  previousCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the OSes class.
+ * @constructor
+ * @member {number} [total]
+ * 
+ * @member {array} [osesProperty]
+ * 
+ */
+export interface OSes {
+  total?: number;
+  osesProperty?: OS[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the OS class.
+ * @constructor
+ * @member {string} [osName] OS name
+ * 
+ * @member {number} [count] count current of OS
+ * 
+ * @member {number} [previousCount] count of previous OS
+ * 
+ */
+export interface OS {
+  osName?: string;
+  count?: number;
+  previousCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AvailableVersions class.
+ * @constructor
+ * @member {array} [versions] List of available versions.
+ * 
+ * @member {number} [totalCount] The full number of versions accross all pages.
+ * 
+ */
+export interface AvailableVersions {
+  versions?: string[];
+  totalCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashFreeDevicePercentages class.
+ * @constructor
+ * @member {number} [averagePercentage] Average percentage
+ * 
+ * @member {array} [dailyPercentages] The crash-free percentage per day.
+ * 
+ */
+export interface CrashFreeDevicePercentages {
+  averagePercentage?: number;
+  dailyPercentages?: DateTimePercentages[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DateTimePercentages class.
+ * @constructor
+ * @member {string} [datetime] the ISO 8601 datetime
+ * 
+ * @member {number} [percentage] percentage of the object
+ * 
+ */
+export interface DateTimePercentages {
+  datetime?: string;
+  percentage?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashesOverallItem class.
+ * @constructor
+ * @member {string} [crashGroupId]
+ * 
+ * @member {string} [appVersion]
+ * 
+ * @member {object} [overall]
+ * 
+ * @member {number} [overall.crashCount]
+ * 
+ * @member {number} [overall.deviceCount]
+ * 
+ */
+export interface CrashesOverallItem {
+  crashGroupId?: string;
+  appVersion?: string;
+  overall?: CrashOverall;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashOverall class.
+ * @constructor
+ * @member {number} [crashCount]
+ * 
+ * @member {number} [deviceCount]
+ * 
+ */
+export interface CrashOverall {
+  crashCount?: number;
+  deviceCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroupModels class.
+ * @constructor
+ * @member {number} [crashCount]
+ * 
+ * @member {array} [models]
+ * 
+ */
+export interface CrashGroupModels {
+  crashCount?: number;
+  models?: CrashGroupModel[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroupModel class.
+ * @constructor
+ * @member {string} [modelName] model's name
+ * 
+ * @member {number} [crashCount] count of model
+ * 
+ */
+export interface CrashGroupModel {
+  modelName?: string;
+  crashCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroupOperatingSystems class.
+ * @constructor
+ * @member {number} [crashCount]
+ * 
+ * @member {array} [operatingSystems]
+ * 
+ */
+export interface CrashGroupOperatingSystems {
+  crashCount?: number;
+  operatingSystems?: CrashGroupOperatingSystem[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroupOperatingSystem class.
+ * @constructor
+ * @member {string} [operatingSystemName] OS name
+ * 
+ * @member {number} [crashCount] count of OS
+ * 
+ */
+export interface CrashGroupOperatingSystem {
+  operatingSystemName?: string;
+  crashCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroupContainer class.
+ * @constructor
+ * @member {array} crashGroups
+ * 
+ */
+export interface CrashGroupContainer {
+  crashGroups: CrashGroupAndVersion[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroupAndVersion class.
+ * @constructor
+ * @member {string} [crashGroupId]
+ * 
+ * @member {string} [appVersion]
+ * 
+ */
+export interface CrashGroupAndVersion {
+  crashGroupId?: string;
+  appVersion?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Events class.
+ * @constructor
+ * @member {array} [eventsProperty]
+ * 
+ * @member {number} [total] the total count of events
+ * 
+ */
+export interface Events {
+  eventsProperty?: Event[];
+  total?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Event class.
+ * @constructor
+ * @member {string} [id]
+ * 
+ * @member {string} [name]
+ * 
+ * @member {number} [deviceCount]
+ * 
+ * @member {number} [previousDeviceCount] the device count of previous time
+ * range of the event
+ * 
+ * @member {number} [totalDevices]
+ * 
+ * @member {number} [count]
+ * 
+ * @member {number} [previousCount] the event count of previous time range of
+ * the event
+ * 
+ * @member {number} [countPerDevice]
+ * 
+ * @member {number} [countPerSession]
+ * 
+ */
+export interface Event {
+  id?: string;
+  name?: string;
+  deviceCount?: number;
+  previousDeviceCount?: number;
+  totalDevices?: number;
+  count?: number;
+  previousCount?: number;
+  countPerDevice?: number;
+  countPerSession?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the LogContainer class.
+ * @constructor
+ * @member {boolean} [exceededMaxLimit] indicates if the number of available
+ * logs are more than the max allowed return limit.
+ * 
+ * @member {array} logs the list of logs
+ * 
+ */
+export interface LogContainer {
+  exceededMaxLimit?: boolean;
+  logs: Log[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Log class.
+ * @constructor
+ * @member {string} type Log type.
+ * 
+ * @member {date} timestamp Log creation timestamp.
+ * 
+ * @member {uuid} installId Install ID.
+ * 
+ * @member {object} device
+ * 
+ * @member {string} [device.sdkName] Name of the SDK. Consists of the name of
+ * the SDK and the platform, e.g. "avalanchesdk.ios", "hockeysdk.android".
+ * 
+ * @member {string} [device.sdkVersion] Version of the SDK in semver format,
+ * e.g. "1.2.0" or "0.12.3-alpha.1".
+ * 
+ * @member {string} [device.wrapperSdkVersion] Version of the wrapper SDK in
+ * semver format. When the SDK is embedding another base SDK (for example
+ * Xamarin.Android wraps Android), the Xamarin specific version is populated
+ * into this field while sdkVersion refers to the original Android SDK.
+ * 
+ * @member {string} [device.wrapperSdkName] Name of the wrapper SDK. Consists
+ * of the name of the SDK and the wrapper platform, e.g.
+ * "avalanchesdk.xamarin", "hockeysdk.cordova".
+ * 
+ * @member {string} [device.model] Device model (example: iPad2,3).
+ * 
+ * @member {string} [device.oemName] Device manufacturer (example: HTC).
+ * 
+ * @member {string} [device.osName] OS name (example: iOS). The following OS
+ * names are standardized (non-exclusive): Android, iOS, macOS, tvOS, Windows.
+ * 
+ * @member {string} [device.osVersion] OS version (example: 9.3.0).
+ * 
+ * @member {string} [device.osBuild] OS build code (example: LMY47X).
+ * 
+ * @member {number} [device.osApiLevel] API level when applicable like in
+ * Android (example: 15).
+ * 
+ * @member {string} [device.locale] Language code (example: en_US).
+ * 
+ * @member {number} [device.timeZoneOffset] The offset in minutes from UTC for
+ * the device time zone, including daylight savings time.
+ * 
+ * @member {string} [device.screenSize] Screen size of the device in pixels
+ * (example: 640x480).
+ * 
+ * @member {string} [device.appVersion] Application version name, e.g. 1.1.0
+ * 
+ * @member {string} [device.carrierName] Carrier name (for mobile devices).
+ * 
+ * @member {string} [device.carrierCode] Carrier country code (for mobile
+ * devices).
+ * 
+ * @member {string} [device.carrierCountry] Carrier country.
+ * 
+ * @member {string} [device.appBuild] The app's build number, e.g. 42.
+ * 
+ * @member {string} [device.appNamespace] The bundle identifier, package
+ * identifier, or namespace, depending on what the individual plattforms use,
+ * .e.g com.microsoft.example.
+ * 
+ */
+export interface Log {
+  type: string;
+  timestamp: Date;
+  installId: string;
+  device: Device;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Device class.
+ * @constructor
+ * Device characteristics.
+ *
+ * @member {string} sdkName Name of the SDK. Consists of the name of the SDK
+ * and the platform, e.g. "avalanchesdk.ios", "hockeysdk.android".
+ * 
+ * @member {string} sdkVersion Version of the SDK in semver format, e.g.
+ * "1.2.0" or "0.12.3-alpha.1".
+ * 
+ * @member {string} [wrapperSdkVersion] Version of the wrapper SDK in semver
+ * format. When the SDK is embedding another base SDK (for example
+ * Xamarin.Android wraps Android), the Xamarin specific version is populated
+ * into this field while sdkVersion refers to the original Android SDK.
+ * 
+ * @member {string} [wrapperSdkName] Name of the wrapper SDK. Consists of the
+ * name of the SDK and the wrapper platform, e.g. "avalanchesdk.xamarin",
+ * "hockeysdk.cordova".
+ * 
+ * @member {string} model Device model (example: iPad2,3).
+ * 
+ * @member {string} oemName Device manufacturer (example: HTC).
+ * 
+ * @member {string} osName OS name (example: iOS). The following OS names are
+ * standardized (non-exclusive): Android, iOS, macOS, tvOS, Windows.
+ * 
+ * @member {string} osVersion OS version (example: 9.3.0).
+ * 
+ * @member {string} [osBuild] OS build code (example: LMY47X).
+ * 
+ * @member {number} [osApiLevel] API level when applicable like in Android
+ * (example: 15).
+ * 
+ * @member {string} locale Language code (example: en_US).
+ * 
+ * @member {number} timeZoneOffset The offset in minutes from UTC for the
+ * device time zone, including daylight savings time.
+ * 
+ * @member {string} screenSize Screen size of the device in pixels (example:
+ * 640x480).
+ * 
+ * @member {string} appVersion Application version name, e.g. 1.1.0
+ * 
+ * @member {string} [carrierName] Carrier name (for mobile devices).
+ * 
+ * @member {string} [carrierCode] Carrier country code (for mobile devices).
+ * 
+ * @member {string} [carrierCountry] Carrier country.
+ * 
+ * @member {string} appBuild The app's build number, e.g. 42.
+ * 
+ * @member {string} [appNamespace] The bundle identifier, package identifier,
+ * or namespace, depending on what the individual plattforms use,  .e.g
+ * com.microsoft.example.
+ * 
+ */
+export interface Device {
+  sdkName: string;
+  sdkVersion: string;
+  wrapperSdkVersion?: string;
+  wrapperSdkName?: string;
+  model: string;
+  oemName: string;
+  osName: string;
+  osVersion: string;
+  osBuild?: string;
+  osApiLevel?: number;
+  locale: string;
+  timeZoneOffset: number;
+  screenSize: string;
+  appVersion: string;
+  carrierName?: string;
+  carrierCode?: string;
+  carrierCountry?: string;
+  appBuild: string;
+  appNamespace?: string;
 }
 
 /**
@@ -1039,9 +2506,21 @@ export interface PackageDetails {
  * 
  * @member {string} [model.model]
  * 
+ * @member {string} [model.platform]
+ * 
+ * @member {string} [model.dimensions]
+ * 
+ * @member {string} [model.resolution]
+ * 
  * @member {string} [model.releaseDate]
  * 
- * @member {string} [model.platform]
+ * @member {string} [model.formFactor]
+ * 
+ * @member {string} [model.screenSize]
+ * 
+ * @member {string} [model.cpu]
+ * 
+ * @member {string} [model.memory]
  * 
  * @member {string} [os]
  * 
@@ -1071,17 +2550,35 @@ export interface DeviceConfiguration {
  * 
  * @member {string} [model]
  * 
+ * @member {string} [platform]
+ * 
+ * @member {string} [dimensions]
+ * 
+ * @member {string} [resolution]
+ * 
  * @member {string} [releaseDate]
  * 
- * @member {string} [platform]
+ * @member {string} [formFactor]
+ * 
+ * @member {string} [screenSize]
+ * 
+ * @member {string} [cpu]
+ * 
+ * @member {string} [memory]
  * 
  */
 export interface DeviceModel {
   name?: string;
   manufacturer?: string;
   model?: string;
-  releaseDate?: string;
   platform?: string;
+  dimensions?: string;
+  resolution?: string;
+  releaseDate?: string;
+  formFactor?: string;
+  screenSize?: string;
+  cpu?: string;
+  memory?: string;
 }
 
 /**
@@ -1178,31 +2675,9 @@ export interface TestRunStatistics {
 
 /**
  * @class
- * Initializes a new instance of the TestRunState class.
- * @constructor
- * @summary TestRunState
- *
- * Current status of a test run
- *
- * @member {array} [message] Multi-line message that describes the status
- * 
- * @member {number} [waitTime] Time (in seconds) that the client should wait
- * for before checking the status again
- * 
- * @member {number} [exitCode] Exit code for the client
- * 
- */
-export interface TestRunState {
-  message?: string[];
-  waitTime?: number;
-  exitCode?: number;
-}
-
-/**
- * @class
  * Initializes a new instance of the TestSeries class.
  * @constructor
- * @summary TestSeries
+ * @summary Test Series
  *
  * Summary of a single test series
  *
@@ -1227,7 +2702,7 @@ export interface TestSeries {
  * @class
  * Initializes a new instance of the TestRunSummary class.
  * @constructor
- * @summary TestRunSummary
+ * @summary Test Run Summary
  *
  * Most important information about a test run.
  *
@@ -1248,6 +2723,300 @@ export interface TestRunSummary {
   failed?: number;
   passed?: number;
   completed?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DeviceSelection class.
+ * @constructor
+ * @summary Device Selection
+ *
+ * Short ID for a list of device IDs
+ *
+ * @member {string} shortId Identifier of the device selection
+ * 
+ */
+export interface DeviceSelection {
+  shortId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Subscription class.
+ * @constructor
+ * @summary Subscription
+ *
+ * Subscription information
+ *
+ * @member {string} [startsAt] The date the subscription began
+ * 
+ * @member {string} [endsAt] The date the subscription will end or ended
+ * 
+ * @member {number} [daysLeft] The number of days left in the subscription
+ * 
+ * @member {object} [tier]
+ * 
+ * @member {string} [tier.name] The name of the tier
+ * 
+ * @member {boolean} [active] Is the subscription currently active?
+ * 
+ * @member {uuid} [id] Id of the subscription
+ * 
+ */
+export interface Subscription {
+  startsAt?: string;
+  endsAt?: string;
+  daysLeft?: number;
+  tier?: Tier;
+  active?: boolean;
+  id?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Tier class.
+ * @constructor
+ * @summary Subscription Tier
+ *
+ * @member {string} [name] The name of the tier
+ * 
+ */
+export interface Tier {
+  name?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestReport class.
+ * @constructor
+ * @member {string} appUploadId
+ * 
+ * @member {string} date
+ * 
+ * @member {string} testType
+ * 
+ * @member {string} platform
+ * 
+ * @member {object} stats
+ * 
+ * @member {number} [stats.os]
+ * 
+ * @member {number} [stats.devices]
+ * 
+ * @member {number} [stats.filesize]
+ * 
+ * @member {number} [stats.totalDeviceMinutes]
+ * 
+ * @member {number} [stats.devicesNotRunned]
+ * 
+ * @member {number} [stats.failed]
+ * 
+ * @member {number} [stats.skipped]
+ * 
+ * @member {number} [stats.passed]
+ * 
+ * @member {number} [stats.total]
+ * 
+ * @member {number} [stats.devicesFinished]
+ * 
+ * @member {number} [stats.devicesFailed]
+ * 
+ * @member {number} [stats.devicesSkipped]
+ * 
+ * @member {number} [stats.stepCount]
+ * 
+ * @member {string} id
+ * 
+ * @member {number} schemaVersion
+ * 
+ * @member {number} revision
+ * 
+ * @member {array} features
+ * 
+ * @member {array} finishedDeviceSnapshots
+ * 
+ * @member {array} deviceLogs
+ * 
+ * @member {string} dateFinished
+ * 
+ */
+export interface TestReport {
+  appUploadId: string;
+  date: string;
+  testType: string;
+  platform: string;
+  stats: TestReportStats;
+  id: string;
+  schemaVersion: number;
+  revision: number;
+  features: TestReportFeaturesItem[];
+  finishedDeviceSnapshots: string[];
+  deviceLogs: TestReportDeviceLogsItem[];
+  dateFinished: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestReportStats class.
+ * @constructor
+ * @member {number} [os]
+ * 
+ * @member {number} [devices]
+ * 
+ * @member {number} [filesize]
+ * 
+ * @member {number} [totalDeviceMinutes]
+ * 
+ * @member {number} [devicesNotRunned]
+ * 
+ * @member {number} [failed]
+ * 
+ * @member {number} [skipped]
+ * 
+ * @member {number} [passed]
+ * 
+ * @member {number} [total]
+ * 
+ * @member {number} [devicesFinished]
+ * 
+ * @member {number} [devicesFailed]
+ * 
+ * @member {number} [devicesSkipped]
+ * 
+ * @member {number} [stepCount]
+ * 
+ */
+export interface TestReportStats {
+  os?: number;
+  devices?: number;
+  filesize?: number;
+  totalDeviceMinutes?: number;
+  devicesNotRunned?: number;
+  failed?: number;
+  skipped?: number;
+  passed?: number;
+  total?: number;
+  devicesFinished?: number;
+  devicesFailed?: number;
+  devicesSkipped?: number;
+  stepCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestReportFeaturesItem class.
+ * @constructor
+ * @member {string} [name]
+ * 
+ * @member {array} [tests]
+ * 
+ * @member {number} [failed]
+ * 
+ * @member {number} [skipped]
+ * 
+ */
+export interface TestReportFeaturesItem {
+  name?: string;
+  tests?: TestReportFeaturesItemTestsItem[];
+  failed?: number;
+  skipped?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestReportFeaturesItemTestsItem class.
+ * @constructor
+ * @member {string} [testName]
+ * 
+ * @member {array} [runs]
+ * 
+ */
+export interface TestReportFeaturesItemTestsItem {
+  testName?: string;
+  runs?: TestReportFeaturesItemTestsItemRunsItem[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestReportFeaturesItemTestsItemRunsItem class.
+ * @constructor
+ * @member {number} [number]
+ * 
+ * @member {array} [steps]
+ * 
+ * @member {number} [failed]
+ * 
+ * @member {number} [skipped]
+ * 
+ */
+export interface TestReportFeaturesItemTestsItemRunsItem {
+  number?: number;
+  steps?: TestReportFeaturesItemTestsItemRunsItemStepsItem[];
+  failed?: number;
+  skipped?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestReportFeaturesItemTestsItemRunsItemStepsItem class.
+ * @constructor
+ * @member {string} [stepName]
+ * 
+ * @member {string} [id]
+ * 
+ * @member {array} [stepExecutions]
+ * 
+ * @member {number} [failed]
+ * 
+ * @member {number} [skipped]
+ * 
+ * @member {string} [stepReportUrl]
+ * 
+ */
+export interface TestReportFeaturesItemTestsItemRunsItemStepsItem {
+  stepName?: string;
+  id?: string;
+  stepExecutions?: TestReportFeaturesItemTestsItemRunsItemStepsItemStepExecutionsItem[];
+  failed?: number;
+  skipped?: number;
+  stepReportUrl?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestReportFeaturesItemTestsItemRunsItemStepsItemStepExecutionsItem class.
+ * @constructor
+ * @member {string} [deviceSnapshotId]
+ * 
+ * @member {string} [status]
+ * 
+ * @member {number} [timestamp]
+ * 
+ */
+export interface TestReportFeaturesItemTestsItemRunsItemStepsItemStepExecutionsItem {
+  deviceSnapshotId?: string;
+  status?: string;
+  timestamp?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestReportDeviceLogsItem class.
+ * @constructor
+ * @member {string} [deviceSnapshotId]
+ * 
+ * @member {string} [deviceLog]
+ * 
+ * @member {string} [testLog]
+ * 
+ * @member {string} [appiumLog]
+ * 
+ */
+export interface TestReportDeviceLogsItem {
+  deviceSnapshotId?: string;
+  deviceLog?: string;
+  testLog?: string;
+  appiumLog?: string;
 }
 
 /**
@@ -1339,4 +3108,106 @@ export interface TestCloudStartTestRunOptions {
 export interface TestCloudStartTestRunResult {
   acceptedDevices?: string[];
   rejectedDevices?: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestRunState class.
+ * @constructor
+ * @summary TestRunState
+ *
+ * Current status of a test run
+ *
+ * @member {array} [message] Multi-line message that describes the status
+ * 
+ * @member {number} [waitTime] Time (in seconds) that the client should wait
+ * for before checking the status again
+ * 
+ * @member {number} [exitCode] Exit code for the client
+ * 
+ */
+export interface TestRunState {
+  message?: string[];
+  waitTime?: number;
+  exitCode?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Permission class.
+ * @constructor
+ * @member {string} [name]
+ * 
+ * @member {string} [level]
+ * 
+ */
+export interface Permission {
+  name?: string;
+  level?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Table class.
+ * @constructor
+ * @member {string} [name]
+ * 
+ * @member {array} [permissions]
+ * 
+ * @member {object} [extendedSettings]
+ * 
+ * @member {array} [columns]
+ * 
+ */
+export interface Table {
+  name?: string;
+  permissions?: Permission[];
+  extendedSettings?: { [propertyName: string]: string };
+  columns?: TableColumn[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TableColumn class.
+ * @constructor
+ * @member {string} [name]
+ * 
+ * @member {boolean} [isIndexed]
+ * 
+ * @member {string} [type] Possible values include: 'String', 'Boolean',
+ * 'Number', 'Date', 'Version', 'Custom'
+ * 
+ * @member {boolean} [canDelete]
+ * 
+ * @member {boolean} [canUpdateIndex]
+ * 
+ */
+export interface TableColumn {
+  name?: string;
+  isIndexed?: boolean;
+  type?: string;
+  canDelete?: boolean;
+  canUpdateIndex?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ImportDataContainer class.
+ * @constructor
+ * @member {string} [csvData]
+ * 
+ */
+export interface ImportDataContainer {
+  csvData?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroups class.
+ * @constructor
+ * @member {array} crashGroupsProperty
+ * 
+ */
+export interface CrashGroups {
+  crashGroupsProperty: CrashGroupAndVersion[];
 }

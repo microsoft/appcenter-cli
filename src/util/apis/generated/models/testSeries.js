@@ -14,7 +14,7 @@ var util = require('util');
  * @class
  * Initializes a new instance of the TestSeries class.
  * @constructor
- * @summary TestSeries
+ * @summary Test Series
  *
  * Summary of a single test series
  *

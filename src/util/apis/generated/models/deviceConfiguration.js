@@ -28,9 +28,21 @@ var models = require('./index');
  * 
  * @member {string} [model.model]
  * 
+ * @member {string} [model.platform]
+ * 
+ * @member {string} [model.dimensions]
+ * 
+ * @member {string} [model.resolution]
+ * 
  * @member {string} [model.releaseDate]
  * 
- * @member {string} [model.platform]
+ * @member {string} [model.formFactor]
+ * 
+ * @member {string} [model.screenSize]
+ * 
+ * @member {string} [model.cpu]
+ * 
+ * @member {string} [model.memory]
  * 
  * @member {string} [os]
  * 

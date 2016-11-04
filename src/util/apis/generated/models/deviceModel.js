@@ -16,9 +16,21 @@
  * 
  * @member {string} [model]
  * 
+ * @member {string} [platform]
+ * 
+ * @member {string} [dimensions]
+ * 
+ * @member {string} [resolution]
+ * 
  * @member {string} [releaseDate]
  * 
- * @member {string} [platform]
+ * @member {string} [formFactor]
+ * 
+ * @member {string} [screenSize]
+ * 
+ * @member {string} [cpu]
+ * 
+ * @member {string} [memory]
  * 
  */
 function DeviceModel() {
@@ -59,6 +71,27 @@ DeviceModel.prototype.mapper = function () {
             name: 'String'
           }
         },
+        platform: {
+          required: false,
+          serializedName: 'platform',
+          type: {
+            name: 'String'
+          }
+        },
+        dimensions: {
+          required: false,
+          serializedName: 'dimensions',
+          type: {
+            name: 'String'
+          }
+        },
+        resolution: {
+          required: false,
+          serializedName: 'resolution',
+          type: {
+            name: 'String'
+          }
+        },
         releaseDate: {
           required: false,
           serializedName: 'releaseDate',
@@ -66,9 +99,30 @@ DeviceModel.prototype.mapper = function () {
             name: 'String'
           }
         },
-        platform: {
+        formFactor: {
           required: false,
-          serializedName: 'platform',
+          serializedName: 'formFactor',
+          type: {
+            name: 'String'
+          }
+        },
+        screenSize: {
+          required: false,
+          serializedName: 'screenSize',
+          type: {
+            name: 'String'
+          }
+        },
+        cpu: {
+          required: false,
+          serializedName: 'cpu',
+          type: {
+            name: 'String'
+          }
+        },
+        memory: {
+          required: false,
+          serializedName: 'memory',
           type: {
             name: 'String'
           }

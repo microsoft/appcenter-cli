@@ -4,7 +4,7 @@ import * as path from "path";
 import { Command, CommandArgs } from "./command";
 import { CommandResult, success } from "./command-result";
 import { out } from "../interaction";
-import { scriptName } from "./help";
+import { scriptName } from "../misc";
 import { getClassHelpText } from "./option-decorators";
 
 const Table = require("cli-table2");

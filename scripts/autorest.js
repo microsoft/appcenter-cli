@@ -1,5 +1,6 @@
 // Helper functions for dealing with autorest generation of the HTTP client object.
 
+const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 const stream = require('stream');
@@ -32,7 +33,6 @@ function checkStats(path, predicate) {
     throw err;
   }
 }
-
 
 function downloadNuget() {
   if (checkStats(nugetExe, s => s.isFile())) {
@@ -100,7 +100,80 @@ function generateCode(swaggerFile, dest, clientName) {
   });
 }
 
+//
+// Fix up the swagger file so that we have consistent operationIds and remove the
+// bad empty paths.
+//
+
+function fixupRawSwagger(rawSwaggerPath, fixedSwaggerPath) {
+  let swagger = JSON.parse(fs.readFileSync(rawSwaggerPath, 'utf8'));
+  let urlPaths = Object.keys(swagger.paths);
+  urlPaths.forEach(urlPath => {
+    if (_.isEmpty(swagger.paths[urlPath])) {
+      delete swagger.paths[urlPath];
+    } else {
+      let operations = _.toPairs(swagger.paths[urlPath]);
+      operations.forEach(([method, operationObj]) => {
+        if (!operationIdIsValid(operationObj)) {
+          if (operationObj.operationId) {
+            operationObj.operationId = `${getArea(operationObj)}_${operationObj.operationId}`;
+          } else {
+            operationObj.operationId = `${getArea(operationObj)}_${method}${urlPathToOperation(urlPath)}`;
+          }
+        }
+      });
+    }
+  });
+
+  fs.writeFileSync(fixedSwaggerPath, JSON.stringify(swagger, null, 2), 'utf8');
+}
+
+// Is the operationId present and of the form "area_id"
+function operationIdIsValid(operationObj) {
+  return operationObj.operationId && operationIdHasArea(operationObj);
+}
+
+function operationIdHasArea(operationObj) {
+  return operationObj.operationId.includes('_');
+}
+
+function getArea(operationObj) {
+  if (operationObj.tags && operationObj.tags.length > 0) {
+    return operationObj.tags[0];
+  }
+  return 'misc';
+}
+
+// Case conversion for path parts used in generating operation Ids
+function snakeToPascalCase(s) {
+  return s.split('_')
+    .filter(_.negate(_.isEmpty))
+    .map(part => part[0].toUpperCase() + part.slice(1))
+    .join('');
+}
+
+function removeIllegalCharacters(s) {
+  return s.replace(/\./g, '');
+}
+
+function convertParameter(part) {
+  if (part[0] === '{') {
+    return `by_${part.slice(1, -1)}`;
+  }
+  return part;
+}
+
+function urlPathToOperation(urlPath) {
+  return urlPath.split('/')
+    .filter(_.negate(_.isEmpty))
+    .map(convertParameter)
+    .map(removeIllegalCharacters)
+    .map(snakeToPascalCase)
+    .join('');
+}
+
 module.exports = {
   downloadTools,
-  generateCode
+  generateCode,
+  fixupRawSwagger
 };

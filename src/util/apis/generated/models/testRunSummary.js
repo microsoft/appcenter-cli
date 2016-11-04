@@ -10,7 +10,7 @@
  * @class
  * Initializes a new instance of the TestRunSummary class.
  * @constructor
- * @summary TestRunSummary
+ * @summary Test Run Summary
  *
  * Most important information about a test run.
  *

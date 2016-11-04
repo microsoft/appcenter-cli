@@ -44,7 +44,11 @@ gulp.task('clean-autorest', function (done) {
   rimraf(generatedSource, done);
 });
 
-gulp.task('autorest', ['clean-autorest'], function () {
+gulp.task('fixup-swagger', function () {
+  autorest.fixupRawSwagger('./swagger/bifrost.swagger.before.json', './swagger/bifrost.swagger.json');
+});
+
+gulp.task('autorest', ['clean-autorest', 'fixup-swagger'], function () {
   return autorest.downloadTools()
     .then(() => autorest.generateCode('./swagger/bifrost.swagger.json', generatedSource, 'SonomaClient'));
 });

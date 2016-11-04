@@ -6,6 +6,10 @@
 
 'use strict';
 
+var models = require('./index');
+
+var util = require('util');
+
 /**
  * @class
  * Initializes a new instance of the PackageDetails class.
@@ -51,6 +55,9 @@
  * @member {string} [installUrl] The href required to install a package on a
  * mobile device. On iOS devices will be prefixed with
  * `itms-services://?action=download-manifest&url=`
+ * 
+ * @member {array} [distributionGroups] a list of distribution groups that are
+ * associated with this package.
  * 
  */
 function PackageDetails() {
@@ -166,6 +173,21 @@ PackageDetails.prototype.mapper = function () {
           serializedName: 'install_url',
           type: {
             name: 'String'
+          }
+        },
+        distributionGroups: {
+          required: false,
+          serializedName: 'distribution_groups',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'DistributionGroupElementType',
+                type: {
+                  name: 'Composite',
+                  className: 'DistributionGroup'
+                }
+            }
           }
         }
       }

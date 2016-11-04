@@ -7,8 +7,11 @@
   "globalDependencies": {
     "adm-zip": "registry:dt/adm-zip#0.0.0+20160317120654",
     "node": "registry:dt/node#6.0.0+20161019125345",
+    "event-stream": "registry:dt/event-stream#0.0.0+20160216030252",
+    "node": "registry:dt/node#6.0.0+20160915134512",
     "node-fetch": "registry:dt/node-fetch#0.0.0+20160711094047",
-    "promptly": "registry:dt/promptly#1.1.1+20160316155526"
+    "promptly": "registry:dt/promptly#1.1.1+20160316155526",
+    "rx": "npm:rx/ts/rx.all.d.ts"
   },
   "devDependencies": {
     "nock": "registry:npm/nock#0.7.0+20160723033700",
