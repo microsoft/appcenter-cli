@@ -10,8 +10,10 @@
 
 'use strict';
 
+exports.Data = require('./data');
 exports.Account = require('./account');
 exports.BuildOperations = require('./buildOperations');
 exports.CrashOperations = require('./crashOperations');
+exports.Test = require('./test');
 exports.Distribute = require('./distribute');
 exports.Analytics = require('./analytics');

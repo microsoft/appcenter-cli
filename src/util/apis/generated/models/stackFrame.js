@@ -36,6 +36,8 @@
  * 
  * @member {boolean} [relevant] frame should be shown always
  * 
+ * @member {string} [methodParams] parameters of the frames method
+ * 
  */
 function StackFrame() {
 }
@@ -136,6 +138,13 @@ StackFrame.prototype.mapper = function () {
           serializedName: 'relevant',
           type: {
             name: 'Boolean'
+          }
+        },
+        methodParams: {
+          required: false,
+          serializedName: 'method_params',
+          type: {
+            name: 'String'
           }
         }
       }

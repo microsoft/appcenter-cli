@@ -14,7 +14,7 @@ var util = require('util');
  * @class
  * Initializes a new instance of the CrashGroupContainer class.
  * @constructor
- * @member {array} crashgroups
+ * @member {array} crashGroups
  * 
  */
 function CrashGroupContainer() {
@@ -34,9 +34,9 @@ CrashGroupContainer.prototype.mapper = function () {
       name: 'Composite',
       className: 'CrashGroupContainer',
       modelProperties: {
-        crashgroups: {
+        crashGroups: {
           required: true,
-          serializedName: 'crashgroups',
+          serializedName: 'crash_groups',
           constraints: {
             MinItems: 1
           },
@@ -44,10 +44,10 @@ CrashGroupContainer.prototype.mapper = function () {
             name: 'Sequence',
             element: {
                 required: false,
-                serializedName: 'CrashgroupModelModelElementType',
+                serializedName: 'CrashGroupAndVersionElementType',
                 type: {
                   name: 'Composite',
-                  className: 'CrashgroupModelModel'
+                  className: 'CrashGroupAndVersion'
                 }
             }
           }

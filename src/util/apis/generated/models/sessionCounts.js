@@ -14,9 +14,9 @@ var util = require('util');
  * @class
  * Initializes a new instance of the SessionCounts class.
  * @constructor
- * @member {number} [totalCount]
+ * @member {number} [totalCount] total session count
  * 
- * @member {number} [previousTotalCount]
+ * @member {number} [previousTotalCount] previous total session count
  * 
  * @member {array} [sessions] the total session count for each interval
  * 

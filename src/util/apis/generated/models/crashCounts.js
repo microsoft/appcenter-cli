@@ -14,7 +14,7 @@ var util = require('util');
  * @class
  * Initializes a new instance of the CrashCounts class.
  * @constructor
- * @member {number} [totalCount]
+ * @member {number} [count] total crash count
  * 
  * @member {array} [crashes] the total crash count for day
  * 
@@ -36,9 +36,9 @@ CrashCounts.prototype.mapper = function () {
       name: 'Composite',
       className: 'CrashCounts',
       modelProperties: {
-        totalCount: {
+        count: {
           required: false,
-          serializedName: 'totalCount',
+          serializedName: 'count',
           type: {
             name: 'Number'
           }

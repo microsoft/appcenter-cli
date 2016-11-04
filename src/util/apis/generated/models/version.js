@@ -10,9 +10,9 @@
  * @class
  * Initializes a new instance of the Version class.
  * @constructor
- * @member {string} [versionProperty]
+ * @member {string} [versionProperty] version
  * 
- * @member {number} [count]
+ * @member {number} [count] version count
  * 
  * @member {number} [previousCount] the count of previous time range of the
  * version

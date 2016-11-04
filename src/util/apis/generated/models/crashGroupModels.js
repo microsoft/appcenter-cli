@@ -14,7 +14,7 @@ var util = require('util');
  * @class
  * Initializes a new instance of the CrashGroupModels class.
  * @constructor
- * @member {number} [total]
+ * @member {number} [crashCount]
  * 
  * @member {array} [models]
  * 
@@ -36,9 +36,9 @@ CrashGroupModels.prototype.mapper = function () {
       name: 'Composite',
       className: 'CrashGroupModels',
       modelProperties: {
-        total: {
+        crashCount: {
           required: false,
-          serializedName: 'total',
+          serializedName: 'crash_count',
           type: {
             name: 'Number'
           }

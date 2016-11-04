@@ -8,40 +8,40 @@
 
 /**
  * @class
- * Initializes a new instance of the CrashgroupModelModel class.
+ * Initializes a new instance of the CrashGroupAndVersion class.
  * @constructor
  * @member {string} [crashGroupId]
  * 
  * @member {string} [appVersion]
  * 
  */
-function CrashgroupModelModel() {
+function CrashGroupAndVersion() {
 }
 
 /**
- * Defines the metadata of CrashgroupModelModel
+ * Defines the metadata of CrashGroupAndVersion
  *
- * @returns {object} metadata of CrashgroupModelModel
+ * @returns {object} metadata of CrashGroupAndVersion
  *
  */
-CrashgroupModelModel.prototype.mapper = function () {
+CrashGroupAndVersion.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'Crashgroup',
+    serializedName: 'CrashGroupAndVersion',
     type: {
       name: 'Composite',
-      className: 'CrashgroupModelModel',
+      className: 'CrashGroupAndVersion',
       modelProperties: {
         crashGroupId: {
           required: false,
-          serializedName: 'crashGroupId',
+          serializedName: 'crash_group_id',
           type: {
             name: 'String'
           }
         },
         appVersion: {
           required: false,
-          serializedName: 'appVersion',
+          serializedName: 'app_version',
           type: {
             name: 'String'
           }
@@ -51,4 +51,4 @@ CrashgroupModelModel.prototype.mapper = function () {
   };
 };
 
-module.exports = CrashgroupModelModel;
+module.exports = CrashGroupAndVersion;

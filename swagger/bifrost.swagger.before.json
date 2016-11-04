@@ -17,6 +17,1053 @@
     "application/json"
   ],
   "paths": {
+    "/v1/swagger": {},
+    "/v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/data/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "permanent",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/data": {
+      "get": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "import",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ImportDataContainer"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/columns/{columnName}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "columnName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      },
+      "put": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "columnName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "column",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TableColumn"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "columnName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/columns": {
+      "get": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "column",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TableColumn"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      },
+      "put": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "table",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Table"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "table",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Table"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tablepermissions/{permissionName}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "permissionName",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tablepermissions": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/resources/": {
+      "post": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      },
+      "get": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/ping/": {
+      "get": {
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/identity/{provider_name}": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "provider_name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
+    "/v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/identity": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "schema": {
+              "type": "object"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "data"
+        ]
+      }
+    },
     "/v0.1/user/invitations/apps/{owner_name}/{app_name}/reject": {
       "post": {
         "description": "Rejects a pending invitation for the specified user",
@@ -242,6 +1289,41 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/websockets": {
+      "post": {
+        "description": "Returns a one-time websocket URL",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/WebSocketContainer"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ValidationErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "build"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/versions": {
       "get": {
         "description": "Gets a list of application versions",
@@ -392,6 +1474,532 @@
         ],
         "tags": [
           "account"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_series/{test_series_slug}/test_runs": {
+      "get": {
+        "description": "Returns list of all test runs for a given test series",
+        "operationId": "test_getAllTestRunsForSeries",
+        "parameters": [
+          {
+            "name": "test_series_slug",
+            "type": "string",
+            "in": "path",
+            "description": "The slug of the test series",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestRun"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_series/{test_series_slug}": {
+      "delete": {
+        "description": "Deletes a single test series",
+        "operationId": "test_deleteTestSeries",
+        "parameters": [
+          {
+            "name": "test_series_slug",
+            "type": "string",
+            "in": "path",
+            "description": "The slug of the test series",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test series was successfully removed"
+          },
+          "404": {
+            "description": "The test series was not found"
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      },
+      "patch": {
+        "description": "Updates name and slug of a test series",
+        "operationId": "test_patchTestSeries",
+        "parameters": [
+          {
+            "name": "test_series_slug",
+            "type": "string",
+            "in": "path",
+            "description": "The slug of the test series",
+            "required": true
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "in": "formData",
+            "description": "New name of the new test series",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test series was successfully patched",
+            "schema": {
+              "$ref": "#/definitions/TestSeries"
+            }
+          },
+          "400": {
+            "description": "The new test series name is incorrect"
+          },
+          "404": {
+            "description": "Test series with the given slug name was not found"
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_series": {
+      "get": {
+        "description": "Returns list of all test series for an application",
+        "operationId": "test_getAllTestSeries",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestSeries"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      },
+      "post": {
+        "description": "Creates new test series for an application",
+        "operationId": "test_createTestSeries",
+        "parameters": [
+          {
+            "name": "name",
+            "type": "string",
+            "in": "formData",
+            "description": "Name of the new test series",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TestSeries"
+            }
+          },
+          "400": {
+            "description": "Invalid test series name",
+            "schema": {
+              "$ref": "#/definitions/TestCloudErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/state": {
+      "get": {
+        "description": "Gets state of the test run",
+        "operationId": "test_getTestRunState",
+        "parameters": [
+          {
+            "name": "test_run_id",
+            "type": "string",
+            "in": "path",
+            "description": "The ID of the test run",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TestRunState"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/start": {
+      "post": {
+        "description": "Starts test run",
+        "operationId": "test_startTestRun",
+        "parameters": [
+          {
+            "name": "test_run_id",
+            "type": "string",
+            "in": "path",
+            "description": "The ID of the test run",
+            "required": true
+          },
+          {
+            "name": "startOptions",
+            "schema": {
+              "$ref": "#/definitions/TestCloudStartTestRunOptions"
+            },
+            "in": "body",
+            "description": "Option required to start the test run",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TestCloudStartTestRunResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/report": {
+      "get": {
+        "description": "Returns a single test report",
+        "operationId": "getTestReport",
+        "parameters": [
+          {
+            "name": "test_run_id",
+            "type": "string",
+            "format": "uuid",
+            "in": "path",
+            "description": "The ID of the test run",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TestReport"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/hashes": {
+      "post": {
+        "description": "Adds file with the given hash to a test run",
+        "operationId": "test_uploadHash",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "test_run_id",
+            "type": "string",
+            "in": "path",
+            "description": "The ID of the test run",
+            "required": true
+          },
+          {
+            "name": "file_info",
+            "schema": {
+              "$ref": "#/definitions/TestCloudFileHash"
+            },
+            "in": "body",
+            "description": "File hash information",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Byte range verification required for given SHA256 hash",
+            "headers": {
+              "X-Challenge-Bytes": {
+                "description": "Byte range required to authenticate the request",
+                "type": "string"
+              }
+            }
+          },
+          "412": {
+            "description": "File with given SHA256 hash doesn't exist and must be uploaded"
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/files": {
+      "post": {
+        "description": "Uploads file for a test run",
+        "operationId": "test_startUploadingFile",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "test_run_id",
+            "type": "string",
+            "in": "path",
+            "description": "The ID of the test run",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File was created and can be uploaded",
+            "headers": {
+              "Location": {
+                "description": "Relative URL that points to the upload endpoint",
+                "type": "string"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}": {
+      "get": {
+        "description": "Returns a single test runs",
+        "operationId": "test_getTestRun",
+        "parameters": [
+          {
+            "name": "test_run_id",
+            "type": "string",
+            "format": "uuid",
+            "in": "path",
+            "description": "The ID of the test run",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TestRun"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/test_runs": {
+      "get": {
+        "description": "Returns a list of test runs",
+        "operationId": "test_getTestRuns",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestRun"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      },
+      "post": {
+        "description": "Creates a new test run",
+        "operationId": "test_createTestRun",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "headers": {
+              "Location": {
+                "description": "Relative URL that points to the test run",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
         ]
       }
     },
@@ -743,6 +2351,64 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/subscriptions": {
+      "get": {
+        "description": "Get information about the currently active subscriptions, if any",
+        "operationId": "getSubscriptions",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Subscription"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      },
+      "post": {
+        "description": "Accept a free trial subscription",
+        "operationId": "createSubscription",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Subscription"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/source_hosts/{source_host}/repositories": {
       "get": {
         "description": "Gets the repositories available from the source code host",
@@ -901,6 +2567,39 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/recent_packages": {
+      "get": {
+        "description": "Get the latest package from every distribution group associated with an application.",
+        "operationId": "getLatestPackages",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BasicPackageDetails"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/packages/{package_id}": {
       "get": {
         "description": "Return the details for this package.",
@@ -910,7 +2609,7 @@
             "name": "package_id",
             "type": "string",
             "in": "path",
-            "description": "The ID of the package",
+            "description": "The ID of the package, or 'latest' to get the latest package from all the distribution groups assigned to the current user.",
             "required": true
           },
           {
@@ -925,6 +2624,12 @@
             "description": "Success",
             "schema": {
               "$ref": "#/definitions/PackageDetails"
+            }
+          },
+          "404": {
+            "description": "Return when a package can't be found",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
             }
           }
         },
@@ -967,13 +2672,13 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/PackageDetails"
+              "$ref": "#/definitions/PackageUpdateResponse"
             }
           },
-          "500": {
-            "description": "Internal error",
+          "400": {
+            "description": "Both distribution group name and id were supplied, or a package was changed to 'available' without a distribution group.",
             "schema": {
-              "$ref": "#/definitions/Failure"
+              "$ref": "#/definitions/ErrorDetails"
             }
           }
         },
@@ -989,7 +2694,7 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/packages": {
       "get": {
-        "description": "Return detailed information about available packages.",
+        "description": "Return detailed information about packages.",
         "parameters": [
           {
             "name": "$filter",
@@ -1062,12 +2767,6 @@
           },
           "400": {
             "description": "Unknown upload_id or status was committed but the upload hasn't finished."
-          },
-          "500": {
-            "description": "Internal error",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
           }
         },
         "security": [
@@ -1096,12 +2795,6 @@
             "description": "Success",
             "schema": {
               "$ref": "#/definitions/PackageUploadBeginResponse"
-            }
-          },
-          "500": {
-            "description": "Internal error",
-            "schema": {
-              "$ref": "#/definitions/Failure"
             }
           }
         },
@@ -1280,6 +2973,646 @@
         ],
         "tags": [
           "account"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/packages/latest": {
+      "get": {
+        "operationId": "getLatestPackageForDistributionGroup",
+        "description": "Return detailed information about available packages in a given distribution group.",
+        "parameters": [
+          {
+            "name": "distribution_group_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the distribution group.",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/PackageDetails"
+            }
+          },
+          "404": {
+            "description": "Return when a distribution group can't be found",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/packages": {
+      "get": {
+        "operationId": "getPackagesForDistributionGroup",
+        "description": "Return detailed information about available packages in a given distribution group.",
+        "parameters": [
+          {
+            "name": "distribution_group_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the distribution group.",
+            "required": true
+          },
+          {
+            "name": "$filter",
+            "type": "string",
+            "in": "query",
+            "description": "An OData style filter. Currently only support the 'eq' comparision type. E.g. ?$filter=status eq 'Availabe'.",
+            "required": false
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PackageDetails"
+              }
+            }
+          },
+          "404": {
+            "description": "Return when a distribution group can't be found",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/members": {
+      "get": {
+        "description": "Returns a list of member details in the distribution group specified",
+        "parameters": [
+          {
+            "name": "owner_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the owner",
+            "required": true
+          },
+          {
+            "name": "app_name",
+            "type": "string",
+            "in": "path",
+            "description": "The slug name of the app",
+            "required": true
+          },
+          {
+            "name": "distribution_group_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the distribution group",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UserProfileResponse"
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      },
+      "post": {
+        "description": "Adds the members to the specified distribution group",
+        "parameters": [
+          {
+            "name": "owner_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the owner",
+            "required": true
+          },
+          {
+            "name": "app_name",
+            "type": "string",
+            "in": "path",
+            "description": "The slug name of the app",
+            "required": true
+          },
+          {
+            "name": "distribution_group_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the distribution group",
+            "required": true
+          },
+          {
+            "name": "members",
+            "in": "body",
+            "description": "The list of members to add",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DistributionGroupUserRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "schema": {
+              "$ref": "#/definitions/DistributionGroupUserResponse"
+            },
+            "description": "Success"
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      },
+      "delete": {
+        "description": "Remove the users from the distribution group",
+        "parameters": [
+          {
+            "name": "owner_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the owner",
+            "required": true
+          },
+          {
+            "name": "app_name",
+            "type": "string",
+            "in": "path",
+            "description": "The slug name of the app",
+            "required": true
+          },
+          {
+            "name": "distribution_group_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the distribution group",
+            "required": true
+          },
+          {
+            "name": "members",
+            "in": "body",
+            "description": "The list of members to add",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DistributionGroupUserRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/DistributionGroupUserResponse"
+            },
+            "description": "Success"
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}": {
+      "get": {
+        "description": "Returns a single distribution group for a given distribution group name",
+        "parameters": [
+          {
+            "name": "owner_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the owner",
+            "required": true
+          },
+          {
+            "name": "app_name",
+            "type": "string",
+            "in": "path",
+            "description": "The slug name of the app",
+            "required": true
+          },
+          {
+            "name": "distribution_group_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the distribution group",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/DistributionGroupResponse"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      },
+      "patch": {
+        "description": "Updates the attributes of distribution group",
+        "parameters": [
+          {
+            "name": "owner_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the owner",
+            "required": true
+          },
+          {
+            "name": "app_name",
+            "type": "string",
+            "in": "path",
+            "description": "The slug name of the app",
+            "required": true
+          },
+          {
+            "name": "distribution_group_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the distribution group",
+            "required": true
+          },
+          {
+            "name": "distribution_group",
+            "in": "body",
+            "description": "The attributes to update for the distribution group",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DistributionGroupPatchRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/DistributionGroupResponse"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/views/include_users": {
+      "get": {
+        "description": "Returns a list of distribution groups and their users in the app specified",
+        "parameters": [
+          {
+            "name": "owner_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the owner",
+            "required": true
+          },
+          {
+            "name": "app_name",
+            "type": "string",
+            "in": "path",
+            "description": "The slug name of the app",
+            "required": true
+          },
+          {
+            "name": "users_limit",
+            "type": "number",
+            "in": "query",
+            "description": "The max number of users in each distribution group to include in response. Use with include_users",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DistributionGroupResponse"
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/distribution_groups": {
+      "get": {
+        "description": "Returns a list of distribution groups in the app specified",
+        "parameters": [
+          {
+            "name": "owner_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the owner",
+            "required": true
+          },
+          {
+            "name": "app_name",
+            "type": "string",
+            "in": "path",
+            "description": "The slug name of the app",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DistributionGroupResponse"
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      },
+      "post": {
+        "description": "Creates a new distribution group and returns it to the caller",
+        "parameters": [
+          {
+            "name": "owner_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the owner",
+            "required": true
+          },
+          {
+            "name": "app_name",
+            "type": "string",
+            "in": "path",
+            "description": "The slug name of the app",
+            "required": true
+          },
+          {
+            "name": "distribution_group",
+            "in": "body",
+            "description": "The data for the distribution group",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DistributionGroupRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/DistributionGroupResponse"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/device_selection": {
+      "post": {
+        "description": "Creates a short ID for a list of devices",
+        "operationId": "createDeviceSelection",
+        "parameters": [
+          {
+            "name": "devices",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "in": "formData",
+            "description": "List of device IDs",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/DeviceSelection"
+            }
+          },
+          "400": {
+            "description": "Invalid list of device IDs",
+            "schema": {
+              "$ref": "#/definitions/TestCloudErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/device_configurations": {
+      "get": {
+        "description": "Returns a list of available devices",
+        "operationId": "test_getDeviceConfigurations",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DeviceConfiguration"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
         ]
       }
     },
@@ -2005,10 +4338,10 @@
             "$ref": "#/parameters/branch"
           },
           {
-            "name": "platform",
+            "name": "os",
             "type": "string",
             "in": "query",
-            "description": "The desired platform for the project scan; normally the same as the app platform",
+            "description": "The desired OS for the project scan; normally the same as the app OS",
             "required": true,
             "enum": [
               "iOS",
@@ -2016,16 +4349,16 @@
             ]
           },
           {
-            "name": "language",
+            "name": "platform",
             "type": "string",
             "in": "query",
-            "description": "The desired language for the project scan; normally the same as the app language",
+            "description": "The desired platform for the project scan",
             "required": true,
             "enum": [
-              "objective-c",
-              "swift",
-              "javascript",
-              "c#"
+              "Objective-C-Swift",
+              "React-Native",
+              "Xamarin",
+              "Java"
             ]
           },
           {
@@ -2368,7 +4701,7 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/analytics/sessions_per_device": {
       "get": {
-        "operationId": "Analytics_SessionCounts",
+        "operationId": "Analytics_PerDeviceCounts",
         "description": "Count of sessions per device in the time range",
         "parameters": [
           {
@@ -2557,7 +4890,7 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/analytics/oses": {
       "get": {
-        "operationId": "Analyticd_OperatingSystemCounts",
+        "operationId": "Analytics_OperatingSystemCounts",
         "description": "OSes in the time range",
         "parameters": [
           {
@@ -2605,7 +4938,7 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/analytics/models": {
       "get": {
-        "operationId": "Analyticsd_ModelCounts",
+        "operationId": "Analytics_ModelCounts",
         "description": "models in the time range",
         "parameters": [
           {
@@ -2631,7 +4964,49 @@
           "200": {
             "description": "Models with count during the time range in descending order",
             "schema": {
-              "$ref": "#/definitions/Models"
+              "$ref": "#/definitions/AnalyticsModels"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/logs": {
+      "get": {
+        "operationId": "Analytics_Logs",
+        "description": "Logs in the time range.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/StartParameter"
+          },
+          {
+            "$ref": "#/parameters/EndParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of logs for the requested time range.",
+            "schema": {
+              "$ref": "#/definitions/LogContainer"
             }
           },
           "default": {
@@ -2699,63 +5074,39 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/analytics/crashgroups/{crash_group_id}/overall": {
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/events": {
       "get": {
-        "operationId": "Analytics_CrashGroupTotals",
-        "description": "Overall crashes and affected users count of the selected crash group with selected version",
+        "operationId": "Analytics_Events",
+        "description": "Count of active events in the time range ordered by event.",
         "parameters": [
           {
-            "$ref": "#/parameters/CrashGroupParameter"
+            "$ref": "#/parameters/StartParameter"
           },
           {
-            "$ref": "#/parameters/VersionParameter"
+            "$ref": "#/parameters/EndParameter"
           },
           {
-            "$ref": "#/parameters/owner_name"
+            "$ref": "#/parameters/CountParameter"
           },
           {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Overall crashes and affected users count",
-            "schema": {
-              "$ref": "#/definitions/CrashOverall"
-            }
-          },
-          "default": {
-            "description": "Error code with reason",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "analytics"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/analytics/crashgroups/{crash_group_id}/oses": {
-      "get": {
-        "operationId": "Analytics_CrashGroupOperatinSystemCounts",
-        "description": "top OSes of the selected crash group with selected version",
-        "parameters": [
-          {
-            "$ref": "#/parameters/CrashGroupParameter"
+            "$ref": "#/parameters/VersionsParameter"
           },
           {
-            "$ref": "#/parameters/VersionParameter"
+            "$ref": "#/parameters/EventNameParameter"
           },
           {
             "$ref": "#/parameters/TopParameter"
           },
           {
+            "$ref": "#/parameters/SkipParameter"
+          },
+          {
+            "$ref": "#/parameters/FilterParameter"
+          },
+          {
+            "$ref": "#/parameters/InlineCountParameter"
+          },
+          {
             "$ref": "#/parameters/owner_name"
           },
           {
@@ -2764,9 +5115,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Top OSes with percentage in descending order",
+            "description": "Count of active events in the time range ordered by event.",
             "schema": {
-              "$ref": "#/definitions/CrashGroupOSes"
+              "$ref": "#/definitions/Events"
             }
           },
           "default": {
@@ -2786,61 +5137,13 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/analytics/crashgroups/{crash_group_id}/models": {
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/event/{event_id}/event_count": {
       "get": {
-        "operationId": "Analytics_CrashGroupModelCounts",
-        "description": "top models of the selected crash group with selected version",
+        "operationId": "Analytics_EventCount",
+        "description": "Count of events by interval in the time range.",
         "parameters": [
           {
-            "$ref": "#/parameters/CrashGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/VersionParameter"
-          },
-          {
-            "$ref": "#/parameters/TopParameter"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Top Models with percentage in descending order",
-            "schema": {
-              "$ref": "#/definitions/CrashGroupModels"
-            }
-          },
-          "default": {
-            "description": "Error code with reason",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "analytics"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/analytics/crashgroups/{crash_group_id}/crash_counts": {
-      "get": {
-        "operationId": "Analytics_CrashGroupCounts",
-        "description": "Count of crashes by day in the time range of the selected crash group with selected version",
-        "parameters": [
-          {
-            "$ref": "#/parameters/CrashGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/VersionParameter"
+            "$ref": "#/parameters/EventParameter"
           },
           {
             "$ref": "#/parameters/StartParameter"
@@ -2849,6 +5152,9 @@
             "$ref": "#/parameters/EndParameter"
           },
           {
+            "$ref": "#/parameters/VersionsParameter"
+          },
+          {
             "$ref": "#/parameters/owner_name"
           },
           {
@@ -2857,9 +5163,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Count of crashes by day in the time range and total crashes over the time range.",
+            "description": "Count of events by interval in the time range.",
             "schema": {
-              "$ref": "#/definitions/CrashCounts"
+              "$ref": "#/definitions/DateTimeCountContainer"
             }
           },
           "default": {
@@ -2879,13 +5185,22 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/analytics/crashgroups": {
-      "post": {
-        "operationId": "Analytics_CrashGroupsTotals",
-        "description": "Overall crashes and affected users count of the selected crash groups with selected versions",
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/event/{event_id}/device_count": {
+      "get": {
+        "operationId": "Analytics_EventDeviceCount",
+        "description": "Count of devices for an event by interval in the time range.",
         "parameters": [
           {
-            "$ref": "#/parameters/CrashGroupsParameter"
+            "$ref": "#/parameters/EventParameter"
+          },
+          {
+            "$ref": "#/parameters/StartParameter"
+          },
+          {
+            "$ref": "#/parameters/EndParameter"
+          },
+          {
+            "$ref": "#/parameters/VersionsParameter"
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -2896,9 +5211,105 @@
         ],
         "responses": {
           "200": {
-            "description": "Overall crashes and affected users count for all selected crash groups",
+            "description": "Count of devices for an event by interval in the time range.",
             "schema": {
-              "$ref": "#/definitions/CrashesOverall"
+              "$ref": "#/definitions/DateTimeCountContainer"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/event/{event_id}/count_per_session": {
+      "get": {
+        "operationId": "Analytics_EventPerSessionCount",
+        "description": "Count of events per session by interval in the time range.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EventParameter"
+          },
+          {
+            "$ref": "#/parameters/StartParameter"
+          },
+          {
+            "$ref": "#/parameters/EndParameter"
+          },
+          {
+            "$ref": "#/parameters/VersionsParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Count of events per session by interval in the time range.",
+            "schema": {
+              "$ref": "#/definitions/DateTimeCountContainer"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/event/{event_id}/count_per_device": {
+      "get": {
+        "operationId": "Analytics_EventPerDeviceCount",
+        "description": "Count of events per device by interval in the time range.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EventParameter"
+          },
+          {
+            "$ref": "#/parameters/StartParameter"
+          },
+          {
+            "$ref": "#/parameters/EndParameter"
+          },
+          {
+            "$ref": "#/parameters/VersionsParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Count of events per device by interval in the time range.",
+            "schema": {
+              "$ref": "#/definitions/DateTimeCountContainer"
             }
           },
           "default": {
@@ -2963,6 +5374,225 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/crash_groups/{crash_group_id}/overall": {
+      "get": {
+        "operationId": "Analytics_CrashGroupTotals",
+        "description": "Overall crashes and affected users count of the selected crash group with selected version",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CrashGroupParameter"
+          },
+          {
+            "$ref": "#/parameters/VersionParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Overall crashes and affected users count",
+            "schema": {
+              "$ref": "#/definitions/CrashOverall"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/crash_groups/{crash_group_id}/operating_systems": {
+      "get": {
+        "operationId": "Analytics_CrashGroupOperatingSystemCounts",
+        "description": "top OSes of the selected crash group with selected version",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CrashGroupParameter"
+          },
+          {
+            "$ref": "#/parameters/VersionParameter"
+          },
+          {
+            "$ref": "#/parameters/TopParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Top OSes with percentage in descending order",
+            "schema": {
+              "$ref": "#/definitions/CrashGroupOperatingSystems"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/crash_groups/{crash_group_id}/models": {
+      "get": {
+        "operationId": "Analytics_CrashGroupModelCounts",
+        "description": "top models of the selected crash group with selected version",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CrashGroupParameter"
+          },
+          {
+            "$ref": "#/parameters/VersionParameter"
+          },
+          {
+            "$ref": "#/parameters/TopParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Top Models with percentage in descending order",
+            "schema": {
+              "$ref": "#/definitions/CrashGroupModels"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/crash_groups/{crash_group_id}/crash_counts": {
+      "get": {
+        "operationId": "Analytics_CrashGroupCounts",
+        "description": "Count of crashes by day in the time range of the selected crash group with selected version",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CrashGroupParameter"
+          },
+          {
+            "$ref": "#/parameters/VersionParameter"
+          },
+          {
+            "$ref": "#/parameters/StartParameter"
+          },
+          {
+            "$ref": "#/parameters/EndParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Count of crashes by day in the time range and total crashes over the time range.",
+            "schema": {
+              "$ref": "#/definitions/CrashCounts"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/crash_groups": {
+      "post": {
+        "operationId": "Analytics_CrashGroupsTotals",
+        "description": "Overall crashes and affected users count of the selected crash groups with selected versions",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CrashGroupsParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Overall crashes and affected users count for all selected crash groups",
+            "schema": {
+              "$ref": "#/definitions/CrashesOverall"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/analytics/crash_counts": {
       "get": {
         "operationId": "Analytics_CrashCounts",
@@ -3008,7 +5638,6 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/analytics/available_versions": {},
     "/v0.1/apps/{owner_name}/{app_name}/analytics/active_device_counts": {
       "get": {
         "operationId": "Analytics_DeviceCounts",
@@ -3146,6 +5775,45 @@
         "tags": [
           "account"
         ]
+      },
+      "delete": {
+        "description": "Delete an app",
+        "parameters": [
+          {
+            "name": "app_name",
+            "type": "string",
+            "in": "path",
+            "description": "The slug name of the app",
+            "required": true
+          },
+          {
+            "name": "owner_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the owner",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "operationId": "deleteApp",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
       }
     },
     "/v0.1/apps": {
@@ -3248,11 +5916,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/ApiTokenResponse"
-            }
+          "204": {
+            "description": "Success"
           },
           "400": {
             "description": "Error",
@@ -3262,6 +5927,12 @@
           },
           "403": {
             "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "NotFound",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -3302,6 +5973,12 @@
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         },
         "operationId": "getApiTokens",
@@ -3320,13 +5997,6 @@
       "post": {
         "description": "Creates a new API token",
         "parameters": [
-          {
-            "name": "Authorization",
-            "type": "string",
-            "in": "header",
-            "description": "The basic auth header including the base64-encoded username or email and password",
-            "required": true
-          },
           {
             "name": "description",
             "in": "body",
@@ -3354,6 +6024,12 @@
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         },
         "operationId": "createApiToken",
@@ -3366,8 +6042,7 @@
           "account"
         ]
       }
-    },
-    "/preview/swagger.json": {}
+    }
   },
   "definitions": {
     "Status": {
@@ -3501,27 +6176,85 @@
           "type": "string",
           "description": "The full name of the user. Might for example be first and last name"
         },
-        "language": {
-          "type": "string",
-          "description": "The primary programming language used in the app"
-        },
         "name": {
           "type": "string",
           "description": "The name of the app used in URLs"
+        },
+        "os": {
+          "type": "string",
+          "description": "The OS the app will be running on",
+          "enum": [
+            "iOS",
+            "Android"
+          ]
         },
         "platform": {
           "type": "string",
           "description": "The platform of the app",
           "enum": [
-            "iOS",
-            "Android"
+            "Objective-C-Swift",
+            "Java",
+            "React-Native",
+            "Xamarin"
           ]
         }
       },
       "required": [
         "display_name",
+        "os",
         "platform"
       ]
+    },
+    "FeatureNameResponse": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The unique name of the feature"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "FeatureRequestResponse": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The unique name of the feature"
+        },
+        "display_name": {
+          "type": "string",
+          "description": "The full (friendly) name of the feature."
+        },
+        "state": {
+          "type": "integer",
+          "description": "The state of the feature"
+        },
+        "description": {
+          "type": "string",
+          "description": "The friendly name of the feature"
+        }
+      },
+      "required": [
+        "name",
+        "display_name"
+      ]
+    },
+    "FeaturePatchRequest": {
+      "properties": {
+        "display_name": {
+          "type": "string",
+          "description": "The full (friendly) name of the feature."
+        },
+        "state": {
+          "type": "integer",
+          "description": "The state of the feature"
+        },
+        "description": {
+          "type": "string",
+          "description": "The friendly name of the feature"
+        }
+      }
     },
     "UserUpdateRequest": {
       "properties": {
@@ -3553,13 +6286,23 @@
           "type": "string",
           "description": "The name of the app used in URLs"
         },
+        "os": {
+          "type": "string",
+          "description": "The OS the app will be running on",
+          "enum": [
+            "iOS",
+            "Android"
+          ]
+        },
         "platform": {
           "type": "string",
-          "description": "The platform of the app"
-        },
-        "language": {
-          "type": "string",
-          "description": "The primary programming language used in the app"
+          "description": "The platform of the app",
+          "enum": [
+            "Objective-C-Swift",
+            "Java",
+            "React-Native",
+            "Xamarin"
+          ]
         },
         "icon_url": {
           "type": "string",
@@ -3567,6 +6310,10 @@
         },
         "owner": {
           "$ref": "#/definitions/Owner"
+        },
+        "azure_subscription_id": {
+          "type": "string",
+          "description": "The unique ID (UUID) of the Azure subscription associate with the app"
         }
       },
       "required": [
@@ -3574,8 +6321,33 @@
         "app_secret",
         "display_name",
         "name",
-        "platform",
+        "os",
         "owner"
+      ]
+    },
+    "FeatureResponse": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The unique name of the feature"
+        },
+        "display_name": {
+          "type": "string",
+          "description": "The friendly name of the feature"
+        },
+        "description": {
+          "type": "string",
+          "description": "The description of the feature"
+        },
+        "state": {
+          "type": "integer",
+          "description": "The state (unset, enabled, disabled) of the feature"
+        }
+      },
+      "required": [
+        "name",
+        "display_name",
+        "state"
       ]
     },
     "Owner": {
@@ -3668,6 +6440,84 @@
         "email"
       ]
     },
+    "DistributionGroupResponse": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique ID of the distribution group"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the distribution group used in URLs"
+        },
+        "display_name": {
+          "type": "string",
+          "description": "The display name of the distribution group"
+        },
+        "users": {
+          "type": "array",
+          "description": "The distribution group users",
+          "items": {
+            "$ref": "#/definitions/UserProfileResponse"
+          }
+        },
+        "total_user_count": {
+          "type": "number",
+          "description": "The count of users in the distribution group"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "DistributionGroupRequest": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the distribution group"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "DistributionGroupPatchRequest": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the distribution group"
+        }
+      }
+    },
+    "DistributionGroupUserRequest": {
+      "properties": {
+        "user_ids": {
+          "type": "array",
+          "description": "The list of unique ID (UUID) of the users",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "user_ids"
+      ]
+    },
+    "DistributionGroupUserResponse": {
+      "properties": {
+        "user_ids": {
+          "type": "array",
+          "description": "The list of unique ID (UUID) of the users",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "user_ids"
+      ]
+    },
     "SourceRepository": {
       "description": "The source repository",
       "properties": {
@@ -3683,6 +6533,18 @@
       "items": {
         "$ref": "#/definitions/SourceRepository"
       }
+    },
+    "WebSocketContainer": {
+      "description": "A websocket reference",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "WebSocket URL"
+        }
+      },
+      "required": [
+        "url"
+      ]
     },
     "Project": {
       "description": "A build project",
@@ -3766,6 +6628,38 @@
         "configurations"
       ]
     },
+    "AndroidProject": {
+      "properties": {
+        "modules": {
+          "description": "Gradle modules for the project",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AndroidModule"
+          }
+        },
+        "gradleWrapperPath": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "modules"
+      ]
+    },
+    "AndroidModule": {
+      "properties": {
+        "name": {
+          "description": "Name of the Android module",
+          "type": "string"
+        },
+        "path": {
+          "description": "Path to the module",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
     "ToolsetProjects": {
       "description": "A collection of projects for each type of toolset",
       "properties": {
@@ -3789,6 +6683,9 @@
           "items": {
             "$ref": "#/definitions/XamarinSolution"
           }
+        },
+        "android": {
+          "$ref": "#/definitions/AndroidProject"
         }
       }
     },
@@ -3868,6 +6765,9 @@
         },
         "xamarin": {
           "$ref": "#/definitions/XamarinBranchConfigurationProperties"
+        },
+        "android": {
+          "$ref": "#/definitions/AndroidBranchConfigurationProperties"
         }
       }
     },
@@ -3902,12 +6802,42 @@
         },
         "certificateFilename": {
           "type": "string"
+        },
+        "teamId": {
+          "type": "string"
+        },
+        "automaticSigning": {
+          "type": "boolean"
         }
       },
       "required": [
         "projectOrWorkspacePath",
         "scheme",
         "xcodeVersion"
+      ]
+    },
+    "AndroidBranchConfigurationProperties": {
+      "description": "Build configuration for Android projects",
+      "properties": {
+        "gradleWrapperPath": {
+          "description": "Path to the Gradle wrapper script",
+          "type": "string"
+        },
+        "gradleTasks": {
+          "description": "The Gradle tasks to perform",
+          "type": "string"
+        },
+        "module": {
+          "description": "The Gradle module to build",
+          "type": "string"
+        },
+        "variant": {
+          "description": "The Android build variant to build",
+          "type": "string"
+        }
+      },
+      "required": [
+        "gradleTasks"
       ]
     },
     "JavaScriptBranchConfigurationProperties": {
@@ -4170,16 +7100,76 @@
       "description": "A request containing information pertaining to distributing a package.",
       "properties": {
         "status": {
-          "description": "The package state.<br>\n<b>available</b>: The uploaded package has been distributed.<br>\n<b>unavailable</b>: The uploaded package is not visible to the user. <br>\n",
+          "description": "The package state.<br>\n<b>available</b>: The uploaded package has been distributed. When changing to available a distribution group name or id must be set.<br>\n<b>unavailable</b>: The uploaded package is not visible to the user. <br>\n",
           "type": "string",
           "enum": [
             "available",
             "unavailable"
           ]
         },
+        "destribution_group_name": {
+          "description": "Name of a distribution group. The package will be distributed to this distribution group. If the distribution group doesn't exist a 400 is returned. If both, distribution group name and id, are passed a 400 is returned.",
+          "type": "string"
+        },
+        "destribution_group_id": {
+          "description": "Id of a distribution group. The package will be distributed to this distribution group. If the distribution group doesn't exist a 400 is returned. If both, distribution group name and id, are passed a 400 is returned.",
+          "type": "string"
+        },
         "release_notes": {
           "description": "Release notes for this package.",
           "type": "string"
+        }
+      }
+    },
+    "PackageUpdateResponse": {
+      "description": "Package has successfully updated.",
+      "properties": {
+        "packageDetails": {
+          "$ref": "#/definitions/PackageDetails"
+        }
+      }
+    },
+    "DistributionGroup": {
+      "properties": {
+        "id": {
+          "description": "ID identifying a unique distribution group.",
+          "type": "string"
+        },
+        "name": {
+          "description": "A name identifying a unique distribution group.",
+          "type": "string"
+        },
+        "is_latest": {
+          "description": "Is the containing package the latest one in this distribution group.",
+          "type": "boolean"
+        }
+      }
+    },
+    "BasicPackageDetails": {
+      "description": "Basic information on a pacakge",
+      "properties": {
+        "package_id": {
+          "description": "ID identifying this unique package.",
+          "type": "string"
+        },
+        "version": {
+          "description": "The package's version.<br>\nFor iOS: CFBundleVersion from info.plist.\nFor Android: android:versionCode from AppManifest.xml.\n",
+          "type": "string"
+        },
+        "short_version": {
+          "description": "The package's short version.<br>\nFor iOS: CFBundleShortVersionString from info.plist.\nFor Android: android:versionName from AppManifest.xml.  \n",
+          "type": "string"
+        },
+        "uploaded_at": {
+          "description": "UTC time in ISO 8601 format of the uploaded time.",
+          "type": "string"
+        },
+        "distribution_groups": {
+          "description": "a list of distribution groups that are associated with this package.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DistributionGroup"
+          }
         }
       }
     },
@@ -4245,6 +7235,13 @@
         "install_url": {
           "description": "The href required to install a package on a mobile device. On iOS devices will be prefixed with `itms-services://?action=download-manifest&url=`",
           "type": "string"
+        },
+        "distribution_groups": {
+          "description": "a list of distribution groups that are associated with this package.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DistributionGroup"
+          }
         }
       }
     },
@@ -4261,6 +7258,7 @@
             "Apple",
             "AndroidNative",
             "AndroidJava",
+            "JavaScript",
             "Windows"
           ]
         },
@@ -4529,7 +7527,7 @@
           "description": "relevant exception (crashed)",
           "type": "boolean"
         },
-        "inner_exception": {
+        "inner_exceptions": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Exception"
@@ -4590,6 +7588,10 @@
         "relevant": {
           "description": "frame should be shown always",
           "type": "boolean"
+        },
+        "method_params": {
+          "description": "parameters of the frames method",
+          "type": "string"
         }
       },
       "required": [
@@ -4597,6 +7599,51 @@
         "code_formatted",
         "app_code"
       ]
+    },
+    "ReasonStackFrame": {
+      "description": "frame belonging to the reason of the crash",
+      "properties": {
+        "class_name": {
+          "description": "name of the class",
+          "type": "string"
+        },
+        "method": {
+          "description": "name of the method",
+          "type": "string"
+        },
+        "class_method": {
+          "description": "is a class method",
+          "type": "boolean"
+        },
+        "file": {
+          "description": "name of the file",
+          "type": "string"
+        },
+        "line": {
+          "description": "line number",
+          "type": "integer"
+        },
+        "app_code": {
+          "description": "this line isn't from any framework",
+          "type": "boolean"
+        },
+        "framework_name": {
+          "description": "Name of the framework",
+          "type": "string"
+        },
+        "code_formatted": {
+          "description": "Formatted frame string",
+          "type": "string"
+        },
+        "language": {
+          "description": "programming language of the frame",
+          "type": "string"
+        },
+        "method_params": {
+          "description": "parameters of the frames method",
+          "type": "string"
+        }
+      }
     },
     "CrashGroup": {
       "required": [
@@ -4622,7 +7669,12 @@
           "type": "string"
         },
         "status": {
-          "$ref": "#/definitions/CrashGroupStatus"
+          "type": "string",
+          "enum": [
+            "open",
+            "closed",
+            "ignored"
+          ]
         },
         "count": {
           "type": "integer"
@@ -4645,7 +7697,7 @@
           "type": "string"
         },
         "reason_frame": {
-          "$ref": "#/definitions/StackFrame"
+          "$ref": "#/definitions/ReasonStackFrame"
         },
         "fatal": {
           "type": "boolean",
@@ -4653,19 +7705,15 @@
         }
       }
     },
-    "CrashGroupStatus": {
-      "type": "string",
-      "enum": [
-        "Open",
-        "Closed",
-        "Ignored"
-      ]
-    },
     "CrashGroupChange": {
       "type": "object",
       "properties": {
         "status": {
-          "$ref": "#/definitions/CrashGroupStatus"
+          "enum": [
+            "open",
+            "closed",
+            "ignored"
+          ]
         }
       }
     },
@@ -4760,7 +7808,8 @@
     "CrashCounts": {
       "type": "object",
       "properties": {
-        "totalCount": {
+        "count": {
+          "description": "total crash count",
           "type": "integer",
           "format": "int64"
         },
@@ -4891,6 +7940,7 @@
     "Versions": {
       "properties": {
         "versions": {
+          "description": "list of version count",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Version"
@@ -4907,9 +7957,11 @@
       "type": "object",
       "properties": {
         "version": {
+          "description": "version",
           "type": "string"
         },
         "count": {
+          "description": "version count",
           "type": "integer",
           "format": "int64"
         },
@@ -4924,10 +7976,12 @@
       "type": "object",
       "properties": {
         "totalCount": {
+          "description": "total session count",
           "type": "integer",
           "format": "int64"
         },
         "previousTotalCount": {
+          "description": "previous total session count",
           "type": "integer",
           "format": "int64"
         },
@@ -4944,18 +7998,22 @@
       "type": "object",
       "properties": {
         "averageSessionsPerUser": {
+          "description": "average seesion per user",
           "type": "number",
           "format": "double"
         },
         "previousAverageSessionsPerUser": {
+          "description": "previous average session per user",
           "type": "number",
           "format": "double"
         },
         "totalCount": {
+          "description": "total session per device count",
           "type": "integer",
           "format": "int64"
         },
         "previousTotalCount": {
+          "description": "previous total count",
           "type": "integer",
           "format": "int64"
         },
@@ -4979,7 +8037,7 @@
         }
       }
     },
-    "Models": {
+    "AnalyticsModels": {
       "type": "object",
       "properties": {
         "total": {
@@ -5113,12 +8171,13 @@
     "CrashFreeDevicePercentages": {
       "type": "object",
       "properties": {
-        "overtimePercentage": {
+        "average_percentage": {
+          "description": "Average percentage",
           "type": "integer",
           "format": "int64"
         },
-        "dailyPercentages": {
-          "description": "the crash-free percentage for day",
+        "daily_percentages": {
+          "description": "The crash-free percentage per day.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DateTimePercentages"
@@ -5145,11 +8204,11 @@
       "items": {
         "type": "object",
         "properties": {
-          "crashGroupId": {
+          "crash_group_id": {
             "type": "string",
             "format": "string"
           },
-          "appVersion": {
+          "app_version": {
             "type": "string",
             "format": "string"
           },
@@ -5162,11 +8221,11 @@
     "CrashOverall": {
       "type": "object",
       "properties": {
-        "crashCount": {
+        "crash_count": {
           "type": "integer",
           "format": "int64"
         },
-        "deviceCount": {
+        "device_count": {
           "type": "integer",
           "format": "int64"
         }
@@ -5175,7 +8234,7 @@
     "CrashGroupModels": {
       "type": "object",
       "properties": {
-        "total": {
+        "crash_count": {
           "type": "integer",
           "format": "int64"
         },
@@ -5190,40 +8249,40 @@
     "CrashGroupModel": {
       "type": "object",
       "properties": {
-        "modelName": {
+        "model_name": {
           "type": "string",
           "description": "model's name"
         },
-        "count": {
+        "crash_count": {
           "description": "count of model",
           "type": "integer",
           "format": "int64"
         }
       }
     },
-    "CrashGroupOSes": {
+    "CrashGroupOperatingSystems": {
       "type": "object",
       "properties": {
-        "total": {
+        "crash_count": {
           "type": "integer",
           "format": "int64"
         },
-        "oses": {
+        "operating_systems": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/CrashGroupOS"
+            "$ref": "#/definitions/CrashGroupOperatingSystem"
           }
         }
       }
     },
-    "CrashGroupOS": {
+    "CrashGroupOperatingSystem": {
       "type": "object",
       "properties": {
-        "osName": {
+        "operating_system_name": {
           "type": "string",
           "description": "OS name"
         },
-        "count": {
+        "crash_count": {
           "type": "integer",
           "format": "int64",
           "description": "count of OS"
@@ -5233,28 +8292,910 @@
     "CrashGroupContainer": {
       "type": "object",
       "required": [
-        "crashgroups"
+        "crash_groups"
       ],
       "properties": {
-        "crashgroups": {
+        "crash_groups": {
           "type": "array",
           "minItems": 1,
           "items": {
-            "$ref": "#/definitions/Crashgroup"
+            "$ref": "#/definitions/CrashGroupAndVersion"
           }
         }
       }
     },
-    "Crashgroup": {
+    "CrashGroupAndVersion": {
       "type": "object",
       "properties": {
-        "crashGroupId": {
+        "crash_group_id": {
           "type": "string",
           "format": "string"
         },
-        "appVersion": {
+        "app_version": {
           "type": "string",
           "format": "string"
+        }
+      }
+    },
+    "Events": {
+      "properties": {
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Event"
+          }
+        },
+        "total": {
+          "description": "the total count of events",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "string"
+        },
+        "name": {
+          "type": "string",
+          "format": "string"
+        },
+        "deviceCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "previous_device_count": {
+          "description": "the device count of previous time range of the event",
+          "type": "integer",
+          "format": "int64"
+        },
+        "total_devices": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "previous_count": {
+          "description": "the event count of previous time range of the event",
+          "type": "integer",
+          "format": "int64"
+        },
+        "count_per_device": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "count_per_session": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "LogContainer": {
+      "type": "object",
+      "properties": {
+        "exceeded_max_limit": {
+          "description": "indicates if the number of available logs are more than the max allowed return limit.",
+          "type": "boolean"
+        },
+        "logs": {
+          "minItems": 0,
+          "description": "the list of logs",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Log"
+          }
+        }
+      },
+      "required": [
+        "logs"
+      ]
+    },
+    "Log": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Log type.\n"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Log creation timestamp.\n"
+        },
+        "install_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Install ID.\n"
+        },
+        "device": {
+          "$ref": "#/definitions/Device"
+        }
+      },
+      "required": [
+        "type",
+        "timestamp",
+        "install_id",
+        "device"
+      ]
+    },
+    "Device": {
+      "type": "object",
+      "description": "Device characteristics.",
+      "properties": {
+        "sdk_name": {
+          "type": "string",
+          "description": "Name of the SDK. Consists of the name of the SDK and the platform, e.g. \"avalanchesdk.ios\", \"hockeysdk.android\".\n"
+        },
+        "sdk_version": {
+          "type": "string",
+          "description": "Version of the SDK in semver format, e.g. \"1.2.0\" or \"0.12.3-alpha.1\".\n"
+        },
+        "wrapper_sdk_version": {
+          "type": "string",
+          "description": "Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for example Xamarin.Android wraps Android), the Xamarin specific version is populated into this field while sdkVersion refers to the original Android SDK.\n"
+        },
+        "wrapper_sdk_name": {
+          "type": "string",
+          "description": "Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g. \"avalanchesdk.xamarin\", \"hockeysdk.cordova\".\n"
+        },
+        "model": {
+          "type": "string",
+          "description": "Device model (example: iPad2,3).\n"
+        },
+        "oem_name": {
+          "type": "string",
+          "description": "Device manufacturer (example: HTC).\n"
+        },
+        "os_name": {
+          "type": "string",
+          "description": "OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS, macOS, tvOS, Windows.\n"
+        },
+        "os_version": {
+          "type": "string",
+          "description": "OS version (example: 9.3.0).\n"
+        },
+        "os_build": {
+          "type": "string",
+          "description": "OS build code (example: LMY47X).\n"
+        },
+        "os_api_level": {
+          "type": "integer",
+          "description": "API level when applicable like in Android (example: 15).\n"
+        },
+        "locale": {
+          "type": "string",
+          "description": "Language code (example: en_US).\n"
+        },
+        "time_zone_offset": {
+          "type": "integer",
+          "description": "The offset in minutes from UTC for the device time zone, including daylight savings time.\n"
+        },
+        "screen_size": {
+          "type": "string",
+          "description": "Screen size of the device in pixels (example: 640x480).\n"
+        },
+        "app_version": {
+          "type": "string",
+          "description": "Application version name, e.g. 1.1.0\n"
+        },
+        "carrier_name": {
+          "type": "string",
+          "description": "Carrier name (for mobile devices).\n"
+        },
+        "carrier_code": {
+          "type": "string",
+          "description": "Carrier country code (for mobile devices).\n"
+        },
+        "carrier_country": {
+          "type": "string",
+          "description": "Carrier country.\n"
+        },
+        "app_build": {
+          "type": "string",
+          "description": "The app's build number, e.g. 42.\n"
+        },
+        "app_namespace": {
+          "type": "string",
+          "description": "The bundle identifier, package identifier, or namespace, depending on what the individual plattforms use,  .e.g com.microsoft.example.\n"
+        }
+      },
+      "required": [
+        "sdk_name",
+        "sdk_version",
+        "model",
+        "oem_name",
+        "os_name",
+        "os_version",
+        "locale",
+        "time_zone_offset",
+        "screen_size",
+        "app_version",
+        "app_build"
+      ]
+    },
+    "DateTimeCountContainer": {
+      "description": "count for each interval",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DateTimeCounts"
+      }
+    },
+    "DeviceConfiguration": {
+      "properties": {
+        "name": {
+          "description": "The name of the device model and OS version",
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The unique id of the device configuration"
+        },
+        "tier": {
+          "description": "The tier",
+          "type": "number"
+        },
+        "frame": {
+          "type": "string"
+        },
+        "model": {
+          "$ref": "#/definitions/DeviceModel"
+        },
+        "os": {
+          "type": "string"
+        },
+        "osName": {
+          "type": "string"
+        },
+        "marketShare": {
+          "type": "number"
+        }
+      }
+    },
+    "DeviceModel": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "manufacturer": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "dimensions": {
+          "type": "string"
+        },
+        "resolution": {
+          "type": "string"
+        },
+        "releaseDate": {
+          "type": "string"
+        },
+        "formFactor": {
+          "type": "string"
+        },
+        "screenSize": {
+          "type": "string"
+        },
+        "cpu": {
+          "type": "string"
+        },
+        "memory": {
+          "type": "string"
+        }
+      }
+    },
+    "TestRun": {
+      "title": "Test Run",
+      "description": "Summary single test run on Xamarin Test Cloud",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The unique id of the test upload"
+        },
+        "date": {
+          "description": "The date and time the test was uploaded",
+          "type": "string"
+        },
+        "appVersion": {
+          "description": "The compiled version of the app binary",
+          "type": "string"
+        },
+        "testSeries": {
+          "description": "The name of the test series with which this test upload is associated",
+          "type": "string"
+        },
+        "platform": {
+          "description": "The device platform targeted by the test. Possible values are 'ios' or 'android'",
+          "type": "string"
+        },
+        "state": {
+          "description": "The current status of the test run, in relation to the various phases",
+          "type": "string"
+        },
+        "status": {
+          "description": "The passed/failed state",
+          "type": "string"
+        },
+        "description": {
+          "description": "Human readable explanation of the current test status",
+          "type": "string"
+        },
+        "stats": {
+          "$ref": "#/definitions/TestRunStatistics"
+        },
+        "testType": {
+          "description": "The name of the test framework used to run this test",
+          "type": "string"
+        }
+      }
+    },
+    "TestRunStatistics": {
+      "title": "Test Run Statistics",
+      "description": "Summary single test run on Xamarin Test Cloud",
+      "type": "object",
+      "properties": {
+        "devices": {
+          "description": "Number of devices running the test",
+          "type": "number"
+        },
+        "total": {
+          "description": "Number of tests in total",
+          "type": "number"
+        },
+        "passed": {
+          "description": "Number of passed tests",
+          "type": "number"
+        },
+        "failed": {
+          "description": "Number of failed tests",
+          "type": "number"
+        },
+        "peakMemory": {
+          "description": "The max amount of MB used during the test run",
+          "type": "number"
+        },
+        "totalDeviceMinutes": {
+          "description": "The number of minutes of device time the test has been runnign",
+          "type": "number"
+        }
+      }
+    },
+    "TestSeries": {
+      "title": "Test Series",
+      "description": "Summary of a single test series",
+      "type": "object",
+      "properties": {
+        "slug": {
+          "description": "Unique, human-readable identifier of the test series",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the test series",
+          "type": "string"
+        },
+        "mostRecentActivity": {
+          "description": "Date of the latest test run that used this test series",
+          "type": "string",
+          "format": "dateTime"
+        },
+        "testRuns": {
+          "description": "Most recent test runs",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestRunSummary"
+          }
+        }
+      },
+      "required": [
+        "slug",
+        "name"
+      ]
+    },
+    "TestRunSummary": {
+      "title": "Test Run Summary",
+      "description": "Most important information about a test run.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "description": "Date of the test run.",
+          "type": "string",
+          "format": "dateTime"
+        },
+        "statusDescription": {
+          "description": "Human-readable status of the test run.",
+          "type": "string"
+        },
+        "failed": {
+          "description": "Number of failed tests",
+          "type": "number"
+        },
+        "passed": {
+          "description": "Number of passed tests",
+          "type": "number"
+        },
+        "completed": {
+          "description": "Tells whether the test run has completed",
+          "type": "boolean"
+        }
+      }
+    },
+    "DeviceSelection": {
+      "title": "Device Selection",
+      "description": "Short ID for a list of device IDs",
+      "type": "object",
+      "properties": {
+        "shortId": {
+          "description": "Identifier of the device selection",
+          "type": "string"
+        }
+      },
+      "required": [
+        "shortId"
+      ]
+    },
+    "Subscription": {
+      "title": "Subscription",
+      "description": "Subscription information",
+      "type": "object",
+      "properties": {
+        "startsAt": {
+          "description": "The date the subscription began",
+          "type": "string",
+          "format": "dateTime"
+        },
+        "endsAt": {
+          "description": "The date the subscription will end or ended",
+          "type": "string",
+          "format": "dateTime"
+        },
+        "daysLeft": {
+          "description": "The number of days left in the subscription",
+          "type": "number"
+        },
+        "tier": {
+          "$ref": "#/definitions/Tier"
+        },
+        "active": {
+          "description": "Is the subscription currently active?",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "Id of the subscription",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "Tier": {
+      "title": "Subscription Tier",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The name of the tier",
+          "type": "string"
+        }
+      }
+    },
+    "TestReport": {
+      "required": [
+        "app_upload_id",
+        "date",
+        "testType",
+        "platform",
+        "stats",
+        "id",
+        "schema_version",
+        "revision",
+        "features",
+        "finished_device_snapshots",
+        "device_logs",
+        "date_finished"
+      ],
+      "properties": {
+        "app_upload_id": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "testType": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "stats": {
+          "required": [
+            "os",
+            "devices",
+            "filesize",
+            "totalDeviceMinutes",
+            "devices_not_runned",
+            "failed",
+            "skipped",
+            "passed",
+            "total",
+            "devices_finished",
+            "devices_failed",
+            "devices_skipped",
+            "step_count"
+          ],
+          "properties": {
+            "os": {
+              "type": "number"
+            },
+            "devices": {
+              "type": "number"
+            },
+            "filesize": {
+              "type": "number"
+            },
+            "totalDeviceMinutes": {
+              "type": "number"
+            },
+            "devices_not_runned": {
+              "type": "number"
+            },
+            "failed": {
+              "type": "number"
+            },
+            "skipped": {
+              "type": "number"
+            },
+            "passed": {
+              "type": "number"
+            },
+            "total": {
+              "type": "number"
+            },
+            "devices_finished": {
+              "type": "number"
+            },
+            "devices_failed": {
+              "type": "number"
+            },
+            "devices_skipped": {
+              "type": "number"
+            },
+            "step_count": {
+              "type": "number"
+            }
+          },
+          "type": "object"
+        },
+        "id": {
+          "type": "string"
+        },
+        "schema_version": {
+          "type": "number"
+        },
+        "revision": {
+          "type": "number"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "tests": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "testName": {
+                      "type": "string"
+                    },
+                    "runs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "number": {
+                            "type": "number"
+                          },
+                          "steps": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "stepName": {
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "type": "string"
+                                },
+                                "stepExecutions": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "device_snapshot_id": {
+                                        "type": "string"
+                                      },
+                                      "status": {
+                                        "type": "string"
+                                      },
+                                      "timestamp": {
+                                        "type": "number"
+                                      }
+                                    }
+                                  }
+                                },
+                                "failed": {
+                                  "type": "number"
+                                },
+                                "skipped": {
+                                  "type": "number"
+                                },
+                                "step_report_url": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "failed": {
+                            "type": "number"
+                          },
+                          "skipped": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "failed": {
+                "type": "number"
+              },
+              "skipped": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "finished_device_snapshots": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "device_logs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "device_snapshot_id": {
+                "type": "string"
+              },
+              "device_log": {
+                "type": "string"
+              },
+              "test_log": {
+                "type": "string"
+              },
+              "appium_log": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "date_finished": {
+          "type": "string"
+        }
+      }
+    },
+    "TestCloudErrorDetails": {
+      "title": "TestCloudErrorDetails",
+      "description": "Details of a failed operation",
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "Status of the operation",
+          "type": "string"
+        },
+        "message": {
+          "description": "Human-readable message that describes the error",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "message"
+      ]
+    },
+    "TestCloudFileHash": {
+      "title": "TestCloudFileHash",
+      "description": "Hash, type, path and byte range of a file that is required in test run",
+      "type": "object",
+      "properties": {
+        "file_type": {
+          "type": "string",
+          "description": "Type of the file",
+          "enum": [
+            "dsym-file",
+            "app-file",
+            "test-file"
+          ]
+        },
+        "checksum": {
+          "type": "string",
+          "description": "SHA256 hash of the file"
+        },
+        "relative_path": {
+          "type": "string",
+          "description": "Relative path of the file"
+        },
+        "byte_range": {
+          "type": "string",
+          "description": "Range of bytes required to verify ownership of the file"
+        }
+      },
+      "required": [
+        "file_type",
+        "checksum",
+        "relative_path"
+      ]
+    },
+    "TestCloudStartTestRunOptions": {
+      "title": "TestCloudStartTestRunOptions",
+      "description": "Options required to start the test run",
+      "type": "object",
+      "properties": {
+        "test_framework": {
+          "type": "string",
+          "description": "Test framework used by tests."
+        },
+        "device_selection": {
+          "type": "string",
+          "description": "Device selection string."
+        },
+        "locale": {
+          "type": "string",
+          "description": "Locale that should be used to run tests."
+        },
+        "test_series": {
+          "type": "string",
+          "description": "Name of the test series."
+        },
+        "test_parameters": {
+          "type": "object",
+          "description": "A JSON dictionary with additional test parameters"
+        }
+      },
+      "required": [
+        "test_framework",
+        "device_selection"
+      ]
+    },
+    "TestCloudStartTestRunResult": {
+      "title": "TestCloudStartTestRunResult",
+      "description": "Result of starting a test run",
+      "type": "object",
+      "properties": {
+        "accepted_devices": {
+          "description": "List with names of accepted devices",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rejected_devices": {
+          "description": "List with names and descriptions of rejected devices",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "TestRunState": {
+      "title": "TestRunState",
+      "description": "Current status of a test run",
+      "type": "object",
+      "properties": {
+        "message": {
+          "description": "Multi-line message that describes the status",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "wait_time": {
+          "description": "Time (in seconds) that the client should wait for before checking the status again",
+          "type": "integer"
+        },
+        "exit_code": {
+          "description": "Exit code for the client",
+          "type": "integer"
+        }
+      }
+    },
+    "Permission": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Level": {
+          "type": "string"
+        }
+      }
+    },
+    "Table": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Permission"
+          }
+        },
+        "extendedSettings": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TableColumn"
+          }
+        }
+      }
+    },
+    "TableColumn": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "IsIndexed": {
+          "type": "boolean"
+        },
+        "Type": {
+          "enum": [
+            "String",
+            "Boolean",
+            "Number",
+            "Date",
+            "Version",
+            "Custom"
+          ],
+          "type": "string"
+        },
+        "CanDelete": {
+          "type": "boolean"
+        },
+        "CanUpdateIndex": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ImportDataContainer": {
+      "type": "object",
+      "properties": {
+        "csvData": {
+          "type": "string"
         }
       }
     }
@@ -5265,14 +9206,16 @@
       "type": "string",
       "in": "path",
       "description": "The name of the application",
-      "required": true
+      "required": true,
+      "x-ms-parameter-location": "method"
     },
     "owner_name": {
       "name": "owner_name",
       "type": "string",
       "in": "path",
       "description": "The name of the owner",
-      "required": true
+      "required": true,
+      "x-ms-parameter-location": "method"
     },
     "app_id": {
       "name": "app_id",
@@ -5280,7 +9223,8 @@
       "description": "The app ID",
       "required": true,
       "type": "string",
-      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+      "x-ms-parameter-location": "method"
     },
     "build_id": {
       "name": "build_id",
@@ -5289,14 +9233,16 @@
       "required": true,
       "type": "integer",
       "minimum": 0,
-      "exclusiveMinimum": true
+      "exclusiveMinimum": true,
+      "x-ms-parameter-location": "method"
     },
     "branch": {
       "name": "branch",
       "in": "path",
       "description": "The branch name",
       "required": true,
-      "type": "string"
+      "type": "string",
+      "x-ms-parameter-location": "method"
     },
     "sha": {
       "name": "sha",
@@ -5304,7 +9250,8 @@
       "description": "The SHA hash",
       "required": true,
       "type": "string",
-      "pattern": "^[0-9a-f]{5,40}$"
+      "pattern": "^[0-9a-f]{5,40}$",
+      "x-ms-parameter-location": "method"
     },
     "form": {
       "name": "form",
@@ -5315,49 +9262,56 @@
       "enum": [
         "lite",
         "full"
-      ]
+      ],
+      "x-ms-parameter-location": "method"
     },
     "token": {
       "name": "token",
       "in": "query",
       "description": "An auth token",
       "required": true,
-      "type": "string"
+      "type": "string",
+      "x-ms-parameter-location": "method"
     },
     "path_symbol_upload_id": {
       "name": "symbol_upload_id",
       "type": "string",
       "in": "path",
       "description": "The ID of the symbol upload",
-      "required": true
+      "required": true,
+      "x-ms-parameter-location": "method"
     },
     "path_symbol_id": {
       "name": "symbol_id",
       "type": "string",
       "in": "path",
       "description": "The ID of the symbol (uuid of the symbol)",
-      "required": true
+      "required": true,
+      "x-ms-parameter-location": "method"
     },
     "path_crash_group_id": {
       "name": "crash_group_id",
       "in": "path",
       "required": true,
       "description": "id of a specific group",
-      "type": "string"
+      "type": "string",
+      "x-ms-parameter-location": "method"
     },
     "path_crash_id": {
       "name": "crash_id",
       "in": "path",
       "required": true,
       "description": "id of a specific error",
-      "type": "string"
+      "type": "string",
+      "x-ms-parameter-location": "method"
     },
     "app_version": {
       "name": "app_version",
       "in": "query",
       "type": "string",
       "description": "version",
-      "required": false
+      "required": false,
+      "x-ms-parameter-location": "method"
     },
     "date_from": {
       "name": "date_from",
@@ -5365,7 +9319,8 @@
       "type": "string",
       "format": "date-time",
       "description": "",
-      "required": false
+      "required": false,
+      "x-ms-parameter-location": "method"
     },
     "date_to": {
       "name": "date_to",
@@ -5373,7 +9328,8 @@
       "type": "string",
       "format": "date-time",
       "description": "",
-      "required": false
+      "required": false,
+      "x-ms-parameter-location": "method"
     },
     "last_occurrence_from": {
       "name": "last_occurrence_from",
@@ -5381,7 +9337,8 @@
       "type": "string",
       "format": "date-time",
       "description": "Earliest date when the last time a crash occured in a error group",
-      "required": false
+      "required": false,
+      "x-ms-parameter-location": "method"
     },
     "last_occurrence_to": {
       "name": "last_occurrence_to",
@@ -5389,7 +9346,8 @@
       "type": "string",
       "format": "date-time",
       "description": "Latest date when the last time a crash occured in a error group",
-      "required": false
+      "required": false,
+      "x-ms-parameter-location": "method"
     },
     "error_type": {
       "name": "error_type",
@@ -5399,7 +9357,8 @@
       "enum": [
         "something",
         "else"
-      ]
+      ],
+      "x-ms-parameter-location": "method"
     },
     "group_type": {
       "name": "group_type",
@@ -5409,7 +9368,8 @@
       "enum": [
         "GroupType1",
         "GroupType2"
-      ]
+      ],
+      "x-ms-parameter-location": "method"
     },
     "group_status": {
       "name": "group_status",
@@ -5417,10 +9377,11 @@
       "type": "string",
       "required": false,
       "enum": [
-        "Open",
-        "Closed",
-        "Ignored"
-      ]
+        "open",
+        "closed",
+        "ignored"
+      ],
+      "x-ms-parameter-location": "method"
     },
     "include_report": {
       "name": "include_report",
@@ -5428,7 +9389,8 @@
       "type": "boolean",
       "default": false,
       "required": false,
-      "description": "true if the error should include the raw error report. Default is false"
+      "description": "true if the error should include the raw error report. Default is false",
+      "x-ms-parameter-location": "method"
     },
     "include_log": {
       "name": "include_log",
@@ -5436,14 +9398,16 @@
       "type": "boolean",
       "default": false,
       "required": false,
-      "description": "true if the error should include the custom log report. Default is false"
+      "description": "true if the error should include the custom log report. Default is false",
+      "x-ms-parameter-location": "method"
     },
     "group_text_search": {
       "name": "group_text_search",
       "in": "query",
       "type": "string",
       "required": false,
-      "description": "A freetext search that matches in error, error types, error stack_traces and error user"
+      "description": "A freetext search that matches in error, error types, error stack_traces and error user",
+      "x-ms-parameter-location": "method"
     },
     "StartParameter": {
       "name": "start",
@@ -5451,7 +9415,8 @@
       "description": "Start date time in data in ISO 8601 date time format",
       "required": true,
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "x-ms-parameter-location": "method"
     },
     "EndParameter": {
       "name": "end",
@@ -5459,7 +9424,8 @@
       "description": "Last date time in data in ISO 8601 date time format.",
       "required": false,
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "x-ms-parameter-location": "method"
     },
     "CrashGroupParameter": {
       "name": "crash_group_id",
@@ -5467,15 +9433,26 @@
       "description": "The id of the crash group",
       "required": true,
       "type": "string",
-      "format": "string"
+      "format": "string",
+      "x-ms-parameter-location": "method"
     },
     "CrashGroupsParameter": {
-      "name": "crashgroups",
+      "name": "crash_groups",
       "in": "body",
       "required": true,
       "schema": {
         "$ref": "#/definitions/CrashGroupContainer"
-      }
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "EventParameter": {
+      "name": "event_id",
+      "in": "path",
+      "description": "The id of the event",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
     },
     "IntervalParameter": {
       "name": "interval",
@@ -5483,7 +9460,8 @@
       "description": "Size of interval in ISO 8601 duration format. (PnYnMnDTnHnMnS|PnW|P<date>T<time>). The valid durations are 1 day (P1D), 1 week (P1W), and 30 days (P30D).",
       "required": true,
       "type": "string",
-      "format": "Timespan"
+      "format": "Timespan",
+      "x-ms-parameter-location": "method"
     },
     "VersionsParameter": {
       "name": "versions",
@@ -5493,14 +9471,28 @@
       "items": {
         "type": "string"
       },
-      "collectionFormat": "pipes"
+      "collectionFormat": "pipes",
+      "x-ms-parameter-location": "method"
     },
     "VersionParameter": {
       "name": "version",
       "in": "query",
       "required": true,
       "type": "string",
-      "format": "string"
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "EventNameParameter": {
+      "name": "event_name",
+      "in": "query",
+      "description": "to select the specific events",
+      "required": false,
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "collectionFormat": "pipes",
+      "x-ms-parameter-location": "method"
     },
     "CountParameter": {
       "name": "count",
@@ -5508,7 +9500,8 @@
       "description": "The number of results to return",
       "required": false,
       "type": "integer",
-      "format": "int64"
+      "format": "int64",
+      "x-ms-parameter-location": "method"
     },
     "TopParameter": {
       "name": "$top",
@@ -5519,7 +9512,8 @@
       "minimum": 1,
       "maximum": 2000,
       "type": "integer",
-      "format": "int64"
+      "format": "int64",
+      "x-ms-parameter-location": "method"
     },
     "SkipParameter": {
       "name": "$skip",
@@ -5529,7 +9523,8 @@
       "default": 0,
       "minimum": 0,
       "type": "integer",
-      "format": "int64"
+      "format": "int64",
+      "x-ms-parameter-location": "method"
     },
     "FilterParameter": {
       "name": "$filter",
@@ -5537,7 +9532,8 @@
       "description": "A filter as specified in https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.",
       "required": false,
       "type": "string",
-      "format": "string"
+      "format": "string",
+      "x-ms-parameter-location": "method"
     },
     "InlineCountParameter": {
       "name": "$inlinecount",
@@ -5549,7 +9545,8 @@
       "enum": [
         "allpages",
         "none"
-      ]
+      ],
+      "x-ms-parameter-location": "method"
     }
   },
   "securityDefinitions": {
@@ -5578,6 +9575,12 @@
     },
     {
       "name": "analytics"
+    },
+    {
+      "name": "test"
+    },
+    {
+      "name": "data"
     }
   ]
 }

@@ -48,7 +48,7 @@ function BuildOperations(client) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.getXcodeVersions = function (ownerName, appName, options, callback) {
+BuildOperations.prototype.getV01AppsByOwnerNameByAppNameXcodeVersions = function (ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -174,6 +174,141 @@ BuildOperations.prototype.getXcodeVersions = function (ownerName, appName, optio
 };
 
 /**
+ * Returns a one-time websocket URL
+ *
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+BuildOperations.prototype.postV01AppsByOwnerNameByAppNameWebsockets = function (ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/websockets';
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'POST';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200 && statusCode !== 400) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['WebSocketContainer']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 400) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ValidationErrorResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError1.request = msRest.stripRequest(httpRequest);
+        deserializationError1.response = msRest.stripResponse(response);
+        return callback(deserializationError1);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
  * Gets the repositories available from the source code host
  *
  * @param {string} ownerName The name of the owner
@@ -200,7 +335,7 @@ BuildOperations.prototype.getXcodeVersions = function (ownerName, appName, optio
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.getRepositories = function (ownerName, appName, options, callback) {
+BuildOperations.prototype.getV01AppsByOwnerNameByAppNameSourceHostsBySourceHostRepositories = function (ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -362,7 +497,7 @@ BuildOperations.prototype.getRepositories = function (ownerName, appName, option
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.getRepositoryConfiguration = function (ownerName, appName, options, callback) {
+BuildOperations.prototype.getV01AppsByOwnerNameByAppNameRepoConfig = function (ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -499,7 +634,7 @@ BuildOperations.prototype.getRepositoryConfiguration = function (ownerName, appN
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.configureRepository = function (ownerName, appName, repoUrl, options, callback) {
+BuildOperations.prototype.postV01AppsByOwnerNameByAppNameRepoConfig = function (ownerName, appName, repoUrl, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -656,7 +791,7 @@ BuildOperations.prototype.configureRepository = function (ownerName, appName, re
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.deleteRepositoryConfiguration = function (ownerName, appName, options, callback) {
+BuildOperations.prototype.deleteV01AppsByOwnerNameByAppNameRepoConfig = function (ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -796,7 +931,7 @@ BuildOperations.prototype.deleteRepositoryConfiguration = function (ownerName, a
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.getCommitInfo = function (shaCollection, ownerName, appName, options, callback) {
+BuildOperations.prototype.getV01AppsByOwnerNameByAppNameCommitsBatchByShaCollection = function (shaCollection, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -948,7 +1083,7 @@ BuildOperations.prototype.getCommitInfo = function (shaCollection, ownerName, ap
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.getDownloadUri = function (buildId, downloadType, ownerName, appName, options, callback) {
+BuildOperations.prototype.getV01AppsByOwnerNameByAppNameBuildsByBuildIdDownloadsByDownloadType = function (buildId, downloadType, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1066,7 +1201,7 @@ BuildOperations.prototype.getDownloadUri = function (buildId, downloadType, owne
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.getBuildDetails = function (buildId, ownerName, appName, options, callback) {
+BuildOperations.prototype.getV01AppsByOwnerNameByAppNameBuildsByBuildId = function (buildId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1199,7 +1334,7 @@ BuildOperations.prototype.getBuildDetails = function (buildId, ownerName, appNam
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.updateProperties = function (buildId, ownerName, appName, options, callback) {
+BuildOperations.prototype.patchV01AppsByOwnerNameByAppNameBuildsByBuildId = function (buildId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1331,13 +1466,12 @@ BuildOperations.prototype.updateProperties = function (buildId, ownerName, appNa
  *
  * @param {string} branch The branch name
  * 
- * @param {string} platform The desired platform for the project scan;
- * normally the same as the app platform. Possible values include: 'iOS',
- * 'Android'
+ * @param {string} os The desired OS for the project scan; normally the same
+ * as the app OS. Possible values include: 'iOS', 'Android'
  * 
- * @param {string} language The desired language for the project scan;
- * normally the same as the app language. Possible values include:
- * 'objective-c', 'swift', 'javascript', 'c#'
+ * @param {string} platform The desired platform for the project scan.
+ * Possible values include: 'Objective-C-Swift', 'React-Native', 'Xamarin',
+ * 'Java'
  * 
  * @param {string} ownerName The name of the owner
  * 
@@ -1361,7 +1495,7 @@ BuildOperations.prototype.updateProperties = function (buildId, ownerName, appNa
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.getToolsetProjects = function (branch, platform, language, ownerName, appName, options, callback) {
+BuildOperations.prototype.getV01AppsByOwnerNameByAppNameBranchesByBranchToolsetProjects = function (branch, os, platform, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1375,11 +1509,11 @@ BuildOperations.prototype.getToolsetProjects = function (branch, platform, langu
     if (branch === null || branch === undefined || typeof branch.valueOf() !== 'string') {
       throw new Error('branch cannot be null or undefined and it must be of type string.');
     }
+    if (os === null || os === undefined || typeof os.valueOf() !== 'string') {
+      throw new Error('os cannot be null or undefined and it must be of type string.');
+    }
     if (platform === null || platform === undefined || typeof platform.valueOf() !== 'string') {
       throw new Error('platform cannot be null or undefined and it must be of type string.');
-    }
-    if (language === null || language === undefined || typeof language.valueOf() !== 'string') {
-      throw new Error('language cannot be null or undefined and it must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -1398,8 +1532,8 @@ BuildOperations.prototype.getToolsetProjects = function (branch, platform, langu
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
   var queryParameters = [];
+  queryParameters.push('os=' + encodeURIComponent(os));
   queryParameters.push('platform=' + encodeURIComponent(platform));
-  queryParameters.push('language=' + encodeURIComponent(language));
   if (queryParameters.length > 0) {
     requestUrl += '?' + queryParameters.join('&');
   }
@@ -1498,7 +1632,7 @@ BuildOperations.prototype.getToolsetProjects = function (branch, platform, langu
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.getProjectsDeprecated = function (branch, ownerName, appName, options, callback) {
+BuildOperations.prototype.getV01AppsByOwnerNameByAppNameBranchesByBranchProjects = function (branch, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1636,7 +1770,7 @@ BuildOperations.prototype.getProjectsDeprecated = function (branch, ownerName, a
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.getBranchConfiguration = function (branch, ownerName, appName, options, callback) {
+BuildOperations.prototype.getV01AppsByOwnerNameByAppNameBranchesByBranchConfig = function (branch, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1778,7 +1912,7 @@ BuildOperations.prototype.getBranchConfiguration = function (branch, ownerName, 
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.configureBranch = function (branch, ownerName, appName, options, callback) {
+BuildOperations.prototype.postV01AppsByOwnerNameByAppNameBranchesByBranchConfig = function (branch, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1903,7 +2037,7 @@ BuildOperations.prototype.configureBranch = function (branch, ownerName, appName
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.reconfigureBranch = function (branch, ownerName, appName, options, callback) {
+BuildOperations.prototype.putV01AppsByOwnerNameByAppNameBranchesByBranchConfig = function (branch, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -2028,7 +2162,7 @@ BuildOperations.prototype.reconfigureBranch = function (branch, ownerName, appNa
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.deleteBranchConfiguration = function (branch, ownerName, appName, options, callback) {
+BuildOperations.prototype.deleteV01AppsByOwnerNameByAppNameBranchesByBranchConfig = function (branch, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -2152,7 +2286,7 @@ BuildOperations.prototype.deleteBranchConfiguration = function (branch, ownerNam
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.getBuildsForBranch = function (branch, ownerName, appName, options, callback) {
+BuildOperations.prototype.getV01AppsByOwnerNameByAppNameBranchesByBranchBuilds = function (branch, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -2292,7 +2426,7 @@ BuildOperations.prototype.getBuildsForBranch = function (branch, ownerName, appN
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.createBuild = function (branch, ownerName, appName, options, callback) {
+BuildOperations.prototype.postV01AppsByOwnerNameByAppNameBranchesByBranchBuilds = function (branch, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -2439,7 +2573,7 @@ BuildOperations.prototype.createBuild = function (branch, ownerName, appName, op
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-BuildOperations.prototype.getBranches = function (ownerName, appName, options, callback) {
+BuildOperations.prototype.getV01AppsByOwnerNameByAppNameBranches = function (ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;

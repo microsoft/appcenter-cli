@@ -14,13 +14,14 @@ var util = require('util');
  * @class
  * Initializes a new instance of the SessionsPerDevice class.
  * @constructor
- * @member {number} [averageSessionsPerUser]
+ * @member {number} [averageSessionsPerUser] average seesion per user
  * 
- * @member {number} [previousAverageSessionsPerUser]
+ * @member {number} [previousAverageSessionsPerUser] previous average session
+ * per user
  * 
- * @member {number} [totalCount]
+ * @member {number} [totalCount] total session per device count
  * 
- * @member {number} [previousTotalCount]
+ * @member {number} [previousTotalCount] previous total count
  * 
  * @member {array} [sessionsPerUser] the session count for each interval per
  * device

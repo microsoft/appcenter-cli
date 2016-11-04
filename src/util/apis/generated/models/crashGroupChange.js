@@ -10,8 +10,7 @@
  * @class
  * Initializes a new instance of the CrashGroupChange class.
  * @constructor
- * @member {string} [status] Possible values include: 'Open', 'Closed',
- * 'Ignored'
+ * @member {object} [status]
  * 
  */
 function CrashGroupChange() {
@@ -35,7 +34,7 @@ CrashGroupChange.prototype.mapper = function () {
           required: false,
           serializedName: 'status',
           type: {
-            name: 'String'
+            name: 'Object'
           }
         }
       }

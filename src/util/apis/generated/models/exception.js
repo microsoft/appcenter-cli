@@ -25,7 +25,7 @@ var util = require('util');
  * 
  * @member {boolean} [relevant] relevant exception (crashed)
  * 
- * @member {array} [innerException]
+ * @member {array} [innerExceptions]
  * 
  */
 function Exception() {
@@ -81,9 +81,9 @@ Exception.prototype.mapper = function () {
             name: 'Boolean'
           }
         },
-        innerException: {
+        innerExceptions: {
           required: false,
-          serializedName: 'inner_exception',
+          serializedName: 'inner_exceptions',
           type: {
             name: 'Sequence',
             element: {

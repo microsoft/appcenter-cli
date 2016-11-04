@@ -24,9 +24,11 @@ var models = require('./index');
  * 
  * @member {string} name The name of the app used in URLs
  * 
- * @member {string} platform The platform of the app
+ * @member {string} os The OS the app will be running on. Possible values
+ * include: 'iOS', 'Android'
  * 
- * @member {string} [language] The primary programming language used in the app
+ * @member {string} [platform] The platform of the app. Possible values
+ * include: 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
  * 
  * @member {string} [iconUrl] The string representation of the URL pointing to
  * the app's icon
@@ -46,6 +48,9 @@ var models = require('./index');
  * 
  * @member {string} [owner.type] The owner type. Can either be 'org' or
  * 'user'. Possible values include: 'org', 'user'
+ * 
+ * @member {string} [azureSubscriptionId] The unique ID (UUID) of the Azure
+ * subscription associate with the app
  * 
  */
 function AppResponse() {
@@ -100,16 +105,16 @@ AppResponse.prototype.mapper = function () {
             name: 'String'
           }
         },
-        platform: {
+        os: {
           required: true,
-          serializedName: 'platform',
+          serializedName: 'os',
           type: {
             name: 'String'
           }
         },
-        language: {
+        platform: {
           required: false,
-          serializedName: 'language',
+          serializedName: 'platform',
           type: {
             name: 'String'
           }
@@ -127,6 +132,13 @@ AppResponse.prototype.mapper = function () {
           type: {
             name: 'Composite',
             className: 'Owner'
+          }
+        },
+        azureSubscriptionId: {
+          required: false,
+          serializedName: 'azure_subscription_id',
+          type: {
+            name: 'String'
           }
         }
       }
