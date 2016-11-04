@@ -3,6 +3,7 @@
 const gulp = require('gulp');
 const runSeq = require('run-sequence');
 const rimraf = require('rimraf');
+const sourcemaps = require('gulp-sourcemaps');
 const ts = require('gulp-typescript');
 const autorest = require('./scripts/autorest');
 
@@ -18,9 +19,12 @@ gulp.task('clean', function (done) {
 
 gulp.task('build-ts', function () {
   let tsResult = gulp.src(['src/**/*.ts', 'typings/**/*.d.ts'])
+    .pipe(sourcemaps.init())
     .pipe(tsProject());
 
-  return tsResult.js.pipe(gulp.dest('dist'));
+  return tsResult.js
+    .pipe(sourcemaps.write('.', { includeContent:false, sourceRoot: '.' }))
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('copy-assets', function () {
@@ -66,4 +70,3 @@ gulp.task('prepublish', function(done) {
 //
 
 gulp.task('default', [ 'build' ]);
-
