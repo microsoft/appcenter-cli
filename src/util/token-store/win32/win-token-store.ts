@@ -176,3 +176,7 @@ export class WinTokenStore implements TokenStore {
     });
   }
 }
+
+export function createWinTokenStore(): TokenStore {
+  return new WinTokenStore();
+}
