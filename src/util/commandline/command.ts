@@ -2,7 +2,7 @@
 import * as Result from "./command-result";
 import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription } from "./option-decorators";
 import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "./option-parser";
-import { setDebug, isDebug, setFormatJson, out } from "../interaction";
+import { setDebug, isDebug, setQuiet, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
 import { getUser } from "../profile";
@@ -48,6 +48,10 @@ export class Command {
   @help("Display help for this command")
   public help: boolean;
 
+  @longName("quiet")
+  @help("Auto-confirm any requests, do not prompt for input")
+  public quiet: boolean;
+
   @shortName("v")
   @longName("version")
   @help("Display command's version")
@@ -69,6 +73,10 @@ export class Command {
 
     if (this.debug) {
       setDebug();
+    }
+
+    if (this.quiet) {
+      setQuiet();
     }
 
     if (this.format) {

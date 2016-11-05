@@ -8,6 +8,10 @@ let debug: boolean = false;
 export function isDebug(): boolean { return debug; }
 export function setDebug(): void { debug = true; }
 
+let quiet: boolean = false;
+
+export function isQuiet() { return quiet; }
+export function setQuiet(): void { quiet = true; }
 
 let format: string = "list";
 

@@ -1,38 +1,44 @@
 // Functions to read information from the user
 
 import * as inquirer from "inquirer";
-
+import { isQuiet } from "./io-options";
 export { Questions, Answers, Separator } from "inquirer";
 
-interface PromptFunc {
-  (prompt: string): Promise<string>;
-  password: {(prompt: string): Promise<string>};
-  question: {(questions: inquirer.Questions): Promise<inquirer.Answers>};
-}
-
-const prompt =  <PromptFunc>function prompt(message: string): Promise<string> {
-  return (<PromptFunc>prompt).question([
+export function prompt(message: string): Promise<string> {
+  return prompt.question([
     {
       name: "result", message: message
     }])
     .then(answers => answers["result"]);
 }
 
-prompt.password = function password(message: string): Promise<string> {
-  return (<PromptFunc>prompt).question([
-    {
-      type: "password",
-      name: "result",
-      message: message
-    }])
-  .then(answers => answers["result"]);
-};
+export namespace prompt {
+  export function password(message: string): Promise<string> {
+    return prompt.question([
+      {
+        type: "password",
+        name: "result",
+        message: message
+      }])
+    .then(answers => answers["result"]);
+  };
 
-prompt.question = function(questions: inquirer.Questions): Promise<inquirer.Answers> {
-  // Wrap inquirer promise in "real" promise, typescript definitions
-  // don't line up.
-  return Promise.resolve(inquirer.prompt(questions));
-};
-
-export { prompt };
-
+  export function question(questions: inquirer.Questions): Promise<inquirer.Answers> {
+    if (isQuiet()) {
+      let answers: any = {};
+      if (!Array.isArray(questions)) {
+        questions = [questions];
+      }
+      questions.forEach(q => {
+        if (q.type !== "confirm") {
+          throw new Error(`Cannot prompt for input in quiet mode`);
+        }
+        answers[q.name] = true;
+      });
+      return Promise.resolve(answers);
+    }
+    // Wrap inquirer promise in "real" promise, typescript definitions
+    // don't line up.
+    return Promise.resolve(inquirer.prompt(questions));
+  };
+}
