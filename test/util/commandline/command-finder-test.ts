@@ -42,12 +42,6 @@ describe("Finding commands", function () {
     expect(result.commandPath).to.equal(path.join(__dirname, "sample-commands", "cmd1.ts"));
   });
 
-  it("should fail if flags are in command line before command", function () {
-    const commandLine = "-h cmd1 -f stuff".split(" ");
-    const result = commandFinder(commandLine);
-    expect(result).to.have.property("found", false);
-  });
-
   it("should return command line flags without command name", function () {
     const commandLine = "cmd1 -f stuff.txt".split(" ");
     const result = commandFinder(commandLine);

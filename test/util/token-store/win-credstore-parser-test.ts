@@ -142,7 +142,6 @@ describe('Parsing output of creds child process', function () {
   before(function () {
     return credStore.set(testTargetName, testToken)
       .then(() => {
-        console.log("credential set, checking contents");
         return runAndParseOutput();
       });
   });
@@ -160,12 +159,10 @@ describe('Parsing output of creds child process', function () {
 
   function runAndParseOutput(): Promise<void> {
     return new Promise((resolve, reject) => {
-      console.log("Listing credstore contents");
       credStore.list()
         .subscribe({
           onNext: (entry: TokenEntry) => {
             parseResults.push(entry);
-            console.log(`got entry ${inspect(entry)}`);
             if (entry.key === testTargetName) {
               expectedEntry = entry;
             }

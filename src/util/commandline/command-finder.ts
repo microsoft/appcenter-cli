@@ -47,7 +47,7 @@ function normalizeCommandNames(command: string[]): string[] {
   return command.map(part => part.toLowerCase());
 }
 
-const legalCommandRegex = /^[a-zA-Z0-9_-]+$/;
+const legalCommandRegex = /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/;
 
 function isLegalCommandName(commandName: string): boolean {
   debug(`Checking legality of '${commandName}'`);

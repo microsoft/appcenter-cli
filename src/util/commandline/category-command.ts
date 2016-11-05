@@ -13,11 +13,15 @@ const debug = require("debug")("sonoma-cli:util:commandline:category-command");
 // "filler" command used to display category help
 export class CategoryCommand extends Command {
   constructor(args: CommandArgs) {
-    // Don't pass args to base class, nothing to parse
-    super({ commandPath: args.commandPath, command: args.command, args: []});
+    super(args);
   }
 
-  async runNoClient(): Promise<CommandResult> {
+  async execute(): Promise<CommandResult> {
+    if (this.version) {
+      debug("Version switch detected, displaying version number");
+      return this.showVersion();
+    }
+
     out.help(`${scriptName} ${this.command.join(" ")}`);
     out.help();
     out.help(this.categoryHelp());

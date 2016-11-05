@@ -2,11 +2,12 @@
 import * as Result from "./command-result";
 import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription } from "./option-decorators";
 import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "./option-parser";
-import { setDebug, isDebug, setFormatJson } from "../interaction";
+import { setDebug, isDebug, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
 import { getUser } from "../profile";
 import { SonomaClient, createSonomaClient } from "../apis";
+import * as path from "path";
 
 const debug = require("debug")("sonoma-cli:util:commandline:command");
 import { inspect } from "util";
@@ -47,6 +48,11 @@ export class Command {
   @help("Display help for this command")
   public help: boolean;
 
+  @shortName("v")
+  @longName("version")
+  @help("Display command's version")
+  public version: boolean;
+
   // Entry point for runner. DO NOT override in command definition!
   async execute(): Promise<Result.CommandResult> {
     debug(`Initial execution of command`);
@@ -54,6 +60,11 @@ export class Command {
       debug(`help switch detected, displaying help for command`);
       runHelp(Object.getPrototypeOf(this), this);
       return Result.success();
+    }
+
+    if (this.version) {
+      debug("Version switch detected, displaying version number");
+      return this.showVersion();
     }
 
     if (this.debug) {
@@ -94,5 +105,12 @@ export class Command {
   // Entry point for command author - override this!
   protected run(client: SonomaClient): Promise<Result.CommandResult> {
     throw new Error("Dev error, should be overridden!");
+  }
+
+  protected showVersion(): Result.CommandResult {
+    const packageJsonPath = path.join(__dirname, "../../../package.json");
+    const packageJson: any = require(packageJsonPath);
+    out.text(s => s,`${scriptName} version ${packageJson.version}`);
+    return Result.success();
   }
 }

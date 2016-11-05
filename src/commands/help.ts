@@ -16,6 +16,10 @@ export default class HelpCommand extends Command {
   }
 
   async execute(): Promise<CommandResult> {
+    if (this.version) {
+      return this.showVersion();
+    }
+
     debug(`Getting help for "${inspect(this.commandToGetHelpFor)}"`);
     // Try to load help for the command in question
     // We just load the command and run the help
