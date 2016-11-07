@@ -15,8 +15,8 @@ import * as http from 'http';
 import * as _ from "lodash";
 import * as url from "url";
 import * as request from "request";
-import * as async from "async";
 
+const pLimit = require("p-limit");
 const debug = require("debug")("somona-cli:commands:submit-tests");
 const paralleRequests = 10;
 
@@ -135,25 +135,11 @@ export default class RunTestsCommand extends AppCommand {
     }
   }
 
-  private async uploadAllTestFiles(client: SonomaClient, testRunId: string, files: TestRunFile[]): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      async.mapLimit(
-        files, 
-        paralleRequests,
-        async (file, callback) => {
-            this.uploadHashOrNewFile(client, testRunId, file)
-            .then(() => callback(null, null))
-            .catch(err => callback(err, null));
-        },
-        (err, _) => {
-          if (err) {
-            reject(err);
-          }
-          else {
-            resolve();
-          }
-        })
-    });
+  private uploadAllTestFiles(client: SonomaClient, testRunId: string, files: TestRunFile[]): Promise<void> {
+    let limit = pLimit(paralleRequests);
+    let uploadTasks = files.map(f => limit(() => this.uploadHashOrNewFile(client, testRunId, f)));
+
+    return Promise.all(uploadTasks);
   }
 
   private createTestRun(client: SonomaClient): Promise<string> {
