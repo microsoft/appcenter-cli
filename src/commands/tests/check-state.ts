@@ -4,6 +4,7 @@ import { AppCommand, CommandArgs, CommandResult,
 import { out } from "../../util/interaction";
 import { getUser } from "../../util/profile";
 import { SonomaClient, models, clientCall } from "../../util/apis";
+import * as os from "os";
 
 @help("Checks state of test run submitted to Visual Studio Mobile Center")
 export default class CheckStateCommand extends AppCommand {
@@ -27,7 +28,7 @@ export default class CheckStateCommand extends AppCommand {
 
     while (true) {
       let state = await out.progress("Checking state...", this.getTestRunState(client));
-      out.list(l => l, state.message);
+      out.text(state.message.join(os.EOL));
 
       if (!this.continuous || (typeof state.exitCode === "number")) {
         if (state.exitCode) {
