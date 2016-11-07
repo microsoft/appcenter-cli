@@ -1,0 +1,1 @@
+This is a sample TXT file used by manifest path resolving tests. Do not change it - it's content is used to generate SHA256 hash code verified in one of the tests.

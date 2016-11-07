@@ -1,0 +1,11 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/types/npm-async/ff63908a70ec51b775d9a6b8afac9945b12fbe08/2/typings.json",
+    "raw": "registry:npm/async#2.0.1+20160815105832",
+    "main": "index.d.ts",
+    "version": "2.0.1",
+    "name": "async",
+    "type": "typings"
+  }
+}

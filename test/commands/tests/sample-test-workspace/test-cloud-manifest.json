@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0.0",
+  "files": [
+    {
+      "sourcePath": "lib/tests.rb",
+      "targetPath": "index.rb"
+    },
+    "resources/**"
+  ],
+  "testFramework": {
+    "name": "uiTest",
+    "data": {
+      "testFixtures": 
+      [
+        {
+          "name": "MyTestFixture",
+          "testMethods": [
+            "VerifyFoo",
+            "VerifyBar"
+          ]
+        },
+        {
+          "name": "AnotherTestFixture",
+          "testMethods": [
+            "VerifyBuzz"
+          ]
+        }
+      ]
+    }
+  }
+}
