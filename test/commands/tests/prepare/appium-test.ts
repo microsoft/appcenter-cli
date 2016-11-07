@@ -57,7 +57,7 @@ describe("Preparing Appium workspace", () => {
     mockPath("workspace/test-classes", true, false);
     mockClassFile("workspace/test-classes", "test.class");
 
-    let result = await command.run();
+    let result = await command.runNoClient();
     expect(result.succeeded).to.be.false;
   });
 
@@ -68,7 +68,7 @@ describe("Preparing Appium workspace", () => {
     mockPath("workspace/test-classes", true, false);
     mockClassFile("workspace/test-classes", "test.class");
 
-    let result = await command.run();
+    let result = await command.runNoClient();
     expect(result.succeeded).to.be.false;
   });
 
@@ -79,7 +79,7 @@ describe("Preparing Appium workspace", () => {
     mockPath("workspace/test-classes", false, false);
     mockClassFile("workspace/test-classes", "test.class");
 
-    let result = await command.run();
+    let result = await command.runNoClient();
     expect(result.succeeded).to.be.false;
   });
 
@@ -89,7 +89,7 @@ describe("Preparing Appium workspace", () => {
     mockPath("workspace/dependency-jars", true, false);
     mockPath("workspace/test-classes", true, false);
 
-    let result = await command.run();
+    let result = await command.runNoClient();
     expect(result.succeeded).to.be.false;
   });
 
@@ -100,7 +100,7 @@ describe("Preparing Appium workspace", () => {
     mockPath("workspace/test-classes", true, false);
     mockClassFile("workspace/test-classes", "test.class");
 
-    let result = await command.run();
+    let result = await command.runNoClient();
     expect(result.succeeded).to.be.true;
   });
 });

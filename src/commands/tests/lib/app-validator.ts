@@ -6,9 +6,9 @@ import * as _ from "lodash";
 export class AppValidator {
   private appPath: string;
 
-  public static async validate(appPath: string): Promise<void> {
+  public static validate(appPath: string) {
     let validator = new AppValidator(appPath);
-    await validator.validate();
+    validator.validate();
   }
 
   constructor(appPath: string) {
@@ -18,9 +18,9 @@ export class AppValidator {
     this.appPath = appPath;
   }
 
-  public async validate(): Promise<void> {
+  public validate() {
     if (this.isAndroidApp()) {
-      if (await this.usesSharedRuntime()) {
+      if (this.usesSharedRuntime()) {
         throw new Error("Shared runtime apps are not supported yet.\
 Your application needs to be compiled for release.");
       }
@@ -38,7 +38,7 @@ Your application needs to be compiled for release.");
     return path.extname(this.appPath) === ".apk";
   }
 
-  public async usesSharedRuntime(): Promise<boolean> {
+  public usesSharedRuntime(): boolean {
     let zip = new AdmZip(this.appPath);
     let entries = zip.getEntries();
     let monodroid = entries.some(e => e.name.endsWith("libmonodroid.so"));

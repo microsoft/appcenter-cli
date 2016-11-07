@@ -1,6 +1,6 @@
 import { Command, CommandArgs, CommandResult, 
          help, success, name, shortName, longName, required, hasArg,
-         position, failure, notLoggedIn } from "../../../util/commandLine";
+         position, failure, notLoggedIn, ErrorCodes } from "../../../util/commandLine";
 import { out } from "../../../util/interaction";
 import * as outExtensions from "../lib/interaction";
 import { getUser } from "../../../util/profile";
@@ -8,7 +8,9 @@ import * as path from "path";
 import * as fs from "fs";
 import * as glob from "glob";
 
+@help("Prepares Appium workspace for test run")
 export default class PrepareAppiumCommand extends Command {
+  @help("Path to the Appium workspace")
   @longName("workspace-path")
   @required
   @hasArg
@@ -18,7 +20,7 @@ export default class PrepareAppiumCommand extends Command {
     super(args);
   }
 
-  async run(): Promise<CommandResult> {
+  async runNoClient(): Promise<CommandResult> {
     try {
       this.validateAppiumWorkspace();
 
@@ -30,7 +32,7 @@ export default class PrepareAppiumCommand extends Command {
       return success();
     } 
     catch (err) {
-      return failure(1, err.message);
+      return failure(ErrorCodes.Exception, err.message);
     }
   }
 
@@ -38,7 +40,7 @@ export default class PrepareAppiumCommand extends Command {
     this.validateWorkspaceExists();
     this.validatePomFile();
     this.validateDependencyJarsDirectory();
-    this.validateTestClassedDirectory();
+    this.validateTestClassesDirectory();
   }
 
   private validateWorkspaceExists() {
@@ -62,7 +64,7 @@ export default class PrepareAppiumCommand extends Command {
       'The Appium workspace directory must contain directory "dependency-jars"');
   }
 
-  private validateTestClassedDirectory() {
+  private validateTestClassesDirectory() {
     let testClassesDir = path.join(this.workspacePath, "test-classes");
     this.validatePathExists(
       path.join(this.workspacePath, "test-classes"),
@@ -77,14 +79,14 @@ export default class PrepareAppiumCommand extends Command {
   private hasClassFile(rootPath: string): boolean {
     let entries = fs.readdirSync(rootPath);
     for (let i = 0; i < entries.length; i++) {
-      
       let entry = entries[i];
-      let stats = fs.statSync(path.join(rootPath, entry));
+      let fullEntryPath = path.join(rootPath, entry);
+      let stats = fs.statSync(fullEntryPath);
       if (stats.isFile() && entry.endsWith(".class")) {
         return true;
       }
       
-      if (this.hasClassFile(entry)) {
+      if (this.hasClassFile(fullEntryPath)) {
         return true;
       }
     }

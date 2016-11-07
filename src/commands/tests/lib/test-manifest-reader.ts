@@ -29,22 +29,14 @@ export class TestManifestReader {
     let workspace = path.dirname(filePath);
     let resolver = new PathResolver(workspace);
     let readerInstance = new TestManifestReader(resolver);
-    let json = await TestManifestReader.readJsonFromFile(filePath);
+    let json = TestManifestReader.readJsonFromFile(filePath);
 
     return await readerInstance.readManifest(json);
   } 
 
-  private static async readJsonFromFile(filePath: string): Promise<any> {
-    return new Promise<any>((resolve, reject) => {
-      fs.readFile(filePath, "utf8", (error, data) => {
-        if (error) {
-          reject(error);
-        }
-        else {
-          resolve(JSON.parse(data));
-        }
-      });
-    });
+  private static readJsonFromFile(filePath: string): any {
+    let json = fs.readFileSync(filePath, "utf8");
+    return JSON.parse(json);
   }
 
   private constructor(pathResolver: PathResolver) {

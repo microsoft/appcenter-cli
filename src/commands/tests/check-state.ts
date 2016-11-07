@@ -1,35 +1,32 @@
-import { Command, CommandArgs, CommandResult, 
+import { AppCommand, CommandArgs, CommandResult, 
          help, success, name, shortName, longName, required, hasArg,
          position, failure, notLoggedIn } from "../../util/commandLine";
 import { out } from "../../util/interaction";
 import { getUser } from "../../util/profile";
 import { SonomaClient, models, clientCall } from "../../util/apis";
 
-export default class CheckStateCommand extends Command {
+@help("Checks state of test run submitted to Visual Studio Mobile Center")
+export default class CheckStateCommand extends AppCommand {
+  @help("Id of the test run")
   @longName("test-run-id")
   @required
   @hasArg
   testRunId: string;
 
-  @longName("app-name")
-  @hasArg
-  @required
-  applicationName: string;
-
+  @help("Continuously checks the state until the test run completes")
   @longName("continuous")
-  @hasArg
   continuous: boolean;
 
   constructor(args: CommandArgs) {
     super(args);
-    this.continuous = this.continuous != undefined;
+    this.continuous = this.continuous !== undefined;
   }
 
   async run(client: SonomaClient): Promise<CommandResult> {
     let exitCode = 0;
 
     while (true) {
-      let state = await this.getTestRunState(client);
+      let state = await out.progress("Checking state...", this.getTestRunState(client));
       out.list(l => l, state.message);
 
       if (!this.continuous || (typeof state.exitCode === "number")) {
@@ -62,7 +59,7 @@ export default class CheckStateCommand extends Command {
       client.test.getTestRunState(
         this.testRunId,
         getUser().userName,
-        this.applicationName,
+        this.app.appName,
         cb
       );
     });

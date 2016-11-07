@@ -1,4 +1,4 @@
-import { Command, CommandArgs, CommandResult, 
+import { AppCommand, CommandArgs, CommandResult, 
          help, success, name, shortName, longName, required, hasArg,
          position, failure, notLoggedIn } from "../../util/commandLine";
 import { out } from "../../util/interaction";
@@ -20,14 +20,8 @@ import * as async from "async";
 const debug = require("debug")("somona-cli:commands:submit-tests");
 const paralleRequests = 10;
 
-@help("Submits tests to Sonoma")
-export default class RunTestsCommand extends Command {
-  @help("Application name")
-  @longName("app-name")
-  @hasArg
-  @required
-  applicationName: string;
-
+@help("Submits tests to Visual Studio Mobile Center")
+export default class RunTestsCommand extends AppCommand {
   @help("Application file path")
   @longName("app-path")
   @hasArg
@@ -57,7 +51,7 @@ export default class RunTestsCommand extends Command {
   @hasArg
   testParameters: string[];
 
-  @help("Locale of the test run")
+  @help("Locale for the test run (e.g. en-US)")
   @longName("locale")
   @hasArg
   locale: string;
@@ -66,10 +60,6 @@ export default class RunTestsCommand extends Command {
   @longName("test-series")
   @hasArg
   testSeries: string;
-
-  @longName("test-run-id")
-  @hasArg
-  testRunId: string;
 
   constructor(args: CommandArgs) {
     super(args);
@@ -82,21 +72,18 @@ export default class RunTestsCommand extends Command {
     
     let appFile = await TestRunFile.create(this.applicationPath, path.basename(this.applicationPath), "app-file");
 
-    let testRunId = this.testRunId;
-    if (!testRunId) {
-      testRunId = await outExtensions.progressWithResult(
-        "Creating new test run", 
-        this.createTestRun(client));
-      debug(`Test run id: ${testRunId}`);
+    let testRunId = await outExtensions.progressWithResult(
+      "Creating new test run", 
+      this.createTestRun(client));
+    debug(`Test run id: ${testRunId}`);
 
-      await outExtensions.progressWithResult(
-        "Uploading application file", 
-        this.uploadHashOrNewFile(client, testRunId, appFile));
-      
-      await outExtensions.progressWithResult(
-        "Uploading test files", 
-        this.uploadAllTestFiles(client, testRunId, manifest.files));
-    }
+    await outExtensions.progressWithResult(
+      "Uploading application file", 
+      this.uploadHashOrNewFile(client, testRunId, appFile));
+    
+    await outExtensions.progressWithResult(
+      "Uploading test files", 
+      this.uploadAllTestFiles(client, testRunId, manifest.files));
 
     let startRunResult = await outExtensions.progressWithResult("Starting test run", this.startTestRun(client, testRunId, manifest));
 
@@ -154,13 +141,9 @@ export default class RunTestsCommand extends Command {
         files, 
         paralleRequests,
         async (file, callback) => {
-          try {
-            await this.uploadHashOrNewFile(client, testRunId, file);
-            callback(null, null);
-          }
-          catch (err) {
-            callback(err, null);
-          }
+            this.uploadHashOrNewFile(client, testRunId, file)
+            .then(() => callback(null, null))
+            .catch(err => callback(err, null));
         },
         (err, _) => {
           if (err) {
@@ -177,7 +160,7 @@ export default class RunTestsCommand extends Command {
      return new Promise<string>((resolve, reject) => {
        client.test.createTestRun(
          getUser().userName, 
-         this.applicationName, 
+         this.app.appName, 
          (err: Error, _result: any, _request: any, response: http.IncomingMessage) => {
           if (err) { 
             reject(err); 
@@ -212,7 +195,7 @@ export default class RunTestsCommand extends Command {
           byteRange: byteRange
         },
         getUser().userName,
-        this.applicationName,
+        this.app.appName,
         (err, result, request, response) => {
           if (err) {
             reject(err);
@@ -244,7 +227,7 @@ export default class RunTestsCommand extends Command {
       client.test.startUploadingFile(
         testRunId,
         getUser().userName,
-        this.applicationName,
+        this.app.appName,
         (err, _result, _request, response) => {
           if (err) {
             reject(err);
@@ -304,7 +287,7 @@ export default class RunTestsCommand extends Command {
         testRunId, 
         startOptions,
         getUser().userName,
-        this.applicationName,
+        this.app.appName,
         cb);
     });
   }
@@ -314,7 +297,7 @@ export default class RunTestsCommand extends Command {
       client.test.getTestRunState(
         testRunId,
         getUser().userName,
-        this.applicationName,
+        this.app.appName,
         cb
       );
     });
