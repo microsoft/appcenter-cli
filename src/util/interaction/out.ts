@@ -2,7 +2,7 @@
 const debug = require("debug")("sonoma-cli:util:interaction:out");
 import { inspect } from "util";
 
-import { isDebug, formatIsJson } from "./io-options";
+import { isDebug, isQuiet, formatIsJson } from "./io-options";
 
 import * as os from "os";
 import * as wrap from "wordwrap";
@@ -15,7 +15,7 @@ const Spinner = require("cli-spinner").Spinner;
 // to complete.
 //
 export function progress<T>(title: string, action: Promise<T>): Promise<T> {
-  if (!formatIsJson()) {
+  if (!formatIsJson() && !isQuiet()) {
     const spinner = new Spinner(title);
     spinner.start();
     return action.then(result => {
