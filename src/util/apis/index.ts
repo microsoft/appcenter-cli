@@ -1,4 +1,4 @@
-import SonomaClient = require("./generated/SonomaClient");
+import SonomaClient = require("./generated/sonomaClient");
 import * as models from "./generated/models";
 
 export { SonomaClient, models };
