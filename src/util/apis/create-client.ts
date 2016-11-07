@@ -2,7 +2,7 @@
 const debug = require("debug")("sonoma-cli:util:apis:create-client");
 import { inspect } from "util";
 
-import SonomaClient = require("./generated/SonomaClient");
+import SonomaClient = require("./generated/sonomaClient");
 import { SonomaClientCredentials } from "./sonoma-client-credentials";
 import { userAgentFilter } from "./user-agent-filter";
 const BasicAuthenticationCredentials = require("ms-rest").BasicAuthenticationCredentials;
