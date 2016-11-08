@@ -23,6 +23,7 @@ export function runHelp(commandPrototype: any, commandObj: any): void {
   const commandHelp: string = getCommandHelp(commandObj);
   const optionsHelp: string[] = getOptionsHelp(commandPrototype);
 
+  out.help();
   out.help(commandExample);
   out.help();
   out.help(commandHelp);
@@ -106,16 +107,21 @@ function getPositionalOptionsHelp(commandPrototype: any): string[] {
 }
 
 function getCommandExample(commandPrototype: any, commandObj: any): string {
-  let commandParts: string[] = commandObj.command;
+  let commandName = getCommandName(commandObj);
+
+  return `  ${scriptName} ${commandName}`;
+}
+
+function getCommandName(commandObj: any): string {
+  const commandParts: string[] = commandObj.command;
 
   let script = commandParts[commandParts.length - 1];
-  let extIndex = script.lastIndexOf(".");
+  const extIndex = script.lastIndexOf(".");
   if (extIndex > -1) {
     script = script.slice(0, extIndex);
   }
   commandParts[commandParts.length - 1] = script;
-
-  return `${scriptName} ${commandObj.command.join(" ")}`;
+  return commandParts.join(" ");
 }
 
 function switchText(switchOption: SwitchOptionHelp): string {
