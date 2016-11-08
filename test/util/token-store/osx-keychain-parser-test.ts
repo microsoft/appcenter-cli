@@ -1,11 +1,14 @@
 import { expect } from "chai";
 import * as _ from "lodash";
 import * as es from "event-stream";
+import * as rx from "rx";
 import * as os from "os";
 import * as childProcess from "child_process";
 import { inspect } from "util";
 
+import { TokenEntry, TokenKeyType, TokenValueType } from "../../../src/util/token-store";
 import * as keychainParser from "../../../src/util/token-store/osx/osx-keychain-parser";
+import * as tokenStore from "../../../src/util/token-store/osx/osx-token-store";
 
 type DoneFunc = {(err?: Error): void};
 
@@ -166,74 +169,36 @@ describe('security tool output parsing', function () {
   });
 });
 
-// describe('Parsing output of security child process', function () {
-//   if (os.platform() !== 'darwin') {
-//     console.log('These tests only run on Mac OSX');
-//     return;
-//   }
+describe('storing data in keychain', function () {
+  if (os.platform() !== 'darwin') {
+    console.log('These tests only run on Mac OSX');
+    return;
+  }
 
-//   var parseResults: any[] = [];
-//   var testUser = "xplat-test-user";
-//   var testService = "xplat test account";
-//   var testDescription = "A dummy entry for testing";
-//   var testPassword = "Sekret!";
+  let keychain = tokenStore.createOsxTokenStore();
 
-//   before(function (done: DoneFunc) {
-//     addExpectedEntry(function (err: Error) {
-//       if (err) { return done(err); }
-//       runAndParseOutput(function (err) {
-//         done(err);
-//       });
-//     });
-//   });
+  let parseResults: any[] = [];
+  let testUser = "mobile-center-user";
+  let testPassword = "Sekret!";
+  let testTokenId = "1234abcd";
 
-//   after(function (done: DoneFunc) {
-//     removeExpectedEntry(function (err: Error) {
-//       done(err);
-//     });
-//   });
+  before(() => {
+    return keychain.set(testUser, { id: testTokenId, token: testPassword });
+  });
 
-//   // Helper functions to do each stage of the setup
-//   function addExpectedEntry(done: DoneFunc) {
-//     keychain.set(testUser, testService, testDescription, testPassword, done);
-//   }
+  after(() => keychain.remove(testUser));
 
-//   function runAndParseOutput(done) {
-//     var parser = keychain.list();
+  it('should have at least one item', async function (): Promise<void> {
+    let c = await keychain.list().count().toPromise();
+    expect(c).to.be.above(0);
+  });
 
-//     parser.on('data', function (entry) {
-//       parseResults.push(entry);
-//     });
-//     parser.on('end', function () {
-//       done();
-//     });
-//   }
-
-//   function removeExpectedEntry(done) {
-//     keychain.remove(testUser, testService, testDescription, done);
-//   }
-
-//   it('should have entries', function () {
-//     parseResults.length.should.be.greaterThan(0);
-//   });
-
-//   it('should have expected entry', function () {
-//     var entry = _.findWhere(parseResults, { svce: testService });
-//     should.exist(entry);
-//     entry.should.have.properties({
-//       svce: testService,
-//       acct: testUser,
-//       desc: testDescription
-//     });
-//   });
-
-//   it('should be able to retrieve password for expected entry', function (done) {
-//     var entry = _.findWhere(parseResults, {svce: testService });
-
-//     keychain.get(entry.acct, entry.svce, function (err, password) {
-//       should.not.exist(err);
-//       password.should.equal(testPassword);
-//       done();
-//     });
-//   });
-// });
+  it('should have expected entry', async function (): Promise<void> {
+    let entry: TokenEntry = await keychain.get(testUser);
+    console.log(`Entry is ${inspect(entry)}`);
+    expect(entry).to.be.not.null;
+    expect(entry.key).to.equal(testUser);
+    expect(entry.accessToken.id).to.equal(testTokenId);
+    expect(entry.accessToken.token).to.equal(testPassword);
+  });
+});
