@@ -105,7 +105,7 @@ declare module 'event-stream'
      *
      * @param callback
      */
-    export function writeArray(callback: Function): stream.Stream;
+    export function writeArray(callback: Function): stream.Writable;
 
     /**
      * A stream that buffers all chunks when paused

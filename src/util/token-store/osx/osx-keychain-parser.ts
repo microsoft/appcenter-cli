@@ -22,12 +22,15 @@ import * as es from "event-stream";
 import * as stream from "stream";
 import * as util from "util";
 
+import { inspect } from "util";
+const debug = require("debug")("sonoma-cli:util:token-store:osx:osx-keychain-parser");
+
 //
 // Regular expressions that match the various fields in the input
 //
 
 // Fields at the root - not attributes
-const rootFieldRe = /^([^:]+):(?: (?:"([^"]+)")|(.*))?$/;
+const rootFieldRe = /^([^: \t]+):(?: (?:"([^"]+)")|(.*))?$/;
 
 // Attribute values, this gets a little more complicated
 const attrRe = /^    (?:(0x[0-9a-fA-F]+) |"([a-z]{4})")<[^>]+>=(?:(<NULL>)|"([^"]+)"|(0x[0-9a-fA-F]+)(?:  "([^"]+)")|(.*)?)/;
@@ -57,6 +60,8 @@ export class OsxSecurityParsingStream extends stream.Transform {
 
   _transform(chunk: any, encoding: string, callback: {(err?: Error): void}): void {
     const line = chunk.toString();
+
+    debug(`Parsing line [${line}]`);
 
     const rootMatch = line.match(rootFieldRe);
     if (rootMatch) {
@@ -90,19 +95,24 @@ export class OsxSecurityParsingStream extends stream.Transform {
   }
 
   processRootLine(key: string, value: string): void {
+    debug(`matched root line`);
     if (this.inAttributes) {
+      debug(`was in attributes, emitting`);
       this.emitCurrentEntry();
       this.inAttributes = false;
     }
     if (key === "attributes") {
+      debug(`now in attributes`);
       this.inAttributes = true;
     } else {
+      debug(`adding root attribute ${key} with value ${value} to object`);
       this.currentEntry = this.currentEntry || {};
       this.currentEntry[key] = value;
     }
   }
 
   processAttributeLine(key: string, value: string): void  {
+    debug(`adding attribute ${key} with value ${value} to object`);
     this.currentEntry[key] = value;
   }
 }
