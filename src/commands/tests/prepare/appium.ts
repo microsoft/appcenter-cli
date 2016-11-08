@@ -4,29 +4,73 @@ import { Command, CommandArgs, CommandResult,
 import { out } from "../../../util/interaction";
 import * as outExtensions from "../lib/interaction";
 import { getUser } from "../../../util/profile";
+import { parseTestParameters } from "../lib/parameters-parser";
+import { parseIncludedFiles } from "../lib/included-files-parser";
 import * as path from "path";
 import * as fs from "fs";
+import * as pfs from "../../../util/fs/promisfied-fs";
 import * as glob from "glob";
+import * as _ from "lodash";
 
 @help("Prepares Appium workspace for test run")
 export default class PrepareAppiumCommand extends Command {
-  @help("Path to the Appium workspace")
-  @longName("workspace-path")
-  @required
+  @help("Path to output directory where all test files will be copied")
+  @longName("artifacts-dir")
   @hasArg
-  workspacePath: string;
+  artifactsDir: string;
+
+  @help("Path to Appium output directory (usually target/upload)")
+  @longName("build-dir")
+  @hasArg
+  buildDir: string;
+
+  @help("Path to Appium test project that should be built")
+  @longName("project-dir")
+  @hasArg
+  projectDir: string;
+
+  @help("Additional files / directories that should be included in the test run. The value should be in format 'sourceDir=targetDir'")
+  @longName("include")
+  @hasArg
+  include: string[];
+
+  @help("Additional test parameters that should be included in the test run. The value should be in format key=value")
+  @longName("test-parameter")
+  @shortName("p")
+  @hasArg
+  testParameters: string[];
 
   constructor(args: CommandArgs) {
     super(args);
+    if (typeof this.testParameters === "string") {
+      this.testParameters = [ this.testParameters ];
+    }
+
+    if (typeof this.include === "string") {
+      this.include = [ this.include ];
+    }
   }
 
-  async runNoClient(): Promise<CommandResult> {
+  public async runNoClient(): Promise<CommandResult> {
     try {
-      this.validateAppiumWorkspace();
+      this.validateEitherProjectOrBuildDir();
+      if (this.projectDir) {
+        this.buildDir = await this.generateBuildDir();
+      }
 
-      let manifestPath = path.join(this.workspacePath, "test-manifest.json");
-      let manifest = JSON.stringify(this.getAppiumManifest(), null, 1);
-      fs.writeFileSync(manifestPath, manifest);
+      this.validateBuildDir();
+
+      if (!this.artifactsDir) {
+        this.artifactsDir = this.buildDir;
+      }
+      else {
+        await pfs.copyDir(this.buildDir, this.artifactsDir);
+      }
+
+      let manifestPath = path.join(this.artifactsDir, "test-manifest.json");
+      let manifest = await this.createAppiumManifest();
+      let manifestJson = JSON.stringify(manifest, null, 1);
+      await pfs.writeFile(manifestPath, manifestJson);
 
       out.text(`Appium tests are ready to run. Manifest file was written to ${manifestPath}.`);
       return success();
@@ -36,52 +80,69 @@ export default class PrepareAppiumCommand extends Command {
     }
   }
 
-  private validateAppiumWorkspace() {
-    this.validateWorkspaceExists();
+  private validateEitherProjectOrBuildDir() {
+    if ((this.projectDir && this.buildDir) || !(this.projectDir || this.buildDir)) {
+      throw new Error("You must specify either project or build directory");
+    }
+  }
+
+  private validateProjectDir() {
+    this.validatePathExists(
+      this.projectDir, 
+      false, 
+      `Project directory ${this.projectDir} doesn't exist`);
+  }
+
+  private async generateBuildDir(): Promise<string> {
+    throw "Not implemented";
+  }
+
+  private validateBuildDir() {
+    this.validateBuildDirExists();
     this.validatePomFile();
     this.validateDependencyJarsDirectory();
     this.validateTestClassesDirectory();
   }
 
-  private validateWorkspaceExists() {
+  private validateBuildDirExists() {
     this.validatePathExists(
-      this.workspacePath,
+      this.buildDir,
       false,
-      `Workspace directory "${this.workspacePath}"" doesn't exist`);
+      `Appium build directory "${this.buildDir}"" doesn't exist`);
   }
 
   private validatePomFile() {    
     this.validatePathExists(
-      path.join(this.workspacePath, "pom.xml"),
+      path.join(this.buildDir, "pom.xml"),
       true,
-      'The Appium workspace directory must contain file "pom.xml"');
+      `Appium build directory "${this.buildDir}" must contain file "pom.xml"`);
   }
 
   private validateDependencyJarsDirectory() {
     this.validatePathExists(
-      path.join(this.workspacePath, "dependency-jars"),
+      path.join(this.buildDir, "dependency-jars"),
       false,
-      'The Appium workspace directory must contain directory "dependency-jars"');
+      `Appium build directory "${this.buildDir}" must contain directory "dependency-jars"`);
   }
 
   private validateTestClassesDirectory() {
-    let testClassesDir = path.join(this.workspacePath, "test-classes");
+    let testClassesDir = path.join(this.buildDir, "test-classes");
     this.validatePathExists(
-      path.join(this.workspacePath, "test-classes"),
+      path.join(this.buildDir, "test-classes"),
       false,
-      `The Appium workspace directory must contain directory "test-classes"`);
+      `Appium build directory "${this.buildDir}" must contain directory "test-classes"`);
 
     if (!this.hasClassFile(testClassesDir)) {
-      throw new Error('The "test-classes" directory inside Appium workspace must contain at least one "class" file');
+      throw new Error(`The "test-classes" directory inside Appium build directory "${this.buildDir}" must contain at least one "*.class" file`);
     }
   }
 
-  private hasClassFile(rootPath: string): boolean {
-    let entries = fs.readdirSync(rootPath);
+  private async hasClassFile(rootPath: string): Promise<boolean> {
+    let entries = await pfs.readdir(rootPath);
     for (let i = 0; i < entries.length; i++) {
       let entry = entries[i];
       let fullEntryPath = path.join(rootPath, entry);
-      let stats = fs.statSync(fullEntryPath);
+      let stats = await pfs.stat(fullEntryPath);
       if (stats.isFile() && entry.endsWith(".class")) {
         return true;
       }
@@ -94,11 +155,11 @@ export default class PrepareAppiumCommand extends Command {
     return false;
   } 
 
-  private validatePathExists(path: string, isFile: boolean, errorMessage: string) {
+  private async validatePathExists(path: string, isFile: boolean, errorMessage: string): Promise<void> {
     let stats: fs.Stats = null;
     
     try {
-      stats = fs.statSync(path);
+      stats = await pfs.stat(path);
     }
     catch (err) {
       throw new Error(errorMessage);
@@ -109,13 +170,30 @@ export default class PrepareAppiumCommand extends Command {
     }
   }
 
-  private getAppiumManifest(): any { 
-    return {
+  private async createAppiumManifest(): Promise<any> { 
+    let result = {
       "schemaVersion": "1.0.0",
       "files": [ "pom.xml", "dependency-jars", "test-classes" ],
       "testFramework": {
-        "name": "appium"
+        "name": "appium",
+        "data": { }
+      }
+    };
+
+    if (this.include) {
+      let parsedIncludedFiles = parseIncludedFiles(this.include);
+      for (let i = 0; i < parsedIncludedFiles.length; i++) {
+        
+        let includedFile = parsedIncludedFiles[i];
+        let targetPath = path.join(this.artifactsDir, includedFile.targetPath);
+        await pfs.copy(includedFile.sourcePath, targetPath);
+        result.files.push(includedFile.targetPath);
       }
     }
+
+    let parsedParameters = parseTestParameters(this.testParameters);
+    _.merge(result.testFramework.data, parsedParameters); 
+
+    return result;
   }
 }
