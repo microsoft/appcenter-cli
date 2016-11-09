@@ -61,7 +61,6 @@ export function copyFile(source: string, target: string): Promise<void> {
     let targetStream = fs.createWriteStream(target);
 
     targetStream.on("close", () => resolve());
-    sourceStream.on("error", (err: any) => reject(err));
     targetStream.on("error", (err: any) => reject(err));
 
     sourceStream.pipe(targetStream);
