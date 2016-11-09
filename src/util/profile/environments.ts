@@ -16,14 +16,14 @@ interface EnvironmentsFile {
 
 // Default environment data
 const environmentsData: EnvironmentsFile = {
-  defaultEnvironment: "int",
+  defaultEnvironment: "prod",
   environments: {
     int: {
       endpoint: "https://bifrost-int.trafficmanager.net",
       description: "Integration"
     },
     prod: {
-      "endpoint": "https://api.sonoma.hockeyapp.com",
+      "endpoint": "https://api.mobile.azure.com",
       description: "Production"
     },
     testCloudLocalDev: {
