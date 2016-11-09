@@ -62,7 +62,7 @@ export async function copyDir(source: string, target: string): Promise<void> {
 
 export function copyFile(source: string, target: string): Promise<void> {
   return new Promise((resolve, reject) => { 
-    let sourceStream = fs.createReadStream( source);
+    let sourceStream = fs.createReadStream(source);
     let targetStream = fs.createWriteStream(target);
 
     targetStream.on("close", () => resolve());
