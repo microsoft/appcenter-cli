@@ -51,7 +51,7 @@
         "${workspaceRoot}/dist/**/*.js"
       ],
       "sourceMaps": true,
-      "preLaunchTask": "build"
+      "preLaunchTask": "build-sourcemaps"
     },
     {
       "name": "Attach",

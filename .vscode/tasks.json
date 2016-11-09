@@ -9,8 +9,8 @@
   ],
   "tasks": [
     {
-      "taskName": "build",
-      "args": [],
+      "taskName": "build-sourcemaps",
+      "args": [ "build-sourcemaps" ],
       "isBuildCommand": true,
       "isWatching": false,
       "problemMatcher": [
