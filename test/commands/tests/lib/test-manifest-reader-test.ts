@@ -5,7 +5,7 @@ import { expect } from "chai";
 import * as path from "path";
 import * as _ from "lodash";
 
-describe("TestManifestReader.readManifest", function() {
+describe("TestManifestReader.readManifest", () => {
   let expectedManifest = new TestManifest(
     "1.0.0",
     [

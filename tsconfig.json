@@ -5,7 +5,7 @@
         "outDir": "dist",
         "noImplicitAny": true,
         "experimentalDecorators": true,
-        "sourceMap": false,
+        "sourceMap": true,
         "allowJs": false
     },
     "exclude": [
