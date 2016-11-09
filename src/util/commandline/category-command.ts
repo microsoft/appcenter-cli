@@ -59,7 +59,7 @@ export class CategoryCommand extends Command {
     const helpTable = new Table(out.noTableBorders);
     contents.filter(item => item[1].isDirectory() && item[0] !== "lib")
       .forEach(item => {
-        helpTable.push([ `    ${scriptName} ${this.command.join(" ")}${item[0]}`, this.categoryHelp(item[0])]);
+        helpTable.push([ `    ${scriptName} ${this.command.concat(item[0]).join(" ")}`, this.categoryHelp(item[0])]);
       });
 
     return helpTable.toString();
