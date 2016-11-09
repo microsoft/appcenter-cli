@@ -39,11 +39,6 @@ export default class PrepareAppiumCommand extends Command {
   @hasArg
   testParameters: string[];
 
-  @name("command...")
-  @position(null)
-  @help("Arguments to pass to prepare command")
-  prepareArgs: string[];
-
   constructor(args: CommandArgs) {
     super(args);
     if (typeof this.testParameters === "string") {
