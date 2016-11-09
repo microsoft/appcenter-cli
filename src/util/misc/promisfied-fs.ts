@@ -15,16 +15,21 @@ export function writeFile(filename: string, data: any): Promise<void> {
 }
 
 export function exists(path: string | Buffer): Promise<boolean> {
-  return new Promise((resolve, reject) => {
-    try {
-      fs.stat(path, () => {
-        resolve(true);
-      })
-    }
-    catch (err) {
-      resolve(false);
-    }
-  });
+   return new Promise((resolve, reject) => {
+     fs.stat(path, err => {
+       if (err) {
+          if (err.code === "ENOENT") {
+            resolve(false);
+          }
+          else {
+            reject(err);
+          }
+       }
+       else {
+           resolve(true);
+       }
+     });
+ });
 }
 
 export function mkdir(path: string | Buffer): Promise<void> {
@@ -57,7 +62,7 @@ export async function copyDir(source: string, target: string): Promise<void> {
 
 export function copyFile(source: string, target: string): Promise<void> {
   return new Promise((resolve, reject) => { 
-    let sourceStream = fs.createReadStream(source);
+    let sourceStream = fs.createReadStream( source);
     let targetStream = fs.createWriteStream(target);
 
     targetStream.on("close", () => resolve());
