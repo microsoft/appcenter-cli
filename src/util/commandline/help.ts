@@ -1,6 +1,10 @@
 // Help system - displays help for categories and commands
 
+import * as _ from "lodash";
+import * as os from "os";
+import { isatty } from "tty";
 import { inspect } from "util";
+
 const debug = require("debug")("sonoma-cli:util:commandline:help");
 
 import { values, identity } from "lodash";
@@ -23,6 +27,7 @@ export function runHelp(commandPrototype: any, commandObj: any): void {
   const commandHelp: string = getCommandHelp(commandObj);
   const optionsHelp: string[] = getOptionsHelp(commandPrototype);
 
+  out.help();
   out.help(commandExample);
   out.help();
   out.help(commandHelp);
@@ -105,18 +110,6 @@ function getPositionalOptionsHelp(commandPrototype: any): string[] {
   return [helpTable.toString()];
 }
 
-function getCommandExample(commandPrototype: any, commandObj: any): string {
-  let commandParts: string[] = commandObj.command;
-
-  let script = commandParts[commandParts.length - 1];
-  let extIndex = script.lastIndexOf(".");
-  if (extIndex > -1) {
-    script = script.slice(0, extIndex);
-  }
-  commandParts[commandParts.length - 1] = script;
-
-  return `${scriptName} ${commandObj.command.join(" ")}`;
-}
 
 function switchText(switchOption: SwitchOptionHelp): string {
   // Desired formats look like:
@@ -132,4 +125,84 @@ function switchText(switchOption: SwitchOptionHelp): string {
   const long = switchOption.longName ? [ switchOption.longName ] : [];
   const arg = switchOption.argName ? [ " " + switchOption.argName ] : [];
   return start.concat(sep).concat(long).concat(arg).join("");
+}
+
+function terminalWidth(): number {
+  // If stdout is a terminal, return the width
+  if (isatty(1)) {
+    return (process.stdout as any).columns;
+  }
+
+  // Otherwise return something useful.
+  return 80;
+}
+
+function getCommandExample(commandPrototype: any, commandObj: any): string {
+  let commandName = getCommandName(commandObj);
+  let lines: string[] = [];
+  let currentLine = `    ${scriptName} ${commandName}`;
+
+  let maxWidth = terminalWidth();
+  let rightMargin = 4;
+  getAllOptionExamples(commandPrototype)
+    .forEach((example) => {
+      if (currentLine.length + example.length + 1 > maxWidth - rightMargin) {
+        lines.push(currentLine);
+        currentLine = `        ${example}`;
+      } else {
+        currentLine += ` ${example}`;
+      }
+    });
+
+  lines.push(currentLine);
+
+  return lines.join(os.EOL);
+}
+
+function getCommandName(commandObj: any): string {
+  const commandParts: string[] = commandObj.command;
+
+  let script = commandParts[commandParts.length - 1];
+  const extIndex = script.lastIndexOf(".");
+  if (extIndex > -1) {
+    script = script.slice(0, extIndex);
+  }
+  commandParts[commandParts.length - 1] = script;
+  return commandParts.join(" ");
+}
+
+function getAllOptionExamples(commandPrototype: any): string[] {
+  return getSwitchOptionExamples(commandPrototype)
+    .concat(getPositionalOptionExamples(commandPrototype));
+}
+
+function getSwitchOptionExamples(commandPrototype: any): string[] {
+  const switchOptions = getOptionsDescription(commandPrototype);
+
+  return _.values(switchOptions)
+    .map((description: OptionDescription): string => {
+      let result: string[] = [];
+      result.push(description.shortName ? `-${description.shortName}` : "");
+      result.push(description.shortName && description.longName ? "|" : "");
+      result.push(description.longName ? `--${description.longName}` : "");
+      result.push(description.hasArg ? " <arg>" : "");
+      if (!description.required) {
+        result.unshift("[");
+        result.push("]");
+      }
+      return result.join("");
+    });
+}
+
+function getPositionalOptionExamples(commandPrototype: any): string[] {
+  const positionalOptions = getPositionalOptionsDescription(commandPrototype);
+
+  return _.sortBy(positionalOptions, "position")
+    .map((description): string => {
+      if (description.position !== null) {
+        return `<${description.name}>`;
+      }
+      // Output for "rest" parameter. sortBy will push it to the end.
+      return `<${description.name}...>`;
+    });
 }
