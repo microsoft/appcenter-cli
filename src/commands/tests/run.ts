@@ -9,6 +9,7 @@ import { PathResolver } from "./lib/path-resolver";
 import { TestManifest, TestRunFile } from "./lib/test-manifest";
 import { TestManifestReader } from "./lib/test-manifest-reader";
 import { AppValidator } from "./lib/app-validator";
+import { parseTestParameters } from "./lib/parameters-parser";
 import * as path from "path";
 import * as fs from "fs";
 import * as http from 'http';
@@ -17,16 +18,16 @@ import * as url from "url";
 import * as request from "request";
 
 const pLimit = require("p-limit");
-const debug = require("debug")("somona-cli:commands:submit-tests");
+const debug = require("debug")("mobile-center:commands:tests:run");
 const paralleRequests = 10;
 
 @help("Submits tests to Visual Studio Mobile Center")
 export default class RunTestsCommand extends AppCommand {
-  @help("Application file path")
+  @help("Path to an application file")
   @longName("app-path")
   @hasArg
   @required
-  applicationPath: string;
+  appPath: string;
 
   @help("Selected devices slug")
   @longName("devices")
@@ -70,7 +71,7 @@ export default class RunTestsCommand extends AppCommand {
       "Validating arguments", 
       this.validateAndParseManifest());
     
-    let appFile = await TestRunFile.create(this.applicationPath, path.basename(this.applicationPath), "app-file");
+    let appFile = await TestRunFile.create(this.appPath, path.basename(this.appPath), "app-file");
 
     let testRunId = await outExtensions.progressWithResult(
       "Creating new test run", 
@@ -100,24 +101,10 @@ export default class RunTestsCommand extends AppCommand {
   }
 
   private async validateAndParseManifest(): Promise<TestManifest> {
-    await AppValidator.validate(this.applicationPath);
+    await AppValidator.validate(this.appPath);
     
     return await TestManifestReader.readFromFile(this.manifestPath);
   };
-
- private createTestParameters(): any {
-    let result: any = {};
-    if (this.testParameters) {
-      if (typeof this.testParameters === "string") {
-        this.testParameters = [this.testParameters];
-      }
-      this.testParameters.forEach(p => {
-        let parsedParameter = this.parseTestParameter(p);
-        result[parsedParameter.key] = result[parsedParameter.value];
-      });
-    }
-    return result;
-  }
 
   private parseTestParameter(testParameter: string) {
     let colonIndex = testParameter.indexOf(":");
@@ -265,7 +252,7 @@ export default class RunTestsCommand extends AppCommand {
       deviceSelection: this.devices,
       locale: this.locale,
       testSeries: this.testSeries,
-      testParameters: this.createTestParameters()
+      testParameters: parseTestParameters(this.testParameters)
     };
 
     return clientCall(cb => {

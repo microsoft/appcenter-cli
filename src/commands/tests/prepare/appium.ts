@@ -3,7 +3,6 @@ import { Command, CommandArgs, CommandResult,
          position, failure, notLoggedIn, ErrorCodes } from "../../../util/commandLine";
 import { out } from "../../../util/interaction";
 import * as outExtensions from "../lib/interaction";
-import { getUser } from "../../../util/profile";
 import { parseTestParameters } from "../lib/parameters-parser";
 import { parseIncludedFiles } from "../lib/included-files-parser";
 import * as path from "path";
@@ -12,7 +11,7 @@ import * as pfs from "../../../util/fs/promisfied-fs";
 import * as glob from "glob";
 import * as _ from "lodash";
 
-@help("Prepares Appium workspace for test run")
+@help("Prepares Appium artifacts for test run")
 export default class PrepareAppiumCommand extends Command {
   @help("Path to output directory where all test files will be copied")
   @longName("artifacts-dir")
@@ -40,6 +39,11 @@ export default class PrepareAppiumCommand extends Command {
   @hasArg
   testParameters: string[];
 
+  @name("command...")
+  @position(null)
+  @help("Arguments to pass to prepare command")
+  prepareArgs: string[];
+
   constructor(args: CommandArgs) {
     super(args);
     if (typeof this.testParameters === "string") {
@@ -55,7 +59,7 @@ export default class PrepareAppiumCommand extends Command {
     try {
       this.validateEitherProjectOrBuildDir();
       if (this.projectDir) {
-        this.buildDir = await this.generateBuildDir();
+        this.buildDir = await this.generateBuildDirFromProject();
       }
 
       this.validateBuildDir();
@@ -93,7 +97,7 @@ export default class PrepareAppiumCommand extends Command {
       `Project directory ${this.projectDir} doesn't exist`);
   }
 
-  private async generateBuildDir(): Promise<string> {
+  private async generateBuildDirFromProject(): Promise<string> {
     throw "Not implemented";
   }
 
