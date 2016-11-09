@@ -16,7 +16,14 @@ export function writeFile(filename: string, data: any): Promise<void> {
 
 export function exists(path: string | Buffer): Promise<boolean> {
   return new Promise((resolve, reject) => {
-    fs.exists(path, resolve);
+    try {
+      fs.stat(path, () => {
+        resolve(true);
+      })
+    }
+    catch (err) {
+      resolve(false);
+    }
   });
 }
 
@@ -48,8 +55,17 @@ export async function copyDir(source: string, target: string): Promise<void> {
   }
 }
 
-export async function copyFile(source: string, target: string): Promise<void> {
-  fs.createReadStream(source).pipe(fs.createWriteStream(target));
+export function copyFile(source: string, target: string): Promise<void> {
+  return new Promise((resolve, reject) => { 
+    let sourceStream = fs.createReadStream(source);
+    let targetStream = fs.createWriteStream(target);
+
+    targetStream.on("close", () => resolve());
+    sourceStream.on("error", (err: any) => reject(err));
+    targetStream.on("error", (err: any) => reject(err));
+
+    sourceStream.pipe(targetStream);
+  });  
 }
 
 function callFs<TArg, TResult>(func: (arg: TArg, callback: (err: any, result?: TResult) => void) => void, ...args: any[]): Promise<TResult> {

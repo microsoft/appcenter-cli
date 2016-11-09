@@ -7,7 +7,7 @@ import { parseTestParameters } from "../lib/parameters-parser";
 import { parseIncludedFiles } from "../lib/included-files-parser";
 import * as path from "path";
 import * as fs from "fs";
-import * as pfs from "../../../util/fs/promisfied-fs";
+import * as pfs from "../../../util/misc/promisfied-fs";
 import * as glob from "glob";
 import * as _ from "lodash";
 

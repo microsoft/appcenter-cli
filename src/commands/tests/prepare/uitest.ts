@@ -3,7 +3,7 @@ import { Command, CommandArgs, CommandResult,
          position, failure, notLoggedIn, ErrorCodes } from "../../../util/commandLine";
 import { out } from "../../../util/interaction";
 import * as outExtensions from "../lib/interaction";
-import * as process from "../../../util/process/process-helper";
+import * as process from "../../../util/misc/process-helper";
 
 const debug = require("debug")("mobile-center:commands:tests:prepare");
 

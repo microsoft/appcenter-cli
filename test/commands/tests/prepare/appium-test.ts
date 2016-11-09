@@ -1,5 +1,5 @@
 // import { CommandArgs } from "../../../../src/util/commandLine";
-// import * as pfs from "../../../../src/util/fs/promisfied-fs";
+// import * as pfs from "../../../../src/util/misc/promisfied-fs";
 // import { expect } from "chai";
 // import PrepareAppiumCommand from "../../../../src/commands/tests/prepare/appium";
 // import * as sinon from "sinon";
