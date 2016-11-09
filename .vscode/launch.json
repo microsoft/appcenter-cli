@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "${workspaceRoot}/src/index.ts",
       "cwd": "${workspaceRoot}/dist",
-      "args": ["tests", "prepare", "appium", "--build-dir", "D:\\Projects\\Uploader\\iOS\\workspace", "--debug"],
+      "args": ["tests", "prepare", "appium"],
       "sourceMaps": true,
       "outFiles": [ "${workspaceRoot}/dist/**/*.js" ]
     },
@@ -18,7 +18,7 @@
       "sourceMaps": true,
       "program": "${workspaceRoot}\\src\\index.ts",
       "stopOnEntry": false,
-      "args": ["tests", "prepare", "appium", "--build-dir", "D:\\Projects\\Uploader\\iOS\\workspace", "--debug"],
+      "args": [],
       "cwd": "${workspaceRoot}",
       "preLaunchTask": null,
       "runtimeExecutable": null,
