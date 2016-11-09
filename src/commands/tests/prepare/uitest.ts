@@ -110,16 +110,16 @@ export default class PrepareUITestCommand extends Command {
   }
 
   private getPrepareCommand(): string {
-    let command = `test-cloud prepare ${this.appPath}`;
+    let command = `Xamarin.UITest.Console.exe prepare "${this.appPath}"`;
 
     if (this.storeFile) {
-      command += ` ${this.storeFile} ${this.storePassword} ${this.keyAlias} ${this.keyPassword}`;
+      command += ` "${this.storeFile}" "${this.storePassword}" "${this.keyAlias}" "${this.keyPassword}"`;
     }
 
-    command += ` --assembly-dir ${this.assemblyDir} --artifacts-dir ${this.artifactsDir}`;
+    command += ` --assembly-dir "${this.assemblyDir}" --artifacts-dir "${this.artifactsDir}"`;
 
     for (let i = 0; i < this.testParameters.length; i++) {
-      command += ` --test-params "${this.testParameters[i]}"`;
+      command += ` --test-parameter "${this.testParameters[i]}"`;
     }
 
     for (let i = 0; i < this.include.length; i++) {
