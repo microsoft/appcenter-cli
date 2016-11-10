@@ -1,1 +1,1 @@
-Commands for managing Test Cloud tests.
+Commands for managing tests from Mobile Center Test service

@@ -3,7 +3,7 @@ import { SonomaClient } from "../util/apis";
 import { getUser } from "../util/profile";
 import { logout } from "./lib/logout";
 
-@help("Log out current user")
+@help("Logout from Mobile Center")
 export default class LogoutCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);

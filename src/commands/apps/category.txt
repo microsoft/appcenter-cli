@@ -1,1 +1,1 @@
-Commands to manage applications
+Commands to manage applications in Mobile Center
