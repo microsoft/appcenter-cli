@@ -3,7 +3,7 @@ import { Command, CommandArgs, CommandResult, help, runner, success, name, posit
 const debug = require("debug")("somona-cli:commands:help");
 import { inspect } from "util";
 
-@help("Get help using Mobile Center CLI")
+@help("List available commands for use")
 export default class HelpCommand extends Command {
 
   @name("command...")
