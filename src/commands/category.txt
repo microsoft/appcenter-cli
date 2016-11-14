@@ -1,4 +1,3 @@
 
     mobile-center
-    Command to start using Mobile Center CLI
-
+    Command to start with the Mobile Center CLI
