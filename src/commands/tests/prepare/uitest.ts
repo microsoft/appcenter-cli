@@ -1,6 +1,7 @@
 import { Command, CommandArgs, CommandResult, 
          help, success, name, shortName, longName, required, hasArg,
          position, failure, notLoggedIn, ErrorCodes } from "../../../util/commandLine";
+import { UITestPreparer } from "../lib/uitest-preparer";
 import { out } from "../../../util/interaction";
 import * as outExtensions from "../lib/interaction";
 import * as process from "../../../util/misc/process-helper";
@@ -83,49 +84,22 @@ export default class PrepareUITestCommand extends Command {
 
   public async runNoClient(): Promise<CommandResult> {
     try {
-      this.validateArguments();
+      let preparer = new UITestPreparer(this.artifactsDir, this.assemblyDir, this.appPath);
+      
+      preparer.storeFile = this.storeFile;
+      preparer.storePassword = this.storePassword;
+      preparer.keyAlias = this.keyAlias;
+      preparer.keyPassword = this.keyPassword;
+      preparer.include = this.include;
+      preparer.testParameters = this.testParameters;
 
-      let command = this.getPrepareCommand();
-      debug(`Executing command ${command}`);
-      let exitCode = await process.execAndWait(command);
-
-      if (exitCode === 0) {
-        return success();
-      }
-      else {
-        return failure(exitCode, "Cannot prepare UI Test artifacts. Please inspect logs for more details");
-      }
+      let manifestPath = await preparer.prepare();
+      out.text(`UI Tests are ready to run. Manifest file was written to ${manifestPath}.`);
+      
+      return success();
     }
     catch (err) {
       return failure(ErrorCodes.Exception, err.message);
     }
-  }
-
-  private validateArguments() {
-    if (this.storeFile || this.storePassword || this.keyAlias || this.keyPassword) {
-      if (!(this.storeFile && this.storePassword && this.keyAlias && this.keyPassword)) {
-        throw new Error("If keystore is used, all of the following arguments must be set: --store-file, --store-password, --key-alias, --key-password");
-      }
-    }
-  }
-
-  private getPrepareCommand(): string {
-    let command = `Xamarin.UITest.Console.exe prepare "${this.appPath}"`;
-
-    if (this.storeFile) {
-      command += ` "${this.storeFile}" "${this.storePassword}" "${this.keyAlias}" "${this.keyPassword}"`;
-    }
-
-    command += ` --assembly-dir "${this.assemblyDir}" --artifacts-dir "${this.artifactsDir}"`;
-
-    for (let i = 0; i < this.testParameters.length; i++) {
-      command += ` --test-parameter "${this.testParameters[i]}"`;
-    }
-
-    for (let i = 0; i < this.include.length; i++) {
-      command += ` --data "${this.include[i]}"`;
-    }
-
-    return command;
   }
 }
