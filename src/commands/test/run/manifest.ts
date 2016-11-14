@@ -2,8 +2,6 @@ import { CommandArgs, help, name, longName, required, hasArg } from "../../../ut
 import { RunTestsCommand } from "../lib/run-tests-command";
 import * as path from "path";
 
-const debug = require("debug")("mobile-center:commands:test");
-
 @help("Submits tests described by a manifest to Mobile Center Test Cloud")
 export default class RunManifestTestsCommand extends RunTestsCommand {
   @help("Path to manifest file")

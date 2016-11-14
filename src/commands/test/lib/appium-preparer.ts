@@ -56,7 +56,7 @@ export class AppiumPreparer {
   }
 
   private async generateBuildDirFromProject(): Promise<string> {
-    throw "Not implemented";
+    throw new Error("Not implemented");
   }
 
   private async validateBuildDir() {
@@ -70,24 +70,24 @@ export class AppiumPreparer {
     await this.validatePathExists(
       this.buildDir,
       false,
-      `Appium build directory "${this.buildDir}"" doesn't exist`);
+      `Appium build directory "${this.buildDir}" doesn't exist`);
   }
 
-  private async validatePomFile() {    
-    await this.validatePathExists(
+  private validatePomFile(): Promise<void> {
+    return this.validatePathExists(
       path.join(this.buildDir, "pom.xml"),
       true,
       `Appium build directory "${this.buildDir}" must contain file "pom.xml"`);
   }
 
-  private async validateDependencyJarsDirectory() {
-    await this.validatePathExists(
+  private validateDependencyJarsDirectory(): Promise<void> {
+    return this.validatePathExists(
       path.join(this.buildDir, "dependency-jars"),
       false,
       `Appium build directory "${this.buildDir}" must contain directory "dependency-jars"`);
   }
 
-  private async validateTestClassesDirectory() {
+  private async validateTestClassesDirectory(): Promise<void> {
     let testClassesDir = path.join(this.buildDir, "test-classes");
     await this.validatePathExists(
       path.join(this.buildDir, "test-classes"),

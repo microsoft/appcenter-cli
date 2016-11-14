@@ -1,0 +1,28 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/types/npm-rimraf/cc98cbd747092eeb0a5c73d211878aacd985e5de/typings.json",
+    "raw": "registry:npm/rimraf#2.5.0+20160723033700",
+    "main": "rimraf.d.ts",
+    "dependencies": {
+      "glob": {
+        "src": "https://raw.githubusercontent.com/typed-typings/npm-glob/59ca0f5d4696a8d4da27858035316c1014133fcb/typings.json",
+        "raw": "github:typed-typings/npm-glob#59ca0f5d4696a8d4da27858035316c1014133fcb",
+        "main": "glob.d.ts",
+        "dependencies": {
+          "minimatch": {
+            "src": "https://raw.githubusercontent.com/typed-typings/npm-minimatch/74f47de8acb42d668491987fc6bc144e7d9aa891/typings.json",
+            "raw": "github:typed-typings/npm-minimatch#74f47de8acb42d668491987fc6bc144e7d9aa891",
+            "main": "minimatch.d.ts",
+            "name": "minimatch",
+            "type": "typings"
+          }
+        },
+        "name": "glob",
+        "type": "typings"
+      }
+    },
+    "name": "rimraf",
+    "type": "typings"
+  }
+}

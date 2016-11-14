@@ -6,7 +6,7 @@ import { out } from "../../../util/interaction";
 import * as outExtensions from "../lib/interaction";
 import * as process from "../../../util/misc/process-helper";
 
-const debug = require("debug")("mobile-center:commands:test");
+const debug = require("debug")("mobile-center:commands:test:prepare:calabash");
 
 @help("Prepares Calabash artifacts for test run")
 export default class PrepareCalabashCommand extends Command {

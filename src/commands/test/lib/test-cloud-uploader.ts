@@ -10,7 +10,7 @@ import * as http from 'http';
 import * as path from "path";
 import * as request from "request";
 
-const debug = require("debug")("mobile-center:commands:test");
+const debug = require("debug")("mobile-center:commands:test:lib:test-cloud-uploader");
 const pLimit = require("p-limit");
 const paralleRequests = 10;
 

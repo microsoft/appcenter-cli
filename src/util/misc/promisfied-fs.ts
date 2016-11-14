@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as _ from "lodash";
+import * as rimraf from "rimraf";
 
 export function stat(path: string | Buffer): Promise<fs.Stats> {
   return callFs(fs.stat, path);
@@ -72,32 +73,22 @@ export function copyFile(source: string, target: string): Promise<void> {
   });  
 }
 
-export async function rm(source: string, recursive: boolean = true): Promise<void> {
-  let stats = await stat(source);
-  if (stats.isDirectory()) {
-    await rmDir(source, recursive);
+export function rmDir(source: string, recursive: boolean = true): Promise<void> {
+  if (recursive) {
+    return new Promise<void>((resolve, reject) => {
+      rimraf(source, err => {
+        if (err) {
+          reject(err);
+        }
+        else {
+          resolve();
+        }
+      });
+    }); 
   }
   else {
-    await rmFile(source);
+    return callFs(fs.rmdir, source);
   }
-}
-
-export async function rmDir(source: string, recursive: boolean = true) {
-  if (recursive) {
-    let files = await readdir(source);
-
-    for (let i = 0; i < files.length; i++) {
-      let fullPath = path.join(source, files[i]);
-
-      await rm(fullPath, recursive);
-    }
-  }
-
-  await callFs(fs.rmdir, source);
-}
-
-export async function rmFile(path: string) {
-  await callFs(fs.unlink, path);
 }
 
 function callFs<TArg, TResult>(func: (arg: TArg, callback: (err: any, result?: TResult) => void) => void, ...args: any[]): Promise<TResult> {

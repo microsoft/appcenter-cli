@@ -2,7 +2,7 @@ import { TestCloudError } from "./test-cloud-error";
 import * as path from "path";
 import * as process from "../../../util/misc/process-helper";
 
-const debug = require("debug")("mobile-center:commands:test");
+const debug = require("debug")("mobile-center:commands:test:lib:uitest-preparer");
 
 export class UITestPreparer {
   private readonly appPath: string;
