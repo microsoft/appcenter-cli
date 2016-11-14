@@ -4,38 +4,35 @@ import * as process from "../../../util/misc/process-helper";
 
 const debug = require("debug")("mobile-center:commands:test");
 
-export class UITestPreparer {
+export class CalabashPreparer {
   private readonly appPath: string;
-  private readonly assemblyDir: string;
+  private readonly workspace: string;
   private readonly artifactsDir: string;
 
-  public storeFile: string;
-  public storePassword: string;
-  public keyAlias: string;
-  public keyPassword: string;
   public signInfo: string;
+  public config: string;
+  public profile: string;
+  public skipConfigCheck: boolean;
   public include: string[];
   public testParameters: string[];
 
-  constructor(artifactsDir: string, assemblyDir: string, appPath: string) {
+  constructor(artifactsDir: string, workspace: string, appPath: string) {
     if (!artifactsDir) {
       throw new Error("Argument artifactsDir is required");
     }
-    if (!assemblyDir) {
-      throw new Error("Argument assemblyDir is required");
+    if (!workspace) {
+      throw new Error("Argument workspace is required");
     }
     if (!appPath) {
       throw new Error("Argument appPath is required");
     }
 
-    this.appPath = appPath;
-    this.assemblyDir = assemblyDir;
     this.artifactsDir = artifactsDir;
+    this.workspace = workspace;
+    this.appPath = appPath;
   }
 
   public async prepare(): Promise<string> {
-    this.validateArguments();
-
     let command = this.getPrepareCommand();
     debug(`Executing command ${command}`);
     let exitCode = await process.execAndWait(command);
@@ -47,25 +44,22 @@ export class UITestPreparer {
     return path.join(this.artifactsDir, "manifest.json");
   }
 
-  private validateArguments() {
-    if (this.storeFile || this.storePassword || this.keyAlias || this.keyPassword) {
-      if (!(this.storeFile && this.storePassword && this.keyAlias && this.keyPassword)) {
-        throw new Error("If keystore is used, all of the following arguments must be set: --store-file, --store-password, --key-alias, --key-password");
-      }
-    }
-  }
-
   private getPrepareCommand(): string {
-    let command = `test-cloud prepare "${this.appPath}"`;
-
-    if (this.storeFile) {
-      command += ` "${this.storeFile}" "${this.storePassword}" "${this.keyAlias}" "${this.keyPassword}"`;
+    let command = `test-cloud prepare ${this.appPath} --artifacts-dir ${this.artifactsDir}`;
+    command += ` --workspace "${this.workspace}"`; 
+    
+    if (this.config) {
+      command += ` --config "${this.config}"`;
     }
-
-    command += ` --assembly-dir "${this.assemblyDir}" --artifacts-dir "${this.artifactsDir}"`;
+    if (this.profile) {
+      command += ` --profile "${this.profile}"`;
+    }
+    if (this.skipConfigCheck) {
+      command += "--skip-config-check";
+    }
 
     for (let i = 0; i < this.testParameters.length; i++) {
-      command += ` --test-parameter "${this.testParameters[i]}"`;
+      command += ` --test-parameters "${this.testParameters[i]}"`;
     }
 
     for (let i = 0; i < this.include.length; i++) {

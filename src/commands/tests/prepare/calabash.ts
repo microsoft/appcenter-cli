@@ -1,11 +1,12 @@
 import { Command, CommandArgs, CommandResult, 
          help, success, name, shortName, longName, required, hasArg,
          position, failure, notLoggedIn, ErrorCodes } from "../../../util/commandLine";
+import { CalabashPreparer } from "../lib/calabash-preparer";
 import { out } from "../../../util/interaction";
 import * as outExtensions from "../lib/interaction";
 import * as process from "../../../util/misc/process-helper";
 
-const debug = require("debug")("mobile-center:commands:tests:prepare");
+const debug = require("debug")("mobile-center:commands:test");
 
 @help("Prepares Calabash artifacts for test run")
 export default class PrepareCalabashCommand extends Command {
@@ -77,45 +78,23 @@ export default class PrepareCalabashCommand extends Command {
 
   public async runNoClient(): Promise<CommandResult> {
     try {
-      let command = this.getPrepareCommand();
-      debug(`Executing command ${command}`);
-      let exitCode = await process.execAndWait(command);
+      let preparer = new CalabashPreparer(this.artifactsDir, this.workspace, this.appPath);
 
-      if (exitCode === 0) {
-        return success();
-      }
-      else {
-        return failure(exitCode, "Cannot prepare UI Test artifacts. Please inspect logs for more details");
-      }
+      preparer.signInfo = this.signInfo;
+      preparer.config = this.config;
+      preparer.profile = this.profile;
+      preparer.skipConfigCheck = this.skipConfigCheck;
+      preparer.include = this.include;
+      preparer.testParameters = this.testParameters;
+
+      let manifestPath = await preparer.prepare();
+      out.text(`Calabash tests are ready to run. Manifest file was written to ${manifestPath}.`);
+      
+      return success();
     }
     catch (err) {
-      return failure(ErrorCodes.Exception, err.message);
+      let exitCode = err.exitCode || ErrorCodes.Exception;
+      return failure(exitCode, err.message);
     }
-  }
-
-  private getPrepareCommand(): string {
-    let command = `test-cloud prepare ${this.appPath} --artifacts-dir ${this.artifactsDir}`;
-    if (this.workspace) {
-      command += ` --workspace "${this.workspace}"`; 
-    }
-    if (this.config) {
-      command += ` --config "${this.config}"`;
-    }
-    if (this.profile) {
-      command += ` --profile "${this.profile}"`;
-    }
-    if (this.skipConfigCheck) {
-      command += "--skip-config-check";
-    }
-
-    for (let i = 0; i < this.testParameters.length; i++) {
-      command += ` --test-parameters "${this.testParameters[i]}"`;
-    }
-
-    for (let i = 0; i < this.include.length; i++) {
-      command += ` --data "${this.include[i]}"`;
-    }
-
-    return command;
   }
 }

@@ -4,7 +4,7 @@ import { UITestPreparer } from "../lib/uitest-preparer";
 import { parseTestParameters } from "../lib/parameters-parser";
 import { parseIncludedFiles } from "../lib/included-files-parser";
 
-@help("Prepares and runs UI Tests")
+@help("Prepares and runs UI tests")
 export default class RunUITestsCommand extends RunTestsCommand {
   @help("Path to an application file")
   @longName("app-path")

@@ -99,7 +99,8 @@ export default class PrepareUITestCommand extends Command {
       return success();
     }
     catch (err) {
-      return failure(ErrorCodes.Exception, err.message);
+      let exitCode = err.exitCode || ErrorCodes.Exception;
+      return failure(exitCode, err.message);
     }
   }
 }
