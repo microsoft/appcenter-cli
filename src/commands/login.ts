@@ -16,13 +16,13 @@ export default class LoginCommand extends Command {
     super(args);
   }
 
-  @help("user name to log in as")
+  @help("Username to log in as")
   @shortName("u")
   @longName("user")
   @hasArg
   userName: string;
 
-  @help("password to log in with")
+  @help("Password to log in with")
   @shortName("p")
   @longName("password")
   @hasArg
