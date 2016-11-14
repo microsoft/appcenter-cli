@@ -8,6 +8,11 @@ import * as _ from "lodash";
 describe("TestManifestReader.readManifest", () => {
   let expectedManifest = new TestManifest(
     "1.0.0",
+    new TestRunFile(
+        "apps/app.apk",
+        "app.apk",
+        "Ignores",
+        "app-file"),
     [
       new TestRunFile(
         "test/commands/tests/sample-test-workspace/lib/tests.rb", 
@@ -55,7 +60,7 @@ describe("TestManifestReader.readManifest", () => {
     return {
       "schemaVersion": manifest.version,
       "testFramework": manifest.testFramework,
-      "files": _.sortBy(manifest.files.map(f => {  
+      "files": _.sortBy(manifest.testFiles.map(f => {  
         return { 
           "sourcePath": f.sourcePath.replace(new RegExp("/", 'g'), path.sep),
           "targetRelativePath": f.targetRelativePath.replace(new RegExp("/", 'g'), path.sep), 

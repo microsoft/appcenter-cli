@@ -19,6 +19,8 @@ export interface ITestCloudManifestJson {
   
   files: (string | IFileDescriptionJson)[];
 
+  applicationFile?: string;
+
   testFramework: ITestFrameworkJson;
 };
 
@@ -48,9 +50,11 @@ export class TestManifestReader {
 
   public async readManifest(json: ITestCloudManifestJson): Promise<TestManifest> {
     let files = await this.readTestFiles(json.files);
+    let applicationFile = json.applicationFile ? await this.readApplicationFile(json.applicationFile) : null;
     
     return new TestManifest(
       json.schemaVersion,
+      applicationFile,
       files,
       new TestFrameworkData(
         json.testFramework.name,
@@ -72,6 +76,16 @@ export class TestManifestReader {
     );
   }
 
+  private async readApplicationFile(pattern: string): Promise<TestRunFile> {
+    let inputFile = await this.resolveSinglePathPattern(pattern);
+
+    return await TestRunFile.create(
+      path.join(this.pathResolver.workspace, inputFile),
+      path.basename(inputFile),
+      "app-file"
+    );
+  }
+
   private async readFilePatterns(patterns: string[]): Promise<TestRunFile[]> {
     let filePaths = await this.pathResolver.resolve(patterns);
     
@@ -86,17 +100,24 @@ export class TestManifestReader {
   }
 
   private async readFileDescription(description: IFileDescriptionJson): Promise<TestRunFile> {
-    let inputFiles = await this.pathResolver.resolve(description.sourcePath);
-    if (inputFiles.length == 0) {
-      throw new Error(`Pattern ${description.sourcePath} did not resolve to any existing file`);
-    };
-    if (inputFiles.length > 1) {
-      throw new Error(`Pattern ${description.sourcePath} resolved to more than one file`);
-    }
+    let inputFile = await this.resolveSinglePathPattern(description.sourcePath);
 
     return await TestRunFile.create(
-      path.join(this.pathResolver.workspace, inputFiles[0]), 
+      path.join(this.pathResolver.workspace, inputFile), 
       description.targetPath, 
       "test-file");
+  }
+
+  private async resolveSinglePathPattern(pattern: string): Promise<string> {
+    let filePaths = await this.pathResolver.resolve(pattern);
+
+    if (filePaths.length > 1) {
+      throw new Error(`Pattern ${pattern} resolved to more than one file`);
+    }
+    else if (filePaths.length === 0) {
+      throw new Error(`Pattern ${pattern} did not resolve to any existing file`);
+    }
+
+    return filePaths[0];
   }
 }

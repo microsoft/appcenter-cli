@@ -56,10 +56,11 @@ export class TestFrameworkData {
 
 export class TestManifest {
   readonly version: string;
-  readonly files: TestRunFile[];
+  readonly testFiles: TestRunFile[];
+  readonly applicationFile?: TestRunFile;
   readonly testFramework: TestFrameworkData;
 
-  constructor(version: string, files: TestRunFile[], testFramework: TestFrameworkData) {
+  constructor(version: string, applicationFile: TestRunFile, files: TestRunFile[], testFramework: TestFrameworkData) {
     if (!version)
       throw new Error("Argument version is required");
     if (!files)
@@ -68,7 +69,8 @@ export class TestManifest {
       throw new Error("Argument testFramework is required");
     
     this.version = version;
-    this.files = files;
+    this.applicationFile = applicationFile;
+    this.testFiles = files;
     this.testFramework = testFramework; 
   }
 }

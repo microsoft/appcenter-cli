@@ -16,7 +16,7 @@ interface EnvironmentsFile {
 
 // Default environment data
 const environmentsData: EnvironmentsFile = {
-  defaultEnvironment: "prod",
+  defaultEnvironment: "int",
   environments: {
     int: {
       endpoint: "https://bifrost-int.trafficmanager.net",
