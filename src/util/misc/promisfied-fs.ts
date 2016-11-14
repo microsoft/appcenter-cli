@@ -72,6 +72,34 @@ export function copyFile(source: string, target: string): Promise<void> {
   });  
 }
 
+export async function rm(source: string, recursive: boolean = true): Promise<void> {
+  let stats = await stat(source);
+  if (stats.isDirectory()) {
+    await rmDir(source, recursive);
+  }
+  else {
+    await rmFile(source);
+  }
+}
+
+export async function rmDir(source: string, recursive: boolean = true) {
+  if (recursive) {
+    let files = await readdir(source);
+
+    for (let i = 0; i < files.length; i++) {
+      let fullPath = path.join(source, files[i]);
+
+      await rm(fullPath, recursive);
+    }
+  }
+
+  await callFs(fs.rmdir, source);
+}
+
+export async function rmFile(path: string) {
+  await callFs(fs.unlink, path);
+}
+
 function callFs<TArg, TResult>(func: (arg: TArg, callback: (err: any, result?: TResult) => void) => void, ...args: any[]): Promise<TResult> {
   return new Promise<TResult>((resolve, reject) => {
     func.apply(fs, _.concat(args, [

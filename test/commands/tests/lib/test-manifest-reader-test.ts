@@ -9,8 +9,8 @@ describe("TestManifestReader.readManifest", () => {
   let expectedManifest = new TestManifest(
     "1.0.0",
     new TestRunFile(
-        "apps/app.apk",
-        "app.apk",
+        "test/commands/tests/sample-test-workspace/apps/app.txt",
+        "app.txt",
         "Ignores",
         "app-file"),
     [
@@ -60,12 +60,20 @@ describe("TestManifestReader.readManifest", () => {
     return {
       "schemaVersion": manifest.version,
       "testFramework": manifest.testFramework,
-      "files": _.sortBy(manifest.testFiles.map(f => {  
-        return { 
-          "sourcePath": f.sourcePath.replace(new RegExp("/", 'g'), path.sep),
-          "targetRelativePath": f.targetRelativePath.replace(new RegExp("/", 'g'), path.sep), 
-        } }), ['sourcePath'])
+      "applicationFile": normalizeFile(manifest.applicationFile),
+      "files": _.sortBy(manifest.testFiles.map(normalizeFile), ['sourcePath'])
     }
+  }
+
+  function normalizeFile(file: TestRunFile) {
+    return { 
+      "sourcePath": normalizePath(file.sourcePath),
+      "targetRelativePath": normalizePath(file.targetRelativePath) 
+    };
+  }
+
+  function normalizePath(filePath: string): string {
+    return filePath.replace(new RegExp("/", 'g'), path.sep);
   }
 
   it("should correctly read json manifest", async () => {

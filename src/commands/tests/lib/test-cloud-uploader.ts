@@ -59,13 +59,13 @@ export class TestCloudUploader {
 
   public async uploadAndStart(): Promise<StartedTestRun> {
     let manifest = await progressWithResult<TestManifest>(
-      "Validating argumetns",
+      "Validating arguments",
       this.validateAndParseManifest());
     
     let testRunId = await progressWithResult("Creating new test run", this.createTestRun());
     debug(`Test run id: ${testRunId}`);
 
-    let appFile = await TestRunFile.create(this.appPath, path.basename(this.appPath), "app-file");
+    let appFile = await progressWithResult("Validating application file", this.validateAndCreateAppFile(manifest));
     await progressWithResult("Uploading application file", this.uploadHashOrNewFile(testRunId, appFile));
     await progressWithResult("Uploading test files", this.uploadAllTestFiles(testRunId, manifest.testFiles));
 
@@ -79,10 +79,22 @@ export class TestCloudUploader {
   }
 
   private async validateAndParseManifest(): Promise<TestManifest> {
-    await AppValidator.validate(this.appPath);
-    
     return await TestManifestReader.readFromFile(this._manifestPath);
   };
+
+  private async validateAndCreateAppFile(manifest: TestManifest): Promise<TestRunFile> {
+    let result = this.appPath ? 
+      await TestRunFile.create(this.appPath, path.basename(this.appPath), "app-file")
+      : manifest.applicationFile;
+
+    if (!result) {
+      throw new Error("If test manifest doesn't contain path to application file, it must be provided using --app-path option");
+    }
+
+    await AppValidator.validate(result.sourcePath);
+
+    return result;
+  }
 
   private createTestRun(): Promise<string> {
      return new Promise<string>((resolve, reject) => {
