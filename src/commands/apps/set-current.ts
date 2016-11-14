@@ -3,7 +3,7 @@ import { SonomaClient, models, clientCall } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { Profile, DefaultApp, toDefaultApp, getUser } from "../../util/profile";
 
-@help("Set the default application for commands")
+@help("Set default application for all CLI commands")
 export default class SetCurrentAppCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);

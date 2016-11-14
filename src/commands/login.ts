@@ -10,19 +10,19 @@ import { inspect } from "util";
 
 const debug = require("debug")("sonoma-cli:commands:login");
 
-@help("Log in to the sonoma system.")
+@help("Login to Mobile Center")
 export default class LoginCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);
   }
 
-  @help("user name to log in as")
+  @help("Username to log in as")
   @shortName("u")
   @longName("user")
   @hasArg
   userName: string;
 
-  @help("password to log in with")
+  @help("Password to log in with")
   @shortName("p")
   @longName("password")
   @hasArg

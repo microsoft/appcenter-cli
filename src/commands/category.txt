@@ -1,4 +1,3 @@
 
     mobile-center
-    Microsoft mobile dev stuff?
-
+    Command to start with the Mobile Center CLI
