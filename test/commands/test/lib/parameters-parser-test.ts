@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { parseTestParameters } from "../../../../src/commands/tests/lib/parameters-parser"; 
+import { parseTestParameters } from "../../../../src/commands/test/lib/parameters-parser"; 
 
 describe("parseTestParameters", () => {
   it("should parse arguments with values", () => {
