@@ -52,11 +52,17 @@ export class RunTestsCommand extends AppCommand {
   constructor(args: CommandArgs) {
     super(args);
 
-    if (typeof this.testParameters === "string") {
+    if (!this.testParameters) {
+      this.testParameters = [];
+    }
+    else if (typeof this.testParameters === "string") {
       this.testParameters = [ this.testParameters ];
     }
 
-    if (typeof this.include === "string") {
+    if (!this.include) {
+      this.include = [];
+    }
+    else if (typeof this.include === "string") {
       this.include = [ this.include ];
     }
   }
@@ -66,7 +72,7 @@ export class RunTestsCommand extends AppCommand {
       let artifactsDir = await this.getArtifactsDir();
       
       try {
-        let manifestPath = await progressWithResult("Preparing Appium tests", this.prepareArtifactsDir(artifactsDir));
+        let manifestPath = await progressWithResult("Preparing tests", this.prepareArtifactsDir(artifactsDir));
         let testRun = await this.uploadAndStart(client, manifestPath);
         
         out.text(`Test run id: "${testRun.testRunId}"`);

@@ -69,7 +69,7 @@ export class UITestPreparer {
     }
 
     for (let i = 0; i < this.include.length; i++) {
-      command += ` --data "${this.include[i]}"`;
+      command += ` --include "${this.include[i]}"`;
     }
 
     if (this.signInfo) {

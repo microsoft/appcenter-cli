@@ -83,9 +83,10 @@ export class TestCloudUploader {
   };
 
   private async validateAndCreateAppFile(manifest: TestManifest): Promise<TestRunFile> {
-    let result = this.appPath ? 
-      await TestRunFile.create(this.appPath, path.basename(this.appPath), "app-file")
-      : manifest.applicationFile;
+    let result = manifest.applicationFile ?
+      manifest.applicationFile  
+      : await TestRunFile.create(this.appPath, path.basename(this.appPath), "app-file")
+      
 
     if (!result) {
       throw new Error("If test manifest doesn't contain path to application file, it must be provided using --app-path option");

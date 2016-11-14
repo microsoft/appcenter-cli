@@ -18,12 +18,6 @@ export default class RunUITestsCommand extends RunTestsCommand {
   @hasArg
   assemblyDir: string;
 
-  @help("Path to output directory with all test artifacts")
-  @longName("artifacts-dir")
-  @required
-  @hasArg
-  artifactsDir: string;
-
   @help("TODO")
   @longName("store-file")
   @hasArg
