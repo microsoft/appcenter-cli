@@ -224,6 +224,21 @@ describe("Command line option parsing", function() {
       expect(target).to.have.property("file", "a.txt");
       expect(target).to.not.have.property("moreFiles");
     });
+
+    it("should throw if there are extra positional args and no rest arg", function () {
+      const opts: PositionalOptionsDescription = [
+        {
+          name: "file",
+          propertyName: "file",
+          position: 0,
+          required: true
+        }
+      ];
+
+      let target: any = {};
+      expect(() => parseOptions({}, opts, target, "a.txt b.txt".split(" ")))
+        .to.throw(Error, /Unknown arguments: b.txt/);
+    });
   });
 
   describe("flags and positional together", function () {

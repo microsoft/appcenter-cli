@@ -128,6 +128,13 @@ export function parseOptions(...params: any[]): void {
     return b.position - a.position;
   });
 
+  // Check for leftover positional parameters, fail if found
+  const hasRestOption = positionalOptions.some(o => o.position === null);
+  if (!hasRestOption && positionalArgs.length > positionalOptions.length) {
+    const unknownArgs = positionalArgs.slice(positionalOptions.length);
+    throw new Error(`Unknown arguments: ${unknownArgs.join(" ")}`);
+  }
+
   positionalOptions.forEach((opt, index) => {
     debug(`Checking for ${opt.required ? "required" : "optional" } option ${opt.name} at position ${opt.position}`);
 
