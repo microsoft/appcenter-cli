@@ -53,6 +53,11 @@ export default class PrepareUITestCommand extends Command {
   @hasArg
   signInfo: string;
 
+  @help("Path to Xamarin UITest tools directory that contains test-cloud.exe")
+  @longName("uitest-tools-dir")
+  @hasArg
+  uiTestToolsDir: string;
+
   @help("Additional files / directories that should be included in the test run. The value should be in format 'sourceDir=targetDir'")
   @longName("include")
   @hasArg
@@ -92,6 +97,7 @@ export default class PrepareUITestCommand extends Command {
       preparer.keyPassword = this.keyPassword;
       preparer.include = this.include;
       preparer.testParameters = this.testParameters;
+      preparer.uiTestToolsDir = this.uiTestToolsDir;
 
       let manifestPath = await preparer.prepare();
       out.text(`UI Tests are ready to run. Manifest file was written to ${manifestPath}.`);

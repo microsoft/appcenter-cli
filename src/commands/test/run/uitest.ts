@@ -43,6 +43,11 @@ export default class RunUITestsCommand extends RunTestsCommand {
   @hasArg
   signInfo: string;
 
+  @help("Path to Xamarin UITest tools directory that contains test-cloud.exe")
+  @longName("uitest-tools-dir")
+  @hasArg
+  uiTestToolsDir: string;
+
   constructor(args: CommandArgs) {
     super(args);
   }
@@ -56,6 +61,7 @@ export default class RunUITestsCommand extends RunTestsCommand {
     preparer.keyPassword = this.keyPassword;
     preparer.include = this.include;
     preparer.testParameters = this.testParameters;
+    preparer.uiTestToolsDir = this.uiTestToolsDir;
 
     return await preparer.prepare();
   }
