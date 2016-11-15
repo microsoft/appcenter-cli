@@ -1,11 +1,22 @@
 {
   "name": "mobile-center-cli",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Command line tool for Microsoft Mobile Center",
+  "keywords": [
+    "microsoft",
+    "mobilecenter",
+    "mobile-center",
+    "azure"
+  ],
+  "homepage": "https://github.com/Microsoft/MobileCenter-cli",
   "engine": {
     "node": ">= 6.3.0"
   },
   "main": "dist/index.js",
+  "bin": {
+    "mobile-center": "./bin/mobile-center.js"
+  },
+  "preferGlobal": true,
   "scripts": {
     "build": "gulp build",
     "test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s",
@@ -20,7 +31,7 @@
   "author": "Microsoft",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/Sonoma-cli/issues"
+    "url": "https://github.com/Microsoft/MobileCenter-cli/issues"
   },
   "homepage": "https://github.com/Microsoft/Sonoma-cli#readme",
   "devDependencies": {
