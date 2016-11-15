@@ -1,10 +1,8 @@
 import { AppCommand, CommandArgs, CommandResult,
-         help, success, name, shortName, longName, required, hasArg,
-         position, failure, notLoggedIn } from "../../util/commandLine";
-import { out } from "../../util/interaction";
-import { getUser } from "../../util/profile";
-import { MobileCenterClient, models, clientCall } from "../../util/apis";
-import * as os from "os";
+         help, success, name, longName, required, hasArg,
+         failure } from "../../util/commandLine";
+import { StateChecker } from "./lib/state-checker";
+import { MobileCenterClient } from "../../util/apis";
 
 @help("Checks state of test run submitted to Visual Studio Mobile Center")
 export default class CheckStateCommand extends AppCommand {
@@ -20,49 +18,18 @@ export default class CheckStateCommand extends AppCommand {
 
   constructor(args: CommandArgs) {
     super(args);
-    this.continuous = this.continuous !== undefined;
   }
 
   async run(client: MobileCenterClient): Promise<CommandResult> {
-    let exitCode = 0;
+    let checker = new StateChecker(client, this.testRunId, this.app.ownerName, this.app.appName);
 
-    while (true) {
-      let state = await out.progress("Checking state...", this.getTestRunState(client));
-      out.text(state.message.join(os.EOL));
+    let exitCode = this.continuous ? await checker.checkUntilCompleted() : await checker.checkOnce(); 
 
-      if (!this.continuous || (typeof state.exitCode === "number")) {
-        if (state.exitCode) {
-          exitCode = state.exitCode;
-        }
-        break;
-      }
-
-      out.text(`Waiting ${state.waitTime} seconds...`)
-      await this.delay(1000 * state.waitTime);
-    }
-
-    if (exitCode !== 0) {
-      return failure(exitCode, "");
-    }
-    else {
+    if (!exitCode) {
       return success();
     }
-  }
-
-  private async delay(milliseconds: number) {
-    return new Promise<void>(resolve => {
-      setTimeout(resolve, milliseconds);
-    });
-  }
-
-  private getTestRunState(client: MobileCenterClient): Promise<models.TestRunState> {
-    return clientCall(cb => {
-      client.test.getTestRunState(
-        this.testRunId,
-        this.app.ownerName,
-        this.app.appName,
-        cb
-      );
-    });
+    else {
+      return failure(exitCode, "Test run failed. Please inspect logs for more details");
+    }
   }
 }
