@@ -1,9 +1,9 @@
-import { AppCommand, CommandArgs, CommandResult, 
+import { AppCommand, CommandArgs, CommandResult,
          help, success, name, shortName, longName, required, hasArg,
          position, failure, notLoggedIn } from "../../util/commandLine";
 import { out } from "../../util/interaction";
 import { getUser } from "../../util/profile";
-import { SonomaClient, models, clientCall } from "../../util/apis";
+import { MobileCenterClient, models, clientCall } from "../../util/apis";
 import * as os from "os";
 
 @help("Checks state of test run submitted to Visual Studio Mobile Center")
@@ -23,7 +23,7 @@ export default class CheckStateCommand extends AppCommand {
     this.continuous = this.continuous !== undefined;
   }
 
-  async run(client: SonomaClient): Promise<CommandResult> {
+  async run(client: MobileCenterClient): Promise<CommandResult> {
     let exitCode = 0;
 
     while (true) {
@@ -55,7 +55,7 @@ export default class CheckStateCommand extends AppCommand {
     });
   }
 
-  private getTestRunState(client: SonomaClient): Promise<models.TestRunState> {
+  private getTestRunState(client: MobileCenterClient): Promise<models.TestRunState> {
     return clientCall(cb => {
       client.test.getTestRunState(
         this.testRunId,

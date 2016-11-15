@@ -11,7 +11,7 @@ import { environments } from "./environments";
 import { profileFile, getProfileDir } from "../misc";
 import { TokenValueType, tokenStore } from "../token-store";
 
-const debug = require("debug")("sonoma-cli:util:profile:profile");
+const debug = require("debug")("mobile-center-cli:util:profile:profile");
 
 export interface UpdatableProfile {
   userId: string;

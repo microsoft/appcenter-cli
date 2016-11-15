@@ -1,5 +1,5 @@
-import SonomaClient = require("./generated/sonomaClient");
+import MobileCenterClient = require("./generated/mobileCenterClient");
 import * as models from "./generated/models";
 
-export { SonomaClient, models };
-export { createSonomaClient, clientCall } from "./create-client";
+export { MobileCenterClient, models };
+export { createMobileCenterClient, clientCall } from "./create-client";

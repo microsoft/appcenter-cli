@@ -14,11 +14,11 @@ var WebResource = msRest.WebResource;
  * @class
  * Distribute
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the SonomaClient.
+ * instance of the MobileCenterClient.
  * Initializes a new instance of the Distribute class.
  * @constructor
  *
- * @param {SonomaClient} client Reference to the service client.
+ * @param {MobileCenterClient} client Reference to the service client.
  */
 function Distribute(client) {
   this.client = client;

@@ -3,6 +3,8 @@
 // room for other errors.
 // This consolidates success and failure into a single type.
 
+import { scriptName } from "../misc/constants";
+
 export interface CommandSucceededResult {
   // Nothing to say here, it just works. :-)
   succeeded: boolean;
@@ -81,7 +83,7 @@ export function notFound(command: string): CommandResult {
 
 export function notLoggedIn(command: string): CommandResult {
   return failure(ErrorCodes.NotLoggedIn,
-    `Command '${command}' requires a logged in user. Use the 'sonoma login' command to log in.`);
+    `Command '${command}' requires a logged in user. Use the '${scriptName} login' command to log in.`);
 }
 
 export function exception(command: string, ex: Error): CommandResult {

@@ -1,10 +1,10 @@
 //
-// Custom credentials object for talking to Sonoma
+// Custom credentials object for talking to Mobile center
 //
 
 import { WebResource } from "ms-rest";
 
-export class SonomaClientCredentials {
+export class MobileCenterClientCredentials {
   private token: Promise<string>;
 
   constructor(token: Promise<string>) {

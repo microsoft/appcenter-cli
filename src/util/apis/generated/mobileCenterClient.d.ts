@@ -7,10 +7,10 @@
 import { ServiceClientOptions, RequestOptions, ServiceCallback, ServiceClientCredentials } from 'ms-rest';
 import * as operations from "./operations";
 
-declare class SonomaClient {
+declare class MobileCenterClient {
     /**
      * @class
-     * Initializes a new instance of the SonomaClient class.
+     * Initializes a new instance of the MobileCenterClient class.
      * @constructor
      *
      * @param {credentials} credentials - Subscription credentials which uniquely identify client subscription.
@@ -41,4 +41,4 @@ declare class SonomaClient {
     analytics: operations.Analytics;
     }
 
-export = SonomaClient;
+export = MobileCenterClient;

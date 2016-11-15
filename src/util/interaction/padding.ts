@@ -1,7 +1,7 @@
 //
 // Misc string padding - no npm disasters for us! :-)
 //
-const debug = require("debug")("sonoma-cli:util:interaction:padding");
+const debug = require("debug")("mobile-center-cli:util:interaction:padding");
 
 export function padding(width: number, text: string): string {
   const len = text.length;

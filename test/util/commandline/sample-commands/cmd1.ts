@@ -1,5 +1,5 @@
 import { Command, CommandArgs, CommandResult, success } from "../../../../src/util/commandline";
-import { SonomaClient } from "../../../../src/util/apis";
+import { MobileCenterClient } from "../../../../src/util/apis";
 
 
 export default class Command1 extends Command {
@@ -11,7 +11,7 @@ export default class Command1 extends Command {
     return success();
   }
 
-  async run(client: SonomaClient): Promise<CommandResult> {
+  async run(client: MobileCenterClient): Promise<CommandResult> {
     return success();
   }
 };
