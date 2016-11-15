@@ -2,7 +2,7 @@ import { AppCommand, CommandArgs, CommandResult,
          help, success, name, shortName, longName, required, hasArg,
          position, failure, notLoggedIn, ErrorCodes } from "../../../util/commandLine";
 import { TestCloudUploader, StartedTestRun } from "../lib/test-cloud-uploader";
-import { SonomaClient } from "../../../util/apis";
+import { MobileCenterClient } from "../../../util/apis";
 import { getUser } from "../../../util/profile";
 import { out } from "../../../util/interaction";
 import { progressWithResult } from "../lib/interaction";
@@ -67,7 +67,7 @@ export class RunTestsCommand extends AppCommand {
     }
   }
 
-  public async run(client: SonomaClient): Promise<CommandResult> {
+  public async run(client: MobileCenterClient): Promise<CommandResult> {
     try {
       let artifactsDir = await this.getArtifactsDir();
       
@@ -117,7 +117,7 @@ export class RunTestsCommand extends AppCommand {
     });
   }
 
-  protected async uploadAndStart(client: SonomaClient, manifestPath: string): Promise<StartedTestRun> {
+  protected async uploadAndStart(client: MobileCenterClient, manifestPath: string): Promise<StartedTestRun> {
     let uploader = new TestCloudUploader(
       client, 
       getUser().userName,

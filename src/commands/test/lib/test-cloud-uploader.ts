@@ -1,4 +1,4 @@
-import { SonomaClient, models, clientCall } from "../../../util/apis";
+import { MobileCenterClient, models, clientCall } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { progressWithResult } from "./interaction";
 import { TestManifest, TestRunFile } from "./test-manifest";
@@ -21,7 +21,7 @@ export interface StartedTestRun {
 }
 
 export class TestCloudUploader {
-  private readonly _client: SonomaClient;
+  private readonly _client: MobileCenterClient;
   private readonly _userName: string;
   private readonly _appName: string;
   private readonly _manifestPath: string;
@@ -33,7 +33,7 @@ export class TestCloudUploader {
   public testSeries: string;
   public locale: string;
 
-  constructor(client: SonomaClient, userName: string, appName: string, manifestPath: string, devices: string) {
+  constructor(client: MobileCenterClient, userName: string, appName: string, manifestPath: string, devices: string) {
     if (!client) {
       throw new Error("Argument client is required");
     }
@@ -163,7 +163,7 @@ export class TestCloudUploader {
     await this.makeDirectUpload(directUrl, file);
   }
 
-  private getDirectUploadUrl(client: SonomaClient, testRunId: string, file: TestRunFile): Promise<string> {
+  private getDirectUploadUrl(client: MobileCenterClient, testRunId: string, file: TestRunFile): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       client.test.startUploadingFile(
         testRunId,
