@@ -1,14 +1,14 @@
 import { AppCommand, CommandArgs, CommandResult, 
          help, success, name, shortName, longName, required, hasArg,
-         position, failure, notLoggedIn, ErrorCodes } from "../../../util/commandLine";
-import { TestCloudUploader, StartedTestRun } from "../lib/test-cloud-uploader";
-import { MobileCenterClient, models, clientCall } from "../../../util/apis";
-import { getUser } from "../../../util/profile";
+         failure, ErrorCodes } from "../../../util/commandLine";
+import { TestCloudUploader, StartedTestRun } from "./test-cloud-uploader";
+import { TestCloudError } from "./test-cloud-error";
+import { StateChecker } from "./state-checker";
+import { MobileCenterClient } from "../../../util/apis";
 import { out } from "../../../util/interaction";
-import { progressWithResult } from "../lib/interaction";
-import { parseTestParameters } from "../lib/parameters-parser";
-import { parseIncludedFiles } from "../lib/included-files-parser";
-import * as os from "os";
+import { progressWithResult } from "./interaction";
+import { parseTestParameters } from "./parameters-parser";
+import { parseIncludedFiles } from "./included-files-parser";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as temp from "temp";
 
@@ -141,43 +141,12 @@ export class RunTestsCommand extends AppCommand {
     return await uploader.uploadAndStart();
   }
 
-  private async waitForCompletion(client: MobileCenterClient, testRunId: string): Promise<number> {
-    let exitCode = 0;
-
-    while (true) {
-      let state = await out.progress("Checking status...", this.getTestRunState(client, testRunId));
-      out.text(`Current test status: ${state.message.join(os.EOL)}`);
-
-      if (typeof state.exitCode === "number") {
-        exitCode = state.exitCode;
-        break;
-      }
-
-      await out.progress(`Waiting ${state.waitTime} seconds...`, this.delay(1000 * state.waitTime));
-    }
+  private async waitForCompletion(client: MobileCenterClient, testRunId: string): Promise<void> {
+    let checker = new StateChecker(client, testRunId, this.app.ownerName, this.app.appName);
+    let exitCode = await checker.checkUntilCompleted();
 
     if (exitCode !== 0) {
-      return exitCode;
+      throw new TestCloudError("Test run failed. Please inspect logs for more details", exitCode);
     }
-    else {
-      return 0;
-    }
-  }
-
-  private getTestRunState(client: MobileCenterClient, testRunId: string): Promise<models.TestRunState> {
-    return clientCall(cb => {
-      client.test.getTestRunState(
-        testRunId,
-        this.app.ownerName,
-        this.app.appName,
-        cb
-      );
-    });
-  }
-
-  private async delay(milliseconds: number) {
-    return new Promise<void>(resolve => {
-      setTimeout(resolve, milliseconds);
-    });
   }
 }
