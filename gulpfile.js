@@ -1,6 +1,7 @@
 // Gulpfile to build sonoma CLI
 
 const gulp = require('gulp');
+const runSeq = require('run-sequence');
 const rimraf = require('rimraf');
 const ts = require('gulp-typescript');
 const autorest = require('./scripts/autorest');
@@ -51,6 +52,13 @@ gulp.task('fixup-swagger', function () {
 gulp.task('autorest', ['clean-autorest', 'fixup-swagger'], function () {
   return autorest.downloadTools()
     .then(() => autorest.generateCode('./swagger/bifrost.swagger.json', generatedSource, 'MobileCenterClient'));
+});
+
+//
+// Prepublish script - set up everything before publishing to npm
+//
+gulp.task('prepublish', function(done) {
+  runSeq('clean', 'build', done);
 });
 
 //

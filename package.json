@@ -1,17 +1,29 @@
 {
   "name": "mobile-center-cli",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Command line tool for Microsoft Mobile Center",
+  "keywords": [
+    "microsoft",
+    "mobilecenter",
+    "mobile-center",
+    "azure"
+  ],
+  "homepage": "https://github.com/Microsoft/Sonoma-cli#readme",
   "engine": {
     "node": ">= 6.3.0"
   },
   "main": "dist/index.js",
+  "bin": {
+    "mobile-center": "./bin/mobile-center.js"
+  },
+  "preferGlobal": true,
   "scripts": {
     "build": "gulp build",
     "test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s",
     "watch-test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s --watch",
     "autorest": "gulp autorest",
-    "clean": "gulp clean"
+    "clean": "gulp clean",
+    "prepublish": "gulp prepublish"
   },
   "repository": {
     "type": "git",
@@ -20,15 +32,15 @@
   "author": "Microsoft",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Microsoft/Sonoma-cli/issues"
+    "url": "https://github.com/Microsoft/MobileCenter-cli/issues"
   },
-  "homepage": "https://github.com/Microsoft/Sonoma-cli#readme",
   "devDependencies": {
     "chai": "^3.5.0",
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.0.2",
     "mocha": "^3.0.2",
     "nock": "^8.0.0",
+    "run-sequence": "^1.2.2",
     "sinon": "^1.17.6",
     "temp": "^0.8.3",
     "ts-node": "^1.3.0",
