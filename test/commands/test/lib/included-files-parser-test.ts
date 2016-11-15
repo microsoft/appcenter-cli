@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { parseIncludedFiles } from "../../../../src/commands/tests/lib/included-files-parser";
+import { parseIncludedFiles } from "../../../../src/commands/test/lib/included-files-parser";
 
 describe("parseIncludedFiles", () => {
   it("should parse included files", () => {

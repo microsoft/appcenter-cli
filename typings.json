@@ -6,7 +6,6 @@
   },
   "globalDependencies": {
     "adm-zip": "registry:dt/adm-zip#0.0.0+20160317120654",
-    "node": "registry:dt/node#6.0.0+20161019125345",
     "event-stream": "registry:dt/event-stream#0.0.0+20160216030252",
     "node": "registry:dt/node#6.0.0+20160915134512",
     "node-fetch": "registry:dt/node-fetch#0.0.0+20160711094047",
@@ -25,6 +24,7 @@
     "minimist": "registry:npm/minimist#1.0.0+20160723033700",
     "mkdirp": "registry:npm/mkdirp#0.5.0+20160723033700",
     "request": "registry:npm/request#2.69.0+20160428223725",
+    "rimraf": "registry:npm/rimraf#2.5.0+20160723033700",
     "wordwrap": "registry:npm/wordwrap#1.0.0+20160723033700"
   }
 }

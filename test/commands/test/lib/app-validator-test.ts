@@ -1,4 +1,4 @@
-import { AppValidator } from "../../../../src/commands/tests/lib/app-validator";
+import { AppValidator } from "../../../../src/commands/test/lib/app-validator";
 import { expect } from "chai";
 import * as path from "path";
 import * as fs from "fs";
