@@ -1,5 +1,5 @@
 import { Command, CommandArgs, CommandResult, help, success } from "../util/commandline";
-import { SonomaClient } from "../util/apis";
+import { MobileCenterClient } from "../util/apis";
 import { getUser } from "../util/profile";
 import { logout } from "./lib/logout";
 
@@ -9,7 +9,7 @@ export default class LogoutCommand extends Command {
     super(args);
   }
 
-  async run(client: SonomaClient): Promise<CommandResult> {
+  async run(client: MobileCenterClient): Promise<CommandResult> {
     await logout(client, getUser());
     return success();
   }

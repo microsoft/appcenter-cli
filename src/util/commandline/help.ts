@@ -5,7 +5,7 @@ import * as os from "os";
 import { isatty } from "tty";
 import { inspect } from "util";
 
-const debug = require("debug")("sonoma-cli:util:commandline:help");
+const debug = require("debug")("mobile-center-cli:util:commandline:help");
 
 import { values, identity } from "lodash";
 const Table = require("cli-table2");

@@ -1,9 +1,9 @@
 // Helper function to create client objects
-const debug = require("debug")("sonoma-cli:util:apis:create-client");
+const debug = require("debug")("mobile-center-cli:util:apis:create-client");
 import { inspect } from "util";
 
-import SonomaClient = require("./generated/sonomaClient");
-import { SonomaClientCredentials } from "./sonoma-client-credentials";
+import MobileCenterClient = require("./generated/MobileCenterClient");
+import { MobileCenterClientCredentials } from "./mobile-center-client-credentials";
 import { userAgentFilter } from "./user-agent-filter";
 const BasicAuthenticationCredentials = require("ms-rest").BasicAuthenticationCredentials;
 import { ServiceCallback } from "ms-rest";
@@ -13,21 +13,21 @@ const createLogger = require('ms-rest').LogFilter.create;
 import { isDebug } from "../interaction";
 import { Profile } from "../profile";
 
-export function createSonomaClient(userName: string, password: string, endpoint: string): SonomaClient;
-export function createSonomaClient(token: Promise<string>, endpoint:string): SonomaClient;
-export function createSonomaClient(token: string, endpoint: string): SonomaClient;
-export function createSonomaClient(user: Profile): SonomaClient;
-export function createSonomaClient(...args: any[]): SonomaClient {
+export function createMobileCenterClient(userName: string, password: string, endpoint: string): MobileCenterClient;
+export function createMobileCenterClient(token: Promise<string>, endpoint:string): MobileCenterClient;
+export function createMobileCenterClient(token: string, endpoint: string): MobileCenterClient;
+export function createMobileCenterClient(user: Profile): MobileCenterClient;
+export function createMobileCenterClient(...args: any[]): MobileCenterClient {
   if (args.length === 3) {
     return createBasicAuthClient(args[0], args[1], args[2]);
   }
   else if (args.length === 2) {
     if (typeof args[0] === 'string') {
-      return createSonomaAuthClientFromToken(Promise.resolve(args[0]), args[1]);
+      return createMobileCenterAuthClientFromToken(Promise.resolve(args[0]), args[1]);
     }
-    return createSonomaAuthClientFromToken(args[0], args[1]);
+    return createMobileCenterAuthClientFromToken(args[0], args[1]);
   }
-  return createSonomaAuthClient(args[0]);
+  return createMobileCenterAuthClient(args[0]);
 }
 
 function createClientOptions(): any {
@@ -39,23 +39,23 @@ function createClientOptions(): any {
 }
 
 
-function createBasicAuthClient(userName: string, password: string, endpoint: string): SonomaClient {
+function createBasicAuthClient(userName: string, password: string, endpoint: string): MobileCenterClient {
   debug(`Creating client from user name and password for endpoint ${endpoint}`);
-  return new SonomaClient(new BasicAuthenticationCredentials(userName, password), endpoint, createClientOptions());
+  return new MobileCenterClient(new BasicAuthenticationCredentials(userName, password), endpoint, createClientOptions());
 }
 
-function createSonomaAuthClientFromToken(token: Promise<string>, endpoint: string): SonomaClient {
+function createMobileCenterAuthClientFromToken(token: Promise<string>, endpoint: string): MobileCenterClient {
   debug(`Creating client from token for endpoint ${endpoint}`);
-  return new SonomaClient(new SonomaClientCredentials(token), endpoint, createClientOptions());
+  return new MobileCenterClient(new MobileCenterClientCredentials(token), endpoint, createClientOptions());
 }
 
-function createSonomaAuthClient(user: Profile): SonomaClient {
+function createMobileCenterAuthClient(user: Profile): MobileCenterClient {
   if (!user) {
     debug(`No current user, not creating client`);
     return null;
   }
   debug(`Creating client from user for user ${inspect(user)}`);
-  return new SonomaClient(new SonomaClientCredentials(user.accessToken), user.endpoint, createClientOptions());
+  return new MobileCenterClient(new MobileCenterClientCredentials(user.accessToken), user.endpoint, createClientOptions());
 }
 
 // Helper function to wrap client calls into promises while maintaining some type safety.

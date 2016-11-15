@@ -1,9 +1,9 @@
 import { Command, CommandArgs, CommandResult, help, success, failure, failed, notLoggedIn, getCurrentApp } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { DefaultApp, getUser } from "../../util/profile";
-import { SonomaClient, models, clientCall } from "../../util/apis";
+import { MobileCenterClient, models, clientCall } from "../../util/apis";
 
-const debug = require("debug")("sonoma-cli:commands:apps:list");
+const debug = require("debug")("mobile-center-cli:commands:apps:list");
 import { inspect } from "util";
 
 @help("Get list of configured applications")
@@ -22,7 +22,7 @@ export default class AppsListCommand extends Command {
     return `${prefix}${app.owner.name}/${app.name}${suffix}`;
   }
 
-  async run(client: SonomaClient): Promise<CommandResult> {
+  async run(client: MobileCenterClient): Promise<CommandResult> {
     const apps = await out.progress("Getting app list ...",
       clientCall<models.AppResponse[]>(cb => client.account.getApps(cb)));
 

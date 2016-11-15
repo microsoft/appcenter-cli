@@ -14,11 +14,11 @@ var WebResource = msRest.WebResource;
  * @class
  * Account
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the SonomaClient.
+ * instance of the MobileCenterClient.
  * Initializes a new instance of the Account class.
  * @constructor
  *
- * @param {SonomaClient} client Reference to the service client.
+ * @param {MobileCenterClient} client Reference to the service client.
  */
 function Account(client) {
   this.client = client;

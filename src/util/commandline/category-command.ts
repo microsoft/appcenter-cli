@@ -8,7 +8,7 @@ import { scriptName } from "../misc";
 import { getClassHelpText } from "./option-decorators";
 
 const Table = require("cli-table2");
-const debug = require("debug")("sonoma-cli:util:commandline:category-command");
+const debug = require("debug")("mobile-center-cli:util:commandline:category-command");
 
 // "filler" command used to display category help
 export class CategoryCommand extends Command {

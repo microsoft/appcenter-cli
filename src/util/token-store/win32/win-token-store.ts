@@ -12,7 +12,7 @@ import * as parser from "./win-credstore-parser";
 
 import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../token-store";
 
-const debug = require("debug")("sonoma-cli:util:token-store:win32:win-token-store");
+const debug = require("debug")("mobile-center-cli:util:token-store:win32:win-token-store");
 import { inspect } from "util";
 
 type ReadableStream = NodeJS.ReadableStream;

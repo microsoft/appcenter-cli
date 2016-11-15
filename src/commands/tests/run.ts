@@ -1,10 +1,10 @@
-import { AppCommand, CommandArgs, CommandResult, 
+import { AppCommand, CommandArgs, CommandResult,
          help, success, name, shortName, longName, required, hasArg,
          position, failure, notLoggedIn } from "../../util/commandLine";
 import { out } from "../../util/interaction";
 import * as outExtensions from "./lib/interaction";
 import { getUser } from "../../util/profile";
-import { SonomaClient, models, clientCall } from "../../util/apis";
+import { MobileCenterClient, models, clientCall } from "../../util/apis";
 import { PathResolver } from "./lib/path-resolver";
 import { TestManifest, TestRunFile } from "./lib/test-manifest";
 import { TestManifestReader } from "./lib/test-manifest-reader";
@@ -18,7 +18,7 @@ import * as url from "url";
 import * as request from "request";
 
 const pLimit = require("p-limit");
-const debug = require("debug")("mobile-center:commands:tests:run");
+const debug = require("debug")("mobile-center-cli:commands:tests:run");
 const paralleRequests = 10;
 
 @help("Submits tests to Visual Studio Mobile Center")
@@ -66,24 +66,24 @@ export default class RunTestsCommand extends AppCommand {
     super(args);
   }
 
-  async run(client: SonomaClient): Promise<CommandResult> {
+  async run(client: MobileCenterClient): Promise<CommandResult> {
     let manifest = await outExtensions.progressWithResult<TestManifest>(
-      "Validating arguments", 
+      "Validating arguments",
       this.validateAndParseManifest());
-    
+
     let appFile = await TestRunFile.create(this.appPath, path.basename(this.appPath), "app-file");
 
     let testRunId = await outExtensions.progressWithResult(
-      "Creating new test run", 
+      "Creating new test run",
       this.createTestRun(client));
     debug(`Test run id: ${testRunId}`);
 
     await outExtensions.progressWithResult(
-      "Uploading application file", 
+      "Uploading application file",
       this.uploadHashOrNewFile(client, testRunId, appFile));
-    
+
     await outExtensions.progressWithResult(
-      "Uploading test files", 
+      "Uploading test files",
       this.uploadAllTestFiles(client, testRunId, manifest.files));
 
     let startRunResult = await outExtensions.progressWithResult("Starting test run", this.startTestRun(client, testRunId, manifest));
@@ -91,18 +91,18 @@ export default class RunTestsCommand extends AppCommand {
     out.text(`Test run id: "${testRunId}"`);
     out.text("Accepted devices: ");
     out.list(item => `  - ${item}`, startRunResult.acceptedDevices);
-    
+
     if (startRunResult.rejectedDevices && startRunResult.rejectedDevices.length > 0) {
       out.text("Rejected devices: ");
       out.list(item => `  - ${item}`, startRunResult.rejectedDevices);
     }
-    
+
     return success();
   }
 
   private async validateAndParseManifest(): Promise<TestManifest> {
     await AppValidator.validate(this.appPath);
-    
+
     return await TestManifestReader.readFromFile(this.manifestPath);
   };
 
@@ -122,32 +122,32 @@ export default class RunTestsCommand extends AppCommand {
     }
   }
 
-  private uploadAllTestFiles(client: SonomaClient, testRunId: string, files: TestRunFile[]): Promise<void> {
+  private uploadAllTestFiles(client: MobileCenterClient, testRunId: string, files: TestRunFile[]): Promise<void> {
     let limit = pLimit(paralleRequests);
     let uploadTasks = files.map(f => limit(() => this.uploadHashOrNewFile(client, testRunId, f)));
 
     return Promise.all(uploadTasks);
   }
 
-  private createTestRun(client: SonomaClient): Promise<string> {
+  private createTestRun(client: MobileCenterClient): Promise<string> {
      return new Promise<string>((resolve, reject) => {
        client.test.createTestRun(
-         getUser().userName, 
-         this.app.appName, 
+         getUser().userName,
+         this.app.appName,
          (err: Error, _result: any, _request: any, response: http.IncomingMessage) => {
-          if (err) { 
-            reject(err); 
+          if (err) {
+            reject(err);
           }
           else {
             let location: string = response.headers["location"];
             let testRunId = _.last(location.split("/"));
-            resolve(testRunId); 
+            resolve(testRunId);
           }
       });
     });
   }
 
-  private async uploadHashOrNewFile(client: SonomaClient, testRunId: string, file: TestRunFile): Promise<void> {
+  private async uploadHashOrNewFile(client: MobileCenterClient, testRunId: string, file: TestRunFile): Promise<void> {
     if (await this.tryUploadFileHash(client, testRunId, file)) {
       debug(`File ${file.sourcePath}: hash upload`);
     }
@@ -157,10 +157,10 @@ export default class RunTestsCommand extends AppCommand {
     }
   }
 
-  private async tryUploadFileHash(client: SonomaClient, testRunId: string, file: TestRunFile, byteRange: string = null): Promise<boolean> {
+  private async tryUploadFileHash(client: MobileCenterClient, testRunId: string, file: TestRunFile, byteRange: string = null): Promise<boolean> {
     let response = await new Promise<http.IncomingMessage>((resolve, reject) => {
       client.test.uploadHash(
-        testRunId, 
+        testRunId,
         {
           checksum: file.sha256,
           fileType: file.fileType,
@@ -187,15 +187,15 @@ export default class RunTestsCommand extends AppCommand {
     }
     else {
       return false;
-    } 
+    }
   }
 
-  private async uploadFile(client: SonomaClient, testRunId: string, file: TestRunFile): Promise<void> {
+  private async uploadFile(client: MobileCenterClient, testRunId: string, file: TestRunFile): Promise<void> {
     let directUrl = await this.getDirectUploadUrl(client, testRunId, file);
     await this.makeDirectUpload(directUrl, file);
   }
 
-  private getDirectUploadUrl(client: SonomaClient, testRunId: string, file: TestRunFile): Promise<string> {
+  private getDirectUploadUrl(client: MobileCenterClient, testRunId: string, file: TestRunFile): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       client.test.startUploadingFile(
         testRunId,
@@ -232,7 +232,7 @@ export default class RunTestsCommand extends AppCommand {
               reject(err);
             }
             else if (response.statusCode >= 400) {
-              reject(new Error(`Cannot upload file. Response: ${response.statusCode}; Message: ${body}`));              
+              reject(new Error(`Cannot upload file. Response: ${response.statusCode}; Message: ${body}`));
             }
             else {
               resolve();
@@ -243,10 +243,10 @@ export default class RunTestsCommand extends AppCommand {
       catch (err) {
         reject(err);
       }
-    });    
+    });
   }
 
-  private startTestRun(client: SonomaClient, testRunId: string, manifest: TestManifest): Promise<models.TestCloudStartTestRunResult> {
+  private startTestRun(client: MobileCenterClient, testRunId: string, manifest: TestManifest): Promise<models.TestCloudStartTestRunResult> {
     let startOptions: models.TestCloudStartTestRunOptions = {
       testFramework: manifest.testFramework.name,
       deviceSelection: this.devices,
@@ -257,7 +257,7 @@ export default class RunTestsCommand extends AppCommand {
 
     return clientCall(cb => {
       client.test.startTestRun(
-        testRunId, 
+        testRunId,
         startOptions,
         getUser().userName,
         this.app.appName,
@@ -265,7 +265,7 @@ export default class RunTestsCommand extends AppCommand {
     });
   }
 
-  private getTestRunState(client: SonomaClient, testRunId: string): Promise<any> {
+  private getTestRunState(client: MobileCenterClient, testRunId: string): Promise<any> {
     return clientCall(cb => {
       client.test.getTestRunState(
         testRunId,

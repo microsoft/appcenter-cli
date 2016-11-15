@@ -1,5 +1,5 @@
 import { Command, CommandArgs, CommandResult, success, failure, name, help, position, required, ErrorCodes } from "../../util/commandline";
-import { SonomaClient, models, clientCall } from "../../util/apis";
+import { MobileCenterClient, models, clientCall } from "../../util/apis";
 import { out, formatIsJson } from "../../util/interaction";
 import { Profile, DefaultApp, getUser } from "../../util/profile";
 

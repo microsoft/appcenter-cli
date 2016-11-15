@@ -12,11 +12,13 @@ import * as path from "path";
 import * as rx from "rx";
 import { toPairs } from "lodash";
 
-const debug = require("debug")("sonoma-cli:util:token-store:file:file-token-store");
+import { profileDirName } from "../../misc/constants";
+
+const debug = require("debug")("mobile-center-cli:util:token-store:file:file-token-store");
 
 import { TokenEntry, TokenStore, TokenKeyType, TokenValueType } from "../token-store";
 
-const defaultPath = ".sonomacli";
+const defaultPath = profileDirName;
 const defaultFile = "tokens.json";
 
 export class FileTokenStore implements TokenStore {

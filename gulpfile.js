@@ -50,7 +50,7 @@ gulp.task('fixup-swagger', function () {
 
 gulp.task('autorest', ['clean-autorest', 'fixup-swagger'], function () {
   return autorest.downloadTools()
-    .then(() => autorest.generateCode('./swagger/bifrost.swagger.json', generatedSource, 'SonomaClient'));
+    .then(() => autorest.generateCode('./swagger/bifrost.swagger.json', generatedSource, 'MobileCenterClient'));
 });
 
 //

@@ -23,7 +23,7 @@ import * as stream from "stream";
 import * as util from "util";
 
 import { inspect } from "util";
-const debug = require("debug")("sonoma-cli:util:token-store:osx:osx-keychain-parser");
+const debug = require("debug")("mobile-center-cli:util:token-store:osx:osx-keychain-parser");
 
 //
 // Regular expressions that match the various fields in the input
