@@ -4,7 +4,7 @@ import * as path from "path";
 import * as fs from "fs";
 import { inspect } from "util";
 
-const debug = require("debug")("sonoma-cli:util:commandline:command-finder");
+const debug = require("debug")("mobile-center-cli:util:commandline:command-finder");
 
 // Helpers for file system checks
 

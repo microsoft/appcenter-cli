@@ -1,28 +1,28 @@
-// Implementation of Sonoma login command
+// Implementation of Mobile Center login command
 
 import { Command, CommandArgs, CommandResult, success, failure, help, shortName, longName, required, hasArg } from "../util/commandline";
 import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser } from "../util/profile";
 import { prompt, out } from "../util/interaction";
-import { models, createSonomaClient, clientCall } from "../util/apis";
+import { models, createMobileCenterClient, clientCall } from "../util/apis";
 import { logout } from "./lib/logout";
 
 import { inspect } from "util";
 
-const debug = require("debug")("sonoma-cli:commands:login");
+const debug = require("debug")("mobile-center-cli:commands:login");
 
-@help("Log in to the sonoma system.")
+@help("Login to Mobile Center")
 export default class LoginCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);
   }
 
-  @help("user name to log in as")
+  @help("Username to log in as")
   @shortName("u")
   @longName("user")
   @hasArg
   userName: string;
 
-  @help("password to log in with")
+  @help("Password to log in with")
   @shortName("p")
   @longName("password")
   @hasArg
@@ -79,13 +79,13 @@ export default class LoginCommand extends Command {
 
   private createAuthToken(): Promise<models.ApiTokensPostResponse> {
     const endpoint = environments(this.environmentName).endpoint;
-    const client = createSonomaClient(this.userName, this.password, endpoint);
-    return clientCall<models.ApiTokensPostResponse>(cb => client.account.createApiToken({ description: "Created from sonoma cli"}, cb));
+    const client = createMobileCenterClient(this.userName, this.password, endpoint);
+    return clientCall<models.ApiTokensPostResponse>(cb => client.account.createApiToken({ description: "Created from mobile center cli"}, cb));
   }
 
   private getUserInfo(token: string): Promise<models.UserProfileResponse> {
     const endpoint = environments(this.environmentName).endpoint;
-    const client = createSonomaClient(token, endpoint);
+    const client = createMobileCenterClient(token, endpoint);
     return clientCall<models.UserProfileResponse>(cb => client.account.getUserProfile(cb));
   }
 
@@ -94,7 +94,7 @@ export default class LoginCommand extends Command {
     if (currentUser !== null) {
       debug(`Currently logged in as ${currentUser.userName}, removing token id ${currentUser.accessTokenId}`);
 
-      const client = createSonomaClient(currentUser);
+      const client = createMobileCenterClient(currentUser);
       await logout(client, currentUser);
     }
   }

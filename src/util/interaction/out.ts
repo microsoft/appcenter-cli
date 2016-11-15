@@ -1,5 +1,5 @@
 // Functions to support outputting stuff to the user
-const debug = require("debug")("sonoma-cli:util:interaction:out");
+const debug = require("debug")("mobile-center-cli:util:interaction:out");
 import { inspect } from "util";
 
 import { isDebug, isQuiet, formatIsJson } from "./io-options";
@@ -146,7 +146,7 @@ export const noTableBorders = {
 //       ["Username", "userName" ],
 //       [ "Display Name", "displayName" ],
 //       [ "Email", "email"]
-//     ], "No logged in user. Use 'sonoma login' command to log in.",
+//     ], "No logged in user. Use 'mobile-center login' command to log in.",
 //     user);
 //
 // "userName", "displayName", and "email" are names of properties on the user object being
@@ -166,7 +166,7 @@ export const noTableBorders = {
 //       [ "Username", "name.userName" ],
 //       [ "Display Name", "name.displayName" ],
 //       [ "Email", "email"]
-//     ], "No logged in user. Use 'sonoma login' command to log in.",
+//     ], "No logged in user. Use 'mobile-center login' command to log in.",
 //     user);
 //
 // Each report format entry can have a formatter supplied with it. This is a function that

@@ -6,10 +6,10 @@ import { setDebug, isDebug, setQuiet, setFormatJson, out } from "../interaction"
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
 import { getUser } from "../profile";
-import { SonomaClient, createSonomaClient } from "../apis";
+import { MobileCenterClient, createMobileCenterClient } from "../apis";
 import * as path from "path";
 
-const debug = require("debug")("sonoma-cli:util:commandline:command");
+const debug = require("debug")("mobile-center-cli:util:commandline:command");
 import { inspect } from "util";
 
 export interface CommandArgs {
@@ -97,21 +97,21 @@ export class Command {
     return this.runNoClient();
   }
 
-  // Entry point to load sonoma client.
+  // Entry point to load mobile center client.
   // Override this if your command needs to do something special with login - typically just
   // the login command
   protected runNoClient(): Promise<Result.CommandResult> {
-    debug(`Creating sonoma client for command`);
+    debug(`Creating mobile center client for command`);
     var user = getUser();
     if (user) {
       debug(`running commmand logic`);
-      return this.run(createSonomaClient(user));
+      return this.run(createMobileCenterClient(user));
     }
     return Promise.resolve(Result.notLoggedIn(`${scriptName} ${this.command.join(" ")}`));
   }
 
   // Entry point for command author - override this!
-  protected run(client: SonomaClient): Promise<Result.CommandResult> {
+  protected run(client: MobileCenterClient): Promise<Result.CommandResult> {
     throw new Error("Dev error, should be overridden!");
   }
 

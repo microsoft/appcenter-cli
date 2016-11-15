@@ -12,7 +12,7 @@ import * as models from '../models';
  * @class
  * Data
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the SonomaClient.
+ * instance of the MobileCenterClient.
  */
 export interface Data {
 
@@ -513,7 +513,7 @@ export interface Data {
  * @class
  * Account
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the SonomaClient.
+ * instance of the MobileCenterClient.
  */
 export interface Account {
 
@@ -1001,7 +1001,7 @@ export interface Account {
  * @class
  * BuildOperations
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the SonomaClient.
+ * instance of the MobileCenterClient.
  */
 export interface BuildOperations {
 
@@ -1399,7 +1399,7 @@ export interface BuildOperations {
  * @class
  * CrashOperations
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the SonomaClient.
+ * instance of the MobileCenterClient.
  */
 export interface CrashOperations {
 
@@ -1888,7 +1888,7 @@ export interface CrashOperations {
  * @class
  * Test
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the SonomaClient.
+ * instance of the MobileCenterClient.
  */
 export interface Test {
 
@@ -2253,7 +2253,7 @@ export interface Test {
  * @class
  * Distribute
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the SonomaClient.
+ * instance of the MobileCenterClient.
  */
 export interface Distribute {
 
@@ -2451,7 +2451,7 @@ export interface Distribute {
  * @class
  * Analytics
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the SonomaClient.
+ * instance of the MobileCenterClient.
  */
 export interface Analytics {
 

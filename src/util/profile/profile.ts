@@ -11,7 +11,7 @@ import { environments } from "./environments";
 import { profileFile, getProfileDir } from "../misc";
 import { TokenValueType, tokenStore } from "../token-store";
 
-const debug = require("debug")("sonoma-cli:util:profile:profile");
+const debug = require("debug")("mobile-center-cli:util:profile:profile");
 
 export interface UpdatableProfile {
   userId: string;
@@ -158,7 +158,7 @@ export function getUser(): Profile {
 export function saveUser(user: any, token: TokenValueType, environment: string ): Promise<Profile> {
   return tokenStore.set(user.name, token)
     .then(() => {
-      let profile = new ProfileImpl(user);
+      let profile = new ProfileImpl(Object.assign({}, user, { environment: environment }));
       profile.save();
       return profile;
     });

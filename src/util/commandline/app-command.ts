@@ -4,7 +4,7 @@ import { help, longName, hasArg } from "./option-decorators";
 import { Profile, DefaultApp, toDefaultApp, getUser } from "../profile";
 import { scriptName } from "../misc";
 
-const currentAppVar = "SONOMA_CURRENT_APP";
+const currentAppVar = "MOBILE_CENTER_CURRENT_APP";
 
 export class AppCommand extends Command {
   constructor(args: CommandArgs) {

@@ -3,7 +3,7 @@
 import { Command, CommandArgs, CommandResult, help, success, notLoggedIn } from "../../util/commandline";
 import { Profile, getUser, environments } from "../../util/profile";
 import { out } from "../../util/interaction";
-import { SonomaClient, models, clientCall } from "../../util/apis";
+import { MobileCenterClient, models, clientCall } from "../../util/apis";
 import { reportProfile } from "./lib/format-profile";
 
 @help("Get information about logged in user")
@@ -12,7 +12,7 @@ export default class ProfileListCommand extends Command {
     super(args);
   }
 
-  async run(client: SonomaClient): Promise<CommandResult> {
+  async run(client: MobileCenterClient): Promise<CommandResult> {
     const userInfo = await out.progress("Getting user information...",
       clientCall<models.UserProfileResponse>(cb => client.account.getUserProfile(cb)));
 

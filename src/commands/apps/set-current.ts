@@ -1,9 +1,9 @@
 import { Command, CommandArgs, CommandResult, success, failure, name, help, position, required, ErrorCodes } from "../../util/commandline";
-import { SonomaClient, models, clientCall } from "../../util/apis";
+import { MobileCenterClient, models, clientCall } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { Profile, DefaultApp, toDefaultApp, getUser } from "../../util/profile";
 
-@help("Set the default application for commands")
+@help("Set default application for all CLI commands")
 export default class SetCurrentAppCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);
@@ -15,7 +15,7 @@ export default class SetCurrentAppCommand extends Command {
   @required
   appId: string;
 
-  async run(client: SonomaClient): Promise<CommandResult> {
+  async run(client: MobileCenterClient): Promise<CommandResult> {
     let newDefault = toDefaultApp(this.appId);
     if (!newDefault) {
       return failure(ErrorCodes.InvalidParameter, `'${this.appId}' is not a valid application.`);

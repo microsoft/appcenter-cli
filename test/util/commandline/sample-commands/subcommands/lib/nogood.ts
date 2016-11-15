@@ -1,12 +1,12 @@
 import { Command, CommandArgs, CommandResult, failure } from "../../../../../../src/util/commandline";
-import { SonomaClient } from "../../../../../../src/util/apis";
+import { MobileCenterClient } from "../../../../../../src/util/apis";
 
 export default class NoGoodCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);
   }
 
-  run(client: SonomaClient): Promise<CommandResult> {
+  run(client: MobileCenterClient): Promise<CommandResult> {
     return Promise.resolve(failure(5, "this shouldn't get called"));
   }
 }

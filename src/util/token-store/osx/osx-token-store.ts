@@ -13,7 +13,7 @@ import * as stream from "stream";
 import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../token-store";
 import { createOsxSecurityParsingStream, OsxSecurityParsingStream } from "./osx-keychain-parser";
 
-const debug = require("debug")("sonoma-cli:util:token-store:osx:osx-token-store");
+const debug = require("debug")("mobile-center-cli:util:token-store:osx:osx-token-store");
 import { inspect } from "util";
 
 const securityPath = '/usr/bin/security';
@@ -61,7 +61,7 @@ export class OsxTokenStore implements TokenStore {
 			"find-generic-password",
 			"-a", key,
 			"-s", serviceName,
-			"-g" 
+			"-g"
 		];
 
 		return new Promise<TokenEntry>((resolve, reject) => {

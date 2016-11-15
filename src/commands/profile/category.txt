@@ -1,1 +1,1 @@
-Commands for managing logged in user information.
+Commands to manage profile information in Mobile Center

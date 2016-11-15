@@ -1,13 +1,13 @@
-# Sonoma CLI - command line for Sonoma
+# Mobile Center CLI - command line for Mobile Center
 (Kind of obvious from the name, really)
 
-Sonoma CLI is a command line interface to interact with the Sonoma services. It's intended
-for use by mobile developers and people building scripts that need to interact with Sonoma (for example,
+Mobile Center CLI is a command line interface to interact with the Mobile Center services. It's intended
+for use by mobile developers and people building scripts that need to interact with Mobile Center (for example,
 local CI configurations).
 
 ## Technologies Used
 
-sonoma cli is written using Node.js version 6 and [Typescript](http://typescriptlang.org). Wrappers over the Bifrost HTTP API are
+Mobile center cli is written using Node.js version 6 and [Typescript](http://typescriptlang.org). Wrappers over the Bifrost HTTP API are
 generated using the [AutoRest](https://github.com/Azure/autorest) code generator. And the usual
 plethora of npm modules.
 
@@ -22,10 +22,8 @@ will be used to record and playback mock http traffic. [Note: this isn't set up 
 Install the latese version of Node 6 from [here](https://nodejs.org). If you are on a Mac, we recommend
 a 64-bit version.
 
-Also have a working git installation. You will need access to this [repo](https://github.com/Microsoft/sonoma-cli).
-At this time, repo access is managed manually. Everyone in the sonoma group should have read access. If not, please
-contact Chris Tavares (ctavares@microsoft.com or @ctavares-ms on Xamarin slack)
-or Matt Gibbs (matt.gibbs@microsoft.com or @mattgi on Xamarin slack) to get added to the repo.
+Also have a working git installation. The code is available from this [repo](https://github.com/Microsoft/MobileCenter-cli).
+
 
 ### Optional Tools
 
@@ -147,9 +145,9 @@ For example:
 
 | Command | Source File |
 | ------- | ----------- |
-| `sonoma login` | src/commands/login.ts |
-| `sonoma profile configure` | src/commands/profile/configure.ts |
-| `sonoma apps list` | src/commands/apps/list.ts |
+| `mobile-center login` | src/commands/login.ts |
+| `mobile-center profile configure` | src/commands/profile/configure.ts |
+| `mobile-center apps list` | src/commands/apps/list.ts |
 
 The command line parser and dispatcher uses the directory structure and file names to determine which code to run, so the naming conventions are important.
 
@@ -199,7 +197,7 @@ Stores type definitions for the external Javascript libraries used. These are ch
 
 # Development Processes
 
-We follow the standard GitHub flow. Each person working on the cli should create their own fork of the repo. Work in your own repo (preferably on a feature branch). When ready, send a pull request to the master Microsoft/sonoma-cli repo against the master branch. After review, the pull request will be merged.
+We follow the standard GitHub flow. Each person working on the cli should create their own fork of the repo. Work in your own repo (preferably on a feature branch). When ready, send a pull request to the master Microsoft/MobileCenter-cli repo against the master branch. After review, the pull request will be merged.
 
 Issue tracking will be done on [VSO](https://mseng.visualstudio.com/Mobile%20DevOps/Command%20Line%20Interface/).
 
