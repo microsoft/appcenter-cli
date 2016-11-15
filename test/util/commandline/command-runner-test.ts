@@ -27,12 +27,12 @@ describe("Running commands", function () {
       });
   });
 
-  it("should show root category command if command has invalid characters", function () {
+  it("should fail if command has invalid characters", function () {
     return run(["..", "command-finder-test"])
       .then((result: CommandResult) => {
-        expect(succeeded(result)).to.be.true;
+        expect(failed(result)).to.be.true;
         if (failed(result)) {
-          expect(result.errorCode).to.equal(ErrorCodes.NoSuchCommand);
+          expect(result.errorCode).to.equal(ErrorCodes.Exception);
         }
       });
   });
