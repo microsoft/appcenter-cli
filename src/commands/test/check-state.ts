@@ -59,7 +59,7 @@ export default class CheckStateCommand extends AppCommand {
     return clientCall(cb => {
       client.test.getTestRunState(
         this.testRunId,
-        getUser().userName,
+        this.app.ownerName,
         this.app.appName,
         cb
       );

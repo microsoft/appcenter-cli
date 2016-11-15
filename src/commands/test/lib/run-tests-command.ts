@@ -120,7 +120,7 @@ export class RunTestsCommand extends AppCommand {
   protected async uploadAndStart(client: MobileCenterClient, manifestPath: string): Promise<StartedTestRun> {
     let uploader = new TestCloudUploader(
       client, 
-      getUser().userName,
+      this.app.ownerName,
       this.app.appName,
       manifestPath,
       this.devices);
