@@ -158,7 +158,7 @@ export function getUser(): Profile {
 export function saveUser(user: any, token: TokenValueType, environment: string ): Promise<Profile> {
   return tokenStore.set(user.name, token)
     .then(() => {
-      let profile = new ProfileImpl(user);
+      let profile = new ProfileImpl(Object.assign({}, user, { environment: environment }));
       profile.save();
       return profile;
     });

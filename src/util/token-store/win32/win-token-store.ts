@@ -105,6 +105,7 @@ export class WinTokenStore implements TokenStore {
     let result: any = null;
     let errors: string[] = [];
 
+    debug(`Getting key with args ${inspect(args)}`);
     return new Promise<TokenEntry>((resolve, reject) => {
       credsProcess.stdout.pipe(parser.createParsingStream())
         .pipe(es.mapSync(removePrefixFromCred) as any as Duplex)
@@ -120,6 +121,7 @@ export class WinTokenStore implements TokenStore {
 
       credsProcess.on("exit", (code: number) => {
         if (code === 0) {
+          debug(`Completed getting token, result = ${inspect(result)}`);
           return resolve(credToTokenEntry(result));
         };
         return reject(new Error(`Getting credential failed, exit code ${code}: ${errors.join(", ")}`));
@@ -140,12 +142,15 @@ export class WinTokenStore implements TokenStore {
   set(key: TokenKeyType, credential: TokenValueType): Promise<void> {
     let args = [ "-a", "-t", ensurePrefix(key), "-p", encodeTokenValueAsHex(credential) ];
 
+    debug(`Saving token with args ${inspect(args)}`);
     return new Promise<void>((resolve, reject) => {
       childProcess.execFile(credExePath, args,
         function (err) {
           if (err) {
+            debug(`Token store failed, ${inspect(err)}`);
             return reject(err);
           }
+          debug(`Token successfully stored`);
           return resolve();
         });
      });
@@ -167,6 +172,7 @@ export class WinTokenStore implements TokenStore {
       args.push('-g');
     }
 
+    debug(`Deleting token with args ${inspect(args)}`);
     return new Promise((resolve, reject) => {
       childProcess.execFile(credExePath, args,
         function (err) {
@@ -178,5 +184,6 @@ export class WinTokenStore implements TokenStore {
 }
 
 export function createWinTokenStore(): TokenStore {
+  debug(`Creating WinTokenStore`);
   return new WinTokenStore();
 }
