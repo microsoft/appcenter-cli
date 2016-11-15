@@ -2,14 +2,15 @@ import { AppCommand, CommandArgs, CommandResult,
          help, success, name, shortName, longName, required, hasArg,
          position, failure, notLoggedIn, ErrorCodes } from "../../../util/commandLine";
 import { TestCloudUploader, StartedTestRun } from "../lib/test-cloud-uploader";
-import { MobileCenterClient } from "../../../util/apis";
+import { MobileCenterClient, models, clientCall } from "../../../util/apis";
 import { getUser } from "../../../util/profile";
 import { out } from "../../../util/interaction";
 import { progressWithResult } from "../lib/interaction";
 import { parseTestParameters } from "../lib/parameters-parser";
 import { parseIncludedFiles } from "../lib/included-files-parser";
-import * as temp from "temp";
+import * as os from "os";
 import * as pfs from "../../../util/misc/promisfied-fs";
+import * as temp from "temp";
 
 export class RunTestsCommand extends AppCommand {
   @help("Path to an application file")
@@ -49,6 +50,10 @@ export class RunTestsCommand extends AppCommand {
   @hasArg
   testParameters: string[];
 
+  @help("Don't block waiting for test results")
+  @longName("async")
+  async: boolean;
+
   constructor(args: CommandArgs) {
     super(args);
 
@@ -82,6 +87,10 @@ export class RunTestsCommand extends AppCommand {
         if (testRun.rejectedDevices && testRun.rejectedDevices.length > 0) {
           out.text("Rejected devices: ");
           out.list(item => `  - ${item}`, testRun.rejectedDevices);
+        }
+
+        if (!this.async) {
+          await this.waitForCompletion(client, testRun.testRunId);
         }
 
         return success();
@@ -130,5 +139,45 @@ export class RunTestsCommand extends AppCommand {
     uploader.testSeries = this.testSeries;
 
     return await uploader.uploadAndStart();
+  }
+
+  private async waitForCompletion(client: MobileCenterClient, testRunId: string): Promise<number> {
+    let exitCode = 0;
+
+    while (true) {
+      let state = await out.progress("Checking status...", this.getTestRunState(client, testRunId));
+      out.text(`Current test status: ${state.message.join(os.EOL)}`);
+
+      if (typeof state.exitCode === "number") {
+        exitCode = state.exitCode;
+        break;
+      }
+
+      await out.progress(`Waiting ${state.waitTime} seconds...`, this.delay(1000 * state.waitTime));
+    }
+
+    if (exitCode !== 0) {
+      return exitCode;
+    }
+    else {
+      return 0;
+    }
+  }
+
+  private getTestRunState(client: MobileCenterClient, testRunId: string): Promise<models.TestRunState> {
+    return clientCall(cb => {
+      client.test.getTestRunState(
+        testRunId,
+        this.app.ownerName,
+        this.app.appName,
+        cb
+      );
+    });
+  }
+
+  private async delay(milliseconds: number) {
+    return new Promise<void>(resolve => {
+      setTimeout(resolve, milliseconds);
+    });
   }
 }
