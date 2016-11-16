@@ -6,6 +6,8 @@ Although our current feature set is minimal, all the existing Mobile Center serv
 
 # Prerequisites
 
+Mobile Center CLI requires Node.js version 6.3 or better.
+
 # Installation
 
 ```
