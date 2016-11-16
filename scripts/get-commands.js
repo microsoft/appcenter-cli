@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 
-const decorators = require('../dist/util/commandline/option-decorators');
+const { getClassHelpText } = require('../dist/util/commandline/option-decorators');
 
 function checkStats(dir, fileName, checker) {
   try {
@@ -28,31 +28,30 @@ function isFile(dir, fileName) {
   return checkStats(dir, fileName, s => s.isFile());
 }
 
-function isDir(dir, fileName) {
-  return checkStats(dir, fileName, s => s.isDirectory());
+function loadCommand(dir, cmdFileName) {
+  return require(path.join(dir, cmdFileName)).default;
 }
 
-function getHelpForCommandClass(command) {
-  return decorators.getClassHelpText(command);
+function loadCommandHelp(dir, cmdFileName) {
+  return getClassHelpText(loadCommand(dir, cmdFileName));
 }
 
-function getHelpForDir(dir, category = [], result = []) {
-  let files = fs.readdirSync(dir);
-  let [commands, categories] = _.partition(files, f => isFile(dir, f));
-  commands.forEach(cmdName => {
-    let parsed = path.parse(cmdName);
-    if (parsed.ext === '.js') {
-      let cmdClass = require(path.join(dir, cmdName)).default;
-      let name = parsed.name;
-      let help = getHelpForCommandClass(cmdClass);
-      result.push({name, category, help});
-    }
-  });
+function getHelpForDir(dir, category = []) {
+  const files = fs.readdirSync(dir);
+  const [commands, categories] = _.partition(files, f => isFile(dir, f));
+  const thisDirCommands = commands
+    .filter(cmdName => path.extname(cmdName) === '.js')
+    .map(cmdName => ({
+      name: path.parse(cmdName).name,
+      category,
+      help: loadCommandHelp(dir, cmdName)
+    }));
 
-  _(categories)
-    .filter(n => n !== 'lib')
-    .forEach(dirName => getHelpForDir(path.join(dir, dirName), category.concat([dirName]), result));
-  return result;
+  const subCategoryCommands = categories
+    .filter(dirName => dirName !== 'lib')
+    .map(dirName => getHelpForDir(path.join(dir, dirName), category.concat([dirName])));
+
+  return _.flattenDeep([thisDirCommands, subCategoryCommands]);
 }
 
 function formatCommandInfo(info) {
