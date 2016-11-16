@@ -24,6 +24,29 @@ To get help on a specific command or category, run `mobile-center help command` 
 
 Below is the list of commands currently supported by Mobile Center CLI:
 
+| Command | Description |
+|---------|-------------|
+| `mobile-center help` | Get command or category help |
+| `mobile-center login` | Login to Mobile Center |
+| `mobile-center logout` | Logout from Mobile Center |
+| | |
+| `mobile-center apps get-current` | Get the application that's set as default for all CLI commands |
+| `mobile-center apps list` | Get list of configured applications |
+| `mobile-center apps set-current` | Set default application for all CLI commands |
+| | |
+| `mobile-center profile configure` | Update user information |
+| `mobile-center profile list` | Get information about logged in user |
+| | |
+| `mobile-center test check-state` | Checks state of test run submitted to Visual Studio Mobile Center |
+| `mobile-center test prepare appium` | Prepares Appium artifacts for test run |
+| `mobile-center test prepare calabash` | Prepares Calabash artifacts for test run |
+| `mobile-center test prepare uitest` | Prepares UI Test artifacts for test run |
+| `mobile-center test run appium` | Prepares and runs Appium tests |
+| `mobile-center test run calabash` | Prepares and runs Calabash tests |
+| `mobile-center test run manifest` | Submits tests described by a manifest to Mobile Center Test Cloud |
+| `mobile-center test run uitest` | Prepares and runs UI tests |
+
+Please use the `mobile-center help` command to get more information about each one.
 
 # Contributing
 
