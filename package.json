@@ -1,6 +1,6 @@
 {
   "name": "mobile-center-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Command line tool for Microsoft Mobile Center",
   "keywords": [
     "microsoft",
@@ -8,7 +8,7 @@
     "mobile-center",
     "azure"
   ],
-  "homepage": "https://github.com/Microsoft/Sonoma-cli#readme",
+  "homepage": "https://github.com/Microsoft/MobileCenter-cli#readme",
   "engine": {
     "node": ">= 6.3.0"
   },
@@ -27,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Microsoft/Sonoma-cli.git"
+    "url": "git+https://github.com/Microsoft/MobileCenter-cli.git"
   },
   "author": "Microsoft",
   "license": "MIT",
