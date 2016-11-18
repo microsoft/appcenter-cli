@@ -25,13 +25,13 @@ export async function getByteRange(path: string, start: number, length: number):
   }
 }
 
-export function parseByteRange(byteRange: string): IByteRange {
-  let colonIndex = byteRange.indexOf(":");
-  if (colonIndex === -1) {
+export function parseRange(byteRange: string): IByteRange {
+  let separatorIndex = byteRange.indexOf("-");
+  if (separatorIndex === -1) {
     throw new Error(`Invalid byte range: "${byteRange}"`);
   }
-  let start = parseInt(byteRange.substr(0, colonIndex));
-  let end = parseInt(byteRange.substr(colonIndex + 1, byteRange.length - colonIndex - 1));
+  let start = parseInt(byteRange.substr(0, separatorIndex));
+  let end = parseInt(byteRange.substr(separatorIndex + 1, byteRange.length - separatorIndex - 1));
 
   if (isNaN(start) || isNaN(end) || start < 0 || start > end) {
     throw new Error(`Invalid byte range: "${byteRange}"`);

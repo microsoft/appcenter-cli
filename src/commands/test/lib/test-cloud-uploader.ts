@@ -4,6 +4,7 @@ import { progressWithResult } from "./interaction";
 import { TestManifest, TestRunFile } from "./test-manifest";
 import { TestManifestReader } from "./test-manifest-reader";
 import { AppValidator } from "./app-validator";
+import { parseRange, getByteRange } from "./byte-range-helper";
 import * as _ from "lodash";
 import * as fs from "fs";
 import * as http from 'http';
@@ -151,7 +152,12 @@ export class TestCloudUploader {
       return true;
     }
     else if (response.statusCode === 401 && !byteRange) {
-      return await this.tryUploadFileHash(testRunId, file, "TODO");
+      let rangeString = response.headers["x-challenge-bytes"];
+      let parsedRange = parseRange(rangeString);
+      let requestedBytes = await getByteRange(file.sourcePath, parsedRange.start, parsedRange.length);
+      let base64Bytes = new Buffer(requestedBytes).toString("base64");
+      
+      return await this.tryUploadFileHash(testRunId, file, base64Bytes);
     }
     else {
       return false;

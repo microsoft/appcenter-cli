@@ -1,4 +1,4 @@
-import { parseByteRange, getByteRange, IByteRange } from "../../../../src/commands/test/lib/byte-range-helper";
+import { parseRange, getByteRange, IByteRange } from "../../../../src/commands/test/lib/byte-range-helper";
 import { expect } from "chai";
 import * as temp from "temp";
 import * as fs from "fs";
@@ -42,23 +42,23 @@ function appendData(fd: number, range: number[]): Promise<void> {
   return pfs.write(fd, new Buffer(range));
 }
 
-describe("parseByteRange", () => {
+describe("parseRange", () => {
   it("should parse correct range", () => {
-    expect(parseByteRange("1:10")).to.deep.equal({ start: 1, length: 10 });
-    expect(parseByteRange("2:3")).to.deep.equal({ start: 2, length: 2 });
-    expect(parseByteRange("1:1")).to.deep.equal({ start: 1, length: 1 });
-    expect(parseByteRange("1024:2048")).to.deep.equal({ start: 1024, length: 1025 }); 
+    expect(parseRange("1-10")).to.deep.equal({ start: 1, length: 10 });
+    expect(parseRange("2-3")).to.deep.equal({ start: 2, length: 2 });
+    expect(parseRange("1-1")).to.deep.equal({ start: 1, length: 1 });
+    expect(parseRange("1024-2048")).to.deep.equal({ start: 1024, length: 1025 }); 
   });
 
   it("should throw if range is incorrect", () => {
-    expect(() => parseByteRange("123:")).to.throw(Error);
-    expect(() => parseByteRange("foo:bar")).to.throw(Error);
-    expect(() => parseByteRange("-1:2")).to.throw(Error);
-    expect(() => parseByteRange("2:1")).to.throw(Error);
+    expect(() => parseRange("123-")).to.throw(Error);
+    expect(() => parseRange("foo-bar")).to.throw(Error);
+    expect(() => parseRange("-1-2")).to.throw(Error);
+    expect(() => parseRange("2-1")).to.throw(Error);
   });
 });
 
-describe("getByteRangeBase64", () => {
+describe("getByteRange", () => {
   it("should return correct range is within file size", async () => {
     let expectedRange = [ 1, 1, 3, 4, 5 ];
     let testFile = await createFileWithByteRange(10, expectedRange, 1024);
