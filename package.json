@@ -1,6 +1,6 @@
 {
   "name": "mobile-center-cli",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Command line tool for Microsoft Mobile Center",
   "keywords": [
     "microsoft",
@@ -10,7 +10,7 @@
   ],
   "homepage": "https://github.com/Microsoft/MobileCenter-cli#readme",
   "engine": {
-    "node": ">= 6.3.0"
+    "node": ">=6.3.0"
   },
   "main": "dist/index.js",
   "bin": {
