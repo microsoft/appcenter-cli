@@ -5,7 +5,7 @@ import * as os from "os";
 import * as path from "path";
 import * as process from "../../../util/misc/process-helper";
 
-const debug = require("debug")("mobile-center:commands:test:lib:uitest-preparer");
+const debug = require("debug")("mobile-center-cli:commands:test:lib:uitest-preparer");
 const minimumVersion = [2, 0, 1];
 
 export class UITestPreparer {
@@ -20,7 +20,7 @@ export class UITestPreparer {
   public signInfo: string;
   public include: string[];
   public testParameters: string[];
-  public uiTestToolsDir: string;  
+  public uiTestToolsDir: string;
 
   constructor(artifactsDir: string, assemblyDir: string, appPath: string) {
     if (!artifactsDir) {
@@ -48,7 +48,7 @@ export class UITestPreparer {
     if (exitCode !== 0) {
       throw new TestCloudError("Cannot prepare UI Test artifacts. Please inspect logs for more details", exitCode);
     }
-    
+
     return path.join(this.artifactsDir, "manifest.json");
   }
 
@@ -98,15 +98,15 @@ export class UITestPreparer {
   private async findXamarinUITestNugetDir(root: string): Promise<string> {
     let possibleNugetDirPattern = path.join(root, "packages", "Xamarin.UITest.*", "tools", "test-cloud.exe");
     let files = (await this.globAsync(possibleNugetDirPattern)).sort();
-    
+
     if (files.length === 0) {
        let parentDir = path.dirname(root);
-       
+
        if (parentDir === root) {
-         throw new Error(`Cannot find test-cloud.exe, which is required to prepare UI tests.${os.EOL}` + 
-          `We have searched for directory "packages${path.sep}Xamarin.UITest.*${path.sep}tools" inside ` + 
-          `"${this.assemblyDir}" and all of its parent directories.${os.EOL}` + 
-          `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` + 
+         throw new Error(`Cannot find test-cloud.exe, which is required to prepare UI tests.${os.EOL}` +
+          `We have searched for directory "packages${path.sep}Xamarin.UITest.*${path.sep}tools" inside ` +
+          `"${this.assemblyDir}" and all of its parent directories.${os.EOL}` +
+          `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` +
           `Minimum required version is "${this.getMinimumVersionString()}".`);
        }
        else {
@@ -118,16 +118,16 @@ export class UITestPreparer {
       let match = latestTestCloudPath.match(/Xamarin\.UITest\.(\d+)\.(\d+)\.(\d+)/);
 
       if (!match) {
-        throw new Error(`Found test-cloud.exe at "${path.dirname(latestTestCloudPath)}", but cannot recognize its version.${os.EOL}` + 
-                        `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` + 
+        throw new Error(`Found test-cloud.exe at "${path.dirname(latestTestCloudPath)}", but cannot recognize its version.${os.EOL}` +
+                        `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` +
                         `Minimum required version is "${this.getMinimumVersionString()}".`);
       }
 
-      let [, major, minor, build] = match; 
+      let [, major, minor, build] = match;
       if (!this.hasMinimumTestCloudVersion(parseInt(major), parseInt(minor), parseInt(build))) {
-        throw new Error(`The latest version of test-cloud.exe, found at "${path.dirname(latestTestCloudPath)}", ` + 
+        throw new Error(`The latest version of test-cloud.exe, found at "${path.dirname(latestTestCloudPath)}", ` +
                         `is too old.${os.EOL}` +
-                        `Please upgrade the NuGet package to version ${this.getMinimumVersionString()} or higher.`);  
+                        `Please upgrade the NuGet package to version ${this.getMinimumVersionString()} or higher.`);
       }
       else {
         return path.dirname(latestTestCloudPath);

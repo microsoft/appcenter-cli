@@ -1,4 +1,4 @@
-import { Command, CommandArgs, CommandResult, 
+import { Command, CommandArgs, CommandResult,
          help, success, name, shortName, longName, required, hasArg,
          position, failure, notLoggedIn, ErrorCodes } from "../../../util/commandLine";
 import { CalabashPreparer } from "../lib/calabash-preparer";
@@ -6,7 +6,7 @@ import { out } from "../../../util/interaction";
 import * as outExtensions from "../lib/interaction";
 import * as process from "../../../util/misc/process-helper";
 
-const debug = require("debug")("mobile-center:commands:test:prepare:calabash");
+const debug = require("debug")("mobile-center-cli:commands:test:prepare:calabash");
 
 @help("Prepares Calabash artifacts for test run")
 export default class PrepareCalabashCommand extends Command {
@@ -60,7 +60,7 @@ export default class PrepareCalabashCommand extends Command {
 
   constructor(args: CommandArgs) {
     super(args);
-    
+
     if (!this.testParameters) {
       this.testParameters = [];
     }
@@ -89,7 +89,7 @@ export default class PrepareCalabashCommand extends Command {
 
       let manifestPath = await preparer.prepare();
       out.text(`Calabash tests are ready to run. Manifest file was written to ${manifestPath}.`);
-      
+
       return success();
     }
     catch (err) {

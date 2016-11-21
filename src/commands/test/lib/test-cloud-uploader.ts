@@ -10,7 +10,7 @@ import * as http from 'http';
 import * as path from "path";
 import * as request from "request";
 
-const debug = require("debug")("mobile-center:commands:test:lib:test-cloud-uploader");
+const debug = require("debug")("mobile-center-cli:commands:test:lib:test-cloud-uploader");
 const pLimit = require("p-limit");
 const paralleRequests = 10;
 
@@ -26,7 +26,7 @@ export class TestCloudUploader {
   private readonly _appName: string;
   private readonly _manifestPath: string;
   private readonly _devices: string;
-    
+
   public appPath: string;
   public dSymPath: string;
   public testParameters: { [key:string]: any };
@@ -61,7 +61,7 @@ export class TestCloudUploader {
     let manifest = await progressWithResult<TestManifest>(
       "Validating arguments",
       this.validateAndParseManifest());
-    
+
     let testRunId = await progressWithResult("Creating new test run", this.createTestRun());
     debug(`Test run id: ${testRunId}`);
 
@@ -72,7 +72,7 @@ export class TestCloudUploader {
     let startResult = await progressWithResult("Starting test run", this.startTestRun(testRunId, manifest));
 
     return {
-      acceptedDevices: startResult.acceptedDevices || [], 
+      acceptedDevices: startResult.acceptedDevices || [],
       rejectedDevices: startResult.rejectedDevices || [],
       testRunId: testRunId
     };
@@ -84,9 +84,9 @@ export class TestCloudUploader {
 
   private async validateAndCreateAppFile(manifest: TestManifest): Promise<TestRunFile> {
     let result = manifest.applicationFile ?
-      manifest.applicationFile  
+      manifest.applicationFile
       : await TestRunFile.create(this.appPath, path.basename(this.appPath), "app-file")
-      
+
 
     if (!result) {
       throw new Error("If test manifest doesn't contain path to application file, it must be provided using --app-path option");
@@ -101,15 +101,15 @@ export class TestCloudUploader {
      return new Promise<string>((resolve, reject) => {
        this._client.test.createTestRun(
          this._userName,
-         this._appName, 
+         this._appName,
          (err: Error, _result: any, _request: any, response: http.IncomingMessage) => {
-          if (err) { 
-            reject(err); 
+          if (err) {
+            reject(err);
           }
           else {
             let location: string = response.headers["location"];
             let testRunId = _.last(location.split("/"));
-            resolve(testRunId); 
+            resolve(testRunId);
           }
       });
     });
@@ -128,7 +128,7 @@ export class TestCloudUploader {
   private async tryUploadFileHash(testRunId: string, file: TestRunFile, byteRange: string = null): Promise<boolean> {
     let response = await new Promise<http.IncomingMessage>((resolve, reject) => {
       this._client.test.uploadHash(
-        testRunId, 
+        testRunId,
         {
           checksum: file.sha256,
           fileType: file.fileType,
@@ -155,7 +155,7 @@ export class TestCloudUploader {
     }
     else {
       return false;
-    } 
+    }
   }
 
   private async uploadFile(testRunId: string, file: TestRunFile): Promise<void> {
@@ -200,7 +200,7 @@ export class TestCloudUploader {
               reject(err);
             }
             else if (response.statusCode >= 400) {
-              reject(new Error(`Cannot upload file. Response: ${response.statusCode}; Message: ${body}`));              
+              reject(new Error(`Cannot upload file. Response: ${response.statusCode}; Message: ${body}`));
             }
             else {
               resolve();
@@ -234,7 +234,7 @@ export class TestCloudUploader {
 
     return clientCall(cb => {
       this._client.test.startTestRun(
-        testRunId, 
+        testRunId,
         startOptions,
         this._userName,
         this._appName,

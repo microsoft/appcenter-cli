@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+var util = require('util');
+
 // Verify user has minimum required version of node installed
 var minMajorVersion = 6;
 var minMinorVersion = 3;
@@ -32,7 +34,7 @@ function runCli() {
 
   var runner = commandLine.runner(path.join(__dirname, '..', 'dist', 'commands'));
   runner(process.argv.slice(2))
-    .then((result) => {
+    .then(function (result) {
       if (commandLine.failed(result)) {
         console.log(`Command failed, ${result.errorMessage}`);
         process.exit(result.errorCode);
