@@ -10,10 +10,11 @@ export class EspressoPreparer {
   private readonly artifactsDir: string;
   private buildDir: string;
   private projectDir: string;
+  private readonly testApkPath: string;
   public include: IFileDescriptionJson[];
   public testParameters: { [key:string]: any };
 
-  constructor(artifactsDir: string, projectDir?: string, buildDir?: string) {
+  constructor(artifactsDir: string, projectDir?: string, buildDir?: string, testApkPath?: string) {
     if (!artifactsDir) {
       throw new Error("Argument artifactsDir is required");
     }
@@ -21,26 +22,32 @@ export class EspressoPreparer {
     this.projectDir = projectDir;
     this.buildDir = buildDir;
     this.artifactsDir = artifactsDir;
-
-    this.validateEitherProjectOrBuildDir();
+    this.testApkPath = testApkPath;
   }
 
-  private validateEitherProjectOrBuildDir() {
+  private validateEitherProjectBuildDirOrTestApkPath() {
     if ((this.projectDir && this.buildDir) || !(this.projectDir || this.buildDir)) {
-      throw new Error("Either projectDir or buildDir must be specified");
+      throw new Error("Either projectDir, buildDir or testApkPath must be specified");
     }
   }
 
   public async prepare(): Promise<string> {
+    this.validateEitherProjectBuildDirOrTestApkPath();
     if (this.projectDir) {
       await this.validateProjectDir();
       this.buildDir = await this.generateBuildDirFromProject();
     }
-
-    this.validateBuildDir();
-
-    await pfs.copyDir(this.buildDir, this.artifactsDir);
-
+    else if (this.testApkPath) {
+      await this.validatePathExists(
+                    this.testApkPath,
+                    true,
+                    `File not found for test apk path: "${this.testApkPath}"`);
+      await pfs.copyFile(this.testApkPath, this.artifactsDir);
+    }
+    else {
+      await this.validateBuildDir();
+      await pfs.copyDir(this.buildDir, this.artifactsDir);
+    }
     let manifestPath = path.join(this.artifactsDir, "test-manifest.json");
     let manifest = await this.createEspressoManifest();
     let manifestJson = JSON.stringify(manifest, null, 1);
@@ -86,10 +93,10 @@ export class EspressoPreparer {
   }
 
   private async validateTestApkExists(): Promise<void> {
-    await this.testApkPath();      
+    await this.detectTestApkPathFromBuildDir();
   }
 
-  private async testApkPath(): Promise<string> {
+  private async detectTestApkPathFromBuildDir(): Promise<string> {
     let apkPattern = path.join(this.buildDir,"*androidTest.apk");
     let files = await this.globAsync(apkPattern);
     
@@ -121,7 +128,7 @@ export class EspressoPreparer {
   }
 
   private async createEspressoManifest(): Promise<any> {
-    let apkFullPath = await this.testApkPath();
+    let apkFullPath = this.testApkPath ? this.testApkPath : await this.detectTestApkPathFromBuildDir();
     let apkArtifactsPath = path.basename(apkFullPath); 
     let result = {
       "schemaVersion": "1.0.0",
