@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.0.2",
     "mocha": "^3.0.2",

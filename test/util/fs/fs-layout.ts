@@ -3,8 +3,8 @@ import * as path from "path";
 import * as temp from "temp";
 import * as pfs from "../../../src/util/misc/promisfied-fs";
 
-type IFileSpec = Buffer | string | number[];
-type IDirSpec = { [name: string]: (IDirSpec | IFileSpec) }; 
+export type IFileSpec = Buffer | string | number[];
+export type IDirSpec = { [name: string]: (IDirSpec | IFileSpec) }; 
 
 /*
   Creates directories and files, described by the spec, and returns

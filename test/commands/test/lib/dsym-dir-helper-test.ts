@@ -1,20 +1,12 @@
+import * as chai from "chai";
 import { getDSymFile } from "../../../../src/commands/test/lib/dsym-dir-helper"; 
-import { expect } from "chai";
 import * as fsLayout from "../../../util/fs/fs-layout";
 import * as path from "path";
 import * as pfs from "../../../../src/util/misc/promisfied-fs"; 
 
-async function expectToThrow(func: () => Promise<any>): Promise<void> {
-  let caughtException = false;
-  try {
-    await func();
-  }
-  catch (err) {
-    caughtException = true;
-  }
-
-  expect(caughtException).to.be.true;
-}
+const chaiAsPromised = require("chai-as-promised");
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 
 describe("getDSymDirectory", () => {
   let testDirPath: string = null; 
@@ -29,7 +21,7 @@ describe("getDSymDirectory", () => {
     testDirPath = await fsLayout.createLayout({ });
     let dSymPath = path.join(testDirPath, "Symbols.dSYM");
     
-    await expectToThrow(() => getDSymFile(dSymPath));
+    await expect(getDSymFile(dSymPath)).to.eventually.be.rejected;
   });
 
   it("should fail if the dSYM directory has no 'dSYM' extension", async () => {
@@ -46,7 +38,7 @@ describe("getDSymDirectory", () => {
     });
 
     let dSymPath = path.join(testDirPath, "Symbols");
-    await expectToThrow(() => getDSymFile(dSymPath));
+    await expect(getDSymFile(dSymPath)).to.eventually.be.rejected;
   });
 
   it("should fail if there is no DWARF directory", async () => {
@@ -59,7 +51,7 @@ describe("getDSymDirectory", () => {
     });
     
     let dSymPath = path.join(testDirPath, "Symbols.dSYM");
-    await expectToThrow(() => getDSymFile(dSymPath));
+    await expect(getDSymFile(dSymPath)).to.eventually.be.rejected;
   });
 
   it("should fail if there is no dSym file in DWARF directory", async () => {
@@ -74,7 +66,7 @@ describe("getDSymDirectory", () => {
     });
 
     let dSymPath = path.join(testDirPath, "Symbols.dSYM");
-    await expectToThrow(() => getDSymFile(dSymPath));
+    await expect(getDSymFile(dSymPath)).to.eventually.be.rejected;
   });
 
   it("should fail if there is more than one dSym file in DWARF directory", async () => {
@@ -92,7 +84,7 @@ describe("getDSymDirectory", () => {
     });
     
     let dSymPath = path.join(testDirPath, "Symbols.dSYM");
-    await expectToThrow(() => getDSymFile(dSymPath));
+    await expect(getDSymFile(dSymPath)).to.eventually.be.rejected;
   });
 
   it("should return correct file if there is only one dSym file in DWARF directory", async () => {
