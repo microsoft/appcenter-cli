@@ -34,6 +34,9 @@ export default class RunEspressoTestsCommand extends RunTestsCommand {
   }
 
   protected async prepareArtifactsDir(artifactsDir: string): Promise<string> {
+    if (!this.appPath) {
+      throw new Error("Argument --app-path is required");
+    }
     let preparer = new EspressoPreparer(artifactsDir, this.projectDir, this.buildDir, this.testApkPath);
     preparer.include = parseIncludedFiles(this.include || []);
     preparer.testParameters = parseTestParameters(this.testParameters || []);

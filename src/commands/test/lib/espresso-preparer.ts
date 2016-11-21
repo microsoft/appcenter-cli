@@ -26,7 +26,13 @@ export class EspressoPreparer {
   }
 
   private validateEitherProjectBuildDirOrTestApkPath() {
-    if ((this.projectDir && this.buildDir) || !(this.projectDir || this.buildDir)) {
+    if (this.projectDir && (this.buildDir || this.testApkPath)) {
+      throw new Error("You must not specify build dir if project dir or test apk path is specified.");
+    }
+    if (this.buildDir && this.testApkPath) {
+      throw new Error("You must not specify both build dir and test apk path.");
+    }
+    if (!(this.projectDir || this.buildDir || this.testApkPath)) {
       throw new Error("Either projectDir, buildDir or testApkPath must be specified");
     }
   }
@@ -42,7 +48,7 @@ export class EspressoPreparer {
                     this.testApkPath,
                     true,
                     `File not found for test apk path: "${this.testApkPath}"`);
-      await pfs.copyFile(this.testApkPath, this.artifactsDir);
+      await pfs.copyFile(this.testApkPath, path.join(this.artifactsDir, path.basename(this.testApkPath)));
     }
     else {
       await this.validateBuildDir();
