@@ -8,7 +8,6 @@ async function createFileWithByteRange(start: number, range: number[], totalSize
   let pathAndFd = await pfs.openTempFile("byte_range_test");
   try {
     if (start > 0) {
-      debugger;
       await appendData(pathAndFd.fd, getRandomBytes(start));
     }    
     await appendData(pathAndFd.fd, range);

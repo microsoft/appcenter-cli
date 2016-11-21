@@ -5,6 +5,7 @@ import { TestManifest, TestRunFile } from "./test-manifest";
 import { TestManifestReader } from "./test-manifest-reader";
 import { AppValidator } from "./app-validator";
 import { parseRange, getByteRange } from "./byte-range-helper";
+import { getDSymFile } from "./dsym-dir-helper";
 import * as _ from "lodash";
 import * as fs from "fs";
 import * as http from 'http';
@@ -68,6 +69,12 @@ export class TestCloudUploader {
 
     let appFile = await progressWithResult("Validating application file", this.validateAndCreateAppFile(manifest));
     await progressWithResult("Uploading application file", this.uploadHashOrNewFile(testRunId, appFile));
+
+    if (this.dSymPath) {
+      let dSymFile = await progressWithResult("Validating DSym file", getDSymFile(this.dSymPath));
+      await progressWithResult("Uploading DSym file", this.uploadHashOrNewFile(testRunId, dSymFile));
+    }
+
     await progressWithResult("Uploading test files", this.uploadAllTestFiles(testRunId, manifest.testFiles));
 
     let startResult = await progressWithResult("Starting test run", this.startTestRun(testRunId, manifest));

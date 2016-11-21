@@ -51,6 +51,10 @@ export function mkdir(path: string | Buffer): Promise<void> {
   return callFs(fs.mkdir, path);
 }
 
+export function mkTempDir(affixes: string): Promise<string> {
+  return callTemp(temp.mkdir, affixes);
+}
+
 export async function cp(source: string, target: string): Promise<void> {
   let sourceStats = await stat(source);
   if (sourceStats.isDirectory()) {
