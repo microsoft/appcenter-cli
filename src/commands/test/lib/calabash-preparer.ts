@@ -2,7 +2,7 @@ import { TestCloudError } from "./test-cloud-error";
 import * as path from "path";
 import * as process from "../../../util/misc/process-helper";
 
-const debug = require("debug")("mobile-center:commands:test:lib:calabash-preparer");
+const debug = require("debug")("mobile-center-cli:commands:test:lib:calabash-preparer");
 
 export class CalabashPreparer {
   private readonly appPath: string;
@@ -40,14 +40,14 @@ export class CalabashPreparer {
     if (exitCode !== 0) {
       throw new TestCloudError("Cannot prepare UI Test artifacts. Please inspect logs for more details", exitCode);
     }
-    
+
     return path.join(this.artifactsDir, "manifest.json");
   }
 
   private getPrepareCommand(): string {
     let command = `test-cloud prepare ${this.appPath} --artifacts-dir ${this.artifactsDir}`;
-    command += ` --workspace "${this.workspace}"`; 
-    
+    command += ` --workspace "${this.workspace}"`;
+
     if (this.config) {
       command += ` --config "${this.config}"`;
     }

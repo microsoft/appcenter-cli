@@ -25,16 +25,22 @@ export namespace prompt {
 
   export function question(questions: inquirer.Questions): Promise<inquirer.Answers> {
     if (isQuiet()) {
-      let answers: any = {};
       if (!Array.isArray(questions)) {
         questions = [questions];
       }
-      questions.forEach(q => {
+      let answers: any = questions.reduce((answers: any, q: inquirer.Question) => {
+        if (answers instanceof Error) {
+          return answers;
+        }
         if (q.type !== "confirm") {
-          throw new Error(`Cannot prompt for input in quiet mode`);
+          return new Error("Cannot prompt for input in quiet mode");
         }
         answers[q.name] = true;
-      });
+        return answers;
+      }, {});
+
+      // Wrap inquirer promise in "real" promise, typescript definitions
+      // don't line up.
       return Promise.resolve(answers);
     }
     // Wrap inquirer promise in "real" promise, typescript definitions

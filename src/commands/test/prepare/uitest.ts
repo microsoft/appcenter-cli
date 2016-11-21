@@ -1,4 +1,4 @@
-import { Command, CommandArgs, CommandResult, 
+import { Command, CommandArgs, CommandResult,
          help, success, name, shortName, longName, required, hasArg,
          position, failure, notLoggedIn, ErrorCodes } from "../../../util/commandLine";
 import { UITestPreparer } from "../lib/uitest-preparer";
@@ -6,7 +6,7 @@ import { out } from "../../../util/interaction";
 import * as outExtensions from "../lib/interaction";
 import * as process from "../../../util/misc/process-helper";
 
-const debug = require("debug")("mobile-center:commands:tests:prepare");
+const debug = require("debug")("mobile-center-cli:commands:tests:prepare");
 
 @help("Prepares UI Test artifacts for test run")
 export default class PrepareUITestCommand extends Command {
@@ -71,7 +71,7 @@ export default class PrepareUITestCommand extends Command {
 
   constructor(args: CommandArgs) {
     super(args);
-    
+
     if (!this.testParameters) {
       this.testParameters = [];
     }
@@ -90,7 +90,7 @@ export default class PrepareUITestCommand extends Command {
   public async runNoClient(): Promise<CommandResult> {
     try {
       let preparer = new UITestPreparer(this.artifactsDir, this.assemblyDir, this.appPath);
-      
+
       preparer.storeFile = this.storeFile;
       preparer.storePassword = this.storePassword;
       preparer.keyAlias = this.keyAlias;
@@ -101,7 +101,7 @@ export default class PrepareUITestCommand extends Command {
 
       let manifestPath = await preparer.prepare();
       out.text(`UI Tests are ready to run. Manifest file was written to ${manifestPath}.`);
-      
+
       return success();
     }
     catch (err) {
