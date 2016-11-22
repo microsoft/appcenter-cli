@@ -39,8 +39,9 @@ export namespace prompt {
         return answers;
       }, {});
 
-      // Wrap inquirer promise in "real" promise, typescript definitions
-      // don't line up.
+      if (answers instanceof Error) {
+        return Promise.reject(answers);
+      }
       return Promise.resolve(answers);
     }
     // Wrap inquirer promise in "real" promise, typescript definitions
