@@ -17,9 +17,9 @@ export class AppiumPreparer {
       throw new Error("Argument artifactsDir is required");
     }
 
+    this.artifactsDir = artifactsDir;
     this.projectDir = projectDir;
     this.buildDir = buildDir;
-    this.artifactsDir = artifactsDir;
 
     this.validateEitherProjectOrBuildDir();
   }
@@ -36,9 +36,8 @@ export class AppiumPreparer {
       this.buildDir = await this.generateBuildDirFromProject();
     }
 
-    this.validateBuildDir();
-
-    await pfs.copyDir(this.buildDir, this.artifactsDir);
+    await this.validateBuildDir();
+    await pfs.cpDir(this.buildDir, this.artifactsDir);
 
     let manifestPath = path.join(this.artifactsDir, "test-manifest.json");
     let manifest = await this.createAppiumManifest();
@@ -147,7 +146,7 @@ export class AppiumPreparer {
         
         let includedFile = this.include[i];
         let targetPath = path.join(this.artifactsDir, includedFile.targetPath);
-        await pfs.copy(includedFile.sourcePath, targetPath);
+        await pfs.cp(includedFile.sourcePath, targetPath);
         result.files.push(includedFile.targetPath);
       }
     }

@@ -24,10 +24,10 @@ export class RunTestsCommand extends AppCommand {
   @required
   devices: string;
 
-  @help("Path to dSym files")
-  @longName("dsym-path")
+  @help("Path to dSym directory")
+  @longName("dsym-dir")
   @hasArg
-  dSymPath: string;
+  dSymDir: string;
 
   @help("Locale for the test run (e.g. en-US)")
   @longName("locale")
@@ -137,6 +137,7 @@ export class RunTestsCommand extends AppCommand {
     uploader.appPath = this.appPath;
     uploader.locale = this.locale;
     uploader.testSeries = this.testSeries;
+    uploader.dSymPath = this.dSymDir;
 
     return await uploader.uploadAndStart();
   }

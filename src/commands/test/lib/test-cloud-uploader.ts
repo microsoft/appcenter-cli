@@ -4,6 +4,8 @@ import { progressWithResult } from "./interaction";
 import { TestManifest, TestRunFile } from "./test-manifest";
 import { TestManifestReader } from "./test-manifest-reader";
 import { AppValidator } from "./app-validator";
+import { parseRange, getByteRange } from "./byte-range-helper";
+import { getDSymFile } from "./dsym-dir-helper";
 import * as _ from "lodash";
 import * as fs from "fs";
 import * as http from 'http';
@@ -67,6 +69,12 @@ export class TestCloudUploader {
 
     let appFile = await progressWithResult("Validating application file", this.validateAndCreateAppFile(manifest));
     await progressWithResult("Uploading application file", this.uploadHashOrNewFile(testRunId, appFile));
+
+    if (this.dSymPath) {
+      let dSymFile = await progressWithResult("Validating DSym file", getDSymFile(this.dSymPath));
+      await progressWithResult("Uploading DSym file", this.uploadHashOrNewFile(testRunId, dSymFile));
+    }
+
     await progressWithResult("Uploading test files", this.uploadAllTestFiles(testRunId, manifest.testFiles));
 
     let startResult = await progressWithResult("Starting test run", this.startTestRun(testRunId, manifest));
@@ -151,7 +159,12 @@ export class TestCloudUploader {
       return true;
     }
     else if (response.statusCode === 401 && !byteRange) {
-      return await this.tryUploadFileHash(testRunId, file, "TODO");
+      let rangeString = response.headers["x-challenge-bytes"];
+      let parsedRange = parseRange(rangeString);
+      let requestedBytes = await getByteRange(file.sourcePath, parsedRange.start, parsedRange.length);
+      let base64Bytes = new Buffer(requestedBytes).toString("base64");
+      
+      return await this.tryUploadFileHash(testRunId, file, base64Bytes);
     }
     else {
       return false;
