@@ -1,6 +1,6 @@
 import { TestCloudError } from "./test-cloud-error";
+import { glob } from "../../../util/misc/promisfied-glob";
 import * as _ from "lodash";
-import * as glob from "glob";
 import * as os from "os";
 import * as path from "path";
 import * as process from "../../../util/misc/process-helper";
@@ -97,7 +97,7 @@ export class UITestPreparer {
 
   private async findXamarinUITestNugetDir(root: string): Promise<string> {
     let possibleNugetDirPattern = path.join(root, "packages", "Xamarin.UITest.*", "tools", "test-cloud.exe");
-    let files = (await this.globAsync(possibleNugetDirPattern)).sort();
+    let files = (await glob(possibleNugetDirPattern)).sort();
 
     if (files.length === 0) {
        let parentDir = path.dirname(root);
@@ -133,19 +133,6 @@ export class UITestPreparer {
         return path.dirname(latestTestCloudPath);
       }
     }
-  }
-
-  private async globAsync(pattern: string): Promise<string[]> {
-    return new Promise<string[]>((resolve, reject) => {
-      glob(pattern, (err, matches) => {
-        if (err) {
-          reject(err);
-        }
-        else {
-          resolve(matches);
-        }
-      });
-    });
   }
 
   private getMinimumVersionString(): string {

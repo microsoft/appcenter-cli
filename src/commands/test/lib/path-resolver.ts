@@ -1,4 +1,4 @@
-import * as glob from "glob";
+import { glob } from "../../../util/misc/promisfied-glob";
 import * as path from "path";
 import * as fs from "fs";
 import * as _ from "lodash";
@@ -34,7 +34,7 @@ export class PathResolver {
       }
     }
     
-    let matches = await this.globAsync(workspacePattern);
+    let matches = await glob(workspacePattern);
     let result: string[] = [];
 
     for (let i = 0; i < matches.length; i++) {
@@ -61,18 +61,5 @@ export class PathResolver {
     }
 
     return relativePath;
-  }
-
-  private globAsync(pattern: string): Promise<string[]> {
-    return new Promise<string[]>((resolve, reject) => {
-      glob(pattern, (error, matches) => {
-        if (error) {
-          reject(error);
-        }
-        else {
-          resolve(matches);
-        }
-      })
-    });
   }
 };
