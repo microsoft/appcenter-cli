@@ -41,7 +41,7 @@ describe("Preparing Appium workspace", () => {
 
     buildDir = await fsLayout.createLayout(spec);
 
-    let preparer = new AppiumPreparer(artifactsDir, null, buildDir);
+    let preparer = new AppiumPreparer(artifactsDir, buildDir);
     await expect(preparer.prepare()).to.eventually.be.rejected;
   });
 
@@ -51,7 +51,7 @@ describe("Preparing Appium workspace", () => {
 
     buildDir = await fsLayout.createLayout(spec);
 
-    let preparer = new AppiumPreparer(artifactsDir, null, buildDir);
+    let preparer = new AppiumPreparer(artifactsDir, buildDir);
     await expect(preparer.prepare()).to.eventually.be.rejected;
   });
 
@@ -61,7 +61,7 @@ describe("Preparing Appium workspace", () => {
 
     buildDir = await fsLayout.createLayout(spec);
 
-    let preparer = new AppiumPreparer(artifactsDir, null, buildDir);
+    let preparer = new AppiumPreparer(artifactsDir, buildDir);
     await expect(preparer.prepare()).to.eventually.be.rejected;
   });
 
@@ -71,7 +71,7 @@ describe("Preparing Appium workspace", () => {
 
     buildDir = await fsLayout.createLayout(spec);
 
-    let preparer = new AppiumPreparer(artifactsDir, null, buildDir);
+    let preparer = new AppiumPreparer(artifactsDir, buildDir);
     await expect(preparer.prepare()).to.eventually.be.rejected;
   });
 
@@ -79,7 +79,7 @@ describe("Preparing Appium workspace", () => {
     let spec = createValidBuildDirSpec();
     buildDir = await fsLayout.createLayout(spec);
     
-    let preparer = new AppiumPreparer(artifactsDir, null, buildDir);
+    let preparer = new AppiumPreparer(artifactsDir, buildDir);
     let manifestPath = await preparer.prepare();
 
     expect(manifestPath).to.eql(path.join(artifactsDir, "test-manifest.json"));

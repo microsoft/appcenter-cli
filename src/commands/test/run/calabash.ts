@@ -10,7 +10,7 @@ export default class RunCalabashTestsCommand extends RunTestsCommand {
   @longName("workspace")
   @required
   @hasArg
-  workspace: string;
+  projectDir: string;
 
   @help("Use Signing Info for signing the test server")
   @longName("sign-info")
@@ -36,7 +36,7 @@ export default class RunCalabashTestsCommand extends RunTestsCommand {
   }
 
   protected async prepareArtifactsDir(artifactsDir: string): Promise<string> {
-    let preparer = new CalabashPreparer(artifactsDir, this.workspace, this.appPath);
+    let preparer = new CalabashPreparer(artifactsDir, this.projectDir, this.appPath);
 
     preparer.signInfo = this.signInfo;
     preparer.config = this.config;

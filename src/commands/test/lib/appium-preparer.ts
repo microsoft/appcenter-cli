@@ -8,34 +8,22 @@ import * as pfs from "../../../util/misc/promisfied-fs";
 export class AppiumPreparer {
   private readonly artifactsDir: string;
   private buildDir: string;
-  private projectDir: string;
   public include: IFileDescriptionJson[];
   public testParameters: { [key:string]: any };
 
-  constructor(artifactsDir: string, projectDir?: string, buildDir?: string) {
+  constructor(artifactsDir: string, buildDir: string) {
     if (!artifactsDir) {
       throw new Error("Argument artifactsDir is required");
     }
+    if (!buildDir) {
+      throw new Error("Argument buildDir is required");
+    }
 
     this.artifactsDir = artifactsDir;
-    this.projectDir = projectDir;
     this.buildDir = buildDir;
-
-    this.validateEitherProjectOrBuildDir();
-  }
-
-  private validateEitherProjectOrBuildDir() {
-    if ((this.projectDir && this.buildDir) || !(this.projectDir || this.buildDir)) {
-      throw new Error("Either projectDir or buildDir must be specified");
-    }
   }
 
   public async prepare(): Promise<string> {
-    if (this.projectDir) {
-      await this.validateProjectDir();
-      this.buildDir = await this.generateBuildDirFromProject();
-    }
-
     await this.validateBuildDir();
     await pfs.cpDir(this.buildDir, this.artifactsDir);
 
@@ -45,17 +33,6 @@ export class AppiumPreparer {
     await pfs.writeFile(manifestPath, manifestJson);
 
     return manifestPath;
-  }
-
-  private async validateProjectDir() {
-    await this.validatePathExists(
-      this.projectDir, 
-      false, 
-      `Project directory ${this.projectDir} doesn't exist`);
-  }
-
-  private async generateBuildDirFromProject(): Promise<string> {
-    throw new Error("Not implemented");
   }
 
   private async validateBuildDir() {

@@ -10,7 +10,7 @@ const minimumVersion = [2, 0, 1];
 
 export class UITestPreparer {
   private readonly appPath: string;
-  private readonly assemblyDir: string;
+  private readonly buildDir: string;
   private readonly artifactsDir: string;
 
   public storeFile: string;
@@ -22,19 +22,19 @@ export class UITestPreparer {
   public testParameters: string[];
   public uiTestToolsDir: string;
 
-  constructor(artifactsDir: string, assemblyDir: string, appPath: string) {
+  constructor(artifactsDir: string, buildDir: string, appPath: string) {
     if (!artifactsDir) {
       throw new Error("Argument artifactsDir is required");
     }
-    if (!assemblyDir) {
-      throw new Error("Argument assemblyDir is required");
+    if (!buildDir) {
+      throw new Error("Argument buildDir is required");
     }
     if (!appPath) {
       throw new Error("Argument appPath is required");
     }
 
     this.appPath = appPath;
-    this.assemblyDir = assemblyDir;
+    this.buildDir = buildDir;
     this.artifactsDir = artifactsDir;
   }
 
@@ -73,7 +73,7 @@ export class UITestPreparer {
       command += ` "${this.storeFile}" "${this.storePassword}" "${this.keyAlias}" "${this.keyPassword}"`;
     }
 
-    command += ` --assembly-dir "${this.assemblyDir}" --artifacts-dir "${this.artifactsDir}"`;
+    command += ` --assembly-dir "${this.buildDir}" --artifacts-dir "${this.artifactsDir}"`;
 
     for (let i = 0; i < this.testParameters.length; i++) {
       command += ` --test-parameter "${this.testParameters[i]}"`;
@@ -91,7 +91,7 @@ export class UITestPreparer {
   }
 
   private async getTestCloudExecutablePath(): Promise<string> {
-    let toolsDir = this.uiTestToolsDir || await this.findXamarinUITestNugetDir(this.assemblyDir);
+    let toolsDir = this.uiTestToolsDir || await this.findXamarinUITestNugetDir(this.buildDir);
     return path.join(toolsDir, "test-cloud.exe");
   }
 
@@ -105,7 +105,7 @@ export class UITestPreparer {
        if (parentDir === root) {
          throw new Error(`Cannot find test-cloud.exe, which is required to prepare UI tests.${os.EOL}` +
           `We have searched for directory "packages${path.sep}Xamarin.UITest.*${path.sep}tools" inside ` +
-          `"${this.assemblyDir}" and all of its parent directories.${os.EOL}` +
+          `"${this.buildDir}" and all of its parent directories.${os.EOL}` +
           `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` +
           `Minimum required version is "${this.getMinimumVersionString()}".`);
        }

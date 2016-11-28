@@ -13,10 +13,10 @@ export default class RunUITestsCommand extends RunTestsCommand {
   appPath: string;
 
   @help("Path to directory with test assemblies")
-  @longName("assembly-dir")
+  @longName("build-dir")
   @required
   @hasArg
-  assemblyDir: string;
+  buildDir: string;
 
   @help("TODO")
   @longName("store-file")
@@ -53,7 +53,7 @@ export default class RunUITestsCommand extends RunTestsCommand {
   }
 
   protected async prepareArtifactsDir(artifactsDir: string): Promise<string> {
-    let preparer = new UITestPreparer(artifactsDir, this.assemblyDir, this.appPath);
+    let preparer = new UITestPreparer(artifactsDir, this.buildDir, this.appPath);
 
     preparer.storeFile = this.storeFile;
     preparer.storePassword = this.storePassword;
