@@ -15,11 +15,8 @@ export default class RunAppiumTestsCommand extends RunTestsCommand {
     super(args);
   }
 
-  protected async prepareArtifactsDir(artifactsDir: string): Promise<string> {
+  protected prepareManifest(artifactsDir: string): Promise<string> {
     let preparer = new AppiumPreparer(artifactsDir, this.buildDir);
-    preparer.include = parseIncludedFiles(this.include || []);
-    preparer.testParameters = parseTestParameters(this.testParameters || []);
-
-    return await preparer.prepare();
+    return preparer.prepare();
   }
 }

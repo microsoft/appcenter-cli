@@ -18,8 +18,6 @@ export class UITestPreparer {
   public keyAlias: string;
   public keyPassword: string;
   public signInfo: string;
-  public include: string[];
-  public testParameters: string[];
   public uiTestToolsDir: string;
 
   constructor(artifactsDir: string, buildDir: string, appPath: string) {
@@ -74,14 +72,6 @@ export class UITestPreparer {
     }
 
     command += ` --assembly-dir "${this.buildDir}" --artifacts-dir "${this.artifactsDir}"`;
-
-    for (let i = 0; i < this.testParameters.length; i++) {
-      command += ` --test-parameter "${this.testParameters[i]}"`;
-    }
-
-    for (let i = 0; i < this.include.length; i++) {
-      command += ` --include "${this.include[i]}"`;
-    }
 
     if (this.signInfo) {
       command += ` --sign-info "${this.signInfo}"`;

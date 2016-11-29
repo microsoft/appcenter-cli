@@ -6,10 +6,13 @@ import { TestCloudError } from "./test-cloud-error";
 import { StateChecker } from "./state-checker";
 import { MobileCenterClient } from "../../../util/apis";
 import { out } from "../../../util/interaction";
-import { progressWithResult } from "./interaction";
 import { parseTestParameters } from "./parameters-parser";
 import { parseIncludedFiles } from "./included-files-parser";
+import { progressWithResult } from "./interaction";
+import { ITestCloudManifestJson, ITestFrameworkJson, IFileDescriptionJson } from "./test-manifest-reader";
+import * as _ from "lodash";
 import * as pfs from "../../../util/misc/promisfied-fs";
+import * as path from "path";
 import * as temp from "temp";
 
 export class RunTestsCommand extends AppCommand {
@@ -77,13 +80,14 @@ export class RunTestsCommand extends AppCommand {
       let artifactsDir = await this.getArtifactsDir();
       
       try {
-        let manifestPath = await progressWithResult("Preparing tests", this.prepareArtifactsDir(artifactsDir));
+        let manifestPath = await progressWithResult("Preparing tests", this.prepareManifest(artifactsDir));
+        await this.addIncludedFilesAndTestParametersToManifest(manifestPath);
         let testRun = await this.uploadAndStart(client, manifestPath);
-        
+
         out.text(`Test run id: "${testRun.testRunId}"`);
         out.text("Accepted devices: ");
         out.list(item => `  - ${item}`, testRun.acceptedDevices);
-        
+
         if (testRun.rejectedDevices && testRun.rejectedDevices.length > 0) {
           out.text("Rejected devices: ");
           out.list(item => `  - ${item}`, testRun.rejectedDevices);
@@ -105,7 +109,18 @@ export class RunTestsCommand extends AppCommand {
     }
   }
 
-  protected prepareArtifactsDir(artifactsDir: string): Promise<string> {
+  private async addIncludedFilesAndTestParametersToManifest(manifestPath: string): Promise<void> {
+    let manifestJson = await pfs.readFile(manifestPath, "utf8"); 
+    let manifest = JSON.parse(manifestJson) as ITestCloudManifestJson;
+    
+    await this.addIncludedFiles(path.dirname(manifestPath), manifest);
+    await this.addTestParameters(manifest);
+
+    let modifiedJson = JSON.stringify(manifest, null, 1);
+    await pfs.writeFile(manifestPath, modifiedJson);
+  }
+
+  protected prepareManifest(artifactsDir: string): Promise<string> {
     throw new Error("This method must be overriden in derived classes");
   }
 
@@ -149,5 +164,29 @@ export class RunTestsCommand extends AppCommand {
     if (exitCode !== 0) {
       throw new TestCloudError("Test run failed. Please inspect logs for more details", exitCode);
     }
+  }
+
+  protected async addIncludedFiles(artifactsDir: string, manifest: ITestCloudManifestJson): Promise<void> {
+    if (!this.include) {
+      return;
+    }
+
+    let includedFiles = parseIncludedFiles(this.include);
+    for (let i = 0; i < includedFiles.length; i++) {
+      let includedFile = includedFiles[i];
+      let copyTarget = path.join(artifactsDir, includedFile.targetPath);
+      await pfs.cp(includedFile.sourcePath, copyTarget);
+
+      manifest.files.push(includedFile.targetPath);
+    }
+  } 
+
+  protected async addTestParameters(manifest: ITestCloudManifestJson): Promise<void> {
+    if (!this.testParameters) {
+      return;
+    }
+
+    let parsedParameters = parseTestParameters(this.testParameters);
+    _.merge(manifest.testFramework.data, parsedParameters || {});
   }
 }

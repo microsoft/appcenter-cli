@@ -8,8 +8,6 @@ import * as pfs from "../../../util/misc/promisfied-fs";
 export class AppiumPreparer {
   private readonly artifactsDir: string;
   private buildDir: string;
-  public include: IFileDescriptionJson[];
-  public testParameters: { [key:string]: any };
 
   constructor(artifactsDir: string, buildDir: string) {
     if (!artifactsDir) {
@@ -117,18 +115,6 @@ export class AppiumPreparer {
         "data": { }
       }
     };
-
-    if (this.include) {
-      for (let i = 0; i < this.include.length; i++) {
-        
-        let includedFile = this.include[i];
-        let targetPath = path.join(this.artifactsDir, includedFile.targetPath);
-        await pfs.cp(includedFile.sourcePath, targetPath);
-        result.files.push(includedFile.targetPath);
-      }
-    }
-
-    _.merge(result.testFramework.data, this.testParameters || {}); 
 
     return result;
   }

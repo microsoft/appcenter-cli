@@ -17,6 +17,13 @@ export async function read(fd: number, buffer: Buffer, offset: number, length: n
   return { bytesRead: result[0], buffer: result[1] };
 }
 
+export function readFile(filename: string): Promise<Buffer>;
+export function readFile(filename: string, encoding: string): Promise<string>;
+export function readFile(filename: string, options: { flag?: string; }): Promise<Buffer>;
+export async function readFile(filename: string, options?: string | { encoding: string; flag?: string; }): Promise<string> {
+  return (await callFs(fs.readFile, filename, options))[0];
+};
+
 export async function readdir(path: string | Buffer): Promise<string[]> {
   return (await callFs(fs.readdir, path))[0];
 }

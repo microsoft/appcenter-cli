@@ -18,12 +18,6 @@ export default class RunEspressoTestsCommand extends RunTestsCommand {
   @hasArg
   buildDir: string;
 
-  @help("Path to Espresso test project that should be built")
-  @longName("project-dir")
-  @hasArg
-  projectDir: string;
-
-
   @help("Path to Espresso tests .apk file (default uses build-dir to detect this file)")
   @longName("test-apk-path")
   @hasArg
@@ -33,14 +27,11 @@ export default class RunEspressoTestsCommand extends RunTestsCommand {
     super(args);
   }
 
-  protected async prepareArtifactsDir(artifactsDir: string): Promise<string> {
+  protected prepareArtifactsDir(artifactsDir: string): Promise<string> {
     if (!this.appPath) {
       throw new Error("Argument --app-path is required");
     }
-    let preparer = new EspressoPreparer(artifactsDir, this.projectDir, this.buildDir, this.testApkPath);
-    preparer.include = parseIncludedFiles(this.include || []);
-    preparer.testParameters = parseTestParameters(this.testParameters || []);
-
-    return await preparer.prepare();
+    let preparer = new EspressoPreparer(artifactsDir, this.buildDir, this.testApkPath);
+    return preparer.prepare();
   }
 }

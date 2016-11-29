@@ -13,8 +13,6 @@ export class CalabashPreparer {
   public config: string;
   public profile: string;
   public skipConfigCheck: boolean;
-  public include: string[];
-  public testParameters: string[];
 
   constructor(artifactsDir: string, projectDir: string, appPath: string) {
     if (!artifactsDir) {
@@ -55,15 +53,7 @@ export class CalabashPreparer {
       command += ` --profile "${this.profile}"`;
     }
     if (this.skipConfigCheck) {
-      command += "--skip-config-check";
-    }
-
-    for (let i = 0; i < this.testParameters.length; i++) {
-      command += ` --test-parameters "${this.testParameters[i]}"`;
-    }
-
-    for (let i = 0; i < this.include.length; i++) {
-      command += ` --data "${this.include[i]}"`;
+      command += " --skip-config-check";
     }
 
     if (this.signInfo) {
