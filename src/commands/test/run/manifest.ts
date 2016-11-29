@@ -18,7 +18,7 @@ export default class RunManifestTestsCommand extends RunTestsCommand {
     return path.dirname(this.manifestPath);
   }
 
-  protected async prepareArtifactsDir(artifactsDir: string): Promise<string> {
+  protected async prepareManifest(artifactsDir: string): Promise<string> {
     return this.manifestPath;
   }
 

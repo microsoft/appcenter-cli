@@ -52,17 +52,15 @@ export default class RunUITestsCommand extends RunTestsCommand {
     super(args);
   }
 
-  protected async prepareArtifactsDir(artifactsDir: string): Promise<string> {
+  protected prepareManifest(artifactsDir: string): Promise<string> {
     let preparer = new UITestPreparer(artifactsDir, this.buildDir, this.appPath);
 
     preparer.storeFile = this.storeFile;
     preparer.storePassword = this.storePassword;
     preparer.keyAlias = this.keyAlias;
     preparer.keyPassword = this.keyPassword;
-    preparer.include = this.include;
-    preparer.testParameters = this.testParameters;
     preparer.uiTestToolsDir = this.uiTestToolsDir;
 
-    return await preparer.prepare();
+    return preparer.prepare();
   }
 }
