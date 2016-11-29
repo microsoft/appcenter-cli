@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as crypto from "crypto";
+import * as glob from "glob";
 
 export type TestRunFileType = "app-file" | "dsym-file" | "test-file"; 
 

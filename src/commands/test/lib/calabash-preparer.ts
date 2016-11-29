@@ -6,7 +6,7 @@ const debug = require("debug")("mobile-center-cli:commands:test:lib:calabash-pre
 
 export class CalabashPreparer {
   private readonly appPath: string;
-  private readonly workspace: string;
+  private readonly projectDir: string;
   private readonly artifactsDir: string;
 
   public signInfo: string;
@@ -16,19 +16,19 @@ export class CalabashPreparer {
   public include: string[];
   public testParameters: string[];
 
-  constructor(artifactsDir: string, workspace: string, appPath: string) {
+  constructor(artifactsDir: string, projectDir: string, appPath: string) {
     if (!artifactsDir) {
       throw new Error("Argument artifactsDir is required");
     }
-    if (!workspace) {
-      throw new Error("Argument workspace is required");
+    if (!projectDir) {
+      throw new Error("Argument projectDir is required");
     }
     if (!appPath) {
       throw new Error("Argument appPath is required");
     }
 
     this.artifactsDir = artifactsDir;
-    this.workspace = workspace;
+    this.projectDir = projectDir;
     this.appPath = appPath;
   }
 
@@ -46,7 +46,7 @@ export class CalabashPreparer {
 
   private getPrepareCommand(): string {
     let command = `test-cloud prepare ${this.appPath} --artifacts-dir ${this.artifactsDir}`;
-    command += ` --workspace "${this.workspace}"`;
+    command += ` --workspace "${this.projectDir}"`;
 
     if (this.config) {
       command += ` --config "${this.config}"`;

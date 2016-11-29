@@ -17,10 +17,10 @@ export default class PrepareCalabashCommand extends Command {
   appPath: string;
 
   @help("Path to workspace")
-  @longName("workspace")
+  @longName("project-dir")
   @required
   @hasArg
-  workspace: string;
+  projectDir: string;
 
   @help("Path to output directory with all test artifacts")
   @longName("artifacts-dir")
@@ -78,7 +78,7 @@ export default class PrepareCalabashCommand extends Command {
 
   public async runNoClient(): Promise<CommandResult> {
     try {
-      let preparer = new CalabashPreparer(this.artifactsDir, this.workspace, this.appPath);
+      let preparer = new CalabashPreparer(this.artifactsDir, this.projectDir, this.appPath);
 
       preparer.signInfo = this.signInfo;
       preparer.config = this.config;

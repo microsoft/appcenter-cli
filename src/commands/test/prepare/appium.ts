@@ -18,11 +18,6 @@ export default class PrepareAppiumCommand extends Command {
   @hasArg
   buildDir: string;
 
-  @help("Path to Appium test project that should be built")
-  @longName("project-dir")
-  @hasArg
-  projectDir: string;
-
   @help("Additional files / directories that should be included in the test run. The value should be in format 'sourceDir=targetDir'")
   @longName("include")
   @hasArg
@@ -48,7 +43,7 @@ export default class PrepareAppiumCommand extends Command {
 
   public async runNoClient(): Promise<CommandResult> {
     try {
-      let preparer = new AppiumPreparer(this.artifactsDir, this.projectDir, this.buildDir);
+      let preparer = new AppiumPreparer(this.artifactsDir, this.buildDir);
       preparer.include = parseIncludedFiles(this.include || []);
       preparer.testParameters = parseTestParameters(this.testParameters || []);
 

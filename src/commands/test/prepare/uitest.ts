@@ -17,10 +17,10 @@ export default class PrepareUITestCommand extends Command {
   appPath: string;
 
   @help("Path to directory with test assemblies")
-  @longName("assembly-dir")
+  @longName("build-dir")
   @required
   @hasArg
-  assemblyDir: string;
+  buildDir: string;
 
   @help("Path to output directory with all test artifacts")
   @longName("artifacts-dir")
@@ -89,7 +89,7 @@ export default class PrepareUITestCommand extends Command {
 
   public async runNoClient(): Promise<CommandResult> {
     try {
-      let preparer = new UITestPreparer(this.artifactsDir, this.assemblyDir, this.appPath);
+      let preparer = new UITestPreparer(this.artifactsDir, this.buildDir, this.appPath);
 
       preparer.storeFile = this.storeFile;
       preparer.storePassword = this.storePassword;

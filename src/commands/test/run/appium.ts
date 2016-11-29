@@ -11,17 +11,12 @@ export default class RunAppiumTestsCommand extends RunTestsCommand {
   @hasArg
   buildDir: string;
 
-  @help("Path to Appium test project that should be built")
-  @longName("project-dir")
-  @hasArg
-  projectDir: string;
-
   constructor(args: CommandArgs) {
     super(args);
   }
 
   protected async prepareArtifactsDir(artifactsDir: string): Promise<string> {
-    let preparer = new AppiumPreparer(artifactsDir, this.projectDir, this.buildDir);
+    let preparer = new AppiumPreparer(artifactsDir, this.buildDir);
     preparer.include = parseIncludedFiles(this.include || []);
     preparer.testParameters = parseTestParameters(this.testParameters || []);
 
