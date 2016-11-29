@@ -26,6 +26,9 @@ export function globSingleFile(pattern: string, options?: g.Options): Promise<st
       else if (matches.length > 1) {
         reject(new Error(`Found more than one file that matches pattern "${pattern}`));
       }
+      else {
+        resolve(matches);
+      }
     });
   });
 }
