@@ -11,34 +11,34 @@ const debug = require("debug")("mobile-center-cli:commands:test:prepare:calabash
 
 @help(Messages.TestCloud.Commands.PrepareCalabash)
 export default class PrepareCalabashCommand extends PrepareTestsCommand {
-  @help("Path to an application file")
+  @help(Messages.TestCloud.Arguments.AppPath)
   @longName("app-path")
   @required
   @hasArg
   appPath: string;
 
-  @help("Path to workspace")
+  @help(Messages.TestCloud.Arguments.CalabashProjectDir)
   @longName("project-dir")
   @required
   @hasArg
   projectDir: string;
 
-  @help("Use Signing Info for signing the test server")
+  @help(Messages.TestCloud.Arguments.CalabashSignInfo)
   @longName("sign-info")
   @hasArg
   signInfo: string;
 
-  @help("Path to Cucumber configuration. Can be relative to workspace")
+  @help(Messages.TestCloud.Arguments.CalabashConfigPath)
   @longName("config")
   @hasArg
   config: string;
 
-  @help("TODO")
+  @help(Messages.TestCloud.Arguments.CalabashProfile)
   @longName("profile")
   @hasArg
   profile: string;
 
-  @help("TODO")
+  @help(Messages.TestCloud.Arguments.CalabashSkipConfigCheck)
   @longName("skip-config-check")
   skipConfigCheck: boolean;
 

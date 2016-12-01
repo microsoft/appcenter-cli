@@ -8,18 +8,18 @@ import { Messages } from "../lib/help-messages";
 @help(Messages.TestCloud.Commands.RunEspresso)
 export default class RunEspressoTestsCommand extends RunTestsCommand {
 
-  @help("Path to an application file")
+  @help(Messages.TestCloud.Arguments.AppPath)
   @longName("app-path")
   @required
   @hasArg
   appPath: string;
 
-  @help("Path to Espresso build directory (usually <project>/build/outputs/apk)")
+  @help(Messages.TestCloud.Arguments.EspressoBuildDir)
   @longName("build-dir")
   @hasArg
   buildDir: string;
 
-  @help("Path to Espresso tests .apk file (default uses build-dir to detect this file)")
+  @help(Messages.TestCloud.Arguments.EspressoTestApkPath)
   @longName("test-apk-path")
   @hasArg
   testApkPath: string;

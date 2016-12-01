@@ -7,44 +7,44 @@ import { Messages } from "../lib/help-messages";
 
 @help(Messages.TestCloud.Commands.RunUITests)
 export default class RunUITestsCommand extends RunTestsCommand {
-  @help("Path to an application file")
+  @help(Messages.TestCloud.Arguments.AppPath)
   @longName("app-path")
   @required
   @hasArg
   appPath: string;
 
-  @help("Path to directory with test assemblies")
+  @help(Messages.TestCloud.Arguments.UITestsBuildDir)
   @longName("build-dir")
   @required
   @hasArg
   buildDir: string;
 
-  @help("TODO")
+  @help(Messages.TestCloud.Arguments.UITestsStoreFile)
   @longName("store-file")
   @hasArg
   storeFile: string;
 
-  @help("TODO")
+  @help(Messages.TestCloud.Arguments.UITestsStorePassword)
   @longName("store-password")
   @hasArg
   storePassword: string;
 
-  @help("TODO")
+  @help(Messages.TestCloud.Arguments.UITestsKeyAlias)
   @longName("key-alias")
   @hasArg
   keyAlias: string;
 
-  @help("TODO")
+  @help(Messages.TestCloud.Arguments.UITestsKeyPassword)
   @longName("key-password")
   @hasArg
   keyPassword: string;
 
-  @help("Use Signing Info for signing the test server")
+  @help(Messages.TestCloud.Arguments.UITestsSignInfo)
   @longName("sign-info")
   @hasArg
   signInfo: string;
 
-  @help("Path to Xamarin UITest tools directory that contains test-cloud.exe")
+  @help(Messages.TestCloud.Arguments.UITestsToolsDir)
   @longName("uitest-tools-dir")
   @hasArg
   uiTestToolsDir: string;

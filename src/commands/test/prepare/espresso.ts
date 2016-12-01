@@ -7,12 +7,12 @@ import { Messages } from "../lib/help-messages";
 
 @help(Messages.TestCloud.Commands.PrepareEspresso)
 export default class PrepareEspressoCommand extends PrepareTestsCommand {
-  @help("Path to Espresso output directory (usually <project>/build/outputs/apk)")
+  @help(Messages.TestCloud.Arguments.EspressoBuildDir)
   @longName("build-dir")
   @hasArg
   buildDir: string;
 
-  @help("Path to Espresso tests .apk file (default uses build-dir to detect this file)")
+  @help(Messages.TestCloud.Arguments.EspressoTestApkPath)
   @longName("test-apk-path")
   @hasArg
   testApkPath: string;

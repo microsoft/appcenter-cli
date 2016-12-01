@@ -7,7 +7,7 @@ import { Messages } from "../lib/help-messages";
 
 @help(Messages.TestCloud.Commands.PrepareAppium)
 export default class PrepareAppiumCommand extends PrepareTestsCommand {
-  @help("Path to Appium output directory (usually target/upload)")
+  @help(Messages.TestCloud.Arguments.AppiumBuildDir)
   @longName("build-dir")
   @hasArg
   @required
