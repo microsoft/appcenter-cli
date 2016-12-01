@@ -3,8 +3,9 @@ import { AppCommand, CommandArgs, CommandResult,
          failure } from "../../util/commandLine";
 import { StateChecker } from "./lib/state-checker";
 import { MobileCenterClient } from "../../util/apis";
+import { Messages } from "./lib/help-messages";
 
-@help("Checks state of test run submitted to Visual Studio Mobile Center")
+@help(Messages.TestCloud.Commands.CheckState)
 export default class CheckStateCommand extends AppCommand {
   @help("Id of the test run")
   @longName("test-run-id")

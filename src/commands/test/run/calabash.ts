@@ -3,8 +3,9 @@ import { RunTestsCommand } from "../lib/run-tests-command";
 import { CalabashPreparer } from "../lib/calabash-preparer";
 import { parseTestParameters } from "../lib/parameters-parser";
 import { parseIncludedFiles } from "../lib/included-files-parser";
+import { Messages } from "../lib/help-messages";
 
-@help("Prepares and runs Calabash tests")
+@help(Messages.TestCloud.Commands.RunCalabash)
 export default class RunCalabashTestsCommand extends RunTestsCommand {
   @help("Path to workspace")
   @longName("workspace")

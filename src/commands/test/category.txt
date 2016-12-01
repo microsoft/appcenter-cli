@@ -1,1 +1,1 @@
-Commands for managing tests from Mobile Center Test service
+Command for preparing, starting and checking state of Visual Studio Mobile Center tests.

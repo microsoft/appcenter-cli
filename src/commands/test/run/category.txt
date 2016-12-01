@@ -1,1 +1,7 @@
-Commands that upload and start test runs in the Mobile Center Test Cloud. 
+Commands that upload and start test runs.
+
+These commands can automatically create artifacts directory for supported test frameworks, or upload previously prepared artifacts.
+
+The former approach - automatically creating artifacts directory - is simpler to use, but may require additional tools. For example, Xamarin UI Tests require either .NET Framework or Mono, and Calabash tests require Ruby and the Xamarin Test Cloud gem.
+
+The latter approach - uploading previously prepared artifacts directory - does not require any other tools. It can be used in CI systems where tests are built and started from different machines.

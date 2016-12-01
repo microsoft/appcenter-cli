@@ -3,8 +3,9 @@ import { CommandArgs, help, success, name, shortName, longName, required, hasArg
 import { EspressoPreparer } from "../lib/espresso-preparer";
 import { PrepareTestsCommand } from "../lib/prepare-tests-command";
 import { out } from "../../../util/interaction";
+import { Messages } from "../lib/help-messages";
 
-@help("Prepares Espresso artifacts for test run")
+@help(Messages.TestCloud.Commands.PrepareEspresso)
 export default class PrepareEspressoCommand extends PrepareTestsCommand {
   @help("Path to Espresso output directory (usually <project>/build/outputs/apk)")
   @longName("build-dir")

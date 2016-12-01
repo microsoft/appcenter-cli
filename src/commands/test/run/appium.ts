@@ -3,8 +3,9 @@ import { RunTestsCommand } from "../lib/run-tests-command";
 import { AppiumPreparer } from "../lib/appium-preparer";
 import { parseTestParameters } from "../lib/parameters-parser";
 import { parseIncludedFiles } from "../lib/included-files-parser";
+import { Messages } from "../lib/help-messages";
 
-@help("Prepares and runs Appium tests")
+@help(Messages.TestCloud.Commands.RunAppium)
 export default class RunAppiumTestsCommand extends RunTestsCommand {
   @help("Path to Appium output directory (usually target/upload)")
   @longName("build-dir")

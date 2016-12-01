@@ -3,8 +3,9 @@ import { RunTestsCommand } from "../lib/run-tests-command";
 import { EspressoPreparer } from "../lib/espresso-preparer";
 import { parseTestParameters } from "../lib/parameters-parser";
 import { parseIncludedFiles } from "../lib/included-files-parser";
+import { Messages } from "../lib/help-messages";
 
-@help("Prepares and runs Espresso tests")
+@help(Messages.TestCloud.Commands.RunEspresso)
 export default class RunEspressoTestsCommand extends RunTestsCommand {
 
   @help("Path to an application file")

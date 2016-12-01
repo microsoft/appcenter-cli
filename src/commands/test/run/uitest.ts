@@ -3,8 +3,9 @@ import { RunTestsCommand } from "../lib/run-tests-command";
 import { UITestPreparer } from "../lib/uitest-preparer";
 import { parseTestParameters } from "../lib/parameters-parser";
 import { parseIncludedFiles } from "../lib/included-files-parser";
+import { Messages } from "../lib/help-messages";
 
-@help("Prepares and runs UI tests")
+@help(Messages.TestCloud.Commands.RunUITests)
 export default class RunUITestsCommand extends RunTestsCommand {
   @help("Path to an application file")
   @longName("app-path")

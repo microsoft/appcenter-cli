@@ -5,10 +5,11 @@ import { PrepareTestsCommand } from "../lib/prepare-tests-command";
 import { out } from "../../../util/interaction";
 import * as outExtensions from "../lib/interaction";
 import * as process from "../../../util/misc/process-helper";
+import { Messages } from "../lib/help-messages";
 
 const debug = require("debug")("mobile-center-cli:commands:tests:prepare");
 
-@help("Prepares UI Test artifacts for test run")
+@help(Messages.TestCloud.Commands.PrepareUITests)
 export default class PrepareUITestCommand extends PrepareTestsCommand {
   @help("Path to an application file")
   @longName("app-path")
