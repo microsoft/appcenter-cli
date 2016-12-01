@@ -38,6 +38,8 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-sourcemaps": "^2.2.0",
     "gulp-typescript": "^3.0.2",
     "mocha": "^3.0.2",
     "nock": "^8.0.0",
