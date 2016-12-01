@@ -195,6 +195,35 @@ Test code lives here. For new tests create a subdirectory structure correspondin
 
 Stores type definitions for the external Javascript libraries used. These are checked in rather than dynamically downloaded in case we need to edit them.
 
+# Naming conventions
+To get consistent user experience among commands for all beacons, the command line argument names should follow the following conventions.
+
+1. **All argument names**: lower-case nouns, separated by dash "-".
+   
+   Examples:   
+   - `--app-path`
+   - `--dsym-dir`
+   - `--debug`
+
+1. **Arguments that describe application**: the first noun is "app".
+
+   Examples:
+   - `--app`
+   - `--app-path`
+
+1. **Arguments that point to directories**: the last noun is "dir".
+
+   Examples:
+   - `--tests-dir`
+   - `--build-dir`
+   - `--dsym-dir`
+
+1. **Arguments that point to a single file**: the last noun is "path".
+
+   Examples:
+   - `--manifest-path`
+   - `--app-path`
+
 # Development Processes
 
 We follow the standard GitHub flow. Each person working on the cli should create their own fork of the repo. Work in your own repo (preferably on a feature branch). When ready, send a pull request to the master Microsoft/MobileCenter-cli repo against the master branch. After review, the pull request will be merged.
