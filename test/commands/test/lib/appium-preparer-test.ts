@@ -82,6 +82,6 @@ describe("Preparing Appium workspace", () => {
     let preparer = new AppiumPreparer(artifactsDir, buildDir);
     let manifestPath = await preparer.prepare();
 
-    expect(manifestPath).to.eql(path.join(artifactsDir, "test-manifest.json"));
+    expect(manifestPath).to.eql(path.join(artifactsDir, "manifest.json"));
   });
 });
