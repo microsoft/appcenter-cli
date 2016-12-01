@@ -45,4 +45,8 @@ export default class RunCalabashTestsCommand extends RunTestsCommand {
 
     return preparer.prepare();
   }
+
+  protected getSourceRootDir() {
+    return this.projectDir;
+  }
 }

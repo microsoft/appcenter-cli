@@ -34,4 +34,8 @@ export default class RunEspressoTestsCommand extends RunTestsCommand {
     let preparer = new EspressoPreparer(artifactsDir, this.buildDir, this.testApkPath);
     return preparer.prepare();
   }
+
+  protected getSourceRootDir() {
+    return this.buildDir;
+  }
 }

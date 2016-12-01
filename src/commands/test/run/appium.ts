@@ -19,4 +19,8 @@ export default class RunAppiumTestsCommand extends RunTestsCommand {
     let preparer = new AppiumPreparer(artifactsDir, this.buildDir);
     return preparer.prepare();
   }
+  
+  protected getSourceRootDir() {
+    return this.buildDir;
+  }
 }
