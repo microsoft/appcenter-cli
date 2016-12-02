@@ -1,19 +1,21 @@
 import { AppCommand, CommandArgs, CommandResult,
-         help, success, name, longName, required, hasArg,
+         help, success, name, longName, shortName, required, hasArg,
          failure } from "../../util/commandLine";
 import { StateChecker } from "./lib/state-checker";
 import { MobileCenterClient } from "../../util/apis";
+import { Messages } from "./lib/help-messages";
 
-@help("Checks state of test run submitted to Visual Studio Mobile Center")
+@help(Messages.TestCloud.Commands.CheckState)
 export default class CheckStateCommand extends AppCommand {
-  @help("Id of the test run")
+  @help(Messages.TestCloud.Arguments.CheckStateTestRunId)
   @longName("test-run-id")
   @required
   @hasArg
   testRunId: string;
 
-  @help("Continuously checks the state until the test run completes")
+  @help(Messages.TestCloud.Arguments.CheckStateContinuous)
   @longName("continuous")
+  @shortName("c")
   continuous: boolean;
 
   constructor(args: CommandArgs) {

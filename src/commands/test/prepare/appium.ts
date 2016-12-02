@@ -3,10 +3,11 @@ import { CommandArgs, help, success, name, longName, required, hasArg,
 import { AppiumPreparer } from "../lib/appium-preparer";
 import { PrepareTestsCommand } from "../lib/prepare-tests-command";
 import { out } from "../../../util/interaction";
+import { Messages } from "../lib/help-messages";
 
-@help("Prepares Appium artifacts for test run")
+@help(Messages.TestCloud.Commands.PrepareAppium)
 export default class PrepareAppiumCommand extends PrepareTestsCommand {
-  @help("Path to Appium output directory (usually target/upload)")
+  @help(Messages.TestCloud.Arguments.AppiumBuildDir)
   @longName("build-dir")
   @hasArg
   @required

@@ -6,23 +6,24 @@ import { parseTestParameters } from "./parameters-parser";
 import { parseIncludedFiles } from "./included-files-parser";
 import { progressWithResult } from "./interaction";
 import { ITestCloudManifestJson, ITestFrameworkJson, IFileDescriptionJson } from "./test-manifest-reader";
+import { Messages } from "./help-messages";
 import * as _ from "lodash";
 import * as path from "path";
 import * as pfs from "../../../util/misc/promisfied-fs";
 
 export class PrepareTestsCommand extends Command {
   
-  @help("Path to output directory where all test files will be copied")
+  @help(Messages.TestCloud.Arguments.PrepareArtifactsDir)
   @longName("artifacts-dir")
   @hasArg
   artifactsDir: string;
 
-  @help("Additional files / directories that should be included in the test run. The value should be in format 'sourceDir=targetDir'")
+  @help(Messages.TestCloud.Arguments.Include)
   @longName("include")
   @hasArg
   include: string[];
 
-  @help("Additional test parameters that should be included in the test run. The value should be in format key=value")
+  @help(Messages.TestCloud.Arguments.TestParameter)
   @longName("test-parameter")
   @shortName("p")
   @hasArg

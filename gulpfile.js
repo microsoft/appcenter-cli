@@ -1,8 +1,10 @@
 // Gulpfile to build sonoma CLI
 
+const clean = require('gulp-clean');
 const gulp = require('gulp');
 const runSeq = require('run-sequence');
 const rimraf = require('rimraf');
+const sourcemaps = require('gulp-sourcemaps');
 const ts = require('gulp-typescript');
 const autorest = require('./scripts/autorest');
 
@@ -20,7 +22,18 @@ gulp.task('build-ts', function () {
   let tsResult = gulp.src(['src/**/*.ts', 'typings/**/*.d.ts'])
     .pipe(tsProject());
 
-  return tsResult.js.pipe(gulp.dest('dist'));
+  return tsResult.js
+    .pipe(gulp.dest('dist'));
+});
+
+gulp.task('build-ts-sourcemaps', function () {
+  let tsResult = gulp.src(['src/**/*.ts', 'typings/**/*.d.ts'])
+    .pipe(sourcemaps.init())
+    .pipe(tsProject());
+
+  return tsResult.js
+    .pipe(sourcemaps.write('.', { includeContent:false, sourceRoot: '.' }))
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('copy-assets', function () {
@@ -34,6 +47,13 @@ gulp.task('copy-generated-client', function () {
 });
 
 gulp.task('build', [ 'build-ts', 'copy-assets', 'copy-generated-client' ]);
+
+gulp.task('build-sourcemaps', [ 'build-ts-sourcemaps', 'copy-assets', 'copy-generated-client' ]);
+
+gulp.task('clean-sourcemaps', function (cb) {
+  return gulp.src('dist/**/*.js.map')
+    .pipe(clean())
+});
 
 //
 // Client code generation. Requires mono to be installed on the machine
@@ -66,4 +86,3 @@ gulp.task('prepublish', function(done) {
 //
 
 gulp.task('default', [ 'build' ]);
-
