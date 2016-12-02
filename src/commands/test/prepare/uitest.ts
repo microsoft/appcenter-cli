@@ -23,10 +23,10 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
   @hasArg
   buildDir: string;
 
-  @help(Messages.TestCloud.Arguments.UITestsStoreFile)
-  @longName("store-file")
+  @help(Messages.TestCloud.Arguments.UITestsStoreFilePath)
+  @longName("store-path")
   @hasArg
-  storeFile: string;
+  storePath: string;
 
   @help(Messages.TestCloud.Arguments.UITestsStorePassword)
   @longName("store-password")
@@ -60,7 +60,7 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
   protected prepareManifest(): Promise<string> {
     let preparer = new UITestPreparer(this.artifactsDir, this.buildDir, this.appPath);
 
-    preparer.storeFile = this.storeFile;
+    preparer.storeFile = this.storePath;
     preparer.storePassword = this.storePassword;
     preparer.keyAlias = this.keyAlias;
     preparer.keyPassword = this.keyPassword;
