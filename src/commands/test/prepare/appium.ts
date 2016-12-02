@@ -21,4 +21,8 @@ export default class PrepareAppiumCommand extends PrepareTestsCommand {
     let preparer = new AppiumPreparer(this.artifactsDir, this.buildDir);
     return preparer.prepare();
   }
+
+  protected getSourceRootDir() {
+    return this.buildDir;
+  }
 }

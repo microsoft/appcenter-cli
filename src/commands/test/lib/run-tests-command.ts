@@ -125,6 +125,10 @@ export class RunTestsCommand extends AppCommand {
     throw new Error("This method must be overriden in derived classes");
   }
 
+  protected getSourceRootDir(): string {
+    throw new Error("This method must be overriden in derived classes");
+  }
+
   protected async cleanupArtifactsDir(artifactsDir: string): Promise<void> {
     await pfs.rmDir(artifactsDir, true);
   }
@@ -172,7 +176,7 @@ export class RunTestsCommand extends AppCommand {
       return;
     }
 
-    let includedFiles = parseIncludedFiles(this.include);
+    let includedFiles = parseIncludedFiles(this.include, this.getSourceRootDir());
     for (let i = 0; i < includedFiles.length; i++) {
       let includedFile = includedFiles[i];
       let copyTarget = path.join(artifactsDir, includedFile.targetPath);

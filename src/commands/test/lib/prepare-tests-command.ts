@@ -70,7 +70,7 @@ export class PrepareTestsCommand extends Command {
       return;
     }
 
-    let includedFiles = parseIncludedFiles(this.include);
+    let includedFiles = parseIncludedFiles(this.include, this.getSourceRootDir());
     for (let i = 0; i < includedFiles.length; i++) {
       let includedFile = includedFiles[i];
       let copyTarget = path.join(this.artifactsDir, includedFile.targetPath);
@@ -95,5 +95,9 @@ export class PrepareTestsCommand extends Command {
 
   protected getSuccessMessage(manifestPath: string) {
     return `Tests are ready to run. Manifest file was written to ${manifestPath}`;
+  }
+
+  protected getSourceRootDir(): string {
+    throw new Error("This method must be overriden in derived classes");
   }
 }

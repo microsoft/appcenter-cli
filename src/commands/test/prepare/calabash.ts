@@ -56,4 +56,8 @@ export default class PrepareCalabashCommand extends PrepareTestsCommand {
 
       return preparer.prepare();
   }
+
+  protected getSourceRootDir() {
+    return this.projectDir;
+  }
 }

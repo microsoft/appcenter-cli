@@ -25,4 +25,8 @@ export default class PrepareEspressoCommand extends PrepareTestsCommand {
     let preparer = new EspressoPreparer(this.artifactsDir, this.buildDir, this.testApkPath);
     return preparer.prepare();
   }
+
+  protected getSourceRootDir() {
+    return this.buildDir;
+  }
 }

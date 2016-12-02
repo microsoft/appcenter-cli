@@ -68,4 +68,8 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
 
     return preparer.prepare();
   }
+
+  protected getSourceRootDir() {
+    return this.buildDir;
+  }
 }
