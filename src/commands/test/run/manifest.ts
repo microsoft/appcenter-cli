@@ -1,8 +1,9 @@
 import { CommandArgs, help, name, longName, required, hasArg } from "../../../util/commandLine";
 import { RunTestsCommand } from "../lib/run-tests-command";
+import { Messages } from "../lib/help-messages";
 import * as path from "path";
 
-@help("Submits tests described by a manifest to Mobile Center Test Cloud")
+@help(Messages.TestCloud.Commands.RunManifest)
 export default class RunManifestTestsCommand extends RunTestsCommand {
   @help("Path to manifest file")
   @longName("manifest-path")

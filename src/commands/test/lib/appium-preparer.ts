@@ -25,7 +25,7 @@ export class AppiumPreparer {
     await this.validateBuildDir();
     await pfs.cpDir(this.buildDir, this.artifactsDir);
 
-    let manifestPath = path.join(this.artifactsDir, "test-manifest.json");
+    let manifestPath = path.join(this.artifactsDir, "manifest.json");
     let manifest = await this.createAppiumManifest();
     let manifestJson = JSON.stringify(manifest, null, 1);
     await pfs.writeFile(manifestPath, manifestJson);

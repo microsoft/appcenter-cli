@@ -10,50 +10,51 @@ import { parseTestParameters } from "./parameters-parser";
 import { parseIncludedFiles } from "./included-files-parser";
 import { progressWithResult } from "./interaction";
 import { ITestCloudManifestJson, ITestFrameworkJson, IFileDescriptionJson } from "./test-manifest-reader";
+import { Messages } from "./help-messages";
 import * as _ from "lodash";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as temp from "temp";
 
 export class RunTestsCommand extends AppCommand {
-  @help("Path to an application file")
+  @help(Messages.TestCloud.Arguments.AppPath)
   @longName("app-path")
   @hasArg
   appPath: string;
 
-  @help("Selected devices slug")
+  @help(Messages.TestCloud.Arguments.RunDevices)
   @longName("devices")
   @hasArg
   @required
   devices: string;
 
-  @help("Path to dSym directory")
+  @help(Messages.TestCloud.Arguments.RunDSymDir)
   @longName("dsym-dir")
   @hasArg
   dSymDir: string;
 
-  @help("Locale for the test run (e.g. en-US)")
+  @help(Messages.TestCloud.Arguments.RunLocale)
   @longName("locale")
   @hasArg
   locale: string;
 
-  @help("Test series name")
+  @help(Messages.TestCloud.Arguments.RunTestSeries)
   @longName("test-series")
   @hasArg
   testSeries: string;
 
-  @help("Additional files / directories that should be included in the test run. The value should be in format 'sourceDir=targetDir'")
+  @help(Messages.TestCloud.Arguments.Include)
   @longName("include")
   @hasArg
   include: string[];
 
-  @help("Additional test parameters that should be included in the test run. The value should be in format key=value")
+  @help(Messages.TestCloud.Arguments.TestParameter)
   @longName("test-parameter")
   @shortName("p")
   @hasArg
   testParameters: string[];
 
-  @help("Don't block waiting for test results")
+  @help(Messages.TestCloud.Arguments.RunAsync)
   @longName("async")
   async: boolean;
 
