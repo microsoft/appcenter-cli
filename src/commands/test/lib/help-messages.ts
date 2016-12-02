@@ -26,7 +26,7 @@ export module Messages {
                                 `- .NET Framework on Windows, Mono Runtime on OS X${os.EOL}` + 
                                 `- NuGet package Xamarin.UITests, version 2.0.1 or higher`;
 
-      export const CheckState = "Checks status of started test run.";
+      export const Status = "Checks status of started test run.";
     }
 
     export module Arguments {
@@ -60,8 +60,8 @@ export module Messages {
       export const UITestsSignInfo = "Use Signing Info for signing the test server.";
       export const UITestsToolsDir = "Path to directory with Xamarin UI Tests tools that contains test-cloud.exe";
 
-      export const CheckStateTestRunId = "ID of started test run";
-      export const CheckStateContinuous = "Continuously checks test run status until it completes";
+      export const StatusTestRunId = "ID of started test run";
+      export const StatusContinuous = "Continuously checks test run status until it completes";
     }
   }
 }
