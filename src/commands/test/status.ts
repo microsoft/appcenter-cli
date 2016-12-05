@@ -5,15 +5,15 @@ import { StateChecker } from "./lib/state-checker";
 import { MobileCenterClient } from "../../util/apis";
 import { Messages } from "./lib/help-messages";
 
-@help(Messages.TestCloud.Commands.CheckState)
-export default class CheckStateCommand extends AppCommand {
-  @help(Messages.TestCloud.Arguments.CheckStateTestRunId)
+@help(Messages.TestCloud.Commands.Status)
+export default class StatusCommand extends AppCommand {
+  @help(Messages.TestCloud.Arguments.StatusTestRunId)
   @longName("test-run-id")
   @required
   @hasArg
   testRunId: string;
 
-  @help(Messages.TestCloud.Arguments.CheckStateContinuous)
+  @help(Messages.TestCloud.Arguments.StatusContinuous)
   @longName("continuous")
   @shortName("c")
   continuous: boolean;
