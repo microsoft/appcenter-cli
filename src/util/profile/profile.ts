@@ -100,7 +100,7 @@ class ProfileImpl implements Profile {
   }
 }
 
-const validApp = /^([a-zA-Z0-9-_]{3,100})\/([a-zA-Z0-9-_]{3,100})$/;
+const validApp = /^([a-zA-Z0-9-_.]{1,100})\/([a-zA-Z0-9-_.]{1,100})$/;
 
 export function toDefaultApp(app: string): DefaultApp {
   const matches = app.match(validApp);
