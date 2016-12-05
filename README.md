@@ -52,5 +52,5 @@ Please use the `mobile-center help` command to get more information about each o
 
 # Contributing
 
-Please see the [contributing](https://github.com/Microsoft/Mobile-center-cli/contributing.md) file
+Please see the [contributing](./contributing.md) file
 for an introduction to the codebase and what the various moving parts are.
