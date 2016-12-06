@@ -19,9 +19,13 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
 
   @help(Messages.TestCloud.Arguments.UITestsBuildDir)
   @longName("build-dir")
-  @required
   @hasArg
   buildDir: string;
+
+  @help("Obsolete. Please use --build-dir instead")
+  @longName("assembly-dir")
+  @hasArg
+  assemblyDir: string;
 
   @help(Messages.TestCloud.Arguments.UITestsStoreFilePath)
   @longName("store-path")
@@ -55,6 +59,15 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
 
   constructor(args: CommandArgs) {
     super(args);
+
+    if (this.assemblyDir && !this.buildDir) {
+      out.text("Argument --assembly-dir is obsolete. Please use --build-dir instead.")
+      this.buildDir = this.assemblyDir;
+    }
+
+    if (!this.buildDir) {
+      throw new Error("Argument --build-dir is required");
+    }
   }
 
   protected prepareManifest(): Promise<string> {
