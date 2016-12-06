@@ -4,6 +4,7 @@ import { CalabashPreparer } from "../lib/calabash-preparer";
 import { parseTestParameters } from "../lib/parameters-parser";
 import { parseIncludedFiles } from "../lib/included-files-parser";
 import { Messages } from "../lib/help-messages";
+import { out } from "../../../util/interaction";
 
 @help(Messages.TestCloud.Commands.RunCalabash)
 export default class RunCalabashTestsCommand extends RunTestsCommand {
@@ -12,6 +13,11 @@ export default class RunCalabashTestsCommand extends RunTestsCommand {
   @required
   @hasArg
   projectDir: string;
+
+  @help("Obsolete. Please use --project-dir instead")
+  @longName("workspace")
+  @hasArg
+  workspaceDir: string;
 
   @help(Messages.TestCloud.Arguments.CalabashSignInfo)
   @longName("sign-info")
@@ -34,6 +40,15 @@ export default class RunCalabashTestsCommand extends RunTestsCommand {
 
   constructor(args: CommandArgs) {
     super(args);
+
+    if (this.workspaceDir && !this.projectDir) {
+      out.text("Argument --workspace is obsolete. Please use --project-dir instead.");
+      this.projectDir = this.workspaceDir;
+    }
+
+    if (!this.projectDir) {
+      throw new Error("Argument --project-dir is required");
+    }
   }
 
   protected prepareManifest(artifactsDir: string): Promise<string> {
