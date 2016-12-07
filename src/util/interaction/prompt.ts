@@ -13,6 +13,20 @@ export function prompt(message: string): Promise<string> {
 }
 
 export namespace prompt {
+  export function confirm(message: string): Promise<boolean> {
+    return prompt.question([
+      {
+        type: "confirm",
+        name: "confirm",
+        message: message,
+        default: false
+      }
+    ])
+    .then(answers => {
+      return answers["confirm"];
+    });
+  }
+
   export function password(message: string): Promise<string> {
     return prompt.question([
       {
