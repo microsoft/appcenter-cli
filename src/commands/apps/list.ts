@@ -1,6 +1,6 @@
 import { AppCommand, CommandArgs, CommandResult, help, success } from "../../util/commandline";
 import { out } from "../../util/interaction";
-import { DefaultApp, getUser } from "../../util/profile";
+import { DefaultApp } from "../../util/profile";
 import { MobileCenterClient, models, clientCall } from "../../util/apis";
 
 const debug = require("debug")("mobile-center-cli:commands:apps:list");
