@@ -50,39 +50,3 @@ export class AppCommand extends Command {
     return `${this.app.ownerName}/${this.app.appName}`;
   }
 }
-
-export function getCurrentApp(optValue: string): ResultOrValue<DefaultApp> {
-
-  function fromCommandLineOpt(): ResultOrValue<DefaultApp> {
-    if (optValue) {
-      let result = toDefaultApp(optValue);
-      if (!result) {
-        return ResultOrValue.fromResult<DefaultApp>(failure(ErrorCodes.InvalidParameter,
-          `'${optValue}' is not a valid application id`));
-      }
-      return ResultOrValue.fromValue(result);
-    }
-  }
-
-  function fromEnvironment(): ResultOrValue<DefaultApp> {
-    if (process.env[currentAppVar]) {
-      let result = toDefaultApp(process.env[currentAppVar]);
-      if (!result) {
-        return ResultOrValue.fromResult<DefaultApp>(failure(ErrorCodes.InvalidParameter,
-          `'${process.env[currentAppVar]}' (read from environment ${currentAppVar}) is not a valid application id`));
-      }
-      return ResultOrValue.fromValue(result);
-    }
-  }
-
-  function fromProfile(): ResultOrValue<DefaultApp> {
-    let profile = getUser();
-    if (profile.defaultApp) {
-      return ResultOrValue.fromValue(profile.defaultApp);
-    }
-  }
-
-  return fromCommandLineOpt() || fromEnvironment() || fromProfile() ||
-    ResultOrValue.fromResult<DefaultApp>(failure(ErrorCodes.InvalidParameter,
-        `Could not find application to work on. Specify the '--app' switch, use '${scriptName} apps set-current', or set the ${currentAppVar} environment variable.`));
-}

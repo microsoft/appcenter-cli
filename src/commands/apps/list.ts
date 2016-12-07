@@ -1,4 +1,4 @@
-import { Command, CommandArgs, CommandResult, help, success, failure, failed, notLoggedIn, getCurrentApp } from "../../util/commandline";
+import { AppCommand, CommandArgs, CommandResult, help, success } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { DefaultApp, getUser } from "../../util/profile";
 import { MobileCenterClient, models, clientCall } from "../../util/apis";
@@ -7,7 +7,7 @@ const debug = require("debug")("mobile-center-cli:commands:apps:list");
 import { inspect } from "util";
 
 @help("Get list of configured applications")
-export default class AppsListCommand extends Command {
+export default class AppsListCommand extends AppCommand {
   constructor(args: CommandArgs) {
     super(args);
   }
@@ -26,9 +26,9 @@ export default class AppsListCommand extends Command {
     const apps = await out.progress("Getting app list ...",
       clientCall<models.AppResponse[]>(cb => client.account.getApps(cb)));
 
-    const defaultApp = getCurrentApp(null);
+    const defaultApp = this.app;
     debug(`Current app = ${inspect(defaultApp)}`);
-    out.list(app => this.formatApp(defaultApp.value, app), apps);
+    out.list(app => this.formatApp(defaultApp, app), apps);
 
     return success();
   }
