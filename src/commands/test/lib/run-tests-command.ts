@@ -1,6 +1,6 @@
-import { AppCommand, CommandArgs, CommandResult, 
+import { AppCommand, CommandArgs, CommandResult,
          help, success, name, shortName, longName, required, hasArg,
-         failure, ErrorCodes } from "../../../util/commandLine";
+         failure, ErrorCodes } from "../../../util/commandline";
 import { TestCloudUploader, StartedTestRun } from "./test-cloud-uploader";
 import { TestCloudError } from "./test-cloud-error";
 import { StateChecker } from "./state-checker";
@@ -79,7 +79,7 @@ export class RunTestsCommand extends AppCommand {
   public async run(client: MobileCenterClient): Promise<CommandResult> {
     try {
       let artifactsDir = await this.getArtifactsDir();
-      
+
       try {
         let manifestPath = await progressWithResult("Preparing tests", this.prepareManifest(artifactsDir));
         await this.addIncludedFilesAndTestParametersToManifest(manifestPath);
@@ -103,7 +103,7 @@ export class RunTestsCommand extends AppCommand {
       finally {
         await this.cleanupArtifactsDir(artifactsDir);
       }
-    } 
+    }
     catch (err) {
       let exitCode = err.exitCode || ErrorCodes.Exception;
       return failure(exitCode, err.message);
@@ -111,9 +111,9 @@ export class RunTestsCommand extends AppCommand {
   }
 
   private async addIncludedFilesAndTestParametersToManifest(manifestPath: string): Promise<void> {
-    let manifestJson = await pfs.readFile(manifestPath, "utf8"); 
+    let manifestJson = await pfs.readFile(manifestPath, "utf8");
     let manifest = JSON.parse(manifestJson) as ITestCloudManifestJson;
-    
+
     await this.addIncludedFiles(path.dirname(manifestPath), manifest);
     await this.addTestParameters(manifest);
 
@@ -148,7 +148,7 @@ export class RunTestsCommand extends AppCommand {
 
   protected async uploadAndStart(client: MobileCenterClient, manifestPath: string): Promise<StartedTestRun> {
     let uploader = new TestCloudUploader(
-      client, 
+      client,
       this.app.ownerName,
       this.app.appName,
       manifestPath,
@@ -184,7 +184,7 @@ export class RunTestsCommand extends AppCommand {
 
       manifest.files.push(includedFile.targetPath);
     }
-  } 
+  }
 
   protected async addTestParameters(manifest: ITestCloudManifestJson): Promise<void> {
     if (!this.testParameters) {
