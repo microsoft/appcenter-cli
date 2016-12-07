@@ -1,6 +1,6 @@
 import { Command, CommandArgs } from "./command";
 import { CommandResult, failure, ErrorCodes, ResultOrValue } from "./command-result";
-import { help, longName, hasArg } from "./option-decorators";
+import { help, longName, shortName, hasArg } from "./option-decorators";
 import { Profile, DefaultApp, toDefaultApp, getUser } from "../profile";
 import { scriptName } from "../misc";
 
@@ -11,6 +11,7 @@ export class AppCommand extends Command {
     super(args);
   }
 
+  @shortName("a")
   @longName("app")
   @hasArg
   @help("Specify application for command to act on")
