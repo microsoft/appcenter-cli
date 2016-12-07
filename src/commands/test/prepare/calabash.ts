@@ -1,5 +1,5 @@
 import { CommandArgs, help, success, name, longName, required, hasArg,
-         ErrorCodes } from "../../../util/commandLine";
+         ErrorCodes } from "../../../util/commandline";
 import { CalabashPreparer } from "../lib/calabash-preparer";
 import { PrepareTestsCommand } from "../lib/prepare-tests-command";
 import { out } from "../../../util/interaction";
