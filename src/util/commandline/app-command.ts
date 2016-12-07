@@ -45,6 +45,10 @@ export class AppCommand extends Command {
 
     return result;
   }
+
+  public get identifier(): string {
+    return `${this.app.ownerName}/${this.app.appName}`;
+  }
 }
 
 export function getCurrentApp(optValue: string): ResultOrValue<DefaultApp> {

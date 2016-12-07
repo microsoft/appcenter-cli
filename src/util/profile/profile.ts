@@ -33,6 +33,7 @@ export interface Profile extends UpdatableProfile {
 export interface DefaultApp {
   ownerName: string;
   appName: string;
+  identifier: string;
 }
 
 class ProfileImpl implements Profile {
@@ -107,7 +108,8 @@ export function toDefaultApp(app: string): DefaultApp {
   if (matches !== null) {
     return {
       ownerName: matches[1],
-      appName: matches[2]
+      appName: matches[2],
+      identifier: `${matches[1]}/${matches[2]}`
     };
   }
   return null;
