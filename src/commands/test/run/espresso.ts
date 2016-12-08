@@ -28,7 +28,7 @@ export default class RunEspressoTestsCommand extends RunTestsCommand {
     super(args);
   }
 
-  protected prepareArtifactsDir(artifactsDir: string): Promise<string> {
+  protected prepareManifest(artifactsDir: string): Promise<string> {
     if (!this.appPath) {
       throw new Error("Argument --app-path is required");
     }
