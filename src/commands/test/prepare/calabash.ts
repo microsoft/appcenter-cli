@@ -50,7 +50,7 @@ export default class PrepareCalabashCommand extends PrepareTestsCommand {
     super(args);
 
     if (this.workspaceDir && !this.projectDir) {
-      out.text("Argument --workspace is obsolete. Please use --project-dir instead");
+      out.text("Argument --workspace is obsolete. Please use --project-dir instead.");
       this.projectDir = this.workspaceDir;
     }
 
