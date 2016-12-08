@@ -1,4 +1,4 @@
-import { CommandArgs, help, name, longName, hasArg, ErrorCodes } from "../../../util/commandLine";
+import { CommandArgs, help, name, longName, hasArg, ErrorCodes } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { AppiumPreparer } from "../lib/appium-preparer";
 import { parseTestParameters } from "../lib/parameters-parser";
@@ -20,7 +20,7 @@ export default class RunAppiumTestsCommand extends RunTestsCommand {
     let preparer = new AppiumPreparer(artifactsDir, this.buildDir);
     return preparer.prepare();
   }
-  
+
   protected getSourceRootDir() {
     return this.buildDir;
   }

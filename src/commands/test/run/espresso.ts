@@ -1,4 +1,4 @@
-import { CommandArgs, help, name, longName, hasArg, ErrorCodes, required } from "../../../util/commandLine";
+import { CommandArgs, help, name, longName, hasArg, ErrorCodes, required } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { EspressoPreparer } from "../lib/espresso-preparer";
 import { parseTestParameters } from "../lib/parameters-parser";

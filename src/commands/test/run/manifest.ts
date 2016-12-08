@@ -1,4 +1,4 @@
-import { CommandArgs, help, name, longName, required, hasArg } from "../../../util/commandLine";
+import { CommandArgs, help, name, longName, required, hasArg } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { Messages } from "../lib/help-messages";
 import * as path from "path";
