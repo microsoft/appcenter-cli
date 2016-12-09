@@ -180,5 +180,5 @@ export function finder(dispatchRoot: string): CommandFinder {
 
     // Got here, nothing found
     return commandNotFound(commandLineArgs);
-  };
+  }
 }
