@@ -69,7 +69,7 @@ export default class LoginCommand extends Command {
   }
 
   private async doLogin(): Promise<void> {
-    let token: models.ApiTokensPostResponse = await out.progress("Logging in ...", this.createAuthToken());
+    let token: models.ApiTokensCreateResponse = await out.progress("Logging in ...", this.createAuthToken());
     debug(`Got response = ${inspect(token)}`);
     let user: models.UserProfileResponse = await out.progress("Getting user info ...", this.getUserInfo(token.apiToken));
     debug(`Got response = ${inspect(user)}`);
@@ -77,10 +77,10 @@ export default class LoginCommand extends Command {
     out.text(`Logged in as ${user.name}`);
   }
 
-  private createAuthToken(): Promise<models.ApiTokensPostResponse> {
+  private createAuthToken(): Promise<models.ApiTokensCreateResponse> {
     const endpoint = environments(this.environmentName).endpoint;
     const client = createMobileCenterClient(this.userName, this.password, endpoint);
-    return clientCall<models.ApiTokensPostResponse>(cb => client.account.createApiToken({ description: "Created from mobile center cli"}, cb));
+    return clientCall<models.ApiTokensCreateResponse>(cb => client.account.createApiToken({ description: "Created from mobile center cli"}, cb));
   }
 
   private getUserInfo(token: string): Promise<models.UserProfileResponse> {

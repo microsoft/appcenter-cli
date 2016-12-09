@@ -27,9 +27,8 @@ function Account(client) {
 /**
  * Rejects a pending invitation for the specified user
  *
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The slug name of the app
+ * @param {string} invitationToken The app invitation token that was sent to
+ * the user
  * 
  * @param {object} [options] Optional Parameters.
  * 
@@ -49,7 +48,7 @@ function Account(client) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Account.prototype.rejectInvitation = function (ownerName, appName, options, callback) {
+Account.prototype.rejectInvitation = function (invitationToken, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -60,11 +59,8 @@ Account.prototype.rejectInvitation = function (ownerName, appName, options, call
   }
   // Validate
   try {
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    if (invitationToken === null || invitationToken === undefined || typeof invitationToken.valueOf() !== 'string') {
+      throw new Error('invitationToken cannot be null or undefined and it must be of type string.');
     }
   } catch (error) {
     return callback(error);
@@ -72,9 +68,8 @@ Account.prototype.rejectInvitation = function (ownerName, appName, options, call
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/user/invitations/apps/{owner_name}/{app_name}/reject';
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/user/invitations/apps/{invitation_token}/reject';
+  requestUrl = requestUrl.replace('{invitation_token}', encodeURIComponent(invitationToken));
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -180,9 +175,8 @@ Account.prototype.rejectInvitation = function (ownerName, appName, options, call
 /**
  * Accepts a pending invitation for the specified user
  *
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The slug name of the app
+ * @param {string} invitationToken The app invitation token that was sent to
+ * the user
  * 
  * @param {object} [options] Optional Parameters.
  * 
@@ -202,7 +196,7 @@ Account.prototype.rejectInvitation = function (ownerName, appName, options, call
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Account.prototype.acceptInvitation = function (ownerName, appName, options, callback) {
+Account.prototype.acceptInvitation = function (invitationToken, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -213,11 +207,8 @@ Account.prototype.acceptInvitation = function (ownerName, appName, options, call
   }
   // Validate
   try {
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    if (invitationToken === null || invitationToken === undefined || typeof invitationToken.valueOf() !== 'string') {
+      throw new Error('invitationToken cannot be null or undefined and it must be of type string.');
     }
   } catch (error) {
     return callback(error);
@@ -225,9 +216,8 @@ Account.prototype.acceptInvitation = function (ownerName, appName, options, call
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/user/invitations/apps/{owner_name}/{app_name}/accept';
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/user/invitations/apps/{invitation_token}/accept';
+  requestUrl = requestUrl.replace('{invitation_token}', encodeURIComponent(invitationToken));
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -1412,7 +1402,7 @@ Account.prototype.getAppInvitations = function (ownerName, appName, options, cal
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['InvitationDetailResponse']().mapper();
+          var resultMapper = new client.models['AppInvitationDetailResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1706,7 +1696,7 @@ Account.prototype.postV01AppsByOwnerNameByAppNameDistributionGroupsByDistributio
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 201 && statusCode !== 400 && statusCode !== 404 && statusCode !== 409) {
+    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 404) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -1731,13 +1721,27 @@ Account.prototype.postV01AppsByOwnerNameByAppNameDistributionGroupsByDistributio
     var result = null;
     if (responseBody === '') responseBody = null;
     // Deserialize Response
-    if (statusCode === 201) {
+    if (statusCode === 200) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['DistributionGroupUserResponse']().mapper();
+          var resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'DistributionGroupUserResponseElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'DistributionGroupUserResponse'
+                  }
+              }
+            }
+          };
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1779,23 +1783,6 @@ Account.prototype.postV01AppsByOwnerNameByAppNameDistributionGroupsByDistributio
         deserializationError2.request = msRest.stripRequest(httpRequest);
         deserializationError2.response = msRest.stripResponse(response);
         return callback(deserializationError2);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 409) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorResponse']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError3 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError3.request = msRest.stripRequest(httpRequest);
-        deserializationError3.response = msRest.stripResponse(response);
-        return callback(deserializationError3);
       }
     }
 
@@ -1941,7 +1928,7 @@ Account.prototype.deleteV01AppsByOwnerNameByAppNameDistributionGroupsByDistribut
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['DistributionGroupUserResponse']().mapper();
+          var resultMapper = new client.models['DistributionGroupUsersResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -2332,16 +2319,15 @@ Account.prototype.patchV01AppsByOwnerNameByAppNameDistributionGroupsByDistributi
 };
 
 /**
- * Returns a list of distribution groups and their users in the app specified
+ * Deletes a distribution group
  *
- * @param {string} ownerName The name of the owner
- * 
  * @param {string} appName The slug name of the app
  * 
- * @param {object} [options] Optional Parameters.
+ * @param {string} ownerName The name of the owner
  * 
- * @param {number} [options.usersLimit] The max number of users in each
- * distribution group to include in response. Use with include_users
+ * @param {string} distributionGroupName The name of the distribution group
+ * 
+ * @param {object} [options] Optional Parameters.
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -2353,12 +2339,13 @@ Account.prototype.patchV01AppsByOwnerNameByAppNameDistributionGroupsByDistributi
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object.
+ *                      See {@link ErrorResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Account.prototype.getV01AppsByOwnerNameByAppNameDistributionGroupsViewsIncludeUsers = function (ownerName, appName, options, callback) {
+Account.prototype.deleteV01AppsByOwnerNameByAppNameDistributionGroupsByDistributionGroupName = function (appName, ownerName, distributionGroupName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -2367,17 +2354,16 @@ Account.prototype.getV01AppsByOwnerNameByAppNameDistributionGroupsViewsIncludeUs
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  var usersLimit = (options && options.usersLimit !== undefined) ? options.usersLimit : undefined;
   // Validate
   try {
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
-    if (usersLimit !== null && usersLimit !== undefined && typeof usersLimit !== 'number') {
-      throw new Error('usersLimit must be of type number.');
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (distributionGroupName === null || distributionGroupName === undefined || typeof distributionGroupName.valueOf() !== 'string') {
+      throw new Error('distributionGroupName cannot be null or undefined and it must be of type string.');
     }
   } catch (error) {
     return callback(error);
@@ -2385,20 +2371,14 @@ Account.prototype.getV01AppsByOwnerNameByAppNameDistributionGroupsViewsIncludeUs
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/distribution_groups/views/include_users';
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}';
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  var queryParameters = [];
-  if (usersLimit !== null && usersLimit !== undefined) {
-    queryParameters.push('users_limit=' + encodeURIComponent(usersLimit.toString()));
-  }
-  if (queryParameters.length > 0) {
-    requestUrl += '?' + queryParameters.join('&');
-  }
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{distribution_group_name}', encodeURIComponent(distributionGroupName));
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
+  httpRequest.method = 'DELETE';
   httpRequest.headers = {};
   httpRequest.url = requestUrl;
   // Set Headers
@@ -2417,7 +2397,7 @@ Account.prototype.getV01AppsByOwnerNameByAppNameDistributionGroupsViewsIncludeUs
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 404) {
+    if (statusCode !== 204 && statusCode !== 400 && statusCode !== 404) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -2442,27 +2422,13 @@ Account.prototype.getV01AppsByOwnerNameByAppNameDistributionGroupsViewsIncludeUs
     var result = null;
     if (responseBody === '') responseBody = null;
     // Deserialize Response
-    if (statusCode === 200) {
+    if (statusCode === 400) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'DistributionGroupResponseElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'DistributionGroupResponse'
-                  }
-              }
-            }
-          };
+          var resultMapper = new client.models['ErrorResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3014,7 +2980,6 @@ Account.prototype.getApp = function (ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object.
- *                      See {@link AppResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -3101,7 +3066,7 @@ Account.prototype.updateApp = function (appName, ownerName, options, callback) {
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200) {
+    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 404 && statusCode !== 409) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -3140,6 +3105,57 @@ Account.prototype.updateApp = function (appName, ownerName, options, callback) {
         deserializationError.request = msRest.stripRequest(httpRequest);
         deserializationError.response = msRest.stripResponse(response);
         return callback(deserializationError);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 400) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ErrorResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError1.request = msRest.stripRequest(httpRequest);
+        deserializationError1.response = msRest.stripResponse(response);
+        return callback(deserializationError1);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 404) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ErrorResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError2 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError2.request = msRest.stripRequest(httpRequest);
+        deserializationError2.response = msRest.stripResponse(response);
+        return callback(deserializationError2);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 409) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ErrorResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError3 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError3.request = msRest.stripRequest(httpRequest);
+        deserializationError3.response = msRest.stripResponse(response);
+        return callback(deserializationError3);
       }
     }
 
@@ -3273,8 +3289,8 @@ Account.prototype.deleteApp = function (appName, ownerName, options, callback) {
  * 
  * @param {string} [app.description] A short text describing the app
  * 
- * @param {string} app.displayName The full name of the user. Might for
- * example be first and last name
+ * @param {string} app.displayName The descriptive name of the app. This can
+ * contain any characters
  * 
  * @param {string} [app.name] The name of the app used in URLs
  * 
@@ -3358,7 +3374,7 @@ Account.prototype.createApp = function (app, options, callback) {
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 201 && statusCode !== 400 && statusCode !== 409) {
+    if (statusCode !== 200 && statusCode !== 201 && statusCode !== 400 && statusCode !== 404 && statusCode !== 409) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -3434,7 +3450,7 @@ Account.prototype.createApp = function (app, options, callback) {
       }
     }
     // Deserialize Response
-    if (statusCode === 409) {
+    if (statusCode === 404) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
@@ -3448,6 +3464,23 @@ Account.prototype.createApp = function (app, options, callback) {
         deserializationError3.request = msRest.stripRequest(httpRequest);
         deserializationError3.response = msRest.stripResponse(response);
         return callback(deserializationError3);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 409) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ErrorResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError4 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError4.request = msRest.stripRequest(httpRequest);
+        deserializationError4.response = msRest.stripResponse(response);
+        return callback(deserializationError4);
       }
     }
 
@@ -3671,7 +3704,7 @@ Account.prototype.deleteApiToken = function (apiTokenId, options, callback) {
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 204 && statusCode !== 400 && statusCode !== 403 && statusCode !== 404) {
+    if (statusCode !== 204 && statusCode !== 400 && statusCode !== 401 && statusCode !== 404) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -3713,7 +3746,7 @@ Account.prototype.deleteApiToken = function (apiTokenId, options, callback) {
       }
     }
     // Deserialize Response
-    if (statusCode === 403) {
+    if (statusCode === 401) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
@@ -3806,7 +3839,7 @@ Account.prototype.getApiTokens = function (options, callback) {
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 403 && statusCode !== 404) {
+    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 401) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -3837,7 +3870,21 @@ Account.prototype.getApiTokens = function (options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ApiTokenResponse']().mapper();
+          var resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'ApiTokensGetResponseElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'ApiTokensGetResponse'
+                  }
+              }
+            }
+          };
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3865,7 +3912,7 @@ Account.prototype.getApiTokens = function (options, callback) {
       }
     }
     // Deserialize Response
-    if (statusCode === 403) {
+    if (statusCode === 401) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
@@ -3879,23 +3926,6 @@ Account.prototype.getApiTokens = function (options, callback) {
         deserializationError2.request = msRest.stripRequest(httpRequest);
         deserializationError2.response = msRest.stripResponse(response);
         return callback(deserializationError2);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 404) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorResponse']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError3 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError3.request = msRest.stripRequest(httpRequest);
-        deserializationError3.response = msRest.stripResponse(response);
-        return callback(deserializationError3);
       }
     }
 
@@ -3945,7 +3975,7 @@ Account.prototype.createApiToken = function (options, callback) {
   }
   var description1;
   if (description !== null && description !== undefined) {
-      description1 = new client.models['ApiTokensPostRequest']();
+      description1 = new client.models['ApiTokensCreateRequest']();
       description1.description = description;
   }
 
@@ -3972,7 +4002,7 @@ Account.prototype.createApiToken = function (options, callback) {
   var requestModel = null;
   try {
     if (description1 !== null && description1 !== undefined) {
-      var requestModelMapper = new client.models['ApiTokensPostRequest']().mapper();
+      var requestModelMapper = new client.models['ApiTokensCreateRequest']().mapper();
       requestModel = client.serialize(requestModelMapper, description1, 'description1');
       requestContent = JSON.stringify(requestModel);
     }
@@ -3988,7 +4018,7 @@ Account.prototype.createApiToken = function (options, callback) {
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 201 && statusCode !== 400 && statusCode !== 403 && statusCode !== 404) {
+    if (statusCode !== 201 && statusCode !== 400 && statusCode !== 401) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -4019,7 +4049,7 @@ Account.prototype.createApiToken = function (options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ApiTokensPostResponse']().mapper();
+          var resultMapper = new client.models['ApiTokensCreateResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -4047,7 +4077,7 @@ Account.prototype.createApiToken = function (options, callback) {
       }
     }
     // Deserialize Response
-    if (statusCode === 403) {
+    if (statusCode === 401) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
@@ -4061,23 +4091,6 @@ Account.prototype.createApiToken = function (options, callback) {
         deserializationError2.request = msRest.stripRequest(httpRequest);
         deserializationError2.response = msRest.stripResponse(response);
         return callback(deserializationError2);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 404) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorResponse']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError3 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError3.request = msRest.stripRequest(httpRequest);
-        deserializationError3.response = msRest.stripResponse(response);
-        return callback(deserializationError3);
       }
     }
 

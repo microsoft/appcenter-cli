@@ -21,12 +21,12 @@ export default class TokenCreateCommand extends Command {
   description: string;
 
   async run(client: MobileCenterClient): Promise<CommandResult> {
-    const tokenAttributes: models.ApiTokensPostRequest = {
+    const tokenAttributes: models.ApiTokensCreateRequest = {
       description: this.description,
     };
 
     const createdToken = await out.progress("Creating token ...",
-      clientCall<models.ApiTokensPostResponse>(cb => client.account.createApiToken(tokenAttributes, cb))
+      clientCall<models.ApiTokensCreateResponse>(cb => client.account.createApiToken(tokenAttributes, cb))
     );
 
     if ((createdToken as any).error) {

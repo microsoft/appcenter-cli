@@ -36,7 +36,7 @@ Model.prototype.mapper = function () {
       modelProperties: {
         modelName: {
           required: false,
-          serializedName: 'modelName',
+          serializedName: 'model_name',
           type: {
             name: 'String'
           }
@@ -50,7 +50,7 @@ Model.prototype.mapper = function () {
         },
         previousCount: {
           required: false,
-          serializedName: 'previousCount',
+          serializedName: 'previous_count',
           type: {
             name: 'Number'
           }

@@ -36,7 +36,7 @@ function Analytics(client) {
  * @param {object} [options] Optional Parameters.
  * 
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
+ * format
  * 
  * @param {number} [options.count] The number of results to return
  * 
@@ -207,7 +207,7 @@ Analytics.prototype.versions = function (start, ownerName, appName, options, cal
  * @param {object} [options] Optional Parameters.
  * 
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
+ * format
  * 
  * @param {array} [options.versions]
  * 
@@ -369,7 +369,7 @@ Analytics.prototype.perDeviceCounts = function (start, interval, ownerName, appN
  * @param {object} [options] Optional Parameters.
  * 
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
+ * format
  * 
  * @param {array} [options.versions]
  * 
@@ -532,7 +532,7 @@ Analytics.prototype.sessionDurationsDistribution = function (start, ownerName, a
  * @param {object} [options] Optional Parameters.
  * 
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
+ * format
  * 
  * @param {array} [options.versions]
  * 
@@ -694,7 +694,7 @@ Analytics.prototype.sessionCounts = function (start, interval, ownerName, appNam
  * @param {object} [options] Optional Parameters.
  * 
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
+ * format
  * 
  * @param {number} [options.count] The number of results to return
  * 
@@ -861,7 +861,7 @@ Analytics.prototype.placeCounts = function (start, ownerName, appName, options, 
  * @param {object} [options] Optional Parameters.
  * 
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
+ * format
  * 
  * @param {number} [options.count] The number of results to return
  * 
@@ -1028,7 +1028,7 @@ Analytics.prototype.operatingSystemCounts = function (start, ownerName, appName,
  * @param {object} [options] Optional Parameters.
  * 
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
+ * format
  * 
  * @param {number} [options.count] The number of results to return
  * 
@@ -1184,18 +1184,18 @@ Analytics.prototype.modelCounts = function (start, ownerName, appName, options, 
 };
 
 /**
- * Logs in the time range.
+ * Logs received between the specified start time and the current time. The
+ * API will return a maximum of 100 logs per call.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
- * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
  * 
  * @param {object} [options] Optional Parameters.
  * 
- * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
+ * @param {date} [options.start] Start date time in data in ISO 8601 date time
+ * format. It must be within the current day in the UTC timezone. The default
+ * value is the start time of the current day in UTC timezone.
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1213,7 +1213,7 @@ Analytics.prototype.modelCounts = function (start, ownerName, appName, options, 
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Analytics.prototype.logs = function (start, ownerName, appName, options, callback) {
+Analytics.prototype.logFlow = function (ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1222,16 +1222,12 @@ Analytics.prototype.logs = function (start, ownerName, appName, options, callbac
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  var end = (options && options.end !== undefined) ? options.end : undefined;
+  var start = (options && options.start !== undefined) ? options.start : undefined;
   // Validate
   try {
-    if(!start || !(start instanceof Date || 
+    if (start && !(start instanceof Date || 
         (typeof start.valueOf() === 'string' && !isNaN(Date.parse(start))))) {
-          throw new Error('start cannot be null or undefined and it must be of type date.');
-        }
-    if (end && !(end instanceof Date || 
-        (typeof end.valueOf() === 'string' && !isNaN(Date.parse(end))))) {
-          throw new Error('end must be of type date.');
+          throw new Error('start must be of type date.');
         }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -1245,13 +1241,12 @@ Analytics.prototype.logs = function (start, ownerName, appName, options, callbac
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/logs';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/log_flow';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
   var queryParameters = [];
-  queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
-  if (end !== null && end !== undefined) {
-    queryParameters.push('end=' + encodeURIComponent(client.serializeObject(end)));
+  if (start !== null && start !== undefined) {
+    queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
   }
   if (queryParameters.length > 0) {
     requestUrl += '?' + queryParameters.join('&');
@@ -1340,7 +1335,7 @@ Analytics.prototype.logs = function (start, ownerName, appName, options, callbac
  * @param {object} [options] Optional Parameters.
  * 
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
+ * format
  * 
  * @param {number} [options.count] The number of results to return
  * 
@@ -1496,6 +1491,962 @@ Analytics.prototype.languageCounts = function (start, ownerName, appName, option
 };
 
 /**
+ * Event properties value counts during the time range in descending order.
+ * Limited up to 5 values.
+ *
+ * @param {string} eventName The id of the event
+ * 
+ * @param {string} eventPropertyName The id of the event property
+ * 
+ * @param {date} start Start date time in data in ISO 8601 date time format
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {date} [options.end] Last date time in data in ISO 8601 date time
+ * format
+ * 
+ * @param {array} [options.versions]
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *                      See {@link EventPropertyValues} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Analytics.prototype.eventPropertyCounts = function (eventName, eventPropertyName, start, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  var end = (options && options.end !== undefined) ? options.end : undefined;
+  var versions = (options && options.versions !== undefined) ? options.versions : undefined;
+  // Validate
+  try {
+    if (eventName === null || eventName === undefined || typeof eventName.valueOf() !== 'string') {
+      throw new Error('eventName cannot be null or undefined and it must be of type string.');
+    }
+    if (eventPropertyName === null || eventPropertyName === undefined || typeof eventPropertyName.valueOf() !== 'string') {
+      throw new Error('eventPropertyName cannot be null or undefined and it must be of type string.');
+    }
+    if(!start || !(start instanceof Date || 
+        (typeof start.valueOf() === 'string' && !isNaN(Date.parse(start))))) {
+          throw new Error('start cannot be null or undefined and it must be of type date.');
+        }
+    if (end && !(end instanceof Date || 
+        (typeof end.valueOf() === 'string' && !isNaN(Date.parse(end))))) {
+          throw new Error('end must be of type date.');
+        }
+    if (util.isArray(versions)) {
+      for (var i = 0; i < versions.length; i++) {
+        if (versions[i] !== null && versions[i] !== undefined && typeof versions[i].valueOf() !== 'string') {
+          throw new Error('versions[i] must be of type string.');
+        }
+      }
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/events/{event_name}/properties/{event_property_name}/counts';
+  requestUrl = requestUrl.replace('{event_name}', encodeURIComponent(eventName));
+  requestUrl = requestUrl.replace('{event_property_name}', encodeURIComponent(eventPropertyName));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  var queryParameters = [];
+  queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
+  if (end !== null && end !== undefined) {
+    queryParameters.push('end=' + encodeURIComponent(client.serializeObject(end)));
+  }
+  if (versions !== null && versions !== undefined) {
+    queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
+  }
+  if (queryParameters.length > 0) {
+    requestUrl += '?' + queryParameters.join('&');
+  }
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['ErrorModel']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['EventPropertyValues']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * Event properties.  Up to the first 5 received properties.
+ *
+ * @param {string} eventName The id of the event
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *                      See {@link EventProperties} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Analytics.prototype.eventProperties = function (eventName, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (eventName === null || eventName === undefined || typeof eventName.valueOf() !== 'string') {
+      throw new Error('eventName cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/events/{event_name}/properties';
+  requestUrl = requestUrl.replace('{event_name}', encodeURIComponent(eventName));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['ErrorModel']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['EventProperties']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * Count of events by interval in the time range.
+ *
+ * @param {string} eventName The id of the event
+ * 
+ * @param {date} start Start date time in data in ISO 8601 date time format
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {date} [options.end] Last date time in data in ISO 8601 date time
+ * format
+ * 
+ * @param {array} [options.versions]
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *                      See {@link EventCount} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Analytics.prototype.eventCount = function (eventName, start, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  var end = (options && options.end !== undefined) ? options.end : undefined;
+  var versions = (options && options.versions !== undefined) ? options.versions : undefined;
+  // Validate
+  try {
+    if (eventName === null || eventName === undefined || typeof eventName.valueOf() !== 'string') {
+      throw new Error('eventName cannot be null or undefined and it must be of type string.');
+    }
+    if(!start || !(start instanceof Date || 
+        (typeof start.valueOf() === 'string' && !isNaN(Date.parse(start))))) {
+          throw new Error('start cannot be null or undefined and it must be of type date.');
+        }
+    if (end && !(end instanceof Date || 
+        (typeof end.valueOf() === 'string' && !isNaN(Date.parse(end))))) {
+          throw new Error('end must be of type date.');
+        }
+    if (util.isArray(versions)) {
+      for (var i = 0; i < versions.length; i++) {
+        if (versions[i] !== null && versions[i] !== undefined && typeof versions[i].valueOf() !== 'string') {
+          throw new Error('versions[i] must be of type string.');
+        }
+      }
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/events/{event_name}/event_count';
+  requestUrl = requestUrl.replace('{event_name}', encodeURIComponent(eventName));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  var queryParameters = [];
+  queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
+  if (end !== null && end !== undefined) {
+    queryParameters.push('end=' + encodeURIComponent(client.serializeObject(end)));
+  }
+  if (versions !== null && versions !== undefined) {
+    queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
+  }
+  if (queryParameters.length > 0) {
+    requestUrl += '?' + queryParameters.join('&');
+  }
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['ErrorModel']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['EventCount']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * Count of devices for an event by interval in the time range.
+ *
+ * @param {string} eventName The id of the event
+ * 
+ * @param {date} start Start date time in data in ISO 8601 date time format
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {date} [options.end] Last date time in data in ISO 8601 date time
+ * format
+ * 
+ * @param {array} [options.versions]
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *                      See {@link EventDeviceCount} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Analytics.prototype.eventDeviceCount = function (eventName, start, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  var end = (options && options.end !== undefined) ? options.end : undefined;
+  var versions = (options && options.versions !== undefined) ? options.versions : undefined;
+  // Validate
+  try {
+    if (eventName === null || eventName === undefined || typeof eventName.valueOf() !== 'string') {
+      throw new Error('eventName cannot be null or undefined and it must be of type string.');
+    }
+    if(!start || !(start instanceof Date || 
+        (typeof start.valueOf() === 'string' && !isNaN(Date.parse(start))))) {
+          throw new Error('start cannot be null or undefined and it must be of type date.');
+        }
+    if (end && !(end instanceof Date || 
+        (typeof end.valueOf() === 'string' && !isNaN(Date.parse(end))))) {
+          throw new Error('end must be of type date.');
+        }
+    if (util.isArray(versions)) {
+      for (var i = 0; i < versions.length; i++) {
+        if (versions[i] !== null && versions[i] !== undefined && typeof versions[i].valueOf() !== 'string') {
+          throw new Error('versions[i] must be of type string.');
+        }
+      }
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/events/{event_name}/device_count';
+  requestUrl = requestUrl.replace('{event_name}', encodeURIComponent(eventName));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  var queryParameters = [];
+  queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
+  if (end !== null && end !== undefined) {
+    queryParameters.push('end=' + encodeURIComponent(client.serializeObject(end)));
+  }
+  if (versions !== null && versions !== undefined) {
+    queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
+  }
+  if (queryParameters.length > 0) {
+    requestUrl += '?' + queryParameters.join('&');
+  }
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['ErrorModel']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['EventDeviceCount']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * Count of events per session by interval in the time range.
+ *
+ * @param {string} eventName The id of the event
+ * 
+ * @param {date} start Start date time in data in ISO 8601 date time format
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {date} [options.end] Last date time in data in ISO 8601 date time
+ * format
+ * 
+ * @param {array} [options.versions]
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *                      See {@link EventCountPerSession} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Analytics.prototype.eventPerSessionCount = function (eventName, start, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  var end = (options && options.end !== undefined) ? options.end : undefined;
+  var versions = (options && options.versions !== undefined) ? options.versions : undefined;
+  // Validate
+  try {
+    if (eventName === null || eventName === undefined || typeof eventName.valueOf() !== 'string') {
+      throw new Error('eventName cannot be null or undefined and it must be of type string.');
+    }
+    if(!start || !(start instanceof Date || 
+        (typeof start.valueOf() === 'string' && !isNaN(Date.parse(start))))) {
+          throw new Error('start cannot be null or undefined and it must be of type date.');
+        }
+    if (end && !(end instanceof Date || 
+        (typeof end.valueOf() === 'string' && !isNaN(Date.parse(end))))) {
+          throw new Error('end must be of type date.');
+        }
+    if (util.isArray(versions)) {
+      for (var i = 0; i < versions.length; i++) {
+        if (versions[i] !== null && versions[i] !== undefined && typeof versions[i].valueOf() !== 'string') {
+          throw new Error('versions[i] must be of type string.');
+        }
+      }
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/events/{event_name}/count_per_session';
+  requestUrl = requestUrl.replace('{event_name}', encodeURIComponent(eventName));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  var queryParameters = [];
+  queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
+  if (end !== null && end !== undefined) {
+    queryParameters.push('end=' + encodeURIComponent(client.serializeObject(end)));
+  }
+  if (versions !== null && versions !== undefined) {
+    queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
+  }
+  if (queryParameters.length > 0) {
+    requestUrl += '?' + queryParameters.join('&');
+  }
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['ErrorModel']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['EventCountPerSession']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * Count of events per device by interval in the time range.
+ *
+ * @param {string} eventName The id of the event
+ * 
+ * @param {date} start Start date time in data in ISO 8601 date time format
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {date} [options.end] Last date time in data in ISO 8601 date time
+ * format
+ * 
+ * @param {array} [options.versions]
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *                      See {@link EventCountPerDevice} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Analytics.prototype.eventPerDeviceCount = function (eventName, start, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  var end = (options && options.end !== undefined) ? options.end : undefined;
+  var versions = (options && options.versions !== undefined) ? options.versions : undefined;
+  // Validate
+  try {
+    if (eventName === null || eventName === undefined || typeof eventName.valueOf() !== 'string') {
+      throw new Error('eventName cannot be null or undefined and it must be of type string.');
+    }
+    if(!start || !(start instanceof Date || 
+        (typeof start.valueOf() === 'string' && !isNaN(Date.parse(start))))) {
+          throw new Error('start cannot be null or undefined and it must be of type date.');
+        }
+    if (end && !(end instanceof Date || 
+        (typeof end.valueOf() === 'string' && !isNaN(Date.parse(end))))) {
+          throw new Error('end must be of type date.');
+        }
+    if (util.isArray(versions)) {
+      for (var i = 0; i < versions.length; i++) {
+        if (versions[i] !== null && versions[i] !== undefined && typeof versions[i].valueOf() !== 'string') {
+          throw new Error('versions[i] must be of type string.');
+        }
+      }
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/events/{event_name}/count_per_device';
+  requestUrl = requestUrl.replace('{event_name}', encodeURIComponent(eventName));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  var queryParameters = [];
+  queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
+  if (end !== null && end !== undefined) {
+    queryParameters.push('end=' + encodeURIComponent(client.serializeObject(end)));
+  }
+  if (versions !== null && versions !== undefined) {
+    queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
+  }
+  if (queryParameters.length > 0) {
+    requestUrl += '?' + queryParameters.join('&');
+  }
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['ErrorModel']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['EventCountPerDevice']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
  * Count of active events in the time range ordered by event.
  *
  * @param {date} start Start date time in data in ISO 8601 date time format
@@ -1507,9 +2458,7 @@ Analytics.prototype.languageCounts = function (start, ownerName, appName, option
  * @param {object} [options] Optional Parameters.
  * 
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
- * 
- * @param {number} [options.count] The number of results to return
+ * format
  * 
  * @param {array} [options.versions]
  * 
@@ -1521,12 +2470,12 @@ Analytics.prototype.languageCounts = function (start, ownerName, appName, option
  * result to return. This parameter along with limit is used to perform
  * pagination.
  * 
- * @param {string} [options.filter] A filter as specified in
- * https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.
- * 
  * @param {string} [options.inlinecount] Controls whether or not to include a
  * count of all the items accross all pages. Possible values include:
  * 'allpages', 'none'
+ * 
+ * @param {string} [options.orderby] controls the sorting order and sorting
+ * based on which column
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1554,13 +2503,12 @@ Analytics.prototype.events = function (start, ownerName, appName, options, callb
     throw new Error('callback cannot be null.');
   }
   var end = (options && options.end !== undefined) ? options.end : undefined;
-  var count = (options && options.count !== undefined) ? options.count : undefined;
   var versions = (options && options.versions !== undefined) ? options.versions : undefined;
   var eventName = (options && options.eventName !== undefined) ? options.eventName : undefined;
   var top = (options && options.top !== undefined) ? options.top : 30;
   var skip = (options && options.skip !== undefined) ? options.skip : 0;
-  var filter = (options && options.filter !== undefined) ? options.filter : undefined;
   var inlinecount = (options && options.inlinecount !== undefined) ? options.inlinecount : 'none';
+  var orderby = (options && options.orderby !== undefined) ? options.orderby : 'count desc';
   // Validate
   try {
     if(!start || !(start instanceof Date || 
@@ -1571,9 +2519,6 @@ Analytics.prototype.events = function (start, ownerName, appName, options, callb
         (typeof end.valueOf() === 'string' && !isNaN(Date.parse(end))))) {
           throw new Error('end must be of type date.');
         }
-    if (count !== null && count !== undefined && typeof count !== 'number') {
-      throw new Error('count must be of type number.');
-    }
     if (util.isArray(versions)) {
       for (var i = 0; i < versions.length; i++) {
         if (versions[i] !== null && versions[i] !== undefined && typeof versions[i].valueOf() !== 'string') {
@@ -1610,11 +2555,11 @@ Analytics.prototype.events = function (start, ownerName, appName, options, callb
         throw new Error('"skip" should satisfy the constraint - "InclusiveMinimum": 0');
       }
     }
-    if (filter !== null && filter !== undefined && typeof filter.valueOf() !== 'string') {
-      throw new Error('filter must be of type string.');
-    }
     if (inlinecount !== null && inlinecount !== undefined && typeof inlinecount.valueOf() !== 'string') {
       throw new Error('inlinecount must be of type string.');
+    }
+    if (orderby !== null && orderby !== undefined && typeof orderby.valueOf() !== 'string') {
+      throw new Error('orderby must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -1636,9 +2581,6 @@ Analytics.prototype.events = function (start, ownerName, appName, options, callb
   if (end !== null && end !== undefined) {
     queryParameters.push('end=' + encodeURIComponent(client.serializeObject(end)));
   }
-  if (count !== null && count !== undefined) {
-    queryParameters.push('count=' + encodeURIComponent(count.toString()));
-  }
   if (versions !== null && versions !== undefined) {
     queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
   }
@@ -1651,11 +2593,11 @@ Analytics.prototype.events = function (start, ownerName, appName, options, callb
   if (skip !== null && skip !== undefined) {
     queryParameters.push('$skip=' + encodeURIComponent(skip.toString()));
   }
-  if (filter !== null && filter !== undefined) {
-    queryParameters.push('$filter=' + encodeURIComponent(filter));
-  }
   if (inlinecount !== null && inlinecount !== undefined) {
     queryParameters.push('$inlinecount=' + encodeURIComponent(inlinecount));
+  }
+  if (orderby !== null && orderby !== undefined) {
+    queryParameters.push('$orderby=' + encodeURIComponent(orderby));
   }
   if (queryParameters.length > 0) {
     requestUrl += '?' + queryParameters.join('&');
@@ -1733,714 +2675,6 @@ Analytics.prototype.events = function (start, ownerName, appName, options, callb
 };
 
 /**
- * Count of events by interval in the time range.
- *
- * @param {string} eventId The id of the event
- * 
- * @param {date} start Start date time in data in ISO 8601 date time format
- * 
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
- * 
- * @param {array} [options.versions]
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {array} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Analytics.prototype.eventCount = function (eventId, start, ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  var end = (options && options.end !== undefined) ? options.end : undefined;
-  var versions = (options && options.versions !== undefined) ? options.versions : undefined;
-  // Validate
-  try {
-    if (eventId === null || eventId === undefined || typeof eventId.valueOf() !== 'string') {
-      throw new Error('eventId cannot be null or undefined and it must be of type string.');
-    }
-    if(!start || !(start instanceof Date || 
-        (typeof start.valueOf() === 'string' && !isNaN(Date.parse(start))))) {
-          throw new Error('start cannot be null or undefined and it must be of type date.');
-        }
-    if (end && !(end instanceof Date || 
-        (typeof end.valueOf() === 'string' && !isNaN(Date.parse(end))))) {
-          throw new Error('end must be of type date.');
-        }
-    if (util.isArray(versions)) {
-      for (var i = 0; i < versions.length; i++) {
-        if (versions[i] !== null && versions[i] !== undefined && typeof versions[i].valueOf() !== 'string') {
-          throw new Error('versions[i] must be of type string.');
-        }
-      }
-    }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/event/{event_id}/event_count';
-  requestUrl = requestUrl.replace('{event_id}', encodeURIComponent(eventId));
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  var queryParameters = [];
-  queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
-  if (end !== null && end !== undefined) {
-    queryParameters.push('end=' + encodeURIComponent(client.serializeObject(end)));
-  }
-  if (versions !== null && versions !== undefined) {
-    queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
-  }
-  if (queryParameters.length > 0) {
-    requestUrl += '?' + queryParameters.join('&');
-  }
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          var resultMapper = new client.models['ErrorModel']().mapper();
-          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'DateTimeCountsElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'DateTimeCounts'
-                  }
-              }
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
- * Count of devices for an event by interval in the time range.
- *
- * @param {string} eventId The id of the event
- * 
- * @param {date} start Start date time in data in ISO 8601 date time format
- * 
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
- * 
- * @param {array} [options.versions]
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {array} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Analytics.prototype.eventDeviceCount = function (eventId, start, ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  var end = (options && options.end !== undefined) ? options.end : undefined;
-  var versions = (options && options.versions !== undefined) ? options.versions : undefined;
-  // Validate
-  try {
-    if (eventId === null || eventId === undefined || typeof eventId.valueOf() !== 'string') {
-      throw new Error('eventId cannot be null or undefined and it must be of type string.');
-    }
-    if(!start || !(start instanceof Date || 
-        (typeof start.valueOf() === 'string' && !isNaN(Date.parse(start))))) {
-          throw new Error('start cannot be null or undefined and it must be of type date.');
-        }
-    if (end && !(end instanceof Date || 
-        (typeof end.valueOf() === 'string' && !isNaN(Date.parse(end))))) {
-          throw new Error('end must be of type date.');
-        }
-    if (util.isArray(versions)) {
-      for (var i = 0; i < versions.length; i++) {
-        if (versions[i] !== null && versions[i] !== undefined && typeof versions[i].valueOf() !== 'string') {
-          throw new Error('versions[i] must be of type string.');
-        }
-      }
-    }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/event/{event_id}/device_count';
-  requestUrl = requestUrl.replace('{event_id}', encodeURIComponent(eventId));
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  var queryParameters = [];
-  queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
-  if (end !== null && end !== undefined) {
-    queryParameters.push('end=' + encodeURIComponent(client.serializeObject(end)));
-  }
-  if (versions !== null && versions !== undefined) {
-    queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
-  }
-  if (queryParameters.length > 0) {
-    requestUrl += '?' + queryParameters.join('&');
-  }
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          var resultMapper = new client.models['ErrorModel']().mapper();
-          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'DateTimeCountsElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'DateTimeCounts'
-                  }
-              }
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
- * Count of events per session by interval in the time range.
- *
- * @param {string} eventId The id of the event
- * 
- * @param {date} start Start date time in data in ISO 8601 date time format
- * 
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
- * 
- * @param {array} [options.versions]
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {array} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Analytics.prototype.eventPerSessionCount = function (eventId, start, ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  var end = (options && options.end !== undefined) ? options.end : undefined;
-  var versions = (options && options.versions !== undefined) ? options.versions : undefined;
-  // Validate
-  try {
-    if (eventId === null || eventId === undefined || typeof eventId.valueOf() !== 'string') {
-      throw new Error('eventId cannot be null or undefined and it must be of type string.');
-    }
-    if(!start || !(start instanceof Date || 
-        (typeof start.valueOf() === 'string' && !isNaN(Date.parse(start))))) {
-          throw new Error('start cannot be null or undefined and it must be of type date.');
-        }
-    if (end && !(end instanceof Date || 
-        (typeof end.valueOf() === 'string' && !isNaN(Date.parse(end))))) {
-          throw new Error('end must be of type date.');
-        }
-    if (util.isArray(versions)) {
-      for (var i = 0; i < versions.length; i++) {
-        if (versions[i] !== null && versions[i] !== undefined && typeof versions[i].valueOf() !== 'string') {
-          throw new Error('versions[i] must be of type string.');
-        }
-      }
-    }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/event/{event_id}/count_per_session';
-  requestUrl = requestUrl.replace('{event_id}', encodeURIComponent(eventId));
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  var queryParameters = [];
-  queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
-  if (end !== null && end !== undefined) {
-    queryParameters.push('end=' + encodeURIComponent(client.serializeObject(end)));
-  }
-  if (versions !== null && versions !== undefined) {
-    queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
-  }
-  if (queryParameters.length > 0) {
-    requestUrl += '?' + queryParameters.join('&');
-  }
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          var resultMapper = new client.models['ErrorModel']().mapper();
-          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'DateTimeCountsElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'DateTimeCounts'
-                  }
-              }
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
- * Count of events per device by interval in the time range.
- *
- * @param {string} eventId The id of the event
- * 
- * @param {date} start Start date time in data in ISO 8601 date time format
- * 
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
- * 
- * @param {array} [options.versions]
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {array} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Analytics.prototype.eventPerDeviceCount = function (eventId, start, ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  var end = (options && options.end !== undefined) ? options.end : undefined;
-  var versions = (options && options.versions !== undefined) ? options.versions : undefined;
-  // Validate
-  try {
-    if (eventId === null || eventId === undefined || typeof eventId.valueOf() !== 'string') {
-      throw new Error('eventId cannot be null or undefined and it must be of type string.');
-    }
-    if(!start || !(start instanceof Date || 
-        (typeof start.valueOf() === 'string' && !isNaN(Date.parse(start))))) {
-          throw new Error('start cannot be null or undefined and it must be of type date.');
-        }
-    if (end && !(end instanceof Date || 
-        (typeof end.valueOf() === 'string' && !isNaN(Date.parse(end))))) {
-          throw new Error('end must be of type date.');
-        }
-    if (util.isArray(versions)) {
-      for (var i = 0; i < versions.length; i++) {
-        if (versions[i] !== null && versions[i] !== undefined && typeof versions[i].valueOf() !== 'string') {
-          throw new Error('versions[i] must be of type string.');
-        }
-      }
-    }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/analytics/event/{event_id}/count_per_device';
-  requestUrl = requestUrl.replace('{event_id}', encodeURIComponent(eventId));
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  var queryParameters = [];
-  queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
-  if (end !== null && end !== undefined) {
-    queryParameters.push('end=' + encodeURIComponent(client.serializeObject(end)));
-  }
-  if (versions !== null && versions !== undefined) {
-    queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
-  }
-  if (queryParameters.length > 0) {
-    requestUrl += '?' + queryParameters.join('&');
-  }
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          var resultMapper = new client.models['ErrorModel']().mapper();
-          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'DateTimeCountsElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'DateTimeCounts'
-                  }
-              }
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
  * Percentage of crash-free device by day in the time range based on the
  * selected versions.
  *
@@ -2453,7 +2687,7 @@ Analytics.prototype.eventPerDeviceCount = function (eventId, start, ownerName, a
  * @param {object} [options] Optional Parameters.
  * 
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
+ * format
  * 
  * @param {array} [options.versions]
  * 
@@ -3074,7 +3308,7 @@ Analytics.prototype.crashGroupModelCounts = function (crashGroupId, version, own
  * @param {object} [options] Optional Parameters.
  * 
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
+ * format
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -3395,7 +3629,7 @@ Analytics.prototype.crashGroupsTotals = function (ownerName, appName, crashGroup
  * @param {object} [options] Optional Parameters.
  * 
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
+ * format
  * 
  * @param {array} [options.versions]
  * 
@@ -3553,7 +3787,7 @@ Analytics.prototype.crashCounts = function (start, ownerName, appName, options, 
  * @param {object} [options] Optional Parameters.
  * 
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format.
+ * format
  * 
  * @param {array} [options.versions]
  * 

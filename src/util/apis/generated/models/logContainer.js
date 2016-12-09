@@ -15,7 +15,11 @@ var util = require('util');
  * Initializes a new instance of the LogContainer class.
  * @constructor
  * @member {boolean} [exceededMaxLimit] indicates if the number of available
- * logs are more than the max allowed return limit.
+ * logs are more than the max allowed return limit(100).
+ * 
+ * @member {date} [lastReceivedLogTimestamp] the timestamp of the last log
+ * received. This value can be used as the start time parameter in the
+ * consecutive API call.
  * 
  * @member {array} logs the list of logs
  * 
@@ -44,6 +48,13 @@ LogContainer.prototype.mapper = function () {
             name: 'Boolean'
           }
         },
+        lastReceivedLogTimestamp: {
+          required: false,
+          serializedName: 'last_received_log_timestamp',
+          type: {
+            name: 'DateTime'
+          }
+        },
         logs: {
           required: true,
           serializedName: 'logs',
@@ -57,6 +68,8 @@ LogContainer.prototype.mapper = function () {
                 serializedName: 'LogElementType',
                 type: {
                   name: 'Composite',
+                  polymorphicDiscriminator: 'type',
+                  uberParent: 'Log',
                   className: 'Log'
                 }
             }

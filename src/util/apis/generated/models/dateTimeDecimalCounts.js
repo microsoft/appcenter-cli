@@ -8,33 +8,33 @@
 
 /**
  * @class
- * Initializes a new instance of the SegmentationDataItem class.
+ * Initializes a new instance of the DateTimeDecimalCounts class.
  * @constructor
- * @member {string} [name]
+ * @member {string} [datetime] the ISO 8601 datetime
  * 
- * @member {number} [count]
+ * @member {number} [count] decimal count of the object
  * 
  */
-function SegmentationDataItem() {
+function DateTimeDecimalCounts() {
 }
 
 /**
- * Defines the metadata of SegmentationDataItem
+ * Defines the metadata of DateTimeDecimalCounts
  *
- * @returns {object} metadata of SegmentationDataItem
+ * @returns {object} metadata of DateTimeDecimalCounts
  *
  */
-SegmentationDataItem.prototype.mapper = function () {
+DateTimeDecimalCounts.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'Segmentation_dataItem',
+    serializedName: 'DateTimeDecimalCounts',
     type: {
       name: 'Composite',
-      className: 'SegmentationDataItem',
+      className: 'DateTimeDecimalCounts',
       modelProperties: {
-        name: {
+        datetime: {
           required: false,
-          serializedName: 'name',
+          serializedName: 'datetime',
           type: {
             name: 'String'
           }
@@ -51,4 +51,4 @@ SegmentationDataItem.prototype.mapper = function () {
   };
 };
 
-module.exports = SegmentationDataItem;
+module.exports = DateTimeDecimalCounts;

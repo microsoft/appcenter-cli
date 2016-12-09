@@ -1,7 +1,7 @@
 import { out } from "../../../util/interaction";
 import { models } from "../../../util/apis";
 
-export function reportTokenInfo(token: models.ApiTokenResponse | models.ApiTokensPostResponse): void {
+export function reportTokenInfo(token: models.ApiTokensGetResponse | models.ApiTokensCreateResponse): void {
   out.report(
   [
     ["ID", "id" ],
@@ -10,7 +10,7 @@ export function reportTokenInfo(token: models.ApiTokenResponse | models.ApiToken
   ], token);
 }
 
-export function reportToken(token: models.ApiTokenResponse | models.ApiTokensPostResponse): void {
+export function reportToken(token: models.ApiTokensGetResponse | models.ApiTokensCreateResponse): void {
   out.report(
   [
     ["ID", "id" ],

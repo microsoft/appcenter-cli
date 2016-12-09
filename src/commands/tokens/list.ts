@@ -12,10 +12,9 @@ export default class ApiTokenListCommand extends Command {
     super(args);
   }
 
-
   async run(client: MobileCenterClient): Promise<CommandResult> {
     const apiTokens = await out.progress("Getting API tokens ...",
-      clientCall<models.ApiTokenResponse[]>(cb => client.account.getApiTokens(cb)));
+      clientCall<models.ApiTokensGetResponse[]>(cb => client.account.getApiTokens(cb)));
 
     apiTokens.map(apiToken => reportTokenInfo(apiToken));
 

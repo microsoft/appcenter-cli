@@ -10,23 +10,17 @@
  * @class
  * Initializes a new instance of the PackageUpdateRequest class.
  * @constructor
- * A request containing information pertaining to distributing a package.
+ * A request containing information for updating a package.
  *
- * @member {string} [status] The package state.<br>
- * <b>available</b>: The uploaded package has been distributed. When changing
- * to available a distribution group name or id must be set.<br>
- * <b>unavailable</b>: The uploaded package is not visible to the user. <br>
- * . Possible values include: 'available', 'unavailable'
+ * @member {string} [distributionGroupName] Name of a distribution group. The
+ * package will be associated with this distribution group. If the
+ * distribution group doesn't exist a 400 is returned. If both distribution
+ * group name and id are passed, the id is taking precedence.
  * 
- * @member {string} [destributionGroupName] Name of a distribution group. The
- * package will be distributed to this distribution group. If the
- * distribution group doesn't exist a 400 is returned. If both, distribution
- * group name and id, are passed a 400 is returned.
- * 
- * @member {string} [destributionGroupId] Id of a distribution group. The
- * package will be distributed to this distribution group. If the
- * distribution group doesn't exist a 400 is returned. If both, distribution
- * group name and id, are passed a 400 is returned.
+ * @member {string} [distributionGroupId] Id of a distribution group. The
+ * package will be associated with this distribution group. If the
+ * distribution group doesn't exist a 400 is returned. If both distribution
+ * group name and id are passed, the id is taking precedence.
  * 
  * @member {string} [releaseNotes] Release notes for this package.
  * 
@@ -48,23 +42,16 @@ PackageUpdateRequest.prototype.mapper = function () {
       name: 'Composite',
       className: 'PackageUpdateRequest',
       modelProperties: {
-        status: {
+        distributionGroupName: {
           required: false,
-          serializedName: 'status',
+          serializedName: 'distribution_group_name',
           type: {
             name: 'String'
           }
         },
-        destributionGroupName: {
+        distributionGroupId: {
           required: false,
-          serializedName: 'destribution_group_name',
-          type: {
-            name: 'String'
-          }
-        },
-        destributionGroupId: {
-          required: false,
-          serializedName: 'destribution_group_id',
+          serializedName: 'distribution_group_id',
           type: {
             name: 'String'
           }

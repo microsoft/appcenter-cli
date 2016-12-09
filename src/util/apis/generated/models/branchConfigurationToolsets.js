@@ -64,11 +64,15 @@ var models = require('./index');
  * @member {string} [android.gradleWrapperPath] Path to the Gradle wrapper
  * script
  * 
- * @member {string} [android.gradleTasks] The Gradle tasks to perform
- * 
  * @member {string} [android.module] The Gradle module to build
  * 
  * @member {string} [android.variant] The Android build variant to build
+ * 
+ * @member {boolean} [android.runTests] Whether to run unit tests during the
+ * build (default)
+ * 
+ * @member {boolean} [android.runLint] Whether to run lint checks during the
+ * build (default)
  * 
  */
 function BranchConfigurationToolsets() {

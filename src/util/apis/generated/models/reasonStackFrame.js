@@ -28,7 +28,9 @@
  * 
  * @member {string} [codeFormatted] Formatted frame string
  * 
- * @member {string} [language] programming language of the frame
+ * @member {string} [language] programming language of the frame. Possible
+ * values include: 'JavaScript', 'CSharp', 'Objective-C', 'Objective-Cpp',
+ * 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
  * 
  * @member {string} [methodParams] parameters of the frames method
  * 

@@ -36,7 +36,7 @@ Language.prototype.mapper = function () {
       modelProperties: {
         languageName: {
           required: false,
-          serializedName: 'languageName',
+          serializedName: 'language_name',
           type: {
             name: 'String'
           }
@@ -50,7 +50,7 @@ Language.prototype.mapper = function () {
         },
         previousCount: {
           required: false,
-          serializedName: 'previousCount',
+          serializedName: 'previous_count',
           type: {
             name: 'Number'
           }

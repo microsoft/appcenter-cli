@@ -22,7 +22,7 @@ export default class AppDeleteCommand extends Command {
     const confirmation = await prompt.confirm(`Do you really want to delete the token with ID "${this.id}"`);
 
     if (confirmation) {
-      const result = await out.progress("Deleting app ...", clientCall<models.ApiTokenResponse>(cb => client.account.deleteApiToken(this.id, cb)));
+      const result = await out.progress("Deleting app ...", clientCall<null>(cb => client.account.deleteApiToken(this.id, cb)));
 
       if (result && (result as any).error.code as string === "NotFound") {
         return failure(ErrorCodes.InvalidParameter, `the token with ID "${this.id}" could not be found`);

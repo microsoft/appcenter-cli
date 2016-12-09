@@ -24,9 +24,9 @@ var util = require('util');
  * 
  * @member {object} [android]
  * 
- * @member {array} [android.modules] Gradle modules for the project
+ * @member {array} [android.androidModules] Android Gradle modules
  * 
- * @member {string} [android.gradleWrapperPath]
+ * @member {string} [android.gradleWrapperPath] The path of the Gradle wrapper
  * 
  */
 function ToolsetProjects() {

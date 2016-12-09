@@ -36,7 +36,7 @@ OS.prototype.mapper = function () {
       modelProperties: {
         osName: {
           required: false,
-          serializedName: 'osName',
+          serializedName: 'os_name',
           type: {
             name: 'String'
           }
@@ -50,7 +50,7 @@ OS.prototype.mapper = function () {
         },
         previousCount: {
           required: false,
-          serializedName: 'previousCount',
+          serializedName: 'previous_count',
           type: {
             name: 'Number'
           }

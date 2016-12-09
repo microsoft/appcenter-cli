@@ -14,9 +14,9 @@ var util = require('util');
  * @class
  * Initializes a new instance of the AndroidProject class.
  * @constructor
- * @member {array} modules Gradle modules for the project
+ * @member {array} androidModules Android Gradle modules
  * 
- * @member {string} [gradleWrapperPath]
+ * @member {string} [gradleWrapperPath] The path of the Gradle wrapper
  * 
  */
 function AndroidProject() {
@@ -36,9 +36,9 @@ AndroidProject.prototype.mapper = function () {
       name: 'Composite',
       className: 'AndroidProject',
       modelProperties: {
-        modules: {
+        androidModules: {
           required: true,
-          serializedName: 'modules',
+          serializedName: 'androidModules',
           type: {
             name: 'Sequence',
             element: {

@@ -51,7 +51,7 @@ Version.prototype.mapper = function () {
         },
         previousCount: {
           required: false,
-          serializedName: 'previousCount',
+          serializedName: 'previous_count',
           type: {
             name: 'Number'
           }

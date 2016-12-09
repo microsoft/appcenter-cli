@@ -32,11 +32,11 @@ declare class MobileCenterClient {
     credentials: ServiceClientCredentials;
 
     // Operation groups
-    data: operations.Data;
     account: operations.Account;
     buildOperations: operations.BuildOperations;
     crashOperations: operations.CrashOperations;
     test: operations.Test;
+    data: operations.Data;
     distribute: operations.Distribute;
     analytics: operations.Analytics;
     }

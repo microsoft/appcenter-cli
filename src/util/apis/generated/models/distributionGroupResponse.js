@@ -6,10 +6,6 @@
 
 'use strict';
 
-var models = require('./index');
-
-var util = require('util');
-
 /**
  * @class
  * Initializes a new instance of the DistributionGroupResponse class.
@@ -17,13 +13,6 @@ var util = require('util');
  * @member {string} id The unique ID of the distribution group
  * 
  * @member {string} name The name of the distribution group used in URLs
- * 
- * @member {string} [displayName] The display name of the distribution group
- * 
- * @member {array} [users] The distribution group users
- * 
- * @member {number} [totalUserCount] The count of users in the distribution
- * group
  * 
  */
 function DistributionGroupResponse() {
@@ -55,35 +44,6 @@ DistributionGroupResponse.prototype.mapper = function () {
           serializedName: 'name',
           type: {
             name: 'String'
-          }
-        },
-        displayName: {
-          required: false,
-          serializedName: 'display_name',
-          type: {
-            name: 'String'
-          }
-        },
-        users: {
-          required: false,
-          serializedName: 'users',
-          type: {
-            name: 'Sequence',
-            element: {
-                required: false,
-                serializedName: 'UserProfileResponseElementType',
-                type: {
-                  name: 'Composite',
-                  className: 'UserProfileResponse'
-                }
-            }
-          }
-        },
-        totalUserCount: {
-          required: false,
-          serializedName: 'total_user_count',
-          type: {
-            name: 'Number'
           }
         }
       }
