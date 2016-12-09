@@ -11,14 +11,10 @@ export function reportApp(app: models.AppResponse): void {
     [ "Name", "name"],
     [ "OS", "os"],
     [ "Platform", "platform"],
-    [ "Owner", "owner",
-      [
-        [ "ID", "id" ],
-        [ "Display Name", "displayName"],
-        [ "Email", "email" ],
-        [ "Name", "name" ]
-      ]
-    ],
+    [ "Owner ID", "owner.id"],
+    [ "Owner Display Name", "owner.displayName"],
+    [ "Owner Email", "owner.email" ],
+    [ "Owner Name", "owner.name" ],
     [ "Azure Subscription ID", "azureSubscriptionId"]
   ], app);
 }
