@@ -21,7 +21,7 @@ export default class AppDeleteCommand extends AppCommand {
       const result = await out.progress("Deleting app ...", clientCall<models.AppResponse>(cb => client.account.deleteApp(app.appName, app.ownerName, cb)));
 
       if (result && (result as any).error.code as string === "NotFound") {
-        return failure(ErrorCodes.InvalidParameter, `the app "${app.identifier}" could not be found`);
+        return failure(ErrorCodes.NotFound, `the app "${app.identifier}" could not be found`);
       }
     } else {
       out.text(`Deletion of "${app.identifier}" canceled`);

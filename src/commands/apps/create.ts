@@ -64,7 +64,7 @@ export default class AppCreateCommand extends AppCommand {
         case "BadRequest":
           return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
         case "NotFound":
-          return failure(ErrorCodes.NotLoggedIn, "there appears to be no such user");
+          return failure(ErrorCodes.NotFound, "there appears to be no such user");
         case "Conflict":
           return failure(ErrorCodes.InvalidParameter, "an app with this 'name' already exists");
       }

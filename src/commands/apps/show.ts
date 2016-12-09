@@ -23,7 +23,7 @@ export default class AppShowCommand extends AppCommand {
       case "BadRequest":
         return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
       case "NotFound":
-        return failure(ErrorCodes.NotLoggedIn, `the app "${app.identifier}" could not be found`);
+        return failure(ErrorCodes.NotFound, `the app "${app.identifier}" could not be found`);
     }
 
     reportApp(appDetails);
