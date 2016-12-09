@@ -84,7 +84,7 @@ class ProfileImpl implements Profile {
     return this;
   }
 
-  setAccessToken(token: TokenValueType): Promise<void> {
+  setAccessToken(token: TokenValueType): Promise<this> {
     return tokenStore.set(this.userName, token).then(() => this);
   }
 
