@@ -163,7 +163,7 @@ export class TestCloudUploader {
       let parsedRange = parseRange(rangeString);
       let requestedBytes = await getByteRange(file.sourcePath, parsedRange.start, parsedRange.length);
       let base64Bytes = new Buffer(requestedBytes).toString("base64");
-      
+
       return await this.tryUploadFileHash(testRunId, file, base64Bytes);
     }
     else {
@@ -227,7 +227,7 @@ export class TestCloudUploader {
     });
   }
 
-  private uploadAllTestFiles(testRunId: string, files: TestRunFile[]): Promise<void> {
+  private uploadAllTestFiles(testRunId: string, files: TestRunFile[]): Promise<any[]> {
     let limit = pLimit(paralleRequests);
     let uploadTasks = files.map(f => limit(() => this.uploadHashOrNewFile(testRunId, f)));
 

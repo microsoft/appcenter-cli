@@ -25,7 +25,7 @@ export interface UpdatableProfile {
 }
 
 export interface Profile extends UpdatableProfile {
-  readonly accessToken: Promise<TokenValueType>;
+  readonly accessToken: Promise<string>;
   save(): Profile;
   logout(): Promise<void>;
 }
@@ -83,7 +83,7 @@ class ProfileImpl implements Profile {
     return this;
   }
 
-  setAccessToken(token: TokenValueType): Promise<Profile> {
+  setAccessToken(token: TokenValueType): Promise<ProfileImpl> {
     return tokenStore.set(this.userName, token).then(() => this);
   }
 
