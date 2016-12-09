@@ -4,9 +4,6 @@ import { AppCommand, CommandArgs, CommandResult, help, success, failure, ErrorCo
 import { out, prompt } from "../../util/interaction";
 import { MobileCenterClient, models, clientCall } from "../../util/apis";
 
-const debug = require("debug")("mobile-center-cli:commands:apps:create");
-import { inspect } from "util";
-
 @help("Delete an app")
 export default class AppDeleteCommand extends AppCommand {
   constructor(args: CommandArgs) {

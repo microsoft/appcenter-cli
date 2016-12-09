@@ -55,6 +55,7 @@ export default class AppCreateCommand extends AppCommand {
       name: this.name,
     };
 
+    debug(`Creating app with attributes: ${inspect(appAttributes)}`);
     const createdApp = await out.progress("Creating app ...",
       clientCall<models.AppResponse>(cb => client.account.createApp(appAttributes, cb))
     );

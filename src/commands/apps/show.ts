@@ -5,7 +5,7 @@ import { out } from "../../util/interaction";
 import { reportApp } from "./lib/format-app";
 import { MobileCenterClient, models, clientCall } from "../../util/apis";
 
-const debug = require("debug")("mobile-center-cli:commands:apps:create");
+const debug = require("debug")("mobile-center-cli:commands:apps:show");
 import { inspect } from "util";
 
 @help("Get the details of an app")
