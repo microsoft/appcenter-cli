@@ -17,9 +17,9 @@ export default class AppShowCommand extends AppCommand {
   async run(client: MobileCenterClient): Promise<CommandResult> {
     const app = this.app;
 
-    const appDetails = await out.progress("Getting app details ...", clientCall<models.AppResponse>(cb => client.account.getApp(app.appName, app.ownerName, cb)));
+    const appDetails = await out.progress("Getting app details ...", clientCall<models.AppResponse>(cb => client.account.getApp(app.ownerName, app.appName, cb)));
 
-    switch ((appDetails as any).error.code as string) {
+    switch ((appDetails as any).error && (appDetails as any).error.code as string) {
       case "BadRequest":
         return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
       case "NotFound":
