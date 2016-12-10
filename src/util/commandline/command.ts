@@ -5,7 +5,7 @@ import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "
 import { setDebug, isDebug, setQuiet, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
-import { getUser } from "../profile";
+import { getUser, environments } from "../profile";
 import { MobileCenterClient, createMobileCenterClient } from "../apis";
 import * as path from "path";
 
@@ -42,6 +42,16 @@ export class Command {
   @hasArg
   @help("Format of output for this command: json")
   public format: string;
+
+  @longName("token")
+  @hasArg
+  @help("API Token to use for this command")
+  public token: string;
+
+  @longName("env")
+  @hasArg
+  @help("Environment to connect to when using api token")
+  public environmentName: string;
 
   @shortName("h")
   @longName("help")
@@ -101,11 +111,24 @@ export class Command {
   // Override this if your command needs to do something special with login - typically just
   // the login command
   protected runNoClient(): Promise<Result.CommandResult> {
-    debug(`Creating mobile center client for command`);
-    var user = getUser();
-    if (user) {
-      debug(`running commmand logic`);
-      return this.run(createMobileCenterClient(user));
+    if (this.environmentName && !this.token) {
+      return Promise.resolve(Result.illegal("Cannot specify environment without giving token"));
+    }
+
+    let client: MobileCenterClient;
+    if(this.token) {
+      let environment = environments(this.environmentName);
+      debug(`Creating mobile center client for command from token`);
+      client = createMobileCenterClient(this.token, environment.endpoint);
+    } else {
+      let user = getUser();
+      if (user) {
+        debug(`Creating mobile center client for command for current logged in user`);
+        client = createMobileCenterClient(user);
+      }
+    }
+    if (client) {
+      return this.run(client);
     }
     return Promise.resolve(Result.notLoggedIn(`${scriptName} ${this.command.join(" ")}`));
   }
