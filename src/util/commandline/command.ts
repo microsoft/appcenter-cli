@@ -116,7 +116,7 @@ export class Command {
     }
 
     let client: MobileCenterClient;
-    if(this.token) {
+    if (this.token) {
       let environment = environments(this.environmentName);
       debug(`Creating mobile center client for command from token`);
       client = createMobileCenterClient(this.token, environment.endpoint);
