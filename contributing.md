@@ -39,7 +39,7 @@ works well.
 #### Typescript compiler and Typings
 
 The typescript compilation can be run via the `npm run build` command, but if you want the Typescript compiler available directly,
-install it on you machine by doing `npm install -g typescript`.
+install it on you machine by doing `npm install -g typescript@2.0.10`.
 
 The Typings tool is useful if you're bringing in a new exteral Javascript library and want to get access to type definitions
 for that library. The typings files are checked into the repo, but if you want to download and add new ones, you'll need to
@@ -199,8 +199,8 @@ Stores type definitions for the external Javascript libraries used. These are ch
 To get consistent user experience among commands for all beacons, the command line argument names should follow the following conventions.
 
 1. **All argument names**: lower-case nouns, separated by dash "-".
-   
-   Examples:   
+
+   Examples:
    - `--app-path`
    - `--dsym-dir`
    - `--debug`
