@@ -1,6 +1,6 @@
 // apps create command
 
-import { AppCommand, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
+import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportApp } from "./lib/format-app";
 import { MobileCenterClient, models, clientCall } from "../../util/apis";
@@ -9,7 +9,7 @@ const debug = require("debug")("mobile-center-cli:commands:apps:create");
 import { inspect } from "util";
 
 @help("Create a new app")
-export default class AppCreateCommand extends AppCommand {
+export default class AppCreateCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);
   }
