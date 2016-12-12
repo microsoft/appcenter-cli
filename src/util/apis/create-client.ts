@@ -3,7 +3,7 @@ const debug = require("debug")("mobile-center-cli:util:apis:create-client");
 import { inspect } from "util";
 import { IncomingMessage } from "http";
 
-import MobileCenterClient = require("./generated/MobileCenterClient");
+import MobileCenterClient = require("./generated/mobileCenterClient");
 import { MobileCenterClientCredentials } from "./mobile-center-client-credentials";
 import { userAgentFilter } from "./user-agent-filter";
 const BasicAuthenticationCredentials = require("ms-rest").BasicAuthenticationCredentials;
