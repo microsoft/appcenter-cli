@@ -2,7 +2,7 @@
 
 import { AppCommand, CommandArgs, CommandResult, help, success, failure, ErrorCodes } from "../../util/commandline";
 import { out, prompt } from "../../util/interaction";
-import { MobileCenterClient, models, clientCall } from "../../util/apis";
+import { MobileCenterClient, models, clientRequest } from "../../util/apis";
 
 @help("Delete an app")
 export default class AppDeleteCommand extends AppCommand {
@@ -15,10 +15,16 @@ export default class AppDeleteCommand extends AppCommand {
     const confirmation = await prompt.confirm(`Do you really want to delete the app "${app.identifier}"`);
 
     if (confirmation) {
-      const result = await out.progress("Deleting app ...", clientCall<models.AppResponse>(cb => client.account.deleteApp(app.appName, app.ownerName, cb)));
+      const deleteAppResponse = await out.progress("Deleting app ...", clientRequest<models.AppResponse>(cb => client.account.deleteApp(app.appName, app.ownerName, cb)));
 
-      if (result && (result as any).error.code as string === "NotFound") {
-        return failure(ErrorCodes.NotFound, `the app "${app.identifier}" could not be found`);
+      const statusCode = deleteAppResponse.response.statusCode;
+      if (statusCode >= 400) {
+        switch (statusCode) {
+          case 404:
+            return failure(ErrorCodes.NotFound, `the app "${app.identifier}" could not be found`);
+          default:
+            return failure(ErrorCodes.Exception, "Unknown error when deleting the app");
+        }
       }
     } else {
       out.text(`Deletion of "${app.identifier}" canceled`);

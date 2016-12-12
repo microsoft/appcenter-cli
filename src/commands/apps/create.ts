@@ -3,7 +3,7 @@
 import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportApp } from "./lib/format-app";
-import { MobileCenterClient, models, clientCall } from "../../util/apis";
+import { MobileCenterClient, models, clientRequest } from "../../util/apis";
 
 const debug = require("debug")("mobile-center-cli:commands:apps:create");
 import { inspect } from "util";
@@ -56,24 +56,22 @@ export default class AppCreateCommand extends Command {
     };
 
     debug(`Creating app with attributes: ${inspect(appAttributes)}`);
-    const createdApp = await out.progress("Creating app ...",
-      clientCall<models.AppResponse>(cb => client.account.createApp(appAttributes, cb))
+    const createAppResponse = await out.progress("Creating app ...",
+      clientRequest<models.AppResponse>(cb => client.account.createApp(appAttributes, cb))
     );
-
-    if ((createdApp as any).error) {
-      switch ((createdApp as any).error.code as string || "") {
-        case "BadRequest":
+    const statusCode = createAppResponse.response.statusCode;
+    if (statusCode >= 400) {
+      switch (statusCode) {
+        case 400:
           return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
-        case "NotFound":
+        case 404:
           return failure(ErrorCodes.NotFound, "there appears to be no such user");
-        case "Conflict":
+        case 409:
           return failure(ErrorCodes.InvalidParameter, "an app with this 'name' already exists");
       }
-    } else if (!createdApp.id) {
-      return failure(ErrorCodes.Exception, "invalid request");
     }
 
-    reportApp(createdApp);
+    reportApp(createAppResponse.result);
 
     return success();
   }

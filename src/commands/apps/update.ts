@@ -3,7 +3,7 @@
 import { AppCommand, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportApp } from "./lib/format-app";
-import { MobileCenterClient, models, clientCall } from "../../util/apis";
+import { MobileCenterClient, models, clientRequest } from "../../util/apis";
 
 const debug = require("debug")("mobile-center-cli:commands:apps:create");
 import { inspect } from "util";
@@ -48,20 +48,23 @@ export default class AppUpdateCommand extends AppCommand {
     }
 
     const app = this.app;
-    const updatedApp = await out.progress("Updating app ...",
-      clientCall<models.AppResponse>(cb => client.account.updateApp(app.appName, app.ownerName, appAttributes, cb))
+    const updateAppResponse = await out.progress("Updating app ...",
+      clientRequest<models.AppResponse>(cb => client.account.updateApp(app.appName, app.ownerName, appAttributes, cb))
     );
 
-    switch ((updatedApp as any).error.code as string) {
-      case "BadRequest":
-        return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
-      case "NotFound":
-        return failure(ErrorCodes.NotLoggedIn, `the app "${app.identifier}" could not be found`);
-      case "Conflict":
-        return failure(ErrorCodes.InvalidParameter, `an app with the "name" ${app.appName} already exists`);
+    const statusCode = updateAppResponse.response.statusCode;
+    if (statusCode >= 400) {
+      switch (statusCode) {
+        case 400:
+          return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
+        case 404:
+          return failure(ErrorCodes.NotLoggedIn, `the app "${app.identifier}" could not be found`);
+        case 409:
+          return failure(ErrorCodes.InvalidParameter, `an app with the "name" ${app.appName} already exists`);
+      }
     }
 
-    reportApp(updatedApp);
+    reportApp(updateAppResponse.result);
 
     return success();
   }
