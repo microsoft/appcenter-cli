@@ -1,5 +1,5 @@
 import { CommandArgs, help, success, name, shortName, longName, required, hasArg,
-         ErrorCodes } from "../../../util/commandLine";
+         ErrorCodes } from "../../../util/commandline";
 import { UITestPreparer } from "../lib/uitest-preparer";
 import { PrepareTestsCommand } from "../lib/prepare-tests-command";
 import { out } from "../../../util/interaction";
@@ -19,14 +19,18 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
 
   @help(Messages.TestCloud.Arguments.UITestsBuildDir)
   @longName("build-dir")
-  @required
   @hasArg
   buildDir: string;
 
-  @help(Messages.TestCloud.Arguments.UITestsStoreFile)
-  @longName("store-file")
+  @help("Obsolete. Please use --build-dir instead")
+  @longName("assembly-dir")
   @hasArg
-  storeFile: string;
+  assemblyDir: string;
+
+  @help(Messages.TestCloud.Arguments.UITestsStoreFilePath)
+  @longName("store-path")
+  @hasArg
+  storePath: string;
 
   @help(Messages.TestCloud.Arguments.UITestsStorePassword)
   @longName("store-password")
@@ -55,12 +59,21 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
 
   constructor(args: CommandArgs) {
     super(args);
+
+    if (this.assemblyDir && !this.buildDir) {
+      out.text("Argument --assembly-dir is obsolete. Please use --build-dir instead.")
+      this.buildDir = this.assemblyDir;
+    }
+
+    if (!this.buildDir) {
+      throw new Error("Argument --build-dir is required");
+    }
   }
 
   protected prepareManifest(): Promise<string> {
     let preparer = new UITestPreparer(this.artifactsDir, this.buildDir, this.appPath);
 
-    preparer.storeFile = this.storeFile;
+    preparer.storeFile = this.storePath;
     preparer.storePassword = this.storePassword;
     preparer.keyAlias = this.keyAlias;
     preparer.keyPassword = this.keyPassword;

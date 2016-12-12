@@ -1,4 +1,4 @@
-import { CommandArgs, help, name, longName, hasArg, ErrorCodes, required } from "../../../util/commandLine";
+import { CommandArgs, help, name, longName, hasArg, ErrorCodes, required } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { EspressoPreparer } from "../lib/espresso-preparer";
 import { parseTestParameters } from "../lib/parameters-parser";
@@ -28,7 +28,7 @@ export default class RunEspressoTestsCommand extends RunTestsCommand {
     super(args);
   }
 
-  protected prepareArtifactsDir(artifactsDir: string): Promise<string> {
+  protected prepareManifest(artifactsDir: string): Promise<string> {
     if (!this.appPath) {
       throw new Error("Argument --app-path is required");
     }

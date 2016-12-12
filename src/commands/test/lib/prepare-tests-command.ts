@@ -1,6 +1,6 @@
-import { Command, CommandArgs, CommandResult, 
+import { Command, CommandArgs, CommandResult,
          help, success, name, shortName, longName, required, hasArg,
-         position, failure, notLoggedIn, ErrorCodes } from "../../../util/commandLine";
+         position, failure, notLoggedIn, ErrorCodes } from "../../../util/commandline";
 import { out } from "../../../util/interaction";
 import { parseTestParameters } from "./parameters-parser";
 import { parseIncludedFiles } from "./included-files-parser";
@@ -12,7 +12,7 @@ import * as path from "path";
 import * as pfs from "../../../util/misc/promisfied-fs";
 
 export class PrepareTestsCommand extends Command {
-  
+
   @help(Messages.TestCloud.Arguments.PrepareArtifactsDir)
   @longName("artifacts-dir")
   @hasArg
@@ -55,9 +55,9 @@ export class PrepareTestsCommand extends Command {
   }
 
   private async addIncludedFilesAndTestParametersToManifest(manifestPath: string): Promise<void> {
-    let manifestJson = await pfs.readFile(manifestPath, "utf8"); 
+    let manifestJson = await pfs.readFile(manifestPath, "utf8");
     let manifest = JSON.parse(manifestJson) as ITestCloudManifestJson;
-    
+
     await this.addIncludedFiles(manifest);
     await this.addTestParameters(manifest);
 
@@ -78,7 +78,7 @@ export class PrepareTestsCommand extends Command {
 
       manifest.files.push(includedFile.targetPath);
     }
-  } 
+  }
 
   protected async addTestParameters(manifest: ITestCloudManifestJson): Promise<void> {
     if (!this.testParameters) {

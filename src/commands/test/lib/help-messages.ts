@@ -26,7 +26,7 @@ export module Messages {
                                 `- .NET Framework on Windows, Mono Runtime on OS X${os.EOL}` + 
                                 `- NuGet package Xamarin.UITests, version 2.0.1 or higher`;
 
-      export const CheckState = "Checks status of started test run.";
+      export const Status = "Checks status of started test run.";
     }
 
     export module Arguments {
@@ -53,15 +53,15 @@ export module Messages {
       export const EspressoTestApkPath = "Path to *.apk file with Espresso tests. If not set, build-dir is used to discover it";
 
       export const UITestsBuildDir = "Path to directory with built test assemblies (usually <project>/bin/<configuration>)";
-      export const UITestsStoreFile = "TODO";
-      export const UITestsStorePassword = "TODO";
-      export const UITestsKeyAlias = "TODO";
-      export const UITestsKeyPassword = "TODO";
+      export const UITestsStoreFilePath = "Path to the keystore file";
+      export const UITestsStorePassword = 'Password to the keystore. Corresponds to the "-storepass" argument in jarsigner';
+      export const UITestsKeyAlias = 'Alias to the key in the keystore. Corresponds to the "-alias" argument in jarsigner';
+      export const UITestsKeyPassword = 'Password to the matching private key in the keystore. Corresponds to the "-keypass" argument in jarsigner';
       export const UITestsSignInfo = "Use Signing Info for signing the test server.";
       export const UITestsToolsDir = "Path to directory with Xamarin UI Tests tools that contains test-cloud.exe";
 
-      export const CheckStateTestRunId = "ID of started test run";
-      export const CheckStateContinuous = "Continuously checks test run status until it completes";
+      export const StatusTestRunId = "ID of started test run";
+      export const StatusContinuous = "Continuously checks test run status until it completes";
     }
   }
 }

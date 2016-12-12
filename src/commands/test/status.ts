@@ -1,19 +1,19 @@
 import { AppCommand, CommandArgs, CommandResult,
          help, success, name, longName, shortName, required, hasArg,
-         failure } from "../../util/commandLine";
+         failure } from "../../util/commandline";
 import { StateChecker } from "./lib/state-checker";
 import { MobileCenterClient } from "../../util/apis";
 import { Messages } from "./lib/help-messages";
 
-@help(Messages.TestCloud.Commands.CheckState)
-export default class CheckStateCommand extends AppCommand {
-  @help(Messages.TestCloud.Arguments.CheckStateTestRunId)
+@help(Messages.TestCloud.Commands.Status)
+export default class StatusCommand extends AppCommand {
+  @help(Messages.TestCloud.Arguments.StatusTestRunId)
   @longName("test-run-id")
   @required
   @hasArg
   testRunId: string;
 
-  @help(Messages.TestCloud.Arguments.CheckStateContinuous)
+  @help(Messages.TestCloud.Arguments.StatusContinuous)
   @longName("continuous")
   @shortName("c")
   continuous: boolean;
@@ -25,7 +25,7 @@ export default class CheckStateCommand extends AppCommand {
   async run(client: MobileCenterClient): Promise<CommandResult> {
     let checker = new StateChecker(client, this.testRunId, this.app.ownerName, this.app.appName);
 
-    let exitCode = this.continuous ? await checker.checkUntilCompleted() : await checker.checkOnce(); 
+    let exitCode = this.continuous ? await checker.checkUntilCompleted() : await checker.checkOnce();
 
     if (!exitCode) {
       return success();

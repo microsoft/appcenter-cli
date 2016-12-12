@@ -1,12 +1,13 @@
 // Helper function to create client objects
 const debug = require("debug")("mobile-center-cli:util:apis:create-client");
 import { inspect } from "util";
+import { IncomingMessage } from "http";
 
 import MobileCenterClient = require("./generated/MobileCenterClient");
 import { MobileCenterClientCredentials } from "./mobile-center-client-credentials";
 import { userAgentFilter } from "./user-agent-filter";
 const BasicAuthenticationCredentials = require("ms-rest").BasicAuthenticationCredentials;
-import { ServiceCallback } from "ms-rest";
+import { ServiceCallback, ServiceError, WebResource } from "ms-rest";
 
 const createLogger = require('ms-rest').LogFilter.create;
 
@@ -64,6 +65,26 @@ export function clientCall<T>(action: {(cb: ServiceCallback<any>): void}): Promi
     action((err: Error, result: T) => {
       if (err) { reject(err); }
       else { resolve(result); }
+    });
+  });
+}
+
+//
+// Response type for clientRequest<T> - returns both parsed result and the HTTP response.
+//
+export interface ClientResponse<T> {
+  result: T;
+  response: IncomingMessage;
+}
+
+// Helper function to wrap client calls into pormises and returning both HTTP response and parsed result
+export function clientRequest<T>(action: {(cb: ServiceCallback<any>): void}): Promise<ClientResponse<T>> {
+  return new Promise<ClientResponse<T>>((resolve, reject) => {
+    action((err: Error | ServiceError, result: T, request: WebResource, response: IncomingMessage) => {
+      if (err) { reject(err); }
+      else {
+        resolve({ result, response});
+      }
     });
   });
 }
