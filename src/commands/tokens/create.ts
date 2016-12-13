@@ -3,7 +3,7 @@
 import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportToken } from "./lib/format-token";
-import { MobileCenterClient, models, clientCall } from "../../util/apis";
+import { MobileCenterClient, models, clientRequest } from "../../util/apis";
 
 const debug = require("debug")("mobile-center-cli:commands:apps:create");
 import { inspect } from "util";
@@ -25,24 +25,24 @@ export default class TokenCreateCommand extends Command {
       description: this.description,
     };
 
-    const createdToken = await out.progress("Creating token ...",
-      clientCall<models.ApiTokensCreateResponse>(cb => client.account.createApiToken(tokenAttributes, cb))
+    const createTokenResponse = await out.progress("Creating token ...",
+      clientRequest<models.ApiTokensCreateResponse>(cb => client.account.createApiToken(tokenAttributes, cb))
     );
 
-    if ((createdToken as any).error) {
-      switch ((createdToken as any).error.code as string || "") {
-        case "BadRequest":
-          return failure(ErrorCodes.Exception, "the request was rejected for an unknown reason");
-        case "NotFound":
-          return failure(ErrorCodes.NotLoggedIn, "user could not be found");
-        case "Forbidden":
+    const statusCode = createTokenResponse.response.statusCode;
+    if (statusCode >= 400) {
+      switch (statusCode) {
+        case 400:
+        default:
+          return failure(ErrorCodes.Exception, "invalid request");
+        case 403:
           return failure(ErrorCodes.InvalidParameter, "authorization to create an API token failed");
+        case 404:
+          return failure(ErrorCodes.NotLoggedIn, "user could not be found");
       }
-    } else if (!createdToken.id) {
-      return failure(ErrorCodes.Exception, "invalid request");
     }
 
-    reportToken(createdToken);
+    reportToken(createTokenResponse.result);
 
     return success();
   }
