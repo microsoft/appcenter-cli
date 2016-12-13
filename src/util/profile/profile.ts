@@ -26,6 +26,7 @@ export interface UpdatableProfile {
 
 export interface Profile extends UpdatableProfile {
   readonly accessToken: Promise<string>;
+  readonly tokenSuppliedByUser: boolean;
   save(): Profile;
   logout(): Promise<void>;
 }
@@ -43,6 +44,7 @@ class ProfileImpl implements Profile {
   email: string;
   environment: string;
   defaultApp?: DefaultApp;
+  tokenSuppliedByUser: boolean;
 
   get accessTokenId(): Promise<string> {
     return tokenStore.get(this.userName)
@@ -67,6 +69,7 @@ class ProfileImpl implements Profile {
     this.email = fileContents.email;
     this.environment = fileContents.environment;
     this.defaultApp = fileContents.defaultApp;
+    this.tokenSuppliedByUser = fileContents.tokenSuppliedByUser || false;
   }
 
   save(): Profile {
@@ -76,7 +79,8 @@ class ProfileImpl implements Profile {
       displayName: this.displayName,
       email: this.email,
       environment: this.environment,
-      defaultApp: this.defaultApp
+      defaultApp: this.defaultApp,
+      tokenSuppliedByUser: this.tokenSuppliedByUser
     };
 
     mkdirp.sync(getProfileDir());
@@ -84,7 +88,7 @@ class ProfileImpl implements Profile {
     return this;
   }
 
-  setAccessToken(token: TokenValueType): Promise<this> {
+  setAccessToken(token: TokenValueType): Promise<Profile> {
     return tokenStore.set(this.userName, token).then(() => this);
   }
 
@@ -157,10 +161,10 @@ export function getUser(): Profile {
   return currentProfile;
 }
 
-export function saveUser(user: any, token: TokenValueType, environment: string ): Promise<Profile> {
+export function saveUser(user: any, token: TokenValueType, environment: string, tokenSuppliedByUser: boolean): Promise<Profile> {
   return tokenStore.set(user.name, token)
     .then(() => {
-      let profile = new ProfileImpl(Object.assign({}, user, { environment: environment }));
+      let profile = new ProfileImpl(Object.assign({}, user, { environment, tokenSuppliedByUser }));
       profile.save();
       return profile;
     });
