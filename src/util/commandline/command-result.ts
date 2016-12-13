@@ -48,7 +48,9 @@ export enum ErrorCodes {
   // A parameter is invalid
   InvalidParameter,
   // Command requires logged in user
-  NotLoggedIn
+  NotLoggedIn,
+  // The requested resource was not found
+  NotFound
 }
 
 // Cache this, we only ever need one
