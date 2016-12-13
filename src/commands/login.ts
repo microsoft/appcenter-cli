@@ -1,7 +1,7 @@
 // Implementation of Mobile Center login command
 
-import { Command, CommandArgs, CommandResult, success, failure, help, shortName, longName, required, hasArg } from "../util/commandline";
-import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser } from "../util/profile";
+import { Command, CommandArgs, CommandResult, success, failure, help, shortName, longName, hasArg } from "../util/commandline";
+import { environments, getUser, saveUser } from "../util/profile";
 import { prompt, out } from "../util/interaction";
 import { models, createMobileCenterClient, clientCall } from "../util/apis";
 import { logout } from "./lib/logout";

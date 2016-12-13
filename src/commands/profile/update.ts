@@ -1,8 +1,8 @@
 // Implementation of profile configure command
 
-import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes } from "../../util/commandline";
+import { Command, CommandArgs, CommandResult, help, success } from "../../util/commandline";
 import { prompt, out } from "../../util/interaction";
-import { Profile, getUser } from "../../util/profile";
+import { Profile } from "../../util/profile";
 import { MobileCenterClient, models, clientCall } from "../../util/apis";
 import { reportProfile } from "./lib/format-profile";
 

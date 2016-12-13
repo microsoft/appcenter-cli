@@ -1,7 +1,6 @@
 // profile list command
 
-import { Command, CommandArgs, CommandResult, help, success, notLoggedIn } from "../../util/commandline";
-import { Profile, getUser, environments } from "../../util/profile";
+import { Command, CommandArgs, CommandResult, help, success } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { MobileCenterClient, models, clientCall } from "../../util/apis";
 import { reportProfile } from "./lib/format-profile";

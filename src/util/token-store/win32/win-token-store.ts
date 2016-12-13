@@ -173,7 +173,7 @@ export class WinTokenStore implements TokenStore {
     }
 
     debug(`Deleting token with args ${inspect(args)}`);
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       childProcess.execFile(credExePath, args,
         function (err) {
           if (err) { return reject(err); }
