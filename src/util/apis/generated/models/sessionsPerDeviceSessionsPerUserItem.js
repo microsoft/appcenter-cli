@@ -27,7 +27,7 @@ function SessionsPerDeviceSessionsPerUserItem() {
 SessionsPerDeviceSessionsPerUserItem.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'SessionsPerDevice_sessionsPerUserItem',
+    serializedName: 'SessionsPerDevice_sessions_per_userItem',
     type: {
       name: 'Composite',
       className: 'SessionsPerDeviceSessionsPerUserItem',

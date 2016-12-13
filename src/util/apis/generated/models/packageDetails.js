@@ -18,7 +18,11 @@ var util = require('util');
  *
  * @member {string} [packageId] ID identifying this unique package.
  * 
- * @member {string} [status] The package state.<br>
+ * @member {string} [status] OBSOLETE. Will be removed in next version. The
+ * availability concept is now replaced with distributed. Any 'available'
+ * package will be associated with the default distribution group of an
+ * app.</br>
+ * The package state.<br>
  * <b>available</b>: The uploaded package has been distributed.<br>
  * <b>unavailable</b>: The uploaded package is not visible to the user. <br>
  * . Possible values include: 'available', 'unavailable'

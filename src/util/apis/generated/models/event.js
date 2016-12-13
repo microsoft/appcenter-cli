@@ -19,8 +19,6 @@
  * @member {number} [previousDeviceCount] the device count of previous time
  * range of the event
  * 
- * @member {number} [totalDevices]
- * 
  * @member {number} [count]
  * 
  * @member {number} [previousCount] the event count of previous time range of
@@ -72,13 +70,6 @@ Event.prototype.mapper = function () {
         previousDeviceCount: {
           required: false,
           serializedName: 'previous_device_count',
-          type: {
-            name: 'Number'
-          }
-        },
-        totalDevices: {
-          required: false,
-          serializedName: 'total_devices',
           type: {
             name: 'Number'
           }

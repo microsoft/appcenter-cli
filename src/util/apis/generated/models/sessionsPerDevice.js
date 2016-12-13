@@ -46,35 +46,35 @@ SessionsPerDevice.prototype.mapper = function () {
       modelProperties: {
         averageSessionsPerUser: {
           required: false,
-          serializedName: 'averageSessionsPerUser',
+          serializedName: 'average_sessions_per_user',
           type: {
             name: 'Number'
           }
         },
         previousAverageSessionsPerUser: {
           required: false,
-          serializedName: 'previousAverageSessionsPerUser',
+          serializedName: 'previous_average_sessions_per_user',
           type: {
             name: 'Number'
           }
         },
         totalCount: {
           required: false,
-          serializedName: 'totalCount',
+          serializedName: 'total_count',
           type: {
             name: 'Number'
           }
         },
         previousTotalCount: {
           required: false,
-          serializedName: 'previousTotalCount',
+          serializedName: 'previous_total_count',
           type: {
             name: 'Number'
           }
         },
         sessionsPerUser: {
           required: false,
-          serializedName: 'sessionsPerUser',
+          serializedName: 'sessions_per_user',
           type: {
             name: 'Sequence',
             element: {

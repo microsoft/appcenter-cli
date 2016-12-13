@@ -27,8 +27,8 @@ var models = require('./index');
  * @member {string} os The OS the app will be running on. Possible values
  * include: 'iOS', 'Android'
  * 
- * @member {string} [platform] The platform of the app. Possible values
- * include: 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
+ * @member {string} platform The platform of the app. Possible values include:
+ * 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
  * 
  * @member {string} [iconUrl] The string representation of the URL pointing to
  * the app's icon
@@ -113,7 +113,7 @@ AppResponse.prototype.mapper = function () {
           }
         },
         platform: {
-          required: false,
+          required: true,
           serializedName: 'platform',
           type: {
             name: 'String'

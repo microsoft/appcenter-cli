@@ -16,7 +16,8 @@ var models = require('./index');
  *
  * @member {number} id
  * 
- * @member {string} [trigger] Possible values include: 'continous', 'manual'
+ * @member {string} [trigger] Possible values include: 'continous',
+ * 'continuous', 'manual'
  * 
  * @member {boolean} [testsEnabled]
  * 
@@ -76,12 +77,16 @@ var models = require('./index');
  * @member {string} [toolsets.android.gradleWrapperPath] Path to the Gradle
  * wrapper script
  * 
- * @member {string} [toolsets.android.gradleTasks] The Gradle tasks to perform
- * 
  * @member {string} [toolsets.android.module] The Gradle module to build
  * 
  * @member {string} [toolsets.android.variant] The Android build variant to
  * build
+ * 
+ * @member {boolean} [toolsets.android.runTests] Whether to run unit tests
+ * during the build (default)
+ * 
+ * @member {boolean} [toolsets.android.runLint] Whether to run lint checks
+ * during the build (default)
  * 
  */
 function BranchConfiguration() {

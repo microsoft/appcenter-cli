@@ -19,11 +19,11 @@ var util = require('util');
  * @member {string} [packageId] ID identifying this unique package.
  * 
  * @member {string} [version] The package's version.<br>
- * For iOS: CFBundleVersion from info.plist.
+ * For iOS: CFBundleVersion from info.plist.<br>
  * For Android: android:versionCode from AppManifest.xml.
  * 
  * @member {string} [shortVersion] The package's short version.<br>
- * For iOS: CFBundleShortVersionString from info.plist.
+ * For iOS: CFBundleShortVersionString from info.plist.<br>
  * For Android: android:versionName from AppManifest.xml.
  * 
  * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded

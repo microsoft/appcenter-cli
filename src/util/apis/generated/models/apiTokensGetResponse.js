@@ -8,45 +8,35 @@
 
 /**
  * @class
- * Initializes a new instance of the ApiTokensPostResponse class.
+ * Initializes a new instance of the ApiTokensGetResponse class.
  * @constructor
  * @member {string} id The unique id (UUID) of the api token
- * 
- * @member {string} [apiToken] The api token generated will not be accessible
- * again(so please save in a safe location)
  * 
  * @member {string} [description] The description of the token
  * 
  * @member {string} createdAt The creation time
  * 
  */
-function ApiTokensPostResponse() {
+function ApiTokensGetResponse() {
 }
 
 /**
- * Defines the metadata of ApiTokensPostResponse
+ * Defines the metadata of ApiTokensGetResponse
  *
- * @returns {object} metadata of ApiTokensPostResponse
+ * @returns {object} metadata of ApiTokensGetResponse
  *
  */
-ApiTokensPostResponse.prototype.mapper = function () {
+ApiTokensGetResponse.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'ApiTokensPostResponse',
+    serializedName: 'ApiTokensGetResponse',
     type: {
       name: 'Composite',
-      className: 'ApiTokensPostResponse',
+      className: 'ApiTokensGetResponse',
       modelProperties: {
         id: {
           required: true,
           serializedName: 'id',
-          type: {
-            name: 'String'
-          }
-        },
-        apiToken: {
-          required: false,
-          serializedName: 'api_token',
           type: {
             name: 'String'
           }
@@ -70,4 +60,4 @@ ApiTokensPostResponse.prototype.mapper = function () {
   };
 };
 
-module.exports = ApiTokensPostResponse;
+module.exports = ApiTokensGetResponse;

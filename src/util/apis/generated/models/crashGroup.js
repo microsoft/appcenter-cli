@@ -50,7 +50,9 @@ var models = require('./index');
  * 
  * @member {string} [reasonFrame.codeFormatted] Formatted frame string
  * 
- * @member {string} [reasonFrame.language] programming language of the frame
+ * @member {string} [reasonFrame.language] programming language of the frame.
+ * Possible values include: 'JavaScript', 'CSharp', 'Objective-C',
+ * 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
  * 
  * @member {string} [reasonFrame.methodParams] parameters of the frames method
  * 

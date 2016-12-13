@@ -6,13 +6,17 @@
 
 'use strict';
 
-var util = require('util');
-
 /**
  * @class
  * Initializes a new instance of the DistributionGroupUserResponse class.
  * @constructor
- * @member {array} userIds The list of unique ID (UUID) of the users
+ * @member {string} userId The unique ID (UUID) of the user
+ * 
+ * @member {number} status The status code of the result
+ * 
+ * @member {string} [code] The code of the result
+ * 
+ * @member {number} [message] The message of the result
  * 
  */
 function DistributionGroupUserResponse() {
@@ -32,18 +36,32 @@ DistributionGroupUserResponse.prototype.mapper = function () {
       name: 'Composite',
       className: 'DistributionGroupUserResponse',
       modelProperties: {
-        userIds: {
+        userId: {
           required: true,
-          serializedName: 'user_ids',
+          serializedName: 'user_id',
           type: {
-            name: 'Sequence',
-            element: {
-                required: false,
-                serializedName: 'StringElementType',
-                type: {
-                  name: 'String'
-                }
-            }
+            name: 'String'
+          }
+        },
+        status: {
+          required: true,
+          serializedName: 'status',
+          type: {
+            name: 'Number'
+          }
+        },
+        code: {
+          required: false,
+          serializedName: 'code',
+          type: {
+            name: 'String'
+          }
+        },
+        message: {
+          required: false,
+          serializedName: 'message',
+          type: {
+            name: 'Number'
           }
         }
       }

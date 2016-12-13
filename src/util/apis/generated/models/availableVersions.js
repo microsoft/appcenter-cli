@@ -50,7 +50,7 @@ AvailableVersions.prototype.mapper = function () {
         },
         totalCount: {
           required: false,
-          serializedName: 'totalCount',
+          serializedName: 'total_count',
           type: {
             name: 'Number'
           }

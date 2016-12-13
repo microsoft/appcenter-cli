@@ -40,14 +40,14 @@ SessionCounts.prototype.mapper = function () {
       modelProperties: {
         totalCount: {
           required: false,
-          serializedName: 'totalCount',
+          serializedName: 'total_count',
           type: {
             name: 'Number'
           }
         },
         previousTotalCount: {
           required: false,
-          serializedName: 'previousTotalCount',
+          serializedName: 'previous_total_count',
           type: {
             name: 'Number'
           }

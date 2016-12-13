@@ -14,11 +14,15 @@
  *
  * @member {string} [gradleWrapperPath] Path to the Gradle wrapper script
  * 
- * @member {string} gradleTasks The Gradle tasks to perform
+ * @member {string} module The Gradle module to build
  * 
- * @member {string} [module] The Gradle module to build
+ * @member {string} variant The Android build variant to build
  * 
- * @member {string} [variant] The Android build variant to build
+ * @member {boolean} [runTests] Whether to run unit tests during the build
+ * (default). Default value: true .
+ * 
+ * @member {boolean} [runLint] Whether to run lint checks during the build
+ * (default). Default value: true .
  * 
  */
 function AndroidBranchConfigurationProperties() {
@@ -45,25 +49,34 @@ AndroidBranchConfigurationProperties.prototype.mapper = function () {
             name: 'String'
           }
         },
-        gradleTasks: {
-          required: true,
-          serializedName: 'gradleTasks',
-          type: {
-            name: 'String'
-          }
-        },
         module: {
-          required: false,
+          required: true,
           serializedName: 'module',
           type: {
             name: 'String'
           }
         },
         variant: {
-          required: false,
+          required: true,
           serializedName: 'variant',
           type: {
             name: 'String'
+          }
+        },
+        runTests: {
+          required: false,
+          serializedName: 'runTests',
+          defaultValue: true,
+          type: {
+            name: 'Boolean'
+          }
+        },
+        runLint: {
+          required: false,
+          serializedName: 'runLint',
+          defaultValue: true,
+          type: {
+            name: 'Boolean'
           }
         }
       }

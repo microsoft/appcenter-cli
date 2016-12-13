@@ -36,6 +36,8 @@ export function progress<T>(title: string, action: Promise<T>): Promise<T> {
 // function.
 //
 export function list<T>(formatter: {(item: T): string}, items: T[]): void {
+  if (!items || Object.keys(items).length === 0) { return; }
+
   if (!formatIsJson()) {
     items.map(formatter).forEach(text => console.log(text));
   } else {

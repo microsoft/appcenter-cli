@@ -8,27 +8,27 @@
 
 /**
  * @class
- * Initializes a new instance of the ApiTokensPostRequest class.
+ * Initializes a new instance of the ApiTokensCreateRequest class.
  * @constructor
  * @member {string} [description] The description of the token
  * 
  */
-function ApiTokensPostRequest() {
+function ApiTokensCreateRequest() {
 }
 
 /**
- * Defines the metadata of ApiTokensPostRequest
+ * Defines the metadata of ApiTokensCreateRequest
  *
- * @returns {object} metadata of ApiTokensPostRequest
+ * @returns {object} metadata of ApiTokensCreateRequest
  *
  */
-ApiTokensPostRequest.prototype.mapper = function () {
+ApiTokensCreateRequest.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'ApiTokensPostRequest',
+    serializedName: 'ApiTokensCreateRequest',
     type: {
       name: 'Composite',
-      className: 'ApiTokensPostRequest',
+      className: 'ApiTokensCreateRequest',
       modelProperties: {
         description: {
           required: false,
@@ -42,4 +42,4 @@ ApiTokensPostRequest.prototype.mapper = function () {
   };
 };
 
-module.exports = ApiTokensPostRequest;
+module.exports = ApiTokensCreateRequest;

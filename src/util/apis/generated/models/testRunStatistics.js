@@ -16,11 +16,17 @@
  *
  * @member {number} [devices] Number of devices running the test
  * 
+ * @member {number} [devicesFinished] Number of finished devices
+ * 
+ * @member {number} [devicesFailed] Number of failed devices
+ * 
  * @member {number} [total] Number of tests in total
  * 
  * @member {number} [passed] Number of passed tests
  * 
  * @member {number} [failed] Number of failed tests
+ * 
+ * @member {number} [skipped] Number of skipped tests
  * 
  * @member {number} [peakMemory] The max amount of MB used during the test run
  * 
@@ -52,6 +58,20 @@ TestRunStatistics.prototype.mapper = function () {
             name: 'Number'
           }
         },
+        devicesFinished: {
+          required: false,
+          serializedName: 'devicesFinished',
+          type: {
+            name: 'Number'
+          }
+        },
+        devicesFailed: {
+          required: false,
+          serializedName: 'devicesFailed',
+          type: {
+            name: 'Number'
+          }
+        },
         total: {
           required: false,
           serializedName: 'total',
@@ -69,6 +89,13 @@ TestRunStatistics.prototype.mapper = function () {
         failed: {
           required: false,
           serializedName: 'failed',
+          type: {
+            name: 'Number'
+          }
+        },
+        skipped: {
+          required: false,
+          serializedName: 'skipped',
           type: {
             name: 'Number'
           }

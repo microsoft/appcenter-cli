@@ -40,11 +40,17 @@ var models = require('./index');
  * 
  * @member {number} [stats.devices] Number of devices running the test
  * 
+ * @member {number} [stats.devicesFinished] Number of finished devices
+ * 
+ * @member {number} [stats.devicesFailed] Number of failed devices
+ * 
  * @member {number} [stats.total] Number of tests in total
  * 
  * @member {number} [stats.passed] Number of passed tests
  * 
  * @member {number} [stats.failed] Number of failed tests
+ * 
+ * @member {number} [stats.skipped] Number of skipped tests
  * 
  * @member {number} [stats.peakMemory] The max amount of MB used during the
  * test run
@@ -54,6 +60,8 @@ var models = require('./index');
  * 
  * @member {string} [testType] The name of the test framework used to run this
  * test
+ * 
+ * @member {string} [uploadedBy] The name of the user who uploaded the test
  * 
  */
 function TestRun() {
@@ -140,6 +148,13 @@ TestRun.prototype.mapper = function () {
         testType: {
           required: false,
           serializedName: 'testType',
+          type: {
+            name: 'String'
+          }
+        },
+        uploadedBy: {
+          required: false,
+          serializedName: 'uploadedBy',
           type: {
             name: 'String'
           }
