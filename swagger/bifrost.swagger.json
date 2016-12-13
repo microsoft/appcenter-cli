@@ -1820,6 +1820,61 @@
         ]
       }
     },
+     "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/hashes/batch": {
+      "post": {
+        "description": "Adds file with the given hash to a test run",
+        "operationId": "test_uploadHashesBatch",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "test_run_id",
+            "type": "string",
+            "in": "path",
+            "description": "The ID of the test run",
+            "required": true
+          },
+          {
+            "name": "file_info",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestCloudFileHash"
+              }
+            },
+            "in": "body",
+            "description": "File hash information",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestCloudFileHashResponse"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "test"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/test_runs/{test_run_id}/hashes": {
       "post": {
         "description": "Adds file with the given hash to a test run",
@@ -9104,6 +9159,61 @@
         "relative_path"
       ]
     },
+      "TestCloudFileHashResponse": {
+      "title": "TestCloudFileHashResponse",
+      "description": "Response message for single uploaded file hash",
+      "type": "object",
+      "properties": {
+        "file_type": {
+          "type": "string",
+          "description": "Type of the file",
+          "enum": [
+            "dsym-file",
+            "app-file",
+            "test-file"
+          ]
+        },
+        "checksum": {
+          "type": "string",
+          "description": "SHA256 hash of the file"
+        },
+        "relative_path": {
+          "type": "string",
+          "description": "Relative path of the file"
+        },
+        "upload_status": {
+          "$ref": "#/definitions/TestCloudHashUploadStatus",
+          "description": "Status of the upload"
+        }
+      },
+      "required": [
+        "file_type",
+        "checksum",
+        "upload_status"
+      ]
+    },
+    "TestCloudHashUploadStatus": {
+      "title": "TestCloudHashUploadStatus",
+      "description": "Result of uploading a single file hash",
+      "type": "object",
+      "properties": {
+        "status_code": {
+          "type": "number",
+          "description": "HTTP status code that represent result of upload"
+        },
+        "location": {
+          "type": "string",
+          "description": "URI that should be used to make POST request if file with given hash doesn't exist. This is set when status_code is equal to 412"
+        },
+        "x_challenge_bytes": {
+          "type": "string",
+          "description": "Byte range required to authenticate the request"
+        }
+      },
+      "required": [
+        "status_code"
+      ]
+    },
     "TestCloudStartTestRunOptions": {
       "title": "TestCloudStartTestRunOptions",
       "description": "Options required to start the test run",
@@ -9135,6 +9245,7 @@
         "device_selection"
       ]
     },
+    
     "TestCloudStartTestRunResult": {
       "title": "TestCloudStartTestRunResult",
       "description": "Result of starting a test run",

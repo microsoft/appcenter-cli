@@ -3065,6 +3065,65 @@ export interface TestCloudFileHash {
 
 /**
  * @class
+ * Initializes a new instance of the TestCloudFileHashResponse class.
+ * @constructor
+ * @summary TestCloudFileHashResponse
+ *
+ * Response message for single uploaded file hash
+ *
+ * @member {string} fileType Type of the file. Possible values include:
+ * 'dsym-file', 'app-file', 'test-file'
+ * 
+ * @member {string} checksum SHA256 hash of the file
+ * 
+ * @member {string} [relativePath] Relative path of the file
+ * 
+ * @member {object} uploadStatus Status of the upload
+ * 
+ * @member {number} [uploadStatus.statusCode] HTTP status code that represent
+ * result of upload
+ * 
+ * @member {string} [uploadStatus.location] URI that should be used to make
+ * POST request if file with given hash doesn't exist. This is set when
+ * status_code is equal to 412
+ * 
+ * @member {string} [uploadStatus.xChallengeBytes] Byte range required to
+ * authenticate the request
+ * 
+ */
+export interface TestCloudFileHashResponse {
+  fileType: string;
+  checksum: string;
+  relativePath?: string;
+  uploadStatus: TestCloudHashUploadStatus;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestCloudHashUploadStatus class.
+ * @constructor
+ * @summary TestCloudHashUploadStatus
+ *
+ * Result of uploading a single file hash
+ *
+ * @member {number} statusCode HTTP status code that represent result of upload
+ * 
+ * @member {string} [location] URI that should be used to make POST request if
+ * file with given hash doesn't exist. This is set when status_code is equal
+ * to 412
+ * 
+ * @member {string} [xChallengeBytes] Byte range required to authenticate the
+ * request
+ * 
+ */
+export interface TestCloudHashUploadStatus {
+  statusCode: number;
+  location?: string;
+  xChallengeBytes?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the TestCloudStartTestRunOptions class.
  * @constructor
  * @summary TestCloudStartTestRunOptions

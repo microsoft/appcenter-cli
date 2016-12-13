@@ -68,14 +68,15 @@ export class TestCloudUploader {
     debug(`Test run id: ${testRunId}`);
 
     let appFile = await progressWithResult("Validating application file", this.validateAndCreateAppFile(manifest));
-    await progressWithResult("Uploading application file", this.uploadHashOrNewFile(testRunId, appFile));
+
+    let allFiles = _.concat(manifest.testFiles, [appFile]);
 
     if (this.dSymPath) {
       let dSymFile = await progressWithResult("Validating DSym file", getDSymFile(this.dSymPath));
-      await progressWithResult("Uploading DSym file", this.uploadHashOrNewFile(testRunId, dSymFile));
+      allFiles.push(dSymFile);
     }
 
-    await progressWithResult("Uploading test files", this.uploadAllTestFiles(testRunId, manifest.testFiles));
+    await progressWithResult("Uploading files", this.uploadFilesUsingBatch(testRunId, allFiles));
 
     let startResult = await progressWithResult("Starting test run", this.startTestRun(testRunId, manifest));
 
@@ -123,52 +124,63 @@ export class TestCloudUploader {
     });
   }
 
-  private async uploadHashOrNewFile(testRunId: string, file: TestRunFile): Promise<void> {
-    if (await this.tryUploadFileHash(testRunId, file)) {
-      debug(`File ${file.sourcePath}: hash upload`);
-    }
-    else {
-      await this.uploadFile(testRunId, file);
-      debug(`File ${file.sourcePath}: direct upload`);
-    }
+  private async uploadFilesUsingBatch(testRunId: string, files: TestRunFile[]): Promise<void> {
+    let checkHashResult = await this.uploadHashesBatch(testRunId, files.map(f => { return { file: f }; }));
+
+    let limit = pLimit(paralleRequests);
+    let uploadNewFilesTask = checkHashResult
+      .filter(r => r.response.uploadStatus.statusCode === 412)
+      .map(r => limit(() => this.uploadFile(testRunId, r.file)));
+
+    let uploadHashesWithByteRangeTask = limit(this.uploadHashesBatchWithByteRange(
+      testRunId, 
+      checkHashResult.filter(r => r.response.uploadStatus.statusCode === 401)));
+    
+    await Promise.all(_.concat(uploadNewFilesTask, [uploadHashesWithByteRangeTask]));
   }
 
-  private async tryUploadFileHash(testRunId: string, file: TestRunFile, byteRange: string = null): Promise<boolean> {
-    let response = await new Promise<http.IncomingMessage>((resolve, reject) => {
-      this._client.test.uploadHash(
+  private async uploadHashesBatchWithByteRange(testRunId: string, checkHashesResult: { file: TestRunFile, response: models.TestCloudFileHashResponse }[]): Promise<void> {
+    let filesWithByteRanges: { file: TestRunFile, byteRange: string }[] = [];
+
+    for (let i = 0; i < checkHashesResult.length; i++) {
+      let currentResult = checkHashesResult[i];
+      let parsedRange = parseRange(currentResult.response.uploadStatus.xChallengeBytes);
+      let byteRange = await getByteRange(currentResult.file.sourcePath, parsedRange.start, parsedRange.length);
+      let base64Bytes = new Buffer(byteRange).toString("base64");
+      filesWithByteRanges.push({ file: currentResult.file, byteRange: base64Bytes });
+    }
+
+    await this.uploadHashesBatch(testRunId, filesWithByteRanges);
+  }
+
+  private async uploadHashesBatch(testRunId: string, files: { file: TestRunFile, byteRange?: string }[]): Promise<{ file: TestRunFile, response: models.TestCloudFileHashResponse }[]> { 
+    let hashResponses = await new Promise<models.TestCloudFileHashResponse[]>((resolve, reject) => {
+      let mappedFiles = files.map(f => this.testRunFileToFileHash(f.file, f.byteRange));
+      this._client.test.uploadHashesBatch(
         testRunId,
-        {
-          checksum: file.sha256,
-          fileType: file.fileType,
-          relativePath: file.targetRelativePath,
-          byteRange: byteRange
-        },
+        mappedFiles,
         this._userName,
         this._appName,
-        (err, result, request, response) => {
+        (err: Error, result: models.TestCloudFileHashResponse[], _request: any, response: any) => {
           if (err) {
             reject(err);
           }
           else {
-            resolve(response);
+            resolve(result);
           }
-        })
+        });
     });
 
-    if (response.statusCode === 201) {
-      return true;
-    }
-    else if (response.statusCode === 401 && !byteRange) {
-      let rangeString = response.headers["x-challenge-bytes"];
-      let parsedRange = parseRange(rangeString);
-      let requestedBytes = await getByteRange(file.sourcePath, parsedRange.start, parsedRange.length);
-      let base64Bytes = new Buffer(requestedBytes).toString("base64");
-      
-      return await this.tryUploadFileHash(testRunId, file, base64Bytes);
-    }
-    else {
-      return false;
-    }
+    return _.zip<any>(files, hashResponses).map((fr: any) => { return { file: fr[0].file, response: fr[1] }; });
+  }
+
+  private testRunFileToFileHash(file: TestRunFile, byteRange: string = null): models.TestCloudFileHash {
+    return {
+      checksum: file.sha256,
+      fileType: file.fileType,
+      relativePath: file.targetRelativePath,
+      byteRange: byteRange
+    };
   }
 
   private async uploadFile(testRunId: string, file: TestRunFile): Promise<void> {
@@ -225,13 +237,6 @@ export class TestCloudUploader {
         reject(err);
       }
     });
-  }
-
-  private uploadAllTestFiles(testRunId: string, files: TestRunFile[]): Promise<void> {
-    let limit = pLimit(paralleRequests);
-    let uploadTasks = files.map(f => limit(() => this.uploadHashOrNewFile(testRunId, f)));
-
-    return Promise.all(uploadTasks);
   }
 
   private startTestRun(testRunId: string, manifest: TestManifest): Promise<models.TestCloudStartTestRunResult> {
