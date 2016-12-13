@@ -16,7 +16,9 @@ export default class ApiTokenListCommand extends Command {
     const apiTokensResponse = await out.progress("Getting API tokens ...",
       clientRequest<models.ApiTokensGetResponse[]>(cb => client.account.getApiTokens(cb)));
 
-    apiTokensResponse.result.map(apiToken => reportTokenInfo(apiToken));
+    out.table({ head: ['ID', 'Description', 'Created At'], style: { head: [] } },
+      apiTokensResponse.result.map(apiToken => [apiToken.id, apiToken.description, apiToken.createdAt])
+    );
 
     return success();
   }
