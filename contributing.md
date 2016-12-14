@@ -39,11 +39,14 @@ works well.
 #### Typescript compiler and Typings
 
 The typescript compilation can be run via the `npm run build` command, but if you want the Typescript compiler available directly,
-install it on you machine by doing `npm install -g typescript@2.0.10`.
+install it on your machine by doing `npm install -g typescript@2.0.10`.
 
 The Typings tool is useful if you're bringing in a new exteral Javascript library and want to get access to type definitions
 for that library. The typings files are checked into the repo, but if you want to download and add new ones, you'll need to
 install typings: `npm install -g typings`.
+
+Do _not_ run `typings install` - the typings files are already included in the repos, and this would overwrite necessary changes to the
+type declaration files.
 
 #### gulp
 
@@ -63,7 +66,7 @@ see the [Mono download page](http://www.mono-project.com/download/) for download
 ## Troubleshooting
 
 If you are running on a Mac and have to use `sudo` to install global npm modules (for example, `npm install -g typescript`),
-the please check out [this tutorial](https://docs.npmjs.com/getting-started/fixing-npm-permissions).
+then please check out [this tutorial](https://docs.npmjs.com/getting-started/fixing-npm-permissions).
 
 # Building
 
@@ -104,16 +107,20 @@ There will be more over time.
 
 The gulpfile.js file contains the following targets that can be called manually if you desire
 
-| Target | npm script |What it does |
-|--------|------------|-------------|
-| `clean`  | `clean` | Deletes the dist folder |
+| Target | npm script | What it does |
+|--------|------------|--------------|
+| `default` | | Runs the `build` task |
+| `autorest` | `autorest` | Regenerate client code from swagger/bifrost.swagger.json file |
+| `build` | `build` | Runs the build (build-ts, copy-assets, copy-generated-clients) |
+| `build-sourcemaps` | | Create sourcemap files for the compiled typescript to aid in debugging |
+| `build-ts-sourcemaps` | | Run Typescript compiler to output sourcemap files |
 | `build-ts` | | Runs typesscript compiler, using settings in tsconfig.json |
+| `clean`  | `clean` | Deletes the dist folder |
+| `clean-autorest` | | Deleted all generated code from src directory |
+| `clean-sourcemaps` | | Delete generated source map files from dist directory |
 | `copy-assets` | | Copies .txt files from src to dist (category descriptions) |
 | `copy-generated-client` | | Copies the generated HTTP client code to dist |
-| `build` | `build` | Runs the build (build-ts, copy-assets, copy-generated-clients) |
-| `clean-autorest` | | Deleted all generated code from src directory |
-| `autorest` | `autorest` | Regenerate client code from swagger/bifrost.swagger.json file |
-| `default` | | Runs the build task |
+| `prepublish` | `prepublish` | Runs the `clean` and `build` tasks before publishing to npm |
 
 # Touring the codebase
 
