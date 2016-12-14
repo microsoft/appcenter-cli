@@ -3,7 +3,7 @@
 import { Command, CommandArgs, CommandResult, success, failure, ErrorCodes, help, shortName, longName, hasArg } from "../util/commandline";
 import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser } from "../util/profile";
 import { prompt, out } from "../util/interaction";
-import { models, createMobileCenterClient, clientCall } from "../util/apis";
+import { models, createMobileCenterClient, clientRequest, ClientResponse } from "../util/apis";
 import { TokenValueType } from "../util/token-store";
 import { logout } from "./lib/logout";
 
@@ -42,9 +42,9 @@ export default class LoginCommand extends Command {
     }
 
     await this.removeLoggedInUser();
-    await this.doLogin();
+    const result = await this.doLogin();
 
-    return success();
+    return result;
   }
 
   private userNameQuestion(): any[] {
@@ -68,7 +68,7 @@ export default class LoginCommand extends Command {
     return [];
   }
 
-  private async doLogin(): Promise<void> {
+  private async doLogin(): Promise<CommandResult> {
     let token: TokenValueType;
     let userSupplied = false;
     if (this.token) {
@@ -76,23 +76,27 @@ export default class LoginCommand extends Command {
       userSupplied = true;
     } else {
       let createTokenResponse = await out.progress("Logging in...", this.createAuthToken());
-      token = { id: createTokenResponse.id, token: createTokenResponse.apiToken };
+      if (createTokenResponse.response.statusCode >= 400) {
+        return failure(ErrorCodes.Exception, 'login was not successful');
+      }
+      token = { id: createTokenResponse.result.id, token: createTokenResponse.result.apiToken };
     }
-    let user: models.UserProfileResponse = await out.progress("Getting user info ...", this.getUserInfo(token.token));
-    saveUser(user, { id: token.id, token: token.token }, this.environmentName, userSupplied);
-    out.text(`Logged in as ${user.name}`);
+    let userResponse = await out.progress("Getting user info ...", this.getUserInfo(token.token));
+    saveUser(userResponse.result, { id: token.id, token: token.token }, this.environmentName, userSupplied);
+    out.text(`Logged in as ${userResponse.result.name}`);
+    return success();
   }
 
-  private createAuthToken(): Promise<models.ApiTokensCreateResponse> {
+  private createAuthToken(): Promise<ClientResponse<models.ApiTokensCreateResponse>> {
     const endpoint = environments(this.environmentName).endpoint;
     const client = createMobileCenterClient(this.userName, this.password, endpoint);
-    return clientCall<models.ApiTokensCreateResponse>(cb => client.account.createApiToken({ description: "Created from mobile center cli"}, cb));
+    return clientRequest<models.ApiTokensCreateResponse>(cb => client.account.createApiToken({ description: "Created from mobile center cli"}, cb));
   }
 
-  private getUserInfo(token: string): Promise<models.UserProfileResponse> {
+  private getUserInfo(token: string): Promise<ClientResponse<models.UserProfileResponse>> {
     const endpoint = environments(this.environmentName).endpoint;
     const client = createMobileCenterClient(token, endpoint);
-    return clientCall<models.UserProfileResponse>(cb => client.account.getUserProfile(cb));
+    return clientRequest<models.UserProfileResponse>(cb => client.account.getUserProfile(cb));
   }
 
   private async removeLoggedInUser(): Promise<void> {
