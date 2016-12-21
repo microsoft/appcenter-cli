@@ -10,7 +10,7 @@
  * @class
  * Initializes a new instance of the TestCloudHashUploadStatus class.
  * @constructor
- * @summary TestCloudHashUploadStatus
+ * @summary Test Cloud Hash Upload Status
  *
  * Result of uploading a single file hash
  *
@@ -19,9 +19,6 @@
  * @member {string} [location] URI that should be used to make POST request if
  * file with given hash doesn't exist. This is set when status_code is equal
  * to 412
- * 
- * @member {string} [xChallengeBytes] Byte range required to authenticate the
- * request
  * 
  */
 function TestCloudHashUploadStatus() {
@@ -43,7 +40,7 @@ TestCloudHashUploadStatus.prototype.mapper = function () {
       modelProperties: {
         statusCode: {
           required: true,
-          serializedName: 'status_code',
+          serializedName: 'statusCode',
           type: {
             name: 'Number'
           }
@@ -51,13 +48,6 @@ TestCloudHashUploadStatus.prototype.mapper = function () {
         location: {
           required: false,
           serializedName: 'location',
-          type: {
-            name: 'String'
-          }
-        },
-        xChallengeBytes: {
-          required: false,
-          serializedName: 'x_challenge_bytes',
           type: {
             name: 'String'
           }

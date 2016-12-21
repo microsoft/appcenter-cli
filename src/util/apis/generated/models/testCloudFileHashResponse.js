@@ -12,7 +12,7 @@ var models = require('./index');
  * @class
  * Initializes a new instance of the TestCloudFileHashResponse class.
  * @constructor
- * @summary TestCloudFileHashResponse
+ * @summary Test Cloud File Hash Response
  *
  * Response message for single uploaded file hash
  *
@@ -31,9 +31,6 @@ var models = require('./index');
  * @member {string} [uploadStatus.location] URI that should be used to make
  * POST request if file with given hash doesn't exist. This is set when
  * status_code is equal to 412
- * 
- * @member {string} [uploadStatus.xChallengeBytes] Byte range required to
- * authenticate the request
  * 
  */
 function TestCloudFileHashResponse() {
@@ -55,7 +52,7 @@ TestCloudFileHashResponse.prototype.mapper = function () {
       modelProperties: {
         fileType: {
           required: true,
-          serializedName: 'file_type',
+          serializedName: 'fileType',
           type: {
             name: 'String'
           }
@@ -69,14 +66,14 @@ TestCloudFileHashResponse.prototype.mapper = function () {
         },
         relativePath: {
           required: false,
-          serializedName: 'relative_path',
+          serializedName: 'relativePath',
           type: {
             name: 'String'
           }
         },
         uploadStatus: {
           required: true,
-          serializedName: 'upload_status',
+          serializedName: 'uploadStatus',
           type: {
             name: 'Composite',
             className: 'TestCloudHashUploadStatus'

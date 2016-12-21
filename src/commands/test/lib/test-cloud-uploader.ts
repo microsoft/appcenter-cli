@@ -132,25 +132,7 @@ export class TestCloudUploader {
       .filter(r => r.response.uploadStatus.statusCode === 412)
       .map(r => limit(() => this.uploadFile(testRunId, r.file)));
 
-    let uploadHashesWithByteRangeTask = limit(this.uploadHashesBatchWithByteRange(
-      testRunId, 
-      checkHashResult.filter(r => r.response.uploadStatus.statusCode === 401)));
-    
-    await Promise.all(_.concat(uploadNewFilesTask, [uploadHashesWithByteRangeTask]));
-  }
-
-  private async uploadHashesBatchWithByteRange(testRunId: string, checkHashesResult: { file: TestRunFile, response: models.TestCloudFileHashResponse }[]): Promise<void> {
-    let filesWithByteRanges: { file: TestRunFile, byteRange: string }[] = [];
-
-    for (let i = 0; i < checkHashesResult.length; i++) {
-      let currentResult = checkHashesResult[i];
-      let parsedRange = parseRange(currentResult.response.uploadStatus.xChallengeBytes);
-      let byteRange = await getByteRange(currentResult.file.sourcePath, parsedRange.start, parsedRange.length);
-      let base64Bytes = new Buffer(byteRange).toString("base64");
-      filesWithByteRanges.push({ file: currentResult.file, byteRange: base64Bytes });
-    }
-
-    await this.uploadHashesBatch(testRunId, filesWithByteRanges);
+    await Promise.all(uploadNewFilesTask);
   }
 
   private async uploadHashesBatch(testRunId: string, files: { file: TestRunFile, byteRange?: string }[]): Promise<{ file: TestRunFile, response: models.TestCloudFileHashResponse }[]> { 
@@ -178,8 +160,7 @@ export class TestCloudUploader {
     return {
       checksum: file.sha256,
       fileType: file.fileType,
-      relativePath: file.targetRelativePath,
-      byteRange: byteRange
+      relativePath: file.targetRelativePath
     };
   }
 

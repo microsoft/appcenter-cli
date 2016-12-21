@@ -1347,7 +1347,7 @@ Test.prototype.uploadHash = function (testRunId, fileInfo, ownerName, appName, o
   var requestModel = null;
   try {
     if (fileInfo !== null && fileInfo !== undefined) {
-      var requestModelMapper = new client.models['TestCloudFileHash']().mapper();
+      var requestModelMapper = new client.models['TestCloudFileHashDeprecated']().mapper();
       requestModel = client.serialize(requestModelMapper, fileInfo, 'fileInfo');
       requestContent = JSON.stringify(requestModel);
     }

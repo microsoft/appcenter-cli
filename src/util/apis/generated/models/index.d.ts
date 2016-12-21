@@ -3039,9 +3039,9 @@ export interface TestCloudErrorDetails {
 
 /**
  * @class
- * Initializes a new instance of the TestCloudFileHash class.
+ * Initializes a new instance of the TestCloudFileHashDeprecated class.
  * @constructor
- * @summary TestCloudFileHash
+ * @summary Test Cloud File Hash
  *
  * Hash, type, path and byte range of a file that is required in test run
  *
@@ -3056,7 +3056,7 @@ export interface TestCloudErrorDetails {
  * the file
  * 
  */
-export interface TestCloudFileHash {
+export interface TestCloudFileHashDeprecated {
   fileType: string;
   checksum: string;
   relativePath: string;
@@ -3065,9 +3065,31 @@ export interface TestCloudFileHash {
 
 /**
  * @class
+ * Initializes a new instance of the TestCloudFileHash class.
+ * @constructor
+ * @summary Test Cloud File Hash
+ *
+ * Hash, type, path and byte range of a file that is required in test run
+ *
+ * @member {string} fileType Type of the file. Possible values include:
+ * 'dsym-file', 'app-file', 'test-file'
+ * 
+ * @member {string} checksum SHA256 hash of the file
+ * 
+ * @member {string} relativePath Relative path of the file
+ * 
+ */
+export interface TestCloudFileHash {
+  fileType: string;
+  checksum: string;
+  relativePath: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the TestCloudFileHashResponse class.
  * @constructor
- * @summary TestCloudFileHashResponse
+ * @summary Test Cloud File Hash Response
  *
  * Response message for single uploaded file hash
  *
@@ -3087,9 +3109,6 @@ export interface TestCloudFileHash {
  * POST request if file with given hash doesn't exist. This is set when
  * status_code is equal to 412
  * 
- * @member {string} [uploadStatus.xChallengeBytes] Byte range required to
- * authenticate the request
- * 
  */
 export interface TestCloudFileHashResponse {
   fileType: string;
@@ -3102,7 +3121,7 @@ export interface TestCloudFileHashResponse {
  * @class
  * Initializes a new instance of the TestCloudHashUploadStatus class.
  * @constructor
- * @summary TestCloudHashUploadStatus
+ * @summary Test Cloud Hash Upload Status
  *
  * Result of uploading a single file hash
  *
@@ -3112,14 +3131,10 @@ export interface TestCloudFileHashResponse {
  * file with given hash doesn't exist. This is set when status_code is equal
  * to 412
  * 
- * @member {string} [xChallengeBytes] Byte range required to authenticate the
- * request
- * 
  */
 export interface TestCloudHashUploadStatus {
   statusCode: number;
   location?: string;
-  xChallengeBytes?: string;
 }
 
 /**

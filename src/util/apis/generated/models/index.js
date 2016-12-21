@@ -138,6 +138,7 @@ exports.TestReportFeaturesItemTestsItemRunsItemStepsItem = require('./testReport
 exports.TestReportFeaturesItemTestsItemRunsItemStepsItemStepExecutionsItem = require('./testReportFeaturesItemTestsItemRunsItemStepsItemStepExecutionsItem');
 exports.TestReportDeviceLogsItem = require('./testReportDeviceLogsItem');
 exports.TestCloudErrorDetails = require('./testCloudErrorDetails');
+exports.TestCloudFileHashDeprecated = require('./testCloudFileHashDeprecated');
 exports.TestCloudFileHash = require('./testCloudFileHash');
 exports.TestCloudFileHashResponse = require('./testCloudFileHashResponse');
 exports.TestCloudHashUploadStatus = require('./testCloudHashUploadStatus');

@@ -1893,7 +1893,7 @@
           {
             "name": "file_info",
             "schema": {
-              "$ref": "#/definitions/TestCloudFileHash"
+              "$ref": "#/definitions/TestCloudFileHashDeprecated"
             },
             "in": "body",
             "description": "File hash information",
@@ -9126,8 +9126,8 @@
         "message"
       ]
     },
-    "TestCloudFileHash": {
-      "title": "TestCloudFileHash",
+    "TestCloudFileHashDeprecated": {
+      "title": "Test Cloud File Hash",
       "description": "Hash, type, path and byte range of a file that is required in test run",
       "type": "object",
       "properties": {
@@ -9159,12 +9159,12 @@
         "relative_path"
       ]
     },
-      "TestCloudFileHashResponse": {
-      "title": "TestCloudFileHashResponse",
-      "description": "Response message for single uploaded file hash",
+    "TestCloudFileHash": {
+      "title": "Test Cloud File Hash",
+      "description": "Hash, type, path and byte range of a file that is required in test run",
       "type": "object",
       "properties": {
-        "file_type": {
+        "fileType": {
           "type": "string",
           "description": "Type of the file",
           "enum": [
@@ -9177,41 +9177,66 @@
           "type": "string",
           "description": "SHA256 hash of the file"
         },
-        "relative_path": {
+        "relativePath": {
+          "type": "string",
+          "description": "Relative path of the file"
+        }
+      },
+      "required": [
+        "fileType",
+        "checksum",
+        "relativePath"
+      ]
+    },
+    "TestCloudFileHashResponse": {
+      "title": "Test Cloud File Hash Response",
+      "description": "Response message for single uploaded file hash",
+      "type": "object",
+      "properties": {
+        "fileType": {
+          "type": "string",
+          "description": "Type of the file",
+          "enum": [
+            "dsym-file",
+            "app-file",
+            "test-file"
+          ]
+        },
+        "checksum": {
+          "type": "string",
+          "description": "SHA256 hash of the file"
+        },
+        "relativePath": {
           "type": "string",
           "description": "Relative path of the file"
         },
-        "upload_status": {
+        "uploadStatus": {
           "$ref": "#/definitions/TestCloudHashUploadStatus",
           "description": "Status of the upload"
         }
       },
       "required": [
-        "file_type",
+        "fileType",
         "checksum",
-        "upload_status"
+        "uploadStatus"
       ]
     },
     "TestCloudHashUploadStatus": {
-      "title": "TestCloudHashUploadStatus",
+      "title": "Test Cloud Hash Upload Status",
       "description": "Result of uploading a single file hash",
       "type": "object",
       "properties": {
-        "status_code": {
+        "statusCode": {
           "type": "number",
           "description": "HTTP status code that represent result of upload"
         },
         "location": {
           "type": "string",
           "description": "URI that should be used to make POST request if file with given hash doesn't exist. This is set when status_code is equal to 412"
-        },
-        "x_challenge_bytes": {
-          "type": "string",
-          "description": "Byte range required to authenticate the request"
         }
       },
       "required": [
-        "status_code"
+        "statusCode"
       ]
     },
     "TestCloudStartTestRunOptions": {

@@ -8,7 +8,7 @@
 
 /**
  * @class
- * Initializes a new instance of the TestCloudFileHash class.
+ * Initializes a new instance of the TestCloudFileHashDeprecated class.
  * @constructor
  * @summary Test Cloud File Hash
  *
@@ -21,27 +21,30 @@
  * 
  * @member {string} relativePath Relative path of the file
  * 
+ * @member {string} [byteRange] Range of bytes required to verify ownership of
+ * the file
+ * 
  */
-function TestCloudFileHash() {
+function TestCloudFileHashDeprecated() {
 }
 
 /**
- * Defines the metadata of TestCloudFileHash
+ * Defines the metadata of TestCloudFileHashDeprecated
  *
- * @returns {object} metadata of TestCloudFileHash
+ * @returns {object} metadata of TestCloudFileHashDeprecated
  *
  */
-TestCloudFileHash.prototype.mapper = function () {
+TestCloudFileHashDeprecated.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'TestCloudFileHash',
+    serializedName: 'TestCloudFileHashDeprecated',
     type: {
       name: 'Composite',
-      className: 'TestCloudFileHash',
+      className: 'TestCloudFileHashDeprecated',
       modelProperties: {
         fileType: {
           required: true,
-          serializedName: 'fileType',
+          serializedName: 'file_type',
           type: {
             name: 'String'
           }
@@ -55,7 +58,14 @@ TestCloudFileHash.prototype.mapper = function () {
         },
         relativePath: {
           required: true,
-          serializedName: 'relativePath',
+          serializedName: 'relative_path',
+          type: {
+            name: 'String'
+          }
+        },
+        byteRange: {
+          required: false,
+          serializedName: 'byte_range',
           type: {
             name: 'String'
           }
@@ -65,4 +75,4 @@ TestCloudFileHash.prototype.mapper = function () {
   };
 };
 
-module.exports = TestCloudFileHash;
+module.exports = TestCloudFileHashDeprecated;

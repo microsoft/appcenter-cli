@@ -2117,8 +2117,8 @@ export interface Test {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    uploadHash(testRunId: string, fileInfo: models.TestCloudFileHash, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-    uploadHash(testRunId: string, fileInfo: models.TestCloudFileHash, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+    uploadHash(testRunId: string, fileInfo: models.TestCloudFileHashDeprecated, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    uploadHash(testRunId: string, fileInfo: models.TestCloudFileHashDeprecated, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
      * Uploads file for a test run
