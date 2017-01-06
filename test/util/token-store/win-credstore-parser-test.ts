@@ -158,7 +158,7 @@ describe('Parsing output of creds child process', function () {
   }
 
   function runAndParseOutput(): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       credStore.list()
         .subscribe({
           onNext: (entry: TokenEntry) => {
