@@ -6,6 +6,8 @@
 
 'use strict';
 
+var models = require('./index');
+
 /**
  * @class
  * Initializes a new instance of the DeviceModel class.
@@ -28,9 +30,39 @@
  * 
  * @member {string} [screenSize]
  * 
- * @member {string} [cpu]
+ * @member {object} [cpu]
  * 
- * @member {string} [memory]
+ * @member {string} [cpu.frequency]
+ * 
+ * @member {string} [cpu.core]
+ * 
+ * @member {object} [memory]
+ * 
+ * @member {string} [memory.formattedSize]
+ * 
+ * @member {number} [screenRotation]
+ * 
+ * @member {object} [deviceFrame]
+ * 
+ * @member {object} [deviceFrame.grid]
+ * 
+ * @member {number} [deviceFrame.grid.width]
+ * 
+ * @member {number} [deviceFrame.grid.height]
+ * 
+ * @member {string} [deviceFrame.grid.frameUrl]
+ * 
+ * @member {array} [deviceFrame.grid.screen]
+ * 
+ * @member {object} [deviceFrame.full]
+ * 
+ * @member {number} [deviceFrame.full.width]
+ * 
+ * @member {number} [deviceFrame.full.height]
+ * 
+ * @member {string} [deviceFrame.full.frameUrl]
+ * 
+ * @member {array} [deviceFrame.full.screen]
  * 
  */
 function DeviceModel() {
@@ -117,14 +149,31 @@ DeviceModel.prototype.mapper = function () {
           required: false,
           serializedName: 'cpu',
           type: {
-            name: 'String'
+            name: 'Composite',
+            className: 'DeviceCpu'
           }
         },
         memory: {
           required: false,
           serializedName: 'memory',
           type: {
-            name: 'String'
+            name: 'Composite',
+            className: 'DeviceMemory'
+          }
+        },
+        screenRotation: {
+          required: false,
+          serializedName: 'screenRotation',
+          type: {
+            name: 'Number'
+          }
+        },
+        deviceFrame: {
+          required: false,
+          serializedName: 'deviceFrame',
+          type: {
+            name: 'Composite',
+            className: 'DeviceFrame'
           }
         }
       }

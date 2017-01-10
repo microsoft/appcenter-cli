@@ -52,7 +52,7 @@ function Data(client) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameDataById = function (subscriptionId, tableName, id, ownerName, appName, options, callback) {
+Data.prototype.getV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameDataById = function (subscriptionId, tableName, id, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -84,7 +84,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesB
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/data/{id}';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/data/{id}';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{tableName}', encodeURIComponent(tableName));
   requestUrl = requestUrl.replace('{id}', encodeURIComponent(id));
@@ -217,7 +217,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesB
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.deleteV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameDataById = function (subscriptionId, tableName, id, ownerName, appName, options, callback) {
+Data.prototype.deleteV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameDataById = function (subscriptionId, tableName, id, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -253,7 +253,7 @@ Data.prototype.deleteV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTabl
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/data/{id}';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/data/{id}';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{tableName}', encodeURIComponent(tableName));
   requestUrl = requestUrl.replace('{id}', encodeURIComponent(id));
@@ -395,7 +395,7 @@ Data.prototype.deleteV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTabl
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameData = function (subscriptionId, tableName, ownerName, appName, options, callback) {
+Data.prototype.getV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameData = function (subscriptionId, tableName, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -436,7 +436,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesB
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/data';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/data';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{tableName}', encodeURIComponent(tableName));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
@@ -579,7 +579,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesB
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameData = function (subscriptionId, tableName, ownerName, appName, options, callback) {
+Data.prototype.postV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameData = function (subscriptionId, tableName, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -617,7 +617,7 @@ Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTables
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/data';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/data';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{tableName}', encodeURIComponent(tableName));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
@@ -759,7 +759,7 @@ Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTables
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.deleteV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameData = function (subscriptionId, tableName, ownerName, appName, options, callback) {
+Data.prototype.deleteV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameData = function (subscriptionId, tableName, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -788,7 +788,7 @@ Data.prototype.deleteV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTabl
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/data';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/data';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{tableName}', encodeURIComponent(tableName));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
@@ -918,7 +918,7 @@ Data.prototype.deleteV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTabl
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameColumnsByColumnName = function (subscriptionId, tableName, columnName, ownerName, appName, options, callback) {
+Data.prototype.getV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameColumnsByColumnName = function (subscriptionId, tableName, columnName, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -950,7 +950,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesB
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/columns/{columnName}';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/columns/{columnName}';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{tableName}', encodeURIComponent(tableName));
   requestUrl = requestUrl.replace('{columnName}', encodeURIComponent(columnName));
@@ -1094,7 +1094,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesB
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.putV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameColumnsByColumnName = function (subscriptionId, tableName, columnName, column, ownerName, appName, options, callback) {
+Data.prototype.putV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameColumnsByColumnName = function (subscriptionId, tableName, columnName, column, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1129,7 +1129,7 @@ Data.prototype.putV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesB
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/columns/{columnName}';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/columns/{columnName}';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{tableName}', encodeURIComponent(tableName));
   requestUrl = requestUrl.replace('{columnName}', encodeURIComponent(columnName));
@@ -1274,7 +1274,7 @@ Data.prototype.putV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesB
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.deleteV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameColumnsByColumnName = function (subscriptionId, tableName, columnName, ownerName, appName, options, callback) {
+Data.prototype.deleteV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameColumnsByColumnName = function (subscriptionId, tableName, columnName, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1306,7 +1306,7 @@ Data.prototype.deleteV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTabl
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/columns/{columnName}';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/columns/{columnName}';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{tableName}', encodeURIComponent(tableName));
   requestUrl = requestUrl.replace('{columnName}', encodeURIComponent(columnName));
@@ -1435,7 +1435,7 @@ Data.prototype.deleteV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTabl
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameColumns = function (subscriptionId, tableName, ownerName, appName, options, callback) {
+Data.prototype.getV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameColumns = function (subscriptionId, tableName, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1464,7 +1464,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesB
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/columns';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/columns';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{tableName}', encodeURIComponent(tableName));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
@@ -1605,7 +1605,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesB
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameColumns = function (subscriptionId, tableName, column, ownerName, appName, options, callback) {
+Data.prototype.postV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableNameColumns = function (subscriptionId, tableName, column, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1637,7 +1637,7 @@ Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTables
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/columns';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}/columns';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{tableName}', encodeURIComponent(tableName));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
@@ -1779,7 +1779,7 @@ Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTables
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableName = function (subscriptionId, tableName, ownerName, appName, options, callback) {
+Data.prototype.getV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableName = function (subscriptionId, tableName, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1808,7 +1808,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesB
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{tableName}', encodeURIComponent(tableName));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
@@ -1946,7 +1946,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesB
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.putV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableName = function (subscriptionId, tableName, table, ownerName, appName, options, callback) {
+Data.prototype.putV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableName = function (subscriptionId, tableName, table, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1978,7 +1978,7 @@ Data.prototype.putV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesB
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{tableName}', encodeURIComponent(tableName));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
@@ -2120,7 +2120,7 @@ Data.prototype.putV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesB
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.deleteV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableName = function (subscriptionId, tableName, ownerName, appName, options, callback) {
+Data.prototype.deleteV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablesByTableName = function (subscriptionId, tableName, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -2149,7 +2149,7 @@ Data.prototype.deleteV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTabl
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables/{tableName}';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{tableName}', encodeURIComponent(tableName));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
@@ -2275,7 +2275,7 @@ Data.prototype.deleteV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTabl
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTables = function (subscriptionId, ownerName, appName, options, callback) {
+Data.prototype.getV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTables = function (subscriptionId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -2301,7 +2301,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTables 
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
@@ -2436,7 +2436,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTables 
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTables = function (subscriptionId, table, ownerName, appName, options, callback) {
+Data.prototype.postV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTables = function (subscriptionId, table, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -2465,7 +2465,7 @@ Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTables
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tables';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
@@ -2583,8 +2583,6 @@ Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTables
 /**
  * @param {string} subscriptionId
  * 
- * @param {string} permissionName
- * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
@@ -2606,162 +2604,7 @@ Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTables
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablepermissionsByPermissionName = function (subscriptionId, permissionName, ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  // Validate
-  try {
-    if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string') {
-      throw new Error('subscriptionId cannot be null or undefined and it must be of type string.');
-    }
-    if (permissionName === null || permissionName === undefined || typeof permissionName.valueOf() !== 'string') {
-      throw new Error('permissionName cannot be null or undefined and it must be of type string.');
-    }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tablepermissions/{permissionName}';
-  requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
-  requestUrl = requestUrl.replace('{permissionName}', encodeURIComponent(permissionName));
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Object'
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 400) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Object'
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
- * @param {string} subscriptionId
- * 
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {object} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablepermissions = function (subscriptionId, ownerName, appName, options, callback) {
+Data.prototype.getV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdResourcesOperations = function (subscriptionId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -2787,7 +2630,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablepe
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/tablepermissions';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/resources/operations';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
@@ -2912,7 +2755,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdTablepe
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdResources = function (subscriptionId, ownerName, appName, options, callback) {
+Data.prototype.postV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdResources = function (subscriptionId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -2938,7 +2781,7 @@ Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdResour
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/resources/';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/resources/';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
@@ -3063,7 +2906,7 @@ Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdResour
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdResources = function (subscriptionId, ownerName, appName, options, callback) {
+Data.prototype.getV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdResources = function (subscriptionId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -3089,7 +2932,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdResourc
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/resources/';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/resources/';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
@@ -3214,7 +3057,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdResourc
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdPing = function (subscriptionId, ownerName, appName, options, callback) {
+Data.prototype.getV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdPing = function (subscriptionId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -3240,7 +3083,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdPing = 
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/ping/';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/ping/';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
@@ -3344,7 +3187,156 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdPing = 
 /**
  * @param {string} subscriptionId
  * 
- * @param {string} providerName
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Data.prototype.getV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdIdentity = function (subscriptionId, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string') {
+      throw new Error('subscriptionId cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/identity';
+  requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200 && statusCode !== 400) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'Object'
+            }
+          };
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 400) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'Object'
+            }
+          };
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError1.request = msRest.stripRequest(httpRequest);
+        deserializationError1.response = msRest.stripResponse(response);
+        return callback(deserializationError1);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * @param {string} subscriptionId
  * 
  * @param {string} ownerName The name of the owner
  * 
@@ -3367,7 +3359,7 @@ Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdPing = 
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdIdentityByProviderName = function (subscriptionId, providerName, ownerName, appName, options, callback) {
+Data.prototype.postV01AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdIdentity = function (subscriptionId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -3381,9 +3373,6 @@ Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdIdenti
     if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string') {
       throw new Error('subscriptionId cannot be null or undefined and it must be of type string.');
     }
-    if (providerName === null || providerName === undefined || typeof providerName.valueOf() !== 'string') {
-      throw new Error('providerName cannot be null or undefined and it must be of type string.');
-    }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
@@ -3396,166 +3385,14 @@ Data.prototype.postV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdIdenti
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/identity/{provider_name}';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/identity';
   requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
-  requestUrl = requestUrl.replace('{provider_name}', encodeURIComponent(providerName));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
   httpRequest.method = 'POST';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Object'
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 400) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Object'
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
- * @param {string} subscriptionId
- * 
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {object} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Data.prototype.getV1AppsByOwnerNameByAppNameSubscriptionsBySubscriptionIdIdentity = function (subscriptionId, ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  // Validate
-  try {
-    if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string') {
-      throw new Error('subscriptionId cannot be null or undefined and it must be of type string.');
-    }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/identity';
-  requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
   httpRequest.headers = {};
   httpRequest.url = requestUrl;
   // Set Headers

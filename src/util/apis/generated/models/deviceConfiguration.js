@@ -18,7 +18,11 @@ var models = require('./index');
  * 
  * @member {number} [tier] The tier
  * 
- * @member {string} [frame]
+ * @member {object} [image]
+ * 
+ * @member {string} [image.full]
+ * 
+ * @member {string} [image.thumb]
  * 
  * @member {object} [model]
  * 
@@ -40,9 +44,39 @@ var models = require('./index');
  * 
  * @member {string} [model.screenSize]
  * 
- * @member {string} [model.cpu]
+ * @member {object} [model.cpu]
  * 
- * @member {string} [model.memory]
+ * @member {string} [model.cpu.frequency]
+ * 
+ * @member {string} [model.cpu.core]
+ * 
+ * @member {object} [model.memory]
+ * 
+ * @member {string} [model.memory.formattedSize]
+ * 
+ * @member {number} [model.screenRotation]
+ * 
+ * @member {object} [model.deviceFrame]
+ * 
+ * @member {object} [model.deviceFrame.grid]
+ * 
+ * @member {number} [model.deviceFrame.grid.width]
+ * 
+ * @member {number} [model.deviceFrame.grid.height]
+ * 
+ * @member {string} [model.deviceFrame.grid.frameUrl]
+ * 
+ * @member {array} [model.deviceFrame.grid.screen]
+ * 
+ * @member {object} [model.deviceFrame.full]
+ * 
+ * @member {number} [model.deviceFrame.full.width]
+ * 
+ * @member {number} [model.deviceFrame.full.height]
+ * 
+ * @member {string} [model.deviceFrame.full.frameUrl]
+ * 
+ * @member {array} [model.deviceFrame.full.screen]
  * 
  * @member {string} [os]
  * 
@@ -89,11 +123,12 @@ DeviceConfiguration.prototype.mapper = function () {
             name: 'Number'
           }
         },
-        frame: {
+        image: {
           required: false,
-          serializedName: 'frame',
+          serializedName: 'image',
           type: {
-            name: 'String'
+            name: 'Composite',
+            className: 'DeviceConfigurationImage'
           }
         },
         model: {

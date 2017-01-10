@@ -12,8 +12,8 @@
  * @constructor
  * @member {string} [description] A short text describing the app
  * 
- * @member {string} displayName The full name of the user. Might for example
- * be first and last name
+ * @member {string} displayName The descriptive name of the app. This can
+ * contain any characters
  * 
  * @member {string} [name] The name of the app used in URLs
  * 

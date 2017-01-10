@@ -46,15 +46,15 @@ function MobileCenterClient(credentials, baseUri, options) {
   MobileCenterClient['super_'].call(this, credentials, options);
   this.baseUri = baseUri;
   if (!this.baseUri) {
-    this.baseUri = 'https://api.sonoma.hockeyapp.com/';
+    this.baseUri = 'https://api.mobile.azure.com/';
   }
   this.credentials = credentials;
 
-  this.data = new operations.Data(this);
   this.account = new operations.Account(this);
   this.buildOperations = new operations.BuildOperations(this);
   this.crashOperations = new operations.CrashOperations(this);
   this.test = new operations.Test(this);
+  this.data = new operations.Data(this);
   this.distribute = new operations.Distribute(this);
   this.analytics = new operations.Analytics(this);
   this.models = models;

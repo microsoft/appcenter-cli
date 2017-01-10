@@ -1,7 +1,7 @@
-import { Command, CommandArgs, CommandResult, help, success, failure, failed, notLoggedIn, getCurrentApp } from "../../util/commandline";
+import { Command, CommandArgs, CommandResult, help, failure, ErrorCodes, success, getCurrentApp } from "../../util/commandline";
 import { out } from "../../util/interaction";
-import { DefaultApp, getUser } from "../../util/profile";
-import { MobileCenterClient, models, clientCall } from "../../util/apis";
+import { DefaultApp } from "../../util/profile";
+import { MobileCenterClient, models, clientRequest } from "../../util/apis";
 
 const debug = require("debug")("mobile-center-cli:commands:apps:list");
 import { inspect } from "util";
@@ -23,12 +23,16 @@ export default class AppsListCommand extends Command {
   }
 
   async run(client: MobileCenterClient): Promise<CommandResult> {
-    const apps = await out.progress("Getting app list ...",
-      clientCall<models.AppResponse[]>(cb => client.account.getApps(cb)));
+    const appsResponse = await out.progress("Getting app list ...",
+      clientRequest<models.AppResponse[]>(cb => client.account.getApps(cb)));
+
+    if (appsResponse.response.statusCode >= 400) {
+      return failure(ErrorCodes.Exception, "Unknown error when loading apps");
+    }
 
     const defaultApp = getCurrentApp(null);
     debug(`Current app = ${inspect(defaultApp)}`);
-    out.list(app => this.formatApp(defaultApp.value, app), apps);
+    out.list(app => this.formatApp(defaultApp.value, app), appsResponse.result);
 
     return success();
   }

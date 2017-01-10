@@ -14,7 +14,7 @@ export function glob(pattern: string, options?: g.Options): Promise<string[]> {
 }
 
 export function globSingleFile(pattern: string, options?: g.Options): Promise<string> {
-  return new Promise<string[]>((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     g(pattern, options, (err, matches) => {
       if (err) {
         reject(err);
@@ -27,7 +27,7 @@ export function globSingleFile(pattern: string, options?: g.Options): Promise<st
         reject(new Error(`Found more than one file that matches pattern "${pattern}`));
       }
       else {
-        resolve(matches);
+        resolve(matches[0]);
       }
     });
   });

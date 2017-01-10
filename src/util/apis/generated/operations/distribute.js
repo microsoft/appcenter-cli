@@ -158,7 +158,9 @@ Distribute.prototype.getLatestPackages = function (ownerName, appName, options, 
 };
 
 /**
- * Return the details for this package.
+ * Get a package with id 'package_id'. if 'package_id' is 'latest', return the
+ * latest package that was distributed to the current user (from all the
+ * distribution groups).
  *
  * @param {string} packageId The ID of the package, or 'latest' to get the
  * latest package from all the distribution groups assigned to the current
@@ -185,7 +187,7 @@ Distribute.prototype.getLatestPackages = function (ownerName, appName, options, 
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Distribute.prototype.getPackageInfo = function (packageId, ownerName, appName, options, callback) {
+Distribute.prototype.getPackageOrLatestPackage = function (packageId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -237,7 +239,7 @@ Distribute.prototype.getPackageInfo = function (packageId, ownerName, appName, o
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 404) {
+    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 404) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -279,7 +281,7 @@ Distribute.prototype.getPackageInfo = function (packageId, ownerName, appName, o
       }
     }
     // Deserialize Response
-    if (statusCode === 404) {
+    if (statusCode === 400) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
@@ -295,6 +297,23 @@ Distribute.prototype.getPackageInfo = function (packageId, ownerName, appName, o
         return callback(deserializationError1);
       }
     }
+    // Deserialize Response
+    if (statusCode === 404) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError2 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError2.request = msRest.stripRequest(httpRequest);
+        deserializationError2.response = msRest.stripResponse(response);
+        return callback(deserializationError2);
+      }
+    }
 
     return callback(null, result, httpRequest, response);
   });
@@ -303,33 +322,25 @@ Distribute.prototype.getPackageInfo = function (packageId, ownerName, appName, o
 /**
  * Updates a package.
  *
- * @param {string} packageId The ID of the package
- * 
- * @param {object} body The package information
- * 
- * @param {string} [body.status] The package state.<br>
- * <b>available</b>: The uploaded package has been distributed. When changing
- * to available a distribution group name or id must be set.<br>
- * <b>unavailable</b>: The uploaded package is not visible to the user. <br>
- * . Possible values include: 'available', 'unavailable'
- * 
- * @param {string} [body.destributionGroupName] Name of a distribution group.
- * The package will be distributed to this distribution group. If the
- * distribution group doesn't exist a 400 is returned. If both, distribution
- * group name and id, are passed a 400 is returned.
- * 
- * @param {string} [body.destributionGroupId] Id of a distribution group. The
- * package will be distributed to this distribution group. If the
- * distribution group doesn't exist a 400 is returned. If both, distribution
- * group name and id, are passed a 400 is returned.
- * 
- * @param {string} [body.releaseNotes] Release notes for this package.
+ * @param {number} packageId The ID of the package
  * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
  * 
  * @param {object} [options] Optional Parameters.
+ * 
+ * @param {string} [options.distributionGroupName] Name of a distribution
+ * group. The package will be associated with this distribution group. If the
+ * distribution group doesn't exist a 400 is returned. If both distribution
+ * group name and id are passed, the id is taking precedence.
+ * 
+ * @param {string} [options.distributionGroupId] Id of a distribution group.
+ * The package will be associated with this distribution group. If the
+ * distribution group doesn't exist a 400 is returned. If both distribution
+ * group name and id are passed, the id is taking precedence.
+ * 
+ * @param {string} [options.releaseNotes] Release notes for this package.
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -346,7 +357,7 @@ Distribute.prototype.getPackageInfo = function (packageId, ownerName, appName, o
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Distribute.prototype.patchV01AppsByOwnerNameByAppNamePackagesByPackageId = function (packageId, body, ownerName, appName, options, callback) {
+Distribute.prototype.patchV01AppsByOwnerNameByAppNamePackagesByPackageId = function (packageId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -355,13 +366,13 @@ Distribute.prototype.patchV01AppsByOwnerNameByAppNamePackagesByPackageId = funct
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  var distributionGroupName = (options && options.distributionGroupName !== undefined) ? options.distributionGroupName : undefined;
+  var distributionGroupId = (options && options.distributionGroupId !== undefined) ? options.distributionGroupId : undefined;
+  var releaseNotes = (options && options.releaseNotes !== undefined) ? options.releaseNotes : undefined;
   // Validate
   try {
-    if (packageId === null || packageId === undefined || typeof packageId.valueOf() !== 'string') {
-      throw new Error('packageId cannot be null or undefined and it must be of type string.');
-    }
-    if (body === null || body === undefined) {
-      throw new Error('body cannot be null or undefined.');
+    if (packageId === null || packageId === undefined || typeof packageId !== 'number') {
+      throw new Error('packageId cannot be null or undefined and it must be of type number.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -369,14 +380,30 @@ Distribute.prototype.patchV01AppsByOwnerNameByAppNamePackagesByPackageId = funct
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
+    if (distributionGroupName !== null && distributionGroupName !== undefined && typeof distributionGroupName.valueOf() !== 'string') {
+      throw new Error('distributionGroupName must be of type string.');
+    }
+    if (distributionGroupId !== null && distributionGroupId !== undefined && typeof distributionGroupId.valueOf() !== 'string') {
+      throw new Error('distributionGroupId must be of type string.');
+    }
+    if (releaseNotes !== null && releaseNotes !== undefined && typeof releaseNotes.valueOf() !== 'string') {
+      throw new Error('releaseNotes must be of type string.');
+    }
   } catch (error) {
     return callback(error);
+  }
+  var body;
+  if ((distributionGroupName !== null && distributionGroupName !== undefined) || (distributionGroupId !== null && distributionGroupId !== undefined) || (releaseNotes !== null && releaseNotes !== undefined)) {
+      body = new client.models['PackageUpdateRequest']();
+      body.distributionGroupName = distributionGroupName;
+      body.distributionGroupId = distributionGroupId;
+      body.releaseNotes = releaseNotes;
   }
 
   // Construct URL
   var baseUrl = this.client.baseUri;
   var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/packages/{package_id}';
-  requestUrl = requestUrl.replace('{package_id}', encodeURIComponent(packageId));
+  requestUrl = requestUrl.replace('{package_id}', encodeURIComponent(packageId.toString()));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -446,7 +473,7 @@ Distribute.prototype.patchV01AppsByOwnerNameByAppNamePackagesByPackageId = funct
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['PackageUpdateResponse']().mapper();
+          var resultMapper = new client.models['PackageDetails']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -487,8 +514,13 @@ Distribute.prototype.patchV01AppsByOwnerNameByAppNamePackagesByPackageId = funct
  * 
  * @param {object} [options] Optional Parameters.
  * 
- * @param {string} [options.filter] An OData style filter. Currently only
- * support the 'eq' comparision type. E.g. ?$filter=status eq 'Availabe'
+ * @param {boolean} [options.publishedOnly] when true, filters out packages
+ * that were uplaoded but were never distributed. Packages that under deleted
+ * distribution groups will not be filtered out.
+ * 
+ * @param {string} [options.filter] OBSOLETE. Will be removed in next version.
+ * An OData style filter. Currently only support the 'eq' comparision type.
+ * E.g. ?$filter=status eq 'Available'
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -514,9 +546,13 @@ Distribute.prototype.getV01AppsByOwnerNameByAppNamePackages = function (ownerNam
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  var publishedOnly = (options && options.publishedOnly !== undefined) ? options.publishedOnly : undefined;
   var filter = (options && options.filter !== undefined) ? options.filter : undefined;
   // Validate
   try {
+    if (publishedOnly !== null && publishedOnly !== undefined && typeof publishedOnly !== 'boolean') {
+      throw new Error('publishedOnly must be of type boolean.');
+    }
     if (filter !== null && filter !== undefined && typeof filter.valueOf() !== 'string') {
       throw new Error('filter must be of type string.');
     }
@@ -536,6 +572,9 @@ Distribute.prototype.getV01AppsByOwnerNameByAppNamePackages = function (ownerNam
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
   var queryParameters = [];
+  if (publishedOnly !== null && publishedOnly !== undefined) {
+    queryParameters.push('published_only=' + encodeURIComponent(publishedOnly.toString()));
+  }
   if (filter !== null && filter !== undefined) {
     queryParameters.push('$filter=' + encodeURIComponent(filter));
   }
@@ -897,7 +936,7 @@ Distribute.prototype.postV01AppsByOwnerNameByAppNamePackageUploads = function (o
 };
 
 /**
- * Return detailed information about available packages in a given
+ * Return detailed information about distributed packages in a given
  * distribution group.
  *
  * @param {string} distributionGroupName The name of the distribution group.
@@ -1039,7 +1078,7 @@ Distribute.prototype.getLatestPackageForDistributionGroup = function (distributi
 };
 
 /**
- * Return detailed information about available packages in a given
+ * Return detailed information about distributed packages in a given
  * distribution group.
  *
  * @param {string} distributionGroupName The name of the distribution group.
@@ -1049,9 +1088,6 @@ Distribute.prototype.getLatestPackageForDistributionGroup = function (distributi
  * @param {string} appName The name of the application
  * 
  * @param {object} [options] Optional Parameters.
- * 
- * @param {string} [options.filter] An OData style filter. Currently only
- * support the 'eq' comparision type. E.g. ?$filter=status eq 'Availabe'.
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1077,14 +1113,10 @@ Distribute.prototype.getPackagesForDistributionGroup = function (distributionGro
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  var filter = (options && options.filter !== undefined) ? options.filter : undefined;
   // Validate
   try {
     if (distributionGroupName === null || distributionGroupName === undefined || typeof distributionGroupName.valueOf() !== 'string') {
       throw new Error('distributionGroupName cannot be null or undefined and it must be of type string.');
-    }
-    if (filter !== null && filter !== undefined && typeof filter.valueOf() !== 'string') {
-      throw new Error('filter must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -1102,13 +1134,6 @@ Distribute.prototype.getPackagesForDistributionGroup = function (distributionGro
   requestUrl = requestUrl.replace('{distribution_group_name}', encodeURIComponent(distributionGroupName));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  var queryParameters = [];
-  if (filter !== null && filter !== undefined) {
-    queryParameters.push('$filter=' + encodeURIComponent(filter));
-  }
-  if (queryParameters.length > 0) {
-    requestUrl += '?' + queryParameters.join('&');
-  }
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();

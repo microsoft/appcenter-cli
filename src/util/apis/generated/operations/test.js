@@ -2254,6 +2254,8 @@ Test.prototype.createDeviceSelection = function (devices, ownerName, appName, op
  * 
  * @param {object} [options] Optional Parameters.
  * 
+ * @param {uuid} [options.appUploadId] The ID of the test run
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  * 
@@ -2278,8 +2280,12 @@ Test.prototype.getDeviceConfigurations = function (ownerName, appName, options, 
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  var appUploadId = (options && options.appUploadId !== undefined) ? options.appUploadId : undefined;
   // Validate
   try {
+    if (appUploadId !== null && appUploadId !== undefined && !(typeof appUploadId.valueOf() === 'string' && msRest.isValidUuid(appUploadId))) {
+      throw new Error('appUploadId must be of type string and must be a valid uuid.');
+    }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
@@ -2295,6 +2301,13 @@ Test.prototype.getDeviceConfigurations = function (ownerName, appName, options, 
   var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/device_configurations';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  var queryParameters = [];
+  if (appUploadId !== null && appUploadId !== undefined) {
+    queryParameters.push('app_upload_id=' + encodeURIComponent(appUploadId.toString()));
+  }
+  if (queryParameters.length > 0) {
+    requestUrl += '?' + queryParameters.join('&');
+  }
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();

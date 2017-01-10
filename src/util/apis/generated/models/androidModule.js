@@ -6,13 +6,18 @@
 
 'use strict';
 
+var util = require('util');
+
 /**
  * @class
  * Initializes a new instance of the AndroidModule class.
  * @constructor
  * @member {string} name Name of the Android module
  * 
- * @member {string} [path] Path to the module
+ * @member {array} [productFlavors] The product flavors of the Android module
+ * 
+ * @member {array} [buildVariants] The build variants of the Android module
+ * (matrix of product flavor + build type (debug|release))
  * 
  */
 function AndroidModule() {
@@ -39,11 +44,32 @@ AndroidModule.prototype.mapper = function () {
             name: 'String'
           }
         },
-        path: {
+        productFlavors: {
           required: false,
-          serializedName: 'path',
+          serializedName: 'productFlavors',
           type: {
-            name: 'String'
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'StringElementType',
+                type: {
+                  name: 'String'
+                }
+            }
+          }
+        },
+        buildVariants: {
+          required: false,
+          serializedName: 'buildVariants',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'StringElementType',
+                type: {
+                  name: 'String'
+                }
+            }
           }
         }
       }

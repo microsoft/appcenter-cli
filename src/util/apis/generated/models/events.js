@@ -18,6 +18,8 @@ var util = require('util');
  * 
  * @member {number} [total] the total count of events
  * 
+ * @member {number} [totalDevices] the active device over this period
+ * 
  */
 function Events() {
 }
@@ -54,6 +56,13 @@ Events.prototype.mapper = function () {
         total: {
           required: false,
           serializedName: 'total',
+          type: {
+            name: 'Number'
+          }
+        },
+        totalDevices: {
+          required: false,
+          serializedName: 'total_devices',
           type: {
             name: 'Number'
           }

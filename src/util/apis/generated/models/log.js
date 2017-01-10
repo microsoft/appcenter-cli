@@ -12,8 +12,6 @@ var models = require('./index');
  * @class
  * Initializes a new instance of the Log class.
  * @constructor
- * @member {string} type Log type.
- * 
  * @member {date} timestamp Log creation timestamp.
  * 
  * @member {uuid} installId Install ID.
@@ -72,6 +70,8 @@ var models = require('./index');
  * identifier, or namespace, depending on what the individual plattforms use,
  * .e.g com.microsoft.example.
  * 
+ * @member {string} type Polymorhpic Discriminator
+ * 
  */
 function Log() {
 }
@@ -88,15 +88,10 @@ Log.prototype.mapper = function () {
     serializedName: 'Log',
     type: {
       name: 'Composite',
+      polymorphicDiscriminator: 'type',
+      uberParent: 'Log',
       className: 'Log',
       modelProperties: {
-        type: {
-          required: true,
-          serializedName: 'type',
-          type: {
-            name: 'String'
-          }
-        },
         timestamp: {
           required: true,
           serializedName: 'timestamp',
@@ -117,6 +112,13 @@ Log.prototype.mapper = function () {
           type: {
             name: 'Composite',
             className: 'Device'
+          }
+        },
+        type: {
+          required: true,
+          serializedName: 'type',
+          type: {
+            name: 'String'
           }
         }
       }

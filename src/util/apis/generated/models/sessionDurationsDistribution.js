@@ -57,14 +57,14 @@ SessionDurationsDistribution.prototype.mapper = function () {
         },
         previousAverageDuration: {
           required: false,
-          serializedName: 'previousAverageDuration',
+          serializedName: 'previous_average_duration',
           type: {
             name: 'String'
           }
         },
         averageDuration: {
           required: false,
-          serializedName: 'averageDuration',
+          serializedName: 'average_duration',
           type: {
             name: 'String'
           }
