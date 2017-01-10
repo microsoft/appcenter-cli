@@ -20,8 +20,9 @@ export async function read(fd: number, buffer: Buffer, offset: number, length: n
 export function readFile(filename: string): Promise<Buffer>;
 export function readFile(filename: string, encoding: string): Promise<string>;
 export function readFile(filename: string, options: { flag?: string; }): Promise<Buffer>;
-export async function readFile(filename: string, options?: string | { encoding: string; flag?: string; }): Promise<string> {
-  return (await callFs(fs.readFile, filename, options))[0];
+export function readFile(filename: string, options?: string | { encoding: string; flag?: string; }): Promise<string>;
+export async function readFile(...args: any[]): Promise<any> {
+  return (await callFs(fs.readFile, ...args))[0];
 };
 
 export async function readdir(path: string | Buffer): Promise<string[]> {
@@ -55,7 +56,7 @@ export function exists(path: string | Buffer): Promise<boolean> {
 }
 
 export function mkdir(path: string | Buffer): Promise<void> {
-  return callFs(fs.mkdir, path);
+  return callFs(fs.mkdir, path).then(() => {});
 }
 
 export function mkTempDir(affixes: string): Promise<string> {
@@ -66,7 +67,7 @@ export async function cp(source: string, target: string): Promise<void> {
   let sourceStats = await stat(source);
   if (sourceStats.isDirectory()) {
     await cpDir(source, target);
-  }  
+  }
   else {
     await cpFile(source, target);
   }
@@ -87,7 +88,7 @@ export async function cpDir(source: string, target: string): Promise<void> {
 }
 
 export function cpFile(source: string, target: string): Promise<void> {
-  return new Promise((resolve, reject) => { 
+  return new Promise<void>((resolve, reject) => {
     let sourceStream = fs.createReadStream(source);
     let targetStream = fs.createWriteStream(target);
 
@@ -95,7 +96,7 @@ export function cpFile(source: string, target: string): Promise<void> {
     targetStream.on("error", (err: any) => reject(err));
 
     sourceStream.pipe(targetStream);
-  });  
+  });
 }
 
 export function rmDir(source: string, recursive: boolean = true): Promise<void> {
@@ -109,19 +110,19 @@ export function rmDir(source: string, recursive: boolean = true): Promise<void> 
           resolve();
         }
       });
-    }); 
+    });
   }
   else {
-    return callFs(fs.rmdir, source);
+    return callFs(fs.rmdir, source).then(() => {});
   }
 }
 
 export function unlink(filePath: string): Promise<void> {
-  return callFs(fs.unlink, filePath);
+  return callFs(fs.unlink, filePath).then(() => {});
 }
 
 export function close(fd: number): Promise<void> {
-  return callFs(fs.close, fd);
+  return callFs(fs.close, fd).then(() => {});
 }
 
 export function openTempFile(affixes: string): Promise<{path: string, fd: number}> {
