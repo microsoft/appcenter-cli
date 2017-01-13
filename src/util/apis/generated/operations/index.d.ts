@@ -1452,6 +1452,28 @@ export interface Test {
      *
      * @param {string} testRunId The ID of the test run
      * 
+     * @param {array} fileInfo File hash information
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    uploadHashesBatch(testRunId: string, fileInfo: models.TestCloudFileHash[], ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestCloudFileHashResponse[]>): void;
+    uploadHashesBatch(testRunId: string, fileInfo: models.TestCloudFileHash[], ownerName: string, appName: string, callback: ServiceCallback<models.TestCloudFileHashResponse[]>): void;
+
+    /**
+     * Adds file with the given hash to a test run
+     *
+     * @param {string} testRunId The ID of the test run
+     * 
      * @param {object} fileInfo File hash information
      * 
      * @param {string} fileInfo.fileType Type of the file. Possible values
@@ -1476,8 +1498,8 @@ export interface Test {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    uploadHash(testRunId: string, fileInfo: models.TestCloudFileHash, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-    uploadHash(testRunId: string, fileInfo: models.TestCloudFileHash, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+    uploadHash(testRunId: string, fileInfo: models.TestCloudFileHashDeprecated, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    uploadHash(testRunId: string, fileInfo: models.TestCloudFileHashDeprecated, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
      * Uploads file for a test run

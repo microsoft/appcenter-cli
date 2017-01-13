@@ -3422,9 +3422,9 @@ export interface TestCloudErrorDetails {
 
 /**
  * @class
- * Initializes a new instance of the TestCloudFileHash class.
+ * Initializes a new instance of the TestCloudFileHashDeprecated class.
  * @constructor
- * @summary TestCloudFileHash
+ * @summary TestCloudFileHashDeprecated
  *
  * Hash, type, path and byte range of a file that is required in test run
  *
@@ -3439,11 +3439,85 @@ export interface TestCloudErrorDetails {
  * the file
  * 
  */
-export interface TestCloudFileHash {
+export interface TestCloudFileHashDeprecated {
   fileType: string;
   checksum: string;
   relativePath: string;
   byteRange?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestCloudFileHash class.
+ * @constructor
+ * @summary Test Cloud File Hash
+ *
+ * Hash, type, path and byte range of a file that is required in test run
+ *
+ * @member {string} fileType Type of the file. Possible values include:
+ * 'dsym-file', 'app-file', 'test-file'
+ * 
+ * @member {string} checksum SHA256 hash of the file
+ * 
+ * @member {string} relativePath Relative path of the file
+ * 
+ */
+export interface TestCloudFileHash {
+  fileType: string;
+  checksum: string;
+  relativePath: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestCloudFileHashResponse class.
+ * @constructor
+ * @summary Test Cloud File Hash Response
+ *
+ * Response message for single uploaded file hash
+ *
+ * @member {string} fileType Type of the file. Possible values include:
+ * 'dsym-file', 'app-file', 'test-file'
+ * 
+ * @member {string} checksum SHA256 hash of the file
+ * 
+ * @member {string} [relativePath] Relative path of the file
+ * 
+ * @member {object} uploadStatus Status of the upload
+ * 
+ * @member {number} [uploadStatus.statusCode] HTTP status code that represent
+ * result of upload
+ * 
+ * @member {string} [uploadStatus.location] URI that should be used to make
+ * POST request if file with given hash doesn't exist. This is set when
+ * status_code is equal to 412
+ * 
+ */
+export interface TestCloudFileHashResponse {
+  fileType: string;
+  checksum: string;
+  relativePath?: string;
+  uploadStatus: TestCloudHashUploadStatus;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestCloudHashUploadStatus class.
+ * @constructor
+ * @summary Test Cloud Hash Upload Status
+ *
+ * Result of uploading a single file hash
+ *
+ * @member {number} statusCode HTTP status code that represent result of upload
+ * 
+ * @member {string} [location] URI that should be used to make POST request if
+ * file with given hash doesn't exist. This is set when status_code is equal
+ * to 412
+ * 
+ */
+export interface TestCloudHashUploadStatus {
+  statusCode: number;
+  location?: string;
 }
 
 /**

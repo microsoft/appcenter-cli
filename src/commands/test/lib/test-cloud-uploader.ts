@@ -1,4 +1,4 @@
-import { MobileCenterClient, models, clientCall } from "../../../util/apis";
+import { MobileCenterClient, models, clientCall, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { progressWithResult } from "./interaction";
 import { TestManifest, TestRunFile } from "./test-manifest";
@@ -68,14 +68,15 @@ export class TestCloudUploader {
     debug(`Test run id: ${testRunId}`);
 
     let appFile = await progressWithResult("Validating application file", this.validateAndCreateAppFile(manifest));
-    await progressWithResult("Uploading application file", this.uploadHashOrNewFile(testRunId, appFile));
+
+    let allFiles = _.concat(manifest.testFiles, [appFile]);
 
     if (this.dSymPath) {
       let dSymFile = await progressWithResult("Validating DSym file", getDSymFile(this.dSymPath));
-      await progressWithResult("Uploading DSym file", this.uploadHashOrNewFile(testRunId, dSymFile));
+      allFiles.push(dSymFile);
     }
 
-    await progressWithResult("Uploading test files", this.uploadAllTestFiles(testRunId, manifest.testFiles));
+    await progressWithResult("Uploading files", this.uploadFilesUsingBatch(testRunId, allFiles));
 
     let startResult = await progressWithResult("Starting test run", this.startTestRun(testRunId, manifest));
 
@@ -123,52 +124,38 @@ export class TestCloudUploader {
     });
   }
 
-  private async uploadHashOrNewFile(testRunId: string, file: TestRunFile): Promise<void> {
-    if (await this.tryUploadFileHash(testRunId, file)) {
-      debug(`File ${file.sourcePath}: hash upload`);
-    }
-    else {
-      await this.uploadFile(testRunId, file);
-      debug(`File ${file.sourcePath}: direct upload`);
-    }
+  private async uploadFilesUsingBatch(testRunId: string, files: TestRunFile[]): Promise<void> {
+    let checkHashesResult = await this.uploadHashesBatch(testRunId, files.map(f => { return { file: f }; }));
+
+    let limit = pLimit(paralleRequests);
+    let uploadNewFilesTasks = checkHashesResult
+      .filter(r => r.response.uploadStatus.statusCode === 412)
+      .map(r => limit(() => this.uploadFile(testRunId, r.file)));
+
+    await Promise.all(uploadNewFilesTasks);
   }
 
-  private async tryUploadFileHash(testRunId: string, file: TestRunFile, byteRange: string = null): Promise<boolean> {
-    let response = await new Promise<http.IncomingMessage>((resolve, reject) => {
-      this._client.test.uploadHash(
+  private async uploadHashesBatch(testRunId: string, files: { file: TestRunFile, byteRange?: string }[]): Promise<{ file: TestRunFile, response: models.TestCloudFileHashResponse }[]> { 
+    let mappedFiles = files.map(f => this.testRunFileToFileHash(f.file, f.byteRange));
+
+    let clientResponse = await clientRequest<models.TestCloudFileHashResponse[]>(cb => {
+      this._client.test.uploadHashesBatch(
         testRunId,
-        {
-          checksum: file.sha256,
-          fileType: file.fileType,
-          relativePath: file.targetRelativePath,
-          byteRange: byteRange
-        },
+        mappedFiles,
         this._userName,
         this._appName,
-        (err, result, request, response) => {
-          if (err) {
-            reject(err);
-          }
-          else {
-            resolve(response);
-          }
-        })
+        cb);
     });
+    
+    return _.zip<any>(files, clientResponse.result).map((fr: any) => { return { file: fr[0].file, response: fr[1] }; });
+  }
 
-    if (response.statusCode === 201) {
-      return true;
-    }
-    else if (response.statusCode === 401 && !byteRange) {
-      let rangeString = response.headers["x-challenge-bytes"];
-      let parsedRange = parseRange(rangeString);
-      let requestedBytes = await getByteRange(file.sourcePath, parsedRange.start, parsedRange.length);
-      let base64Bytes = new Buffer(requestedBytes).toString("base64");
-
-      return await this.tryUploadFileHash(testRunId, file, base64Bytes);
-    }
-    else {
-      return false;
-    }
+  private testRunFileToFileHash(file: TestRunFile, byteRange: string = null): models.TestCloudFileHash {
+    return {
+      checksum: file.sha256,
+      fileType: file.fileType,
+      relativePath: file.targetRelativePath
+    };
   }
 
   private async uploadFile(testRunId: string, file: TestRunFile): Promise<void> {
@@ -225,13 +212,6 @@ export class TestCloudUploader {
         reject(err);
       }
     });
-  }
-
-  private uploadAllTestFiles(testRunId: string, files: TestRunFile[]): Promise<void> {
-    let limit = pLimit(paralleRequests);
-    let uploadTasks = files.map(f => limit(() => this.uploadHashOrNewFile(testRunId, f)));
-
-    return Promise.all(uploadTasks).then(() => {});
   }
 
   private startTestRun(testRunId: string, manifest: TestManifest): Promise<models.TestCloudStartTestRunResult> {
