@@ -1,4 +1,4 @@
-import { MobileCenterClient, models, clientCall } from "../../../util/apis";
+import { MobileCenterClient, models, clientCall, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { progressWithResult } from "./interaction";
 import { TestManifest, TestRunFile } from "./test-manifest";
@@ -125,35 +125,29 @@ export class TestCloudUploader {
   }
 
   private async uploadFilesUsingBatch(testRunId: string, files: TestRunFile[]): Promise<void> {
-    let checkHashResult = await this.uploadHashesBatch(testRunId, files.map(f => { return { file: f }; }));
+    let checkHashesResult = await this.uploadHashesBatch(testRunId, files.map(f => { return { file: f }; }));
 
     let limit = pLimit(paralleRequests);
-    let uploadNewFilesTask = checkHashResult
+    let uploadNewFilesTasks = checkHashesResult
       .filter(r => r.response.uploadStatus.statusCode === 412)
       .map(r => limit(() => this.uploadFile(testRunId, r.file)));
 
-    await Promise.all(uploadNewFilesTask);
+    await Promise.all(uploadNewFilesTasks);
   }
 
   private async uploadHashesBatch(testRunId: string, files: { file: TestRunFile, byteRange?: string }[]): Promise<{ file: TestRunFile, response: models.TestCloudFileHashResponse }[]> { 
-    let hashResponses = await new Promise<models.TestCloudFileHashResponse[]>((resolve, reject) => {
-      let mappedFiles = files.map(f => this.testRunFileToFileHash(f.file, f.byteRange));
+    let mappedFiles = files.map(f => this.testRunFileToFileHash(f.file, f.byteRange));
+
+    let clientResponse = await clientRequest<models.TestCloudFileHashResponse[]>(cb => {
       this._client.test.uploadHashesBatch(
         testRunId,
         mappedFiles,
         this._userName,
         this._appName,
-        (err: Error, result: models.TestCloudFileHashResponse[], _request: any, response: any) => {
-          if (err) {
-            reject(err);
-          }
-          else {
-            resolve(result);
-          }
-        });
+        cb);
     });
-
-    return _.zip<any>(files, hashResponses).map((fr: any) => { return { file: fr[0].file, response: fr[1] }; });
+    
+    return _.zip<any>(files, clientResponse.result).map((fr: any) => { return { file: fr[0].file, response: fr[1] }; });
   }
 
   private testRunFileToFileHash(file: TestRunFile, byteRange: string = null): models.TestCloudFileHash {
