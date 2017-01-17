@@ -20,12 +20,14 @@ export interface CommandArgs {
 
 export class Command {
   constructor(args: CommandArgs) {
+
     const proto = Object.getPrototypeOf(this);
     const flags = getOptionsDescription(proto);
     const positionals = getPositionalOptionsDescription(proto);
     parseOptions(flags, positionals, this, args.args);
     this.commandPath = args.commandPath;
     this.command = args.command;
+    debug(`Starting command with path ${args.commandPath}, command ${args.command}`);
   }
 
   // Used by help system to generate help messages
@@ -119,12 +121,12 @@ export class Command {
     if (this.token) {
       let environment = environments(this.environmentName);
       debug(`Creating mobile center client for command from token`);
-      client = createMobileCenterClient(this.token, environment.endpoint);
+      client = createMobileCenterClient(this.token, environment.endpoint, this.command);
     } else {
       let user = getUser();
       if (user) {
         debug(`Creating mobile center client for command for current logged in user`);
-        client = createMobileCenterClient(user);
+        client = createMobileCenterClient(user, this.command);
       }
     }
     if (client) {
