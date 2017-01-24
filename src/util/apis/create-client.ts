@@ -16,49 +16,51 @@ const createLogger = require('ms-rest').LogFilter.create;
 import { isDebug } from "../interaction";
 import { Profile } from "../profile";
 
-export function createMobileCenterClient(userName: string, password: string, endpoint: string, command: string[]): MobileCenterClient;
-export function createMobileCenterClient(token: Promise<string>, endpoint:string, command: string[]): MobileCenterClient;
-export function createMobileCenterClient(token: string, endpoint: string, command: string[]): MobileCenterClient;
+type TelemetryChecker = { (): Promise<boolean> };
+
+export function createMobileCenterClient(userName: string, password: string, endpoint: string, command: string[], telemetryEnabled: TelemetryChecker): MobileCenterClient;
+export function createMobileCenterClient(token: Promise<string>, endpoint:string, command: string[], telemetryEnabled: TelemetryChecker): MobileCenterClient;
+export function createMobileCenterClient(token: string, endpoint: string, command: string[], telemetryEnabled: TelemetryChecker): MobileCenterClient;
 export function createMobileCenterClient(user: Profile, command: string[]): MobileCenterClient;
 export function createMobileCenterClient(...args: any[]): MobileCenterClient {
-  if (args.length === 4) {
-    return createBasicAuthClient(args[0], args[1], args[2], args[3]);
+  if (args.length === 5) {
+    return createBasicAuthClient(args[0], args[1], args[2], args[3], args[4]);
   }
-  else if (args.length === 3) {
+  else if (args.length === 4) {
     if (typeof args[0] === 'string') {
-      return createMobileCenterAuthClientFromToken(Promise.resolve(args[0]), args[1], args[2]);
+      return createMobileCenterAuthClientFromToken(Promise.resolve(args[0]), args[1], args[2], args[3]);
     }
-    return createMobileCenterAuthClientFromToken(args[0], args[1], args[2]);
+    return createMobileCenterAuthClientFromToken(args[0], args[1], args[2], args[3]);
   }
-  return createMobileCenterAuthClient(args[0], args[1]);
+  return createMobileCenterAuthClient(args[0], args[1], args[2]);
 }
 
-function createClientOptions(command: string[]): any {
+function createClientOptions(command: string[], telemetryEnabled: {(): Promise<boolean>}): any {
   debug(`Creating client options, isDebug = ${isDebug()}`);
-  const filters = [ userAgentFilter, telemetryFilter(command.join(" ")) ];
+  const filters = [ userAgentFilter, telemetryFilter(command.join(" "), telemetryEnabled) ];
   return {
     filters: isDebug() ? [createLogger()].concat(filters) : filters
   };
 }
 
 
-function createBasicAuthClient(userName: string, password: string, endpoint: string, command: string[]): MobileCenterClient {
+function createBasicAuthClient(userName: string, password: string, endpoint: string, command: string[], telemetryEnabled: TelemetryChecker): MobileCenterClient {
   debug(`Creating client from user name and password for endpoint ${endpoint}`);
-  return new MobileCenterClient(new BasicAuthenticationCredentials(userName, password), endpoint, createClientOptions(command));
+  return new MobileCenterClient(new BasicAuthenticationCredentials(userName, password), endpoint, createClientOptions(command, telemetryEnabled));
 }
 
-function createMobileCenterAuthClientFromToken(token: Promise<string>, endpoint: string, command: string[]): MobileCenterClient {
+function createMobileCenterAuthClientFromToken(token: Promise<string>, endpoint: string, command: string[], telemetryEnabled: TelemetryChecker): MobileCenterClient {
   debug(`Creating client from token for endpoint ${endpoint}`);
-  return new MobileCenterClient(new MobileCenterClientCredentials(token), endpoint, createClientOptions(command));
+  return new MobileCenterClient(new MobileCenterClientCredentials(token), endpoint, createClientOptions(command, telemetryEnabled));
 }
 
-function createMobileCenterAuthClient(user: Profile, command: string[]): MobileCenterClient {
+function createMobileCenterAuthClient(user: Profile, command: string[], telemetryEnabled: TelemetryChecker): MobileCenterClient {
   if (!user) {
     debug(`No current user, not creating client`);
     return null;
   }
   debug(`Creating client from user for user ${inspect(user)}`);
-  return new MobileCenterClient(new MobileCenterClientCredentials(user.accessToken), user.endpoint, createClientOptions(command));
+  return new MobileCenterClient(new MobileCenterClientCredentials(user.accessToken), user.endpoint, createClientOptions(command, telemetryEnabled));
 }
 
 // Helper function to wrap client calls into promises while maintaining some type safety.
