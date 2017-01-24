@@ -6,7 +6,7 @@ import { setDebug, isDebug, setQuiet, setFormatJson, out } from "../interaction"
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
 import { getUser, environments } from "../profile";
-import { MobileCenterClient, createMobileCenterClient } from "../apis";
+import { MobileCenterClient, createMobileCenterClient, MobileCenterClientFactory } from "../apis";
 import * as path from "path";
 
 const debug = require("debug")("mobile-center-cli:util:commandline:command");
@@ -27,12 +27,16 @@ export class Command {
     parseOptions(flags, positionals, this, args.args);
     this.commandPath = args.commandPath;
     this.command = args.command;
+    this.clientFactory = createMobileCenterClient(this.command, () => Promise.resolve(false));
     debug(`Starting command with path ${args.commandPath}, command ${args.command}`);
   }
 
   // Used by help system to generate help messages
   protected command: string[];
   protected commandPath: string;
+
+  // Support for login command
+  protected clientFactory: MobileCenterClientFactory;
 
   // Default arguments supported by every command
 
@@ -121,12 +125,12 @@ export class Command {
     if (this.token) {
       let environment = environments(this.environmentName);
       debug(`Creating mobile center client for command from token`);
-      client = createMobileCenterClient(this.token, environment.endpoint, this.command);
+      client = this.clientFactory.fromToken(this.token, environment.endpoint);
     } else {
       let user = getUser();
       if (user) {
         debug(`Creating mobile center client for command for current logged in user`);
-        client = createMobileCenterClient(user, this.command);
+        client = this.clientFactory.fromProfile(user);
       }
     }
     if (client) {

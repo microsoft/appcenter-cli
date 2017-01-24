@@ -48,12 +48,20 @@ class ProfileImpl implements Profile {
 
   get accessTokenId(): Promise<string> {
     return tokenStore.get(this.userName)
-      .then(entry => entry.accessToken.id);
+      .then(entry => entry.accessToken.id)
+      .catch((err: Error) => {
+        debug(`Failed to get token id from profile, error: ${err.message}`);
+        throw err;
+      });
   }
 
   get accessToken(): Promise<string> {
     return tokenStore.get(this.userName)
-      .then(entry => entry.accessToken.token);
+      .then(entry => entry.accessToken.token)
+      .catch((err: Error) => {
+        debug(`Failed to get token from profile, error: ${err.message}`);
+        throw err;
+      });
   }
 
   get endpoint(): string {
