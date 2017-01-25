@@ -27,7 +27,7 @@ export class Command {
     parseOptions(flags, positionals, this, args.args);
     this.commandPath = args.commandPath;
     this.command = args.command;
-    this.clientFactory = createMobileCenterClient(this.command, () => Promise.resolve(false));
+    this.clientFactory = createMobileCenterClient(this.command, () => Promise.resolve(true));
     debug(`Starting command with path ${args.commandPath}, command ${args.command}`);
   }
 

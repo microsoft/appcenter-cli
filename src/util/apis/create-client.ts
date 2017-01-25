@@ -27,7 +27,7 @@ type TelemetryChecker = { (): Promise<boolean> };
 export function createMobileCenterClient(command: string[], telemetryEnabled: TelemetryChecker): MobileCenterClientFactory {
   function createClientOptions(): any {
     debug(`Creating client options, isDebug = ${isDebug()}`);
-    const filters = [ userAgentFilter, telemetryFilter(command.join(" "), telemetryEnabled) ];
+    const filters = [userAgentFilter, telemetryFilter(command.join(" "), telemetryEnabled)];
     return {
       filters: isDebug() ? [createLogger()].concat(filters) : filters
     };
