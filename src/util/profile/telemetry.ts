@@ -5,7 +5,7 @@ import * as os from "os";
 import * as path from "path";
 
 import { getProfileDir, fileExistsSync } from "../misc";
-import { out, prompt } from "../interaction";
+import { out, prompt, terminal } from "../interaction";
 import * as wrap from "wordwrap";
 
 const telemetryOptionFile: string = "telemetryEnabled.json";
@@ -20,12 +20,7 @@ const telemetryPromptText = os.EOL +
  os.EOL;
 
 function promptForTelemetryEnable() : Promise<boolean> {
-  let width: number;
-  if ((process.stdout as any).isTTY) {
-    width = (process.stdout as any).columns - 2;
-  } else {
-    width = 72;
-  }
+  let width = terminal.columns() - 2;
 
   let promptText = wrap(width)(telemetryPromptText);
   out.text(promptText);
@@ -44,6 +39,11 @@ export function telemetryIsEnabled(disableTelemetrySwitch: boolean): Promise<boo
   if (hasTelemetryOptionSaved()) {
     return getSavedTelemetryOption();
   }
+
+  if (!terminal.isInteractive()) {
+    return Promise.resolve(false);
+  }
+
   return promptForTelemetryEnable()
     .then((enabled: boolean) => {
       saveTelemetryOption(enabled);
