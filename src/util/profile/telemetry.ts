@@ -15,6 +15,8 @@ const telemetryPromptText = os.EOL +
 "Mobile Center CLI would like to collect data about how users use CLI commands " +
  "and some problems they encounter. Participation is voluntary and when you choose to participate your " +
  "device automatically sends information to Microsoft about how you use Mobile Center CLI." +
+ os.EOL +
+ "For more information, please see our privary policy at https://www.visualstudio.com/vs/mobile-center/privacy" +
  os.EOL;
 
 function promptForTelemetryEnable() : Promise<boolean> {
@@ -63,6 +65,6 @@ function getSavedTelemetryOption(): Promise<boolean> {
   return Promise.resolve(!!enabled);
 }
 
-function saveTelemetryOption(enabled: boolean) {
+export function saveTelemetryOption(enabled: boolean) {
   fs.writeFileSync(telemetryFileName(), JSON.stringify(enabled), "utf8");
 }
