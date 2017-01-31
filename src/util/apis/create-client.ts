@@ -22,9 +22,7 @@ export interface MobileCenterClientFactory {
   fromProfile(user: Profile): MobileCenterClient;
 }
 
-type TelemetryChecker = { (): Promise<boolean> };
-
-export function createMobileCenterClient(command: string[], telemetryEnabled: TelemetryChecker): MobileCenterClientFactory {
+export function createMobileCenterClient(command: string[], telemetryEnabled: boolean): MobileCenterClientFactory {
   function createClientOptions(): any {
     debug(`Creating client options, isDebug = ${isDebug()}`);
     const filters = [userAgentFilter, telemetryFilter(command.join(" "), telemetryEnabled)];

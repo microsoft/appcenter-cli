@@ -13,13 +13,13 @@ export function prompt(message: string): Promise<string> {
 }
 
 export namespace prompt {
-  export function confirm(message: string): Promise<boolean> {
+  export function confirm(message: string, defaultResponse?: boolean): Promise<boolean> {
     return prompt.question([
       {
         type: "confirm",
         name: "confirm",
         message: message,
-        default: false
+        default: !!defaultResponse
       }
     ])
     .then(answers => {

@@ -5,7 +5,7 @@ import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "
 import { setDebug, isDebug, setQuiet, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
-import { getUser, environments } from "../profile";
+import { getUser, environments, telemetryIsEnabled } from "../profile";
 import { MobileCenterClient, createMobileCenterClient, MobileCenterClientFactory } from "../apis";
 import * as path from "path";
 
@@ -27,7 +27,6 @@ export class Command {
     parseOptions(flags, positionals, this, args.args);
     this.commandPath = args.commandPath;
     this.command = args.command;
-    this.clientFactory = createMobileCenterClient(this.command, () => Promise.resolve(true));
     debug(`Starting command with path ${args.commandPath}, command ${args.command}`);
   }
 
@@ -73,6 +72,11 @@ export class Command {
   @help("Display command's version")
   public version: boolean;
 
+
+  @longName("disable-telemetry")
+  @help("Do not send any CLI telemeetry for this command, overriding defaults")
+  public disableTelemetry: boolean;
+
   // Entry point for runner. DO NOT override in command definition!
   async execute(): Promise<Result.CommandResult> {
     debug(`Initial execution of command`);
@@ -110,6 +114,7 @@ export class Command {
             );
         }
     }
+    this.clientFactory = createMobileCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry));
     return this.runNoClient();
   }
 

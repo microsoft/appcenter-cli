@@ -1,6 +1,7 @@
 // Function to query and persist telemetry enabling settings
 
 import * as fs from "fs";
+import * as os from "os";
 import * as path from "path";
 
 import { getProfileDir, fileExistsSync } from "../misc";
@@ -8,18 +9,36 @@ import { out, prompt } from "../interaction";
 import * as wrap from "wordwrap";
 
 const telemetryOptionFile: string = "telemetryEnabled.json";
+const telemetryDisableEnvironmentVar = "MOBILE_CENTER_TELEMETRY";
 
-const telemetryPromptText = `Mobile Center CLI would like to collect data about how users use CLI commands
- and some problems they encounter.  Participation is voluntary and when you choose to participate your
- device automatically sends information to Microsoft about how you use Mobile Center CLI.`;
+const telemetryPromptText = os.EOL +
+"Mobile Center CLI would like to collect data about how users use CLI commands " +
+ "and some problems they encounter. Participation is voluntary and when you choose to participate your " +
+ "device automatically sends information to Microsoft about how you use Mobile Center CLI." +
+ os.EOL;
 
 function promptForTelemetryEnable() : Promise<boolean> {
-  let promptText = wrap(60)(telemetryPromptText);
+  let width: number;
+  if ((process.stdout as any).isTTY) {
+    width = (process.stdout as any).columns - 2;
+  } else {
+    width = 72;
+  }
+
+  let promptText = wrap(width)(telemetryPromptText);
   out.text(promptText);
-  return prompt.confirm("Enable telemetry? ");
+  return prompt.confirm("Enable telemetry? ", true);
 }
 
-function telemetryIsEnabled(): Promise<boolean> {
+export function telemetryIsEnabled(disableTelemetrySwitch: boolean): Promise<boolean> {
+  if (disableTelemetrySwitch) {
+    return Promise.resolve(false);
+  }
+
+  if (process.env[telemetryDisableEnvironmentVar]) {
+    return Promise.resolve(process.env[telemetryDisableEnvironmentVar].toLowerCase() === "on");
+  }
+
   if (hasTelemetryOptionSaved()) {
     return getSavedTelemetryOption();
   }
