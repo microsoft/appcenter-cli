@@ -8,7 +8,7 @@ import * as os from "os";
 import * as mkdirp from "mkdirp";
 
 import { environments } from "./environments";
-import { profileFile, getProfileDir } from "../misc";
+import { profileFile, getProfileDir, fileExistsSync } from "../misc";
 import { TokenValueType, tokenStore } from "../token-store";
 
 const debug = require("debug")("mobile-center-cli:util:profile:profile");
@@ -48,12 +48,20 @@ class ProfileImpl implements Profile {
 
   get accessTokenId(): Promise<string> {
     return tokenStore.get(this.userName)
-      .then(entry => entry.accessToken.id);
+      .then(entry => entry.accessToken.id)
+      .catch((err: Error) => {
+        debug(`Failed to get token id from profile, error: ${err.message}`);
+        throw err;
+      });
   }
 
   get accessToken(): Promise<string> {
     return tokenStore.get(this.userName)
-      .then(entry => entry.accessToken.token);
+      .then(entry => entry.accessToken.token)
+      .catch((err: Error) => {
+        debug(`Failed to get token from profile, error: ${err.message}`);
+        throw err;
+      });
   }
 
   get endpoint(): string {
@@ -121,18 +129,6 @@ export function toDefaultApp(app: string): DefaultApp {
 
 let currentProfile: Profile = null;
 
-function fileExists(filename: string): boolean {
-  try {
-    return fs.statSync(filename).isFile();
-  }
-  catch (err) {
-    if (err.code !== "ENOENT") {
-      throw err;
-    }
-  }
-  return false;
-}
-
 function getProfileFilename(): string {
   const profileDir = getProfileDir();
   return path.join(profileDir, profileFile);
@@ -141,7 +137,7 @@ function getProfileFilename(): string {
 function loadProfile(): Profile {
   const profilePath = getProfileFilename();
   debug(`Loading profile from ${profilePath}`);
-  if (!fileExists(profilePath)) {
+  if (!fileExistsSync(profilePath)) {
     debug("No profile file exists");
     return null;
   }

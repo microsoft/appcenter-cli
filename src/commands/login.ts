@@ -89,13 +89,13 @@ export default class LoginCommand extends Command {
 
   private createAuthToken(): Promise<ClientResponse<models.ApiTokensCreateResponse>> {
     const endpoint = environments(this.environmentName).endpoint;
-    const client = createMobileCenterClient(this.userName, this.password, endpoint);
+    const client = this.clientFactory.fromUserNameAndPassword(this.userName, this.password, endpoint);
     return clientRequest<models.ApiTokensCreateResponse>(cb => client.account.createApiToken({ description: "Created from mobile center cli"}, cb));
   }
 
   private getUserInfo(token: string): Promise<ClientResponse<models.UserProfileResponse>> {
     const endpoint = environments(this.environmentName).endpoint;
-    const client = createMobileCenterClient(token, endpoint);
+    const client = this.clientFactory.fromToken(token, endpoint);
     return clientRequest<models.UserProfileResponse>(cb => client.account.getUserProfile(cb));
   }
 
@@ -104,7 +104,7 @@ export default class LoginCommand extends Command {
     if (currentUser !== null) {
       debug(`Currently logged in as ${currentUser.userName}, removing token id ${currentUser.accessTokenId}`);
 
-      const client = createMobileCenterClient(currentUser);
+      const client = this.clientFactory.fromProfile(currentUser);
       await logout(client, currentUser);
     }
   }

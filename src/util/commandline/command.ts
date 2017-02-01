@@ -5,8 +5,8 @@ import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "
 import { setDebug, isDebug, setQuiet, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
-import { getUser, environments } from "../profile";
-import { MobileCenterClient, createMobileCenterClient } from "../apis";
+import { getUser, environments, telemetryIsEnabled } from "../profile";
+import { MobileCenterClient, createMobileCenterClient, MobileCenterClientFactory } from "../apis";
 import * as path from "path";
 
 const debug = require("debug")("mobile-center-cli:util:commandline:command");
@@ -20,17 +20,22 @@ export interface CommandArgs {
 
 export class Command {
   constructor(args: CommandArgs) {
+
     const proto = Object.getPrototypeOf(this);
     const flags = getOptionsDescription(proto);
     const positionals = getPositionalOptionsDescription(proto);
     parseOptions(flags, positionals, this, args.args);
     this.commandPath = args.commandPath;
     this.command = args.command;
+    debug(`Starting command with path ${args.commandPath}, command ${args.command}`);
   }
 
   // Used by help system to generate help messages
   protected command: string[];
   protected commandPath: string;
+
+  // Support for login command
+  protected clientFactory: MobileCenterClientFactory;
 
   // Default arguments supported by every command
 
@@ -66,6 +71,11 @@ export class Command {
   @longName("version")
   @help("Display command's version")
   public version: boolean;
+
+
+  @longName("disable-telemetry")
+  @help("Do not send any CLI telemeetry for this command, overriding defaults")
+  public disableTelemetry: boolean;
 
   // Entry point for runner. DO NOT override in command definition!
   async execute(): Promise<Result.CommandResult> {
@@ -104,6 +114,7 @@ export class Command {
             );
         }
     }
+    this.clientFactory = createMobileCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry));
     return this.runNoClient();
   }
 
@@ -119,12 +130,12 @@ export class Command {
     if (this.token) {
       let environment = environments(this.environmentName);
       debug(`Creating mobile center client for command from token`);
-      client = createMobileCenterClient(this.token, environment.endpoint);
+      client = this.clientFactory.fromToken(this.token, environment.endpoint);
     } else {
       let user = getUser();
       if (user) {
         debug(`Creating mobile center client for command for current logged in user`);
-        client = createMobileCenterClient(user);
+        client = this.clientFactory.fromProfile(user);
       }
     }
     if (client) {

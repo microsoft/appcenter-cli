@@ -5,3 +5,4 @@ export { out };
 
 export * from "./io-options";
 export * from "./padding";
+export * from "./terminal";
