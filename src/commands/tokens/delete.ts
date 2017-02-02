@@ -1,6 +1,6 @@
 // tokens delete command
 
-import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
+import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes, position, required } from "../../util/commandline";
 import { out, prompt } from "../../util/interaction";
 import { MobileCenterClient, models, clientRequest } from "../../util/apis";
 
@@ -15,7 +15,7 @@ export default class AppDeleteCommand extends Command {
 
   @help("ID of the API token")
   @required
-  @hasArg
+  @position(0)
   id: string;
 
   async run(client: MobileCenterClient): Promise<CommandResult> {
