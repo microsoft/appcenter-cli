@@ -39,7 +39,7 @@ works well.
 #### Typescript compiler and Typings
 
 The typescript compilation can be run via the `npm run build` command, but if you want the Typescript compiler available directly,
-install it on your machine by doing `npm install -g typescript@2.0.10`.
+install it on your machine by doing `npm install -g typescript`.
 
 The Typings tool is useful if you're bringing in a new exteral Javascript library and want to get access to type definitions
 for that library. The typings files are checked into the repo, but if you want to download and add new ones, you'll need to
@@ -235,7 +235,7 @@ To get consistent user experience among commands for all beacons, the command li
 
 We follow the standard GitHub flow. Each person working on the cli should create their own fork of the repo. Work in your own repo (preferably on a feature branch). When ready, send a pull request to the master Microsoft/MobileCenter-cli repo against the master branch. After review, the pull request will be merged.
 
-Issue tracking will be done on [VSO](https://mseng.visualstudio.com/Mobile%20DevOps/Command%20Line%20Interface/).
+Issue tracking will be done on [VSO](https://mseng.visualstudio.com/Mobile%20Center/Command%20Line%20Interface/).
 
 # Building Installers
 
