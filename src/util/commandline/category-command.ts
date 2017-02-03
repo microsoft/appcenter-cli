@@ -26,11 +26,22 @@ export class CategoryCommand extends Command {
     out.help();
     out.help(this.categoryHelp());
     out.help();
-    const categoryContents = this.categoryDirContents();
 
-    out.help(this.subCategories(categoryContents));
+    const categoryContents = this.categoryDirContents();
+    const subCategoriesHelp = this.subCategories(categoryContents);
+    const categoryCommands = this.categoryCommands(categoryContents);
+    const helpTable = subCategoriesHelp.concat(categoryCommands);
+
+    // Calculate max length of the strings from the first column (category/commands names) - it will be a width for the first column;
+    const firstColumnWidth = helpTable.reduce((contenderMaxWidth, row) => Math.max(row[0].length, contenderMaxWidth), 0);
+
+    // Writing a help table
+    const tableObject = new Table(out.getOptionsForTwoColumnTableWithNoBorders(firstColumnWidth));
+    helpTable.forEach((row) => tableObject.push(row));
+    out.help(tableObject.toString());
+
     out.help();
-    out.help(this.categoryCommands(categoryContents));
+
     return success();
   }
 
@@ -38,7 +49,8 @@ export class CategoryCommand extends Command {
     debug(`Looking for category description in directory ${this.commandPath}`);
     const helpPath = path.join(this.commandPath, category, "category.txt");
     try {
-      const helpText = fs.readFileSync(helpPath, "utf8");
+      // Replacing CRLF with LF to make sure that cli-table2 will be able to correctly split the string
+      const helpText = fs.readFileSync(helpPath, "utf8").replace(/\r\n/g,'\n');
       return helpText;
     } catch (err) {
       if (err.code === "ENOENT") {
@@ -55,24 +67,19 @@ export class CategoryCommand extends Command {
     });
   }
 
-  subCategories(contents: [string, fs.Stats][]): string {
-    const helpTable = new Table(out.noTableBorders);
-    contents.filter(item => item[1].isDirectory() && item[0] !== "lib")
-      .forEach(item => {
-        helpTable.push([ `    ${scriptName} ${this.command.concat(item[0]).join(" ")}`, this.categoryHelp(item[0])]);
+  subCategories(contents: [string, fs.Stats][]): string[][] {
+    return contents.filter(item => item[1].isDirectory() && item[0] !== "lib")
+      .map(item => {
+         return [ `    ${scriptName} ${this.command.concat(item[0]).join(" ")}    `, this.categoryHelp(item[0])];
       });
-
-    return helpTable.toString();
   }
 
-  categoryCommands(contents: [string, fs.Stats][]): string {
+  categoryCommands(contents: [string, fs.Stats][]): string[][] {
     // Locate commands in category directory
-    const helpTable = new Table(out.noTableBorders);
-    contents.filter(item => item[1].isFile() && /\.[tj]s$/.test(item[0]))
-      .forEach(item => {
-        helpTable.push([`    ${this.commandName(item)}`, this.commandHelp(item)]);
+    return contents.filter(item => item[1].isFile() && /\.[tj]s$/.test(item[0]))
+      .map(item => {
+        return [`    ${this.commandName(item)}    `, this.commandHelp(item)];
       });
-    return helpTable.toString();
   }
 
   commandName(item: [string, fs.Stats]): string {

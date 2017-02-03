@@ -10,6 +10,8 @@ import * as wrap from "wordwrap";
 const Table = require("cli-table2");
 const Spinner = require("cli-spinner").Spinner;
 
+import { terminal } from "./terminal";
+
 //
 // Display a progress spinner while waiting for the provided promise
 // to complete.
@@ -113,17 +115,26 @@ export function table(...args: any[]): void {
 }
 
 //
-// Formatting helper for cli-table2 - no table outlines. Used by
+// Formatting helper for cli-table2 - two columns with no table outlines. Used by
 // help commands for formatting lists of options, commands, etc.
 //
-export const noTableBorders = {
-  chars: {
-    "top": "", "top-mid": "", "top-left": "", "top-right": "",
-    "bottom": "", "bottom-mid": "", "bottom-left": "", "bottom-right": "",
-    "left": "", "left-mid": "", "mid": "", "mid-mid": "",
-    "right": "", "right-mid": "", "middle": " "
-  },
-  style: { "padding-left": 0, "padding-right": 0 }
+export function getOptionsForTwoColumnTableWithNoBorders(firstColumnWidth: number) {
+  const consoleWidth = terminal.columns();
+  // There will be a single whitespace to the right from the each column, count it as unavailable
+  const availableWidth = consoleWidth - 2;
+  const secondColumnWidth = availableWidth - firstColumnWidth;
+
+  return {
+    chars: {
+      "top": "", "top-mid": "", "top-left": "", "top-right": "",
+      "bottom": "", "bottom-mid": "", "bottom-left": "", "bottom-right": "",
+      "left": "", "left-mid": "", "mid": " ", "mid-mid": "",
+      "right": "", "right-mid": "", "middle": " "
+    },
+    style: { "padding-left": 0, "padding-right": 0 },
+    colWidths: [firstColumnWidth, secondColumnWidth],
+    wordWrap: true
+  }
 };
 
 //
