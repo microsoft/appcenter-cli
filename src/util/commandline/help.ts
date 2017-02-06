@@ -25,17 +25,17 @@ import { scriptName } from "../misc";
 export function runHelp(commandPrototype: any, commandObj: any): void {
   const commandExample: string = getCommandExample(commandPrototype, commandObj);
   const commandHelp: string = getCommandHelp(commandObj);
-  const optionsHelp: string[] = getOptionsHelp(commandPrototype);
+  const optionsHelpTable: any = getOptionsHelpTable(commandPrototype);
 
   out.help();
   out.help(commandExample);
   out.help();
   out.help(commandHelp);
 
-  if(optionsHelp.length > 0) {
+  if(optionsHelpTable.length > 0) {
     out.help();
     out.help("Command Options:");
-    optionsHelp.forEach(h => out.help(h));
+    out.help(optionsHelpTable.toString());
   }
   out.help();
 }
@@ -65,24 +65,26 @@ function toSwitchOptionHelp(option: OptionDescription): SwitchOptionHelp {
   };
 }
 
-function getOptionsHelp(commandPrototype: any): string[] {
+function getOptionsHelpTable(commandPrototype: any): any {
   const switchOpts = getSwitchOptionsHelp(commandPrototype);
   const posOpts = getPositionalOptionsHelp(commandPrototype);
+  const opts = switchOpts.concat(posOpts);
 
-  const joiner = switchOpts.length > 0 && posOpts.length > 0 ? [ "" ] : [];
+  // Calculate max length of the strings from the first column (switches/positional parameters) - it will be a width for the first column;
+  const firstColumnWidth = opts.reduce((contenderMaxWidth, optRow) => Math.max(optRow[0].length, contenderMaxWidth), 0);
 
-  return switchOpts.concat(joiner).concat(posOpts);
+  // Creating a help table object
+  let helpTableObject = new Table(out.getOptionsForTwoColumnTableWithNoBorders(firstColumnWidth));
+  opts.forEach((opt) => helpTableObject.push(opt));
+
+  return helpTableObject;
 }
 
-function getSwitchOptionsHelp(commandPrototype: any): string[] {
+function getSwitchOptionsHelp(commandPrototype: any): string[][] {
   const options = values(getOptionsDescription(commandPrototype)).map(toSwitchOptionHelp);
   debug(`Command has ${options.length} switch options:`);
   debug(options.map(o => `${o.shortName}|${o.longName}`).join("/"));
-  const helpTable = new Table(out.noTableBorders);
-  options.forEach(optionHelp => {
-    helpTable.push(["    " + switchText(optionHelp), optionHelp.helpText])
-  });
-  return [ helpTable.toString() ];
+  return options.map((optionHelp) => [`    ${switchText(optionHelp)}    `, optionHelp.helpText]);
 }
 
 interface PositionalOptionHelp {
@@ -97,17 +99,13 @@ function toPositionalOptionHelp(option: PositionalOptionDescription): Positional
   };
 }
 
-function getPositionalOptionsHelp(commandPrototype: any): string[] {
+function getPositionalOptionsHelp(commandPrototype: any): string[][] {
   const options: PositionalOptionHelp[] = getPositionalOptionsDescription(commandPrototype).map(toPositionalOptionHelp);
 
   debug(`Command has ${options.length} positional options:`);
   debug(options.map(o => o.name).join("/"));
 
-  const helpTable = new Table(out.noTableBorders);
-  options.forEach(opt => {
-    helpTable.push(["    " + opt.name, opt.helpText]);
-  });
-  return [helpTable.toString()];
+  return options.map((optionsHelp) => [`    ${optionsHelp.name}    `, optionsHelp.helpText])
 }
 
 
