@@ -4,6 +4,8 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 
+import * as mkdirp from "mkdirp";
+
 import { getProfileDir, fileExistsSync } from "../misc";
 import { out, prompt, terminal } from "../interaction";
 import * as wrap from "wordwrap";
@@ -66,5 +68,6 @@ function getSavedTelemetryOption(): Promise<boolean> {
 }
 
 export function saveTelemetryOption(enabled: boolean) {
+  mkdirp.sync(getProfileDir());
   fs.writeFileSync(telemetryFileName(), JSON.stringify(enabled), "utf8");
 }
