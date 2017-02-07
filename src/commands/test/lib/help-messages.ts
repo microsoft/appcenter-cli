@@ -3,6 +3,8 @@ import * as os from "os";
 export module Messages {
   export module TestCloud {
     export module Commands {
+      export const GenerateUITest = "Generates a Xamarin.UITest project";
+
       export const PrepareAppium = "Creates artifacts directory with Appium tests.";
       export const PrepareCalabash = `Creates artifacts directory with Calabash tests.${os.EOL}` + 
                                      `Required external tools:${os.EOL}` + 
@@ -33,6 +35,9 @@ export module Messages {
       export const Include = 'Additional files and directories to include. The value must be either path relative to the input directory, or be in format "targetDir=sourceDir"';
       export const TestParameter = 'Additional test parameters. The value must be in format "key=value"';
       export const AppPath = "Path to an application file";
+      export const AppPlatform = "The app's platform ('ios' or 'android')";
+
+      export const GemerateOutputPath = "The path where the tests will be generated";
 
       export const PrepareArtifactsDir = "Path to artifacts directory to create";
       export const RunDevices = "Device selection slug";
