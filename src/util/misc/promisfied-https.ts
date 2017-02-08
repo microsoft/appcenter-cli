@@ -1,5 +1,4 @@
 import * as https from "https";
-import * as _ from "lodash";
 import * as fs from "fs";
 
 export async function getToFile(url: string, filePath: string): Promise<void> {
