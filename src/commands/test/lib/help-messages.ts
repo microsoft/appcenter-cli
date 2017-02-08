@@ -37,7 +37,7 @@ export module Messages {
       export const AppPath = "Path to an application file";
       export const AppPlatform = "The app's platform ('ios' or 'android')";
 
-      export const GemerateOutputPath = "The path where the tests will be generated";
+      export const GenerateOutputPath = "The path where the tests will be generated";
 
       export const PrepareArtifactsDir = "Path to artifacts directory to create";
       export const RunDevices = "Device selection slug";

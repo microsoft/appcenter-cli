@@ -15,7 +15,7 @@ export default class GenerateUITestCommand extends Command {
   @hasArg
   platform: string;
 
-  @help(Messages.TestCloud.Arguments.GemerateOutputPath)
+  @help(Messages.TestCloud.Arguments.GenerateOutputPath)
   @longName("output-path")
   @required
   @hasArg
