@@ -33,8 +33,8 @@ export default class GenerateUITestCommand extends Command {
 
     if (await pfs.exists(this.outputPath)) {
       let files = await pfs.readdir(this.outputPath);
-      if (!files.length) {
-        failure(ErrorCodes.Exception, this.outputPath + " exists and is not empty");
+      if (!(files.length === 0)) {
+        return failure(ErrorCodes.Exception, this.outputPath + " exists and is not empty");
       }
     }
 
