@@ -23,14 +23,14 @@ export default class GenerateUITestCommand extends Command {
 
   constructor(args: CommandArgs) {
     super(args);
-
-    if (this.platform.toLowerCase() != "ios" && this.platform.toLowerCase() != "android") {
-      throw new Error("Valid values of argument --platform are 'ios' and 'android'");
-    }
   }
 
   async run(client: MobileCenterClient): Promise<CommandResult> {
 
+    if (this.platform.toLowerCase() != "ios" && this.platform.toLowerCase() != "android") {
+      throw new Error("Valid values of argument --platform are 'ios' and 'android'");
+    }
+    
     if (await pfs.exists(this.outputPath)) {
       let files = await pfs.readdir(this.outputPath);
       if (!(files.length === 0)) {
