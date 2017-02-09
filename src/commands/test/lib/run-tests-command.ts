@@ -76,7 +76,12 @@ export class RunTestsCommand extends AppCommand {
     }
   }
 
+  // Override this for things like parameter validation to avoid throwing errors in the constructor
+  protected async runInner(): Promise<void> {
+  }
+
   public async run(client: MobileCenterClient): Promise<CommandResult> {
+    await this.runInner();
     try {
       let artifactsDir = await this.getArtifactsDir();
 
