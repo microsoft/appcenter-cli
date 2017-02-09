@@ -25,7 +25,7 @@ export default class GenerateUITestCommand extends Command {
     super(args);
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async runNoClient(): Promise<CommandResult> {
 
     if (this.platform.toLowerCase() != "ios" && this.platform.toLowerCase() != "android") {
       throw new Error("Valid values of argument --platform are 'ios' and 'android'");
