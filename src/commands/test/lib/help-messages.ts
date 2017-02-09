@@ -16,7 +16,8 @@ export module Messages {
                                     `Required external tools:${os.EOL}` + 
                                     `- .NET Framework on Windows, Mono Runtime on OS X${os.EOL}` + 
                                     `- NuGet package Xamarin.UITests, version 2.0.1 or higher`;
-
+      export const PrepareXCUITest = "Creates an artifacts directory with XCUITest tests.";
+      
       export const RunAppium = "Starts test run with Appium tests.";
       export const RunCalabash = `Starts test run with Calabash tests.${os.EOL}` + 
                                  `Required external tools:${os.EOL}` + 
@@ -28,6 +29,7 @@ export module Messages {
                                 `Required external tools:${os.EOL}` + 
                                 `- .NET Framework on Windows, Mono Runtime on OS X${os.EOL}` + 
                                 `- NuGet package Xamarin.UITests, version 2.0.1 or higher`;
+      export const RunXCUITest = "Starts test run with XCUITest tests.";
 
       export const Status = "Checks status of started test run.";
     }
@@ -69,6 +71,8 @@ export module Messages {
 
       export const StatusTestRunId = "ID of started test run";
       export const StatusContinuous = "Continuously checks test run status until it completes";
+
+      export const XCUITestIpaPath = "Path to *.ipa file with XCUITest tests.";
     }
   }
 }
