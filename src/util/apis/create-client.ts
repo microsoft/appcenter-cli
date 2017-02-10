@@ -18,7 +18,7 @@ import { Profile } from "../profile";
 
 export interface MobileCenterClientFactory {
   fromUserNameAndPassword(userName: string, password: string, endpoint: string): MobileCenterClient;
-  fromToken(token: string | Promise<string>, endpoint: string): MobileCenterClient;
+  fromToken(token: string | Promise<string> | {(): Promise<string>}, endpoint: string): MobileCenterClient;
   fromProfile(user: Profile): MobileCenterClient;
 }
 
@@ -37,12 +37,22 @@ export function createMobileCenterClient(command: string[], telemetryEnabled: bo
       return new MobileCenterClient(new BasicAuthenticationCredentials(userName, password), endpoint, createClientOptions());
     },
 
-    fromToken(token: string | Promise<string>, endpoint: string): MobileCenterClient {
-      if (typeof token === "string") {
-        token = Promise.resolve(token);
-      }
+    fromToken(token: string | Promise<string> | {(): Promise<string>}, endpoint: string): MobileCenterClient {
       debug(`Creating client from token for endpoint ${endpoint}`);
-      return new MobileCenterClient(new MobileCenterClientCredentials(token), endpoint, createClientOptions());
+      let tokenFunc: {(): Promise<string>};
+
+      if (typeof token === "string") {
+        debug("Creating from token as string");
+        tokenFunc = () => Promise.resolve(<string>token);
+      } else if (typeof token === "object") {
+        debug("Creating from token as promise");
+        tokenFunc = () => <Promise<string>>token;
+      } else {
+        debug("Creating from token as function");
+        tokenFunc = token;
+      }
+      debug(`Passing token ${tokenFunc} of type ${typeof tokenFunc}`);
+      return new MobileCenterClient(new MobileCenterClientCredentials(tokenFunc), endpoint, createClientOptions());
     },
 
     fromProfile(user: Profile): MobileCenterClient {
@@ -51,7 +61,7 @@ export function createMobileCenterClient(command: string[], telemetryEnabled: bo
         return null;
       }
       debug(`Creating client from user for user ${inspect(user)}`);
-      return new MobileCenterClient(new MobileCenterClientCredentials(user.accessToken), user.endpoint, createClientOptions());
+      return new MobileCenterClient(new MobileCenterClientCredentials(() => user.accessToken), user.endpoint, createClientOptions());
     }
   };
 }

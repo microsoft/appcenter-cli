@@ -4,18 +4,20 @@
 
 import { WebResource } from "ms-rest";
 const debug = require("debug")("mobile-center-cli:util:apis:mobile-center-client-credentials");
-export class MobileCenterClientCredentials {
-  private token: Promise<string>;
 
-  constructor(token: Promise<string>) {
-    this.token = token;
+export class MobileCenterClientCredentials {
+  private getToken: {(): Promise<string>};
+
+  constructor(getToken: {(): Promise<string>}) {
+    debug(`Constructor with getToken = ${getToken} of type ${typeof getToken}`);
+    this.getToken = getToken;
   }
 
   signRequest(request: WebResource, callback: {(err: Error): void}): void {
     debug("Getting token for request");
-    this.token
+    this.getToken()
       .then(token => {
-        debug("got token");
+        debug(`got token ${token} of type ${typeof token}`);
         request.withHeader("x-api-token", token);
         callback(null);
       })
