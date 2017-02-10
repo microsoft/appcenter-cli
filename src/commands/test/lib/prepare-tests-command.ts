@@ -41,13 +41,13 @@ export class PrepareTestsCommand extends Command {
     }
   }
 
-  // Override this for things like parameter validation to avoid throwing errors in the constructor
-  protected async runNoClientInner(): Promise<void> {
+  // Override this if you need to validate options
+  protected async validateOptions(): Promise<void> {
   }
 
   public async runNoClient(): Promise<CommandResult> {
     try {
-      await this.runNoClientInner();
+      await this.validateOptions();
       let manifestPath = await progressWithResult("Preparing tests", this.prepareManifest());
       await this.addIncludedFilesAndTestParametersToManifest(manifestPath);
       out.text(this.getSuccessMessage(manifestPath));
