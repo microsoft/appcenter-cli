@@ -74,7 +74,7 @@ export class Command {
 
 
   @longName("disable-telemetry")
-  @help("Do not send any CLI telemeetry for this command, overriding defaults")
+  @help("Do not send any CLI telemetry for this command, overriding defaults")
   public disableTelemetry: boolean;
 
   // Entry point for runner. DO NOT override in command definition!
