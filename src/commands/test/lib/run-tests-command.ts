@@ -76,7 +76,12 @@ export class RunTestsCommand extends AppCommand {
     }
   }
 
+  // Override this if you need to validate options
+  protected async validateOptions(): Promise<void> {
+  }
+
   public async run(client: MobileCenterClient): Promise<CommandResult> {
+    await this.validateOptions();
     try {
       let artifactsDir = await this.getArtifactsDir();
 

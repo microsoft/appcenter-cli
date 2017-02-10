@@ -41,8 +41,13 @@ export class PrepareTestsCommand extends Command {
     }
   }
 
+  // Override this if you need to validate options
+  protected async validateOptions(): Promise<void> {
+  }
+
   public async runNoClient(): Promise<CommandResult> {
     try {
+      await this.validateOptions();
       let manifestPath = await progressWithResult("Preparing tests", this.prepareManifest());
       await this.addIncludedFilesAndTestParametersToManifest(manifestPath);
       out.text(this.getSuccessMessage(manifestPath));

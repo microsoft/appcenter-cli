@@ -59,7 +59,9 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
 
   constructor(args: CommandArgs) {
     super(args);
+  }
 
+  protected async validateOptions(): Promise<void> {
     if (this.assemblyDir && !this.buildDir) {
       out.text("Argument --assembly-dir is obsolete. Please use --build-dir instead.")
       this.buildDir = this.assemblyDir;

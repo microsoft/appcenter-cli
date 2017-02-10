@@ -40,7 +40,9 @@ export default class RunCalabashTestsCommand extends RunTestsCommand {
 
   constructor(args: CommandArgs) {
     super(args);
+  }
 
+  protected async validateOptions(): Promise<void> {
     if (this.workspaceDir && !this.projectDir) {
       out.text("Argument --workspace is obsolete. Please use --project-dir instead.");
       this.projectDir = this.workspaceDir;
