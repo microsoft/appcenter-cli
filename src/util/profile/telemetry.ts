@@ -18,7 +18,7 @@ const telemetryPromptText = os.EOL +
  "and some problems they encounter. Participation is voluntary and when you choose to participate your " +
  "device automatically sends information to Microsoft about how you use Mobile Center CLI." +
  os.EOL +
- "For more information, please see our privary policy at https://www.visualstudio.com/vs/mobile-center/privacy" +
+ "For more information, please see our privacy policy at https://www.visualstudio.com/vs/mobile-center/privacy" +
  os.EOL;
 
 function promptForTelemetryEnable() : Promise<boolean> {

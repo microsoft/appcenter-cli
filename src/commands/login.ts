@@ -102,9 +102,11 @@ export default class LoginCommand extends Command {
   private async removeLoggedInUser(): Promise<void> {
     const currentUser = getUser();
     if (currentUser !== null) {
-      debug(`Currently logged in as ${currentUser.userName}, removing token id ${currentUser.accessTokenId}`);
+      debug(`Currently logged in as ${currentUser.userName}, removing token`);
 
+      debug(`Creating client factory`);
       const client = this.clientFactory.fromProfile(currentUser);
+      debug(`Removing existing token`);
       await logout(client, currentUser);
     }
   }
