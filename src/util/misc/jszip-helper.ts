@@ -28,3 +28,22 @@ export async function writeZipToPath(path: string, zip: JSZip): Promise<void> {
 
   await Pfs.writeFile(path, zipBuffer);
 }
+
+/**
+ * Adds the folder and it's content to the zip
+ */
+export async function addFolderToZipRecursively(path: string, zip: JsZip): Promise<void> {
+  let subEntitiesNames = await Pfs.readdir(path);
+  let folderZip = zip.folder(Path.basename(path));
+
+  for (let subEntityName of subEntitiesNames){
+    let subEntityPath = Path.join(path, subEntityName);
+    let subEntityStats = await Pfs.stat(subEntityPath);
+    if (subEntityStats.isDirectory()) {
+      await addFolderToZipRecursively(subEntityPath, folderZip);
+    } else {
+      let fileBuffer = await Pfs.readFile(subEntityPath);
+      folderZip.file(subEntityName, fileBuffer);
+    }
+  }
+}
