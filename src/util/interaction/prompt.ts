@@ -27,6 +27,34 @@ export namespace prompt {
     });
   }
 
+  export function confirmWithTimeout(message: string, timeoutMS: number, defaultResponse?: boolean): Promise<boolean> {
+    if (isQuiet()) {
+      return Promise.resolve(!!defaultResponse);
+    } else {
+      let timerId: NodeJS.Timer;
+      let confirmPrompt = inquirer.prompt({
+        type: "confirm",
+        name: "confirm",
+        message: message,
+        default: !!defaultResponse
+      });
+
+      let promptCompleted = confirmPrompt.then(answers => {
+        clearTimeout(timerId);
+        return answers["confirm"];
+      });
+
+      let timeoutPromise: Promise<boolean> = new Promise((resolve, reject) => {
+        timerId = setTimeout(resolve, timeoutMS);
+      }).then(() => {
+        (<any>confirmPrompt).ui.close();
+        return !!defaultResponse;
+      });
+
+      return Promise.race([promptCompleted, timeoutPromise]);
+    }
+  }
+
   export function password(message: string): Promise<string> {
     return prompt.question([
       {
