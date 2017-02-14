@@ -73,16 +73,19 @@ export function text(...args: any[]): void {
   let converter: {(data: any): string};
   let data: any;
   if (args.length === 1) {
-    converter = s => s;
+    converter = null;
     data = args[0];
   } else {
     [converter, data] = args;
   }
 
-  if (!formatIsJson()) {
-    console.log(converter(data));
+  if (formatIsJson()) {
+    if (converter) {
+      console.log(JSON.stringify(data));
+    }
   } else {
-    console.log(JSON.stringify(data));
+    converter = converter || (s => s);
+    console.log(converter(data));
   }
 }
 

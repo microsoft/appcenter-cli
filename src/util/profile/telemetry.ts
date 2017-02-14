@@ -7,7 +7,7 @@ import * as path from "path";
 import * as mkdirp from "mkdirp";
 
 import { getProfileDir, fileExistsSync } from "../misc";
-import { out, prompt, terminal } from "../interaction";
+import { out, prompt, terminal, isQuiet } from "../interaction";
 import * as wrap from "wordwrap";
 
 const telemetryOptionFile: string = "telemetryEnabled.json";
@@ -25,8 +25,10 @@ function promptForTelemetryEnable() : Promise<boolean> {
   let width = terminal.columns() - 2;
 
   let promptText = wrap(width)(telemetryPromptText);
-  out.text(promptText);
-  return prompt.confirm("Enable telemetry? ", true);
+  if (!isQuiet()) {
+    out.text(promptText);
+  }
+  return prompt.confirmWithTimeout("Enable telemetry? ", 30000, true);
 }
 
 export function telemetryIsEnabled(disableTelemetrySwitch: boolean): Promise<boolean> {
