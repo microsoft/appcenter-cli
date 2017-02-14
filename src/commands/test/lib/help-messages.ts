@@ -43,7 +43,7 @@ export module Messages {
       export const PrepareArtifactsDir = "Path to artifacts directory to create";
       export const RunDevices = "Device selection slug";
       export const RunDSymDir = "Path to directory with iOS symbol files";
-      export const RunLocale = "The system locale for the test run. For example, en-US";
+      export const RunLocale = "The system locale for the test run. For example, en_US";
       export const RunLanguage = "Override language (iOS only) for the test run";
       export const RunTestSeries = "Name of the test series";
       export const RunAsync = "Exit the command when tests are uploaded, without waiting for test results";
