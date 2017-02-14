@@ -4,7 +4,7 @@ import { Command, CommandArgs, CommandResult, help, success } from "../../util/c
 import { saveTelemetryOption } from "../../util/profile";
 import { out } from "../../util/interaction";
 
-@help("Turn on the sending of telemetry")
+@help("Turn off the sending of telemetry")
 export default class TelemetryOnCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);
