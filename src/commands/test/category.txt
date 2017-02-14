@@ -1,1 +1,1 @@
-Command for preparing, starting and checking state of Mobile Center tests.
+Command for preparing, starting and checking state of Mobile Center tests
