@@ -3,6 +3,7 @@ import * as os from "os";
 export module Messages {
   export module TestCloud {
     export module Commands {
+      export const GenerateAppium = "Generates an Appium project";
       export const GenerateUITest = "Generates a Xamarin.UITest project";
 
       export const PrepareAppium = "Creates artifacts directory with Appium tests.";

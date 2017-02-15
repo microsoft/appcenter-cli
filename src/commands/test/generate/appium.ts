@@ -9,12 +9,12 @@ import * as AdmZip from "adm-zip";
 import * as phttps from "../../../util/misc/promisfied-https";
 
 @help(Messages.TestCloud.Commands.GenerateUITest)
-export default class GenerateUITestCommand extends GenerateCommand {
+export default class GenerateAppiumCommand extends GenerateCommand {
   
   constructor(args: CommandArgs) {
     super(args);
   }
 
-  protected zipPathAndroid = "UITest/Android-1.0.zip";
-  protected zipPathiOS = "UITest/iOS-1.0.zip";
+  protected zipPathAndroid = "Appium/Android-1.0.zip";
+  protected zipPathiOS = "Appium/iOS-1.0.zip";
 }
