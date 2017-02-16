@@ -1,4 +1,5 @@
 import { TestCloudError } from "./test-cloud-error";
+import { parseTestParameter } from "./parameters-parser";
 import * as path from "path";
 import * as process from "../../../util/misc/process-helper";
 
@@ -8,13 +9,14 @@ export class CalabashPreparer {
   private readonly appPath: string;
   private readonly projectDir: string;
   private readonly artifactsDir: string;
+  private readonly testParameters: string[];
 
   public signInfo: string;
   public config: string;
   public profile: string;
   public skipConfigCheck: boolean;
 
-  constructor(artifactsDir: string, projectDir: string, appPath: string) {
+  constructor(artifactsDir: string, projectDir: string, appPath: string, testParameters: string[]) {
     if (!artifactsDir) {
       throw new Error("Argument artifactsDir is required");
     }
@@ -28,6 +30,7 @@ export class CalabashPreparer {
     this.artifactsDir = artifactsDir;
     this.projectDir = projectDir;
     this.appPath = appPath;
+    this.testParameters = testParameters;
   }
 
   public async prepare(): Promise<string> {
@@ -60,6 +63,29 @@ export class CalabashPreparer {
       command += ` --sign-info "${this.signInfo}"`;
     }
 
+    if (this.testParameters) {
+      command += ` --test-parameters ${this.generateTestParameterArgs()}`;
+    }
+
     return command;
+  }
+
+  private generateTestParameterArgs(): string {
+    let result: string = "";
+  
+    if (this.testParameters) {
+      this.testParameters.forEach(p => {
+        let parsedParameter = parseTestParameter(p);
+        if (result != "") {
+          result += " ";
+        }
+        result += `${parsedParameter.key}:`;
+        if (parsedParameter.value != null) {
+          result += `${parsedParameter.value}`;
+        }
+      });
+    }    
+
+    return result;
   }
 }
