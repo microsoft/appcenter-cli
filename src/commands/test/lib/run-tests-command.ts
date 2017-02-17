@@ -87,7 +87,6 @@ export class RunTestsCommand extends AppCommand {
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
     await this.validateOptions();
-    await this.processLanguage();
     try {
       let artifactsDir = await this.getArtifactsDir();
 
@@ -166,6 +165,7 @@ export class RunTestsCommand extends AppCommand {
       this.devices);
 
     uploader.appPath = this.appPath;
+    uploader.language = this.language;
     uploader.locale = this.locale;
     uploader.testSeries = this.testSeries;
     uploader.dSymPath = this.dSymDir;
@@ -204,17 +204,5 @@ export class RunTestsCommand extends AppCommand {
 
     let parsedParameters = parseTestParameters(this.testParameters);
     _.merge(manifest.testFramework.data, parsedParameters || {});
-  }
-
-  private async processLanguage(): Promise<void> {
-    if (!this.language) {
-      return;
-    }
-    for (let index in this.testParameters) {
-      if (this.testParameters[index].indexOf("language=") === 0) {
-        throw new Error("Argument '--language' cannot be used with a 'language' test parameter");
-      }
-    }
-    this.testParameters.push("language=" + this.language);
   }
 }
