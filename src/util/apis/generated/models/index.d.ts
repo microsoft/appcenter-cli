@@ -3532,6 +3532,8 @@ export interface TestCloudHashUploadStatus {
  * 
  * @member {string} deviceSelection Device selection string.
  * 
+ * @member {string} [language] Language that should be used to run tests.
+ * 
  * @member {string} [locale] Locale that should be used to run tests.
  * 
  * @member {string} [testSeries] Name of the test series.
@@ -3543,6 +3545,7 @@ export interface TestCloudHashUploadStatus {
 export interface TestCloudStartTestRunOptions {
   testFramework: string;
   deviceSelection: string;
+  language?: string;
   locale?: string;
   testSeries?: string;
   testParameters?: any;
