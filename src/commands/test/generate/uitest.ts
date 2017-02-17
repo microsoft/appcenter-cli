@@ -5,7 +5,6 @@ import { GenerateCommand } from "../lib/generate-command";
 import { MobileCenterClient } from "../../../util/apis";
 import { Messages } from "../lib/help-messages";
 import * as pfs from "../../../util/misc/promisfied-fs";
-import * as AdmZip from "adm-zip";
 import * as phttps from "../../../util/misc/promisfied-https";
 
 @help(Messages.TestCloud.Commands.GenerateUITest)

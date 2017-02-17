@@ -3,7 +3,8 @@ import { expect } from "chai";
 import * as path from "path";
 import * as fs from "fs";
 import * as temp from "temp";
-import * as AdmZip from "adm-zip";
+import * as JsZip from "jszip";
+import * as JsZipHelper from "../../../../src/util/misc/jszip-helper";
 
 function createFakeAppFile(appFilePath: string, entryNames: string[]): Promise<string> {
   return new Promise<string>((resolve, reject) => {
@@ -15,13 +16,12 @@ function createFakeAppFile(appFilePath: string, entryNames: string[]): Promise<s
         }
 
         let inputFile = path.join(dirPath, appFilePath);
-        let zip = new AdmZip();
-        for (let i = 0; i < entryNames.length; i++) {
-          zip.addFile(entryNames[i], new Buffer("Fake file"));
+        let zip = new JsZip();
+        for (let entryName of entryNames) {
+          zip.file(entryName, new Buffer("Fake file"));
         }
 
-        zip.writeZip(inputFile);
-        resolve(inputFile);
+        JsZipHelper.writeZipToPath(inputFile, zip).then(() => resolve(inputFile), (writingError) => reject(writingError));
       }
       catch (err) {
         reject(err);
