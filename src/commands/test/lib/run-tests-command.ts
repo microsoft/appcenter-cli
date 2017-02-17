@@ -125,7 +125,6 @@ export class RunTestsCommand extends AppCommand {
     let manifest = JSON.parse(manifestJson) as ITestCloudManifestJson;
 
     await this.addIncludedFiles(path.dirname(manifestPath), manifest);
-    await this.addTestParameters(manifest);
 
     let modifiedJson = JSON.stringify(manifest, null, 1);
     await pfs.writeFile(manifestPath, modifiedJson);
@@ -169,6 +168,9 @@ export class RunTestsCommand extends AppCommand {
     uploader.locale = this.locale;
     uploader.testSeries = this.testSeries;
     uploader.dSymPath = this.dSymDir;
+    if (this.testParameters) {
+      uploader.testParameters = parseTestParameters(this.testParameters);
+    }
 
     return await uploader.uploadAndStart();
   }
@@ -195,14 +197,5 @@ export class RunTestsCommand extends AppCommand {
 
       manifest.files.push(includedFile.targetPath);
     }
-  }
-
-  protected async addTestParameters(manifest: ITestCloudManifestJson): Promise<void> {
-    if (!this.testParameters) {
-      return;
-    }
-
-    let parsedParameters = parseTestParameters(this.testParameters);
-    _.merge(manifest.testFramework.data, parsedParameters || {});
   }
 }

@@ -224,7 +224,7 @@ export class TestCloudUploader {
       locale: this.locale,
       language: this.language,
       testSeries: this.testSeries,
-      testParameters: this.testParameters
+      testParameters: allTestParameters
     };
 
     return clientCall(cb => {
