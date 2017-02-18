@@ -1,14 +1,15 @@
 import * as path from "path";
 import * as fs from "fs";
-import * as AdmZip from "adm-zip";
+import * as JsZip from "jszip";
 import * as _ from "lodash";
+import * as Pfs from "../../../util/misc/promisfied-fs";
 
 export class AppValidator {
   private appPath: string;
 
-  public static validate(appPath: string) {
+  public static async validate(appPath: string) {
     let validator = new AppValidator(appPath);
-    validator.validate();
+    await validator.validate();
   }
 
   constructor(appPath: string) {
@@ -18,9 +19,9 @@ export class AppValidator {
     this.appPath = appPath;
   }
 
-  public validate() {
+  public async validate() {
     if (this.isAndroidApp()) {
-      if (this.usesSharedRuntime()) {
+      if (await this.usesSharedRuntime()) {
         throw new Error("Shared runtime apps are not supported yet.\
 Your application needs to be compiled for release.");
       }
@@ -38,13 +39,16 @@ Your application needs to be compiled for release.");
     return path.extname(this.appPath) === ".apk";
   }
 
-  public usesSharedRuntime(): boolean {
-    let zip = new AdmZip(this.appPath);
-    let entries = zip.getEntries();
-    let monodroid = entries.some(e => e.name.endsWith("libmonodroid.so"));
-    let hasRuntime = entries.some(e => e.name.endsWith("mscorlib.dll"));
-    let hasEnterpriseBundle = entries.some(e => e.name.endsWith("libmonodroid_bundle_app.so"));
-    
+  public async usesSharedRuntime(): Promise<boolean> {
+    let zipArchive = await Pfs.readFile(this.appPath);
+    let zip = await new JsZip().loadAsync(zipArchive);
+
+    let entries = Object.getOwnPropertyNames(zip.files);
+
+    let monodroid = entries.some((e) => e.endsWith("libmonodroid.so"));
+    let hasRuntime = entries.some((e) => e.endsWith("mscorlib.dll"));
+    let hasEnterpriseBundle = entries.some((e) => e.endsWith("libmonodroid_bundle_app.so"));
+
     return monodroid && !hasRuntime && !hasEnterpriseBundle;
   }
 }

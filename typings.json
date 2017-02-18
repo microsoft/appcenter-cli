@@ -7,8 +7,8 @@
     "temp": "registry:dt/temp#0.8.3+20160105142454"
   },
   "globalDependencies": {
-    "adm-zip": "registry:dt/adm-zip#0.0.0+20160317120654",
     "event-stream": "registry:dt/event-stream#0.0.0+20160216030252",
+    "jszip": "registry:dt/jszip#0.0.0+20170110193107",
     "node": "registry:dt/node#6.0.0+20160915134512",
     "node-fetch": "registry:dt/node-fetch#0.0.0+20160711094047",
     "promptly": "registry:dt/promptly#1.1.1+20160316155526",

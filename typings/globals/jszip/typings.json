@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/60fb8a10230169a92e9fd0db443d596f620bf2be/jszip/index.d.ts",
+    "raw": "registry:dt/jszip#0.0.0+20170110193107",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/60fb8a10230169a92e9fd0db443d596f620bf2be/jszip/index.d.ts"
+  }
+}
