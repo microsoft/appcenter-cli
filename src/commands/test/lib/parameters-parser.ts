@@ -11,7 +11,7 @@ export function parseTestParameters(testParameters: string[]) {
   return result;
 }
 
-function parseTestParameter(testParameter: string) {
+export function parseTestParameter(testParameter: string) {
   let separatorIndex = testParameter.indexOf("=");
   if (separatorIndex !== -1) {
     return {

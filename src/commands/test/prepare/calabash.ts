@@ -62,7 +62,7 @@ export default class PrepareCalabashCommand extends PrepareTestsCommand {
   }
 
   protected prepareManifest(): Promise<string> {
-    let preparer = new CalabashPreparer(this.artifactsDir, this.projectDir, this.appPath);
+    let preparer = new CalabashPreparer(this.artifactsDir, this.projectDir, this.appPath, this.testParameters);
 
       preparer.signInfo = this.signInfo;
       preparer.config = this.config;
