@@ -15,8 +15,7 @@ var util = require('util');
  * @member {string} symbolId The unique id for this symbol (uuid)
  * 
  * @member {string} type The type of the symbol for the current symbol upload.
- * Possible values include: 'Apple', 'AndroidNative', 'AndroidJava',
- * 'JavaScript', 'Windows'
+ * Possible values include: 'Apple', 'JavaScript'
  * 
  * @member {string} appId The application that this symbol belongs to
  * 
@@ -29,6 +28,9 @@ var util = require('util');
  * include: 'System', 'User'
  * 
  * @member {array} alternateSymbolIds The other symbols in the same file
+ * 
+ * @member {string} status Whether the symbol is ignored. Possible values
+ * include: 'available', 'ignored'
  * 
  */
 function Symbol() {
@@ -102,6 +104,13 @@ Symbol.prototype.mapper = function () {
                   name: 'String'
                 }
             }
+          }
+        },
+        status: {
+          required: true,
+          serializedName: 'status',
+          type: {
+            name: 'String'
           }
         }
       }

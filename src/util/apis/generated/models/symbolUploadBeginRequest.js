@@ -13,10 +13,6 @@
  * A request containing information pertaining to starting a symbol upload
  * process
  *
- * @member {string} symbolType The type of the symbol for the current symbol
- * upload. Possible values include: 'Apple', 'AndroidNative', 'AndroidJava',
- * 'Windows'
- * 
  * @member {string} [clientCallback] The callback URL that the client can
  * optionally provide to get status updates for the current symbol upload
  * 
@@ -40,7 +36,9 @@ SymbolUploadBeginRequest.prototype.mapper = function () {
       modelProperties: {
         symbolType: {
           required: true,
+          isConstant: true,
           serializedName: 'symbol_type',
+          defaultValue: 'Apple',
           type: {
             name: 'String'
           }

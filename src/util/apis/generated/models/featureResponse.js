@@ -10,11 +10,11 @@
  * @class
  * Initializes a new instance of the FeatureResponse class.
  * @constructor
- * @member {string} name The unique name of the feature
+ * @member {string} [description] The description of the feature
  * 
  * @member {string} displayName The friendly name of the feature
  * 
- * @member {string} [description] The description of the feature
+ * @member {string} name The unique name of the feature
  * 
  * @member {number} state The state (unset, enabled, disabled) of the feature
  * 
@@ -36,9 +36,9 @@ FeatureResponse.prototype.mapper = function () {
       name: 'Composite',
       className: 'FeatureResponse',
       modelProperties: {
-        name: {
-          required: true,
-          serializedName: 'name',
+        description: {
+          required: false,
+          serializedName: 'description',
           type: {
             name: 'String'
           }
@@ -50,9 +50,9 @@ FeatureResponse.prototype.mapper = function () {
             name: 'String'
           }
         },
-        description: {
-          required: false,
-          serializedName: 'description',
+        name: {
+          required: true,
+          serializedName: 'name',
           type: {
             name: 'String'
           }

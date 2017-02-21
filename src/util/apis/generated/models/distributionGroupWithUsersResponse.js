@@ -18,9 +18,9 @@ var util = require('util');
  * 
  * @member {string} name The name of the distribution group used in URLs
  * 
- * @member {array} users The distribution group users
- * 
  * @member {number} totalUserCount The count of users in the distribution group
+ * 
+ * @member {array} users The distribution group users
  * 
  */
 function DistributionGroupWithUsersResponse() {
@@ -54,6 +54,13 @@ DistributionGroupWithUsersResponse.prototype.mapper = function () {
             name: 'String'
           }
         },
+        totalUserCount: {
+          required: true,
+          serializedName: 'total_user_count',
+          type: {
+            name: 'Number'
+          }
+        },
         users: {
           required: true,
           serializedName: 'users',
@@ -61,19 +68,12 @@ DistributionGroupWithUsersResponse.prototype.mapper = function () {
             name: 'Sequence',
             element: {
                 required: false,
-                serializedName: 'UserProfileResponseElementType',
+                serializedName: 'DistributionGroupUserGetResponseElementType',
                 type: {
                   name: 'Composite',
-                  className: 'UserProfileResponse'
+                  className: 'DistributionGroupUserGetResponse'
                 }
             }
-          }
-        },
-        totalUserCount: {
-          required: true,
-          serializedName: 'total_user_count',
-          type: {
-            name: 'Number'
           }
         }
       }

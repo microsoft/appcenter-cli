@@ -11,9 +11,12 @@
 'use strict';
 
 exports.Account = require('./account');
-exports.BuildOperations = require('./buildOperations');
 exports.CrashOperations = require('./crashOperations');
+exports.BuildOperations = require('./buildOperations');
 exports.Test = require('./test');
-exports.Data = require('./data');
+exports.Tables = require('./tables');
+exports.Azure = require('./azure');
+exports.Push = require('./push');
+exports.Identity = require('./identity');
 exports.Distribute = require('./distribute');
 exports.Analytics = require('./analytics');

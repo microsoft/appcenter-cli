@@ -10,7 +10,7 @@
  * @class
  * Initializes a new instance of the TestCloudFileHashDeprecated class.
  * @constructor
- * @summary TestCloudFileHashDeprecated
+ * @summary Test Cloud File Hash
  *
  * Hash, type, path and byte range of a file that is required in test run
  *

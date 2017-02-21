@@ -12,7 +12,7 @@ var util = require('util');
  * @class
  * Initializes a new instance of the DistributionGroupUserRequest class.
  * @constructor
- * @member {array} userIds The list of unique ID (UUID) of the users
+ * @member {array} [userEmails] The list of emails of the users
  * 
  */
 function DistributionGroupUserRequest() {
@@ -32,9 +32,9 @@ DistributionGroupUserRequest.prototype.mapper = function () {
       name: 'Composite',
       className: 'DistributionGroupUserRequest',
       modelProperties: {
-        userIds: {
-          required: true,
-          serializedName: 'user_ids',
+        userEmails: {
+          required: false,
+          serializedName: 'user_emails',
           type: {
             name: 'Sequence',
             element: {

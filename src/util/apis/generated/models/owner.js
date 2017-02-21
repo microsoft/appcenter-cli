@@ -16,9 +16,9 @@
  * 
  * @member {string} [avatarUrl] The avatar URL of the owner
  * 
- * @member {string} email The owner's email address
- * 
  * @member {string} displayName The owner's display name
+ * 
+ * @member {string} email The owner's email address
  * 
  * @member {string} name The unique name that used to identify the owner
  * 
@@ -57,16 +57,16 @@ Owner.prototype.mapper = function () {
             name: 'String'
           }
         },
-        email: {
+        displayName: {
           required: true,
-          serializedName: 'email',
+          serializedName: 'display_name',
           type: {
             name: 'String'
           }
         },
-        displayName: {
+        email: {
           required: true,
-          serializedName: 'display_name',
+          serializedName: 'email',
           type: {
             name: 'String'
           }

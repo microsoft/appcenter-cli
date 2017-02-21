@@ -22,6 +22,10 @@ var util = require('util');
  * 
  * @member {number} [skipped]
  * 
+ * @member {string} [reportUrl]
+ * 
+ * @member {string} [id]
+ * 
  */
 function TestReportFeaturesItemTestsItemRunsItem() {
 }
@@ -74,6 +78,20 @@ TestReportFeaturesItemTestsItemRunsItem.prototype.mapper = function () {
           serializedName: 'skipped',
           type: {
             name: 'Number'
+          }
+        },
+        reportUrl: {
+          required: false,
+          serializedName: 'report_url',
+          type: {
+            name: 'String'
+          }
+        },
+        id: {
+          required: false,
+          serializedName: 'id',
+          type: {
+            name: 'String'
           }
         }
       }

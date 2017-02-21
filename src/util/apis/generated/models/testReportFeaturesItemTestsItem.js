@@ -18,6 +18,10 @@ var util = require('util');
  * 
  * @member {array} [runs]
  * 
+ * @member {number} [peakMemory]
+ * 
+ * @member {number} [peakDuration]
+ * 
  */
 function TestReportFeaturesItemTestsItem() {
 }
@@ -56,6 +60,20 @@ TestReportFeaturesItemTestsItem.prototype.mapper = function () {
                   className: 'TestReportFeaturesItemTestsItemRunsItem'
                 }
             }
+          }
+        },
+        peakMemory: {
+          required: false,
+          serializedName: 'peakMemory',
+          type: {
+            name: 'Number'
+          }
+        },
+        peakDuration: {
+          required: false,
+          serializedName: 'peakDuration',
+          type: {
+            name: 'Number'
           }
         }
       }

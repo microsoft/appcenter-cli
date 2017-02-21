@@ -12,17 +12,17 @@
  * @constructor
  * @member {string} id The unique id (UUID) of the user
  * 
- * @member {string} email The email address of the user
- * 
- * @member {string} displayName The full name of the user. Might for example
- * be first and last name
- * 
- * @member {string} name The unique name that is used to identify the user.
- * 
  * @member {string} [avatarUrl] The avatar URL of the user
  * 
  * @member {boolean} [canChangePassword] User is required to send an old
  * password in order to change the password.
+ * 
+ * @member {string} displayName The full name of the user. Might for example
+ * be first and last name
+ * 
+ * @member {string} email The email address of the user
+ * 
+ * @member {string} name The unique name that is used to identify the user.
  * 
  */
 function UserProfileResponse() {
@@ -49,27 +49,6 @@ UserProfileResponse.prototype.mapper = function () {
             name: 'String'
           }
         },
-        email: {
-          required: true,
-          serializedName: 'email',
-          type: {
-            name: 'String'
-          }
-        },
-        displayName: {
-          required: true,
-          serializedName: 'display_name',
-          type: {
-            name: 'String'
-          }
-        },
-        name: {
-          required: true,
-          serializedName: 'name',
-          type: {
-            name: 'String'
-          }
-        },
         avatarUrl: {
           required: false,
           serializedName: 'avatar_url',
@@ -82,6 +61,27 @@ UserProfileResponse.prototype.mapper = function () {
           serializedName: 'can_change_password',
           type: {
             name: 'Boolean'
+          }
+        },
+        displayName: {
+          required: true,
+          serializedName: 'display_name',
+          type: {
+            name: 'String'
+          }
+        },
+        email: {
+          required: true,
+          serializedName: 'email',
+          type: {
+            name: 'String'
+          }
+        },
+        name: {
+          required: true,
+          serializedName: 'name',
+          type: {
+            name: 'String'
           }
         }
       }

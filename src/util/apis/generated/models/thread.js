@@ -34,8 +34,16 @@ var util = require('util');
  * 
  * @member {array} [exception.innerExceptions]
  * 
+ * @member {string} [exception.platform] SDK/Platform this thread is beeing
+ * generated from. Possible values include: 'ios', 'android', 'xamarin',
+ * 'react-native', 'other'
+ * 
  * @member {boolean} [relevant] Shows if a thread is relevant or not. Is false
  * if all frames are non relevant, otherwise true
+ * 
+ * @member {string} [platform] SDK/Platform this thread is beeing generated
+ * from. Possible values include: 'ios', 'android', 'xamarin',
+ * 'react-native', 'other'
  * 
  */
 function Thread() {
@@ -90,6 +98,13 @@ Thread.prototype.mapper = function () {
           serializedName: 'relevant',
           type: {
             name: 'Boolean'
+          }
+        },
+        platform: {
+          required: false,
+          serializedName: 'platform',
+          type: {
+            name: 'String'
           }
         }
       }

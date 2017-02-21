@@ -43,6 +43,9 @@ var models = require('./index');
  * @member {string} [javascript.packageJsonPath] Path to package.json file for
  * the main project, e.g. "package.json" or "myapp/package.json"
  * 
+ * @member {boolean} [javascript.runTests] Whether to run Jest unit tests, via
+ * npm test, during the build
+ * 
  * @member {object} [xamarin]
  * 
  * @member {string} [xamarin.slnPath]

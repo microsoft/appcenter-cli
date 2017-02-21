@@ -22,6 +22,10 @@ var util = require('util');
  * 
  * @member {number} [skipped]
  * 
+ * @member {number} [peakMemory]
+ * 
+ * @member {number} [peakDuration]
+ * 
  */
 function TestReportFeaturesItem() {
 }
@@ -72,6 +76,20 @@ TestReportFeaturesItem.prototype.mapper = function () {
         skipped: {
           required: false,
           serializedName: 'skipped',
+          type: {
+            name: 'Number'
+          }
+        },
+        peakMemory: {
+          required: false,
+          serializedName: 'peakMemory',
+          type: {
+            name: 'Number'
+          }
+        },
+        peakDuration: {
+          required: false,
+          serializedName: 'peakDuration',
           type: {
             name: 'Number'
           }

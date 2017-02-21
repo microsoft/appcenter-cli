@@ -33,10 +33,13 @@ declare class MobileCenterClient {
 
     // Operation groups
     account: operations.Account;
-    buildOperations: operations.BuildOperations;
     crashOperations: operations.CrashOperations;
+    buildOperations: operations.BuildOperations;
     test: operations.Test;
-    data: operations.Data;
+    tables: operations.Tables;
+    azure: operations.Azure;
+    push: operations.Push;
+    identity: operations.Identity;
     distribute: operations.Distribute;
     analytics: operations.Analytics;
     }

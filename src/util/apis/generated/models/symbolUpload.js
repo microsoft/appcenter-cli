@@ -24,10 +24,6 @@ var util = require('util');
  * values include: 'created', 'committed', 'aborted', 'processing',
  * 'indexed', 'failed'
  * 
- * @member {string} symbolType The type of the symbol for the current symbol
- * upload. Possible values include: 'Apple', 'AndroidNative', 'AndroidJava',
- * 'Windows'
- * 
  * @member {array} [symbols] The symbol ids
  * 
  * @member {string} [origin] The origin of the symbol upload. Possible values
@@ -74,7 +70,9 @@ SymbolUpload.prototype.mapper = function () {
         },
         symbolType: {
           required: true,
+          isConstant: true,
           serializedName: 'symbol_type',
+          defaultValue: 'Apple',
           type: {
             name: 'String'
           }

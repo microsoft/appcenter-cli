@@ -64,6 +64,8 @@ var util = require('util');
  * 
  * @member {string} dateFinished
  * 
+ * @member {string} [errorMessage]
+ * 
  */
 function TestReport() {
 }
@@ -186,6 +188,13 @@ TestReport.prototype.mapper = function () {
         dateFinished: {
           required: true,
           serializedName: 'date_finished',
+          type: {
+            name: 'String'
+          }
+        },
+        errorMessage: {
+          required: false,
+          serializedName: 'errorMessage',
           type: {
             name: 'String'
           }

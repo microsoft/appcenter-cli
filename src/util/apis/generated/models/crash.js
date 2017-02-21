@@ -24,6 +24,8 @@
  * 
  * @member {string} osVersion
  * 
+ * @member {string} [osType]
+ * 
  * @member {string} userName
  * 
  * @member {string} [userEmail]
@@ -91,6 +93,13 @@ Crash.prototype.mapper = function () {
         osVersion: {
           required: true,
           serializedName: 'os_version',
+          type: {
+            name: 'String'
+          }
+        },
+        osType: {
+          required: false,
+          serializedName: 'os_type',
           type: {
             name: 'String'
           }

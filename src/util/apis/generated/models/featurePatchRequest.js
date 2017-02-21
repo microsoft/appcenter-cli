@@ -10,11 +10,11 @@
  * @class
  * Initializes a new instance of the FeaturePatchRequest class.
  * @constructor
+ * @member {string} [description] The friendly name of the feature
+ * 
  * @member {string} [displayName] The full (friendly) name of the feature.
  * 
  * @member {number} [state] The state of the feature
- * 
- * @member {string} [description] The friendly name of the feature
  * 
  */
 function FeaturePatchRequest() {
@@ -34,6 +34,13 @@ FeaturePatchRequest.prototype.mapper = function () {
       name: 'Composite',
       className: 'FeaturePatchRequest',
       modelProperties: {
+        description: {
+          required: false,
+          serializedName: 'description',
+          type: {
+            name: 'String'
+          }
+        },
         displayName: {
           required: false,
           serializedName: 'display_name',
@@ -46,13 +53,6 @@ FeaturePatchRequest.prototype.mapper = function () {
           serializedName: 'state',
           type: {
             name: 'Number'
-          }
-        },
-        description: {
-          required: false,
-          serializedName: 'description',
-          type: {
-            name: 'String'
           }
         }
       }
