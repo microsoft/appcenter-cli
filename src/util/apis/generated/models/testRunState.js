@@ -12,7 +12,7 @@ var util = require('util');
  * @class
  * Initializes a new instance of the TestRunState class.
  * @constructor
- * @summary TestRunState
+ * @summary Test Run State
  *
  * Current status of a test run
  *

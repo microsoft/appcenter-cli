@@ -1511,6 +1511,8 @@ Analytics.prototype.languageCounts = function (start, ownerName, appName, option
  * 
  * @param {array} [options.versions]
  * 
+ * @param {number} [options.count] The number of property values to return
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  * 
@@ -1538,6 +1540,7 @@ Analytics.prototype.eventPropertyCounts = function (eventName, eventPropertyName
   }
   var end = (options && options.end !== undefined) ? options.end : undefined;
   var versions = (options && options.versions !== undefined) ? options.versions : undefined;
+  var count = (options && options.count !== undefined) ? options.count : 5;
   // Validate
   try {
     if (eventName === null || eventName === undefined || typeof eventName.valueOf() !== 'string') {
@@ -1559,6 +1562,19 @@ Analytics.prototype.eventPropertyCounts = function (eventName, eventPropertyName
         if (versions[i] !== null && versions[i] !== undefined && typeof versions[i].valueOf() !== 'string') {
           throw new Error('versions[i] must be of type string.');
         }
+      }
+    }
+    if (count !== null && count !== undefined && typeof count !== 'number') {
+      throw new Error('count must be of type number.');
+    }
+    if (count !== null && count !== undefined) {
+      if (count > 10)
+      {
+        throw new Error('"count" should satisfy the constraint - "InclusiveMaximum": 10');
+      }
+      if (count < 1)
+      {
+        throw new Error('"count" should satisfy the constraint - "InclusiveMinimum": 1');
       }
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
@@ -1585,6 +1601,9 @@ Analytics.prototype.eventPropertyCounts = function (eventName, eventPropertyName
   }
   if (versions !== null && versions !== undefined) {
     queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
+  }
+  if (count !== null && count !== undefined) {
+    queryParameters.push('count=' + encodeURIComponent(count.toString()));
   }
   if (queryParameters.length > 0) {
     requestUrl += '?' + queryParameters.join('&');
@@ -2464,7 +2483,8 @@ Analytics.prototype.eventPerDeviceCount = function (eventName, start, ownerName,
  * 
  * @param {array} [options.eventName] to select the specific events
  * 
- * @param {number} [options.top] The maximum number of results to return.
+ * @param {number} [options.top] The maximum number of results to return. (0
+ * will fetch all results)
  * 
  * @param {number} [options.skip] The offset (starting at 0) of the first
  * result to return. This parameter along with limit is used to perform
@@ -2541,9 +2561,9 @@ Analytics.prototype.events = function (start, ownerName, appName, options, callb
       {
         throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 2000');
       }
-      if (top < 1)
+      if (top < 0)
       {
-        throw new Error('"top" should satisfy the constraint - "InclusiveMinimum": 1');
+        throw new Error('"top" should satisfy the constraint - "InclusiveMinimum": 0');
       }
     }
     if (skip !== null && skip !== undefined && typeof skip !== 'number') {
@@ -2676,7 +2696,8 @@ Analytics.prototype.events = function (start, ownerName, appName, options, callb
 
 /**
  * Percentage of crash-free device by day in the time range based on the
- * selected versions.
+ * selected versions. Api will return -1 if crash devices is greater than
+ * active devices
  *
  * @param {date} start Start date time in data in ISO 8601 date time format
  * 
@@ -2987,7 +3008,8 @@ Analytics.prototype.crashGroupTotals = function (crashGroupId, version, ownerNam
  * 
  * @param {object} [options] Optional Parameters.
  * 
- * @param {number} [options.top] The maximum number of results to return.
+ * @param {number} [options.top] The maximum number of results to return. (0
+ * will fetch all results)
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -3032,9 +3054,9 @@ Analytics.prototype.crashGroupOperatingSystemCounts = function (crashGroupId, ve
       {
         throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 2000');
       }
-      if (top < 1)
+      if (top < 0)
       {
-        throw new Error('"top" should satisfy the constraint - "InclusiveMinimum": 1');
+        throw new Error('"top" should satisfy the constraint - "InclusiveMinimum": 0');
       }
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
@@ -3146,7 +3168,8 @@ Analytics.prototype.crashGroupOperatingSystemCounts = function (crashGroupId, ve
  * 
  * @param {object} [options] Optional Parameters.
  * 
- * @param {number} [options.top] The maximum number of results to return.
+ * @param {number} [options.top] The maximum number of results to return. (0
+ * will fetch all results)
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -3190,9 +3213,9 @@ Analytics.prototype.crashGroupModelCounts = function (crashGroupId, version, own
       {
         throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 2000');
       }
-      if (top < 1)
+      if (top < 0)
       {
-        throw new Error('"top" should satisfy the constraint - "InclusiveMinimum": 1');
+        throw new Error('"top" should satisfy the constraint - "InclusiveMinimum": 0');
       }
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {

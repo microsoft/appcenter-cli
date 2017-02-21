@@ -14,7 +14,7 @@
  * 
  * @member {string} [name] A name identifying a unique distribution group.
  * 
- * @member {boolean} [isLatest] Is the containing package the latest one in
+ * @member {boolean} [isLatest] Is the containing release the latest one in
  * this distribution group.
  * 
  */

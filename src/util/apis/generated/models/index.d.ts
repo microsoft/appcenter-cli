@@ -7,6 +7,18 @@
 
 /**
  * @class
+ * Initializes a new instance of the GetInAppUpdateTokenResponse class.
+ * @constructor
+ * @member {string} apiToken The api token generated will not be accessible
+ * again
+ * 
+ */
+export interface GetInAppUpdateTokenResponse {
+  apiToken: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the ApiTokensCreateResponse class.
  * @constructor
  * @member {string} id The unique id (UUID) of the api token
@@ -83,8 +95,8 @@ export interface Failure {
  * @member {object} error
  * 
  * @member {string} [error.code] Possible values include: 'BadRequest',
- * 'Conflict', 'NotAcceptable', 'NotAuthorized', 'NotFound',
- * 'InternalServerError'
+ * 'Conflict', 'NotAcceptable', 'NotFound', 'InternalServerError',
+ * 'Unauthorized'
  * 
  * @member {string} [error.message]
  * 
@@ -98,13 +110,24 @@ export interface ErrorResponse {
  * Initializes a new instance of the ErrorDetails class.
  * @constructor
  * @member {string} code Possible values include: 'BadRequest', 'Conflict',
- * 'NotAcceptable', 'NotAuthorized', 'NotFound', 'InternalServerError'
+ * 'NotAcceptable', 'NotFound', 'InternalServerError', 'Unauthorized'
  * 
  * @member {string} message
  * 
  */
 export interface ErrorDetails {
   code: string;
+  message: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SuccessResponse class.
+ * @constructor
+ * @member {string} message
+ * 
+ */
+export interface SuccessResponse {
   message: string;
 }
 
@@ -153,18 +176,57 @@ export interface AppRequest {
 
 /**
  * @class
- * Initializes a new instance of the FeatureNameResponse class.
+ * Initializes a new instance of the DistributionGroupPatchRequest class.
  * @constructor
- * @member {string} name The unique name of the feature
+ * @member {string} [name] The name of the distribution group
  * 
  */
-export interface FeatureNameResponse {
+export interface DistributionGroupPatchRequest {
+  name?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupRequest class.
+ * @constructor
+ * @member {string} name The name of the distribution group
+ * 
+ */
+export interface DistributionGroupRequest {
   name: string;
 }
 
 /**
  * @class
- * Initializes a new instance of the FeatureRequestResponse class.
+ * Initializes a new instance of the DistributionGroupUserRequest class.
+ * @constructor
+ * @member {array} [userEmails] The list of emails of the users
+ * 
+ */
+export interface DistributionGroupUserRequest {
+  userEmails?: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the FeaturePatchRequest class.
+ * @constructor
+ * @member {string} [description] The friendly name of the feature
+ * 
+ * @member {string} [displayName] The full (friendly) name of the feature.
+ * 
+ * @member {number} [state] The state of the feature
+ * 
+ */
+export interface FeaturePatchRequest {
+  description?: string;
+  displayName?: string;
+  state?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the FeatureCreateRequest class.
  * @constructor
  * @member {string} name The unique name of the feature
  * 
@@ -175,7 +237,7 @@ export interface FeatureNameResponse {
  * @member {string} [description] The friendly name of the feature
  * 
  */
-export interface FeatureRequestResponse {
+export interface FeatureCreateRequest {
   name: string;
   displayName: string;
   state?: number;
@@ -184,19 +246,45 @@ export interface FeatureRequestResponse {
 
 /**
  * @class
- * Initializes a new instance of the FeaturePatchRequest class.
+ * Initializes a new instance of the GrantAdminRoleRequest class.
  * @constructor
- * @member {string} [displayName] The full (friendly) name of the feature.
- * 
- * @member {number} [state] The state of the feature
- * 
- * @member {string} [description] The friendly name of the feature
+ * @member {string} adminRole The new admin_role. Possible values include:
+ * 'superAdmin', 'admin', 'devOps', 'notAdmin'
  * 
  */
-export interface FeaturePatchRequest {
-  displayName?: string;
-  state?: number;
+export interface GrantAdminRoleRequest {
+  adminRole: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the OrgPatchRequest class.
+ * @constructor
+ * @member {string} [description] The organization's description
+ * 
+ * @member {string} [displayName] The full (friendly) name of the organization.
+ * 
+ */
+export interface OrgPatchRequest {
   description?: string;
+  displayName?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the OrganizationRequest class.
+ * @constructor
+ * @member {string} [displayName] The display name of the organization
+ * 
+ * @member {string} [email] The billing email address of the organization
+ * 
+ * @member {string} name The name of the organization used in URLs
+ * 
+ */
+export interface OrganizationRequest {
+  displayName?: string;
+  email?: string;
+  name: string;
 }
 
 /**
@@ -220,10 +308,97 @@ export interface UserUpdateRequest {
  * 
  * @member {string} [name] The new, unique name that is used to identify.
  * 
+ * @member {string} [nextNpsSurveyDate] The date in the future when the user
+ * should be checked again for NPS eligibility
+ * 
  */
 export interface UserUpdateRequestInternal {
   displayName?: string;
   name?: string;
+  nextNpsSurveyDate?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppInvitationDetailResponse class.
+ * @constructor
+ * @member {string} id The unique ID (UUID) of the invitation
+ * 
+ * @member {object} app
+ * 
+ * @member {string} [app.id] The unique ID (UUID) of the app
+ * 
+ * @member {string} [app.appSecret] A unique and secret key used to identify
+ * the app in communication with the ingestion endpoint for crash reporting
+ * and analytics
+ * 
+ * @member {string} [app.azureSubscriptionId] The unique ID (UUID) of the
+ * Azure subscription associate with the app
+ * 
+ * @member {string} [app.description] The description of the app
+ * 
+ * @member {string} [app.displayName] The display name of the app
+ * 
+ * @member {string} [app.iconUrl] The string representation of the URL
+ * pointing to the app's icon
+ * 
+ * @member {string} [app.name] The name of the app used in URLs
+ * 
+ * @member {string} [app.os] The OS the app will be running on. Possible
+ * values include: 'iOS', 'Android'
+ * 
+ * @member {object} [app.owner]
+ * 
+ * @member {string} [app.owner.id] The unique id (UUID) of the owner
+ * 
+ * @member {string} [app.owner.avatarUrl] The avatar URL of the owner
+ * 
+ * @member {string} [app.owner.displayName] The owner's display name
+ * 
+ * @member {string} [app.owner.email] The owner's email address
+ * 
+ * @member {string} [app.owner.name] The unique name that used to identify the
+ * owner
+ * 
+ * @member {string} [app.owner.type] The owner type. Can either be 'org' or
+ * 'user'. Possible values include: 'org', 'user'
+ * 
+ * @member {string} [app.platform] The platform of the app. Possible values
+ * include: 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
+ * 
+ * @member {string} email The email address of the invited user
+ * 
+ * @member {string} inviteType The invitation type. Possible values include:
+ * 'developer', 'tester'
+ * 
+ * @member {object} invitedBy
+ * 
+ * @member {string} [invitedBy.id] The unique id (UUID) of the user
+ * 
+ * @member {string} [invitedBy.avatarUrl] The avatar URL of the user
+ * 
+ * @member {boolean} [invitedBy.canChangePassword] User is required to send an
+ * old password in order to change the password.
+ * 
+ * @member {string} [invitedBy.displayName] The full name of the user. Might
+ * for example be first and last name
+ * 
+ * @member {string} [invitedBy.email] The email address of the user
+ * 
+ * @member {string} [invitedBy.name] The unique name that is used to identify
+ * the user.
+ * 
+ * @member {boolean} isExistingUser Indicates whether the invited user already
+ * exists
+ * 
+ */
+export interface AppInvitationDetailResponse {
+  id: string;
+  app: AppResponse;
+  email: string;
+  inviteType: string;
+  invitedBy: UserProfileResponse;
+  isExistingUser: boolean;
 }
 
 /**
@@ -236,20 +411,20 @@ export interface UserUpdateRequestInternal {
  * in communication with the ingestion endpoint for crash reporting and
  * analytics
  * 
+ * @member {string} [azureSubscriptionId] The unique ID (UUID) of the Azure
+ * subscription associate with the app
+ * 
  * @member {string} [description] The description of the app
  * 
  * @member {string} displayName The display name of the app
+ * 
+ * @member {string} [iconUrl] The string representation of the URL pointing to
+ * the app's icon
  * 
  * @member {string} name The name of the app used in URLs
  * 
  * @member {string} os The OS the app will be running on. Possible values
  * include: 'iOS', 'Android'
- * 
- * @member {string} platform The platform of the app. Possible values include:
- * 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
- * 
- * @member {string} [iconUrl] The string representation of the URL pointing to
- * the app's icon
  * 
  * @member {object} owner
  * 
@@ -257,9 +432,9 @@ export interface UserUpdateRequestInternal {
  * 
  * @member {string} [owner.avatarUrl] The avatar URL of the owner
  * 
- * @member {string} [owner.email] The owner's email address
- * 
  * @member {string} [owner.displayName] The owner's display name
+ * 
+ * @member {string} [owner.email] The owner's email address
  * 
  * @member {string} [owner.name] The unique name that used to identify the
  * owner
@@ -267,21 +442,21 @@ export interface UserUpdateRequestInternal {
  * @member {string} [owner.type] The owner type. Can either be 'org' or
  * 'user'. Possible values include: 'org', 'user'
  * 
- * @member {string} [azureSubscriptionId] The unique ID (UUID) of the Azure
- * subscription associate with the app
+ * @member {string} platform The platform of the app. Possible values include:
+ * 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
  * 
  */
 export interface AppResponse {
   id: string;
   appSecret: string;
+  azureSubscriptionId?: string;
   description?: string;
   displayName: string;
+  iconUrl?: string;
   name: string;
   os: string;
-  platform: string;
-  iconUrl?: string;
   owner: Owner;
-  azureSubscriptionId?: string;
+  platform: string;
 }
 
 /**
@@ -294,9 +469,9 @@ export interface AppResponse {
  * 
  * @member {string} [avatarUrl] The avatar URL of the owner
  * 
- * @member {string} email The owner's email address
- * 
  * @member {string} displayName The owner's display name
+ * 
+ * @member {string} email The owner's email address
  * 
  * @member {string} name The unique name that used to identify the owner
  * 
@@ -307,30 +482,10 @@ export interface AppResponse {
 export interface Owner {
   id: string;
   avatarUrl?: string;
-  email: string;
   displayName: string;
+  email: string;
   name: string;
   type: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the FeatureResponse class.
- * @constructor
- * @member {string} name The unique name of the feature
- * 
- * @member {string} displayName The friendly name of the feature
- * 
- * @member {string} [description] The description of the feature
- * 
- * @member {number} state The state (unset, enabled, disabled) of the feature
- * 
- */
-export interface FeatureResponse {
-  name: string;
-  displayName: string;
-  description?: string;
-  state: number;
 }
 
 /**
@@ -339,120 +494,26 @@ export interface FeatureResponse {
  * @constructor
  * @member {string} id The unique id (UUID) of the user
  * 
- * @member {string} email The email address of the user
- * 
- * @member {string} displayName The full name of the user. Might for example
- * be first and last name
- * 
- * @member {string} name The unique name that is used to identify the user.
- * 
  * @member {string} [avatarUrl] The avatar URL of the user
  * 
  * @member {boolean} [canChangePassword] User is required to send an old
  * password in order to change the password.
  * 
+ * @member {string} displayName The full name of the user. Might for example
+ * be first and last name
+ * 
+ * @member {string} email The email address of the user
+ * 
+ * @member {string} name The unique name that is used to identify the user.
+ * 
  */
 export interface UserProfileResponse {
   id: string;
-  email: string;
-  displayName: string;
-  name: string;
   avatarUrl?: string;
   canChangePassword?: boolean;
-}
-
-/**
- * @class
- * Initializes a new instance of the UserNameAvailabilityResponse class.
- * @constructor
- * @member {string} name The requested user name
- * 
- * @member {boolean} available The availability status of the requested user
- * name
- * 
- */
-export interface UserNameAvailabilityResponse {
-  name: string;
-  available: boolean;
-}
-
-/**
- * @class
- * Initializes a new instance of the AppInvitationDetailResponse class.
- * @constructor
- * @member {string} id The unique ID (UUID) of the invitation
- * 
- * @member {string} email The email address of the invited user
- * 
- * @member {boolean} isExistingUser Indicates whether the invited user already
- * exists
- * 
- * @member {object} invitedBy
- * 
- * @member {string} [invitedBy.id] The unique id (UUID) of the user
- * 
- * @member {string} [invitedBy.email] The email address of the user
- * 
- * @member {string} [invitedBy.displayName] The full name of the user. Might
- * for example be first and last name
- * 
- * @member {string} [invitedBy.name] The unique name that is used to identify
- * the user.
- * 
- * @member {string} [invitedBy.avatarUrl] The avatar URL of the user
- * 
- * @member {boolean} [invitedBy.canChangePassword] User is required to send an
- * old password in order to change the password.
- * 
- * @member {object} app
- * 
- * @member {string} [app.id] The unique ID (UUID) of the app
- * 
- * @member {string} [app.appSecret] A unique and secret key used to identify
- * the app in communication with the ingestion endpoint for crash reporting
- * and analytics
- * 
- * @member {string} [app.description] The description of the app
- * 
- * @member {string} [app.displayName] The display name of the app
- * 
- * @member {string} [app.name] The name of the app used in URLs
- * 
- * @member {string} [app.os] The OS the app will be running on. Possible
- * values include: 'iOS', 'Android'
- * 
- * @member {string} [app.platform] The platform of the app. Possible values
- * include: 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
- * 
- * @member {string} [app.iconUrl] The string representation of the URL
- * pointing to the app's icon
- * 
- * @member {object} [app.owner]
- * 
- * @member {string} [app.owner.id] The unique id (UUID) of the owner
- * 
- * @member {string} [app.owner.avatarUrl] The avatar URL of the owner
- * 
- * @member {string} [app.owner.email] The owner's email address
- * 
- * @member {string} [app.owner.displayName] The owner's display name
- * 
- * @member {string} [app.owner.name] The unique name that used to identify the
- * owner
- * 
- * @member {string} [app.owner.type] The owner type. Can either be 'org' or
- * 'user'. Possible values include: 'org', 'user'
- * 
- * @member {string} [app.azureSubscriptionId] The unique ID (UUID) of the
- * Azure subscription associate with the app
- * 
- */
-export interface AppInvitationDetailResponse {
-  id: string;
+  displayName: string;
   email: string;
-  isExistingUser: boolean;
-  invitedBy: UserProfileResponse;
-  app: AppResponse;
+  name: string;
 }
 
 /**
@@ -471,126 +532,194 @@ export interface DistributionGroupResponse {
 
 /**
  * @class
+ * Initializes a new instance of the DistributionGroupUserDeleteResponse class.
+ * @constructor
+ * @member {string} [code] The code of the result
+ * 
+ * @member {number} [message] The message of the result
+ * 
+ * @member {number} status The status code of the result
+ * 
+ * @member {string} [userEmail] The email of the user
+ * 
+ */
+export interface DistributionGroupUserDeleteResponse {
+  code?: string;
+  message?: number;
+  status: number;
+  userEmail?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupUserGetResponse class.
+ * @constructor
+ * @member {string} [id] The unique id (UUID) of the user
+ * 
+ * @member {string} [avatarUrl] The avatar URL of the user
+ * 
+ * @member {boolean} [canChangePassword] User is required to send an old
+ * password in order to change the password.
+ * 
+ * @member {string} [displayName] The full name of the user. Might for example
+ * be first and last name
+ * 
+ * @member {string} email The email address of the user
+ * 
+ * @member {boolean} [invitePending] Whether the has accepted the invite.
+ * Available when an invite is pending, and the value will be "true".
+ * 
+ * @member {string} [name] The unique name that is used to identify the user.
+ * 
+ */
+export interface DistributionGroupUserGetResponse {
+  id?: string;
+  avatarUrl?: string;
+  canChangePassword?: boolean;
+  displayName?: string;
+  email: string;
+  invitePending?: boolean;
+  name?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupUserPostResponse class.
+ * @constructor
+ * @member {string} [code] The code of the result
+ * 
+ * @member {boolean} [invitePending] Whether the has accepted the invite.
+ * Available when an invite is pending, and the value will be "true".
+ * 
+ * @member {number} [message] The message of the result
+ * 
+ * @member {number} status The status code of the result
+ * 
+ * @member {string} [userEmail] The email of the user
+ * 
+ */
+export interface DistributionGroupUserPostResponse {
+  code?: string;
+  invitePending?: boolean;
+  message?: number;
+  status: number;
+  userEmail?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the DistributionGroupWithUsersResponse class.
  * @constructor
  * @member {string} id The unique ID of the distribution group
  * 
  * @member {string} name The name of the distribution group used in URLs
  * 
- * @member {array} users The distribution group users
- * 
  * @member {number} totalUserCount The count of users in the distribution group
+ * 
+ * @member {array} users The distribution group users
  * 
  */
 export interface DistributionGroupWithUsersResponse {
   id: string;
   name: string;
-  users: UserProfileResponse[];
   totalUserCount: number;
+  users: DistributionGroupUserGetResponse[];
 }
 
 /**
  * @class
- * Initializes a new instance of the DistributionGroupRequest class.
+ * Initializes a new instance of the FeatureNameResponse class.
  * @constructor
- * @member {string} name The name of the distribution group
+ * @member {string} name The unique name of the feature
  * 
  */
-export interface DistributionGroupRequest {
+export interface FeatureNameResponse {
   name: string;
 }
 
 /**
  * @class
- * Initializes a new instance of the DistributionGroupPatchRequest class.
+ * Initializes a new instance of the FeatureResponse class.
  * @constructor
- * @member {string} [name] The name of the distribution group
+ * @member {string} [description] The description of the feature
+ * 
+ * @member {string} displayName The friendly name of the feature
+ * 
+ * @member {string} name The unique name of the feature
+ * 
+ * @member {number} state The state (unset, enabled, disabled) of the feature
  * 
  */
-export interface DistributionGroupPatchRequest {
-  name?: string;
+export interface FeatureResponse {
+  description?: string;
+  displayName: string;
+  name: string;
+  state: number;
 }
 
 /**
  * @class
- * Initializes a new instance of the DistributionGroupUserRequest class.
+ * Initializes a new instance of the OrgNameAvailabilityResponse class.
  * @constructor
- * @member {array} userIds The list of unique ID (UUID) of the users
+ * @member {boolean} available The availability status of the requested org
+ * name
+ * 
+ * @member {string} name The generated org name
  * 
  */
-export interface DistributionGroupUserRequest {
-  userIds: string[];
+export interface OrgNameAvailabilityResponse {
+  available: boolean;
+  name: string;
 }
 
 /**
  * @class
- * Initializes a new instance of the DistributionGroupUserResponse class.
+ * Initializes a new instance of the OrganizationResponse class.
  * @constructor
- * @member {string} userId The unique ID (UUID) of the user
+ * @member {string} id The unique id (UUID) of the organization
  * 
- * @member {number} status The status code of the result
+ * @member {string} displayName The display name of the organization
  * 
- * @member {string} [code] The code of the result
- * 
- * @member {number} [message] The message of the result
+ * @member {string} name The slug name of the organization
  * 
  */
-export interface DistributionGroupUserResponse {
-  userId: string;
-  status: number;
-  code?: string;
-  message?: number;
+export interface OrganizationResponse {
+  id: string;
+  displayName: string;
+  name: string;
 }
 
 /**
  * @class
- * Initializes a new instance of the DistributionGroupUsersResponse class.
+ * Initializes a new instance of the OrganizationUserResponse class.
  * @constructor
- * @member {array} userIds The list of unique ID (UUID) of the users
+ * @member {string} email The email address of the user
+ * 
+ * @member {string} displayName The full name of the user. Might for example
+ * be first and last name
+ * 
+ * @member {string} name The unique name that is used to identify the user.
  * 
  */
-export interface DistributionGroupUsersResponse {
-  userIds: string[];
-}
-
-/**
- * @class
- * Initializes a new instance of the GrantAdminRoleRequest class.
- * @constructor
- * @member {string} adminRole The new admin_role. Possible values include:
- * 'superAdmin', 'admin', 'devOps', 'notAdmin'
- * 
- */
-export interface GrantAdminRoleRequest {
-  adminRole: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the WaitlistApproveRequest class.
- * @constructor
- * @member {array} emailAddresses The list of email addresses to approve
- * 
- */
-export interface WaitlistApproveRequest {
-  emailAddresses: string[];
-}
-
-/**
- * @class
- * Initializes a new instance of the WaitListItemResponse class.
- * @constructor
- * @member {string} email The email address to invite
- * 
- * @member {boolean} didSucceed Indicates whether inviting the user succeeded
- * 
- * @member {string} [message] Details about the result for this invitee
- * 
- */
-export interface WaitListItemResponse {
+export interface OrganizationUserResponse {
   email: string;
-  didSucceed: boolean;
-  message?: string;
+  displayName: string;
+  name: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the UserNameAvailabilityResponse class.
+ * @constructor
+ * @member {boolean} available The availability status of the requested user
+ * name
+ * 
+ * @member {string} name The requested user name
+ * 
+ */
+export interface UserNameAvailabilityResponse {
+  available: boolean;
+  name: string;
 }
 
 /**
@@ -902,6 +1031,9 @@ export interface Commit {
  * @member {string} [toolsets.javascript.packageJsonPath] Path to package.json
  * file for the main project, e.g. "package.json" or "myapp/package.json"
  * 
+ * @member {boolean} [toolsets.javascript.runTests] Whether to run Jest unit
+ * tests, via npm test, during the build
+ * 
  * @member {object} [toolsets.xamarin]
  * 
  * @member {string} [toolsets.xamarin.slnPath]
@@ -977,6 +1109,9 @@ export interface BranchConfiguration {
  * 
  * @member {string} [javascript.packageJsonPath] Path to package.json file for
  * the main project, e.g. "package.json" or "myapp/package.json"
+ * 
+ * @member {boolean} [javascript.runTests] Whether to run Jest unit tests, via
+ * npm test, during the build
  * 
  * @member {object} [xamarin]
  * 
@@ -1070,9 +1205,13 @@ export interface XcodeBranchConfigurationProperties {
  * @member {string} packageJsonPath Path to package.json file for the main
  * project, e.g. "package.json" or "myapp/package.json"
  * 
+ * @member {boolean} [runTests] Whether to run Jest unit tests, via npm test,
+ * during the build. Default value: true .
+ * 
  */
 export interface JavaScriptBranchConfigurationProperties {
   packageJsonPath: string;
+  runTests?: boolean;
 }
 
 /**
@@ -1135,6 +1274,27 @@ export interface AndroidBranchConfigurationProperties {
 
 /**
  * @class
+ * Initializes a new instance of the RepoConfig class.
+ * @constructor
+ * @member {string} type Type of repository
+ * 
+ * @member {string} state State of the configuration. Possible values include:
+ * 'unauthorized', 'inactive', 'active'
+ * 
+ * @member {string} [repoUrl] URL of the repository
+ * 
+ * @member {string} [id] Repository identifier
+ * 
+ */
+export interface RepoConfig {
+  type: string;
+  state: string;
+  repoUrl?: string;
+  id?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the RepoInfo class.
  * @constructor
  * @member {string} repoUrl The repository url
@@ -1162,24 +1322,28 @@ export interface XcodeVersion {
 
 /**
  * @class
- * Initializes a new instance of the BuildPatch class.
+ * Initializes a new instance of the BuildParams class.
  * @constructor
- * @member {string} [status] The build status
+ * @member {string} [sourceVersion] Version to build
+ * 
+ * @member {boolean} [debug] Run build in debug mode
  * 
  */
-export interface BuildPatch {
-  status?: string;
+export interface BuildParams {
+  sourceVersion?: string;
+  debug?: boolean;
 }
 
 /**
  * @class
- * Initializes a new instance of the SuccessResponse class.
+ * Initializes a new instance of the BuildPatch class.
  * @constructor
- * @member {string} message
+ * @member {string} [status] The build status; used to cancel builds. Possible
+ * values include: 'cancelling'
  * 
  */
-export interface SuccessResponse {
-  message: string;
+export interface BuildPatch {
+  status?: string;
 }
 
 /**
@@ -1197,6 +1361,199 @@ export interface ValidationErrorResponse {
   id: string;
   code: string;
   message: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the BasicReleaseDetails class.
+ * @constructor
+ * Basic information on a release
+ *
+ * @member {string} [id] ID identifying this unique release.
+ * 
+ * @member {string} [version] The release's version.<br>
+ * For iOS: CFBundleVersion from info.plist.<br>
+ * For Android: android:versionCode from AppManifest.xml.
+ * 
+ * @member {string} [shortVersion] The release's short version.<br>
+ * For iOS: CFBundleShortVersionString from info.plist.<br>
+ * For Android: android:versionName from AppManifest.xml.
+ * 
+ * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
+ * time.
+ * 
+ * @member {array} [distributionGroups] a list of distribution groups that are
+ * associated with this release.
+ * 
+ */
+export interface BasicReleaseDetails {
+  id?: string;
+  version?: string;
+  shortVersion?: string;
+  uploadedAt?: string;
+  distributionGroups?: DistributionGroup[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroup class.
+ * @constructor
+ * @member {string} [id] ID identifying a unique distribution group.
+ * 
+ * @member {string} [name] A name identifying a unique distribution group.
+ * 
+ * @member {boolean} [isLatest] Is the containing release the latest one in
+ * this distribution group.
+ * 
+ */
+export interface DistributionGroup {
+  id?: string;
+  name?: string;
+  isLatest?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseDetails class.
+ * @constructor
+ * Details of an uploaded release
+ *
+ * @member {string} [id] ID identifying this unique release.
+ * 
+ * @member {string} [status] OBSOLETE. Will be removed in next version. The
+ * availability concept is now replaced with distributed. Any 'available'
+ * release will be associated with the default distribution group of an
+ * app.</br>
+ * The release state.<br>
+ * <b>available</b>: The uploaded release has been distributed.<br>
+ * <b>unavailable</b>: The uploaded release is not visible to the user. <br>
+ * . Possible values include: 'available', 'unavailable'
+ * 
+ * @member {string} [appName] The app's name (extracted from the uploaded
+ * release).
+ * 
+ * @member {string} [version] The release's version.<br>
+ * For iOS: CFBundleVersion from info.plist.
+ * For Android: android:versionCode from AppManifest.xml.
+ * 
+ * @member {string} [shortVersion] The release's short version.<br>
+ * For iOS: CFBundleShortVersionString from info.plist.
+ * For Android: android:versionName from AppManifest.xml.
+ * 
+ * @member {string} [releaseNotes] The release's release notes.
+ * 
+ * @member {string} [provisioningProfileName] The release's release notes.
+ * 
+ * @member {number} [size] The release's size in bytes.
+ * 
+ * @member {string} [minOs] The release's minimum required operating system.
+ * 
+ * @member {string} [fingerprint] MD5 checksum of the release binary.
+ * 
+ * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
+ * time.
+ * 
+ * @member {string} [downloadUrl] The URL that hosts the binary for this
+ * release.
+ * 
+ * @member {string} [appIconUrl] A URL to the app's icon.
+ * 
+ * @member {string} [installUrl] The href required to install a release on a
+ * mobile device. On iOS devices will be prefixed with
+ * `itms-services://?action=download-manifest&url=`
+ * 
+ * @member {array} [distributionGroups] a list of distribution groups that are
+ * associated with this release.
+ * 
+ */
+export interface ReleaseDetails {
+  id?: string;
+  status?: string;
+  appName?: string;
+  version?: string;
+  shortVersion?: string;
+  releaseNotes?: string;
+  provisioningProfileName?: string;
+  size?: number;
+  minOs?: string;
+  fingerprint?: string;
+  uploadedAt?: string;
+  downloadUrl?: string;
+  appIconUrl?: string;
+  installUrl?: string;
+  distributionGroups?: DistributionGroup[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseUploadBeginResponse class.
+ * @constructor
+ * A response containing information pertaining to starting a release upload
+ * process
+ *
+ * @member {string} uploadId The ID for the current upload
+ * 
+ * @member {string} uploadUrl The URL where the client needs to upload the
+ * release to
+ * 
+ */
+export interface ReleaseUploadBeginResponse {
+  uploadId: string;
+  uploadUrl: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseUploadEndRequest class.
+ * @constructor
+ * A request containing information pertaining to complete a release upload
+ * process
+ *
+ * @member {string} status The desired operation for the upload. Possible
+ * values include: 'committed', 'aborted'
+ * 
+ */
+export interface ReleaseUploadEndRequest {
+  status: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseUploadEndResponse class.
+ * @constructor
+ * A response containing information about the uploaded release.
+ *
+ * @member {string} [releaseUrl] A URL to the new release. If upload was
+ * aborted will be null.
+ * 
+ */
+export interface ReleaseUploadEndResponse {
+  releaseUrl?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseUpdateRequest class.
+ * @constructor
+ * A request containing information for updating a release.
+ *
+ * @member {string} [distributionGroupName] Name of a distribution group. The
+ * release will be associated with this distribution group. If the
+ * distribution group doesn't exist a 400 is returned. If both distribution
+ * group name and id are passed, the id is taking precedence.
+ * 
+ * @member {string} [distributionGroupId] Id of a distribution group. The
+ * release will be associated with this distribution group. If the
+ * distribution group doesn't exist a 400 is returned. If both distribution
+ * group name and id are passed, the id is taking precedence.
+ * 
+ * @member {string} [releaseNotes] Release notes for this release.
+ * 
+ */
+export interface ReleaseUpdateRequest {
+  distributionGroupName?: string;
+  distributionGroupId?: string;
+  releaseNotes?: string;
 }
 
 /**
@@ -1269,24 +1626,6 @@ export interface PackageUpdateRequest {
   distributionGroupName?: string;
   distributionGroupId?: string;
   releaseNotes?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the DistributionGroup class.
- * @constructor
- * @member {string} [id] ID identifying a unique distribution group.
- * 
- * @member {string} [name] A name identifying a unique distribution group.
- * 
- * @member {boolean} [isLatest] Is the containing package the latest one in
- * this distribution group.
- * 
- */
-export interface DistributionGroup {
-  id?: string;
-  name?: string;
-  isLatest?: boolean;
 }
 
 /**
@@ -1399,8 +1738,7 @@ export interface PackageDetails {
  * @member {string} symbolId The unique id for this symbol (uuid)
  * 
  * @member {string} type The type of the symbol for the current symbol upload.
- * Possible values include: 'Apple', 'AndroidNative', 'AndroidJava',
- * 'JavaScript', 'Windows'
+ * Possible values include: 'Apple', 'JavaScript'
  * 
  * @member {string} appId The application that this symbol belongs to
  * 
@@ -1414,6 +1752,9 @@ export interface PackageDetails {
  * 
  * @member {array} alternateSymbolIds The other symbols in the same file
  * 
+ * @member {string} status Whether the symbol is ignored. Possible values
+ * include: 'available', 'ignored'
+ * 
  */
 export interface Symbol {
   symbolId: string;
@@ -1423,6 +1764,7 @@ export interface Symbol {
   url: string;
   origin: string;
   alternateSymbolIds: string[];
+  status: string;
 }
 
 /**
@@ -1439,10 +1781,6 @@ export interface Symbol {
  * values include: 'created', 'committed', 'aborted', 'processing',
  * 'indexed', 'failed'
  * 
- * @member {string} symbolType The type of the symbol for the current symbol
- * upload. Possible values include: 'Apple', 'AndroidNative', 'AndroidJava',
- * 'Windows'
- * 
  * @member {array} [symbols] The symbol ids
  * 
  * @member {string} [origin] The origin of the symbol upload. Possible values
@@ -1453,7 +1791,6 @@ export interface SymbolUpload {
   symbolUploadId: string;
   appId: string;
   status: string;
-  symbolType: string;
   symbols?: Symbol[];
   origin?: string;
 }
@@ -1465,16 +1802,11 @@ export interface SymbolUpload {
  * A request containing information pertaining to starting a symbol upload
  * process
  *
- * @member {string} symbolType The type of the symbol for the current symbol
- * upload. Possible values include: 'Apple', 'AndroidNative', 'AndroidJava',
- * 'Windows'
- * 
  * @member {string} [clientCallback] The callback URL that the client can
  * optionally provide to get status updates for the current symbol upload
  * 
  */
 export interface SymbolUploadBeginRequest {
-  symbolType: string;
   clientCallback?: string;
 }
 
@@ -1562,6 +1894,10 @@ export interface AppVersion {
  * 
  * @member {array} [exception.innerExceptions]
  * 
+ * @member {string} [exception.platform] SDK/Platform this thread is beeing
+ * generated from. Possible values include: 'ios', 'android', 'xamarin',
+ * 'react-native', 'other'
+ * 
  */
 export interface Stacktrace {
   title?: string;
@@ -1594,8 +1930,16 @@ export interface Stacktrace {
  * 
  * @member {array} [exception.innerExceptions]
  * 
+ * @member {string} [exception.platform] SDK/Platform this thread is beeing
+ * generated from. Possible values include: 'ios', 'android', 'xamarin',
+ * 'react-native', 'other'
+ * 
  * @member {boolean} [relevant] Shows if a thread is relevant or not. Is false
  * if all frames are non relevant, otherwise true
+ * 
+ * @member {string} [platform] SDK/Platform this thread is beeing generated
+ * from. Possible values include: 'ios', 'android', 'xamarin',
+ * 'react-native', 'other'
  * 
  */
 export interface Thread {
@@ -1603,6 +1947,7 @@ export interface Thread {
   frames: StackFrame[];
   exception?: Exception;
   relevant?: boolean;
+  platform?: string;
 }
 
 /**
@@ -1673,6 +2018,10 @@ export interface StackFrame {
  * 
  * @member {array} [innerExceptions]
  * 
+ * @member {string} [platform] SDK/Platform this thread is beeing generated
+ * from. Possible values include: 'ios', 'android', 'xamarin',
+ * 'react-native', 'other'
+ * 
  */
 export interface Exception {
   reason?: string;
@@ -1680,6 +2029,7 @@ export interface Exception {
   frames: StackFrame[];
   relevant?: boolean;
   innerExceptions?: Exception[];
+  platform?: string;
 }
 
 /**
@@ -1734,6 +2084,8 @@ export interface ReasonStackFrame {
  * 
  * @member {string} appVersion
  * 
+ * @member {string} build
+ * 
  * @member {string} status Possible values include: 'open', 'closed', 'ignored'
  * 
  * @member {number} count
@@ -1779,6 +2131,7 @@ export interface CrashGroup {
   crashGroupId: string;
   displayId: string;
   appVersion: string;
+  build: string;
   status: string;
   count: number;
   impactedUsers?: number;
@@ -1830,6 +2183,8 @@ export interface CrashGroupCounts {
  * 
  * @member {string} osVersion
  * 
+ * @member {string} [osType]
+ * 
  * @member {string} userName
  * 
  * @member {string} [userEmail]
@@ -1843,6 +2198,7 @@ export interface Crash {
   build: string;
   device: string;
   osVersion: string;
+  osType?: string;
   userName: string;
   userEmail?: string;
 }
@@ -2718,15 +3074,31 @@ export interface EventPropertyValue {
  * 
  * @member {string} [model.platform]
  * 
- * @member {string} [model.dimensions]
+ * @member {object} [model.dimensions]
  * 
- * @member {string} [model.resolution]
+ * @member {object} [model.dimensions.depth]
+ * 
+ * @member {object} [model.dimensions.height]
+ * 
+ * @member {object} [model.dimensions.width]
+ * 
+ * @member {object} [model.resolution]
+ * 
+ * @member {string} [model.resolution.height]
+ * 
+ * @member {string} [model.resolution.width]
+ * 
+ * @member {string} [model.resolution.ppi]
  * 
  * @member {string} [model.releaseDate]
  * 
  * @member {string} [model.formFactor]
  * 
- * @member {string} [model.screenSize]
+ * @member {object} [model.screenSize]
+ * 
+ * @member {string} [model.screenSize.cm]
+ * 
+ * @member {string} [model.screenSize.in]
  * 
  * @member {object} [model.cpu]
  * 
@@ -2761,6 +3133,8 @@ export interface EventPropertyValue {
  * @member {string} [model.deviceFrame.full.frameUrl]
  * 
  * @member {array} [model.deviceFrame.full.screen]
+ * 
+ * @member {number} [model.availabilityCount]
  * 
  * @member {string} [os]
  * 
@@ -2806,15 +3180,31 @@ export interface DeviceConfigurationImage {
  * 
  * @member {string} [platform]
  * 
- * @member {string} [dimensions]
+ * @member {object} [dimensions]
  * 
- * @member {string} [resolution]
+ * @member {object} [dimensions.depth]
+ * 
+ * @member {object} [dimensions.height]
+ * 
+ * @member {object} [dimensions.width]
+ * 
+ * @member {object} [resolution]
+ * 
+ * @member {string} [resolution.height]
+ * 
+ * @member {string} [resolution.width]
+ * 
+ * @member {string} [resolution.ppi]
  * 
  * @member {string} [releaseDate]
  * 
  * @member {string} [formFactor]
  * 
- * @member {string} [screenSize]
+ * @member {object} [screenSize]
+ * 
+ * @member {string} [screenSize.cm]
+ * 
+ * @member {string} [screenSize.in]
  * 
  * @member {object} [cpu]
  * 
@@ -2850,21 +3240,78 @@ export interface DeviceConfigurationImage {
  * 
  * @member {array} [deviceFrame.full.screen]
  * 
+ * @member {number} [availabilityCount]
+ * 
  */
 export interface DeviceModel {
   name?: string;
   manufacturer?: string;
   model?: string;
   platform?: string;
-  dimensions?: string;
-  resolution?: string;
+  dimensions?: DeviceDimensions;
+  resolution?: DeviceResolution;
   releaseDate?: string;
   formFactor?: string;
-  screenSize?: string;
+  screenSize?: DeviceScreenSize;
   cpu?: DeviceCpu;
   memory?: DeviceMemory;
   screenRotation?: number;
   deviceFrame?: DeviceFrame;
+  availabilityCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DeviceDimensions class.
+ * @constructor
+ * Physical device dimensions
+ *
+ * @member {object} [depth]
+ * 
+ * @member {object} [height]
+ * 
+ * @member {object} [width]
+ * 
+ */
+export interface DeviceDimensions {
+  depth?: any;
+  height?: any;
+  width?: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DeviceResolution class.
+ * @constructor
+ * Device screen resolution
+ *
+ * @member {string} [height]
+ * 
+ * @member {string} [width]
+ * 
+ * @member {string} [ppi]
+ * 
+ */
+export interface DeviceResolution {
+  height?: string;
+  width?: string;
+  ppi?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DeviceScreenSize class.
+ * @constructor
+ * Physical device screen dimensions
+ *
+ * @member {string} [cm]
+ * 
+ * @member {string} [in]
+ * 
+ */
+export interface DeviceScreenSize {
+  cm?: string;
+  in?: string;
 }
 
 /**
@@ -2966,10 +3413,14 @@ export interface DeviceFrameDefinition {
  * @member {string} [platform] The device platform targeted by the test.
  * Possible values are 'ios' or 'android'
  * 
- * @member {string} [state] The current status of the test run, in relation to
- * the various phases
+ * @member {string} [runStatus] The current status of the test run, in
+ * relation to the various phases
  * 
- * @member {string} [status] The passed/failed state
+ * @member {string} [resultStatus] The passed/failed state
+ * 
+ * @member {string} [state] Deprecated. Use runStatus instead.
+ * 
+ * @member {string} [status] Deprecated. Use resultStatus instead.
  * 
  * @member {string} [description] Human readable explanation of the current
  * test status
@@ -3008,6 +3459,8 @@ export interface TestRun {
   appVersion?: string;
   testSeries?: string;
   platform?: string;
+  runStatus?: string;
+  resultStatus?: string;
   state?: string;
   status?: string;
   description?: string;
@@ -3222,6 +3675,8 @@ export interface Tier {
  * 
  * @member {string} dateFinished
  * 
+ * @member {string} [errorMessage]
+ * 
  */
 export interface TestReport {
   appUploadId: string;
@@ -3236,6 +3691,7 @@ export interface TestReport {
   finishedDeviceSnapshots: string[];
   deviceLogs: TestReportDeviceLogsItem[];
   dateFinished: string;
+  errorMessage?: string;
 }
 
 /**
@@ -3297,12 +3753,18 @@ export interface TestReportStats {
  * 
  * @member {number} [skipped]
  * 
+ * @member {number} [peakMemory]
+ * 
+ * @member {number} [peakDuration]
+ * 
  */
 export interface TestReportFeaturesItem {
   name?: string;
   tests?: TestReportFeaturesItemTestsItem[];
   failed?: number;
   skipped?: number;
+  peakMemory?: number;
+  peakDuration?: number;
 }
 
 /**
@@ -3313,10 +3775,16 @@ export interface TestReportFeaturesItem {
  * 
  * @member {array} [runs]
  * 
+ * @member {number} [peakMemory]
+ * 
+ * @member {number} [peakDuration]
+ * 
  */
 export interface TestReportFeaturesItemTestsItem {
   testName?: string;
   runs?: TestReportFeaturesItemTestsItemRunsItem[];
+  peakMemory?: number;
+  peakDuration?: number;
 }
 
 /**
@@ -3331,12 +3799,18 @@ export interface TestReportFeaturesItemTestsItem {
  * 
  * @member {number} [skipped]
  * 
+ * @member {string} [reportUrl]
+ * 
+ * @member {string} [id]
+ * 
  */
 export interface TestReportFeaturesItemTestsItemRunsItem {
   number?: number;
   steps?: TestReportFeaturesItemTestsItemRunsItemStepsItem[];
   failed?: number;
   skipped?: number;
+  reportUrl?: string;
+  id?: string;
 }
 
 /**
@@ -3406,7 +3880,7 @@ export interface TestReportDeviceLogsItem {
  * @class
  * Initializes a new instance of the TestCloudErrorDetails class.
  * @constructor
- * @summary TestCloudErrorDetails
+ * @summary Test Cloud Error Details
  *
  * Details of a failed operation
  *
@@ -3424,7 +3898,7 @@ export interface TestCloudErrorDetails {
  * @class
  * Initializes a new instance of the TestCloudFileHashDeprecated class.
  * @constructor
- * @summary TestCloudFileHashDeprecated
+ * @summary Test Cloud File Hash
  *
  * Hash, type, path and byte range of a file that is required in test run
  *
@@ -3524,7 +3998,7 @@ export interface TestCloudHashUploadStatus {
  * @class
  * Initializes a new instance of the TestCloudStartTestRunOptions class.
  * @constructor
- * @summary TestCloudStartTestRunOptions
+ * @summary Test Cloud Start Test Run Options
  *
  * Options required to start the test run
  *
@@ -3552,7 +4026,7 @@ export interface TestCloudStartTestRunOptions {
  * @class
  * Initializes a new instance of the TestCloudStartTestRunResult class.
  * @constructor
- * @summary TestCloudStartTestRunResult
+ * @summary Test Cloud Test Run Start Result
  *
  * Result of starting a test run
  *
@@ -3571,7 +4045,7 @@ export interface TestCloudStartTestRunResult {
  * @class
  * Initializes a new instance of the TestRunState class.
  * @constructor
- * @summary TestRunState
+ * @summary Test Run State
  *
  * Current status of a test run
  *
@@ -3660,6 +4134,51 @@ export interface ImportDataContainer {
 
 /**
  * @class
+ * Initializes a new instance of the PushConfig class.
+ * @constructor
+ * @member {object} [apnsCredential]
+ * 
+ * @member {string} [apnsCredential.endpoint]
+ * 
+ * @member {string} [apnsCredential.apnsCertificate]
+ * 
+ * @member {object} [gcmCredential]
+ * 
+ * @member {string} [gcmCredential.googleApiKey]
+ * 
+ */
+export interface PushConfig {
+  apnsCredential?: PushConfigApnsCredential;
+  gcmCredential?: PushConfigGcmCredential;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the PushConfigApnsCredential class.
+ * @constructor
+ * @member {string} [endpoint]
+ * 
+ * @member {string} [apnsCertificate]
+ * 
+ */
+export interface PushConfigApnsCredential {
+  endpoint?: string;
+  apnsCertificate?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the PushConfigGcmCredential class.
+ * @constructor
+ * @member {string} [googleApiKey]
+ * 
+ */
+export interface PushConfigGcmCredential {
+  googleApiKey?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the CrashGroups class.
  * @constructor
  * @member {array} crashGroupsProperty
@@ -3667,4 +4186,30 @@ export interface ImportDataContainer {
  */
 export interface CrashGroups {
   crashGroupsProperty: CrashGroupAndVersion[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the App class.
+ * @constructor
+ * @member {string} [description] A short text describing the app
+ * 
+ * @member {string} displayName The descriptive name of the app. This can
+ * contain any characters
+ * 
+ * @member {string} [name] The name of the app used in URLs
+ * 
+ * @member {string} os The OS the app will be running on. Possible values
+ * include: 'iOS', 'Android'
+ * 
+ * @member {string} platform The platform of the app. Possible values include:
+ * 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
+ * 
+ */
+export interface App {
+  description?: string;
+  displayName: string;
+  name?: string;
+  os: string;
+  platform: string;
 }

@@ -14,28 +14,6 @@ var models = require('./index');
  * @constructor
  * @member {string} id The unique ID (UUID) of the invitation
  * 
- * @member {string} email The email address of the invited user
- * 
- * @member {boolean} isExistingUser Indicates whether the invited user already
- * exists
- * 
- * @member {object} invitedBy
- * 
- * @member {string} [invitedBy.id] The unique id (UUID) of the user
- * 
- * @member {string} [invitedBy.email] The email address of the user
- * 
- * @member {string} [invitedBy.displayName] The full name of the user. Might
- * for example be first and last name
- * 
- * @member {string} [invitedBy.name] The unique name that is used to identify
- * the user.
- * 
- * @member {string} [invitedBy.avatarUrl] The avatar URL of the user
- * 
- * @member {boolean} [invitedBy.canChangePassword] User is required to send an
- * old password in order to change the password.
- * 
  * @member {object} app
  * 
  * @member {string} [app.id] The unique ID (UUID) of the app
@@ -44,20 +22,20 @@ var models = require('./index');
  * the app in communication with the ingestion endpoint for crash reporting
  * and analytics
  * 
+ * @member {string} [app.azureSubscriptionId] The unique ID (UUID) of the
+ * Azure subscription associate with the app
+ * 
  * @member {string} [app.description] The description of the app
  * 
  * @member {string} [app.displayName] The display name of the app
+ * 
+ * @member {string} [app.iconUrl] The string representation of the URL
+ * pointing to the app's icon
  * 
  * @member {string} [app.name] The name of the app used in URLs
  * 
  * @member {string} [app.os] The OS the app will be running on. Possible
  * values include: 'iOS', 'Android'
- * 
- * @member {string} [app.platform] The platform of the app. Possible values
- * include: 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
- * 
- * @member {string} [app.iconUrl] The string representation of the URL
- * pointing to the app's icon
  * 
  * @member {object} [app.owner]
  * 
@@ -65,9 +43,9 @@ var models = require('./index');
  * 
  * @member {string} [app.owner.avatarUrl] The avatar URL of the owner
  * 
- * @member {string} [app.owner.email] The owner's email address
- * 
  * @member {string} [app.owner.displayName] The owner's display name
+ * 
+ * @member {string} [app.owner.email] The owner's email address
  * 
  * @member {string} [app.owner.name] The unique name that used to identify the
  * owner
@@ -75,8 +53,33 @@ var models = require('./index');
  * @member {string} [app.owner.type] The owner type. Can either be 'org' or
  * 'user'. Possible values include: 'org', 'user'
  * 
- * @member {string} [app.azureSubscriptionId] The unique ID (UUID) of the
- * Azure subscription associate with the app
+ * @member {string} [app.platform] The platform of the app. Possible values
+ * include: 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
+ * 
+ * @member {string} email The email address of the invited user
+ * 
+ * @member {string} inviteType The invitation type. Possible values include:
+ * 'developer', 'tester'
+ * 
+ * @member {object} invitedBy
+ * 
+ * @member {string} [invitedBy.id] The unique id (UUID) of the user
+ * 
+ * @member {string} [invitedBy.avatarUrl] The avatar URL of the user
+ * 
+ * @member {boolean} [invitedBy.canChangePassword] User is required to send an
+ * old password in order to change the password.
+ * 
+ * @member {string} [invitedBy.displayName] The full name of the user. Might
+ * for example be first and last name
+ * 
+ * @member {string} [invitedBy.email] The email address of the user
+ * 
+ * @member {string} [invitedBy.name] The unique name that is used to identify
+ * the user.
+ * 
+ * @member {boolean} isExistingUser Indicates whether the invited user already
+ * exists
  * 
  */
 function AppInvitationDetailResponse() {
@@ -103,6 +106,14 @@ AppInvitationDetailResponse.prototype.mapper = function () {
             name: 'String'
           }
         },
+        app: {
+          required: true,
+          serializedName: 'app',
+          type: {
+            name: 'Composite',
+            className: 'AppResponse'
+          }
+        },
         email: {
           required: true,
           serializedName: 'email',
@@ -110,11 +121,11 @@ AppInvitationDetailResponse.prototype.mapper = function () {
             name: 'String'
           }
         },
-        isExistingUser: {
+        inviteType: {
           required: true,
-          serializedName: 'is_existing_user',
+          serializedName: 'invite_type',
           type: {
-            name: 'Boolean'
+            name: 'String'
           }
         },
         invitedBy: {
@@ -125,12 +136,11 @@ AppInvitationDetailResponse.prototype.mapper = function () {
             className: 'UserProfileResponse'
           }
         },
-        app: {
+        isExistingUser: {
           required: true,
-          serializedName: 'app',
+          serializedName: 'is_existing_user',
           type: {
-            name: 'Composite',
-            className: 'AppResponse'
+            name: 'Boolean'
           }
         }
       }

@@ -10,10 +10,10 @@
  * @class
  * Initializes a new instance of the UserNameAvailabilityResponse class.
  * @constructor
- * @member {string} name The requested user name
- * 
  * @member {boolean} available The availability status of the requested user
  * name
+ * 
+ * @member {string} name The requested user name
  * 
  */
 function UserNameAvailabilityResponse() {
@@ -33,18 +33,18 @@ UserNameAvailabilityResponse.prototype.mapper = function () {
       name: 'Composite',
       className: 'UserNameAvailabilityResponse',
       modelProperties: {
-        name: {
-          required: true,
-          serializedName: 'name',
-          type: {
-            name: 'String'
-          }
-        },
         available: {
           required: true,
           serializedName: 'available',
           type: {
             name: 'Boolean'
+          }
+        },
+        name: {
+          required: true,
+          serializedName: 'name',
+          type: {
+            name: 'String'
           }
         }
       }

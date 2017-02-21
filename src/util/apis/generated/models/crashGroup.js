@@ -18,6 +18,8 @@ var models = require('./index');
  * 
  * @member {string} appVersion
  * 
+ * @member {string} build
+ * 
  * @member {string} status Possible values include: 'open', 'closed', 'ignored'
  * 
  * @member {number} count
@@ -93,6 +95,13 @@ CrashGroup.prototype.mapper = function () {
         appVersion: {
           required: true,
           serializedName: 'app_version',
+          type: {
+            name: 'String'
+          }
+        },
+        build: {
+          required: true,
+          serializedName: 'build',
           type: {
             name: 'String'
           }

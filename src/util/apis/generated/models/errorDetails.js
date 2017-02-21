@@ -11,7 +11,7 @@
  * Initializes a new instance of the ErrorDetails class.
  * @constructor
  * @member {string} code Possible values include: 'BadRequest', 'Conflict',
- * 'NotAcceptable', 'NotAuthorized', 'NotFound', 'InternalServerError'
+ * 'NotAcceptable', 'NotFound', 'InternalServerError', 'Unauthorized'
  * 
  * @member {string} message
  * 

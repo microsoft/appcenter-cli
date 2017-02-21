@@ -27,6 +27,10 @@ var util = require('util');
  * 
  * @member {array} [innerExceptions]
  * 
+ * @member {string} [platform] SDK/Platform this thread is beeing generated
+ * from. Possible values include: 'ios', 'android', 'xamarin',
+ * 'react-native', 'other'
+ * 
  */
 function Exception() {
 }
@@ -94,6 +98,13 @@ Exception.prototype.mapper = function () {
                   className: 'Exception'
                 }
             }
+          }
+        },
+        platform: {
+          required: false,
+          serializedName: 'platform',
+          type: {
+            name: 'String'
           }
         }
       }

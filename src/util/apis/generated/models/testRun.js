@@ -28,10 +28,14 @@ var models = require('./index');
  * @member {string} [platform] The device platform targeted by the test.
  * Possible values are 'ios' or 'android'
  * 
- * @member {string} [state] The current status of the test run, in relation to
- * the various phases
+ * @member {string} [runStatus] The current status of the test run, in
+ * relation to the various phases
  * 
- * @member {string} [status] The passed/failed state
+ * @member {string} [resultStatus] The passed/failed state
+ * 
+ * @member {string} [state] Deprecated. Use runStatus instead.
+ * 
+ * @member {string} [status] Deprecated. Use resultStatus instead.
  * 
  * @member {string} [description] Human readable explanation of the current
  * test status
@@ -112,6 +116,20 @@ TestRun.prototype.mapper = function () {
         platform: {
           required: false,
           serializedName: 'platform',
+          type: {
+            name: 'String'
+          }
+        },
+        runStatus: {
+          required: false,
+          serializedName: 'runStatus',
+          type: {
+            name: 'String'
+          }
+        },
+        resultStatus: {
+          required: false,
+          serializedName: 'resultStatus',
           type: {
             name: 'String'
           }

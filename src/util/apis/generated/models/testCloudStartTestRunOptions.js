@@ -10,7 +10,7 @@
  * @class
  * Initializes a new instance of the TestCloudStartTestRunOptions class.
  * @constructor
- * @summary TestCloudStartTestRunOptions
+ * @summary Test Cloud Start Test Run Options
  *
  * Options required to start the test run
  *

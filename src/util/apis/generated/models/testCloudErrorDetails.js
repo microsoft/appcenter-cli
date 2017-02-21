@@ -10,7 +10,7 @@
  * @class
  * Initializes a new instance of the TestCloudErrorDetails class.
  * @constructor
- * @summary TestCloudErrorDetails
+ * @summary Test Cloud Error Details
  *
  * Details of a failed operation
  *

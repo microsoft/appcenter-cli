@@ -16,6 +16,9 @@
  * @member {string} packageJsonPath Path to package.json file for the main
  * project, e.g. "package.json" or "myapp/package.json"
  * 
+ * @member {boolean} [runTests] Whether to run Jest unit tests, via npm test,
+ * during the build. Default value: true .
+ * 
  */
 function JavaScriptBranchConfigurationProperties() {
 }
@@ -39,6 +42,14 @@ JavaScriptBranchConfigurationProperties.prototype.mapper = function () {
           serializedName: 'packageJsonPath',
           type: {
             name: 'String'
+          }
+        },
+        runTests: {
+          required: false,
+          serializedName: 'runTests',
+          defaultValue: true,
+          type: {
+            name: 'Boolean'
           }
         }
       }

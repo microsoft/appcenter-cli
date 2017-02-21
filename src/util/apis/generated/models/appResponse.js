@@ -18,20 +18,20 @@ var models = require('./index');
  * in communication with the ingestion endpoint for crash reporting and
  * analytics
  * 
+ * @member {string} [azureSubscriptionId] The unique ID (UUID) of the Azure
+ * subscription associate with the app
+ * 
  * @member {string} [description] The description of the app
  * 
  * @member {string} displayName The display name of the app
+ * 
+ * @member {string} [iconUrl] The string representation of the URL pointing to
+ * the app's icon
  * 
  * @member {string} name The name of the app used in URLs
  * 
  * @member {string} os The OS the app will be running on. Possible values
  * include: 'iOS', 'Android'
- * 
- * @member {string} platform The platform of the app. Possible values include:
- * 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
- * 
- * @member {string} [iconUrl] The string representation of the URL pointing to
- * the app's icon
  * 
  * @member {object} owner
  * 
@@ -39,9 +39,9 @@ var models = require('./index');
  * 
  * @member {string} [owner.avatarUrl] The avatar URL of the owner
  * 
- * @member {string} [owner.email] The owner's email address
- * 
  * @member {string} [owner.displayName] The owner's display name
+ * 
+ * @member {string} [owner.email] The owner's email address
  * 
  * @member {string} [owner.name] The unique name that used to identify the
  * owner
@@ -49,8 +49,8 @@ var models = require('./index');
  * @member {string} [owner.type] The owner type. Can either be 'org' or
  * 'user'. Possible values include: 'org', 'user'
  * 
- * @member {string} [azureSubscriptionId] The unique ID (UUID) of the Azure
- * subscription associate with the app
+ * @member {string} platform The platform of the app. Possible values include:
+ * 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
  * 
  */
 function AppResponse() {
@@ -84,6 +84,13 @@ AppResponse.prototype.mapper = function () {
             name: 'String'
           }
         },
+        azureSubscriptionId: {
+          required: false,
+          serializedName: 'azure_subscription_id',
+          type: {
+            name: 'String'
+          }
+        },
         description: {
           required: false,
           serializedName: 'description',
@@ -94,6 +101,13 @@ AppResponse.prototype.mapper = function () {
         displayName: {
           required: true,
           serializedName: 'display_name',
+          type: {
+            name: 'String'
+          }
+        },
+        iconUrl: {
+          required: false,
+          serializedName: 'icon_url',
           type: {
             name: 'String'
           }
@@ -112,20 +126,6 @@ AppResponse.prototype.mapper = function () {
             name: 'String'
           }
         },
-        platform: {
-          required: true,
-          serializedName: 'platform',
-          type: {
-            name: 'String'
-          }
-        },
-        iconUrl: {
-          required: false,
-          serializedName: 'icon_url',
-          type: {
-            name: 'String'
-          }
-        },
         owner: {
           required: true,
           serializedName: 'owner',
@@ -134,9 +134,9 @@ AppResponse.prototype.mapper = function () {
             className: 'Owner'
           }
         },
-        azureSubscriptionId: {
-          required: false,
-          serializedName: 'azure_subscription_id',
+        platform: {
+          required: true,
+          serializedName: 'platform',
           type: {
             name: 'String'
           }

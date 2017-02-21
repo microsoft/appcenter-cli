@@ -12,7 +12,7 @@ var util = require('util');
  * @class
  * Initializes a new instance of the TestCloudStartTestRunResult class.
  * @constructor
- * @summary TestCloudStartTestRunResult
+ * @summary Test Cloud Test Run Start Result
  *
  * Result of starting a test run
  *

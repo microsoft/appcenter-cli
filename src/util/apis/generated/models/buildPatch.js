@@ -10,7 +10,8 @@
  * @class
  * Initializes a new instance of the BuildPatch class.
  * @constructor
- * @member {string} [status] The build status
+ * @member {string} [status] The build status; used to cancel builds. Possible
+ * values include: 'cancelling'
  * 
  */
 function BuildPatch() {

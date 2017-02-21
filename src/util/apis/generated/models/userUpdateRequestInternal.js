@@ -15,6 +15,9 @@
  * 
  * @member {string} [name] The new, unique name that is used to identify.
  * 
+ * @member {string} [nextNpsSurveyDate] The date in the future when the user
+ * should be checked again for NPS eligibility
+ * 
  */
 function UserUpdateRequestInternal() {
 }
@@ -43,6 +46,13 @@ UserUpdateRequestInternal.prototype.mapper = function () {
         name: {
           required: false,
           serializedName: 'name',
+          type: {
+            name: 'String'
+          }
+        },
+        nextNpsSurveyDate: {
+          required: false,
+          serializedName: 'next_nps_survey_date',
           type: {
             name: 'String'
           }

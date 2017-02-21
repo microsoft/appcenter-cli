@@ -8,7 +8,7 @@
 
 /**
  * @class
- * Initializes a new instance of the FeatureRequestResponse class.
+ * Initializes a new instance of the FeatureCreateRequest class.
  * @constructor
  * @member {string} name The unique name of the feature
  * 
@@ -19,22 +19,22 @@
  * @member {string} [description] The friendly name of the feature
  * 
  */
-function FeatureRequestResponse() {
+function FeatureCreateRequest() {
 }
 
 /**
- * Defines the metadata of FeatureRequestResponse
+ * Defines the metadata of FeatureCreateRequest
  *
- * @returns {object} metadata of FeatureRequestResponse
+ * @returns {object} metadata of FeatureCreateRequest
  *
  */
-FeatureRequestResponse.prototype.mapper = function () {
+FeatureCreateRequest.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'FeatureRequestResponse',
+    serializedName: 'FeatureCreateRequest',
     type: {
       name: 'Composite',
-      className: 'FeatureRequestResponse',
+      className: 'FeatureCreateRequest',
       modelProperties: {
         name: {
           required: true,
@@ -69,4 +69,4 @@ FeatureRequestResponse.prototype.mapper = function () {
   };
 };
 
-module.exports = FeatureRequestResponse;
+module.exports = FeatureCreateRequest;

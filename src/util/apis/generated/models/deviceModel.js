@@ -20,15 +20,31 @@ var models = require('./index');
  * 
  * @member {string} [platform]
  * 
- * @member {string} [dimensions]
+ * @member {object} [dimensions]
  * 
- * @member {string} [resolution]
+ * @member {object} [dimensions.depth]
+ * 
+ * @member {object} [dimensions.height]
+ * 
+ * @member {object} [dimensions.width]
+ * 
+ * @member {object} [resolution]
+ * 
+ * @member {string} [resolution.height]
+ * 
+ * @member {string} [resolution.width]
+ * 
+ * @member {string} [resolution.ppi]
  * 
  * @member {string} [releaseDate]
  * 
  * @member {string} [formFactor]
  * 
- * @member {string} [screenSize]
+ * @member {object} [screenSize]
+ * 
+ * @member {string} [screenSize.cm]
+ * 
+ * @member {string} [screenSize.in]
  * 
  * @member {object} [cpu]
  * 
@@ -63,6 +79,8 @@ var models = require('./index');
  * @member {string} [deviceFrame.full.frameUrl]
  * 
  * @member {array} [deviceFrame.full.screen]
+ * 
+ * @member {number} [availabilityCount]
  * 
  */
 function DeviceModel() {
@@ -114,14 +132,16 @@ DeviceModel.prototype.mapper = function () {
           required: false,
           serializedName: 'dimensions',
           type: {
-            name: 'String'
+            name: 'Composite',
+            className: 'DeviceDimensions'
           }
         },
         resolution: {
           required: false,
           serializedName: 'resolution',
           type: {
-            name: 'String'
+            name: 'Composite',
+            className: 'DeviceResolution'
           }
         },
         releaseDate: {
@@ -142,7 +162,8 @@ DeviceModel.prototype.mapper = function () {
           required: false,
           serializedName: 'screenSize',
           type: {
-            name: 'String'
+            name: 'Composite',
+            className: 'DeviceScreenSize'
           }
         },
         cpu: {
@@ -174,6 +195,13 @@ DeviceModel.prototype.mapper = function () {
           type: {
             name: 'Composite',
             className: 'DeviceFrame'
+          }
+        },
+        availabilityCount: {
+          required: false,
+          serializedName: 'availabilityCount',
+          type: {
+            name: 'Number'
           }
         }
       }

@@ -34,15 +34,31 @@ var models = require('./index');
  * 
  * @member {string} [model.platform]
  * 
- * @member {string} [model.dimensions]
+ * @member {object} [model.dimensions]
  * 
- * @member {string} [model.resolution]
+ * @member {object} [model.dimensions.depth]
+ * 
+ * @member {object} [model.dimensions.height]
+ * 
+ * @member {object} [model.dimensions.width]
+ * 
+ * @member {object} [model.resolution]
+ * 
+ * @member {string} [model.resolution.height]
+ * 
+ * @member {string} [model.resolution.width]
+ * 
+ * @member {string} [model.resolution.ppi]
  * 
  * @member {string} [model.releaseDate]
  * 
  * @member {string} [model.formFactor]
  * 
- * @member {string} [model.screenSize]
+ * @member {object} [model.screenSize]
+ * 
+ * @member {string} [model.screenSize.cm]
+ * 
+ * @member {string} [model.screenSize.in]
  * 
  * @member {object} [model.cpu]
  * 
@@ -77,6 +93,8 @@ var models = require('./index');
  * @member {string} [model.deviceFrame.full.frameUrl]
  * 
  * @member {array} [model.deviceFrame.full.screen]
+ * 
+ * @member {number} [model.availabilityCount]
  * 
  * @member {string} [os]
  * 
