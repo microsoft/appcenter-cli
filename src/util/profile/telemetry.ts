@@ -18,10 +18,10 @@ const telemetryPromptText = os.EOL +
  "and some problems they encounter. Participation is voluntary and when you choose to participate your " +
  "device automatically sends information to Microsoft about how you use Mobile Center CLI." +
  os.EOL +
- "For more information, please see our privacy policy at https://www.microsoft.com/en-us/privacystatement/OnlineServices/Default.aspx" +
+ "For more information, please see our privacy policy at https://aka.ms/mobilecenterprivacy" +
  os.EOL;
 
-function promptForTelemetryEnable() : Promise<boolean> {
+ function promptForTelemetryEnable() : Promise<boolean> {
   let width = terminal.columns() - 2;
 
   let promptText = wrap(width)(telemetryPromptText);
