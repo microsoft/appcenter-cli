@@ -1,0 +1,1 @@
+Command to upload symbols to get symbolicated crash reports on Mobile Center
