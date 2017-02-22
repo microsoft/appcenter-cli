@@ -18,6 +18,8 @@
  * 
  * @member {string} deviceSelection Device selection string.
  * 
+ * @member {string} [language] Language that should be used to run tests.
+ * 
  * @member {string} [locale] Locale that should be used to run tests.
  * 
  * @member {string} [testSeries] Name of the test series.
@@ -53,6 +55,13 @@ TestCloudStartTestRunOptions.prototype.mapper = function () {
         deviceSelection: {
           required: true,
           serializedName: 'device_selection',
+          type: {
+            name: 'String'
+          }
+        },
+        language: {
+          required: false,
+          serializedName: 'language',
           type: {
             name: 'String'
           }

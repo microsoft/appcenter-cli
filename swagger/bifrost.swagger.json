@@ -10831,6 +10831,10 @@
           "type": "string",
           "description": "Device selection string."
         },
+        "language": {
+          "type": "string",
+          "description": "Language that should be used to run tests."
+        },
         "locale": {
           "type": "string",
           "description": "Locale that should be used to run tests."

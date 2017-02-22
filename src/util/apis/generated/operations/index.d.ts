@@ -1499,6 +1499,9 @@ export interface Test {
      * 
      * @param {string} startOptions.deviceSelection Device selection string.
      * 
+     * @param {string} [startOptions.language] Language that should be used to run
+     * tests.
+     * 
      * @param {string} [startOptions.locale] Locale that should be used to run
      * tests.
      * 

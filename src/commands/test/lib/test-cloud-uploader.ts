@@ -33,6 +33,7 @@ export class TestCloudUploader {
   public dSymPath: string;
   public testParameters: { [key:string]: any };
   public testSeries: string;
+  public language: string;
   public locale: string;
 
   constructor(client: MobileCenterClient, userName: string, appName: string, manifestPath: string, devices: string) {
@@ -221,8 +222,9 @@ export class TestCloudUploader {
       testFramework: manifest.testFramework.name,
       deviceSelection: this._devices,
       locale: this.locale,
+      language: this.language,
       testSeries: this.testSeries,
-      testParameters: this.testParameters
+      testParameters: allTestParameters
     };
 
     return clientCall(cb => {
