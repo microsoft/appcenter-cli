@@ -860,7 +860,7 @@ BuildOperations.prototype.getCommits = function (shaCollection, ownerName, appNa
   // Construct URL
   var baseUrl = this.client.baseUri;
   var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/commits/batch/{sha_collection}';
-  requestUrl = requestUrl.replace('{sha_collection}', encodeURIComponent(shaCollection));
+  requestUrl = requestUrl.replace('{sha_collection}', shaCollection);
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
   var queryParameters = [];
