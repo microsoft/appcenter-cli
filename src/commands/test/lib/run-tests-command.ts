@@ -89,8 +89,7 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
-    if (this.isAppPathRquired && !this.appPath)
-    {
+    if (this.isAppPathRquired && !this.appPath) {
       throw new Error("Argument --app-path is required");
     }
     await this.validateOptions();
