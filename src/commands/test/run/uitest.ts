@@ -9,12 +9,6 @@ import { out } from "../../../util/interaction";
 @help(Messages.TestCloud.Commands.RunUITests)
 export default class RunUITestsCommand extends RunTestsCommand {
 
-  @help(Messages.TestCloud.Arguments.AppPath)
-  @longName("app-path")
-  @hasArg
-  @required
-  appPath: string;
-
   @help(Messages.TestCloud.Arguments.UITestsBuildDir)
   @longName("build-dir")
   @hasArg
@@ -84,10 +78,5 @@ export default class RunUITestsCommand extends RunTestsCommand {
 
   protected getSourceRootDir() {
     return this.buildDir;
-  }
-
-  protected getAppPath()
-  {
-    return this.appPath;
   }
 }
