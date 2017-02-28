@@ -20,6 +20,7 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
   @help(Messages.TestCloud.Arguments.UITestsBuildDir)
   @longName("build-dir")
   @hasArg
+  @required
   buildDir: string;
 
   @help("Obsolete. Please use --build-dir instead")

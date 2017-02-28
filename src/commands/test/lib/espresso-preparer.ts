@@ -15,9 +15,6 @@ export class EspressoPreparer {
     if (!artifactsDir) {
       throw new Error("Argument artifactsDir is required");
     }
-    if (!buildDir) {
-      throw new Error("Argument buildDir is required");
-    }
 
     this.buildDir = buildDir;
     this.artifactsDir = artifactsDir;

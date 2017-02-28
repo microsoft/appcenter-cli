@@ -1,4 +1,4 @@
-import { CommandArgs, help, name, longName, hasArg, ErrorCodes } from "../../../util/commandline";
+import { CommandArgs, help, name, longName, hasArg, required, ErrorCodes } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { AppiumPreparer } from "../lib/appium-preparer";
 import { parseTestParameters } from "../lib/parameters-parser";
@@ -7,9 +7,17 @@ import { Messages } from "../lib/help-messages";
 
 @help(Messages.TestCloud.Commands.RunAppium)
 export default class RunAppiumTestsCommand extends RunTestsCommand {
+
+  @help(Messages.TestCloud.Arguments.AppPath)
+  @longName("app-path")
+  @hasArg
+  @required
+  appPath: string;
+
   @help(Messages.TestCloud.Arguments.AppiumBuildDir)
   @longName("build-dir")
   @hasArg
+  @required
   buildDir: string;
 
   constructor(args: CommandArgs) {
@@ -23,5 +31,10 @@ export default class RunAppiumTestsCommand extends RunTestsCommand {
 
   protected getSourceRootDir() {
     return this.buildDir;
+  }
+
+  protected getAppPath()
+  {
+    return this.appPath;
   }
 }
