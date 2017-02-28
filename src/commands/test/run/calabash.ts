@@ -8,6 +8,13 @@ import { out } from "../../../util/interaction";
 
 @help(Messages.TestCloud.Commands.RunCalabash)
 export default class RunCalabashTestsCommand extends RunTestsCommand {
+  
+  @help(Messages.TestCloud.Arguments.AppPath)
+  @longName("app-path")
+  @hasArg
+  @required
+  appPath: string;
+
   @help(Messages.TestCloud.Arguments.CalabashProjectDir)
   @longName("project-dir")
   @required
@@ -66,5 +73,10 @@ export default class RunCalabashTestsCommand extends RunTestsCommand {
 
   protected getSourceRootDir() {
     return this.projectDir;
+  }
+
+  protected getAppPath()
+  {
+    return this.appPath;
   }
 }

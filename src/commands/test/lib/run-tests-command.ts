@@ -16,11 +16,7 @@ import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as temp from "temp";
 
-export class RunTestsCommand extends AppCommand {
-  @help(Messages.TestCloud.Arguments.AppPath)
-  @longName("app-path")
-  @hasArg
-  appPath: string;
+export abstract class RunTestsCommand extends AppCommand {
 
   @help(Messages.TestCloud.Arguments.RunDevices)
   @longName("devices")
@@ -163,7 +159,7 @@ export class RunTestsCommand extends AppCommand {
       manifestPath,
       this.devices);
 
-    uploader.appPath = this.appPath;
+    uploader.appPath = this.getAppPath();
     uploader.language = this.language;
     uploader.locale = this.locale;
     uploader.testSeries = this.testSeries;
@@ -198,4 +194,6 @@ export class RunTestsCommand extends AppCommand {
       manifest.files.push(includedFile.targetPath);
     }
   }
+
+  protected abstract getAppPath() : string;
 }

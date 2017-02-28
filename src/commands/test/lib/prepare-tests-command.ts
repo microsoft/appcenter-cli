@@ -16,6 +16,7 @@ export class PrepareTestsCommand extends Command {
   @help(Messages.TestCloud.Arguments.PrepareArtifactsDir)
   @longName("artifacts-dir")
   @hasArg
+  @required
   artifactsDir: string;
 
   @help(Messages.TestCloud.Arguments.Include)
