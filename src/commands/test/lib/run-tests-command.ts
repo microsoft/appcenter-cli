@@ -18,6 +18,11 @@ import * as temp from "temp";
 
 export abstract class RunTestsCommand extends AppCommand {
 
+  @help(Messages.TestCloud.Arguments.AppPath)
+  @longName("app-path")
+  @hasArg
+  appPath: string;
+
   @help(Messages.TestCloud.Arguments.RunDevices)
   @longName("devices")
   @hasArg
@@ -59,6 +64,8 @@ export abstract class RunTestsCommand extends AppCommand {
   @longName("async")
   async: boolean;
 
+  protected isAppPathRquired = false;
+
   constructor(args: CommandArgs) {
     super(args);
 
@@ -82,6 +89,9 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
+    if (this.isAppPathRquired && !this.appPath) {
+      throw new Error("Argument --app-path is required");
+    }
     await this.validateOptions();
     try {
       let artifactsDir = await this.getArtifactsDir();
@@ -159,7 +169,7 @@ export abstract class RunTestsCommand extends AppCommand {
       manifestPath,
       this.devices);
 
-    uploader.appPath = this.getAppPath();
+    uploader.appPath = this.appPath;
     uploader.language = this.language;
     uploader.locale = this.locale;
     uploader.testSeries = this.testSeries;
@@ -194,6 +204,4 @@ export abstract class RunTestsCommand extends AppCommand {
       manifest.files.push(includedFile.targetPath);
     }
   }
-
-  protected abstract getAppPath() : string;
 }

@@ -5,17 +5,14 @@ import * as path from "path";
 
 @help(Messages.TestCloud.Commands.RunManifest)
 export default class RunManifestTestsCommand extends RunTestsCommand {
-  
-  @help(Messages.TestCloud.Arguments.AppPath)
-  @longName("app-path")
-  @hasArg
-  appPath: string;
 
   @help("Path to manifest file")
   @longName("manifest-path")
   @hasArg
   @required
   manifestPath: string;
+
+  protected isAppPathRquired = true;
 
   constructor(args: CommandArgs) {
     super(args);
@@ -34,10 +31,5 @@ export default class RunManifestTestsCommand extends RunTestsCommand {
 
   protected getSourceRootDir() {
     return path.dirname(this.manifestPath);
-  }
-
-  protected getAppPath()
-  {
-    return this.appPath;
   }
 }

@@ -8,12 +8,6 @@ import { Messages } from "../lib/help-messages";
 @help(Messages.TestCloud.Commands.RunAppium)
 export default class RunAppiumTestsCommand extends RunTestsCommand {
 
-  @help(Messages.TestCloud.Arguments.AppPath)
-  @longName("app-path")
-  @hasArg
-  @required
-  appPath: string;
-
   @help(Messages.TestCloud.Arguments.AppiumBuildDir)
   @longName("build-dir")
   @hasArg
@@ -31,10 +25,5 @@ export default class RunAppiumTestsCommand extends RunTestsCommand {
 
   protected getSourceRootDir() {
     return this.buildDir;
-  }
-
-  protected getAppPath()
-  {
-    return this.appPath;
   }
 }

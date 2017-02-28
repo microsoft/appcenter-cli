@@ -8,12 +8,6 @@ import { Messages } from "../lib/help-messages";
 @help(Messages.TestCloud.Commands.RunEspresso)
 export default class RunEspressoTestsCommand extends RunTestsCommand {
 
-  @help(Messages.TestCloud.Arguments.AppPath)
-  @longName("app-path")
-  @hasArg
-  @required
-  appPath: string;
-
   @help(Messages.TestCloud.Arguments.EspressoBuildDir)
   @longName("build-dir")
   @hasArg
@@ -38,10 +32,5 @@ export default class RunEspressoTestsCommand extends RunTestsCommand {
 
   protected getSourceRootDir() {
     return this.buildDir;
-  }
-
-  protected getAppPath()
-  {
-    return this.appPath;
   }
 }
