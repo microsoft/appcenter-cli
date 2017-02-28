@@ -17,7 +17,6 @@ export default class RunEspressoTestsCommand extends RunTestsCommand {
   @help(Messages.TestCloud.Arguments.EspressoBuildDir)
   @longName("build-dir")
   @hasArg
-  @required
   buildDir: string;
 
   @help(Messages.TestCloud.Arguments.EspressoTestApkPath)

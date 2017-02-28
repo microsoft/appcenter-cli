@@ -10,7 +10,6 @@ export default class PrepareEspressoCommand extends PrepareTestsCommand {
   @help(Messages.TestCloud.Arguments.EspressoBuildDir)
   @longName("build-dir")
   @hasArg
-  @required
   buildDir: string;
 
   @help(Messages.TestCloud.Arguments.EspressoTestApkPath)
