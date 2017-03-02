@@ -168,6 +168,7 @@ export class RunTestsCommand extends AppCommand {
     uploader.locale = this.locale;
     uploader.testSeries = this.testSeries;
     uploader.dSymPath = this.dSymDir;
+
     if (this.testParameters) {
       uploader.testParameters = parseTestParameters(this.testParameters);
     }

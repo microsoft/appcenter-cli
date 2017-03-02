@@ -64,12 +64,12 @@ export default class PrepareCalabashCommand extends PrepareTestsCommand {
   protected prepareManifest(): Promise<string> {
     let preparer = new CalabashPreparer(this.artifactsDir, this.projectDir, this.appPath, this.testParameters);
 
-      preparer.signInfo = this.signInfo;
-      preparer.config = this.config;
-      preparer.profile = this.profile;
-      preparer.skipConfigCheck = this.skipConfigCheck;
+    preparer.signInfo = this.signInfo;
+    preparer.config = this.config;
+    preparer.profile = this.profile;
+    preparer.skipConfigCheck = this.skipConfigCheck;
 
-      return preparer.prepare();
+    return preparer.prepare();
   }
 
   protected getSourceRootDir() {

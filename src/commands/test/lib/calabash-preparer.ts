@@ -58,12 +58,11 @@ export class CalabashPreparer {
     if (this.skipConfigCheck) {
       command += " --skip-config-check";
     }
-
     if (this.signInfo) {
       command += ` --sign-info "${this.signInfo}"`;
     }
 
-    if (this.testParameters) {
+    if (this.testParameters && this.testParameters.length > 0) {
       command += ` --test-parameters ${this.generateTestParameterArgs()}`;
     }
 
