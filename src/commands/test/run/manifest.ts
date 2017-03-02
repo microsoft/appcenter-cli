@@ -12,7 +12,7 @@ export default class RunManifestTestsCommand extends RunTestsCommand {
   @required
   manifestPath: string;
 
-  protected isAppPathRquired = true;
+  protected isAppPathRquired = false;
 
   constructor(args: CommandArgs) {
     super(args);

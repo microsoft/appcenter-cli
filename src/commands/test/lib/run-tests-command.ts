@@ -64,7 +64,7 @@ export abstract class RunTestsCommand extends AppCommand {
   @longName("async")
   async: boolean;
 
-  protected isAppPathRquired = false;
+  protected isAppPathRquired = true;
 
   constructor(args: CommandArgs) {
     super(args);
