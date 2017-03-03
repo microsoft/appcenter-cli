@@ -66,6 +66,10 @@ export default class PrepareCalabashCommand extends PrepareTestsCommand {
       this.configPath = this.config;
     }
 
+    if (this.config && this.configPath) {
+      throw new Error("Both arguments --config-path and --config (obsolete) were used. Please use only --config-path.")
+    }
+
     if (!this.projectDir) {
       throw new Error("Argument --project-dir is required");
     }
