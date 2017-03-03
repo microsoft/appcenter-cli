@@ -61,13 +61,13 @@ export default class PrepareCalabashCommand extends PrepareTestsCommand {
       this.projectDir = this.workspaceDir;
     }
 
+    if (this.config && this.configPath) {
+      throw new Error("Both arguments --config-path and --config (obsolete) were used. Please use only --config-path.")
+    }
+
     if (this.config && !this.configPath) {
       out.text("Argument --config is obsolete. Please use --config-path instead.");
       this.configPath = this.config;
-    }
-
-    if (this.config && this.configPath) {
-      throw new Error("Both arguments --config-path and --config (obsolete) were used. Please use only --config-path.")
     }
 
     if (!this.projectDir) {
