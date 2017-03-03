@@ -1,9 +1,17 @@
 import * as child_process from "child_process";
 import { out } from "../interaction";
 
-export function execAndWait(command: string): Promise<number> {
+export function execAndWait(command: string, onStdOut?: (text: string) => void, onStdErr?: (text: string) => void): Promise<number> {
   return new Promise((resolve, reject) => {
+    if (!onStdOut) {
+      onStdOut = text => out.text(text);
+    }
+    if (!onStdErr) {
+      onStdErr = text => out.text(text);
+    }
+
     let process = child_process.exec(command);
+
     process.on("exit", (exitCode: number) => {
       resolve(exitCode);
     })
@@ -13,11 +21,11 @@ export function execAndWait(command: string): Promise<number> {
     });
 
     process.stdout.on("data", data => {
-      out.text(data as string);
+      onStdOut(data as string);
     });
 
     process.stderr.on("data", data => {
-      out.text(data as string);
+      onStdErr(data as string);
     });
   });
 }
