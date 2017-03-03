@@ -14,6 +14,8 @@
  *
  * @member {string} [name] The repository name
  * 
+ * @member {object} [cloneUrl] URL used to clone the repository
+ * 
  */
 function SourceRepository() {
 }
@@ -37,6 +39,13 @@ SourceRepository.prototype.mapper = function () {
           serializedName: 'name',
           type: {
             name: 'String'
+          }
+        },
+        cloneUrl: {
+          required: false,
+          serializedName: 'clone_url',
+          type: {
+            name: 'Object'
           }
         }
       }

@@ -10,7 +10,8 @@
  * @class
  * Initializes a new instance of the OrganizationResponse class.
  * @constructor
- * @member {string} id The unique id (UUID) of the organization
+ * @member {string} collaboratorRole The role the current user has within the
+ * organization
  * 
  * @member {string} displayName The display name of the organization
  * 
@@ -34,9 +35,9 @@ OrganizationResponse.prototype.mapper = function () {
       name: 'Composite',
       className: 'OrganizationResponse',
       modelProperties: {
-        id: {
+        collaboratorRole: {
           required: true,
-          serializedName: 'id',
+          serializedName: 'collaborator_role',
           type: {
             name: 'String'
           }

@@ -31,7 +31,7 @@ var models = require('./index');
  * @member {string} name The name of the app used in URLs
  * 
  * @member {string} os The OS the app will be running on. Possible values
- * include: 'iOS', 'Android'
+ * include: 'iOS', 'Android', 'Windows'
  * 
  * @member {object} owner
  * 
@@ -50,7 +50,10 @@ var models = require('./index');
  * 'user'. Possible values include: 'org', 'user'
  * 
  * @member {string} platform The platform of the app. Possible values include:
- * 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
+ * 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
+ * 
+ * @member {string} origin The origin of this app can only be mobile-center or
+ * hockeyapp for now. Possible values include: 'mobile-center', 'hockeyapp'
  * 
  */
 function AppResponse() {
@@ -137,6 +140,13 @@ AppResponse.prototype.mapper = function () {
         platform: {
           required: true,
           serializedName: 'platform',
+          type: {
+            name: 'String'
+          }
+        },
+        origin: {
+          required: true,
+          serializedName: 'origin',
           type: {
             name: 'String'
           }

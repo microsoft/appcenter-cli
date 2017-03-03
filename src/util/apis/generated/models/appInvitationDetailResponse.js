@@ -35,7 +35,7 @@ var models = require('./index');
  * @member {string} [app.name] The name of the app used in URLs
  * 
  * @member {string} [app.os] The OS the app will be running on. Possible
- * values include: 'iOS', 'Android'
+ * values include: 'iOS', 'Android', 'Windows'
  * 
  * @member {object} [app.owner]
  * 
@@ -54,7 +54,11 @@ var models = require('./index');
  * 'user'. Possible values include: 'org', 'user'
  * 
  * @member {string} [app.platform] The platform of the app. Possible values
- * include: 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
+ * include: 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
+ * 
+ * @member {string} [app.origin] The origin of this app can only be
+ * mobile-center or hockeyapp for now. Possible values include:
+ * 'mobile-center', 'hockeyapp'
  * 
  * @member {string} email The email address of the invited user
  * 

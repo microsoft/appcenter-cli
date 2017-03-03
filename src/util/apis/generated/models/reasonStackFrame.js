@@ -34,6 +34,10 @@
  * 
  * @member {string} [methodParams] parameters of the frames method
  * 
+ * @member {string} [exceptionType] Exception type.
+ * 
+ * @member {string} [osExceptionType] OS exception type. (aka. SIGNAL)
+ * 
  */
 function ReasonStackFrame() {
 }
@@ -118,6 +122,20 @@ ReasonStackFrame.prototype.mapper = function () {
         methodParams: {
           required: false,
           serializedName: 'method_params',
+          type: {
+            name: 'String'
+          }
+        },
+        exceptionType: {
+          required: false,
+          serializedName: 'exception_type',
+          type: {
+            name: 'String'
+          }
+        },
+        osExceptionType: {
+          required: false,
+          serializedName: 'os_exception_type',
           type: {
             name: 'String'
           }

@@ -33,6 +33,7 @@ declare class MobileCenterClient {
 
     // Operation groups
     account: operations.Account;
+    distribute: operations.Distribute;
     crashOperations: operations.CrashOperations;
     buildOperations: operations.BuildOperations;
     test: operations.Test;
@@ -40,7 +41,8 @@ declare class MobileCenterClient {
     azure: operations.Azure;
     push: operations.Push;
     identity: operations.Identity;
-    distribute: operations.Distribute;
+    deprecated: operations.Deprecated;
+    codepush: operations.Codepush;
     analytics: operations.Analytics;
     }
 

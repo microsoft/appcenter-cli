@@ -12,199 +12,37 @@ var WebResource = msRest.WebResource;
 
 /**
  * @class
- * Distribute
+ * Codepush
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the MobileCenterClient.
- * Initializes a new instance of the Distribute class.
+ * Initializes a new instance of the Codepush class.
  * @constructor
  *
  * @param {MobileCenterClient} client Reference to the service client.
  */
-function Distribute(client) {
+function Codepush(client) {
   this.client = client;
 }
 
 /**
- * Get a release with id `release_id`. if `release_id` is `latest`, return the
- * latest release that was distributed to the current user (from all the
- * distribution groups).
+ * Modifies a CodePush release metadata under the given Deployment
  *
- * @param {string} appSecret The secret of the target application
+ * @param {string} deploymentName deployment name
  * 
- * @param {string} releaseId The ID of the release, or `latest` to get the
- * latest release from all the distribution groups assigned to the current
- * user.
+ * @param {string} releaseLabel release label
  * 
- * @param {object} [options] Optional Parameters.
+ * @param {object} release Release modification. All fields are optional and
+ * only provided fields will get updated.
  * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
+ * @param {string} [release.targetBinaryRange]
  * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {object} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Distribute.prototype.getReleaseOrLatestReleaseBySecret = function (appSecret, releaseId, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  // Validate
-  try {
-    if (appSecret === null || appSecret === undefined || typeof appSecret.valueOf() !== 'string') {
-      throw new Error('appSecret cannot be null or undefined and it must be of type string.');
-    }
-    if (releaseId === null || releaseId === undefined || typeof releaseId.valueOf() !== 'string') {
-      throw new Error('releaseId cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/sdk/apps/{app_secret}/releases/{release_id}';
-  requestUrl = requestUrl.replace('{app_secret}', encodeURIComponent(appSecret));
-  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId));
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 404 && statusCode !== 500) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ReleaseDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 400) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 404) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError2 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError2.request = msRest.stripRequest(httpRequest);
-        deserializationError2.response = msRest.stripResponse(response);
-        return callback(deserializationError2);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 500) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError3 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError3.request = msRest.stripRequest(httpRequest);
-        deserializationError3.response = msRest.stripResponse(response);
-        return callback(deserializationError3);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
- * Get a release with id `release_id`. if `release_id` is `latest`, return the
- * latest release that was distributed to the current user (from all the
- * distribution groups).
- *
- * @param {string} releaseId The ID of the release, or `latest` to get the
- * latest release from all the distribution groups assigned to the current
- * user.
+ * @param {string} [release.description]
+ * 
+ * @param {boolean} [release.isDisabled]
+ * 
+ * @param {boolean} [release.isMandatory]
+ * 
+ * @param {number} [release.rollout]
  * 
  * @param {string} ownerName The name of the owner
  * 
@@ -221,13 +59,13 @@ Distribute.prototype.getReleaseOrLatestReleaseBySecret = function (appSecret, re
  *
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
- *                      {object} [result]   - The deserialized result object.
+ *                      {null} [result]   - The deserialized result object.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Distribute.prototype.getRelease = function (releaseId, ownerName, appName, options, callback) {
+Codepush.prototype.patchRelease = function (deploymentName, releaseLabel, release, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -238,8 +76,14 @@ Distribute.prototype.getRelease = function (releaseId, ownerName, appName, optio
   }
   // Validate
   try {
-    if (releaseId === null || releaseId === undefined || typeof releaseId.valueOf() !== 'string') {
-      throw new Error('releaseId cannot be null or undefined and it must be of type string.');
+    if (deploymentName === null || deploymentName === undefined || typeof deploymentName.valueOf() !== 'string') {
+      throw new Error('deploymentName cannot be null or undefined and it must be of type string.');
+    }
+    if (releaseLabel === null || releaseLabel === undefined || typeof releaseLabel.valueOf() !== 'string') {
+      throw new Error('releaseLabel cannot be null or undefined and it must be of type string.');
+    }
+    if (release === null || release === undefined) {
+      throw new Error('release cannot be null or undefined.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -253,197 +97,9 @@ Distribute.prototype.getRelease = function (releaseId, ownerName, appName, optio
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/releases/{release_id}';
-  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId));
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 404) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ReleaseDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 400) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 404) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError2 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError2.request = msRest.stripRequest(httpRequest);
-        deserializationError2.response = msRest.stripResponse(response);
-        return callback(deserializationError2);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
- * Updates a release.
- *
- * @param {number} releaseId The ID of the release
- * 
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {string} [options.distributionGroupName] Name of a distribution
- * group. The release will be associated with this distribution group. If the
- * distribution group doesn't exist a 400 is returned. If both distribution
- * group name and id are passed, the id is taking precedence.
- * 
- * @param {string} [options.distributionGroupId] Id of a distribution group.
- * The release will be associated with this distribution group. If the
- * distribution group doesn't exist a 400 is returned. If both distribution
- * group name and id are passed, the id is taking precedence.
- * 
- * @param {string} [options.releaseNotes] Release notes for this release.
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {object} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Distribute.prototype.updateRelease = function (releaseId, ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  var distributionGroupName = (options && options.distributionGroupName !== undefined) ? options.distributionGroupName : undefined;
-  var distributionGroupId = (options && options.distributionGroupId !== undefined) ? options.distributionGroupId : undefined;
-  var releaseNotes = (options && options.releaseNotes !== undefined) ? options.releaseNotes : undefined;
-  // Validate
-  try {
-    if (releaseId === null || releaseId === undefined || typeof releaseId !== 'number') {
-      throw new Error('releaseId cannot be null or undefined and it must be of type number.');
-    }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-    if (distributionGroupName !== null && distributionGroupName !== undefined && typeof distributionGroupName.valueOf() !== 'string') {
-      throw new Error('distributionGroupName must be of type string.');
-    }
-    if (distributionGroupId !== null && distributionGroupId !== undefined && typeof distributionGroupId.valueOf() !== 'string') {
-      throw new Error('distributionGroupId must be of type string.');
-    }
-    if (releaseNotes !== null && releaseNotes !== undefined && typeof releaseNotes.valueOf() !== 'string') {
-      throw new Error('releaseNotes must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-  var body;
-  if ((distributionGroupName !== null && distributionGroupName !== undefined) || (distributionGroupId !== null && distributionGroupId !== undefined) || (releaseNotes !== null && releaseNotes !== undefined)) {
-      body = new client.models['ReleaseUpdateRequest']();
-      body.distributionGroupName = distributionGroupName;
-      body.distributionGroupId = distributionGroupId;
-      body.releaseNotes = releaseNotes;
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/releases/{release_id}';
-  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId.toString()));
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/releases/{release_label}';
+  requestUrl = requestUrl.replace('{deployment_name}', encodeURIComponent(deploymentName));
+  requestUrl = requestUrl.replace('{release_label}', encodeURIComponent(releaseLabel));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -465,14 +121,14 @@ Distribute.prototype.updateRelease = function (releaseId, ownerName, appName, op
   var requestContent = null;
   var requestModel = null;
   try {
-    if (body !== null && body !== undefined) {
-      var requestModelMapper = new client.models['ReleaseUpdateRequest']().mapper();
-      requestModel = client.serialize(requestModelMapper, body, 'body');
+    if (release !== null && release !== undefined) {
+      var requestModelMapper = new client.models['LiveUpdateReleaseModification']().mapper();
+      requestModel = client.serialize(requestModelMapper, release, 'release');
       requestContent = JSON.stringify(requestModel);
     }
   } catch (error) {
     var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
-        'payload - "%s"', error.message, util.inspect(body, {depth: null})));
+        'payload - "%s"', error.message, util.inspect(release, {depth: null})));
     return callback(serializationError);
   }
   httpRequest.body = requestContent;
@@ -482,7 +138,7 @@ Distribute.prototype.updateRelease = function (releaseId, ownerName, appName, op
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400) {
+    if (statusCode !== 204) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -496,6 +152,10 @@ Distribute.prototype.updateRelease = function (releaseId, ownerName, appName, op
           if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['Failure']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
       } catch (defaultError) {
         error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
@@ -506,49 +166,15 @@ Distribute.prototype.updateRelease = function (releaseId, ownerName, appName, op
     // Create Result
     var result = null;
     if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ReleaseDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 400) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
 
     return callback(null, result, httpRequest, response);
   });
 };
 
 /**
- * Deletes a release.
+ * Clears a Deployment of releases
  *
- * @param {string} releaseId The ID of the release
+ * @param {string} deploymentName deployment name
  * 
  * @param {string} ownerName The name of the owner
  * 
@@ -565,14 +191,13 @@ Distribute.prototype.updateRelease = function (releaseId, ownerName, appName, op
  *
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
- *                      {object} [result]   - The deserialized result object.
- *                      See {@link ErrorDetails} for more information.
+ *                      {null} [result]   - The deserialized result object.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Distribute.prototype.deleteRelease = function (releaseId, ownerName, appName, options, callback) {
+Codepush.prototype.deleteReleases = function (deploymentName, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -583,8 +208,8 @@ Distribute.prototype.deleteRelease = function (releaseId, ownerName, appName, op
   }
   // Validate
   try {
-    if (releaseId === null || releaseId === undefined || typeof releaseId.valueOf() !== 'string') {
-      throw new Error('releaseId cannot be null or undefined and it must be of type string.');
+    if (deploymentName === null || deploymentName === undefined || typeof deploymentName.valueOf() !== 'string') {
+      throw new Error('deploymentName cannot be null or undefined and it must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -598,8 +223,8 @@ Distribute.prototype.deleteRelease = function (releaseId, ownerName, appName, op
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/releases/{release_id}';
-  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId));
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/releases';
+  requestUrl = requestUrl.replace('{deployment_name}', encodeURIComponent(deploymentName));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -624,7 +249,7 @@ Distribute.prototype.deleteRelease = function (releaseId, ownerName, appName, op
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 404 && statusCode !== 500) {
+    if (statusCode !== 204) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -638,6 +263,10 @@ Distribute.prototype.deleteRelease = function (releaseId, ownerName, appName, op
           if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['Failure']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
       } catch (defaultError) {
         error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
@@ -648,61 +277,21 @@ Distribute.prototype.deleteRelease = function (releaseId, ownerName, appName, op
     // Create Result
     var result = null;
     if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 404) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 500) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
 
     return callback(null, result, httpRequest, response);
   });
 };
 
 /**
- * Return detailed information about releases.
+ * Gets the history of releases on a Deployment
  *
+ * @param {string} deploymentName deployment name
+ * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
  * 
  * @param {object} [options] Optional Parameters.
- * 
- * @param {boolean} [options.publishedOnly] when true, filters out releases
- * that were uplaoded but were never distributed. Releases that under deleted
- * distribution groups will not be filtered out.
- * 
- * @param {string} [options.filter] OBSOLETE. Will be removed in next version.
- * An OData style filter. Currently only support the 'eq' comparision type.
- * E.g. ?$filter=status eq 'Available'
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -719,7 +308,7 @@ Distribute.prototype.deleteRelease = function (releaseId, ownerName, appName, op
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Distribute.prototype.getReleases = function (ownerName, appName, options, callback) {
+Codepush.prototype.getReleases = function (deploymentName, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -728,15 +317,10 @@ Distribute.prototype.getReleases = function (ownerName, appName, options, callba
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  var publishedOnly = (options && options.publishedOnly !== undefined) ? options.publishedOnly : undefined;
-  var filter = (options && options.filter !== undefined) ? options.filter : undefined;
   // Validate
   try {
-    if (publishedOnly !== null && publishedOnly !== undefined && typeof publishedOnly !== 'boolean') {
-      throw new Error('publishedOnly must be of type boolean.');
-    }
-    if (filter !== null && filter !== undefined && typeof filter.valueOf() !== 'string') {
-      throw new Error('filter must be of type string.');
+    if (deploymentName === null || deploymentName === undefined || typeof deploymentName.valueOf() !== 'string') {
+      throw new Error('deploymentName cannot be null or undefined and it must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -750,19 +334,10 @@ Distribute.prototype.getReleases = function (ownerName, appName, options, callba
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/releases';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/releases';
+  requestUrl = requestUrl.replace('{deployment_name}', encodeURIComponent(deploymentName));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  var queryParameters = [];
-  if (publishedOnly !== null && publishedOnly !== undefined) {
-    queryParameters.push('published_only=' + encodeURIComponent(publishedOnly.toString()));
-  }
-  if (filter !== null && filter !== undefined) {
-    queryParameters.push('$filter=' + encodeURIComponent(filter));
-  }
-  if (queryParameters.length > 0) {
-    requestUrl += '?' + queryParameters.join('&');
-  }
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -799,6 +374,10 @@ Distribute.prototype.getReleases = function (ownerName, appName, options, callba
           if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['Failure']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
       } catch (defaultError) {
         error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
@@ -823,10 +402,10 @@ Distribute.prototype.getReleases = function (ownerName, appName, options, callba
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ReleaseDetailsElementType',
+                  serializedName: 'LiveUpdateReleaseElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ReleaseDetails'
+                    className: 'LiveUpdateRelease'
                   }
               }
             }
@@ -846,17 +425,266 @@ Distribute.prototype.getReleases = function (ownerName, appName, options, callba
 };
 
 /**
- * Commits or aborts the upload process for a release for the specified
- * application
+ * Gets all releases metrics for specified Deployment
  *
- * @param {string} uploadId The ID of the upload
+ * @param {string} deploymentName deployment name
  * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
  * 
- * @param {string} status The desired operation for the upload. Possible
- * values include: 'committed', 'aborted'
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {array} [result]   - The deserialized result object.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Codepush.prototype.getDeploymentMetrics = function (deploymentName, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (deploymentName === null || deploymentName === undefined || typeof deploymentName.valueOf() !== 'string') {
+      throw new Error('deploymentName cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/metrics';
+  requestUrl = requestUrl.replace('{deployment_name}', encodeURIComponent(deploymentName));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['Failure']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'LiveUpdateReleaseMetricElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'LiveUpdateReleaseMetric'
+                  }
+              }
+            }
+          };
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * Deletes a CodePush Deployment (e.g. 'Staging') for the given app
+ *
+ * @param {string} deploymentName deployment name
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {null} [result]   - The deserialized result object.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Codepush.prototype.deleteDeployment = function (deploymentName, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (deploymentName === null || deploymentName === undefined || typeof deploymentName.valueOf() !== 'string') {
+      throw new Error('deploymentName cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}';
+  requestUrl = requestUrl.replace('{deployment_name}', encodeURIComponent(deploymentName));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'DELETE';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 204) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['Failure']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * Gets a CodePush Deployment (e.g. 'Staging') for the given app
+ *
+ * @param {string} deploymentName deployment name
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
  * 
  * @param {object} [options] Optional Parameters.
  * 
@@ -870,14 +698,13 @@ Distribute.prototype.getReleases = function (ownerName, appName, options, callba
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object.
- *                      See {@link ReleaseUploadEndResponse} for more
- *                      information.
+ *                      See {@link Deployment} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Distribute.prototype.updateReleaseUpload = function (uploadId, ownerName, appName, status, options, callback) {
+Codepush.prototype.getDeployment = function (deploymentName, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -888,8 +715,8 @@ Distribute.prototype.updateReleaseUpload = function (uploadId, ownerName, appNam
   }
   // Validate
   try {
-    if (uploadId === null || uploadId === undefined || typeof uploadId.valueOf() !== 'string') {
-      throw new Error('uploadId cannot be null or undefined and it must be of type string.');
+    if (deploymentName === null || deploymentName === undefined || typeof deploymentName.valueOf() !== 'string') {
+      throw new Error('deploymentName cannot be null or undefined and it must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -897,22 +724,153 @@ Distribute.prototype.updateReleaseUpload = function (uploadId, ownerName, appNam
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
-    if (status === null || status === undefined || typeof status.valueOf() !== 'string') {
-      throw new Error('status cannot be null or undefined and it must be of type string.');
-    }
   } catch (error) {
     return callback(error);
-  }
-  var body;
-  if (status !== null && status !== undefined) {
-      body = new client.models['ReleaseUploadEndRequest']();
-      body.status = status;
   }
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/release_uploads/{upload_id}';
-  requestUrl = requestUrl.replace('{upload_id}', encodeURIComponent(uploadId));
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}';
+  requestUrl = requestUrl.replace('{deployment_name}', encodeURIComponent(deploymentName));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['Failure']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['Deployment']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * Modifies a CodePush Deployment (e.g. 'Staging') for the given app
+ *
+ * @param {string} deploymentName deployment name
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {string} [options.name]
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {null} [result]   - The deserialized result object.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Codepush.prototype.patchDeployment = function (deploymentName, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  var name = (options && options.name !== undefined) ? options.name : undefined;
+  // Validate
+  try {
+    if (deploymentName === null || deploymentName === undefined || typeof deploymentName.valueOf() !== 'string') {
+      throw new Error('deploymentName cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (name !== null && name !== undefined && typeof name.valueOf() !== 'string') {
+      throw new Error('name must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  var deployment;
+  if (name !== null && name !== undefined) {
+      deployment = new client.models['DeploymentModification']();
+      deployment.name = name;
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}';
+  requestUrl = requestUrl.replace('{deployment_name}', encodeURIComponent(deploymentName));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -934,14 +892,14 @@ Distribute.prototype.updateReleaseUpload = function (uploadId, ownerName, appNam
   var requestContent = null;
   var requestModel = null;
   try {
-    if (body !== null && body !== undefined) {
-      var requestModelMapper = new client.models['ReleaseUploadEndRequest']().mapper();
-      requestModel = client.serialize(requestModelMapper, body, 'body');
+    if (deployment !== null && deployment !== undefined) {
+      var requestModelMapper = new client.models['DeploymentModification']().mapper();
+      requestModel = client.serialize(requestModelMapper, deployment, 'deployment');
       requestContent = JSON.stringify(requestModel);
     }
   } catch (error) {
     var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
-        'payload - "%s"', error.message, util.inspect(body, {depth: null})));
+        'payload - "%s"', error.message, util.inspect(deployment, {depth: null})));
     return callback(serializationError);
   }
   httpRequest.body = requestContent;
@@ -951,7 +909,7 @@ Distribute.prototype.updateReleaseUpload = function (uploadId, ownerName, appNam
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400) {
+    if (statusCode !== 204) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -965,6 +923,10 @@ Distribute.prototype.updateReleaseUpload = function (uploadId, ownerName, appNam
           if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['Failure']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
       } catch (defaultError) {
         error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
@@ -975,30 +937,298 @@ Distribute.prototype.updateReleaseUpload = function (uploadId, ownerName, appNam
     // Create Result
     var result = null;
     if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ReleaseUploadEndResponse']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
 
     return callback(null, result, httpRequest, response);
   });
 };
 
 /**
- * Begins the upload process for a new release for the specified application.
+ * Report download of specified release
+ *
+ * @param {string} deploymentKey deployment key
+ * 
+ * @param {object} releaseMetadata Deployment status metric properties
+ * 
+ * @param {string} [releaseMetadata.label]
+ * 
+ * @param {string} [releaseMetadata.appVersion]
+ * 
+ * @param {string} [releaseMetadata.previousDeploymentKey]
+ * 
+ * @param {string} [releaseMetadata.previousLabelOrAppVersion]
+ * 
+ * @param {string} [releaseMetadata.status]
+ * 
+ * @param {string} [releaseMetadata.clientUniqueId]
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {null} [result]   - The deserialized result object.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Codepush.prototype.postDownloadStatusMetric = function (deploymentKey, releaseMetadata, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (deploymentKey === null || deploymentKey === undefined || typeof deploymentKey.valueOf() !== 'string') {
+      throw new Error('deploymentKey cannot be null or undefined and it must be of type string.');
+    }
+    if (releaseMetadata === null || releaseMetadata === undefined) {
+      throw new Error('releaseMetadata cannot be null or undefined.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/deployments/by_key/{deployment_key}/report_status/download';
+  requestUrl = requestUrl.replace('{deployment_key}', encodeURIComponent(deploymentKey));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'POST';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (releaseMetadata !== null && releaseMetadata !== undefined) {
+      var requestModelMapper = new client.models['LiveUpdateStatusMetricMetadata']().mapper();
+      requestModel = client.serialize(requestModelMapper, releaseMetadata, 'releaseMetadata');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(releaseMetadata, {depth: null})));
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['Failure']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * Report Deployment status metric
+ *
+ * @param {string} deploymentKey deployment key
+ * 
+ * @param {object} releaseMetadata Deployment status metric properties
+ * 
+ * @param {string} [releaseMetadata.label]
+ * 
+ * @param {string} [releaseMetadata.appVersion]
+ * 
+ * @param {string} [releaseMetadata.previousDeploymentKey]
+ * 
+ * @param {string} [releaseMetadata.previousLabelOrAppVersion]
+ * 
+ * @param {string} [releaseMetadata.status]
+ * 
+ * @param {string} [releaseMetadata.clientUniqueId]
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {null} [result]   - The deserialized result object.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Codepush.prototype.postDeployStatusMetric = function (deploymentKey, releaseMetadata, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (deploymentKey === null || deploymentKey === undefined || typeof deploymentKey.valueOf() !== 'string') {
+      throw new Error('deploymentKey cannot be null or undefined and it must be of type string.');
+    }
+    if (releaseMetadata === null || releaseMetadata === undefined) {
+      throw new Error('releaseMetadata cannot be null or undefined.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/deployments/by_key/{deployment_key}/report_status/deploy';
+  requestUrl = requestUrl.replace('{deployment_key}', encodeURIComponent(deploymentKey));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'POST';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (releaseMetadata !== null && releaseMetadata !== undefined) {
+      var requestModelMapper = new client.models['LiveUpdateStatusMetricMetadata']().mapper();
+      requestModel = client.serialize(requestModelMapper, releaseMetadata, 'releaseMetadata');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(releaseMetadata, {depth: null})));
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['Failure']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * Gets a list of CodePush deployments (e.g. 'Staging', 'Production') for the
+ * given app
  *
  * @param {string} ownerName The name of the owner
  * 
@@ -1015,15 +1245,13 @@ Distribute.prototype.updateReleaseUpload = function (uploadId, ownerName, appNam
  *
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
- *                      {object} [result]   - The deserialized result object.
- *                      See {@link ReleaseUploadBeginResponse} for more
- *                      information.
+ *                      {array} [result]   - The deserialized result object.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Distribute.prototype.createReleaseUpload = function (ownerName, appName, options, callback) {
+Codepush.prototype.getDeployments = function (ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1046,7 +1274,196 @@ Distribute.prototype.createReleaseUpload = function (ownerName, appName, options
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/release_uploads';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/deployments';
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['Failure']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'DeploymentElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'Deployment'
+                  }
+              }
+            }
+          };
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * Creates a CodePush Deployment (e.g. 'Staging') for the given app
+ *
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {string} name
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {string} [options.key]
+ * 
+ * @param {object} [options.latestRelease]
+ * 
+ * @param {string} [options.latestRelease.targetBinaryRange]
+ * 
+ * @param {string} [options.latestRelease.blobUrl]
+ * 
+ * @param {string} [options.latestRelease.description]
+ * 
+ * @param {boolean} [options.latestRelease.isDisabled]
+ * 
+ * @param {boolean} [options.latestRelease.isMandatory]
+ * 
+ * @param {string} [options.latestRelease.label]
+ * 
+ * @param {string} [options.latestRelease.originalDeployment] Set on 'Promote'
+ * 
+ * @param {string} [options.latestRelease.originalLabel] Set on 'Promote' and
+ * 'Rollback'
+ * 
+ * @param {string} [options.latestRelease.hash]
+ * 
+ * @param {string} [options.latestRelease.releasedBy]
+ * 
+ * @param {string} [options.latestRelease.releaseMethod] The release method is
+ * unknown if unspecified. Possible values include: 'Upload', 'Promote',
+ * 'Rollback'
+ * 
+ * @param {number} [options.latestRelease.rollout]
+ * 
+ * @param {number} [options.latestRelease.size]
+ * 
+ * @param {number} [options.latestRelease.uploadTime]
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *                      See {@link Deployment} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Codepush.prototype.postDeployments = function (ownerName, appName, name, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  var key = (options && options.key !== undefined) ? options.key : undefined;
+  var latestRelease = (options && options.latestRelease !== undefined) ? options.latestRelease : undefined;
+  // Validate
+  try {
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (key !== null && key !== undefined && typeof key.valueOf() !== 'string') {
+      throw new Error('key must be of type string.');
+    }
+    if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
+      throw new Error('name cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  var deployment;
+  if ((key !== null && key !== undefined) || (name !== null && name !== undefined) || (latestRelease !== null && latestRelease !== undefined)) {
+      deployment = new client.models['Deployment']();
+      deployment.key = key;
+      deployment.name = name;
+      deployment.latestRelease = latestRelease;
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/deployments';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -1064,7 +1481,21 @@ Distribute.prototype.createReleaseUpload = function (ownerName, appName, options
     }
   }
   httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (deployment !== null && deployment !== undefined) {
+      var requestModelMapper = new client.models['Deployment']().mapper();
+      requestModel = client.serialize(requestModelMapper, deployment, 'deployment');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(deployment, {depth: null})));
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, function (err, response, responseBody) {
     if (err) {
@@ -1085,6 +1516,10 @@ Distribute.prototype.createReleaseUpload = function (ownerName, appName, options
           if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['Failure']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
       } catch (defaultError) {
         error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
                          '- "%s" for the default response.', defaultError.message, responseBody);
@@ -1102,7 +1537,7 @@ Distribute.prototype.createReleaseUpload = function (ownerName, appName, options
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ReleaseUploadBeginResponse']().mapper();
+          var resultMapper = new client.models['Deployment']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1117,613 +1552,5 @@ Distribute.prototype.createReleaseUpload = function (ownerName, appName, options
   });
 };
 
-/**
- * Get the latest release from every distribution group associated with an
- * application.
- *
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {array} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Distribute.prototype.getLatestReleases = function (ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  // Validate
-  try {
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
 
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/recent_releases';
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'BasicReleaseDetailsElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'BasicReleaseDetails'
-                  }
-              }
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
- * Return detailed information about a distributed release in a given
- * distribution group.
- *
- * @param {string} distributionGroupName The name of the distribution group.
- * 
- * @param {string} releaseId Must be `latest`, a specific `release_id` is not
- * supported at this time.
- * 
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {object} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Distribute.prototype.getLatestReleaseForDistributionGroup = function (distributionGroupName, releaseId, ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  // Validate
-  try {
-    if (distributionGroupName === null || distributionGroupName === undefined || typeof distributionGroupName.valueOf() !== 'string') {
-      throw new Error('distributionGroupName cannot be null or undefined and it must be of type string.');
-    }
-    if (releaseId === null || releaseId === undefined || typeof releaseId.valueOf() !== 'string') {
-      throw new Error('releaseId cannot be null or undefined and it must be of type string.');
-    }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/releases/{release_id}';
-  requestUrl = requestUrl.replace('{distribution_group_name}', encodeURIComponent(distributionGroupName));
-  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId));
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 404 && statusCode !== 501) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ReleaseDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 404) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 501) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError2 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError2.request = msRest.stripRequest(httpRequest);
-        deserializationError2.response = msRest.stripResponse(response);
-        return callback(deserializationError2);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
- * Deletes a release with id 'release_id' in a given distribution group.
- *
- * @param {string} distributionGroupName The name of the distribution group.
- * 
- * @param {string} releaseId The ID identifying the unique release.
- * 
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {object} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Distribute.prototype.deleteReleaseForDistributionGroup = function (distributionGroupName, releaseId, ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  // Validate
-  try {
-    if (distributionGroupName === null || distributionGroupName === undefined || typeof distributionGroupName.valueOf() !== 'string') {
-      throw new Error('distributionGroupName cannot be null or undefined and it must be of type string.');
-    }
-    if (releaseId === null || releaseId === undefined || typeof releaseId.valueOf() !== 'string') {
-      throw new Error('releaseId cannot be null or undefined and it must be of type string.');
-    }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/releases/{release_id}';
-  requestUrl = requestUrl.replace('{distribution_group_name}', encodeURIComponent(distributionGroupName));
-  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId));
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'DELETE';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 404) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Object'
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 404) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
- * Return detailed information about distributed releases in a given
- * distribution group.
- *
- * @param {string} distributionGroupName The name of the distribution group.
- * 
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {object} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Distribute.prototype.getReleasesForDistributionGroup = function (distributionGroupName, ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  // Validate
-  try {
-    if (distributionGroupName === null || distributionGroupName === undefined || typeof distributionGroupName.valueOf() !== 'string') {
-      throw new Error('distributionGroupName cannot be null or undefined and it must be of type string.');
-    }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/releases';
-  requestUrl = requestUrl.replace('{distribution_group_name}', encodeURIComponent(distributionGroupName));
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 404) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'ReleaseDetailsElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'ReleaseDetails'
-                  }
-              }
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 404) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-
-module.exports = Distribute;
+module.exports = Codepush;

@@ -58,6 +58,11 @@ var models = require('./index');
  * 
  * @member {string} [reasonFrame.methodParams] parameters of the frames method
  * 
+ * @member {string} [reasonFrame.exceptionType] Exception type.
+ * 
+ * @member {string} [reasonFrame.osExceptionType] OS exception type. (aka.
+ * SIGNAL)
+ * 
  * @member {boolean} fatal Crash or handled exception
  * 
  */
