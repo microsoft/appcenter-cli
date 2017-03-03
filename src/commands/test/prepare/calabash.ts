@@ -62,10 +62,10 @@ export default class PrepareCalabashCommand extends PrepareTestsCommand {
     }
 
     if (this.config && this.configPath) {
-      throw new Error("Both arguments --config-path and --config (obsolete) were used. Please use only --config-path.")
+      throw new Error("Arguments --config-path and --config (obsolete) were both used. Please use only --config-path.")
     }
 
-    if (this.config && !this.configPath) {
+    if (this.config) {
       out.text("Argument --config is obsolete. Please use --config-path instead.");
       this.configPath = this.config;
     }
