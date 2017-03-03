@@ -5,6 +5,12 @@ import { Messages } from "../lib/help-messages";
 
 @help(Messages.TestCloud.Commands.PrepareXCUITest)
 export default class PrepareXCUITestCommand extends PrepareTestsCommand {
+
+  @help(Messages.TestCloud.Arguments.XCUITestBuildDir)
+  @longName("build-dir")
+  @hasArg
+  buildDir: string;
+
   @help(Messages.TestCloud.Arguments.XCUITestIpaPath)
   @longName("test-ipa-path")
   @required
@@ -16,7 +22,7 @@ export default class PrepareXCUITestCommand extends PrepareTestsCommand {
   }
 
   protected prepareManifest(): Promise<string> {
-    let preparer = new XCUITestPreparer(this.artifactsDir, this.testIpaPath);
+    let preparer = new XCUITestPreparer(this.artifactsDir, this.buildDir, this.testIpaPath);
     return preparer.prepare();
   }
 }
