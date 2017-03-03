@@ -32,10 +32,15 @@ export default class PrepareCalabashCommand extends PrepareTestsCommand {
   @hasArg
   signInfo: string;
 
-  @help(Messages.TestCloud.Arguments.CalabashConfigPath)
+  @help("Obsolete. Please use --config-path instead")
   @longName("config")
   @hasArg
   config: string;
+
+  @help(Messages.TestCloud.Arguments.CalabashConfigPath)
+  @longName("config-path")
+  @hasArg
+  configPath: string;
 
   @help(Messages.TestCloud.Arguments.CalabashProfile)
   @longName("profile")
@@ -56,6 +61,11 @@ export default class PrepareCalabashCommand extends PrepareTestsCommand {
       this.projectDir = this.workspaceDir;
     }
 
+    if (this.config && !this.configPath) {
+      out.text("Argument --config is obsolete. Please use --config-path instead.");
+      this.configPath = this.config;
+    }
+
     if (!this.projectDir) {
       throw new Error("Argument --project-dir is required");
     }
@@ -65,7 +75,7 @@ export default class PrepareCalabashCommand extends PrepareTestsCommand {
     let preparer = new CalabashPreparer(this.artifactsDir, this.projectDir, this.appPath, this.testParameters);
 
     preparer.signInfo = this.signInfo;
-    preparer.config = this.config;
+    preparer.config = this.configPath;
     preparer.profile = this.profile;
     preparer.skipConfigCheck = this.skipConfigCheck;
 
