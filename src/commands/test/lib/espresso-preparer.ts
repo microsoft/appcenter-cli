@@ -3,12 +3,12 @@ import { out } from "../../../util/interaction";
 import * as _ from "lodash";
 import * as fs from "fs";
 import * as path from "path";
-import * as glob from "glob";
+import * as pglob from "../../../util/misc/promisfied-glob";
 import * as pfs from "../../../util/misc/promisfied-fs";
 
 export class EspressoPreparer {
   private readonly artifactsDir: string;
-  private buildDir: string;
+  private readonly buildDir: string;
   private readonly testApkPath: string;
 
   constructor(artifactsDir: string, buildDir: string, testApkPath?: string) {
@@ -56,19 +56,6 @@ export class EspressoPreparer {
     await this.validateTestApkExists();
   }
 
-  private async globAsync(pattern: string): Promise<string[]> {
-    return new Promise<string[]>((resolve, reject) => {
-      glob(pattern, (err, matches) => {
-        if (err) {
-          reject(err);
-        }
-        else {
-          resolve(matches);
-        }
-      });
-    });
-  }
-
   private async validateBuildDirExists() {
     await this.validatePathExists(
       this.buildDir,
@@ -81,8 +68,8 @@ export class EspressoPreparer {
   }
 
   private async detectTestApkPathFromBuildDir(): Promise<string> {
-    let apkPattern = path.join(this.buildDir,"*androidTest.apk");
-    let files = await this.globAsync(apkPattern);
+    let apkPattern = path.join(this.buildDir, "*androidTest.apk");
+    let files = await pglob.glob(apkPattern);
     
     if (files.length === 0) {
        throw new Error(`An apk with name matching "*androidTest.apk" was not found inside directory inside build directory "${this.buildDir}"`);
