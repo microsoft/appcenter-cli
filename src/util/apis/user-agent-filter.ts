@@ -8,6 +8,6 @@ import { scriptName } from "../misc";
 const { version: cliVersion } = require("../../../package.json");
 
 export function userAgentFilter(resource: WebResource, next: any, callback: any): any {
-  resource.withHeader("User-Agent", `${scriptName}Cli/${cliVersion} NodeJS/${process.version} ${platform()}/${release()}`);
+  resource.withHeader("user-agent", `${scriptName}Cli/${cliVersion} NodeJS/${process.version} ${platform()}/${release()}`);
   return next(resource, callback);
 }
