@@ -11,6 +11,7 @@
 'use strict';
 
 exports.Account = require('./account');
+exports.Distribute = require('./distribute');
 exports.CrashOperations = require('./crashOperations');
 exports.BuildOperations = require('./buildOperations');
 exports.Test = require('./test');
@@ -18,5 +19,6 @@ exports.Tables = require('./tables');
 exports.Azure = require('./azure');
 exports.Push = require('./push');
 exports.Identity = require('./identity');
-exports.Distribute = require('./distribute');
+exports.Deprecated = require('./deprecated');
+exports.Codepush = require('./codepush');
 exports.Analytics = require('./analytics');

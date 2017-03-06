@@ -205,100 +205,59 @@
         ]
       }
     },
-    "/v0.1/orgs/{org_name}/users": {
+    "/v0.1/sdk/apps/{app_secret}/releases/{release_id}": {
       "get": {
-        "description": "Returns a list of users that belong to an organization",
+        "description": "Get a release with id `release_id`. if `release_id` is `latest`, return the latest release that was distributed to the current user (from all the distribution groups).",
+        "operationId": "distribute_getReleaseOrLatestReleaseBySecret",
         "parameters": [
           {
-            "$ref": "#/parameters/organization_name"
+            "name": "app_secret",
+            "type": "string",
+            "in": "path",
+            "description": "The secret of the target application",
+            "required": true
+          },
+          {
+            "name": "release_id",
+            "type": "string",
+            "in": "path",
+            "description": "The ID of the release, or `latest` to get the latest release from all the distribution groups assigned to the current user.",
+            "required": true
           }
         ],
         "responses": {
           "200": {
             "description": "Success",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/OrganizationUserResponse"
-              }
+              "$ref": "#/definitions/ReleaseDetails"
             }
           },
           "400": {
-            "description": "BadRequest",
+            "description": "<b>bad_request</b>: `release_id` is not a number or the string `latest`.\n",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/ErrorDetails"
             }
           },
           "404": {
-            "description": "NotFound",
+            "description": "<b>not_found</b> - A release or an app can't be found.\n",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          },
+          "500": {
+            "description": "An internal error.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
             }
           }
         },
-        "operationId": "account_getOrganizationUsers",
         "security": [
           {
             "APIToken": []
           }
         ],
         "tags": [
-          "account"
-        ]
-      }
-    },
-    "/v0.1/orgs/{org_name}/invitations/{user_email}": {
-      "post": {
-        "description": "Invites a new or existing user to an organization",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          },
-          {
-            "name": "user_email",
-            "type": "string",
-            "in": "path",
-            "description": "The email of the user to invite",
-            "required": true
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "account_inviteOrganizationUser",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
+          "distribute"
         ]
       }
     },
@@ -1538,6 +1497,89 @@
             "description": "Internal error",
             "schema": {
               "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "crash"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/symbol_groups/{symbol_group_id}": {
+      "get": {
+        "description": "Gets missing symbol crash group by its id",
+        "summary": "Gets missing symbol crash group by its id",
+        "operationId": "crash_getMissingSymbolCrashGroupById",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_symbol_group_id"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MissingSymbolCrashGroupsResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/FailureResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "crash"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/symbol_groups": {
+      "get": {
+        "description": "Gets top N (ordered by crash count) of crash groups by missing symbol",
+        "summary": "Gets top N (ordered by crash count) of crash groups by missing symbol",
+        "operationId": "crash_getTopNFilteredMissingSymbolCrashGroups",
+        "parameters": [
+          {
+            "$ref": "#/parameters/query_top"
+          },
+          {
+            "$ref": "#/parameters/query_filter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MissingSymbolCrashGroupsResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/FailureResponse"
             }
           }
         },
@@ -2913,7 +2955,8 @@
             "description": "The source host",
             "required": true,
             "enum": [
-              "github"
+              "github",
+              "bitbucket"
             ]
           },
           {
@@ -3074,7 +3117,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}": {
       "get": {
         "description": "Get a release with id `release_id`. if `release_id` is `latest`, return the latest release that was distributed to the current user (from all the distribution groups).",
-        "operationId": "distribute_getReleaseOrLatestRelease",
+        "operationId": "distribute_getRelease",
         "parameters": [
           {
             "name": "release_id",
@@ -3159,6 +3202,7 @@
             }
           }
         },
+        "operationId": "distribute_updateRelease",
         "security": [
           {
             "APIToken": []
@@ -3166,8 +3210,7 @@
         ],
         "tags": [
           "distribute"
-        ],
-        "operationId": "distribute_patchV01AppsByOwnerNameByAppNameReleasesByReleaseId"
+        ]
       },
       "delete": {
         "description": "Deletes a release.",
@@ -3203,6 +3246,7 @@
             }
           }
         },
+        "operationId": "distribute_deleteRelease",
         "security": [
           {
             "APIToken": []
@@ -3210,8 +3254,7 @@
         ],
         "tags": [
           "distribute"
-        ],
-        "operationId": "distribute_deleteV01AppsByOwnerNameByAppNameReleasesByReleaseId"
+        ]
       }
     },
     "/v0.1/apps/{owner_name}/{app_name}/releases": {
@@ -3250,6 +3293,7 @@
             }
           }
         },
+        "operationId": "distribute_getReleases",
         "security": [
           {
             "APIToken": []
@@ -3257,8 +3301,7 @@
         ],
         "tags": [
           "distribute"
-        ],
-        "operationId": "distribute_getV01AppsByOwnerNameByAppNameReleases"
+        ]
       }
     },
     "/v0.1/apps/{owner_name}/{app_name}/release_uploads/{upload_id}": {
@@ -3299,6 +3342,7 @@
             "description": "Unknown upload_id or status was committed but the upload hasn't finished."
           }
         },
+        "operationId": "distribute_updateReleaseUpload",
         "security": [
           {
             "APIToken": []
@@ -3306,8 +3350,7 @@
         ],
         "tags": [
           "distribute"
-        ],
-        "operationId": "distribute_patchV01AppsByOwnerNameByAppNameReleaseUploadsByUploadId"
+        ]
       }
     },
     "/v0.1/apps/{owner_name}/{app_name}/release_uploads": {
@@ -3329,6 +3372,7 @@
             }
           }
         },
+        "operationId": "distribute_createReleaseUpload",
         "security": [
           {
             "APIToken": []
@@ -3336,8 +3380,7 @@
         ],
         "tags": [
           "distribute"
-        ],
-        "operationId": "distribute_postV01AppsByOwnerNameByAppNameReleaseUploads"
+        ]
       }
     },
     "/v0.1/apps/{owner_name}/{app_name}/recent_releases": {
@@ -3373,317 +3416,9 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/recent_packages": {
-      "get": {
-        "deprecated": true,
-        "description": "Get the latest package from every distribution group associated with an application.",
-        "operationId": "distribute_getLatestPackages",
-        "parameters": [
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/BasicPackageDetails"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/packages/{package_id}": {
-      "get": {
-        "deprecated": true,
-        "description": "Get a package with id 'package_id'. if 'package_id' is 'latest', return the latest package that was distributed to the current user (from all the distribution groups).",
-        "operationId": "distribute_getPackageOrLatestPackage",
-        "parameters": [
-          {
-            "name": "package_id",
-            "type": "string",
-            "in": "path",
-            "description": "The ID of the package, or 'latest' to get the latest package from all the distribution groups assigned to the current user.",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/PackageDetails"
-            }
-          },
-          "400": {
-            "description": "<b>bad_request</b>: 'package_id' is not a number or the string \"latest\".\n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          },
-          "404": {
-            "description": "<b>not_found</b> - A package or an app can't be found.\n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
-        ]
-      },
-      "patch": {
-        "deprecated": true,
-        "description": "Updates a package.",
-        "parameters": [
-          {
-            "name": "package_id",
-            "type": "number",
-            "in": "path",
-            "description": "The ID of the package",
-            "required": true
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "description": "The package information.",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/PackageUpdateRequest"
-            }
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/PackageDetails"
-            }
-          },
-          "400": {
-            "description": "<b>not_supported</b>: Trying to change a distribution group. Currently this operation is not supported.   \n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
-        ],
-        "operationId": "distribute_patchV01AppsByOwnerNameByAppNamePackagesByPackageId"
-      },
-      "delete": {
-        "deprecated": true,
-        "description": "Deletes a package.",
-        "parameters": [
-          {
-            "name": "package_id",
-            "type": "string",
-            "in": "path",
-            "description": "The ID of the package",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "404": {
-            "description": "<b>not_found</b>: An app or a package couldn't be found\n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          },
-          "500": {
-            "description": "An internal error. Delete can partially fail. If that happens partially_deleted error_code is returned.<br>\n<b>partially_deleted</b>: Package was removed from all distribution groups, but couldn't be deleted from Mobile Center.\n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
-        ],
-        "operationId": "distribute_deleteV01AppsByOwnerNameByAppNamePackagesByPackageId"
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/packages": {
-      "get": {
-        "deprecated": true,
-        "description": "Return detailed information about packages.",
-        "parameters": [
-          {
-            "name": "published_only",
-            "type": "boolean",
-            "in": "query",
-            "description": "when true, filters out packages that were uplaoded but were never distributed. Packages that under deleted distribution groups will not be filtered out.",
-            "required": false
-          },
-          {
-            "name": "$filter",
-            "type": "string",
-            "in": "query",
-            "description": "OBSOLETE. Will be removed in next version. An OData style filter. Currently only support the 'eq' comparision type. E.g. ?$filter=status eq 'Available'",
-            "required": false
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/PackageDetails"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
-        ],
-        "operationId": "distribute_getV01AppsByOwnerNameByAppNamePackages"
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/package_uploads/{upload_id}": {
-      "patch": {
-        "deprecated": true,
-        "description": "Commits or aborts the upload process for a package for the specified application",
-        "parameters": [
-          {
-            "name": "upload_id",
-            "type": "string",
-            "in": "path",
-            "description": "The ID of the upload",
-            "required": true
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "description": "The package information",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/PackageUploadEndRequest"
-            }
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/PackageUploadEndResponse"
-            }
-          },
-          "400": {
-            "description": "1. error code - release_not_uploaded - Release hasn't finished uploading or upload hasn't started or upload has failed. <br>  \n2. error code - no_upload_resource - upload_id is not recognized. An Upload resource should be created first. <br>\n"
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
-        ],
-        "operationId": "distribute_patchV01AppsByOwnerNameByAppNamePackageUploadsByUploadId"
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/package_uploads": {
-      "post": {
-        "deprecated": true,
-        "description": "Begins the upload process for a new package for the specified application",
-        "parameters": [
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/PackageUploadBeginResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
-        ],
-        "operationId": "distribute_postV01AppsByOwnerNameByAppNamePackageUploads"
-      }
-    },
     "/v0.1/apps/{owner_name}/{app_name}/invitations/{user_email}": {
       "post": {
+        "deprecated": true,
         "description": "Invites a new or existing user to an app",
         "parameters": [
           {
@@ -3729,7 +3464,65 @@
             }
           }
         },
-        "operationId": "account_inviteAppUser",
+        "operationId": "deprecated_inviteAppUser",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      },
+      "patch": {
+        "description": "Update pending invitation permission",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          },
+          {
+            "name": "user_email",
+            "type": "string",
+            "in": "path",
+            "description": "The email of the user to invite",
+            "required": true
+          },
+          {
+            "name": "user_invitation_permissions_data",
+            "in": "body",
+            "description": "The value to update the user permission in the invite.",
+            "schema": {
+              "$ref": "#/definitions/UserInvitationPermissionsUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "BadRequest",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "operationId": "account_updateAppUserInvitationsPermission",
         "security": [
           {
             "APIToken": []
@@ -3791,6 +3584,63 @@
       }
     },
     "/v0.1/apps/{owner_name}/{app_name}/invitations": {
+      "post": {
+        "description": "Invites a new or existing user to an app",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          },
+          {
+            "name": "user_email",
+            "in": "body",
+            "description": "The email of the user to invite",
+            "schema": {
+              "$ref": "#/definitions/UserEmailRequest"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "BadRequest",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "operationId": "account_inviteAppUser",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      },
       "get": {
         "description": "Gets the pending invitations for the app",
         "parameters": [
@@ -3962,110 +3812,6 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/ReleaseDetails"
-              }
-            }
-          },
-          "404": {
-            "description": "<b>not_found</b>: A distribution group can't be found.\n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/packages/{package_id}": {
-      "get": {
-        "deprecated": true,
-        "operationId": "distribute_getLatestPackageForDistributionGroup",
-        "description": "Return detailed information about a distributed package in a given distribution group.",
-        "parameters": [
-          {
-            "name": "distribution_group_name",
-            "type": "string",
-            "in": "path",
-            "description": "The name of the distribution group.",
-            "required": true
-          },
-          {
-            "name": "package_id",
-            "type": "string",
-            "in": "path",
-            "description": "For GET calls, this must be 'latest', specific package_id's are not supported at this time.",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/PackageDetails"
-            }
-          },
-          "404": {
-            "description": "1. error code - not_found - Distribution group or the app doesn't exist.<br>  \n2. error code - no_packages_for_app - App has no packages.\n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          },
-          "501": {
-            "description": "<b>not_implemented</b> - Cannot request a specific package_id.\n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/packages": {
-      "get": {
-        "deprecated": true,
-        "operationId": "distribute_getPackagesForDistributionGroup",
-        "description": "Return detailed information about distributed packages in a given distribution group.",
-        "parameters": [
-          {
-            "name": "distribution_group_name",
-            "type": "string",
-            "in": "path",
-            "description": "The name of the distribution group.",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/PackageDetails"
               }
             }
           },
@@ -4632,6 +4378,460 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/releases/{release_label}": {
+      "patch": {
+        "description": "Modifies a CodePush release metadata under the given Deployment",
+        "operationId": "codepush_patchRelease",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_name"
+          },
+          {
+            "$ref": "#/parameters/path_release_label"
+          },
+          {
+            "name": "release",
+            "description": "Release modification. All fields are optional and only provided fields will get updated.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LiveUpdateReleaseModification"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/releases": {
+      "delete": {
+        "description": "Clears a Deployment of releases",
+        "operationId": "codepush_deleteReleases",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_name"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      },
+      "get": {
+        "description": "Gets the history of releases on a Deployment",
+        "operationId": "codepush_getReleases",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_name"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LiveUpdateRelease"
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/metrics": {
+      "get": {
+        "description": "Gets all releases metrics for specified Deployment",
+        "operationId": "codepush_getDeploymentMetrics",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_name"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LiveUpdateReleaseMetric"
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}": {
+      "delete": {
+        "description": "Deletes a CodePush Deployment (e.g. 'Staging') for the given app",
+        "operationId": "codepush_deleteDeployment",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_name"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      },
+      "get": {
+        "description": "Gets a CodePush Deployment (e.g. 'Staging') for the given app",
+        "operationId": "codepush_getDeployment",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_name"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Deployment"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      },
+      "patch": {
+        "description": "Modifies a CodePush Deployment (e.g. 'Staging') for the given app",
+        "operationId": "codepush_patchDeployment",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_name"
+          },
+          {
+            "name": "deployment",
+            "description": "Deployment modification. All fields are optional and only provided fields will get updated.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeploymentModification"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments/by_key/{deployment_key}/report_status/download": {
+      "post": {
+        "description": "Report download of specified release",
+        "operationId": "codepush_postDownloadStatusMetric",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_key"
+          },
+          {
+            "name": "release_metadata",
+            "description": "Deployment status metric properties",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LiveUpdateStatusMetricMetadata"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments/by_key/{deployment_key}/report_status/deploy": {
+      "post": {
+        "description": "Report Deployment status metric",
+        "operationId": "codepush_postDeployStatusMetric",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_deployment_key"
+          },
+          {
+            "name": "release_metadata",
+            "description": "Deployment status metric properties",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LiveUpdateStatusMetricMetadata"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/deployments": {
+      "get": {
+        "description": "Gets a list of CodePush deployments (e.g. 'Staging', 'Production') for the given app",
+        "operationId": "codepush_getDeployments",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Deployment"
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      },
+      "post": {
+        "description": "Creates a CodePush Deployment (e.g. 'Staging') for the given app",
+        "operationId": "codepush_postDeployments",
+        "parameters": [
+          {
+            "name": "deployment",
+            "description": "Deployment to be created",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Deployment"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Deployment"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/stacktrace": {
       "get": {
         "description": "Gets a stacktrace for a specific error",
@@ -5057,7 +5257,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/BuildLog"
+            }
           }
         },
         "operationId": "build_getBuildLogs",
@@ -5099,10 +5302,55 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/DownloadContainer"
+            }
           }
         },
         "operationId": "build_getBuildDownload",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "build"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/builds/{build_id}/distribute": {
+      "post": {
+        "description": "Distribute a build",
+        "parameters": [
+          {
+            "$ref": "#/parameters/build_id"
+          },
+          {
+            "name": "distribute_info",
+            "in": "body",
+            "description": "The distribution details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DistributionRequest"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/DistributionResponse"
+            }
+          }
+        },
+        "operationId": "build_postDistributeRequest",
         "security": [
           {
             "APIToken": []
@@ -6188,6 +6436,42 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/events/{event_name}": {
+      "delete": {
+        "operationId": "Analytics_EventsDelete",
+        "description": "Delete the set of Events with the specified event names",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EventParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event successfully deleted"
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/analytics/events": {
       "get": {
         "operationId": "Analytics_Events",
@@ -6230,6 +6514,42 @@
             "schema": {
               "$ref": "#/definitions/Events"
             }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/event_logs/{event_name}": {
+      "delete": {
+        "operationId": "Analytics_EventsDeleteLogs",
+        "description": "Delete the set of Events with the specified event names",
+        "parameters": [
+          {
+            "$ref": "#/parameters/EventParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event successfully deleted"
           },
           "default": {
             "description": "Error code with reason",
@@ -6817,7 +7137,7 @@
             }
           }
         },
-        "operationId": "account_getApps",
+        "operationId": "account_getMemberApps",
         "security": [
           {
             "APIToken": []
@@ -7117,16 +7437,18 @@
           "type": "string",
           "enum": [
             "iOS",
-            "Android"
+            "Android",
+            "Windows"
           ]
         },
         "platform": {
           "description": "The platform of the app",
           "type": "string",
           "enum": [
-            "Objective-C-Swift",
             "Java",
+            "Objective-C-Swift",
             "React-Native",
+            "UWP",
             "Xamarin"
           ]
         }
@@ -7224,14 +7546,14 @@
         "admin_role"
       ]
     },
-    "OrgPatchRequest": {
+    "OrganizationPatchRequest": {
       "properties": {
-        "description": {
-          "description": "The organization's description",
-          "type": "string"
-        },
         "display_name": {
           "description": "The full (friendly) name of the organization.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the organization used in URLs",
           "type": "string"
         }
       }
@@ -7253,6 +7575,48 @@
       },
       "required": [
         "name"
+      ]
+    },
+    "OrganizationUserPatchRequest": {
+      "properties": {
+        "role": {
+          "description": "The user's role in the organizatiion",
+          "type": "string",
+          "enum": [
+            "admin",
+            "collaborator"
+          ]
+        }
+      }
+    },
+    "UserInvitationPermissionsUpdateRequest": {
+      "properties": {
+        "permissions": {
+          "description": "The permissions the user has for the app in the invitation",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "manager",
+              "developer",
+              "viewer"
+            ]
+          }
+        }
+      },
+      "required": [
+        "permissions"
+      ]
+    },
+    "UserEmailRequest": {
+      "properties": {
+        "user_email": {
+          "description": "The user's email address'",
+          "type": "string"
+        }
+      },
+      "required": [
+        "user_email"
       ]
     },
     "UserUpdateRequest": {
@@ -7352,7 +7716,8 @@
           "type": "string",
           "enum": [
             "iOS",
-            "Android"
+            "Android",
+            "Windows"
           ]
         },
         "owner": {
@@ -7362,10 +7727,19 @@
           "description": "The platform of the app",
           "type": "string",
           "enum": [
-            "Objective-C-Swift",
             "Java",
+            "Objective-C-Swift",
             "React-Native",
+            "UWP",
             "Xamarin"
+          ]
+        },
+        "origin": {
+          "description": "The origin of this app can only be mobile-center or hockeyapp for now",
+          "type": "string",
+          "enum": [
+            "mobile-center",
+            "hockeyapp"
           ]
         }
       },
@@ -7376,7 +7750,8 @@
         "name",
         "os",
         "owner",
-        "platform"
+        "platform",
+        "origin"
       ]
     },
     "DistributionGroupResponse": {
@@ -7388,11 +7763,20 @@
         "name": {
           "description": "The name of the distribution group used in URLs",
           "type": "string"
+        },
+        "origin": {
+          "description": "Indicates the origin source of the distribution group, it can be mobile-center or hockeyapp for now.",
+          "type": "string",
+          "enum": [
+            "mobile-center",
+            "hockeyapp"
+          ]
         }
       },
       "required": [
         "id",
-        "name"
+        "name",
+        "origin"
       ]
     },
     "DistributionGroupUserDeleteResponse": {
@@ -7563,8 +7947,8 @@
     },
     "OrganizationResponse": {
       "properties": {
-        "id": {
-          "description": "The unique id (UUID) of the organization",
+        "collaborator_role": {
+          "description": "The role the current user has within the organization",
           "type": "string"
         },
         "display_name": {
@@ -7577,7 +7961,7 @@
         }
       },
       "required": [
-        "id",
+        "collaborator_role",
         "display_name",
         "name"
       ]
@@ -7585,22 +7969,32 @@
     "OrganizationUserResponse": {
       "properties": {
         "email": {
-          "type": "string",
-          "description": "The email address of the user"
+          "description": "The email address of the user",
+          "type": "string"
         },
         "display_name": {
-          "type": "string",
-          "description": "The full name of the user. Might for example be first and last name"
+          "description": "The full name of the user. Might for example be first and last name",
+          "type": "string"
+        },
+        "joined_at": {
+          "description": "The date when the user joined the organization",
+          "type": "string"
         },
         "name": {
-          "type": "string",
-          "description": "The unique name that is used to identify the user."
+          "description": "The unique name that is used to identify the user.",
+          "type": "string"
+        },
+        "role": {
+          "description": "The role the user has within the organization",
+          "type": "string"
         }
       },
       "required": [
         "display_name",
         "email",
-        "name"
+        "joined_at",
+        "name",
+        "role"
       ]
     },
     "UserNameAvailabilityResponse": {
@@ -7699,6 +8093,9 @@
         "name": {
           "description": "The repository name",
           "type": "string"
+        },
+        "clone_url": {
+          "description": "URL used to clone the repository"
         }
       }
     },
@@ -7708,6 +8105,18 @@
       "items": {
         "$ref": "#/definitions/SourceRepository"
       }
+    },
+    "DownloadContainer": {
+      "description": "A download reference",
+      "properties": {
+        "uri": {
+          "type": "string",
+          "description": "Download URI"
+        }
+      },
+      "required": [
+        "uri"
+      ]
     },
     "WebSocketContainer": {
       "description": "A websocket reference",
@@ -8252,6 +8661,43 @@
         }
       }
     },
+    "BuildLog": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "DistributionRequest": {
+      "properties": {
+        "distributionGroupId": {
+          "type": "string",
+          "description": "The distribution group ID"
+        },
+        "releaseNotes": {
+          "type": "string",
+          "description": "The release notes"
+        }
+      },
+      "required": [
+        "distributionGroupId"
+      ]
+    },
+    "DistributionResponse": {
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "Status of the Request"
+        },
+        "upload_id": {
+          "type": "string",
+          "description": "A unique ID of the upload"
+        }
+      }
+    },
     "ValidationErrorResponse": {
       "required": [
         "id",
@@ -8275,7 +8721,7 @@
       "properties": {
         "id": {
           "description": "ID identifying this unique release.",
-          "type": "string"
+          "type": "number"
         },
         "version": {
           "description": "The release's version.<br>\nFor iOS: CFBundleVersion from info.plist.<br>\nFor Android: android:versionCode from AppManifest.xml.\n",
@@ -8303,7 +8749,7 @@
       "properties": {
         "id": {
           "description": "ID identifying this unique release.",
-          "type": "string"
+          "type": "number"
         },
         "status": {
           "description": "OBSOLETE. Will be removed in next version. The availability concept is now replaced with distributed. Any 'available' release will be associated with the default distribution group of an app.</br>   \nThe release state.<br> \n<b>available</b>: The uploaded release has been distributed.<br>\n<b>unavailable</b>: The uploaded release is not visible to the user. <br>\n",
@@ -8339,6 +8785,10 @@
         },
         "min_os": {
           "description": "The release's minimum required operating system.",
+          "type": "string"
+        },
+        "android_min_api_level": {
+          "description": "The release's minimum required Android API level.",
           "type": "string"
         },
         "fingerprint": {
@@ -8819,6 +9269,50 @@
         }
       }
     },
+    "Exception": {
+      "description": "a exception",
+      "properties": {
+        "reason": {
+          "type": "string",
+          "description": "Reason of the exception"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the exception (NSSomethingException, NullPointerException)"
+        },
+        "frames": {
+          "description": "frames of the excetpion",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StackFrame"
+          }
+        },
+        "relevant": {
+          "description": "relevant exception (crashed)",
+          "type": "boolean"
+        },
+        "inner_exceptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Exception"
+          }
+        },
+        "platform": {
+          "description": "SDK/Platform this thread is beeing generated from",
+          "type": "string",
+          "enum": [
+            "ios",
+            "android",
+            "xamarin",
+            "react-native",
+            "other"
+          ]
+        }
+      },
+      "required": [
+        "frames"
+      ]
+    },
     "Stacktrace": {
       "description": "a stacktrace in a processed and prettyfied way",
       "properties": {
@@ -8875,50 +9369,6 @@
       },
       "required": [
         "title",
-        "frames"
-      ]
-    },
-    "Exception": {
-      "description": "a exception",
-      "properties": {
-        "reason": {
-          "type": "string",
-          "description": "Reason of the exception"
-        },
-        "type": {
-          "type": "string",
-          "description": "Type of the exception (NSSomethingException, NullPointerException)"
-        },
-        "frames": {
-          "description": "frames of the excetpion",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/StackFrame"
-          }
-        },
-        "relevant": {
-          "description": "relevant exception (crashed)",
-          "type": "boolean"
-        },
-        "inner_exceptions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Exception"
-          }
-        },
-        "platform": {
-          "description": "SDK/Platform this thread is beeing generated from",
-          "type": "string",
-          "enum": [
-            "ios",
-            "android",
-            "xamarin",
-            "react-native",
-            "other"
-          ]
-        }
-      },
-      "required": [
         "frames"
       ]
     },
@@ -9048,6 +9498,14 @@
         "method_params": {
           "description": "parameters of the frames method",
           "type": "string"
+        },
+        "exception_type": {
+          "type": "string",
+          "description": "Exception type."
+        },
+        "os_exception_type": {
+          "type": "string",
+          "description": "OS exception type. (aka. SIGNAL)"
         }
       }
     },
@@ -9188,6 +9646,133 @@
         "user_email": {
           "type": "string",
           "description": ""
+        }
+      }
+    },
+    "MissingSymbol": {
+      "description": "missing symbol",
+      "required": [
+        "symbol_id",
+        "name",
+        "status"
+      ],
+      "properties": {
+        "symbol_id": {
+          "type": "string",
+          "description": "symbol id"
+        },
+        "name": {
+          "type": "string",
+          "description": "symbol name"
+        },
+        "platform": {
+          "type": "string",
+          "description": "symbol plarform"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "missing",
+            "ignored",
+            "available"
+          ],
+          "description": "symbol status"
+        }
+      }
+    },
+    "MissingSymbols": {
+      "description": "A list of missing symbols",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MissingSymbol"
+      }
+    },
+    "MissingSymbolCrashGroup": {
+      "description": "missing symbol crash group object",
+      "required": [
+        "symbol_group_id",
+        "app_id",
+        "app_ver",
+        "app_build",
+        "last_modified",
+        "missing_symbols",
+        "status"
+      ],
+      "properties": {
+        "symbol_group_id": {
+          "type": "string",
+          "description": "id of the symbol group"
+        },
+        "crash_count": {
+          "type": "integer",
+          "description": "number of crashes that belong to this group"
+        },
+        "app_id": {
+          "type": "string",
+          "description": "application id"
+        },
+        "app_ver": {
+          "type": "string",
+          "description": "application version"
+        },
+        "app_build": {
+          "type": "string",
+          "description": "application build"
+        },
+        "last_modified": {
+          "type": "string",
+          "format": "date-time",
+          "description": "last update date for the group"
+        },
+        "missing_symbols": {
+          "$ref": "#/definitions/MissingSymbols"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "pending",
+            "closed"
+          ],
+          "description": "group status"
+        }
+      }
+    },
+    "MissingSymbolCrashGroups": {
+      "description": "A list of crash groups formed by missing symbols combination",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MissingSymbolCrashGroup"
+      }
+    },
+    "MissingSymbolCrashGroupsResponse": {
+      "description": "grouped by missing symbols crashes response object",
+      "required": [
+        "total_crash_count",
+        "groups"
+      ],
+      "properties": {
+        "total_crash_count": {
+          "description": "total number of cashes for all the groups",
+          "type": "integer"
+        },
+        "groups": {
+          "$ref": "#/definitions/MissingSymbolCrashGroups"
+        }
+      }
+    },
+    "FailureResponse": {
+      "description": "failure response object",
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
         }
       }
     },
@@ -10062,6 +10647,181 @@
           "format": "int64"
         }
       }
+    },
+    "NotificationsListResult": {
+      "description": "List of notifications",
+      "type": "object",
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NotificationDetailsResult"
+          }
+        },
+        "total": {
+          "description": "the total count of notifications",
+          "type": "integer",
+          "format": "int64"
+        },
+        "nextLink": {
+          "type": "string"
+        }
+      }
+    },
+    "NotificationDetailsResult": {
+      "description": "Notification statistics",
+      "type": "object",
+      "properties": {
+        "notification_id": {
+          "description": "Notification id.",
+          "type": "string"
+        },
+        "pns_send_failure": {
+          "description": "Number of the notifications failed to send to the push provider.",
+          "type": "integer",
+          "format": "long"
+        },
+        "pns_send_success": {
+          "description": "Number of the notifications successfully sent to push the provider.",
+          "type": "integer",
+          "format": "long"
+        },
+        "state": {
+          "type": "string",
+          "description": "State of the notification.",
+          "enum": [
+            "Cancelled",
+            "Completed",
+            "Enqueued",
+            "Processing",
+            "Unknown"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationResult"
+        }
+      ]
+    },
+    "NotificationResult": {
+      "description": "Notification result",
+      "properties": {
+        "send_time": {
+          "description": "Notification send time",
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationDefinition"
+        }
+      ]
+    },
+    "NotificationDefinition": {
+      "description": "Notification definition object",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Notification name",
+          "type": "string",
+          "maxLength": 64
+        },
+        "title": {
+          "description": "Notification title",
+          "type": "string",
+          "maxLength": 128
+        },
+        "body": {
+          "description": "Notification body",
+          "type": "string",
+          "maxLength": 4000
+        },
+        "platform_type": {
+          "description": "Notification platform type",
+          "type": "string",
+          "enum": [
+            "apns",
+            "gcm"
+          ]
+        },
+        "notification_target": {
+          "$ref": "#/definitions/NotificationTarget"
+        },
+        "custom_data": {
+          "description": "Notification custom data(priority, expiration, etc.)",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "body",
+        "platform_type"
+      ]
+    },
+    "NotificationSendSucceededResult": {
+      "description": "Notification send succeeded.",
+      "properties": {
+        "notification_id": {
+          "type": "string",
+          "description": "The unique notification identifier."
+        }
+      }
+    },
+    "NotificationTarget": {
+      "description": "Generic notification target.",
+      "type": "object",
+      "discriminator": "type",
+      "properties": {
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "NotificationConfig": {
+      "description": "Generic notification configuration.",
+      "type": "object",
+      "discriminator": "type",
+      "properties": {
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "NotificationConfigResult": {
+      "description": "Generic notification configuration result.",
+      "discriminator": "type",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "description": "Configuration state.",
+          "enum": [
+            "configured",
+            "configuring",
+            "expired",
+            "not_configured",
+            "deleted",
+            "deleting"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "status"
+      ]
     },
     "DeviceConfiguration": {
       "properties": {
@@ -10992,6 +11752,149 @@
           }
         }
       }
+    },
+    "Deployment": {
+      "required": [
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "latest_release": {
+          "$ref": "#/definitions/LiveUpdateRelease"
+        }
+      }
+    },
+    "DeploymentModification": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "LiveUpdateRelease": {
+      "properties": {
+        "target_binary_range": {
+          "type": "string"
+        },
+        "blob_url": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "is_disabled": {
+          "type": "boolean"
+        },
+        "is_mandatory": {
+          "type": "boolean"
+        },
+        "label": {
+          "type": "string"
+        },
+        "original_deployment": {
+          "type": "string",
+          "description": "Set on 'Promote'"
+        },
+        "original_label": {
+          "type": "string",
+          "description": "Set on 'Promote' and 'Rollback'"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "released_by": {
+          "type": "string"
+        },
+        "release_method": {
+          "type": "string",
+          "enum": [
+            "Upload",
+            "Promote",
+            "Rollback"
+          ],
+          "description": "The release method is unknown if unspecified"
+        },
+        "rollout": {
+          "type": "integer"
+        },
+        "size": {
+          "type": "number"
+        },
+        "upload_time": {
+          "type": "integer"
+        }
+      }
+    },
+    "LiveUpdateReleaseModification": {
+      "properties": {
+        "target_binary_range": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "is_disabled": {
+          "type": "boolean"
+        },
+        "is_mandatory": {
+          "type": "boolean"
+        },
+        "rollout": {
+          "type": "integer"
+        }
+      }
+    },
+    "LiveUpdateReleaseMetric": {
+      "required": [
+        "label",
+        "active"
+      ],
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "active": {
+          "type": "integer"
+        },
+        "downloaded": {
+          "type": "integer"
+        },
+        "failed": {
+          "type": "integer"
+        },
+        "installed": {
+          "type": "integer"
+        }
+      }
+    },
+    "LiveUpdateStatusMetricMetadata": {
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "app_version": {
+          "type": "string"
+        },
+        "previous_deployment_key": {
+          "type": "string"
+        },
+        "previous_label_or_app_version": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "client_unique_id": {
+          "type": "string"
+        }
+      }
     }
   },
   "parameters": {
@@ -11058,6 +11961,14 @@
       "type": "string",
       "in": "path",
       "description": "The ID of the user",
+      "required": true,
+      "x-ms-parameter-location": "method"
+    },
+    "user_name": {
+      "name": "user_name",
+      "type": "string",
+      "in": "path",
+      "description": "The slug name of the user",
       "required": true,
       "x-ms-parameter-location": "method"
     },
@@ -11244,6 +12155,30 @@
       "description": "A freetext search that matches in error, error types, error stack_traces and error user",
       "x-ms-parameter-location": "method"
     },
+    "path_symbol_group_id": {
+      "name": "symbol_group_id",
+      "in": "path",
+      "required": true,
+      "description": "missing symbol crash group id",
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "query_top": {
+      "name": "top",
+      "in": "query",
+      "required": true,
+      "description": "top N elements",
+      "type": "integer",
+      "x-ms-parameter-location": "method"
+    },
+    "query_filter": {
+      "name": "filter",
+      "in": "query",
+      "required": false,
+      "description": "query filter",
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
     "StartParameter": {
       "name": "start",
       "in": "query",
@@ -11421,6 +12356,59 @@
       "type": "integer",
       "format": "int64",
       "x-ms-parameter-location": "method"
+    },
+    "NotificationParameter": {
+      "name": "properties",
+      "in": "body",
+      "description": "Notification specifications.",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/NotificationDefinition"
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "NotificationConfigParameter": {
+      "name": "properties",
+      "in": "body",
+      "description": "Notification configurations.",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/NotificationConfig"
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "NotificationIdParameter": {
+      "name": "notification_id",
+      "in": "path",
+      "description": "The id of the notification.",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "path_deployment_name": {
+      "name": "deployment_name",
+      "in": "path",
+      "required": true,
+      "description": "deployment name",
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "path_deployment_key": {
+      "name": "deployment_key",
+      "in": "path",
+      "required": true,
+      "description": "deployment key",
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "path_release_label": {
+      "name": "release_label",
+      "in": "path",
+      "required": true,
+      "description": "release label",
+      "type": "string",
+      "x-ms-parameter-location": "method"
     }
   },
   "securityDefinitions": {
@@ -11455,6 +12443,9 @@
     },
     {
       "name": "data"
+    },
+    {
+      "name": "codepush"
     }
   ]
 }

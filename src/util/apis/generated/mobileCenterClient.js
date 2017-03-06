@@ -51,6 +51,7 @@ function MobileCenterClient(credentials, baseUri, options) {
   this.credentials = credentials;
 
   this.account = new operations.Account(this);
+  this.distribute = new operations.Distribute(this);
   this.crashOperations = new operations.CrashOperations(this);
   this.buildOperations = new operations.BuildOperations(this);
   this.test = new operations.Test(this);
@@ -58,7 +59,8 @@ function MobileCenterClient(credentials, baseUri, options) {
   this.azure = new operations.Azure(this);
   this.push = new operations.Push(this);
   this.identity = new operations.Identity(this);
-  this.distribute = new operations.Distribute(this);
+  this.deprecated = new operations.Deprecated(this);
+  this.codepush = new operations.Codepush(this);
   this.analytics = new operations.Analytics(this);
   this.models = models;
   msRest.addSerializationMixin(this);

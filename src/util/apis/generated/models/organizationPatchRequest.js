@@ -8,40 +8,40 @@
 
 /**
  * @class
- * Initializes a new instance of the OrgPatchRequest class.
+ * Initializes a new instance of the OrganizationPatchRequest class.
  * @constructor
- * @member {string} [description] The organization's description
- * 
  * @member {string} [displayName] The full (friendly) name of the organization.
  * 
+ * @member {string} [name] The name of the organization used in URLs
+ * 
  */
-function OrgPatchRequest() {
+function OrganizationPatchRequest() {
 }
 
 /**
- * Defines the metadata of OrgPatchRequest
+ * Defines the metadata of OrganizationPatchRequest
  *
- * @returns {object} metadata of OrgPatchRequest
+ * @returns {object} metadata of OrganizationPatchRequest
  *
  */
-OrgPatchRequest.prototype.mapper = function () {
+OrganizationPatchRequest.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'OrgPatchRequest',
+    serializedName: 'OrganizationPatchRequest',
     type: {
       name: 'Composite',
-      className: 'OrgPatchRequest',
+      className: 'OrganizationPatchRequest',
       modelProperties: {
-        description: {
+        displayName: {
           required: false,
-          serializedName: 'description',
+          serializedName: 'display_name',
           type: {
             name: 'String'
           }
         },
-        displayName: {
+        name: {
           required: false,
-          serializedName: 'display_name',
+          serializedName: 'name',
           type: {
             name: 'String'
           }
@@ -51,4 +51,4 @@ OrgPatchRequest.prototype.mapper = function () {
   };
 };
 
-module.exports = OrgPatchRequest;
+module.exports = OrganizationPatchRequest;

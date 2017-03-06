@@ -97,40 +97,6 @@ export interface Account {
     updateUserProfile(callback: ServiceCallback<any>): void;
 
     /**
-     * Returns a list of users that belong to an organization
-     *
-     * @param {string} orgName The organization's name
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getOrganizationUsers(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getOrganizationUsers(orgName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * Invites a new or existing user to an organization
-     *
-     * @param {string} orgName The organization's name
-     * 
-     * @param {string} userEmail The email of the user to invite
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    inviteOrganizationUser(orgName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
-    inviteOrganizationUser(orgName: string, userEmail: string, callback: ServiceCallback<models.ErrorResponse>): void;
-
-    /**
      * Removes the user from the app
      *
      * @param {string} ownerName The name of the owner
@@ -189,13 +155,16 @@ export interface Account {
     getAppTesters(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
-     * Invites a new or existing user to an app
+     * Update pending invitation permission
      *
      * @param {string} ownerName The name of the owner
      * 
      * @param {string} appName The name of the application
      * 
      * @param {string} userEmail The email of the user to invite
+     * 
+     * @param {array} permissions The permissions the user has for the app in the
+     * invitation
      * 
      * @param {object} [options] Optional Parameters.
      * 
@@ -205,8 +174,8 @@ export interface Account {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    inviteAppUser(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
-    inviteAppUser(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<models.ErrorResponse>): void;
+    updateAppUserInvitationsPermission(ownerName: string, appName: string, userEmail: string, permissions: string[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    updateAppUserInvitationsPermission(ownerName: string, appName: string, userEmail: string, permissions: string[], callback: ServiceCallback<models.ErrorResponse>): void;
 
     /**
      * Removes a user's invitation to an app
@@ -227,6 +196,26 @@ export interface Account {
      */
     deleteAppInvitation(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
     deleteAppInvitation(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<models.ErrorResponse>): void;
+
+    /**
+     * Invites a new or existing user to an app
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {string} userEmail The user's email address'
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    inviteAppUser(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    inviteAppUser(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<models.ErrorResponse>): void;
 
     /**
      * Gets the pending invitations for the app
@@ -487,10 +476,10 @@ export interface Account {
      * @param {string} [app.name] The name of the app used in URLs
      * 
      * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'iOS', 'Android'
+     * include: 'iOS', 'Android', 'Windows'
      * 
      * @param {string} app.platform The platform of the app. Possible values
-     * include: 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
+     * include: 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
      * 
      * @param {object} [options] Optional Parameters.
      * 
@@ -514,8 +503,8 @@ export interface Account {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getApps(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getApps(callback: ServiceCallback<any>): void;
+    getMemberApps(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getMemberApps(callback: ServiceCallback<any>): void;
 
     /**
      * Delete the api_token object with the specific id
@@ -562,6 +551,267 @@ export interface Account {
      */
     createApiToken(options: { description? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     createApiToken(callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * Distribute
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the MobileCenterClient.
+ */
+export interface Distribute {
+
+    /**
+     * Get a release with id `release_id`. if `release_id` is `latest`, return the
+     * latest release that was distributed to the current user (from all the
+     * distribution groups).
+     *
+     * @param {string} appSecret The secret of the target application
+     * 
+     * @param {string} releaseId The ID of the release, or `latest` to get the
+     * latest release from all the distribution groups assigned to the current
+     * user.
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getReleaseOrLatestReleaseBySecret(appSecret: string, releaseId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getReleaseOrLatestReleaseBySecret(appSecret: string, releaseId: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Get a release with id `release_id`. if `release_id` is `latest`, return the
+     * latest release that was distributed to the current user (from all the
+     * distribution groups).
+     *
+     * @param {string} releaseId The ID of the release, or `latest` to get the
+     * latest release from all the distribution groups assigned to the current
+     * user.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getRelease(releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getRelease(releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Updates a release.
+     *
+     * @param {number} releaseId The ID of the release
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.distributionGroupName] Name of a distribution
+     * group. The release will be associated with this distribution group. If the
+     * distribution group doesn't exist a 400 is returned. If both distribution
+     * group name and id are passed, the id is taking precedence.
+     * 
+     * @param {string} [options.distributionGroupId] Id of a distribution group.
+     * The release will be associated with this distribution group. If the
+     * distribution group doesn't exist a 400 is returned. If both distribution
+     * group name and id are passed, the id is taking precedence.
+     * 
+     * @param {string} [options.releaseNotes] Release notes for this release.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    updateRelease(releaseId: number, ownerName: string, appName: string, options: { distributionGroupName? : string, distributionGroupId? : string, releaseNotes? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    updateRelease(releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Deletes a release.
+     *
+     * @param {string} releaseId The ID of the release
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deleteRelease(releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteRelease(releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
+
+    /**
+     * Return detailed information about releases.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {boolean} [options.publishedOnly] when true, filters out releases
+     * that were uplaoded but were never distributed. Releases that under deleted
+     * distribution groups will not be filtered out.
+     * 
+     * @param {string} [options.filter] OBSOLETE. Will be removed in next version.
+     * An OData style filter. Currently only support the 'eq' comparision type.
+     * E.g. ?$filter=status eq 'Available'
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getReleases(ownerName: string, appName: string, options: { publishedOnly? : boolean, filter? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseDetails[]>): void;
+    getReleases(ownerName: string, appName: string, callback: ServiceCallback<models.ReleaseDetails[]>): void;
+
+    /**
+     * Commits or aborts the upload process for a release for the specified
+     * application
+     *
+     * @param {string} uploadId The ID of the upload
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {string} status The desired operation for the upload. Possible
+     * values include: 'committed', 'aborted'
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    updateReleaseUpload(uploadId: string, ownerName: string, appName: string, status: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseUploadEndResponse>): void;
+    updateReleaseUpload(uploadId: string, ownerName: string, appName: string, status: string, callback: ServiceCallback<models.ReleaseUploadEndResponse>): void;
+
+    /**
+     * Begins the upload process for a new release for the specified application.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    createReleaseUpload(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseUploadBeginResponse>): void;
+    createReleaseUpload(ownerName: string, appName: string, callback: ServiceCallback<models.ReleaseUploadBeginResponse>): void;
+
+    /**
+     * Get the latest release from every distribution group associated with an
+     * application.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getLatestReleases(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetails[]>): void;
+    getLatestReleases(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetails[]>): void;
+
+    /**
+     * Return detailed information about a distributed release in a given
+     * distribution group.
+     *
+     * @param {string} distributionGroupName The name of the distribution group.
+     * 
+     * @param {string} releaseId Must be `latest`, a specific `release_id` is not
+     * supported at this time.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getLatestReleaseForDistributionGroup(distributionGroupName: string, releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getLatestReleaseForDistributionGroup(distributionGroupName: string, releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Deletes a release with id 'release_id' in a given distribution group.
+     *
+     * @param {string} distributionGroupName The name of the distribution group.
+     * 
+     * @param {string} releaseId The ID identifying the unique release.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deleteReleaseForDistributionGroup(distributionGroupName: string, releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    deleteReleaseForDistributionGroup(distributionGroupName: string, releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Return detailed information about distributed releases in a given
+     * distribution group.
+     *
+     * @param {string} distributionGroupName The name of the distribution group.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getReleasesForDistributionGroup(distributionGroupName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getReleasesForDistributionGroup(distributionGroupName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 }
 
 /**
@@ -773,6 +1023,53 @@ export interface CrashOperations {
      */
     postSymbolUpload(ownerName: string, appName: string, options: { clientCallback? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     postSymbolUpload(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * @summary Gets missing symbol crash group by its id
+     *
+     * Gets missing symbol crash group by its id
+     *
+     * @param {string} symbolGroupId missing symbol crash group id
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getMissingSymbolCrashGroupById(symbolGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.MissingSymbolCrashGroupsResponse>): void;
+    getMissingSymbolCrashGroupById(symbolGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.MissingSymbolCrashGroupsResponse>): void;
+
+    /**
+     * @summary Gets top N (ordered by crash count) of crash groups by missing
+     * symbol
+     *
+     * Gets top N (ordered by crash count) of crash groups by missing symbol
+     *
+     * @param {number} top top N elements
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.filter] query filter
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getTopNFilteredMissingSymbolCrashGroups(top: number, ownerName: string, appName: string, options: { filter? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.MissingSymbolCrashGroupsResponse>): void;
+    getTopNFilteredMissingSymbolCrashGroups(top: number, ownerName: string, appName: string, callback: ServiceCallback<models.MissingSymbolCrashGroupsResponse>): void;
 
     /**
      * Gets a stacktrace for a specific error
@@ -1004,6 +1301,9 @@ export interface BuildOperations {
     /**
      * Gets the repositories available from the source code host
      *
+     * @param {string} sourceHost The source host. Possible values include:
+     * 'github', 'bitbucket'
+     * 
      * @param {string} ownerName The name of the owner
      * 
      * @param {string} appName The name of the application
@@ -1019,8 +1319,8 @@ export interface BuildOperations {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getRepositories(ownerName: string, appName: string, options: { form? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getRepositories(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    getRepositories(sourceHost: string, ownerName: string, appName: string, options: { form? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getRepositories(sourceHost: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
      * Returns the repository build configuration status of the app
@@ -1121,8 +1421,8 @@ export interface BuildOperations {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getBuildLogs(buildId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-    getBuildLogs(buildId: number, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+    getBuildLogs(buildId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BuildLog>): void;
+    getBuildLogs(buildId: number, ownerName: string, appName: string, callback: ServiceCallback<models.BuildLog>): void;
 
     /**
      * Gets the download URI
@@ -1144,8 +1444,32 @@ export interface BuildOperations {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getBuildDownload(buildId: number, downloadType: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-    getBuildDownload(buildId: number, downloadType: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+    getBuildDownload(buildId: number, downloadType: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DownloadContainer>): void;
+    getBuildDownload(buildId: number, downloadType: string, ownerName: string, appName: string, callback: ServiceCallback<models.DownloadContainer>): void;
+
+    /**
+     * Distribute a build
+     *
+     * @param {number} buildId The build ID
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {string} distributionGroupId The distribution group ID
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.releaseNotes] The release notes
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    postDistributeRequest(buildId: number, ownerName: string, appName: string, distributionGroupId: string, options: { releaseNotes? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionResponse>): void;
+    postDistributeRequest(buildId: number, ownerName: string, appName: string, distributionGroupId: string, callback: ServiceCallback<models.DistributionResponse>): void;
 
     /**
      * Returns the build detail for the given build ID
@@ -2384,20 +2708,60 @@ export interface Identity {
 
 /**
  * @class
- * Distribute
+ * Deprecated
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the MobileCenterClient.
  */
-export interface Distribute {
+export interface Deprecated {
 
     /**
-     * Get a release with id `release_id`. if `release_id` is `latest`, return the
-     * latest release that was distributed to the current user (from all the
-     * distribution groups).
+     * Invites a new or existing user to an app
      *
-     * @param {string} releaseId The ID of the release, or `latest` to get the
-     * latest release from all the distribution groups assigned to the current
-     * user.
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {string} userEmail The email of the user to invite
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    inviteAppUser(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    inviteAppUser(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<models.ErrorResponse>): void;
+}
+
+/**
+ * @class
+ * Codepush
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the MobileCenterClient.
+ */
+export interface Codepush {
+
+    /**
+     * Modifies a CodePush release metadata under the given Deployment
+     *
+     * @param {string} deploymentName deployment name
+     * 
+     * @param {string} releaseLabel release label
+     * 
+     * @param {object} release Release modification. All fields are optional and
+     * only provided fields will get updated.
+     * 
+     * @param {string} [release.targetBinaryRange]
+     * 
+     * @param {string} [release.description]
+     * 
+     * @param {boolean} [release.isDisabled]
+     * 
+     * @param {boolean} [release.isMandatory]
+     * 
+     * @param {number} [release.rollout]
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -2411,45 +2775,13 @@ export interface Distribute {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getReleaseOrLatestRelease(releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getReleaseOrLatestRelease(releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    patchRelease(deploymentName: string, releaseLabel: string, release: models.LiveUpdateReleaseModification, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    patchRelease(deploymentName: string, releaseLabel: string, release: models.LiveUpdateReleaseModification, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
-     * Updates a release.
+     * Clears a Deployment of releases
      *
-     * @param {number} releaseId The ID of the release
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {string} [options.distributionGroupName] Name of a distribution
-     * group. The release will be associated with this distribution group. If the
-     * distribution group doesn't exist a 400 is returned. If both distribution
-     * group name and id are passed, the id is taking precedence.
-     * 
-     * @param {string} [options.distributionGroupId] Id of a distribution group.
-     * The release will be associated with this distribution group. If the
-     * distribution group doesn't exist a 400 is returned. If both distribution
-     * group name and id are passed, the id is taking precedence.
-     * 
-     * @param {string} [options.releaseNotes] Release notes for this release.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    patchV01AppsByOwnerNameByAppNameReleasesByReleaseId(releaseId: number, ownerName: string, appName: string, options: { distributionGroupName? : string, distributionGroupId? : string, releaseNotes? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    patchV01AppsByOwnerNameByAppNameReleasesByReleaseId(releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * Deletes a release.
-     *
-     * @param {string} releaseId The ID of the release
+     * @param {string} deploymentName deployment name
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -2463,123 +2795,13 @@ export interface Distribute {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    deleteV01AppsByOwnerNameByAppNameReleasesByReleaseId(releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
-    deleteV01AppsByOwnerNameByAppNameReleasesByReleaseId(releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteReleases(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    deleteReleases(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
-     * Return detailed information about releases.
+     * Gets the history of releases on a Deployment
      *
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {boolean} [options.publishedOnly] when true, filters out releases
-     * that were uplaoded but were never distributed. Releases that under deleted
-     * distribution groups will not be filtered out.
-     * 
-     * @param {string} [options.filter] OBSOLETE. Will be removed in next version.
-     * An OData style filter. Currently only support the 'eq' comparision type.
-     * E.g. ?$filter=status eq 'Available'
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getV01AppsByOwnerNameByAppNameReleases(ownerName: string, appName: string, options: { publishedOnly? : boolean, filter? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseDetails[]>): void;
-    getV01AppsByOwnerNameByAppNameReleases(ownerName: string, appName: string, callback: ServiceCallback<models.ReleaseDetails[]>): void;
-
-    /**
-     * Commits or aborts the upload process for a release for the specified
-     * application
-     *
-     * @param {string} uploadId The ID of the upload
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {string} status The desired operation for the upload. Possible
-     * values include: 'committed', 'aborted'
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    patchV01AppsByOwnerNameByAppNameReleaseUploadsByUploadId(uploadId: string, ownerName: string, appName: string, status: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseUploadEndResponse>): void;
-    patchV01AppsByOwnerNameByAppNameReleaseUploadsByUploadId(uploadId: string, ownerName: string, appName: string, status: string, callback: ServiceCallback<models.ReleaseUploadEndResponse>): void;
-
-    /**
-     * Begins the upload process for a new release for the specified application.
-     *
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    postV01AppsByOwnerNameByAppNameReleaseUploads(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseUploadBeginResponse>): void;
-    postV01AppsByOwnerNameByAppNameReleaseUploads(ownerName: string, appName: string, callback: ServiceCallback<models.ReleaseUploadBeginResponse>): void;
-
-    /**
-     * Get the latest release from every distribution group associated with an
-     * application.
-     *
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getLatestReleases(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetails[]>): void;
-    getLatestReleases(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetails[]>): void;
-
-    /**
-     * Get the latest package from every distribution group associated with an
-     * application.
-     *
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getLatestPackages(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicPackageDetails[]>): void;
-    getLatestPackages(ownerName: string, appName: string, callback: ServiceCallback<models.BasicPackageDetails[]>): void;
-
-    /**
-     * Get a package with id 'package_id'. if 'package_id' is 'latest', return the
-     * latest package that was distributed to the current user (from all the
-     * distribution groups).
-     *
-     * @param {string} packageId The ID of the package, or 'latest' to get the
-     * latest package from all the distribution groups assigned to the current
-     * user.
+     * @param {string} deploymentName deployment name
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -2593,45 +2815,13 @@ export interface Distribute {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getPackageOrLatestPackage(packageId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getPackageOrLatestPackage(packageId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    getReleases(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.LiveUpdateRelease[]>): void;
+    getReleases(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.LiveUpdateRelease[]>): void;
 
     /**
-     * Updates a package.
+     * Gets all releases metrics for specified Deployment
      *
-     * @param {number} packageId The ID of the package
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {string} [options.distributionGroupName] Name of a distribution
-     * group. The package will be associated with this distribution group. If the
-     * distribution group doesn't exist a 400 is returned. If both distribution
-     * group name and id are passed, the id is taking precedence.
-     * 
-     * @param {string} [options.distributionGroupId] Id of a distribution group.
-     * The package will be associated with this distribution group. If the
-     * distribution group doesn't exist a 400 is returned. If both distribution
-     * group name and id are passed, the id is taking precedence.
-     * 
-     * @param {string} [options.releaseNotes] Release notes for this package.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    patchV01AppsByOwnerNameByAppNamePackagesByPackageId(packageId: number, ownerName: string, appName: string, options: { distributionGroupName? : string, distributionGroupId? : string, releaseNotes? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    patchV01AppsByOwnerNameByAppNamePackagesByPackageId(packageId: number, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * Deletes a package.
-     *
-     * @param {string} packageId The ID of the package
+     * @param {string} deploymentName deployment name
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -2645,85 +2835,13 @@ export interface Distribute {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    deleteV01AppsByOwnerNameByAppNamePackagesByPackageId(packageId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
-    deleteV01AppsByOwnerNameByAppNamePackagesByPackageId(packageId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
+    getDeploymentMetrics(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.LiveUpdateReleaseMetric[]>): void;
+    getDeploymentMetrics(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.LiveUpdateReleaseMetric[]>): void;
 
     /**
-     * Return detailed information about packages.
+     * Deletes a CodePush Deployment (e.g. 'Staging') for the given app
      *
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {boolean} [options.publishedOnly] when true, filters out packages
-     * that were uplaoded but were never distributed. Packages that under deleted
-     * distribution groups will not be filtered out.
-     * 
-     * @param {string} [options.filter] OBSOLETE. Will be removed in next version.
-     * An OData style filter. Currently only support the 'eq' comparision type.
-     * E.g. ?$filter=status eq 'Available'
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getV01AppsByOwnerNameByAppNamePackages(ownerName: string, appName: string, options: { publishedOnly? : boolean, filter? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PackageDetails[]>): void;
-    getV01AppsByOwnerNameByAppNamePackages(ownerName: string, appName: string, callback: ServiceCallback<models.PackageDetails[]>): void;
-
-    /**
-     * Commits or aborts the upload process for a package for the specified
-     * application
-     *
-     * @param {string} uploadId The ID of the upload
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {string} status The desired operation for the upload. Possible
-     * values include: 'committed', 'aborted'
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    patchV01AppsByOwnerNameByAppNamePackageUploadsByUploadId(uploadId: string, ownerName: string, appName: string, status: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PackageUploadEndResponse>): void;
-    patchV01AppsByOwnerNameByAppNamePackageUploadsByUploadId(uploadId: string, ownerName: string, appName: string, status: string, callback: ServiceCallback<models.PackageUploadEndResponse>): void;
-
-    /**
-     * Begins the upload process for a new package for the specified application
-     *
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    postV01AppsByOwnerNameByAppNamePackageUploads(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.PackageUploadBeginResponse>): void;
-    postV01AppsByOwnerNameByAppNamePackageUploads(ownerName: string, appName: string, callback: ServiceCallback<models.PackageUploadBeginResponse>): void;
-
-    /**
-     * Return detailed information about a distributed release in a given
-     * distribution group.
-     *
-     * @param {string} distributionGroupName The name of the distribution group.
-     * 
-     * @param {string} releaseId Must be `latest`, a specific `release_id` is not
-     * supported at this time.
+     * @param {string} deploymentName deployment name
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -2737,15 +2855,13 @@ export interface Distribute {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getLatestReleaseForDistributionGroup(distributionGroupName: string, releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getLatestReleaseForDistributionGroup(distributionGroupName: string, releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    deleteDeployment(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    deleteDeployment(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
-     * Deletes a release with id 'release_id' in a given distribution group.
+     * Gets a CodePush Deployment (e.g. 'Staging') for the given app
      *
-     * @param {string} distributionGroupName The name of the distribution group.
-     * 
-     * @param {string} releaseId The ID identifying the unique release.
+     * @param {string} deploymentName deployment name
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -2759,14 +2875,49 @@ export interface Distribute {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    deleteReleaseForDistributionGroup(distributionGroupName: string, releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    deleteReleaseForDistributionGroup(distributionGroupName: string, releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    getDeployment(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Deployment>): void;
+    getDeployment(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.Deployment>): void;
 
     /**
-     * Return detailed information about distributed releases in a given
-     * distribution group.
+     * Modifies a CodePush Deployment (e.g. 'Staging') for the given app
      *
-     * @param {string} distributionGroupName The name of the distribution group.
+     * @param {string} deploymentName deployment name
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.name]
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    patchDeployment(deploymentName: string, ownerName: string, appName: string, options: { name? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    patchDeployment(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+    /**
+     * Report download of specified release
+     *
+     * @param {string} deploymentKey deployment key
+     * 
+     * @param {object} releaseMetadata Deployment status metric properties
+     * 
+     * @param {string} [releaseMetadata.label]
+     * 
+     * @param {string} [releaseMetadata.appVersion]
+     * 
+     * @param {string} [releaseMetadata.previousDeploymentKey]
+     * 
+     * @param {string} [releaseMetadata.previousLabelOrAppVersion]
+     * 
+     * @param {string} [releaseMetadata.status]
+     * 
+     * @param {string} [releaseMetadata.clientUniqueId]
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -2780,17 +2931,27 @@ export interface Distribute {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getReleasesForDistributionGroup(distributionGroupName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getReleasesForDistributionGroup(distributionGroupName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    postDownloadStatusMetric(deploymentKey: string, releaseMetadata: models.LiveUpdateStatusMetricMetadata, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    postDownloadStatusMetric(deploymentKey: string, releaseMetadata: models.LiveUpdateStatusMetricMetadata, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
-     * Return detailed information about a distributed package in a given
-     * distribution group.
+     * Report Deployment status metric
      *
-     * @param {string} distributionGroupName The name of the distribution group.
+     * @param {string} deploymentKey deployment key
      * 
-     * @param {string} packageId For GET calls, this must be 'latest', specific
-     * package_id's are not supported at this time.
+     * @param {object} releaseMetadata Deployment status metric properties
+     * 
+     * @param {string} [releaseMetadata.label]
+     * 
+     * @param {string} [releaseMetadata.appVersion]
+     * 
+     * @param {string} [releaseMetadata.previousDeploymentKey]
+     * 
+     * @param {string} [releaseMetadata.previousLabelOrAppVersion]
+     * 
+     * @param {string} [releaseMetadata.status]
+     * 
+     * @param {string} [releaseMetadata.clientUniqueId]
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -2804,15 +2965,13 @@ export interface Distribute {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getLatestPackageForDistributionGroup(distributionGroupName: string, packageId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getLatestPackageForDistributionGroup(distributionGroupName: string, packageId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    postDeployStatusMetric(deploymentKey: string, releaseMetadata: models.LiveUpdateStatusMetricMetadata, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    postDeployStatusMetric(deploymentKey: string, releaseMetadata: models.LiveUpdateStatusMetricMetadata, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
-     * Return detailed information about distributed packages in a given
-     * distribution group.
+     * Gets a list of CodePush deployments (e.g. 'Staging', 'Production') for the
+     * given app
      *
-     * @param {string} distributionGroupName The name of the distribution group.
-     * 
      * @param {string} ownerName The name of the owner
      * 
      * @param {string} appName The name of the application
@@ -2825,8 +2984,63 @@ export interface Distribute {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getPackagesForDistributionGroup(distributionGroupName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getPackagesForDistributionGroup(distributionGroupName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    getDeployments(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Deployment[]>): void;
+    getDeployments(ownerName: string, appName: string, callback: ServiceCallback<models.Deployment[]>): void;
+
+    /**
+     * Creates a CodePush Deployment (e.g. 'Staging') for the given app
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {string} name
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.key]
+     * 
+     * @param {object} [options.latestRelease]
+     * 
+     * @param {string} [options.latestRelease.targetBinaryRange]
+     * 
+     * @param {string} [options.latestRelease.blobUrl]
+     * 
+     * @param {string} [options.latestRelease.description]
+     * 
+     * @param {boolean} [options.latestRelease.isDisabled]
+     * 
+     * @param {boolean} [options.latestRelease.isMandatory]
+     * 
+     * @param {string} [options.latestRelease.label]
+     * 
+     * @param {string} [options.latestRelease.originalDeployment] Set on 'Promote'
+     * 
+     * @param {string} [options.latestRelease.originalLabel] Set on 'Promote' and
+     * 'Rollback'
+     * 
+     * @param {string} [options.latestRelease.hash]
+     * 
+     * @param {string} [options.latestRelease.releasedBy]
+     * 
+     * @param {string} [options.latestRelease.releaseMethod] The release method is
+     * unknown if unspecified. Possible values include: 'Upload', 'Promote',
+     * 'Rollback'
+     * 
+     * @param {number} [options.latestRelease.rollout]
+     * 
+     * @param {number} [options.latestRelease.size]
+     * 
+     * @param {number} [options.latestRelease.uploadTime]
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    postDeployments(ownerName: string, appName: string, name: string, options: { key? : string, latestRelease? : models.LiveUpdateRelease, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Deployment>): void;
+    postDeployments(ownerName: string, appName: string, name: string, callback: ServiceCallback<models.Deployment>): void;
 }
 
 /**
@@ -3239,6 +3453,26 @@ export interface Analytics {
     eventPerDeviceCount(eventName: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.EventCountPerDevice>): void;
 
     /**
+     * Delete the set of Events with the specified event names
+     *
+     * @param {string} eventName The id of the event
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    eventsDelete(eventName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    eventsDelete(eventName: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+    /**
      * Count of active events in the time range ordered by event.
      *
      * @param {date} start Start date time in data in ISO 8601 date time format
@@ -3278,6 +3512,26 @@ export interface Analytics {
      */
     events(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], eventName? : string[], top? : number, skip? : number, inlinecount? : string, orderby? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Events>): void;
     events(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.Events>): void;
+
+    /**
+     * Delete the set of Events with the specified event names
+     *
+     * @param {string} eventName The id of the event
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    eventsDeleteLogs(eventName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    eventsDeleteLogs(eventName: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
      * Percentage of crash-free device by day in the time range based on the

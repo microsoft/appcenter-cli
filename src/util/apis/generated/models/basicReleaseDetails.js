@@ -16,7 +16,7 @@ var util = require('util');
  * @constructor
  * Basic information on a release
  *
- * @member {string} [id] ID identifying this unique release.
+ * @member {number} [id] ID identifying this unique release.
  * 
  * @member {string} [version] The release's version.<br>
  * For iOS: CFBundleVersion from info.plist.<br>
@@ -54,7 +54,7 @@ BasicReleaseDetails.prototype.mapper = function () {
           required: false,
           serializedName: 'id',
           type: {
-            name: 'String'
+            name: 'Number'
           }
         },
         version: {

@@ -15,7 +15,11 @@
  * @member {string} displayName The full name of the user. Might for example
  * be first and last name
  * 
+ * @member {string} joinedAt The date when the user joined the organization
+ * 
  * @member {string} name The unique name that is used to identify the user.
+ * 
+ * @member {string} role The role the user has within the organization
  * 
  */
 function OrganizationUserResponse() {
@@ -49,9 +53,23 @@ OrganizationUserResponse.prototype.mapper = function () {
             name: 'String'
           }
         },
+        joinedAt: {
+          required: true,
+          serializedName: 'joined_at',
+          type: {
+            name: 'String'
+          }
+        },
         name: {
           required: true,
           serializedName: 'name',
+          type: {
+            name: 'String'
+          }
+        },
+        role: {
+          required: true,
+          serializedName: 'role',
           type: {
             name: 'String'
           }

@@ -14,6 +14,10 @@
  * 
  * @member {string} name The name of the distribution group used in URLs
  * 
+ * @member {string} origin Indicates the origin source of the distribution
+ * group, it can be mobile-center or hockeyapp for now. Possible values
+ * include: 'mobile-center', 'hockeyapp'
+ * 
  */
 function DistributionGroupResponse() {
 }
@@ -42,6 +46,13 @@ DistributionGroupResponse.prototype.mapper = function () {
         name: {
           required: true,
           serializedName: 'name',
+          type: {
+            name: 'String'
+          }
+        },
+        origin: {
+          required: true,
+          serializedName: 'origin',
           type: {
             name: 'String'
           }

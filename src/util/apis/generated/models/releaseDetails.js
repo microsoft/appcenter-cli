@@ -16,7 +16,7 @@ var util = require('util');
  * @constructor
  * Details of an uploaded release
  *
- * @member {string} [id] ID identifying this unique release.
+ * @member {number} [id] ID identifying this unique release.
  * 
  * @member {string} [status] OBSOLETE. Will be removed in next version. The
  * availability concept is now replaced with distributed. Any 'available'
@@ -45,6 +45,9 @@ var util = require('util');
  * @member {number} [size] The release's size in bytes.
  * 
  * @member {string} [minOs] The release's minimum required operating system.
+ * 
+ * @member {string} [androidMinApiLevel] The release's minimum required
+ * Android API level.
  * 
  * @member {string} [fingerprint] MD5 checksum of the release binary.
  * 
@@ -85,7 +88,7 @@ ReleaseDetails.prototype.mapper = function () {
           required: false,
           serializedName: 'id',
           type: {
-            name: 'String'
+            name: 'Number'
           }
         },
         status: {
@@ -140,6 +143,13 @@ ReleaseDetails.prototype.mapper = function () {
         minOs: {
           required: false,
           serializedName: 'min_os',
+          type: {
+            name: 'String'
+          }
+        },
+        androidMinApiLevel: {
+          required: false,
+          serializedName: 'android_min_api_level',
           type: {
             name: 'String'
           }

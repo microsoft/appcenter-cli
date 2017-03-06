@@ -160,10 +160,10 @@ export interface AppPatchRequest {
  * @member {string} [name] The name of the app used in URLs
  * 
  * @member {string} os The OS the app will be running on. Possible values
- * include: 'iOS', 'Android'
+ * include: 'iOS', 'Android', 'Windows'
  * 
  * @member {string} platform The platform of the app. Possible values include:
- * 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
+ * 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
  * 
  */
 export interface AppRequest {
@@ -258,16 +258,16 @@ export interface GrantAdminRoleRequest {
 
 /**
  * @class
- * Initializes a new instance of the OrgPatchRequest class.
+ * Initializes a new instance of the OrganizationPatchRequest class.
  * @constructor
- * @member {string} [description] The organization's description
- * 
  * @member {string} [displayName] The full (friendly) name of the organization.
  * 
+ * @member {string} [name] The name of the organization used in URLs
+ * 
  */
-export interface OrgPatchRequest {
-  description?: string;
+export interface OrganizationPatchRequest {
   displayName?: string;
+  name?: string;
 }
 
 /**
@@ -285,6 +285,41 @@ export interface OrganizationRequest {
   displayName?: string;
   email?: string;
   name: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the OrganizationUserPatchRequest class.
+ * @constructor
+ * @member {string} [role] The user's role in the organizatiion. Possible
+ * values include: 'admin', 'collaborator'
+ * 
+ */
+export interface OrganizationUserPatchRequest {
+  role?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the UserInvitationPermissionsUpdateRequest class.
+ * @constructor
+ * @member {array} permissions The permissions the user has for the app in the
+ * invitation
+ * 
+ */
+export interface UserInvitationPermissionsUpdateRequest {
+  permissions: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the UserEmailRequest class.
+ * @constructor
+ * @member {string} userEmail The user's email address'
+ * 
+ */
+export interface UserEmailRequest {
+  userEmail: string;
 }
 
 /**
@@ -345,7 +380,7 @@ export interface UserUpdateRequestInternal {
  * @member {string} [app.name] The name of the app used in URLs
  * 
  * @member {string} [app.os] The OS the app will be running on. Possible
- * values include: 'iOS', 'Android'
+ * values include: 'iOS', 'Android', 'Windows'
  * 
  * @member {object} [app.owner]
  * 
@@ -364,7 +399,11 @@ export interface UserUpdateRequestInternal {
  * 'user'. Possible values include: 'org', 'user'
  * 
  * @member {string} [app.platform] The platform of the app. Possible values
- * include: 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
+ * include: 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
+ * 
+ * @member {string} [app.origin] The origin of this app can only be
+ * mobile-center or hockeyapp for now. Possible values include:
+ * 'mobile-center', 'hockeyapp'
  * 
  * @member {string} email The email address of the invited user
  * 
@@ -424,7 +463,7 @@ export interface AppInvitationDetailResponse {
  * @member {string} name The name of the app used in URLs
  * 
  * @member {string} os The OS the app will be running on. Possible values
- * include: 'iOS', 'Android'
+ * include: 'iOS', 'Android', 'Windows'
  * 
  * @member {object} owner
  * 
@@ -443,7 +482,10 @@ export interface AppInvitationDetailResponse {
  * 'user'. Possible values include: 'org', 'user'
  * 
  * @member {string} platform The platform of the app. Possible values include:
- * 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
+ * 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
+ * 
+ * @member {string} origin The origin of this app can only be mobile-center or
+ * hockeyapp for now. Possible values include: 'mobile-center', 'hockeyapp'
  * 
  */
 export interface AppResponse {
@@ -457,6 +499,7 @@ export interface AppResponse {
   os: string;
   owner: Owner;
   platform: string;
+  origin: string;
 }
 
 /**
@@ -524,10 +567,15 @@ export interface UserProfileResponse {
  * 
  * @member {string} name The name of the distribution group used in URLs
  * 
+ * @member {string} origin Indicates the origin source of the distribution
+ * group, it can be mobile-center or hockeyapp for now. Possible values
+ * include: 'mobile-center', 'hockeyapp'
+ * 
  */
 export interface DistributionGroupResponse {
   id: string;
   name: string;
+  origin: string;
 }
 
 /**
@@ -676,7 +724,8 @@ export interface OrgNameAvailabilityResponse {
  * @class
  * Initializes a new instance of the OrganizationResponse class.
  * @constructor
- * @member {string} id The unique id (UUID) of the organization
+ * @member {string} collaboratorRole The role the current user has within the
+ * organization
  * 
  * @member {string} displayName The display name of the organization
  * 
@@ -684,7 +733,7 @@ export interface OrgNameAvailabilityResponse {
  * 
  */
 export interface OrganizationResponse {
-  id: string;
+  collaboratorRole: string;
   displayName: string;
   name: string;
 }
@@ -698,13 +747,19 @@ export interface OrganizationResponse {
  * @member {string} displayName The full name of the user. Might for example
  * be first and last name
  * 
+ * @member {string} joinedAt The date when the user joined the organization
+ * 
  * @member {string} name The unique name that is used to identify the user.
+ * 
+ * @member {string} role The role the user has within the organization
  * 
  */
 export interface OrganizationUserResponse {
   email: string;
   displayName: string;
+  joinedAt: string;
   name: string;
+  role: string;
 }
 
 /**
@@ -730,9 +785,25 @@ export interface UserNameAvailabilityResponse {
  *
  * @member {string} [name] The repository name
  * 
+ * @member {object} [cloneUrl] URL used to clone the repository
+ * 
  */
 export interface SourceRepository {
   name?: string;
+  cloneUrl?: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DownloadContainer class.
+ * @constructor
+ * A download reference
+ *
+ * @member {string} uri Download URI
+ * 
+ */
+export interface DownloadContainer {
+  uri: string;
 }
 
 /**
@@ -1348,6 +1419,45 @@ export interface BuildPatch {
 
 /**
  * @class
+ * Initializes a new instance of the BuildLog class.
+ * @constructor
+ * @member {array} [value]
+ * 
+ */
+export interface BuildLog {
+  value?: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionRequest class.
+ * @constructor
+ * @member {string} distributionGroupId The distribution group ID
+ * 
+ * @member {string} [releaseNotes] The release notes
+ * 
+ */
+export interface DistributionRequest {
+  distributionGroupId: string;
+  releaseNotes?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionResponse class.
+ * @constructor
+ * @member {string} [status] Status of the Request
+ * 
+ * @member {string} [uploadId] A unique ID of the upload
+ * 
+ */
+export interface DistributionResponse {
+  status?: string;
+  uploadId?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the ValidationErrorResponse class.
  * @constructor
  * @member {string} id
@@ -1369,7 +1479,7 @@ export interface ValidationErrorResponse {
  * @constructor
  * Basic information on a release
  *
- * @member {string} [id] ID identifying this unique release.
+ * @member {number} [id] ID identifying this unique release.
  * 
  * @member {string} [version] The release's version.<br>
  * For iOS: CFBundleVersion from info.plist.<br>
@@ -1387,7 +1497,7 @@ export interface ValidationErrorResponse {
  * 
  */
 export interface BasicReleaseDetails {
-  id?: string;
+  id?: number;
   version?: string;
   shortVersion?: string;
   uploadedAt?: string;
@@ -1418,7 +1528,7 @@ export interface DistributionGroup {
  * @constructor
  * Details of an uploaded release
  *
- * @member {string} [id] ID identifying this unique release.
+ * @member {number} [id] ID identifying this unique release.
  * 
  * @member {string} [status] OBSOLETE. Will be removed in next version. The
  * availability concept is now replaced with distributed. Any 'available'
@@ -1448,6 +1558,9 @@ export interface DistributionGroup {
  * 
  * @member {string} [minOs] The release's minimum required operating system.
  * 
+ * @member {string} [androidMinApiLevel] The release's minimum required
+ * Android API level.
+ * 
  * @member {string} [fingerprint] MD5 checksum of the release binary.
  * 
  * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
@@ -1467,7 +1580,7 @@ export interface DistributionGroup {
  * 
  */
 export interface ReleaseDetails {
-  id?: string;
+  id?: number;
   status?: string;
   appName?: string;
   version?: string;
@@ -1476,6 +1589,7 @@ export interface ReleaseDetails {
   provisioningProfileName?: string;
   size?: number;
   minOs?: string;
+  androidMinApiLevel?: string;
   fingerprint?: string;
   uploadedAt?: string;
   downloadUrl?: string;
@@ -1871,6 +1985,88 @@ export interface AppVersion {
 
 /**
  * @class
+ * Initializes a new instance of the Exception class.
+ * @constructor
+ * a exception
+ *
+ * @member {string} [reason] Reason of the exception
+ * 
+ * @member {string} [type] Type of the exception (NSSomethingException,
+ * NullPointerException)
+ * 
+ * @member {array} frames frames of the excetpion
+ * 
+ * @member {boolean} [relevant] relevant exception (crashed)
+ * 
+ * @member {array} [innerExceptions]
+ * 
+ * @member {string} [platform] SDK/Platform this thread is beeing generated
+ * from. Possible values include: 'ios', 'android', 'xamarin',
+ * 'react-native', 'other'
+ * 
+ */
+export interface Exception {
+  reason?: string;
+  type?: string;
+  frames: StackFrame[];
+  relevant?: boolean;
+  innerExceptions?: Exception[];
+  platform?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the StackFrame class.
+ * @constructor
+ * a single frame of a stack trace
+ *
+ * @member {string} [address] address of the frame
+ * 
+ * @member {string} [className] name of the class
+ * 
+ * @member {string} [method] name of the method
+ * 
+ * @member {boolean} [classMethod] is a class method
+ * 
+ * @member {string} [file] name of the file
+ * 
+ * @member {number} [line] line number
+ * 
+ * @member {boolean} appCode this line isn't from any framework
+ * 
+ * @member {string} [frameworkName] Name of the framework
+ * 
+ * @member {string} codeRaw Raw frame string
+ * 
+ * @member {string} codeFormatted Formatted frame string
+ * 
+ * @member {string} [language] programming language of the frame. Possible
+ * values include: 'JavaScript', 'CSharp', 'Objective-C', 'Objective-Cpp',
+ * 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+ * 
+ * @member {boolean} [relevant] frame should be shown always
+ * 
+ * @member {string} [methodParams] parameters of the frames method
+ * 
+ */
+export interface StackFrame {
+  address?: string;
+  className?: string;
+  method?: string;
+  classMethod?: boolean;
+  file?: string;
+  line?: number;
+  appCode: boolean;
+  frameworkName?: string;
+  codeRaw: string;
+  codeFormatted: string;
+  language?: string;
+  relevant?: boolean;
+  methodParams?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the Stacktrace class.
  * @constructor
  * a stacktrace in a processed and prettyfied way
@@ -1952,88 +2148,6 @@ export interface Thread {
 
 /**
  * @class
- * Initializes a new instance of the StackFrame class.
- * @constructor
- * a single frame of a stack trace
- *
- * @member {string} [address] address of the frame
- * 
- * @member {string} [className] name of the class
- * 
- * @member {string} [method] name of the method
- * 
- * @member {boolean} [classMethod] is a class method
- * 
- * @member {string} [file] name of the file
- * 
- * @member {number} [line] line number
- * 
- * @member {boolean} appCode this line isn't from any framework
- * 
- * @member {string} [frameworkName] Name of the framework
- * 
- * @member {string} codeRaw Raw frame string
- * 
- * @member {string} codeFormatted Formatted frame string
- * 
- * @member {string} [language] programming language of the frame. Possible
- * values include: 'JavaScript', 'CSharp', 'Objective-C', 'Objective-Cpp',
- * 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
- * 
- * @member {boolean} [relevant] frame should be shown always
- * 
- * @member {string} [methodParams] parameters of the frames method
- * 
- */
-export interface StackFrame {
-  address?: string;
-  className?: string;
-  method?: string;
-  classMethod?: boolean;
-  file?: string;
-  line?: number;
-  appCode: boolean;
-  frameworkName?: string;
-  codeRaw: string;
-  codeFormatted: string;
-  language?: string;
-  relevant?: boolean;
-  methodParams?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the Exception class.
- * @constructor
- * a exception
- *
- * @member {string} [reason] Reason of the exception
- * 
- * @member {string} [type] Type of the exception (NSSomethingException,
- * NullPointerException)
- * 
- * @member {array} frames frames of the excetpion
- * 
- * @member {boolean} [relevant] relevant exception (crashed)
- * 
- * @member {array} [innerExceptions]
- * 
- * @member {string} [platform] SDK/Platform this thread is beeing generated
- * from. Possible values include: 'ios', 'android', 'xamarin',
- * 'react-native', 'other'
- * 
- */
-export interface Exception {
-  reason?: string;
-  type?: string;
-  frames: StackFrame[];
-  relevant?: boolean;
-  innerExceptions?: Exception[];
-  platform?: string;
-}
-
-/**
- * @class
  * Initializes a new instance of the ReasonStackFrame class.
  * @constructor
  * frame belonging to the reason of the crash
@@ -2060,6 +2174,10 @@ export interface Exception {
  * 
  * @member {string} [methodParams] parameters of the frames method
  * 
+ * @member {string} [exceptionType] Exception type.
+ * 
+ * @member {string} [osExceptionType] OS exception type. (aka. SIGNAL)
+ * 
  */
 export interface ReasonStackFrame {
   className?: string;
@@ -2072,6 +2190,8 @@ export interface ReasonStackFrame {
   codeFormatted?: string;
   language?: string;
   methodParams?: string;
+  exceptionType?: string;
+  osExceptionType?: string;
 }
 
 /**
@@ -2123,6 +2243,11 @@ export interface ReasonStackFrame {
  * 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
  * 
  * @member {string} [reasonFrame.methodParams] parameters of the frames method
+ * 
+ * @member {string} [reasonFrame.exceptionType] Exception type.
+ * 
+ * @member {string} [reasonFrame.osExceptionType] OS exception type. (aka.
+ * SIGNAL)
  * 
  * @member {boolean} fatal Crash or handled exception
  * 
@@ -2201,6 +2326,96 @@ export interface Crash {
   osType?: string;
   userName: string;
   userEmail?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the MissingSymbol class.
+ * @constructor
+ * missing symbol
+ *
+ * @member {string} symbolId symbol id
+ * 
+ * @member {string} name symbol name
+ * 
+ * @member {string} [platform] symbol plarform
+ * 
+ * @member {string} status symbol status. Possible values include: 'missing',
+ * 'ignored', 'available'
+ * 
+ */
+export interface MissingSymbol {
+  symbolId: string;
+  name: string;
+  platform?: string;
+  status: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the MissingSymbolCrashGroup class.
+ * @constructor
+ * missing symbol crash group object
+ *
+ * @member {string} symbolGroupId id of the symbol group
+ * 
+ * @member {number} [crashCount] number of crashes that belong to this group
+ * 
+ * @member {string} appId application id
+ * 
+ * @member {string} appVer application version
+ * 
+ * @member {string} appBuild application build
+ * 
+ * @member {date} lastModified last update date for the group
+ * 
+ * @member {array} missingSymbols
+ * 
+ * @member {string} status group status. Possible values include: 'active',
+ * 'pending', 'closed'
+ * 
+ */
+export interface MissingSymbolCrashGroup {
+  symbolGroupId: string;
+  crashCount?: number;
+  appId: string;
+  appVer: string;
+  appBuild: string;
+  lastModified: Date;
+  missingSymbols: MissingSymbol[];
+  status: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the MissingSymbolCrashGroupsResponse class.
+ * @constructor
+ * grouped by missing symbols crashes response object
+ *
+ * @member {number} totalCrashCount total number of cashes for all the groups
+ * 
+ * @member {array} groups
+ * 
+ */
+export interface MissingSymbolCrashGroupsResponse {
+  totalCrashCount: number;
+  groups: MissingSymbolCrashGroup[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the FailureResponse class.
+ * @constructor
+ * failure response object
+ *
+ * @member {string} code
+ * 
+ * @member {string} message
+ * 
+ */
+export interface FailureResponse {
+  code: string;
+  message: string;
 }
 
 /**
@@ -3046,6 +3261,152 @@ export interface EventPropertyValue {
   name?: string;
   count?: number;
   previousCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationsListResult class.
+ * @constructor
+ * List of notifications
+ *
+ * @member {array} [values]
+ * 
+ * @member {number} [total] the total count of notifications
+ * 
+ * @member {string} [nextLink]
+ * 
+ */
+export interface NotificationsListResult {
+  values?: NotificationDetailsResult[];
+  total?: number;
+  nextLink?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationDefinition class.
+ * @constructor
+ * Notification definition object
+ *
+ * @member {string} name Notification name
+ * 
+ * @member {string} [title] Notification title
+ * 
+ * @member {string} body Notification body
+ * 
+ * @member {string} platformType Notification platform type. Possible values
+ * include: 'apns', 'gcm'
+ * 
+ * @member {object} [notificationTarget]
+ * 
+ * @member {string} [notificationTarget.type] Polymorhpic Discriminator
+ * 
+ * @member {object} [customData] Notification custom data(priority,
+ * expiration, etc.)
+ * 
+ */
+export interface NotificationDefinition {
+  name: string;
+  title?: string;
+  body: string;
+  platformType: string;
+  notificationTarget?: NotificationTarget;
+  customData?: { [propertyName: string]: string };
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationResult class.
+ * @constructor
+ * Notification result
+ *
+ * @member {date} [sendTime] Notification send time
+ * 
+ */
+export interface NotificationResult extends NotificationDefinition {
+  sendTime?: Date;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationDetailsResult class.
+ * @constructor
+ * Notification statistics
+ *
+ * @member {string} [notificationId] Notification id.
+ * 
+ * @member {number} [pnsSendFailure] Number of the notifications failed to
+ * send to the push provider.
+ * 
+ * @member {number} [pnsSendSuccess] Number of the notifications successfully
+ * sent to push the provider.
+ * 
+ * @member {string} [state] State of the notification. Possible values
+ * include: 'Cancelled', 'Completed', 'Enqueued', 'Processing', 'Unknown'
+ * 
+ */
+export interface NotificationDetailsResult extends NotificationResult {
+  notificationId?: string;
+  pnsSendFailure?: number;
+  pnsSendSuccess?: number;
+  state?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationTarget class.
+ * @constructor
+ * Generic notification target.
+ *
+ * @member {string} type Polymorhpic Discriminator
+ * 
+ */
+export interface NotificationTarget {
+  type: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationSendSucceededResult class.
+ * @constructor
+ * Notification send succeeded.
+ *
+ * @member {string} [notificationId] The unique notification identifier.
+ * 
+ */
+export interface NotificationSendSucceededResult {
+  notificationId?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationConfig class.
+ * @constructor
+ * Generic notification configuration.
+ *
+ * @member {string} type Polymorhpic Discriminator
+ * 
+ */
+export interface NotificationConfig {
+  type: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationConfigResult class.
+ * @constructor
+ * Generic notification configuration result.
+ *
+ * @member {string} status Configuration state. Possible values include:
+ * 'configured', 'configuring', 'expired', 'not_configured', 'deleted',
+ * 'deleting'
+ * 
+ * @member {string} type Polymorhpic Discriminator
+ * 
+ */
+export interface NotificationConfigResult {
+  status: string;
+  type: string;
 }
 
 /**
@@ -4182,6 +4543,188 @@ export interface PushConfigGcmCredential {
 
 /**
  * @class
+ * Initializes a new instance of the Deployment class.
+ * @constructor
+ * @member {string} [key]
+ * 
+ * @member {string} name
+ * 
+ * @member {object} [latestRelease]
+ * 
+ * @member {string} [latestRelease.targetBinaryRange]
+ * 
+ * @member {string} [latestRelease.blobUrl]
+ * 
+ * @member {string} [latestRelease.description]
+ * 
+ * @member {boolean} [latestRelease.isDisabled]
+ * 
+ * @member {boolean} [latestRelease.isMandatory]
+ * 
+ * @member {string} [latestRelease.label]
+ * 
+ * @member {string} [latestRelease.originalDeployment] Set on 'Promote'
+ * 
+ * @member {string} [latestRelease.originalLabel] Set on 'Promote' and
+ * 'Rollback'
+ * 
+ * @member {string} [latestRelease.hash]
+ * 
+ * @member {string} [latestRelease.releasedBy]
+ * 
+ * @member {string} [latestRelease.releaseMethod] The release method is
+ * unknown if unspecified. Possible values include: 'Upload', 'Promote',
+ * 'Rollback'
+ * 
+ * @member {number} [latestRelease.rollout]
+ * 
+ * @member {number} [latestRelease.size]
+ * 
+ * @member {number} [latestRelease.uploadTime]
+ * 
+ */
+export interface Deployment {
+  key?: string;
+  name: string;
+  latestRelease?: LiveUpdateRelease;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the LiveUpdateRelease class.
+ * @constructor
+ * @member {string} [targetBinaryRange]
+ * 
+ * @member {string} [blobUrl]
+ * 
+ * @member {string} [description]
+ * 
+ * @member {boolean} [isDisabled]
+ * 
+ * @member {boolean} [isMandatory]
+ * 
+ * @member {string} [label]
+ * 
+ * @member {string} [originalDeployment] Set on 'Promote'
+ * 
+ * @member {string} [originalLabel] Set on 'Promote' and 'Rollback'
+ * 
+ * @member {string} [hash]
+ * 
+ * @member {string} [releasedBy]
+ * 
+ * @member {string} [releaseMethod] The release method is unknown if
+ * unspecified. Possible values include: 'Upload', 'Promote', 'Rollback'
+ * 
+ * @member {number} [rollout]
+ * 
+ * @member {number} [size]
+ * 
+ * @member {number} [uploadTime]
+ * 
+ */
+export interface LiveUpdateRelease {
+  targetBinaryRange?: string;
+  blobUrl?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  label?: string;
+  originalDeployment?: string;
+  originalLabel?: string;
+  hash?: string;
+  releasedBy?: string;
+  releaseMethod?: string;
+  rollout?: number;
+  size?: number;
+  uploadTime?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DeploymentModification class.
+ * @constructor
+ * @member {string} [name]
+ * 
+ */
+export interface DeploymentModification {
+  name?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the LiveUpdateReleaseModification class.
+ * @constructor
+ * @member {string} [targetBinaryRange]
+ * 
+ * @member {string} [description]
+ * 
+ * @member {boolean} [isDisabled]
+ * 
+ * @member {boolean} [isMandatory]
+ * 
+ * @member {number} [rollout]
+ * 
+ */
+export interface LiveUpdateReleaseModification {
+  targetBinaryRange?: string;
+  description?: string;
+  isDisabled?: boolean;
+  isMandatory?: boolean;
+  rollout?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the LiveUpdateReleaseMetric class.
+ * @constructor
+ * @member {string} label
+ * 
+ * @member {number} active
+ * 
+ * @member {number} [downloaded]
+ * 
+ * @member {number} [failed]
+ * 
+ * @member {number} [installed]
+ * 
+ */
+export interface LiveUpdateReleaseMetric {
+  label: string;
+  active: number;
+  downloaded?: number;
+  failed?: number;
+  installed?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the LiveUpdateStatusMetricMetadata class.
+ * @constructor
+ * @member {string} [label]
+ * 
+ * @member {string} [appVersion]
+ * 
+ * @member {string} [previousDeploymentKey]
+ * 
+ * @member {string} [previousLabelOrAppVersion]
+ * 
+ * @member {string} [status]
+ * 
+ * @member {string} [clientUniqueId]
+ * 
+ */
+export interface LiveUpdateStatusMetricMetadata {
+  label?: string;
+  appVersion?: string;
+  previousDeploymentKey?: string;
+  previousLabelOrAppVersion?: string;
+  status?: string;
+  clientUniqueId?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the CrashGroups class.
  * @constructor
  * @member {array} crashGroupsProperty
@@ -4203,10 +4746,10 @@ export interface CrashGroups {
  * @member {string} [name] The name of the app used in URLs
  * 
  * @member {string} os The OS the app will be running on. Possible values
- * include: 'iOS', 'Android'
+ * include: 'iOS', 'Android', 'Windows'
  * 
  * @member {string} platform The platform of the app. Possible values include:
- * 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
+ * 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
  * 
  */
 export interface App {

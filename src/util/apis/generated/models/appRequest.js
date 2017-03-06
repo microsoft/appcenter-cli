@@ -18,10 +18,10 @@
  * @member {string} [name] The name of the app used in URLs
  * 
  * @member {string} os The OS the app will be running on. Possible values
- * include: 'iOS', 'Android'
+ * include: 'iOS', 'Android', 'Windows'
  * 
  * @member {string} platform The platform of the app. Possible values include:
- * 'Objective-C-Swift', 'Java', 'React-Native', 'Xamarin'
+ * 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
  * 
  */
 function AppRequest() {
