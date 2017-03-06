@@ -68,7 +68,7 @@ export class EspressoPreparer {
   }
 
   private async detectTestApkPathFromBuildDir(): Promise<string> {
-    let apkPattern = path.join(this.buildDir,"*androidTest.apk");
+    let apkPattern = path.join(this.buildDir, "*androidTest.apk");
     let files = await pglob.glob(apkPattern);
     
     if (files.length === 0) {
