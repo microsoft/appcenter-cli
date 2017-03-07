@@ -48,7 +48,7 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | `mobile-center telemetry off` | Turn off the sending of telemetry |
 | `mobile-center telemetry on` | Turn on the sending of telemetry |
 | | |
-| `mobile-center test status` | Checks status of started test run |
+| `mobile-center test status` | Checks status of started test run. |
 | `mobile-center test generate appium` | Generates a Xamarin.UITest project |
 | `mobile-center test generate uitest` | Generates a Xamarin.UITest project |
 | `mobile-center test prepare appium` | Creates artifacts directory with Appium tests |
