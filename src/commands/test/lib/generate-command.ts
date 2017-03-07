@@ -1,3 +1,4 @@
+const fetch = require('node-fetch');
 import * as fs from 'fs';
 import { Command, CommandArgs, CommandResult,
          help, success, longName, required, hasArg,
@@ -6,7 +7,6 @@ import { MobileCenterClient } from "../../../util/apis";
 import { Messages } from "../lib/help-messages";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as JsZip from "jszip";
-import * as phttps from "../../../util/misc/promisfied-https";
 import * as JsZipHelper from "../../../util/misc/jszip-helper";
 
 export abstract class GenerateCommand extends Command {
@@ -55,14 +55,10 @@ export abstract class GenerateCommand extends Command {
       }
     }
 
-    let zipFilePath = (await pfs.openTempFile(null)).path;
-    
-    await phttps.getToFile(await this.zipUrl(), zipFilePath);
-
-    let zipFile = await pfs.readFile(zipFilePath);
-    let zip = await new JsZip().loadAsync(zipFile);
+    let zipUrl = await this.zipUrl();
+    let zipResponse = await fetch(zipUrl);
+    let zip = await new JsZip().loadAsync(await zipResponse.buffer());
     await JsZipHelper.unpackZipToPath(this.outputPath, zip);
-    await pfs.unlink(zipFilePath);
 
     return success();
   }
