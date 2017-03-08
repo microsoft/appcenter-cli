@@ -24,6 +24,7 @@
     "lodash": "registry:npm/lodash#4.0.0+20161015015725",
     "minimist": "registry:npm/minimist#1.0.0+20160723033700",
     "mkdirp": "registry:npm/mkdirp#0.5.0+20160723033700",
+    "node-fetch": "registry:dt/node-fetch#1.6.0+20161224095027",
     "request": "registry:npm/request#2.69.0+20160428223725",
     "rimraf": "registry:npm/rimraf#2.5.0+20160723033700",
     "wordwrap": "registry:npm/wordwrap#1.0.0+20160723033700"
