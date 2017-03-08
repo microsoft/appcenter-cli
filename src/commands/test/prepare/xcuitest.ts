@@ -13,7 +13,6 @@ export default class PrepareXCUITestCommand extends PrepareTestsCommand {
 
   @help(Messages.TestCloud.Arguments.XCUITestIpaPath)
   @longName("test-ipa-path")
-  @required
   @hasArg
   testIpaPath: string;
 
@@ -24,5 +23,14 @@ export default class PrepareXCUITestCommand extends PrepareTestsCommand {
   protected prepareManifest(): Promise<string> {
     let preparer = new XCUITestPreparer(this.artifactsDir, this.buildDir, this.testIpaPath);
     return preparer.prepare();
+  }
+
+  protected async validateOptions(): Promise<void> {
+    if (this.buildDir && this.testIpaPath) {
+      throw Error("--build-dir cannot be used with --test-ipa-path");
+    }
+    if (!(this.buildDir || this.testIpaPath)) {
+      throw Error("--build-dir or --test-ipa-path is required");
+    }
   }
 }
