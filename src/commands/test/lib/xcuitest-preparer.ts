@@ -29,7 +29,7 @@ export class XCUITestPreparer {
   }
 
   public async prepare(): Promise<string> {
-    if (!pfs.exists(this.artifactsDir)) {
+    if (!await pfs.exists(this.artifactsDir)) {
       await pfs.mkdir(this.artifactsDir);
     }
 
