@@ -12,70 +12,33 @@ var util = require('util');
 
 /**
  * @class
- * Initializes a new instance of the AppResponse class.
+ * Initializes a new instance of the AppResponseInternal class.
  * @constructor
- * @member {string} id The unique ID (UUID) of the app
+ * @member {array} [featureFlags] The feature flags that are enabled for this
+ * app
  * 
- * @member {string} appSecret A unique and secret key used to identify the app
- * in communication with the ingestion endpoint for crash reporting and
- * analytics
- * 
- * @member {string} [azureSubscriptionId] The unique ID (UUID) of the Azure
- * subscription associate with the app
- * 
- * @member {string} [description] The description of the app
- * 
- * @member {string} displayName The display name of the app
- * 
- * @member {string} [iconUrl] The string representation of the URL pointing to
- * the app's icon
- * 
- * @member {string} name The name of the app used in URLs
- * 
- * @member {array} [memberPermissions] The permissions of the calling user
- * 
- * @member {string} os The OS the app will be running on. Possible values
- * include: 'iOS', 'Android', 'Windows'
- * 
- * @member {object} owner
- * 
- * @member {string} [owner.id] The unique id (UUID) of the owner
- * 
- * @member {string} [owner.avatarUrl] The avatar URL of the owner
- * 
- * @member {string} [owner.displayName] The owner's display name
- * 
- * @member {string} [owner.email] The owner's email address
- * 
- * @member {string} [owner.name] The unique name that used to identify the
- * owner
- * 
- * @member {string} [owner.type] The owner type. Can either be 'org' or
- * 'user'. Possible values include: 'org', 'user'
- * 
- * @member {string} platform The platform of the app. Possible values include:
- * 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
- * 
- * @member {string} origin The origin of this app can only be mobile-center or
- * hockeyapp for now. Possible values include: 'mobile-center', 'hockeyapp'
+ * @member {array} [repositories] The repositories associated with this app
  * 
  */
-function AppResponse() {
+function AppResponseInternal() {
+  AppResponseInternal['super_'].call(this);
 }
 
+util.inherits(AppResponseInternal, models['AppResponse']);
+
 /**
- * Defines the metadata of AppResponse
+ * Defines the metadata of AppResponseInternal
  *
- * @returns {object} metadata of AppResponse
+ * @returns {object} metadata of AppResponseInternal
  *
  */
-AppResponse.prototype.mapper = function () {
+AppResponseInternal.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'AppResponse',
+    serializedName: 'AppResponseInternal',
     type: {
       name: 'Composite',
-      className: 'AppResponse',
+      className: 'AppResponseInternal',
       modelProperties: {
         id: {
           required: true,
@@ -168,10 +131,39 @@ AppResponse.prototype.mapper = function () {
           type: {
             name: 'String'
           }
+        },
+        featureFlags: {
+          required: false,
+          serializedName: 'feature_flags',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'StringElementType',
+                type: {
+                  name: 'String'
+                }
+            }
+          }
+        },
+        repositories: {
+          required: false,
+          serializedName: 'repositories',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'AppResponseInternalRepositoriesItemElementType',
+                type: {
+                  name: 'Composite',
+                  className: 'AppResponseInternalRepositoriesItem'
+                }
+            }
+          }
         }
       }
     }
   };
 };
 
-module.exports = AppResponse;
+module.exports = AppResponseInternal;

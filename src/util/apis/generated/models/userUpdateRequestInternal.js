@@ -18,6 +18,8 @@
  * @member {string} [nextNpsSurveyDate] The date in the future when the user
  * should be checked again for NPS eligibility
  * 
+ * @member {string} [email] The email address for this user
+ * 
  */
 function UserUpdateRequestInternal() {
 }
@@ -53,6 +55,13 @@ UserUpdateRequestInternal.prototype.mapper = function () {
         nextNpsSurveyDate: {
           required: false,
           serializedName: 'next_nps_survey_date',
+          type: {
+            name: 'String'
+          }
+        },
+        email: {
+          required: false,
+          serializedName: 'email',
           type: {
             name: 'String'
           }

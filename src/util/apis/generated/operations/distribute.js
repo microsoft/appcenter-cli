@@ -25,15 +25,18 @@ function Distribute(client) {
 }
 
 /**
- * Get a release with id `release_id`. if `release_id` is `latest`, return the
- * latest release that was distributed to the current user (from all the
+ * Get a release with hash `release_hash`. If multiple releases matches the
+ * release_hash, return the latest one. If `release_hash` is `latest`, return
+ * the latest release that was distributed to the current user (from all the
  * distribution groups).
  *
  * @param {string} appSecret The secret of the target application
  * 
- * @param {string} releaseId The ID of the release, or `latest` to get the
+ * @param {string} releaseHash The hash of the release, or `latest` to get the
  * latest release from all the distribution groups assigned to the current
  * user.
+ * 
+ * @param {string} internalAppId The app ID
  * 
  * @param {object} [options] Optional Parameters.
  * 
@@ -52,7 +55,7 @@ function Distribute(client) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Distribute.prototype.getReleaseOrLatestReleaseBySecret = function (appSecret, releaseId, options, callback) {
+Distribute.prototype.getReleaseOrLatestReleaseByHash = function (appSecret, releaseHash, internalAppId, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -66,8 +69,11 @@ Distribute.prototype.getReleaseOrLatestReleaseBySecret = function (appSecret, re
     if (appSecret === null || appSecret === undefined || typeof appSecret.valueOf() !== 'string') {
       throw new Error('appSecret cannot be null or undefined and it must be of type string.');
     }
-    if (releaseId === null || releaseId === undefined || typeof releaseId.valueOf() !== 'string') {
-      throw new Error('releaseId cannot be null or undefined and it must be of type string.');
+    if (releaseHash === null || releaseHash === undefined || typeof releaseHash.valueOf() !== 'string') {
+      throw new Error('releaseHash cannot be null or undefined and it must be of type string.');
+    }
+    if (internalAppId === null || internalAppId === undefined || typeof internalAppId.valueOf() !== 'string') {
+      throw new Error('internalAppId cannot be null or undefined and it must be of type string.');
     }
   } catch (error) {
     return callback(error);
@@ -75,9 +81,9 @@ Distribute.prototype.getReleaseOrLatestReleaseBySecret = function (appSecret, re
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/sdk/apps/{app_secret}/releases/{release_id}';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/sdk/apps/{app_secret}/releases/{release_hash}';
   requestUrl = requestUrl.replace('{app_secret}', encodeURIComponent(appSecret));
-  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId));
+  requestUrl = requestUrl.replace('{release_hash}', encodeURIComponent(releaseHash));
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -85,6 +91,9 @@ Distribute.prototype.getReleaseOrLatestReleaseBySecret = function (appSecret, re
   httpRequest.headers = {};
   httpRequest.url = requestUrl;
   // Set Headers
+  if (internalAppId !== undefined && internalAppId !== null) {
+    httpRequest.headers['internal-app-id'] = internalAppId;
+  }
   if(options) {
     for(var headerName in options['customHeaders']) {
       if (options['customHeaders'].hasOwnProperty(headerName)) {
@@ -100,7 +109,7 @@ Distribute.prototype.getReleaseOrLatestReleaseBySecret = function (appSecret, re
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 404 && statusCode !== 500) {
+    if (statusCode !== 200 && statusCode !== 404 && statusCode !== 500) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -142,7 +151,7 @@ Distribute.prototype.getReleaseOrLatestReleaseBySecret = function (appSecret, re
       }
     }
     // Deserialize Response
-    if (statusCode === 400) {
+    if (statusCode === 404) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
@@ -159,7 +168,7 @@ Distribute.prototype.getReleaseOrLatestReleaseBySecret = function (appSecret, re
       }
     }
     // Deserialize Response
-    if (statusCode === 404) {
+    if (statusCode === 500) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
@@ -173,23 +182,6 @@ Distribute.prototype.getReleaseOrLatestReleaseBySecret = function (appSecret, re
         deserializationError2.request = msRest.stripRequest(httpRequest);
         deserializationError2.response = msRest.stripResponse(response);
         return callback(deserializationError2);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 500) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError3 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError3.request = msRest.stripRequest(httpRequest);
-        deserializationError3.response = msRest.stripResponse(response);
-        return callback(deserializationError3);
       }
     }
 
@@ -1500,7 +1492,7 @@ Distribute.prototype.deleteReleaseForDistributionGroup = function (distributionG
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 404) {
+    if (statusCode !== 200 && statusCode !== 403 && statusCode !== 404) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -1548,7 +1540,7 @@ Distribute.prototype.deleteReleaseForDistributionGroup = function (distributionG
       }
     }
     // Deserialize Response
-    if (statusCode === 404) {
+    if (statusCode === 403) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
@@ -1562,6 +1554,23 @@ Distribute.prototype.deleteReleaseForDistributionGroup = function (distributionG
         deserializationError1.request = msRest.stripRequest(httpRequest);
         deserializationError1.response = msRest.stripResponse(response);
         return callback(deserializationError1);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 404) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError2 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError2.request = msRest.stripRequest(httpRequest);
+        deserializationError2.response = msRest.stripResponse(response);
+        return callback(deserializationError2);
       }
     }
 

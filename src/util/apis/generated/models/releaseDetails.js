@@ -30,6 +30,8 @@ var util = require('util');
  * @member {string} [appName] The app's name (extracted from the uploaded
  * release).
  * 
+ * @member {string} [appDisplayName] The app's display name.
+ * 
  * @member {string} [version] The release's version.<br>
  * For iOS: CFBundleVersion from info.plist.
  * For Android: android:versionCode from AppManifest.xml.
@@ -48,6 +50,8 @@ var util = require('util');
  * 
  * @member {string} [androidMinApiLevel] The release's minimum required
  * Android API level.
+ * 
+ * @member {string} [bundleIdentifier] The identifier of the apps bundle.
  * 
  * @member {string} [fingerprint] MD5 checksum of the release binary.
  * 
@@ -105,6 +109,13 @@ ReleaseDetails.prototype.mapper = function () {
             name: 'String'
           }
         },
+        appDisplayName: {
+          required: false,
+          serializedName: 'app_display_name',
+          type: {
+            name: 'String'
+          }
+        },
         version: {
           required: false,
           serializedName: 'version',
@@ -150,6 +161,13 @@ ReleaseDetails.prototype.mapper = function () {
         androidMinApiLevel: {
           required: false,
           serializedName: 'android_min_api_level',
+          type: {
+            name: 'String'
+          }
+        },
+        bundleIdentifier: {
+          required: false,
+          serializedName: 'bundle_identifier',
           type: {
             name: 'String'
           }

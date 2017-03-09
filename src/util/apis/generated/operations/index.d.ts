@@ -17,6 +17,40 @@ import * as models from '../models';
 export interface Account {
 
     /**
+     * Rejects a pending organization invitation
+     *
+     * @param {string} invitationToken The app invitation token that was sent to
+     * the user
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    rejectOrganizationInvitation(invitationToken: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    rejectOrganizationInvitation(invitationToken: string, callback: ServiceCallback<models.ErrorResponse>): void;
+
+    /**
+     * Accepts a pending organization invitation for the specified user
+     *
+     * @param {string} invitationToken The app invitation token that was sent to
+     * the user
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    acceptOrganizationInvitation(invitationToken: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    acceptOrganizationInvitation(invitationToken: string, callback: ServiceCallback<models.ErrorResponse>): void;
+
+    /**
      * Accepts all pending invitations to distribution groups for the specified
      * user
      *
@@ -103,7 +137,7 @@ export interface Account {
      * 
      * @param {string} appName The name of the application
      * 
-     * @param {string} userEmail The email of the user to invite
+     * @param {string} userEmail The user email of the user to delete
      * 
      * @param {object} [options] Optional Parameters.
      * 
@@ -115,6 +149,28 @@ export interface Account {
      */
     deleteAppUser(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
     deleteAppUser(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<models.ErrorResponse>): void;
+
+    /**
+     * Update user permission for the app
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {string} userEmail The user email of the user to delete
+     * 
+     * @param {array} permissions The permissions the user has for the app
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    patch(ownerName: string, appName: string, userEmail: string, permissions: string[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    patch(ownerName: string, appName: string, userEmail: string, permissions: string[], callback: ServiceCallback<models.ErrorResponse>): void;
 
     /**
      * Returns the users associated with the app specified with the given app name
@@ -562,15 +618,18 @@ export interface Account {
 export interface Distribute {
 
     /**
-     * Get a release with id `release_id`. if `release_id` is `latest`, return the
-     * latest release that was distributed to the current user (from all the
+     * Get a release with hash `release_hash`. If multiple releases matches the
+     * release_hash, return the latest one. If `release_hash` is `latest`, return
+     * the latest release that was distributed to the current user (from all the
      * distribution groups).
      *
      * @param {string} appSecret The secret of the target application
      * 
-     * @param {string} releaseId The ID of the release, or `latest` to get the
+     * @param {string} releaseHash The hash of the release, or `latest` to get the
      * latest release from all the distribution groups assigned to the current
      * user.
+     * 
+     * @param {string} internalAppId The app ID
      * 
      * @param {object} [options] Optional Parameters.
      * 
@@ -580,8 +639,8 @@ export interface Distribute {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getReleaseOrLatestReleaseBySecret(appSecret: string, releaseId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getReleaseOrLatestReleaseBySecret(appSecret: string, releaseId: string, callback: ServiceCallback<any>): void;
+    getReleaseOrLatestReleaseByHash(appSecret: string, releaseHash: string, internalAppId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getReleaseOrLatestReleaseByHash(appSecret: string, releaseHash: string, internalAppId: string, callback: ServiceCallback<any>): void;
 
     /**
      * Get a release with id `release_id`. if `release_id` is `latest`, return the
@@ -1401,8 +1460,8 @@ export interface BuildOperations {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getCommits(shaCollection: string, ownerName: string, appName: string, options: { form? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Branch[]>): void;
-    getCommits(shaCollection: string, ownerName: string, appName: string, callback: ServiceCallback<models.Branch[]>): void;
+    getCommits(shaCollection: string, ownerName: string, appName: string, options: { form? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CommitDetails[]>): void;
+    getCommits(shaCollection: string, ownerName: string, appName: string, callback: ServiceCallback<models.CommitDetails[]>): void;
 
     /**
      * Get the build log
@@ -1430,7 +1489,7 @@ export interface BuildOperations {
      * @param {number} buildId The build ID
      * 
      * @param {string} downloadType The download type. Possible values include:
-     * 'build', 'symbols', 'logs'
+     * 'build', 'symbols', 'logs', 'test-report-preview'
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -1515,16 +1574,34 @@ export interface BuildOperations {
     updateBuildStatus(buildId: number, ownerName: string, appName: string, callback: ServiceCallback<models.Build>): void;
 
     /**
+     * Application specific build service status
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getV01AppsByOwnerNameByAppNameBuildServiceStatus(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BuildServiceStatusResponse>): void;
+    getV01AppsByOwnerNameByAppNameBuildServiceStatus(ownerName: string, appName: string, callback: ServiceCallback<models.BuildServiceStatusResponse>): void;
+
+    /**
      * Returns the projects in the repository for the branch, for all toolsets
      *
      * @param {string} branch The branch name
      * 
      * @param {string} os The desired OS for the project scan; normally the same
-     * as the app OS. Possible values include: 'iOS', 'Android'
+     * as the app OS. Possible values include: 'iOS', 'Android', 'Windows'
      * 
      * @param {string} platform The desired platform for the project scan.
      * Possible values include: 'Objective-C-Swift', 'React-Native', 'Xamarin',
-     * 'Java'
+     * 'Java', 'UWP'
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -1662,8 +1739,8 @@ export interface BuildOperations {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    queueBuild(branch: string, ownerName: string, appName: string, options: { sourceVersion? : string, debug? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Build[]>): void;
-    queueBuild(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.Build[]>): void;
+    queueBuild(branch: string, ownerName: string, appName: string, options: { sourceVersion? : string, debug? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Build>): void;
+    queueBuild(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.Build>): void;
 
     /**
      * Returns the list of Git branches for this application
@@ -3162,6 +3239,24 @@ export interface Analytics {
     sessionCounts(start: Date|string, interval: string, ownerName: string, appName: string, callback: ServiceCallback<models.SessionCounts>): void;
 
     /**
+     * Get list of sample devices.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getSampleDevices(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SampleDevices>): void;
+    getSampleDevices(ownerName: string, appName: string, callback: ServiceCallback<models.SampleDevices>): void;
+
+    /**
      * Places in the time range
      *
      * @param {date} start Start date time in data in ISO 8601 date time format
@@ -3706,6 +3801,86 @@ export interface Analytics {
      */
     crashCounts(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashCounts>): void;
     crashCounts(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashCounts>): void;
+
+    /**
+     * Returns whether audience definition exists.
+     *
+     * @param {string} audienceName The name of the audience
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    audienceNameExists(audienceName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    audienceNameExists(audienceName: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+    /**
+     * Gets audience definition.
+     *
+     * @param {string} audienceName The name of the audience
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getAudience(audienceName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Audience>): void;
+    getAudience(audienceName: string, ownerName: string, appName: string, callback: ServiceCallback<models.Audience>): void;
+
+    /**
+     * Creates or updates audience definition.
+     *
+     * @param {string} audienceName The name of the audience
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {string} definition Audience definition in OData format.
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    createOrUpdateAudience(audienceName: string, ownerName: string, appName: string, definition: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Audience>): void;
+    createOrUpdateAudience(audienceName: string, ownerName: string, appName: string, definition: string, callback: ServiceCallback<models.Audience>): void;
+
+    /**
+     * Get list of audiences.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    listAudiences(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AudienceListResult>): void;
+    listAudiences(ownerName: string, appName: string, callback: ServiceCallback<models.AudienceListResult>): void;
 
     /**
      * Count of active devices by interval in the time range.
