@@ -33,10 +33,9 @@ export class EspressoPreparer {
   public async prepare(): Promise<string> {
     this.validateEitherBuildDirOrTestApkPath();
     if (this.testApkPath) {
-      await this.validatePathExists(
-                    this.testApkPath,
-                    true,
-                    `File not found for test apk path: "${this.testApkPath}"`);
+      if (!await pfs.fileExists(this.testApkPath)) {
+        throw new Error(`File not found for test apk path: "${this.testApkPath}"`);
+      }
       await pfs.cpFile(this.testApkPath, path.join(this.artifactsDir, path.basename(this.testApkPath)));
     }
     else {
@@ -70,10 +69,9 @@ export class EspressoPreparer {
   }
 
   private async validateBuildDirExists() {
-    await this.validatePathExists(
-      this.buildDir,
-      false,
-      `Espresso build directory "${this.buildDir}" doesn't exist`);
+    if (!await pfs.directoryExists(this.buildDir)) {
+      throw new Error(`Espresso build directory "${this.buildDir}" doesn't exist`);
+    }
   }
 
   private async validateTestApkExists(): Promise<void> {
@@ -93,21 +91,6 @@ export class EspressoPreparer {
     else {
       let apkPath = files[files.length - 1];
       return apkPath;
-    }
-  }
-
-  private async validatePathExists(path: string, isFile: boolean, errorMessage: string): Promise<void> {
-    let stats: fs.Stats = null;
-    
-    try {
-      stats = await pfs.stat(path);
-    }
-    catch (err) {
-      throw new Error(errorMessage);
-    }
-
-    if (isFile !== stats.isFile()) {
-      throw new Error(errorMessage);
     }
   }
 

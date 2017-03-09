@@ -36,10 +36,9 @@ export class XCUITestPreparer {
     if (this.buildDir) {
       await this.generateTestIpa();
     } else {
-      await this.validatePathExists(
-        this.testIpaPath,
-        true,
-        `File not found for test ipa path: "${this.testIpaPath}"`);
+      if (!await pfs.fileExists(this.testIpaPath)) {
+        throw new Error(`File not found for test ipa path: "${this.testIpaPath}"`);
+      }
       await pfs.cpFile(this.testIpaPath, path.join(this.artifactsDir, path.basename(this.testIpaPath)));
     }
   
@@ -49,20 +48,6 @@ export class XCUITestPreparer {
     await pfs.writeFile(manifestPath, manifestJson);
 
     return manifestPath;
-  }
-
-  private async validatePathExists(path: string, isFile: boolean, errorMessage: string): Promise<void> {
-    let stats: fs.Stats = null;
-    
-    try {
-      stats = await pfs.stat(path);
-    }
-    catch (err) {
-      throw new Error(errorMessage);
-    }
-    if (isFile !== stats.isFile()) {
-      throw new Error(errorMessage);
-    }
   }
 
   private async createXCUITestManifest(): Promise<any> {

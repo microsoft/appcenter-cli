@@ -129,6 +129,27 @@ export function openTempFile(affixes: string): Promise<{path: string, fd: number
   return callTemp(temp.open, affixes);
 }
 
+ export async function fileExists(path: string): Promise<boolean> {
+   return await pathExists(path, true);
+ }
+
+export async function directoryExists(path: string): Promise<boolean> {
+   return await pathExists(path, false);
+ }
+
+async function pathExists(path: string, isFile: boolean): Promise<boolean> {
+  let stats: fs.Stats = null;
+  
+  try {
+    stats = await stat(path);
+  }
+  catch (err) {
+    return false;
+  }
+
+  return isFile === stats.isFile();
+}
+
 function callFs(func: (...args: any[]) => void, ...args: any[]): Promise<any[]> {
   return new Promise<any[]>((resolve, reject) => {
     func.apply(fs, _.concat(args, [
