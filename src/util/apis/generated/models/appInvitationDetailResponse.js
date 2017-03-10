@@ -8,6 +8,8 @@
 
 var models = require('./index');
 
+var util = require('util');
+
 /**
  * @class
  * Initializes a new instance of the AppInvitationDetailResponse class.
@@ -33,6 +35,8 @@ var models = require('./index');
  * pointing to the app's icon
  * 
  * @member {string} [app.name] The name of the app used in URLs
+ * 
+ * @member {array} [app.memberPermissions] The permissions of the calling user
  * 
  * @member {string} [app.os] The OS the app will be running on. Possible
  * values include: 'iOS', 'Android', 'Windows'
@@ -82,8 +86,13 @@ var models = require('./index');
  * @member {string} [invitedBy.name] The unique name that is used to identify
  * the user.
  * 
+ * @member {array} [invitedBy.permissions] The permissions the user has for
+ * the app
+ * 
  * @member {boolean} isExistingUser Indicates whether the invited user already
  * exists
+ * 
+ * @member {array} [permissions] The permissions the user has for the app
  * 
  */
 function AppInvitationDetailResponse() {
@@ -145,6 +154,20 @@ AppInvitationDetailResponse.prototype.mapper = function () {
           serializedName: 'is_existing_user',
           type: {
             name: 'Boolean'
+          }
+        },
+        permissions: {
+          required: false,
+          serializedName: 'permissions',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'StringElementType',
+                type: {
+                  name: 'String'
+                }
+            }
           }
         }
       }

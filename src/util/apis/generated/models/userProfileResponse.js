@@ -6,6 +6,8 @@
 
 'use strict';
 
+var util = require('util');
+
 /**
  * @class
  * Initializes a new instance of the UserProfileResponse class.
@@ -23,6 +25,8 @@
  * @member {string} email The email address of the user
  * 
  * @member {string} name The unique name that is used to identify the user.
+ * 
+ * @member {array} [permissions] The permissions the user has for the app
  * 
  */
 function UserProfileResponse() {
@@ -82,6 +86,20 @@ UserProfileResponse.prototype.mapper = function () {
           serializedName: 'name',
           type: {
             name: 'String'
+          }
+        },
+        permissions: {
+          required: false,
+          serializedName: 'permissions',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'StringElementType',
+                type: {
+                  name: 'String'
+                }
+            }
           }
         }
       }

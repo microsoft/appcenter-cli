@@ -17,6 +17,78 @@
     "application/json"
   ],
   "paths": {
+    "/v0.1/user/invitations/orgs/{invitation_token}/reject": {
+      "post": {
+        "description": "Rejects a pending organization invitation",
+        "parameters": [
+          {
+            "$ref": "#/parameters/invitation_token"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "BadRequest",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "operationId": "account_rejectOrganizationInvitation",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      }
+    },
+    "/v0.1/user/invitations/orgs/{invitation_token}/accept": {
+      "post": {
+        "description": "Accepts a pending organization invitation for the specified user",
+        "parameters": [
+          {
+            "$ref": "#/parameters/invitation_token"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "BadRequest",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "operationId": "account_acceptOrganizationInvitation",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      }
+    },
     "/v0.1/user/invitations/distribution_groups/accept": {
       "post": {
         "description": "Accepts all pending invitations to distribution groups for the specified user",
@@ -205,10 +277,10 @@
         ]
       }
     },
-    "/v0.1/sdk/apps/{app_secret}/releases/{release_id}": {
+    "/v0.1/sdk/apps/{app_secret}/releases/{release_hash}": {
       "get": {
-        "description": "Get a release with id `release_id`. if `release_id` is `latest`, return the latest release that was distributed to the current user (from all the distribution groups).",
-        "operationId": "distribute_getReleaseOrLatestReleaseBySecret",
+        "description": "Get a release with hash `release_hash`. If multiple releases matches the release_hash, return the latest one. If `release_hash` is `latest`, return the latest release that was distributed to the current user (from all the distribution groups).",
+        "operationId": "distribute_getReleaseOrLatestReleaseByHash",
         "parameters": [
           {
             "name": "app_secret",
@@ -218,10 +290,17 @@
             "required": true
           },
           {
-            "name": "release_id",
+            "name": "release_hash",
             "type": "string",
             "in": "path",
-            "description": "The ID of the release, or `latest` to get the latest release from all the distribution groups assigned to the current user.",
+            "description": "The hash of the release, or `latest` to get the latest release from all the distribution groups assigned to the current user.",
+            "required": true
+          },
+          {
+            "name": "internal-app-id",
+            "type": "string",
+            "in": "header",
+            "description": "The app ID",
             "required": true
           }
         ],
@@ -230,12 +309,6 @@
             "description": "Success",
             "schema": {
               "$ref": "#/definitions/ReleaseDetails"
-            }
-          },
-          "400": {
-            "description": "<b>bad_request</b>: `release_id` is not a number or the string `latest`.\n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
             }
           },
           "404": {
@@ -390,7 +463,7 @@
             "name": "user_email",
             "type": "string",
             "in": "path",
-            "description": "The email of the user to invite",
+            "description": "The user email of the user to delete",
             "required": true
           }
         ],
@@ -418,6 +491,64 @@
           }
         },
         "operationId": "account_deleteAppUser",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      },
+      "patch": {
+        "description": "Update user permission for the app",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          },
+          {
+            "name": "user_email",
+            "type": "string",
+            "in": "path",
+            "description": "The user email of the user to delete",
+            "required": true
+          },
+          {
+            "name": "user_app_permissions_data",
+            "in": "body",
+            "description": "The value to update the user permission for the app.",
+            "schema": {
+              "$ref": "#/definitions/UserAppPermissionsUpdateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "BadRequest",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "operationId": "account_patch",
         "security": [
           {
             "APIToken": []
@@ -3769,6 +3900,12 @@
               "$ref": "#/definitions/ReleaseDeleteResponse"
             }
           },
+          "403": {
+            "description": "error code - forbidden - A release from a legacy HockeyApp distribution group canâ€™t be deleted with Mobile Center API. To delete a legacy HockeyApp release, please use the HockeyApp API. https://support.hockeyapp.net/kb/api/api-versions#delete-single-version",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          },
           "404": {
             "description": "1. error code - distribution_group_not_found - Distribution group or the app doesn't exist.<br>  \n2. error code - not_found - Not found.\n",
             "schema": {
@@ -5226,7 +5363,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/Branches"
+              "$ref": "#/definitions/CommitDetailsList"
             }
           }
         },
@@ -5287,7 +5424,8 @@
             "enum": [
               "build",
               "symbols",
-              "logs"
+              "logs",
+              "test-report-preview"
             ],
             "in": "path",
             "description": "The download type",
@@ -5433,6 +5571,39 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/build_service_status": {
+      "get": {
+        "description": "Application specific build service status",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success. Availability for build service status is stored in response schema.",
+            "schema": {
+              "$ref": "#/definitions/BuildServiceStatusResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "build"
+        ],
+        "operationId": "build_getV01AppsByOwnerNameByAppNameBuildServiceStatus"
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/branches/{branch}/toolset_projects": {
       "get": {
         "description": "Returns the projects in the repository for the branch, for all toolsets",
@@ -5448,7 +5619,8 @@
             "required": true,
             "enum": [
               "iOS",
-              "Android"
+              "Android",
+              "Windows"
             ]
           },
           {
@@ -5461,7 +5633,8 @@
               "Objective-C-Swift",
               "React-Native",
               "Xamarin",
-              "Java"
+              "Java",
+              "UWP"
             ]
           },
           {
@@ -5680,7 +5853,7 @@
           "200": {
             "description": "Created build(s)",
             "schema": {
-              "$ref": "#/definitions/Builds"
+              "$ref": "#/definitions/Build"
             }
           }
         },
@@ -5901,6 +6074,42 @@
             "description": "Count of sessions in the time range.",
             "schema": {
               "$ref": "#/definitions/SessionCounts"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/sample_devices": {
+      "get": {
+        "operationId": "Analytics_GetSampleDevices",
+        "description": "Get list of sample devices.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of sample devices.",
+            "schema": {
+              "$ref": "#/definitions/SampleDevices"
             }
           },
           "default": {
@@ -6877,6 +7086,158 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/audiences/{audience_name}": {
+      "head": {
+        "operationId": "Analytics_AudienceNameExists",
+        "description": "Returns whether audience definition exists.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/AudienceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Audiences exists."
+          },
+          "402": {
+            "description": "Audiences does not exist."
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      },
+      "get": {
+        "operationId": "Analytics_GetAudience",
+        "description": "Gets audience definition.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/AudienceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Audiences definition.",
+            "schema": {
+              "$ref": "#/definitions/Audience"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      },
+      "put": {
+        "operationId": "Analytics_CreateOrUpdateAudience",
+        "description": "Creates or updates audience definition.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/AudienceNameParameter"
+          },
+          {
+            "$ref": "#/parameters/AudienceBodyParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updated audiences definition.",
+            "schema": {
+              "$ref": "#/definitions/Audience"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/audiences": {
+      "get": {
+        "operationId": "Analytics_ListAudiences",
+        "description": "Get list of audiences.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of audiences.",
+            "schema": {
+              "$ref": "#/definitions/AudienceListResult"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/analytics/active_device_counts": {
       "get": {
         "operationId": "Analytics_DeviceCounts",
@@ -7589,6 +7950,25 @@
         }
       }
     },
+    "UserAppPermissionsUpdateRequest": {
+      "properties": {
+        "permissions": {
+          "description": "The permissions the user has for the app",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "manager",
+              "developer",
+              "viewer"
+            ]
+          }
+        }
+      },
+      "required": [
+        "permissions"
+      ]
+    },
     "UserInvitationPermissionsUpdateRequest": {
       "properties": {
         "permissions": {
@@ -7640,6 +8020,10 @@
         "next_nps_survey_date": {
           "description": "The date in the future when the user should be checked again for NPS eligibility",
           "type": "string"
+        },
+        "email": {
+          "description": "The email address for this user",
+          "type": "string"
         }
       }
     },
@@ -7670,6 +8054,19 @@
         "is_existing_user": {
           "description": "Indicates whether the invited user already exists",
           "type": "boolean"
+        },
+        "permissions": {
+          "description": "The permissions the user has for the app",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "developer",
+              "member",
+              "tester"
+            ]
+          }
         }
       },
       "required": [
@@ -7679,6 +8076,22 @@
         "invited_by",
         "invite_type",
         "app"
+      ]
+    },
+    "OrganizationInvitationSimpleDetailResponse": {
+      "properties": {
+        "id": {
+          "description": "The unique ID (UUID) of the invitation",
+          "type": "string"
+        },
+        "email": {
+          "description": "The email address of the invited user",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "email"
       ]
     },
     "AppResponse": {
@@ -7710,6 +8123,19 @@
         "name": {
           "description": "The name of the app used in URLs",
           "type": "string"
+        },
+        "member_permissions": {
+          "description": "The permissions of the calling user",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "developer",
+              "member",
+              "tester"
+            ]
+          }
         },
         "os": {
           "description": "The OS the app will be running on",
@@ -7752,6 +8178,39 @@
         "owner",
         "platform",
         "origin"
+      ]
+    },
+    "AppResponseInternal": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AppResponse"
+        },
+        {
+          "properties": {
+            "feature_flags": {
+              "description": "The feature flags that are enabled for this app",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "repositories": {
+              "description": "The repositories associated with this app",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "repo_provider": {
+                    "type": "string"
+                  },
+                  "repo_url": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "DistributionGroupResponse": {
@@ -8038,6 +8497,19 @@
         "name": {
           "description": "The unique name that is used to identify the user.",
           "type": "string"
+        },
+        "permissions": {
+          "description": "The permissions the user has for the app",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "developer",
+              "member",
+              "tester"
+            ]
+          }
         }
       },
       "required": [
@@ -8498,6 +8970,52 @@
         }
       }
     },
+    "CommitDetails": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Commit"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "commit": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "description": "Commit message",
+                  "type": "string"
+                },
+                "author": {
+                  "type": "object",
+                  "properties": {
+                    "date": {
+                      "description": "Date and time of the commit",
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "Author name",
+                      "type": "string"
+                    },
+                    "email": {
+                      "description": "Author's email",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "CommitDetailsList": {
+      "description": "A list of commits",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CommitDetails"
+      }
+    },
     "RepoConfig": {
       "properties": {
         "type": {
@@ -8544,13 +9062,6 @@
       "required": [
         "repo_url"
       ]
-    },
-    "Branches": {
-      "description": "A list of branches",
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/Branch"
-      }
     },
     "XcodeVersions": {
       "description": "A list of Xcode versions",
@@ -8698,6 +9209,28 @@
         }
       }
     },
+    "BuildServiceStatusResponse": {
+      "required": [
+        "service",
+        "message",
+        "url",
+        "valid_until"
+      ],
+      "properties": {
+        "service": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "valid_until": {
+          "type": "string"
+        }
+      }
+    },
     "ValidationErrorResponse": {
       "required": [
         "id",
@@ -8763,6 +9296,10 @@
           "description": "The app's name (extracted from the uploaded release).",
           "type": "string"
         },
+        "app_display_name": {
+          "description": "The app's display name.",
+          "type": "string"
+        },
         "version": {
           "description": "The release's version.<br>\nFor iOS: CFBundleVersion from info.plist.\nFor Android: android:versionCode from AppManifest.xml.\n",
           "type": "string"
@@ -8789,6 +9326,10 @@
         },
         "android_min_api_level": {
           "description": "The release's minimum required Android API level.",
+          "type": "string"
+        },
+        "bundle_identifier": {
+          "description": "The identifier of the apps bundle.",
           "type": "string"
         },
         "fingerprint": {
@@ -9523,7 +10064,8 @@
         "first_occurrence",
         "last_occurrence",
         "error_reason",
-        "fatal"
+        "fatal",
+        "annotation"
       ],
       "type": "object",
       "properties": {
@@ -9573,6 +10115,9 @@
         "fatal": {
           "type": "boolean",
           "description": "Crash or handled exception"
+        },
+        "annotation": {
+          "type": "string"
         }
       }
     },
@@ -10647,6 +11192,93 @@
           "format": "int64"
         }
       }
+    },
+    "SampleDevices": {
+      "description": "List of sample devices.",
+      "properties": {
+        "values": {
+          "description": "List of sample devices.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Device"
+          }
+        }
+      },
+      "required": [
+        "values"
+      ]
+    },
+    "AudienceListResult": {
+      "description": "List of audiences.",
+      "properties": {
+        "values": {
+          "description": "List of audiences.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AudienceSummary"
+          }
+        },
+        "nextLink": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "values"
+      ]
+    },
+    "AudienceSummary": {
+      "description": "Audience definition.",
+      "properties": {
+        "name": {
+          "description": "Audience name.",
+          "type": "string"
+        },
+        "estimatedSize": {
+          "description": "Estimated audience size.",
+          "type": "number"
+        },
+        "state": {
+          "description": "Audience state.",
+          "type": "string",
+          "enum": [
+            "Calculating",
+            "Ready",
+            "Disabled"
+          ]
+        }
+      }
+    },
+    "Audience": {
+      "description": "Audience with details.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AudienceSummary"
+        }
+      ],
+      "properties": {
+        "definition": {
+          "description": "Audience definition in OData format.",
+          "type": "string"
+        },
+        "timestamp": {
+          "description": "Date the audience was last refreshed.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "AudienceDefinition": {
+      "description": "Audience definition.",
+      "type": "object",
+      "properties": {
+        "definition": {
+          "description": "Audience definition in OData format.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "definition"
+      ]
     },
     "NotificationsListResult": {
       "description": "List of notifications",
@@ -12280,6 +12912,26 @@
         "type": "string"
       },
       "collectionFormat": "pipes",
+      "x-ms-parameter-location": "method"
+    },
+    "AudienceNameParameter": {
+      "name": "audience_name",
+      "in": "path",
+      "description": "The name of the audience",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "pattern": "[a-zA-Z0-9\\-_]+",
+      "x-ms-parameter-location": "method"
+    },
+    "AudienceBodyParameter": {
+      "name": "audience",
+      "in": "body",
+      "description": "Audience definition",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/AudienceDefinition"
+      },
       "x-ms-parameter-location": "method"
     },
     "CountParameter": {

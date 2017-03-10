@@ -8,6 +8,7 @@ import { scriptName } from "../misc";
 import { getUser, environments, telemetryIsEnabled } from "../profile";
 import { MobileCenterClient, createMobileCenterClient, MobileCenterClientFactory } from "../apis";
 import * as path from "path";
+import * as PortalHelper from "../portal/portal-helper";
 
 const debug = require("debug")("mobile-center-cli:util:commandline:command");
 import { inspect } from "util";
@@ -127,25 +128,28 @@ export class Command {
     }
 
     let client: MobileCenterClient;
+    let endpoint: string;
     if (this.token) {
       let environment = environments(this.environmentName);
       debug(`Creating mobile center client for command from token`);
       client = this.clientFactory.fromToken(this.token, environment.endpoint);
+      endpoint = environment.endpoint;
     } else {
       let user = getUser();
       if (user) {
         debug(`Creating mobile center client for command for current logged in user`);
         client = this.clientFactory.fromProfile(user);
+        endpoint = user.endpoint;
       }
     }
-    if (client) {
-      return this.run(client);
+    if (client && endpoint) {
+      return this.run(client, PortalHelper.getPortalBaseUrl(endpoint));
     }
     return Promise.resolve(Result.notLoggedIn(`${scriptName} ${this.command.join(" ")}`));
   }
 
   // Entry point for command author - override this!
-  protected run(client: MobileCenterClient): Promise<Result.CommandResult> {
+  protected run(client: MobileCenterClient, portalBaseUrl: string): Promise<Result.CommandResult> {
     throw new Error("Dev error, should be overridden!");
   }
 

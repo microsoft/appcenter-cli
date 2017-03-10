@@ -301,6 +301,17 @@ export interface OrganizationUserPatchRequest {
 
 /**
  * @class
+ * Initializes a new instance of the UserAppPermissionsUpdateRequest class.
+ * @constructor
+ * @member {array} permissions The permissions the user has for the app
+ * 
+ */
+export interface UserAppPermissionsUpdateRequest {
+  permissions: string[];
+}
+
+/**
+ * @class
  * Initializes a new instance of the UserInvitationPermissionsUpdateRequest class.
  * @constructor
  * @member {array} permissions The permissions the user has for the app in the
@@ -346,11 +357,14 @@ export interface UserUpdateRequest {
  * @member {string} [nextNpsSurveyDate] The date in the future when the user
  * should be checked again for NPS eligibility
  * 
+ * @member {string} [email] The email address for this user
+ * 
  */
 export interface UserUpdateRequestInternal {
   displayName?: string;
   name?: string;
   nextNpsSurveyDate?: string;
+  email?: string;
 }
 
 /**
@@ -378,6 +392,8 @@ export interface UserUpdateRequestInternal {
  * pointing to the app's icon
  * 
  * @member {string} [app.name] The name of the app used in URLs
+ * 
+ * @member {array} [app.memberPermissions] The permissions of the calling user
  * 
  * @member {string} [app.os] The OS the app will be running on. Possible
  * values include: 'iOS', 'Android', 'Windows'
@@ -427,8 +443,13 @@ export interface UserUpdateRequestInternal {
  * @member {string} [invitedBy.name] The unique name that is used to identify
  * the user.
  * 
+ * @member {array} [invitedBy.permissions] The permissions the user has for
+ * the app
+ * 
  * @member {boolean} isExistingUser Indicates whether the invited user already
  * exists
+ * 
+ * @member {array} [permissions] The permissions the user has for the app
  * 
  */
 export interface AppInvitationDetailResponse {
@@ -438,6 +459,7 @@ export interface AppInvitationDetailResponse {
   inviteType: string;
   invitedBy: UserProfileResponse;
   isExistingUser: boolean;
+  permissions?: string[];
 }
 
 /**
@@ -461,6 +483,8 @@ export interface AppInvitationDetailResponse {
  * the app's icon
  * 
  * @member {string} name The name of the app used in URLs
+ * 
+ * @member {array} [memberPermissions] The permissions of the calling user
  * 
  * @member {string} os The OS the app will be running on. Possible values
  * include: 'iOS', 'Android', 'Windows'
@@ -496,6 +520,7 @@ export interface AppResponse {
   displayName: string;
   iconUrl?: string;
   name: string;
+  memberPermissions?: string[];
   os: string;
   owner: Owner;
   platform: string;
@@ -549,6 +574,8 @@ export interface Owner {
  * 
  * @member {string} name The unique name that is used to identify the user.
  * 
+ * @member {array} [permissions] The permissions the user has for the app
+ * 
  */
 export interface UserProfileResponse {
   id: string;
@@ -557,6 +584,50 @@ export interface UserProfileResponse {
   displayName: string;
   email: string;
   name: string;
+  permissions?: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the OrganizationInvitationSimpleDetailResponse class.
+ * @constructor
+ * @member {string} id The unique ID (UUID) of the invitation
+ * 
+ * @member {string} email The email address of the invited user
+ * 
+ */
+export interface OrganizationInvitationSimpleDetailResponse {
+  id: string;
+  email: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppResponseInternal class.
+ * @constructor
+ * @member {array} [featureFlags] The feature flags that are enabled for this
+ * app
+ * 
+ * @member {array} [repositories] The repositories associated with this app
+ * 
+ */
+export interface AppResponseInternal extends AppResponse {
+  featureFlags?: string[];
+  repositories?: AppResponseInternalRepositoriesItem[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppResponseInternalRepositoriesItem class.
+ * @constructor
+ * @member {string} [repoProvider]
+ * 
+ * @member {string} [repoUrl]
+ * 
+ */
+export interface AppResponseInternalRepositoriesItem {
+  repoProvider?: string;
+  repoUrl?: string;
 }
 
 /**
@@ -1345,6 +1416,64 @@ export interface AndroidBranchConfigurationProperties {
 
 /**
  * @class
+ * Initializes a new instance of the CommitDetails class.
+ * @constructor
+ * @member {object} [commit]
+ * 
+ * @member {string} [commit.message] Commit message
+ * 
+ * @member {object} [commit.author]
+ * 
+ * @member {string} [commit.author.date] Date and time of the commit
+ * 
+ * @member {string} [commit.author.name] Author name
+ * 
+ * @member {string} [commit.author.email] Author's email
+ * 
+ */
+export interface CommitDetails extends Commit {
+  commit?: CommitDetailsCommit;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CommitDetailsCommit class.
+ * @constructor
+ * @member {string} [message] Commit message
+ * 
+ * @member {object} [author]
+ * 
+ * @member {string} [author.date] Date and time of the commit
+ * 
+ * @member {string} [author.name] Author name
+ * 
+ * @member {string} [author.email] Author's email
+ * 
+ */
+export interface CommitDetailsCommit {
+  message?: string;
+  author?: CommitDetailsCommitAuthor;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CommitDetailsCommitAuthor class.
+ * @constructor
+ * @member {string} [date] Date and time of the commit
+ * 
+ * @member {string} [name] Author name
+ * 
+ * @member {string} [email] Author's email
+ * 
+ */
+export interface CommitDetailsCommitAuthor {
+  date?: string;
+  name?: string;
+  email?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the RepoConfig class.
  * @constructor
  * @member {string} type Type of repository
@@ -1458,6 +1587,26 @@ export interface DistributionResponse {
 
 /**
  * @class
+ * Initializes a new instance of the BuildServiceStatusResponse class.
+ * @constructor
+ * @member {string} service
+ * 
+ * @member {string} message
+ * 
+ * @member {string} url
+ * 
+ * @member {string} validUntil
+ * 
+ */
+export interface BuildServiceStatusResponse {
+  service: string;
+  message: string;
+  url: string;
+  validUntil: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the ValidationErrorResponse class.
  * @constructor
  * @member {string} id
@@ -1542,6 +1691,8 @@ export interface DistributionGroup {
  * @member {string} [appName] The app's name (extracted from the uploaded
  * release).
  * 
+ * @member {string} [appDisplayName] The app's display name.
+ * 
  * @member {string} [version] The release's version.<br>
  * For iOS: CFBundleVersion from info.plist.
  * For Android: android:versionCode from AppManifest.xml.
@@ -1560,6 +1711,8 @@ export interface DistributionGroup {
  * 
  * @member {string} [androidMinApiLevel] The release's minimum required
  * Android API level.
+ * 
+ * @member {string} [bundleIdentifier] The identifier of the apps bundle.
  * 
  * @member {string} [fingerprint] MD5 checksum of the release binary.
  * 
@@ -1583,6 +1736,7 @@ export interface ReleaseDetails {
   id?: number;
   status?: string;
   appName?: string;
+  appDisplayName?: string;
   version?: string;
   shortVersion?: string;
   releaseNotes?: string;
@@ -1590,6 +1744,7 @@ export interface ReleaseDetails {
   size?: number;
   minOs?: string;
   androidMinApiLevel?: string;
+  bundleIdentifier?: string;
   fingerprint?: string;
   uploadedAt?: string;
   downloadUrl?: string;
@@ -2251,6 +2406,8 @@ export interface ReasonStackFrame {
  * 
  * @member {boolean} fatal Crash or handled exception
  * 
+ * @member {string} annotation
+ * 
  */
 export interface CrashGroup {
   crashGroupId: string;
@@ -2266,6 +2423,7 @@ export interface CrashGroup {
   errorReason: string;
   reasonFrame?: ReasonStackFrame;
   fatal: boolean;
+  annotation: string;
 }
 
 /**
@@ -3261,6 +3419,84 @@ export interface EventPropertyValue {
   name?: string;
   count?: number;
   previousCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SampleDevices class.
+ * @constructor
+ * List of sample devices.
+ *
+ * @member {array} values List of sample devices.
+ * 
+ */
+export interface SampleDevices {
+  values: Device[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AudienceListResult class.
+ * @constructor
+ * List of audiences.
+ *
+ * @member {array} values List of audiences.
+ * 
+ * @member {string} [nextLink]
+ * 
+ */
+export interface AudienceListResult {
+  values: AudienceSummary[];
+  nextLink?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AudienceSummary class.
+ * @constructor
+ * Audience definition.
+ *
+ * @member {string} [name] Audience name.
+ * 
+ * @member {number} [estimatedSize] Estimated audience size.
+ * 
+ * @member {string} [state] Audience state. Possible values include:
+ * 'Calculating', 'Ready', 'Disabled'
+ * 
+ */
+export interface AudienceSummary {
+  name?: string;
+  estimatedSize?: number;
+  state?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the Audience class.
+ * @constructor
+ * Audience with details.
+ *
+ * @member {string} [definition] Audience definition in OData format.
+ * 
+ * @member {date} [timestamp] Date the audience was last refreshed.
+ * 
+ */
+export interface Audience extends AudienceSummary {
+  definition?: string;
+  timestamp?: Date;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AudienceDefinition class.
+ * @constructor
+ * Audience definition.
+ *
+ * @member {string} definition Audience definition in OData format.
+ * 
+ */
+export interface AudienceDefinition {
+  definition: string;
 }
 
 /**

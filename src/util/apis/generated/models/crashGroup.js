@@ -65,6 +65,8 @@ var models = require('./index');
  * 
  * @member {boolean} fatal Crash or handled exception
  * 
+ * @member {string} annotation
+ * 
  */
 function CrashGroup() {
 }
@@ -173,6 +175,13 @@ CrashGroup.prototype.mapper = function () {
           serializedName: 'fatal',
           type: {
             name: 'Boolean'
+          }
+        },
+        annotation: {
+          required: true,
+          serializedName: 'annotation',
+          type: {
+            name: 'String'
           }
         }
       }
