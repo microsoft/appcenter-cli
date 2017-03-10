@@ -17,6 +17,13 @@ export interface CommandFailedResult {
   exception?: Error;
 }
 
+export function isCommandFailedResult(object: any): object is CommandFailedResult {
+  return object != null 
+    && typeof(object.succeeded) === "boolean"
+    && typeof(object.errorCode) === "number"
+    && typeof(object.errorMessage) === "string";
+}
+
 export type CommandResult = CommandSucceededResult | CommandFailedResult;
 
 export class ResultOrValue<T> {
