@@ -112,6 +112,9 @@ function fixupRawSwagger(rawSwaggerPath, fixedSwaggerPath) {
     if (_.isEmpty(swagger.paths[urlPath])) {
       delete swagger.paths[urlPath];
     } else {
+      if (urlPath === '/v0.1/apps/{owner_name}/{app_name}/commits/batch/{sha_collection}') {
+        fixupGetCommits(swagger.paths[urlPath]);
+      }
       let operations = _.toPairs(swagger.paths[urlPath]);
       operations.forEach(([method, operationObj]) => {
         if (!operationIdIsValid(operationObj)) {
@@ -170,6 +173,30 @@ function urlPathToOperation(urlPath) {
     .map(removeIllegalCharacters)
     .map(snakeToPascalCase)
     .join('');
+}
+
+function fixupGetCommits(operations) {
+  let getCommits = operations['get'];
+  if (!getCommits) {
+    console.error('Could not find getCommits operation!');
+    return;
+  }
+
+  let parameters = getCommits.parameters;
+  if(!parameters) {
+    console.error('Could not find parameters for get operation!');
+    return;
+  }
+
+  let shaCollection = parameters.filter(p => p.name && p.name === 'sha_collection');
+  if (shaCollection.length !== 1) {
+    return;
+  }
+
+  let shaCollectionParam = shaCollection[0];
+  if (!shaCollectionParam['x-ms-skip-url-encoding']) {
+    shaCollectionParam['x-ms-skip-url-encoding'] = true;
+  }
 }
 
 module.exports = {

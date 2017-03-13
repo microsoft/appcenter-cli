@@ -2,7 +2,7 @@ import {AppCommand, Command, CommandArgs, CommandResult, ErrorCodes, failure, ha
 import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import * as _ from "lodash";
-import * as PortalHelper from "../../../util/portal/portal-helper";
+import { reportBuild } from "./lib/format-build";
 
 const debug = require("debug")("mobile-center-cli:commands:build:branches:show");
 
@@ -51,23 +51,7 @@ export default class ShowBranchBuildStatusCommand extends AppCommand {
 
     const commitInfo = commitInfoRequestResponse.result[0];
 
-    const outputObject = _.extend(_.clone(lastBuild), {
-      author: `${commitInfo.commit.author.name} <${commitInfo.commit.author.email}>`,
-      message: commitInfo.commit.message,
-      sha: commitInfo.sha,
-      url: PortalHelper.getPortalBuildLink(portalBaseUrl, app.ownerName, app.appName, lastBuild.sourceBranch, lastBuild.id.toString())
-    });
-
-    out.report([
-      ["Branch", "sourceBranch"],
-      ["Build number", "buildNumber"],
-      ["Build status", "status"],
-      ["Build result", "result"],
-      ["Build URL", "url"],
-      ["Commit author", "author"],
-      ["Commit message", "message"],
-      ["Commit SHA", "sha"],
-    ], outputObject);
+    reportBuild(lastBuild, commitInfo, app, portalBaseUrl);
 
     return success();
   }
