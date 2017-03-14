@@ -2,10 +2,12 @@
 
 const clean = require('gulp-clean');
 const gulp = require('gulp');
+const minimist = require('minimist');
 const runSeq = require('run-sequence');
 const rimraf = require('rimraf');
 const sourcemaps = require('gulp-sourcemaps');
 const ts = require('gulp-typescript');
+const util = require('util');
 const autorest = require('./scripts/autorest');
 
 let tsProject = ts.createProject('tsconfig.json');
@@ -69,9 +71,27 @@ gulp.task('fixup-swagger', function () {
   autorest.fixupRawSwagger('./swagger/bifrost.swagger.before.json', './swagger/bifrost.swagger.json');
 });
 
-gulp.task('autorest', ['clean-autorest', 'fixup-swagger'], function () {
-  return autorest.downloadTools()
-    .then(() => autorest.generateCode('./swagger/bifrost.swagger.json', generatedSource, 'MobileCenterClient'));
+const parseOpts = {
+  string: 'env',
+  alias: { env: 'e' },
+  default: { env: 'prod' }
+};
+
+gulp.task('download-autorest-tools', function () {
+  return autorest.downloadTools();
+});
+
+gulp.task('download-swagger', function() {
+  const args = minimist(process.argv.slice(2), parseOpts);
+  return autorest.downloadSwagger(args.env);
+});
+
+gulp.task('generate-client', function () {
+  return autorest.generateCode('./swagger/bifrost.swagger.json', generatedSource, 'MobileCenterClient');
+});
+
+gulp.task('autorest', ['clean-autorest'], function (done) {
+  runSeq(['download-autorest-tools', 'download-swagger'], 'fixup-swagger', 'generate-client', done);
 });
 
 //

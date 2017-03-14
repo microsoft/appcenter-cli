@@ -34,6 +34,25 @@ function checkStats(path, predicate) {
   }
 }
 
+function streamDone(origResolve, origReject) {
+  let finished = false;
+
+  return {
+    resolve: () => {
+      if (!finished) {
+        origResolve();
+        finished = true;
+      }
+    },
+    reject: (e) => {
+      if (!finished) {
+        origReject(e);
+        finished = true;
+      }
+    }
+  };
+}
+
 function downloadNuget() {
   if (checkStats(nugetExe, s => s.isFile())) {
     return Promise.resolve();
@@ -44,22 +63,17 @@ function downloadNuget() {
   }
 
   return new Promise((resolve, reject) => {
-    let finished = false;
+    const sd = streamDone(resolve, reject);
+
     const s = request('https://nuget.org/nuget.exe')
       .pipe(fs.createWriteStream(nugetExe));
 
     s.on('error', (e) => {
-      if (!finished) {
-        finished = true;
-        reject(e);
-      }
+      sd.reject(e);
     });
 
     s.on('finish', () => {
-      if (!finished) {
-        finished = true;
-        resolve();
-      }
+      sd.resolve();
     });
   });
 }
@@ -74,7 +88,7 @@ function downloadAutorest() {
     return Promise.resolve();
   }
 
-  var nugetCmd = `${clrCmd(nugetExe)} install Autorest -Source ${nugetSource} -Version ${defaultAutoRestVersion} -o packages`;
+  const nugetCmd = `${clrCmd(nugetExe)} install Autorest -Source ${nugetSource} -Version ${defaultAutoRestVersion} -o packages`;
   console.log(`Downloading default AutoRest version: ${nugetCmd}`);
   return new Promise((resolve, reject) => {
     exec(nugetCmd, function (err, stdout, stderr) {
@@ -82,6 +96,38 @@ function downloadAutorest() {
       console.error(stderr);
       if (err) { reject(err); }
       else { resolve(); }
+    });
+  });
+}
+
+const endpoints = {
+  prod: "https://api.mobile.azure.com",
+  int: "https://bifrost-int.trafficmanager.net"
+};
+
+const swaggerPath = "/preview/swagger.json";
+const swaggerDest = path.join('swagger', 'bifrost.swagger.before.json');
+
+function downloadSwagger(environment) {
+  if (!endpoints[environment]) {
+    throw new Error(`Unknown environment ${environment}, cannot download swagger`);
+  }
+
+  const swaggerUrl = endpoints[environment] + swaggerPath;
+  console.log(`Downloading swagger from ${swaggerUrl}`);
+
+  return new Promise((resolve, reject) => {
+    let sd = streamDone(resolve, reject);
+
+    const s = request(endpoints[environment] + swaggerPath)
+      .pipe(fs.createWriteStream(swaggerDest));
+
+    s.on('error', (e) => {
+      sd.reject(e);
+    });
+
+    s.on('finish', () => {
+      sd.resolve();
     });
   });
 }
@@ -111,18 +157,28 @@ function fixupRawSwagger(rawSwaggerPath, fixedSwaggerPath) {
   urlPaths.forEach(urlPath => {
     if (_.isEmpty(swagger.paths[urlPath])) {
       delete swagger.paths[urlPath];
+    } else if(urlPath.match(/^\/v0.1\/public/)) {
+      // These paths are only for consumption by the device SDKs
+      delete swagger.paths[urlPath];
     } else {
+      // Add x-ms-skip-url-encoding to this operation
       if (urlPath === '/v0.1/apps/{owner_name}/{app_name}/commits/batch/{sha_collection}') {
         fixupGetCommits(swagger.paths[urlPath]);
       }
       let operations = _.toPairs(swagger.paths[urlPath]);
       operations.forEach(([method, operationObj]) => {
+        // Fix up malformed/missing operation Ids
         if (!operationIdIsValid(operationObj)) {
           if (operationObj.operationId) {
             operationObj.operationId = `${getArea(operationObj)}_${operationObj.operationId}`;
           } else {
             operationObj.operationId = `${getArea(operationObj)}_${method}${urlPathToOperation(urlPath)}`;
           }
+        }
+
+        // If operation isn't json, set response to blob/file and remove the produces, that crashes autorest
+        if (operationIsNotJson(operationObj)) {
+          setOperationToFile(operationObj);
         }
       });
     }
@@ -199,8 +255,25 @@ function fixupGetCommits(operations) {
   }
 }
 
+function operationIsNotJson(operation) {
+  return operation.produces && operation.produces[0] !== 'application/json';
+}
+
+function setOperationToFile(operation) {
+  delete operation.produces;
+
+  let response200 = operation.responses["200"];
+  if (response200) {
+    if (response200.schema) {
+      delete response200.schema;
+    }
+    response200.type = "file";
+  }
+}
+
 module.exports = {
+  downloadSwagger,
   downloadTools,
   generateCode,
-  fixupRawSwagger
+  fixupRawSwagger,
 };
