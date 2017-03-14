@@ -18,16 +18,24 @@ interface EnvironmentsFile {
 const environmentsData: EnvironmentsFile = {
   defaultEnvironment: "prod",
   environments: {
+    dev: {
+      endpoint: "https://bifrost-dev.trafficmanager.net",
+      description: "Development"
+    },
     int: {
       endpoint: "https://bifrost-int.trafficmanager.net",
       description: "Integration"
     },
+    staging: {
+      endpoint: "https://bifrost-staging.trafficmanager.net",
+      description: "Staging"
+    },
     prod: {
-      "endpoint": "https://api.mobile.azure.com",
+      endpoint: "https://api.mobile.azure.com",
       description: "Production"
     },
     testCloudLocalDev: {
-      "endpoint": "http://localhost:1700",
+      endpoint: "http://localhost:1700",
       description: "Test Cloud local dev box development"
     }
   }
