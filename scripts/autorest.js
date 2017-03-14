@@ -157,18 +157,28 @@ function fixupRawSwagger(rawSwaggerPath, fixedSwaggerPath) {
   urlPaths.forEach(urlPath => {
     if (_.isEmpty(swagger.paths[urlPath])) {
       delete swagger.paths[urlPath];
+    } else if(urlPath.match(/^\/v0.1\/public/)) {
+      // These paths are only for consumption by the device SDKs
+      delete swagger.paths[urlPath];
     } else {
+      // Add x-ms-skip-url-encoding to this operation
       if (urlPath === '/v0.1/apps/{owner_name}/{app_name}/commits/batch/{sha_collection}') {
         fixupGetCommits(swagger.paths[urlPath]);
       }
       let operations = _.toPairs(swagger.paths[urlPath]);
       operations.forEach(([method, operationObj]) => {
+        // Fix up malformed/missing operation Ids
         if (!operationIdIsValid(operationObj)) {
           if (operationObj.operationId) {
             operationObj.operationId = `${getArea(operationObj)}_${operationObj.operationId}`;
           } else {
             operationObj.operationId = `${getArea(operationObj)}_${method}${urlPathToOperation(urlPath)}`;
           }
+        }
+
+        // If operation isn't json, set response to blob/file and remove the produces, that crashes autorest
+        if (operationIsNotJson(operationObj)) {
+          setOperationToFile(operationObj);
         }
       });
     }
@@ -242,6 +252,22 @@ function fixupGetCommits(operations) {
   let shaCollectionParam = shaCollection[0];
   if (!shaCollectionParam['x-ms-skip-url-encoding']) {
     shaCollectionParam['x-ms-skip-url-encoding'] = true;
+  }
+}
+
+function operationIsNotJson(operation) {
+  return operation.produces && operation.produces[0] !== 'application/json';
+}
+
+function setOperationToFile(operation) {
+  delete operation.produces;
+
+  let response200 = operation.responses["200"];
+  if (response200) {
+    if (response200.schema) {
+      delete response200.schema;
+    }
+    response200.type = "file";
   }
 }
 
