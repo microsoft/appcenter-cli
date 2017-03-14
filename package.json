@@ -23,7 +23,8 @@
     "watch-test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s --watch",
     "autorest": "gulp autorest",
     "clean": "gulp clean",
-    "prepublish": "gulp prepublish"
+    "prepublish": "gulp prepublish",
+    "download-swagger": "gulp download-swagger"
   },
   "repository": {
     "type": "git",

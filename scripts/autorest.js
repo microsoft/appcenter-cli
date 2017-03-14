@@ -34,6 +34,25 @@ function checkStats(path, predicate) {
   }
 }
 
+function streamDone(origResolve, origReject) {
+  let finished = false;
+
+  return {
+    resolve: () => {
+      if (!finished) {
+        origResolve();
+        finished = true;
+      }
+    },
+    reject: (e) => {
+      if (!finished) {
+        origReject(e);
+        finished = true;
+      }
+    }
+  };
+}
+
 function downloadNuget() {
   if (checkStats(nugetExe, s => s.isFile())) {
     return Promise.resolve();
@@ -44,22 +63,17 @@ function downloadNuget() {
   }
 
   return new Promise((resolve, reject) => {
-    let finished = false;
+    const sd = streamDone(resolve, reject);
+
     const s = request('https://nuget.org/nuget.exe')
       .pipe(fs.createWriteStream(nugetExe));
 
     s.on('error', (e) => {
-      if (!finished) {
-        finished = true;
-        reject(e);
-      }
+      sd.reject(e);
     });
 
     s.on('finish', () => {
-      if (!finished) {
-        finished = true;
-        resolve();
-      }
+      sd.resolve();
     });
   });
 }
@@ -74,7 +88,7 @@ function downloadAutorest() {
     return Promise.resolve();
   }
 
-  var nugetCmd = `${clrCmd(nugetExe)} install Autorest -Source ${nugetSource} -Version ${defaultAutoRestVersion} -o packages`;
+  const nugetCmd = `${clrCmd(nugetExe)} install Autorest -Source ${nugetSource} -Version ${defaultAutoRestVersion} -o packages`;
   console.log(`Downloading default AutoRest version: ${nugetCmd}`);
   return new Promise((resolve, reject) => {
     exec(nugetCmd, function (err, stdout, stderr) {
@@ -82,6 +96,38 @@ function downloadAutorest() {
       console.error(stderr);
       if (err) { reject(err); }
       else { resolve(); }
+    });
+  });
+}
+
+const endpoints = {
+  prod: "https://api.mobile.azure.com",
+  int: "https://bifrost-int.trafficmanager.net"
+};
+
+const swaggerPath = "/preview/swagger.json";
+const swaggerDest = path.join('swagger', 'bifrost.swagger.before.json');
+
+function downloadSwagger(environment) {
+  if (!endpoints[environment]) {
+    throw new Error(`Unknown environment ${environment}, cannot download swagger`);
+  }
+
+  const swaggerUrl = endpoints[environment] + swaggerPath;
+  console.log(`Downloading swagger from ${swaggerUrl}`);
+
+  return new Promise((resolve, reject) => {
+    let sd = streamDone(resolve, reject);
+
+    const s = request(endpoints[environment] + swaggerPath)
+      .pipe(fs.createWriteStream(swaggerDest));
+
+    s.on('error', (e) => {
+      sd.reject(e);
+    });
+
+    s.on('finish', () => {
+      sd.resolve();
     });
   });
 }
@@ -200,7 +246,8 @@ function fixupGetCommits(operations) {
 }
 
 module.exports = {
+  downloadSwagger,
   downloadTools,
   generateCode,
-  fixupRawSwagger
+  fixupRawSwagger,
 };
