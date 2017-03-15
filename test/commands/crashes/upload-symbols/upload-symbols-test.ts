@@ -48,6 +48,10 @@ describe("upload-symbols command", () => {
   let expectedRequestsScope: Nock.Scope;
   let skippedRequestsScope: Nock.Scope;
 
+  before(() => {
+    Nock.disableNetConnect();
+  });
+
   beforeEach(() => {
     tmpFolderPath = Temp.mkdirSync("uploadSymbolsTest");
     uploaderSpy = Sinon.spy();
@@ -182,7 +186,7 @@ describe("upload-symbols command", () => {
   });
 
   after(() => {
-    Nock.restore();    
+    Nock.enableNetConnect();
   });
 
   async function executeUploadCommand(args: string[]): Promise<CommandResult> {

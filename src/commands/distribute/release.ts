@@ -1,0 +1,261 @@
+import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, isCommandFailedResult, longName, required, shortName, success} from "../../util/commandline";
+import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
+import { out } from "../../util/interaction";
+import { inspect } from "util";
+import * as _ from "lodash";
+import * as Request from "request";
+import * as Path from "path";
+import * as Pfs from "../../util/misc/promisfied-fs";
+import { DefaultApp } from "../../util/profile";
+
+const debug = require("debug")("mobile-center-cli:commands:distribute:release");
+
+@help("Upload release binary and trigger distribution")
+export default class ReleaseBinaryCommand extends AppCommand {
+  @help("Path to binary file")
+  @shortName("f")
+  @longName("file")
+  @required
+  @hasArg
+  public filePath: string;
+
+  @help("Distribution group name")
+  @shortName("g")
+  @longName("group")
+  @required
+  @hasArg
+  public distributionGroup: string;
+
+  @help("Release notes text")
+  @shortName("r")
+  @longName("release-notes")
+  @hasArg
+  public releaseNotes: string;
+
+  @help("Path to release notes file")
+  @shortName("R")
+  @longName("release-notes-file")
+  @hasArg
+  public releaseNotesFile: string;
+
+  public async run(client: MobileCenterClient): Promise<CommandResult> {
+    try {
+      return await this.doCommand(client);
+    } catch (error) {
+      if (isCommandFailedResult(error)) {
+        return error;
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  private async doCommand(client: MobileCenterClient): Promise<CommandResult> {
+    const app: DefaultApp = this.app;
+    
+    debug("Check that user hasn't selected both --release-notes and --release-notes-file");
+    this.validateParameters();
+
+    debug("Loading prerequisites");
+    const [distributionGroupUsersCount, releaseBinaryFileBuffer, releaseNotesString] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
+
+    debug("Creating release upload");
+    const createdReleaseUpload = await this.createReleaseUpload(client, app);
+    const uploadUri = createdReleaseUpload.uploadUrl;
+    const uploadId = createdReleaseUpload.uploadId;
+
+    let releaseUrl: string;
+    try {
+      debug("Uploading release binary");
+      await out.progress("Uploading release binary...", this.uploadFileToUri(uploadUri, releaseBinaryFileBuffer, Path.basename(this.filePath)));
+
+      debug("Finishing release upload");
+      releaseUrl = await this.finishReleaseUpload(client, app, uploadId);
+    } catch (error) {
+      try {
+        out.text("Release upload failed");
+        await this.abortReleaseUpload(client, app, uploadId);
+        out.text("Release upload was aborted");
+      } catch (abortError) {
+        debug("Failed to abort release upload");
+      }
+
+      throw error;
+    }
+
+    debug("Extracting release ID from the release URL");
+    const releaseId = this.extractReleaseId(releaseUrl);
+
+    debug("Distributing the release");
+    const releaseDetails = await this.distributeRelease(client, app, releaseId, releaseNotesString);
+
+    if (_.isNull(distributionGroupUsersCount)) {
+      out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${this.distributionGroup}`, releaseDetails);
+    } else {
+      out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${distributionGroupUsersCount} testers in ${this.distributionGroup}`, releaseDetails);
+    }
+
+    return success();
+  }
+
+  private validateParameters(): void {
+    if (!_.isNil(this.releaseNotes) && !_.isNil(this.releaseNotesFile)) {
+      throw failure(ErrorCodes.InvalidParameter, "'--release-notes' and '--release-notes-file' switches are mutually exclusive");
+    }
+  }
+
+  private getPrerequisites(client: MobileCenterClient): Promise<[number | null, Buffer, string]> {
+    // load release binary file
+    const fileBuffer = this.getReleaseFileBuffer();
+
+    // load release notes file or use provided release notes if none was specified
+    const releaseNotesString = this.getReleaseNotesString();
+    
+    // get number of distribution group users (and check distribution group existence)
+    // return null if request has failed because of any reason except non-existing group name.
+    const distributionGroupUsersNumber = this.getDistributionGroupUsersNumber(client);
+
+    return Promise.all([distributionGroupUsersNumber, fileBuffer, releaseNotesString]);
+  }
+
+  private async getReleaseFileBuffer(): Promise<Buffer> {
+    try {
+      return await Pfs.readFile(this.filePath);
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        throw failure(ErrorCodes.InvalidParameter, `binary file '${this.filePath}' doesn't exist`);
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  private async getReleaseNotesString(): Promise<string> {
+    if (!_.isNil(this.releaseNotesFile)) {
+      try {
+        return await Pfs.readFile(this.releaseNotesFile, "utf8");
+      } catch (error) {
+        if (error.code === "ENOENT") {
+          throw failure(ErrorCodes.InvalidParameter, `release notes file '${this.releaseNotesFile}' doesn't exist`);
+        } else {
+          throw error;
+        }
+      }
+    } else {
+      return this.releaseNotes;
+    }
+  }
+
+  private async getDistributionGroupUsersNumber(client: MobileCenterClient): Promise<number | null> {
+    let distributionGroupUsersRequestResponse: ClientResponse<models.DistributionGroupUserGetResponse[]>;
+    try {
+      distributionGroupUsersRequestResponse = await clientRequest<models.DistributionGroupUserGetResponse[]>(
+        (cb) => client.account.getDistributionGroupUsers(this.app.ownerName, this.app.appName, this.distributionGroup, cb));
+      const statusCode = distributionGroupUsersRequestResponse.response.statusCode;
+      if (statusCode >= 400) {
+        throw statusCode;
+      }
+    } catch (error) {
+      if (error === 404) {
+        throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} was not found`);
+      } else {
+        debug(`Failed to get users of distribution group ${this.distributionGroup}, returning null - ${inspect(error)}`);
+        return null;
+      }
+    }
+
+    return distributionGroupUsersRequestResponse.result.length;
+  }
+
+  private async createReleaseUpload(client: MobileCenterClient, app: DefaultApp): Promise<models.ReleaseUploadBeginResponse> {
+    let createReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadBeginResponse>;
+    try {
+      createReleaseUploadRequestResponse = await out.progress("Creating release upload...", 
+        clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.distribute.createReleaseUpload(app.ownerName, app.appName, cb)));
+    } catch (error) {
+      throw failure(ErrorCodes.Exception, `failed to create release upload for ${this.filePath}`);
+    }
+
+    return createReleaseUploadRequestResponse.result;
+  }
+
+  private uploadFileToUri(uploadUrl: string, fileBuffer: Buffer, filename: string): Promise<void> {
+    debug("Uploading the release binary");
+    return new Promise<void>((resolve, reject) => {
+      Request.post({
+        formData: {
+          ipa: {
+            options: {
+              filename,
+              contentType: "application/octet-stream"
+            },
+            value: fileBuffer
+          }
+        },
+        url: uploadUrl
+      })
+      .on("error", (error) => {
+        reject(failure(ErrorCodes.Exception, `release binary uploading failed: ${error.message}`));
+      })
+      .on("response", (response) => {
+        if (response.statusCode < 400) {
+          resolve();
+        } else {
+          reject(failure(ErrorCodes.Exception, `release binary file uploading failed: HTTP ${response.statusCode} ${response.statusMessage}`));
+        }
+      });
+    });
+  }
+
+  private async finishReleaseUpload(client: MobileCenterClient, app: DefaultApp, uploadId: string): Promise<string> {
+    let finishReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadEndResponse>;
+    try {
+      finishReleaseUploadRequestResponse = await out.progress("Finishing release upload...", 
+        clientRequest<models.ReleaseUploadEndResponse>((cb) => client.distribute.updateReleaseUpload(uploadId, app.ownerName, app.appName, "committed", cb)));
+    } catch (error) {
+      throw failure(ErrorCodes.Exception, `failed to finish release upload for ${this.filePath}`);
+    }
+
+    return finishReleaseUploadRequestResponse.result.releaseUrl;
+  }
+
+  private async abortReleaseUpload(client: MobileCenterClient, app: DefaultApp, uploadId: string): Promise<void> {
+    let abortReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadEndResponse>;
+    try {
+      abortReleaseUploadRequestResponse = await out.progress("Aborting release upload...", 
+        clientRequest<models.ReleaseUploadEndResponse>((cb) => client.distribute.updateReleaseUpload(uploadId, app.ownerName, app.appName, "aborted", cb)));
+    } catch (error) {
+      throw new Error(`HTTP ${abortReleaseUploadRequestResponse.response.statusCode} - ${abortReleaseUploadRequestResponse.response.statusMessage}`);
+    }
+  }
+
+  private extractReleaseId(releaseUrl: string): number {
+    const releaseId = Number(_(releaseUrl).split("/").last());
+    console.assert(Number.isSafeInteger(releaseId) && releaseId > 0, `API returned unexpected release URL: ${releaseUrl}`);
+    return releaseId;
+  }
+
+  private async distributeRelease(client: MobileCenterClient, app: DefaultApp, releaseId: number, releaseNotesString: string): Promise<models.ReleaseDetails> {
+    let updateReleaseRequestResponse: ClientResponse<models.ReleaseDetails>;
+    try {
+      updateReleaseRequestResponse = await out.progress(`Distributing the release ${releaseId}...`,
+        clientRequest<models.ReleaseDetails>(async (cb) => client.distribute.updateRelease(releaseId, app.ownerName, app.appName, {
+          distributionGroupName: this.distributionGroup,
+          releaseNotes: releaseNotesString
+        }, cb)));
+      const statusCode = updateReleaseRequestResponse.response.statusCode;
+      if (statusCode >= 400) {
+        throw statusCode;
+      }
+    } catch (error) {
+      if (error === 400) {
+        throw failure(ErrorCodes.Exception, "changing distribution group is not supported");
+      } else {
+        debug(`Failed to distribute the release - ${inspect(error)}`);
+        throw failure(ErrorCodes.Exception, `failed to set distribution group and release notes for release ${releaseId}`);
+      }
+    }
+
+    return updateReleaseRequestResponse.result;
+  }
+}
