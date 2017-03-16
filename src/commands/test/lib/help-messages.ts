@@ -73,7 +73,7 @@ export module Messages {
       export const StatusContinuous = "Continuously checks the test run status until it completes";
 
       export const XCUITestIpaPath = "Path to the *.ipa file with the XCUITest tests";
-      export const XCUITestBuildDir = "Path to the XCUITest output directory (usually <project>/Build/Products/Debug-iphoneos)";
+      export const XCUITestBuildDir = "Path to the build output directory (usually <project>/Build/Products/Debug-iphoneos)";
     }
   }
 }
