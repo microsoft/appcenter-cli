@@ -376,3 +376,18 @@ export function reportNewLineSeparatedArray(reportFormat: any, data: any[]) {
     console.log(JSON.stringify(data));
   }
 }
+
+export function reportTitledGroupsOfTables(dataGroups: Array<{title: string, reportFormat: any, tables: any[]}>){
+  if (!formatIsJson()) {
+    dataGroups.forEach((dataGroup, index) => {
+      if (index) {
+        console.log("");
+      }
+      console.log(dataGroup.title);
+      console.log("");
+      reportNewLineSeparatedArray(dataGroup.reportFormat, dataGroup.tables);
+    });
+  } else {
+    console.log(JSON.stringify(dataGroups));
+  }
+}
