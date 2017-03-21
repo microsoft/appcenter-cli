@@ -1,6 +1,7 @@
 import {AppCommand, Command, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success} from "../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { out } from "../../util/interaction";
+import { inspect } from "util";
 import * as _ from "lodash";
 import * as Process from "process";
 import * as MkDirP from "mkdirp";
@@ -45,11 +46,17 @@ export default class DisplayLogsStatusCommand extends AppCommand {
     const app = this.app;
 
     debug(`Downloading logs for build ${this.buildId}`);
-    const logsResponse = await out.progress(`Downloading logs for build ${this.buildId}...`,
-      clientRequest<models.BuildLog>((cb) => client.buildOperations.getBuildLogs(buildIdNumber, app.ownerName, app.appName, cb)));
-
-    if (logsResponse.response.statusCode >= 400) {
-      return failure(ErrorCodes.Exception, "the Get Build Logs request was rejected for an unknown reason");
+    let logsResponse: ClientResponse<models.BuildLog>;
+    try {
+      logsResponse = await out.progress(`Downloading logs for build ${this.buildId}...`,
+        clientRequest<models.BuildLog>((cb) => client.buildOperations.getBuildLogs(buildIdNumber, app.ownerName, app.appName, cb)));
+    } catch (error) {
+      debug(`Request failed - ${inspect(error)}`);
+      if (error.statusCode === 401) {
+        return failure(ErrorCodes.Exception, "failed to get build logs because the authentication has failed");
+      } else {
+        return failure(ErrorCodes.Exception, "failed to get build logs");
+      }
     }
 
     const logs = logsResponse.result.value;
