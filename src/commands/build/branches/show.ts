@@ -3,7 +3,7 @@ import { MobileCenterClient, models, clientRequest, ClientResponse } from "../..
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
-import { reportBuild } from "./lib/format-build";
+import { reportBuild, getBuildReportObject } from "./lib/format-build";
 
 const debug = require("debug")("mobile-center-cli:commands:build:branches:show");
 
@@ -52,7 +52,7 @@ export default class ShowBranchBuildStatusCommand extends AppCommand {
 
     const commitInfo = commitInfoRequestResponse.result[0];
 
-    reportBuild(lastBuild, commitInfo, app, portalBaseUrl);
+    reportBuild(getBuildReportObject(lastBuild, commitInfo, app, portalBaseUrl));
 
     return success();
   }

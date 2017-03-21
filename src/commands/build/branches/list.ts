@@ -1,4 +1,4 @@
-import { reportBuild } from "./lib/format-build";
+import { getBuildReportObject, reportBuilds } from "./lib/format-build";
 import {AppCommand, Command, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success} from "../../../util/commandline";
 import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
 import { out } from "../../../util/interaction";
@@ -54,16 +54,8 @@ export default class ShowBranchesListBuildStatusCommand extends AppCommand {
 
     const commits = commitInfoRequestResponse.result;
 
-    for (let i = 0; i < branchesWithBuilds.length; i++) {
-      const branchBuild = branchesWithBuilds[i].lastBuild;
-      const branchCommit = commits[i];
-
-      if (i) {
-        out.text("");
-      }
-
-      reportBuild(branchBuild, branchCommit, app, portalBaseUrl);
-    }
+    const buildReportObjects = branchesWithBuilds.map((branch, index) => getBuildReportObject(branch.lastBuild, commits[index], app, portalBaseUrl));
+    reportBuilds(buildReportObjects);
 
     return success();
   }

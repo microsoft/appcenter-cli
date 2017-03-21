@@ -64,7 +64,7 @@ export default class DisplayLogsStatusCommand extends AppCommand {
     // taking only specified number of log entries from the end (or all of them if -l was not specified))
     const filteredLogs = _.takeRight(logs, Math.min(numberOfLines, logs.length));
 
-    filteredLogs.forEach((logEntry) => out.text(logEntry));
+    out.text((logStrings: string[]) => logStrings.length ? logStrings.reduce((logEntries, logEntry) => logEntries + "\n" + logEntry) : "No log entries were found", filteredLogs);
 
     return success();
   }
