@@ -14,7 +14,7 @@ export function reportBuild(build: models.Build, commitInfo: models.CommitDetail
 
   out.report([
     ["Branch", "sourceBranch"],
-    ["Build number", "buildNumber"],
+    ["Build ID", "buildNumber"],
     ["Build status", "status"],
     ["Build result", "result"],
     ["Build URL", "url"],
