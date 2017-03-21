@@ -362,3 +362,17 @@ report.asDate = function (data: any): string {
 report.inspect = function (data: any): string {
   return inspect(data, {depth: null});
 };
+
+export function reportNewLineSeparatedArray(reportFormat: any, data: any[]) {
+  if (!formatIsJson()) {
+    data.forEach((item, index) => {
+      if (index) {
+        console.log("");
+      }
+
+      report(reportFormat, item);
+    });
+  } else {
+    console.log(JSON.stringify(data));
+  }
+}

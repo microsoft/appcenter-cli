@@ -104,7 +104,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     let outputFilePath = Path.join(this.directory, fileName);
     await Pfs.writeFile(Path.join(this.directory, fileName), outputFileBuffer);
 
-    out.text(`Downloaded content was saved to ${Path.resolve(outputFilePath)}`);
+    out.text((pathObject) => `Downloaded content was saved to ${pathObject.path}`,  {path: Path.resolve(outputFilePath)});
 
     return success();
   }
