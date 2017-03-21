@@ -111,8 +111,8 @@ export function parseOptions(...params: any[]): void {
     const option = flagOptions[targetPropertyName];
     const optKey = optionKey(option);
 
-    // Skip required args if help has been invoked
-    if (!parsed["help"] && option.required && !parsed[optKey]) {
+    // Skip required args if help or version have been invoked
+    if (!parsed["help"] && !parsed["version"] && option.required && !parsed[optKey]) {
       // TODO: Replace this with auto-prompting
       throw new Error(`Missing required option ${optionDisplayName(option)}`);
     }
