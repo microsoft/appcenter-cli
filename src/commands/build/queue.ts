@@ -1,6 +1,7 @@
 import {AppCommand, Command, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success} from "../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { out } from "../../util/interaction";
+import { inspect } from "util";
 import * as PortalHelper from "../../util/portal/portal-helper";
 
 const debug = require("debug")("mobile-center-cli:commands:build:queue");
@@ -24,15 +25,15 @@ export default class QueueBuildCommand extends AppCommand {
     const app = this.app;
 
     debug(`Queuing build for branch ${this.branchName}`);
-    const queueBuildRequestResponse = await out.progress(`Queueing build for branch ${this.branchName}...`, 
-      clientRequest<models.Build>((cb) => client.buildOperations.queueBuild(this.branchName, app.ownerName, app.appName, {
-        debug: this.debugLogs
-      }, cb)));
-
-    const queueBuildHttpResponseCode = queueBuildRequestResponse.response.statusCode;
-
-    if (queueBuildHttpResponseCode >= 400) {
-      return failure(ErrorCodes.Exception, "the Queue Build request was rejected for an unknown reason");
+    let queueBuildRequestResponse: ClientResponse<models.Build>;
+    try {
+      queueBuildRequestResponse = await out.progress(`Queueing build for branch ${this.branchName}...`, 
+        clientRequest<models.Build>((cb) => client.buildOperations.queueBuild(this.branchName, app.ownerName, app.appName, {
+          debug: this.debugLogs
+        }, cb)));
+    } catch (error) {
+      debug(`Request failed - ${inspect(error)}`);
+      return failure(ErrorCodes.Exception, "failed to queue build request");
     }
 
     const buildId = queueBuildRequestResponse.result.id;

@@ -1,7 +1,8 @@
 import { reportBuild } from "./lib/format-build";
 import {AppCommand, Command, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success} from "../../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
+import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
 import { out } from "../../../util/interaction";
+import { inspect } from "util";
 import * as _ from "lodash";
 
 const debug = require("debug")("mobile-center-cli:commands:build:branches:list");
@@ -13,13 +14,20 @@ export default class ShowBranchesListBuildStatusCommand extends AppCommand {
     const app = this.app;
 
     debug(`Getting list of branches for app ${app.appName}`);
-    const branchesStatusesRequestResponse = await out.progress(`Getting statuses for branches of app ${app.appName}...`, 
-      clientRequest<models.BranchStatus[]>((cb) => client.buildOperations.getBranches(app.ownerName, app.appName, cb)));
-
+    let branchesStatusesRequestResponse: ClientResponse<models.BranchStatus[]>;
+    try {
+      branchesStatusesRequestResponse = await out.progress(`Getting statuses for branches of app ${app.appName}...`, 
+        clientRequest<models.BranchStatus[]>((cb) => client.buildOperations.getBranches(app.ownerName, app.appName, cb)));
+    } catch (error) {
+      debug(`Request failed - ${inspect(error)}`);
+      return failure(ErrorCodes.Exception, "failed to fetch branches list");
+    }
+    
     const branchBuildsHttpResponseCode = branchesStatusesRequestResponse.response.statusCode;
 
     if (branchBuildsHttpResponseCode >= 400) {
-      return failure(ErrorCodes.Exception, "the Branches List request was rejected for an unknown reason");
+      debug(`Request failed - HTTP ${branchBuildsHttpResponseCode} ${branchesStatusesRequestResponse.response.statusMessage}`);
+      return failure(ErrorCodes.Exception, "failed to fetch branches list");
     }
 
     const branchesWithBuilds = _(branchesStatusesRequestResponse.result)
@@ -35,13 +43,13 @@ export default class ShowBranchesListBuildStatusCommand extends AppCommand {
     const buildShas = branchesWithBuilds.map((branch) => branch.lastBuild.sourceVersion);
 
     debug("Getting commit info for the last builds of the branches");
-    const commitInfoRequestResponse = await out.progress("Getting commit info for the last builds of branches...", 
-      clientRequest<models.CommitDetails[]>((cb) => client.buildOperations.getCommits(buildShas.join(","), app.ownerName, app.appName, cb)));
-
-    const commitInfoRequestResponseResponseCode = commitInfoRequestResponse.response.statusCode;
-
-    if (commitInfoRequestResponseResponseCode >= 400) {
-      return failure(ErrorCodes.Exception, "the Get Commits request was rejected for an unknown reason");
+    let commitInfoRequestResponse: ClientResponse<models.CommitDetails[]>;
+    try {
+      commitInfoRequestResponse = await out.progress("Getting commit info for the last builds of branches...", 
+        clientRequest<models.CommitDetails[]>((cb) => client.buildOperations.getCommits(buildShas.join(","), app.ownerName, app.appName, cb)));
+    } catch (error) {
+      debug(`Request failed - ${inspect(error)}`);
+      return failure(ErrorCodes.Exception, "failed to get commit details");
     }
 
     const commits = commitInfoRequestResponse.result;

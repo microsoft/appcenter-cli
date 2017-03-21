@@ -1,8 +1,7 @@
-import { ClientResponse } from "../../util/apis/create-client";
-import { error } from "util";
 import {AppCommand, Command, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success, isCommandFailedResult} from "../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { out } from "../../util/interaction";
+import { inspect } from "util";
 import * as _ from "lodash";
 import * as Process from "process";
 import * as MkDirP from "mkdirp";
@@ -165,13 +164,16 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   }
 
   private async getBuildStatus(client: MobileCenterClient, app: DefaultApp, buildIdNumber: number): Promise<models.Build> {
-    const response = await out.progress(`Getting status of build ${this.buildId}...`,
-      clientRequest<models.Build>((cb) => client.buildOperations.getBuild(buildIdNumber, app.ownerName, app.appName, cb)));
-    if (response.response.statusCode >= 400) {
+    let buildStatusRequestResponse: ClientResponse<models.Build>;
+    try {
+      buildStatusRequestResponse = await out.progress(`Getting status of build ${this.buildId}...`,
+        clientRequest<models.Build>((cb) => client.buildOperations.getBuild(buildIdNumber, app.ownerName, app.appName, cb)));
+    } catch (error) {
+      debug(`Request failed - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, `failed to get status of build ${this.buildId}`);
     }
 
-    const buildInfo = response.result;
+    const buildInfo = buildStatusRequestResponse.result;
 
     if (buildInfo.status !== DownloadBuildStatusCommand.completedStatus) {
       throw failure(ErrorCodes.InvalidParameter, `cannot download ${this.type} for an uncompleted build`);
@@ -184,9 +186,12 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   }
 
   private async getDownloadUri(client: MobileCenterClient, app: DefaultApp, buildIdNumber: number): Promise<string> {
-    const downloadDataResponse = await out.progress(`Getting ${this.type} download URL for build ${this.buildId}...`,
-      clientRequest<models.DownloadContainer>((cb) => client.buildOperations.getBuildDownload(buildIdNumber, this.type, app.ownerName, app.appName, cb)));
-    if (downloadDataResponse.response.statusCode >= 400) {
+    let downloadDataResponse: ClientResponse<models.DownloadContainer>;
+    try {
+      downloadDataResponse = await out.progress(`Getting ${this.type} download URL for build ${this.buildId}...`,
+        clientRequest<models.DownloadContainer>((cb) => client.buildOperations.getBuildDownload(buildIdNumber, this.type, app.ownerName, app.appName, cb)));
+    } catch (error) {
+      debug(`Request failed - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, `failed to get ${this.type} downloading URL for build ${this.buildId}`);
     }
 
@@ -194,14 +199,21 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   }
 
   private async downloadContent(uri: string): Promise<Buffer> {
-    const downloadFileRequestResponse = await out.progress(`Loading ${this.type} for build ${this.buildId}...`, this.downloadFile(uri));
+    let downloadFileRequestResponse: ClientResponse<Buffer>;
+    try {
+      downloadFileRequestResponse = await out.progress(`Loading ${this.type} for build ${this.buildId}...`, this.downloadFile(uri));
+    } catch (error) {
+      debug(`File download failed - ${inspect(error)}`);
+      throw failure(ErrorCodes.Exception, `failed to load file with ${this.type} for build ${this.buildId}`);
+    }
+
     const statusCode = downloadFileRequestResponse.response.statusCode;
     if (statusCode >= 400) {
       switch (statusCode) {
         case 404: 
           throw failure(ErrorCodes.Exception, `unable to find ${this.type} for build ${this.buildId}`); 
         default:
-          throw failure(ErrorCodes.Exception, `failed to load file with ${this.type} for build ${this.buildId}`);
+          throw failure(ErrorCodes.Exception, `failed to load file with ${this.type} for build ${this.buildId} - HTTP ${statusCode} ${downloadFileRequestResponse.response.statusMessage}`);
       }
     }
 
