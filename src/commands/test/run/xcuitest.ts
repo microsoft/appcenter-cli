@@ -54,12 +54,10 @@ export default class RunXCUITestCommand extends RunTestsCommand {
   }
 
   private async generateAppIpa(): Promise<void> {
-    let appPaths = (await pfs.readdir(this.buildDir)).filter((appPath) => {
-      if (appPath.endsWith("-Runner.app")) {
-        return false;
-      }
-      return appPath.endsWith(".app");
-    });
+    let appPaths = (await pfs.readdir(this.buildDir)).filter(
+      (appPath) => /[^-Runner].app$/.test(appPath)
+    );
+
     if (appPaths.length == 0) {
       throw new TestCloudError(`Unable to find app within ${this.buildDir}`);
     }
