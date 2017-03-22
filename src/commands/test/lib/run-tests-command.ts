@@ -148,17 +148,10 @@ export abstract class RunTestsCommand extends AppCommand {
     await pfs.rmDir(artifactsDir, true);
   }
 
-  protected getArtifactsDir(): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      temp.mkdir("mobile-center-upload", (err, dirPath) => {
-        if (err) {
-          reject(err);
-        }
-        else {
-          resolve(dirPath);
-        }
-      });
-    });
+  private artifactsDir: string;
+
+  protected async getArtifactsDir(): Promise<string> {
+    return this.artifactsDir || (this.artifactsDir = await pfs.mkTempDir("mobile-center-upload"));
   }
 
   protected async uploadAndStart(client: MobileCenterClient, manifestPath: string): Promise<StartedTestRun> {
