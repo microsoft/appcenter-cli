@@ -67,7 +67,7 @@ export function help(...args: any[]) : void
 // Output a line of plain text. Only outputs if the format is regular text.
 // If passing a converter, then the raw data is output in json format instead.
 //
-export function text(converter: {(data: any): string}, data: any): void;
+export function text<T>(converter: {(data: T): string}, data: T): void;
 export function text(t: string): void;
 export function text(...args: any[]): void {
   let converter: {(data: any): string};
