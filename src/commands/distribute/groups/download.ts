@@ -1,4 +1,4 @@
-import { AppCommand, CommandResult, help, success, failure, shortName, longName, required, hasArg, isCommandFailedResult, ErrorCodes } from "../../../util/commandline";
+import { AppCommand, CommandResult, help, success, failure, shortName, longName, required, hasArg, ErrorCodes } from "../../../util/commandline";
 import { MobileCenterClient, clientRequest, models } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { DefaultApp } from "../../../util/profile";
@@ -41,17 +41,6 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
   public directory: string;
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
-    try {
-      return await this.doCommand(client);
-    } catch (error) {
-      if (isCommandFailedResult(error)) {
-        return error;
-      } else {
-        throw error;
-      }
-    }
-  }
-  private async doCommand(client: MobileCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     // test that optional release id is a positive integer and optional file name is valid

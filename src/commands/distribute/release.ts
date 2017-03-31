@@ -1,4 +1,4 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, isCommandFailedResult, longName, required, shortName, success} from "../../util/commandline";
+import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
 import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
@@ -39,18 +39,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
   public releaseNotesFile: string;
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
-    try {
-      return await this.doCommand(client);
-    } catch (error) {
-      if (isCommandFailedResult(error)) {
-        return error;
-      } else {
-        throw error;
-      }
-    }
-  }
-
-  private async doCommand(client: MobileCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
     
     debug("Check that user hasn't selected both --release-notes and --release-notes-file");

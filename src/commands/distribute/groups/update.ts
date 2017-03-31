@@ -1,4 +1,4 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg, isCommandFailedResult} from "../../../util/commandline";
+import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
 import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
@@ -50,18 +50,6 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
   public testersToDeleteListFile: string;
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
-    try {
-      return await this.doCommand(client);
-    } catch (error) {
-      if (isCommandFailedResult(error)) {
-        return error;
-      } else {
-        throw error;
-      }
-    }
-  }
-
-  private async doCommand(client: MobileCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     // validate that string and file properties are not specified simultaneously
