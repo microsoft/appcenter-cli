@@ -5,6 +5,7 @@ import { inspect } from "util";
 import * as _ from "lodash";
 import * as Pfs from "../../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../../util/profile";
+import * as emailListStringHelper from "./lib/email-list-string-helper";
 
 const debug = require("debug")("mobile-center-cli:commands:distribute:groups:create");
 
@@ -53,8 +54,8 @@ export default class CreateDistributionGroupCommand extends AppCommand {
     debug("Creating distribution group");
     await this.createDistributionGroup(client, app);
 
-    // extracting emails from test emails string
-    const testersEmails = _.chain(testersEmailsString).words(/\S+/g).uniq().value();
+    // extracting emails from testers' emails string
+    const testersEmails = emailListStringHelper.extractEmailsFromString(testersEmailsString);
 
     // add testers if any were specified
     if (testersEmails.length) {
