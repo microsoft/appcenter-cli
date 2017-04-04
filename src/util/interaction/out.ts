@@ -356,7 +356,12 @@ report.allProperties = function (data: any): any {
 };
 
 report.asDate = function (data: any): string {
-  return new Date(Date.parse(data)).toString();
+  const date = new Date(data);
+  if (formatIsJson()) {
+    return date.toJSON();
+  } else {
+    return date.toString();
+  }
 };
 
 report.inspect = function (data: any): string {
