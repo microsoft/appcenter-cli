@@ -22,7 +22,6 @@ export default class AppUpdateCommand extends AppCommand {
   @help("The descriptive name of the app. This can contain any characters.")
   @shortName("d")
   @longName("display-name")
-  @required
   @hasArg
   displayName: string;
 
