@@ -19,14 +19,13 @@ export default class AppUpdateCommand extends AppCommand {
   @hasArg
   description: string;
 
-  @help("The descriptive name of the app. This can contain any characters")
+  @help("The descriptive name of the app. This can contain any characters.")
   @shortName("d")
   @longName("display-name")
-  @required
   @hasArg
   displayName: string;
 
-  @help("The name of the app used in URLs. Can optionally be provided specifically, otherwise a generated name will be derived from display-name")
+  @help("The name of the app used in URLs.")
   @shortName("n")
   @longName("name")
   @hasArg
