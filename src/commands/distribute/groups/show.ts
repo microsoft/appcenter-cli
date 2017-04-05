@@ -1,4 +1,4 @@
-import { AppCommand, CommandResult, help, success, shortName, longName, required, hasArg, isCommandFailedResult } from "../../../util/commandline";
+import { AppCommand, CommandResult, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
 import { MobileCenterClient } from "../../../util/apis";
 
 import { showDistributionGroupView } from "./lib/group-view-helper";
@@ -18,15 +18,7 @@ export default class ShowDistributionGroupCommand extends AppCommand {
     const app = this.app;
 
     // showing distribution group view
-    try {
-      await showDistributionGroupView(client, app, this.distributionGroup, debug);
-    } catch (error) {
-      if (isCommandFailedResult(error)) {
-        return error;
-      } else {
-        throw error;
-      }
-    }
+    await showDistributionGroupView(client, app, this.distributionGroup, debug);
 
     return success();
   }

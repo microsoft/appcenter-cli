@@ -1,9 +1,12 @@
-import { expect } from "chai";
+import { expect, use } from "chai";
 import * as Fs from "fs";
 import * as Nock from "nock";
 import * as Path from "path";
 import * as Sinon from "sinon";
 import * as Temp from "temp";
+import * as ChaiAsPromised from "chai-as-promised";
+
+use(ChaiAsPromised);
 
 import ReleaseBinaryCommand from "../../../../src/commands/distribute/release";
 import { CommandArgs, CommandResult } from "../../../../src/util/commandline";
@@ -113,7 +116,7 @@ describe("release command", () => {
 
       // Act 
       const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath, "-g", fakeDistributionGroupName]));
-      const result = await command.execute();
+      const result = await expect(command.execute()).to.eventually.be.rejected;
 
       // Assert
       testUploadFailure(result, expectedRequestsScope, skippedRequestsScope);

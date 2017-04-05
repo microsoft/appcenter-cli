@@ -1,4 +1,4 @@
-import {AppCommand, Command, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success, isCommandFailedResult} from "../../util/commandline";
+import {AppCommand, Command, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
 import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
@@ -47,18 +47,6 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   public directory: string;
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
-    try {
-      return await this.doCommand(client);
-    } catch (error) {
-      if (isCommandFailedResult(error)) {
-        return error;
-      } else {
-        throw error;
-      }
-    }
-  }
-
-  private async doCommand(client: MobileCenterClient): Promise<CommandResult> {
     this.type = this.getNormalizedTypeValue(this.type);
 
     const buildIdNumber = this.getNormalizedBuildId(this.buildId);

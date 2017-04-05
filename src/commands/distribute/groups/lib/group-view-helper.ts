@@ -28,7 +28,7 @@ export async function showDistributionGroupView(client: MobileCenterClient, app:
     }
   } catch (error) {
     if (error === 404) {
-      return failure(ErrorCodes.InvalidParameter, `distribution group ${distributionGroup} was not found`);
+      throw failure(ErrorCodes.InvalidParameter, `distribution group ${distributionGroup} was not found`);
     } else {
       debug(`Failed to get list of distribution group members - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, "failed to retrieve list of distribution group users");

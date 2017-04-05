@@ -1,7 +1,7 @@
 // logic that reads a command line, extracts the actual command, and loads it.
 
 import { Command } from "./command";
-import { CommandResult, exception, illegal, notFound } from "./command-result";
+import { CommandResult, exception, illegal, notFound, isCommandFailedResult } from "./command-result";
 import * as Finder from "./command-finder";
 import * as Loader from "./command-loader";
 import { setDebug, isDebug, setFormatJson } from "../interaction";
@@ -49,6 +49,9 @@ function runner(arg: any): CommandRunner {
       return await commandObj.execute();
     }
     catch (ex) {
+      if (isCommandFailedResult(ex)) {
+        return ex;
+      }
       if(isDebug()) {
         console.log(`Command Failure at ${ex.stack}`);
       }
