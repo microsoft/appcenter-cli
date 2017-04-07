@@ -1,15 +1,15 @@
-import {AppCommand, Command, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success} from "../../util/commandline";
+import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
 import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
-import { out } from "../../util/interaction";
+import { StreamingArrayOutput } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
-import * as Process from "process";
-import * as MkDirP from "mkdirp";
+import * as ContinuousPollingHelper from "../../util/continuous-polling/continuous-polling-helper";
 
 const debug = require("debug")("mobile-center-cli:commands:build:logs");
 
 @help("Displays log for build")
 export default class DisplayLogsStatusCommand extends AppCommand {
+  private static readonly delayBetweenRequests = 3000;
 
   @help("ID of build to show logs for")
   @shortName("i")
@@ -23,6 +23,11 @@ export default class DisplayLogsStatusCommand extends AppCommand {
   @longName("lines")
   @hasArg
   public lines: string;
+
+  @help("Continue to return logs, press Ctrl+C to exit")
+  @shortName("c")
+  @longName("continue")
+  public showContinuously: boolean;
 
   async run(client: MobileCenterClient): Promise<CommandResult> {  
     // validate build id  
@@ -45,26 +50,44 @@ export default class DisplayLogsStatusCommand extends AppCommand {
 
     const app = this.app;
 
-    debug(`Downloading logs for build ${this.buildId}`);
-    let logsResponse: ClientResponse<models.BuildLog>;
-    try {
-      logsResponse = await out.progress(`Downloading logs for build ${this.buildId}...`,
-        clientRequest<models.BuildLog>((cb) => client.builds.getLog(buildIdNumber, app.ownerName, app.appName, cb)));
-    } catch (error) {
-      debug(`Request failed - ${inspect(error)}`);
-      if (error.statusCode === 401) {
-        return failure(ErrorCodes.Exception, "failed to get build logs because the authentication has failed");
-      } else {
-        return failure(ErrorCodes.Exception, "failed to get build logs");
+    const streamingOutput = new StreamingArrayOutput();
+    streamingOutput.start();
+
+    let skippedAndShownLogsCount: number;
+    await ContinuousPollingHelper.pollContinuously(async () => {
+      try {
+        debug(`Downloading logs for build ${this.buildId}`);
+        return await clientRequest<models.BuildLog>((cb) => client.builds.getLog(buildIdNumber, app.ownerName, app.appName, cb));
+      } catch (error) {
+        debug(`Request failed - ${inspect(error)}`);
+        if (error.statusCode === 401) {
+          throw failure(ErrorCodes.Exception, "failed to get build logs because the authentication has failed");
+        } else {
+          throw failure(ErrorCodes.Exception, "failed to get build logs");
+        }
       }
-    }
+    }, (response, responsesProcessed) => {
+      // processing response
+      const logs = response.result.value;
+      let filteredLogs: string[];
+      if (responsesProcessed) {
+        filteredLogs = _.drop(logs, skippedAndShownLogsCount);
+        skippedAndShownLogsCount += filteredLogs.length;
+      } else {
+        filteredLogs = _.takeRight(logs, Math.min(numberOfLines, logs.length));
+        skippedAndShownLogsCount = logs.length;
+      }
 
-    const logs = logsResponse.result.value;
+      if (!this.showContinuously && filteredLogs.length === 0) {
+        streamingOutput.text(_.constant(""), "No log entries were found");
+      } else {
+        for (const log of filteredLogs) {
+          streamingOutput.text(_.constant(log), log);
+        }
+      }
+    }, this.showContinuously, DisplayLogsStatusCommand.delayBetweenRequests, `Downloading logs for build ${this.buildId}...`);
 
-    // taking only specified number of log entries from the end (or all of them if -l was not specified))
-    const filteredLogs = _.takeRight(logs, Math.min(numberOfLines, logs.length));
-
-    out.text((logStrings: string[]) => logStrings.length ? logStrings.reduce((logEntries, logEntry) => logEntries + "\n" + logEntry) : "No log entries were found", filteredLogs);
+    streamingOutput.finish();
 
     return success();
   }
