@@ -226,7 +226,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async distributeRelease(client: MobileCenterClient, app: DefaultApp, releaseId: number, releaseNotesString: string): Promise<models.ReleaseDetails> {
     let updateReleaseRequestResponse: ClientResponse<models.ReleaseDetails>;
     try {
-      updateReleaseRequestResponse = await out.progress(`Distributing the release ${releaseId}...`,
+      updateReleaseRequestResponse = await out.progress(`Distributing the release...`,
         clientRequest<models.ReleaseDetails>(async (cb) => client.releases.update(releaseId, app.ownerName, app.appName, {
           distributionGroupName: this.distributionGroup,
           releaseNotes: releaseNotesString

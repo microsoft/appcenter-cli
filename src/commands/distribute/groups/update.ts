@@ -6,7 +6,6 @@ import * as _ from "lodash";
 import * as Pfs from "../../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../../util/profile";
 import * as emailListStringHelper from "./lib/email-list-string-helper";
-import { showDistributionGroupView } from "./lib/group-view-helper";
 
 const debug = require("debug")("mobile-center-cli:commands:distribute:groups:update");
 
@@ -25,13 +24,13 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
   @hasArg
   public newDistributionGroupName: string;
 
-  @help("List of testers (space-separated list of e-mails) to add")
+  @help("List of testers to add (use space-separated list of e-mails)")
   @shortName("t")
   @longName("add-testers")
   @hasArg
   public testersToAdd: string;
 
-  @help("List of testers (space-separated list of e-mails) to delete")
+  @help("List of testers to delete (use space-separated list of e-mails)")
   @shortName("d")
   @longName("delete-testers")
   @hasArg
@@ -69,30 +68,43 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     // getting string with emails of testers to delete
     const testersToDeleteEmails = emailListStringHelper.extractEmailsFromString(await testersToDelete);
 
+    let deletedTestersEmails: string[];
     if (testersToDeleteEmails.length) {
-      debug("Removing testers from distribution group");
-      await this.removeTestersFromDistributionGroup(client, app, testersToDeleteEmails);
+      debug("Deleting testers from distribution group");
+      deletedTestersEmails = await this.deleteTestersFromDistributionGroup(client, app, testersToDeleteEmails);
+    } else {
+      deletedTestersEmails = [];
     }
 
+    let addedTestersEmails: string[];
     if (testersToAddEmails.length) {
       debug("Adding testers to distribution group");
-      await this.addTestersToDistributionGroup(client, app, testersToAddEmails);
+      addedTestersEmails = await this.addTestersToDistributionGroup(client, app, testersToAddEmails);
+    } else {
+      addedTestersEmails = [];
     }
 
-    // Renaming distribution group (if needed) and showing it's view
+    let currentGroupName: string;
     if (!_.isNil(this.newDistributionGroupName)) {
       debug("Renaming the distribution group");
-      await this.renameDistributionGroup(client, app, this.newDistributionGroupName);
-
-      await showDistributionGroupView(client, app, this.newDistributionGroupName, debug);
+      currentGroupName = await this.renameDistributionGroup(client, app, this.newDistributionGroupName);
     } else {
-      await showDistributionGroupView(client, app, this.distributionGroup, debug);
-    }    
+      currentGroupName = this.distributionGroup;
+    }
+
+    if (deletedTestersEmails.length !== testersToDeleteEmails.length || addedTestersEmails.length !== testersToAddEmails.length) {
+      out.text("Updating the list of testers was partially successful");
+    }
+
+    out.text((result) => `Distribution group ${result.name} was successfully updated`, { name: currentGroupName, addedTesters: addedTestersEmails, deletedTesters: deletedTestersEmails});   
     
     return success();
   }
 
   private validateParameters() {
+    if (_.isNil(this.newDistributionGroupName) && _.isNil(this.testersToAdd) && _.isNil(this.testersToAddListFile) && _.isNil(this.testersToDelete) && _.isNil(this.testersToDeleteListFile)) {
+      throw failure(ErrorCodes.InvalidParameter, "nothing to update");
+    }
     if (!_.isNil(this.testersToAdd) && !_.isNil(this.testersToAddListFile)) {
       throw failure(ErrorCodes.InvalidParameter, "parameters 'add-testers' and 'add-testers-file' are mutually exclusive");
     }
@@ -159,28 +171,28 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     }
   }
 
-  private async removeTestersFromDistributionGroup(client: MobileCenterClient, app: DefaultApp, userEmails: string[]): Promise<models.DistributionGroupUserDeleteResponse[]> {
+  private async deleteTestersFromDistributionGroup(client: MobileCenterClient, app: DefaultApp, userEmails: string[]): Promise<string[]> {
     try {
-      const httpResponse = await out.progress("Removing testers from the distribution group...", 
+      const httpResponse = await out.progress("Deleting testers from the distribution group...", 
         clientRequest<models.DistributionGroupUserDeleteResponse[]>((cb) => client.distributionGroups.removeUser(app.ownerName, app.appName, this.distributionGroup, {
           userEmails
         }, cb)));
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.response.statusCode;
       } else {
-        return httpResponse.result;
+        return httpResponse.result.filter((result) => result.status < 400).map((result) => result.userEmail);
       }
     } catch (error) {
       if (error === 404) {
-        throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} doesn't exists`);
+        throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} doesn't exist`);
       } else {
-        debug(`Failed to remove users from the distribution group ${this.distributionGroup} - ${inspect(error)}`);
-        throw failure(ErrorCodes.Exception, `failed to remove testers from the distribution group`);
+        debug(`Failed to delete testers from the distribution group ${this.distributionGroup} - ${inspect(error)}`);
+        throw failure(ErrorCodes.Exception, `failed to delete testers from the distribution group`);
       }
     }
   }
 
-  private async addTestersToDistributionGroup(client: MobileCenterClient, app: DefaultApp, userEmails: string[]): Promise<models.DistributionGroupUserPostResponse[]> {
+  private async addTestersToDistributionGroup(client: MobileCenterClient, app: DefaultApp, userEmails: string[]): Promise<string[]> {
     try {
       const httpResponse = await out.progress("Adding testers to the distribution group...",
         clientRequest<models.DistributionGroupUserPostResponse[]>((cb) => client.distributionGroups.addUser(app.ownerName, app.appName, this.distributionGroup, {
@@ -189,11 +201,11 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.response.statusCode;
       } else {
-        return httpResponse.result;
+        return httpResponse.result.filter((result) => result.status < 400).map((result) => result.userEmail);
       }
     } catch (error) {
       if (error === 404) {
-        throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} doesn't exists`);
+        throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} doesn't exist`);
       } else {
         debug(`Failed to add testers to the distribution group ${this.distributionGroup} - ${inspect(error)}`);
         throw failure(ErrorCodes.Exception, "failed to add testers to the distribution group");
@@ -201,7 +213,7 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     }
   }
 
-  private async renameDistributionGroup(client: MobileCenterClient, app: DefaultApp, newName: string): Promise<models.DistributionGroupResponse> {
+  private async renameDistributionGroup(client: MobileCenterClient, app: DefaultApp, newName: string): Promise<string> {
     try {
       const httpResponse = await out.progress("Renaming the distribution group...", 
         clientRequest<models.DistributionGroupResponse>((cb) => client.distributionGroups.update(app.ownerName, app.appName, this.distributionGroup, {
@@ -210,14 +222,17 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.response.statusCode;
       } else {
-        return httpResponse.result;
+        return newName;
       }      
     } catch (error) {
-      if (error === 404) {
-        throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} doesn't exists`);
-      } else {
-        debug(`Failed to rename the distribution group ${this.distributionGroup} - ${inspect(error)}`);
-        throw failure(ErrorCodes.Exception, `failed to rename the distribution group`);
+      switch (error) {
+        case 400: 
+          throw failure(ErrorCodes.InvalidParameter, `${this.distributionGroup} group can't be renamed`);
+        case 404:
+          throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} doesn't exist`);
+        default:
+          debug(`Failed to rename the distribution group ${this.distributionGroup} - ${inspect(error)}`);
+          throw failure(ErrorCodes.Exception, `failed to rename the distribution group`);
       }
     }
   }
