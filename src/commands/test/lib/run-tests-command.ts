@@ -64,6 +64,11 @@ export abstract class RunTestsCommand extends AppCommand {
   @longName("async")
   async: boolean;
 
+  @help(Messages.TestCloud.Arguments.Timeout)
+  @longName("timeout")
+  @hasArg
+  timeoutSec: number;
+
   protected isAppPathRquired = true;
 
   constructor(args: CommandArgs) {
@@ -81,6 +86,10 @@ export abstract class RunTestsCommand extends AppCommand {
     }
     else if (typeof this.include === "string") {
       this.include = [ this.include ];
+    }
+
+    if (this.timeoutSec && typeof this.timeoutSec === "string") {
+      this.timeoutSec = parseInt(this.timeoutSec);
     }
   }
 
@@ -177,7 +186,7 @@ export abstract class RunTestsCommand extends AppCommand {
 
   private async waitForCompletion(client: MobileCenterClient, testRunId: string): Promise<void> {
     let checker = new StateChecker(client, testRunId, this.app.ownerName, this.app.appName);
-    let exitCode = await checker.checkUntilCompleted();
+    let exitCode = await checker.checkUntilCompleted(this.timeoutSec);
 
     if (exitCode !== 0) {
       throw new TestCloudError("Test run failed. Please inspect logs for more details", exitCode);

@@ -1,6 +1,8 @@
 import { MobileCenterClient, models, clientCall } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import * as os from "os";
+import * as process from "process";
+import { ExitCodes } from "./exit-codes";
 
 export class StateChecker {
   private readonly client: MobileCenterClient;
@@ -14,9 +16,10 @@ export class StateChecker {
     this.ownerName = ownerName;
     this.appName = appName;
   }
-  
-  public async checkUntilCompleted(): Promise<number> {
+
+  public async checkUntilCompleted(timeoutSec: number = null): Promise<number> {
     let exitCode = 0;
+    let startTime = process.hrtime();
 
     while (true) {
       let state = await out.progress("Checking status...", this.getTestRunState(this.client, this.testRunId));
@@ -25,6 +28,15 @@ export class StateChecker {
       if (typeof state.exitCode === "number") {
         exitCode = state.exitCode;
         break;
+      }
+
+      if (timeoutSec) {
+        let elapsedSeconds = process.hrtime(startTime)[0];
+        if (elapsedSeconds + state.waitTime > timeoutSec) {
+          exitCode = ExitCodes.Timeout;
+          out.text(`Command timed out waiting for tests to finish after ${timeoutSec} sec. Returning exit code ${exitCode}.`)
+          break;
+        }
       }
 
       await out.progress(`Waiting ${state.waitTime} seconds...`, this.delay(1000 * state.waitTime));
@@ -49,7 +61,7 @@ export class StateChecker {
         cb
       );
     });
-  } 
+  }
 
   private async delay(milliseconds: number): Promise<void> {
     return new Promise<void>(resolve => {
