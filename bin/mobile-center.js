@@ -36,7 +36,7 @@ function runCli() {
   runner(process.argv.slice(2))
     .then(function (result) {
       if (commandLine.failed(result)) {
-        console.log(`Command failed, ${result.errorMessage}`);
+        console.log(`Command failed: ${result.errorMessage}`);
         process.exit(result.errorCode);
       }
     });

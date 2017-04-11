@@ -34,7 +34,7 @@ export class StateChecker {
         let elapsedSeconds = process.hrtime(startTime)[0];
         if (elapsedSeconds + state.waitTime > timeoutSec) {
           exitCode = ExitCodes.Timeout;
-          out.text(`Command timed out waiting for tests to finish after ${timeoutSec} sec. Returning exit code ${exitCode}.`)
+          out.text(`After ${timeoutSec} seconds, command timed out waiting for tests to finish.`)
           break;
         }
       }

@@ -189,7 +189,7 @@ export abstract class RunTestsCommand extends AppCommand {
     let exitCode = await checker.checkUntilCompleted(this.timeoutSec);
 
     if (exitCode !== 0) {
-      throw new TestCloudError("Test run failed. Please inspect logs for more details", exitCode);
+      throw new TestCloudError(`cannot run Test Cloud tests. Returning exit code ${exitCode}.`, exitCode);
     }
   }
 
