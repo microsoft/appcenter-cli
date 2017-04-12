@@ -17,13 +17,13 @@ export async function archiveAppBundle(appPath: string, ipaPath: string): Promis
     let exitCode = await process.execAndWait(`ditto ${appPath} ${tempAppPath}`);
     if (exitCode !== 0) {
       await pfs.rmDir(tempPath, true);
-      throw new Error("Cannot archive app bundle. Please inspect logs for more details");
+      throw new Error("Cannot archive app bundle.");
     }
     
     exitCode = await process.execAndWait(`ditto -ck --sequesterRsrc ${tempPath} ${ipaPath}`);
     if (exitCode !== 0) {
       await pfs.rmDir(tempPath, true);
-      throw new Error("Cannot archive app bundle. Please inspect logs for more details");
+      throw new Error("Cannot archive app bundle.");
     }
 
     await pfs.rmDir(tempPath, true);

@@ -49,6 +49,7 @@ export module Messages {
       export const RunLanguage = "Override the language (iOS only) for the test run";
       export const RunTestSeries = "Name of the test series";
       export const RunAsync = "Exit the command when tests are uploaded, without waiting for test results";
+      export const Timeout = "Maximum time (in seconds) to wait for test results";
 
       export const AppiumBuildDir = "Path to the directory with the Appium tests (usually <project>/target/upload)";
       

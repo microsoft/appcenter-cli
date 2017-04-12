@@ -59,10 +59,10 @@ export default class RunXCUITestCommand extends RunTestsCommand {
     );
 
     if (appPaths.length == 0) {
-      throw new TestCloudError(`Unable to find app within ${this.buildDir}`);
+      throw new TestCloudError(`unable to find app within ${this.buildDir}`);
     }
     if (appPaths.length > 1) {
-      throw new TestCloudError(`Multiple apps found within ${this.buildDir}`);
+      throw new TestCloudError(`multiple apps found within ${this.buildDir}`);
     }
 
     this.appPath = path.join((await this.getArtifactsDir()), `${path.parse(appPaths[0]).name}.ipa`);

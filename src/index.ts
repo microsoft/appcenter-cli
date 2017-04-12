@@ -13,7 +13,7 @@ let runner = commandRunner(path.join(__dirname, "commands"));
 runner(process.argv.slice(2))
   .then((result: CommandResult) => {
     if (failed(result)) {
-      console.log(`Command failed, ${result.errorMessage}`);
+      console.log(`Command failed: ${result.errorMessage}`);
       process.exit(result.errorCode);
     }
   });

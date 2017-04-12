@@ -31,7 +31,7 @@ export default class StatusCommand extends AppCommand {
       return success();
     }
     else {
-      return failure(exitCode, "Test run failed. Please inspect logs for more details");
+      return failure(exitCode, `Test run failed. Returning exit code ${exitCode}.`);
     }
   }
 }
