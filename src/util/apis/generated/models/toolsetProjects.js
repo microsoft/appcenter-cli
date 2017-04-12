@@ -18,7 +18,7 @@ var util = require('util');
  *
  * @member {array} [xcode] Xcode projects, with their schemes
  * 
- * @member {array} [javascript] package.json filess
+ * @member {array} [javascript] package.json files
  * 
  * @member {array} [xamarin] Xamarin solutions
  * 

@@ -14,6 +14,11 @@
  *
  * @member {string} definition Audience definition in OData format.
  * 
+ * @member {boolean} [enabled]  Default value: true .
+ * 
+ * @member {object} [customProperties] Custom properties used in the
+ * definition.
+ * 
  */
 function AudienceDefinition() {
 }
@@ -37,6 +42,28 @@ AudienceDefinition.prototype.mapper = function () {
           serializedName: 'definition',
           type: {
             name: 'String'
+          }
+        },
+        enabled: {
+          required: false,
+          serializedName: 'enabled',
+          defaultValue: true,
+          type: {
+            name: 'Boolean'
+          }
+        },
+        customProperties: {
+          required: false,
+          serializedName: 'custom_properties',
+          type: {
+            name: 'Dictionary',
+            value: {
+                required: false,
+                serializedName: 'StringElementType',
+                type: {
+                  name: 'String'
+                }
+            }
           }
         }
       }

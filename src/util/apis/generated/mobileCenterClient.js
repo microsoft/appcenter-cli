@@ -50,18 +50,32 @@ function MobileCenterClient(credentials, baseUri, options) {
   }
   this.credentials = credentials;
 
-  this.account = new operations.Account(this);
   this.distribute = new operations.Distribute(this);
-  this.crashOperations = new operations.CrashOperations(this);
-  this.buildOperations = new operations.BuildOperations(this);
+  this.orgInvitations = new operations.OrgInvitations(this);
+  this.distributionGroupInvitations = new operations.DistributionGroupInvitations(this);
+  this.appInvitations = new operations.AppInvitations(this);
+  this.users = new operations.Users(this);
+  this.releases = new operations.Releases(this);
+  this.apps = new operations.Apps(this);
+  this.organizations = new operations.Organizations(this);
+  this.organization = new operations.Organization(this);
+  this.builds = new operations.Builds(this);
+  this.crashes = new operations.Crashes(this);
   this.test = new operations.Test(this);
+  this.symbols = new operations.Symbols(this);
+  this.missingSymbolGroups = new operations.MissingSymbolGroups(this);
   this.tables = new operations.Tables(this);
   this.azure = new operations.Azure(this);
-  this.push = new operations.Push(this);
   this.identity = new operations.Identity(this);
-  this.deprecated = new operations.Deprecated(this);
+  this.repositories = new operations.Repositories(this);
+  this.repositoryConfigurations = new operations.RepositoryConfigurations(this);
+  this.releaseUploads = new operations.ReleaseUploads(this);
+  this.distributionGroups = new operations.DistributionGroups(this);
   this.codepush = new operations.Codepush(this);
+  this.commits = new operations.Commits(this);
+  this.branchConfigurations = new operations.BranchConfigurations(this);
   this.analytics = new operations.Analytics(this);
+  this.account = new operations.Account(this);
   this.models = models;
   msRest.addSerializationMixin(this);
 }

@@ -12,9 +12,7 @@
  * @constructor
  * @member {string} [displayName] The display name of the organization
  * 
- * @member {string} [email] The billing email address of the organization
- * 
- * @member {string} name The name of the organization used in URLs
+ * @member {string} [name] The name of the organization used in URLs
  * 
  */
 function OrganizationRequest() {
@@ -41,15 +39,8 @@ OrganizationRequest.prototype.mapper = function () {
             name: 'String'
           }
         },
-        email: {
-          required: false,
-          serializedName: 'email',
-          type: {
-            name: 'String'
-          }
-        },
         name: {
-          required: true,
+          required: false,
           serializedName: 'name',
           type: {
             name: 'String'

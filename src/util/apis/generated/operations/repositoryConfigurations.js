@@ -12,26 +12,29 @@ var WebResource = msRest.WebResource;
 
 /**
  * @class
- * Push
+ * RepositoryConfigurations
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the MobileCenterClient.
- * Initializes a new instance of the Push class.
+ * Initializes a new instance of the RepositoryConfigurations class.
  * @constructor
  *
  * @param {MobileCenterClient} client Reference to the service client.
  */
-function Push(client) {
+function RepositoryConfigurations(client) {
   this.client = client;
 }
 
 /**
- * @param {string} subscriptionId
- * 
+ * Returns the repository build configuration status of the app
+ *
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
  * 
  * @param {object} [options] Optional Parameters.
+ * 
+ * @param {boolean} [options.includeInactive] Include inactive configurations
+ * if none are active
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -48,7 +51,7 @@ function Push(client) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Push.prototype.getKeys = function (subscriptionId, ownerName, appName, options, callback) {
+RepositoryConfigurations.prototype.list = function (ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -57,10 +60,11 @@ Push.prototype.getKeys = function (subscriptionId, ownerName, appName, options, 
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  var includeInactive = (options && options.includeInactive !== undefined) ? options.includeInactive : undefined;
   // Validate
   try {
-    if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string') {
-      throw new Error('subscriptionId cannot be null or undefined and it must be of type string.');
+    if (includeInactive !== null && includeInactive !== undefined && typeof includeInactive !== 'boolean') {
+      throw new Error('includeInactive must be of type boolean.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -74,10 +78,16 @@ Push.prototype.getKeys = function (subscriptionId, ownerName, appName, options, 
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/push/keys';
-  requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/repo_config';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  var queryParameters = [];
+  if (includeInactive !== null && includeInactive !== undefined) {
+    queryParameters.push('includeInactive=' + encodeURIComponent(includeInactive.toString()));
+  }
+  if (queryParameters.length > 0) {
+    requestUrl += '?' + queryParameters.join('&');
+  }
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -135,7 +145,15 @@ Push.prototype.getKeys = function (subscriptionId, ownerName, appName, options, 
             required: false,
             serializedName: 'parsedResponse',
             type: {
-              name: 'Object'
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'RepoConfigElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'RepoConfig'
+                  }
+              }
             }
           };
           result = client.deserialize(resultMapper, parsedResponse, 'result');
@@ -154,13 +172,7 @@ Push.prototype.getKeys = function (subscriptionId, ownerName, appName, options, 
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Object'
-            }
-          };
+          var resultMapper = new client.models['ValidationErrorResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -176,11 +188,13 @@ Push.prototype.getKeys = function (subscriptionId, ownerName, appName, options, 
 };
 
 /**
- * @param {string} subscriptionId
- * 
+ * Configures the repository for build
+ *
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
+ * 
+ * @param {string} repoUrl The repository url
  * 
  * @param {object} [options] Optional Parameters.
  * 
@@ -199,7 +213,7 @@ Push.prototype.getKeys = function (subscriptionId, ownerName, appName, options, 
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Push.prototype.getConfiguration = function (subscriptionId, ownerName, appName, options, callback) {
+RepositoryConfigurations.prototype.update = function (ownerName, appName, repoUrl, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -210,192 +224,27 @@ Push.prototype.getConfiguration = function (subscriptionId, ownerName, appName, 
   }
   // Validate
   try {
-    if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string') {
-      throw new Error('subscriptionId cannot be null or undefined and it must be of type string.');
-    }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/push/config';
-  requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Object'
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 400) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Object'
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
- * @param {string} subscriptionId
- * 
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {object} [options.apnsCredential]
- * 
- * @param {string} [options.apnsCredential.endpoint]
- * 
- * @param {string} [options.apnsCredential.apnsCertificate]
- * 
- * @param {object} [options.gcmCredential]
- * 
- * @param {string} [options.gcmCredential.googleApiKey]
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {object} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Push.prototype.setConfiguration = function (subscriptionId, ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  var apnsCredential = (options && options.apnsCredential !== undefined) ? options.apnsCredential : undefined;
-  var gcmCredential = (options && options.gcmCredential !== undefined) ? options.gcmCredential : undefined;
-  // Validate
-  try {
-    if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string') {
-      throw new Error('subscriptionId cannot be null or undefined and it must be of type string.');
-    }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    if (repoUrl === null || repoUrl === undefined || typeof repoUrl.valueOf() !== 'string') {
+      throw new Error('repoUrl cannot be null or undefined and it must be of type string.');
     }
   } catch (error) {
     return callback(error);
   }
-  var hubDescription;
-  if ((apnsCredential !== null && apnsCredential !== undefined) || (gcmCredential !== null && gcmCredential !== undefined)) {
-      hubDescription = new client.models['PushConfig']();
-      hubDescription.apnsCredential = apnsCredential;
-      hubDescription.gcmCredential = gcmCredential;
+  var repo;
+  if (repoUrl !== null && repoUrl !== undefined) {
+      repo = new client.models['RepoInfo']();
+      repo.repoUrl = repoUrl;
   }
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/push/config';
-  requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/repo_config';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -417,14 +266,14 @@ Push.prototype.setConfiguration = function (subscriptionId, ownerName, appName, 
   var requestContent = null;
   var requestModel = null;
   try {
-    if (hubDescription !== null && hubDescription !== undefined) {
-      var requestModelMapper = new client.models['PushConfig']().mapper();
-      requestModel = client.serialize(requestModelMapper, hubDescription, 'hubDescription');
+    if (repo !== null && repo !== undefined) {
+      var requestModelMapper = new client.models['RepoInfo']().mapper();
+      requestModel = client.serialize(requestModelMapper, repo, 'repo');
       requestContent = JSON.stringify(requestModel);
     }
   } catch (error) {
     var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
-        'payload - "%s"', error.message, util.inspect(hubDescription, {depth: null})));
+        'payload - "%s"', error.message, util.inspect(repo, {depth: null})));
     return callback(serializationError);
   }
   httpRequest.body = requestContent;
@@ -465,13 +314,7 @@ Push.prototype.setConfiguration = function (subscriptionId, ownerName, appName, 
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Object'
-            }
-          };
+          var resultMapper = new client.models['SuccessResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -488,13 +331,7 @@ Push.prototype.setConfiguration = function (subscriptionId, ownerName, appName, 
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Object'
-            }
-          };
+          var resultMapper = new client.models['ValidationErrorResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -510,8 +347,8 @@ Push.prototype.setConfiguration = function (subscriptionId, ownerName, appName, 
 };
 
 /**
- * @param {string} subscriptionId
- * 
+ * Removes the configuration for the respository
+ *
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
@@ -533,7 +370,7 @@ Push.prototype.setConfiguration = function (subscriptionId, ownerName, appName, 
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Push.prototype.getNotificationHub = function (subscriptionId, ownerName, appName, options, callback) {
+RepositoryConfigurations.prototype.remove = function (ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -544,9 +381,6 @@ Push.prototype.getNotificationHub = function (subscriptionId, ownerName, appName
   }
   // Validate
   try {
-    if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string') {
-      throw new Error('subscriptionId cannot be null or undefined and it must be of type string.');
-    }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
@@ -559,14 +393,13 @@ Push.prototype.getNotificationHub = function (subscriptionId, ownerName, appName
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/push';
-  requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/repo_config';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
+  httpRequest.method = 'DELETE';
   httpRequest.headers = {};
   httpRequest.url = requestUrl;
   // Set Headers
@@ -616,13 +449,7 @@ Push.prototype.getNotificationHub = function (subscriptionId, ownerName, appName
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Object'
-            }
-          };
+          var resultMapper = new client.models['SuccessResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -639,13 +466,7 @@ Push.prototype.getNotificationHub = function (subscriptionId, ownerName, appName
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Object'
-            }
-          };
+          var resultMapper = new client.models['ValidationErrorResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -661,4 +482,4 @@ Push.prototype.getNotificationHub = function (subscriptionId, ownerName, appName
 };
 
 
-module.exports = Push;
+module.exports = RepositoryConfigurations;

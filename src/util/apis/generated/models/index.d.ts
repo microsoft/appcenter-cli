@@ -160,7 +160,7 @@ export interface AppPatchRequest {
  * @member {string} [name] The name of the app used in URLs
  * 
  * @member {string} os The OS the app will be running on. Possible values
- * include: 'iOS', 'Android', 'Windows'
+ * include: 'Android', 'iOS', 'Tizen', 'Windows'
  * 
  * @member {string} platform The platform of the app. Possible values include:
  * 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
@@ -276,15 +276,12 @@ export interface OrganizationPatchRequest {
  * @constructor
  * @member {string} [displayName] The display name of the organization
  * 
- * @member {string} [email] The billing email address of the organization
- * 
- * @member {string} name The name of the organization used in URLs
+ * @member {string} [name] The name of the organization used in URLs
  * 
  */
 export interface OrganizationRequest {
   displayName?: string;
-  email?: string;
-  name: string;
+  name?: string;
 }
 
 /**
@@ -396,7 +393,7 @@ export interface UserUpdateRequestInternal {
  * @member {array} [app.memberPermissions] The permissions of the calling user
  * 
  * @member {string} [app.os] The OS the app will be running on. Possible
- * values include: 'iOS', 'Android', 'Windows'
+ * values include: 'Android', 'iOS', 'macOS', 'Tizen', 'Windows'
  * 
  * @member {object} [app.owner]
  * 
@@ -415,7 +412,8 @@ export interface UserUpdateRequestInternal {
  * 'user'. Possible values include: 'org', 'user'
  * 
  * @member {string} [app.platform] The platform of the app. Possible values
- * include: 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
+ * include: 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'Unity',
+ * 'UWP', 'Xamarin'
  * 
  * @member {string} [app.origin] The origin of this app can only be
  * mobile-center or hockeyapp for now. Possible values include:
@@ -487,7 +485,7 @@ export interface AppInvitationDetailResponse {
  * @member {array} [memberPermissions] The permissions of the calling user
  * 
  * @member {string} os The OS the app will be running on. Possible values
- * include: 'iOS', 'Android', 'Windows'
+ * include: 'Android', 'iOS', 'macOS', 'Tizen', 'Windows'
  * 
  * @member {object} owner
  * 
@@ -506,7 +504,8 @@ export interface AppInvitationDetailResponse {
  * 'user'. Possible values include: 'org', 'user'
  * 
  * @member {string} platform The platform of the app. Possible values include:
- * 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
+ * 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'Unity', 'UWP',
+ * 'Xamarin'
  * 
  * @member {string} origin The origin of this app can only be mobile-center or
  * hockeyapp for now. Possible values include: 'mobile-center', 'hockeyapp'
@@ -539,7 +538,7 @@ export interface AppResponse {
  * 
  * @member {string} displayName The owner's display name
  * 
- * @member {string} email The owner's email address
+ * @member {string} [email] The owner's email address
  * 
  * @member {string} name The unique name that used to identify the owner
  * 
@@ -551,7 +550,7 @@ export interface Owner {
   id: string;
   avatarUrl?: string;
   displayName: string;
-  email: string;
+  email?: string;
   name: string;
   type: string;
 }
@@ -795,6 +794,8 @@ export interface OrgNameAvailabilityResponse {
  * @class
  * Initializes a new instance of the OrganizationResponse class.
  * @constructor
+ * @member {string} id The internal unique id (UUID) of the organization.
+ * 
  * @member {string} collaboratorRole The role the current user has within the
  * organization
  * 
@@ -804,6 +805,7 @@ export interface OrgNameAvailabilityResponse {
  * 
  */
 export interface OrganizationResponse {
+  id: string;
   collaboratorRole: string;
   displayName: string;
   name: string;
@@ -975,7 +977,7 @@ export interface AndroidModule {
  *
  * @member {array} [xcode] Xcode projects, with their schemes
  * 
- * @member {array} [javascript] package.json filess
+ * @member {array} [javascript] package.json files
  * 
  * @member {array} [xamarin] Xamarin solutions
  * 
@@ -1705,6 +1707,10 @@ export interface DistributionGroup {
  * 
  * @member {string} [provisioningProfileName] The release's release notes.
  * 
+ * @member {string} [provisioningProfileType] The type of the provisioning
+ * profile for the requested app version. Possible values include: 'adhoc',
+ * 'enterprise', 'other'
+ * 
  * @member {number} [size] The release's size in bytes.
  * 
  * @member {string} [minOs] The release's minimum required operating system.
@@ -1741,6 +1747,7 @@ export interface ReleaseDetails {
   shortVersion?: string;
   releaseNotes?: string;
   provisioningProfileName?: string;
+  provisioningProfileType?: string;
   size?: number;
   minOs?: string;
   androidMinApiLevel?: string;
@@ -1750,7 +1757,21 @@ export interface ReleaseDetails {
   downloadUrl?: string;
   appIconUrl?: string;
   installUrl?: string;
-  distributionGroups?: DistributionGroup[];
+  distributionGroups?: DistributionGroupWithoutIsLatest[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupWithoutIsLatest class.
+ * @constructor
+ * @member {string} [id] ID identifying a unique distribution group.
+ * 
+ * @member {string} [name] A name identifying a unique distribution group.
+ * 
+ */
+export interface DistributionGroupWithoutIsLatest {
+  id?: string;
+  name?: string;
 }
 
 /**
@@ -2002,6 +2023,95 @@ export interface PackageDetails {
 
 /**
  * @class
+ * Initializes a new instance of the DeviceConfigurationResponse class.
+ * @constructor
+ * A response containing the fully encoded binary blob for a mobileconfig
+ *
+ * @member {string} dataUrl A data URL containing a signed mobileconfig profile
+ * 
+ */
+export interface DeviceConfigurationResponse {
+  dataUrl: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DeviceInfoRequest class.
+ * @constructor
+ * The information for a single iOS device
+ *
+ * @member {string} udid The Unique Device IDentifier of the device
+ * 
+ * @member {string} model The model identifier of the device, in the format
+ * iDeviceM,N
+ * 
+ * @member {string} [osBuild] The build number of the last known OS version
+ * running on the device
+ * 
+ * @member {string} [osVersion] The last known OS version running on the device
+ * 
+ * @member {string} [serial] The device's serial number. Always empty or
+ * undefined at present.
+ * 
+ * @member {string} [imei] The device's International Mobile Equipment
+ * Identity number. Always empty or undefined at present.
+ * 
+ * @member {string} [ownerId] The user ID of the device owner.
+ * 
+ */
+export interface DeviceInfoRequest {
+  udid: string;
+  model: string;
+  osBuild?: string;
+  osVersion?: string;
+  serial?: string;
+  imei?: string;
+  ownerId?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DeviceInfoResponse class.
+ * @constructor
+ * The information for a single iOS device
+ *
+ * @member {string} udid The Unique Device IDentifier of the device
+ * 
+ * @member {string} model The model identifier of the device, in the format
+ * iDeviceM,N
+ * 
+ * @member {string} deviceName The device description, in the format "iPhone 7
+ * Plus (A1784)"
+ * 
+ * @member {string} osBuild The last known OS version running on the device
+ * 
+ * @member {string} osVersion The last known OS version running on the device
+ * 
+ * @member {string} [serial] The device's serial number. Always empty or
+ * undefined at present.
+ * 
+ * @member {string} [imei] The device's International Mobile Equipment
+ * Identity number. Always empty or undefined at present.
+ * 
+ * @member {string} [ownerId] The user ID of the device owner.
+ * 
+ * @member {string} status The provisioning status of the device.
+ * 
+ */
+export interface DeviceInfoResponse {
+  udid: string;
+  model: string;
+  deviceName: string;
+  osBuild: string;
+  osVersion: string;
+  serial?: string;
+  imei?: string;
+  ownerId?: string;
+  status: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the Symbol class.
  * @constructor
  * @member {string} symbolId The unique id for this symbol (uuid)
@@ -2060,7 +2170,7 @@ export interface SymbolUpload {
   symbolUploadId: string;
   appId: string;
   status: string;
-  symbols?: Symbol[];
+  symbols?: string[];
   origin?: string;
 }
 
@@ -2113,6 +2223,17 @@ export interface SymbolUploadBeginResponse {
  */
 export interface SymbolUploadEndRequest {
   status: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppCrashesInfo class.
+ * @constructor
+ * @member {boolean} hasCrashes
+ * 
+ */
+export interface AppCrashesInfo {
+  hasCrashes: boolean;
 }
 
 /**
@@ -2351,6 +2472,17 @@ export interface ReasonStackFrame {
 
 /**
  * @class
+ * Initializes a new instance of the CrashRawUrl class.
+ * @constructor
+ * @member {string} crashRawUrlProperty
+ * 
+ */
+export interface CrashRawUrl {
+  crashRawUrlProperty: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the CrashGroup class.
  * @constructor
  * @member {string} crashGroupId
@@ -2432,9 +2564,12 @@ export interface CrashGroup {
  * @constructor
  * @member {object} [status]
  * 
+ * @member {string} [annotation]
+ * 
  */
 export interface CrashGroupChange {
   status?: any;
+  annotation?: string;
 }
 
 /**
@@ -2527,7 +2662,7 @@ export interface MissingSymbol {
  * 
  * @member {date} lastModified last update date for the group
  * 
- * @member {array} missingSymbols
+ * @member {array} missingSymbols list of missing symbols
  * 
  * @member {string} status group status. Possible values include: 'active',
  * 'pending', 'closed'
@@ -2552,7 +2687,8 @@ export interface MissingSymbolCrashGroup {
  *
  * @member {number} totalCrashCount total number of cashes for all the groups
  * 
- * @member {array} groups
+ * @member {array} groups list of crash groups formed by missing symbols
+ * combination
  * 
  */
 export interface MissingSymbolCrashGroupsResponse {
@@ -3423,19 +3559,6 @@ export interface EventPropertyValue {
 
 /**
  * @class
- * Initializes a new instance of the SampleDevices class.
- * @constructor
- * List of sample devices.
- *
- * @member {array} values List of sample devices.
- * 
- */
-export interface SampleDevices {
-  values: Device[];
-}
-
-/**
- * @class
  * Initializes a new instance of the AudienceListResult class.
  * @constructor
  * List of audiences.
@@ -3458,7 +3581,7 @@ export interface AudienceListResult {
  *
  * @member {string} [name] Audience name.
  * 
- * @member {number} [estimatedSize] Estimated audience size.
+ * @member {number} [estimatedCount] Estimated audience size.
  * 
  * @member {string} [state] Audience state. Possible values include:
  * 'Calculating', 'Ready', 'Disabled'
@@ -3466,7 +3589,7 @@ export interface AudienceListResult {
  */
 export interface AudienceSummary {
   name?: string;
-  estimatedSize?: number;
+  estimatedCount?: number;
   state?: string;
 }
 
@@ -3478,12 +3601,39 @@ export interface AudienceSummary {
  *
  * @member {string} [definition] Audience definition in OData format.
  * 
+ * @member {boolean} [enabled]  Default value: true .
+ * 
+ * @member {object} [customProperties] Custom properties used in the
+ * definition.
+ * 
  * @member {date} [timestamp] Date the audience was last refreshed.
  * 
  */
 export interface Audience extends AudienceSummary {
   definition?: string;
+  enabled?: boolean;
+  customProperties?: { [propertyName: string]: string };
   timestamp?: Date;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AudienceTestResult class.
+ * @constructor
+ * Audience with details.
+ *
+ * @member {string} [definition] Audience definition in OData format.
+ * 
+ * @member {object} [customProperties] Custom properties used in the
+ * definition.
+ * 
+ * @member {number} [estimatedTotalCount] Estimated total audience size.
+ * 
+ */
+export interface AudienceTestResult extends AudienceSummary {
+  definition?: string;
+  customProperties?: { [propertyName: string]: string };
+  estimatedTotalCount?: number;
 }
 
 /**
@@ -3494,9 +3644,16 @@ export interface Audience extends AudienceSummary {
  *
  * @member {string} definition Audience definition in OData format.
  * 
+ * @member {boolean} [enabled]  Default value: true .
+ * 
+ * @member {object} [customProperties] Custom properties used in the
+ * definition.
+ * 
  */
 export interface AudienceDefinition {
   definition: string;
+  enabled?: boolean;
+  customProperties?: { [propertyName: string]: string };
 }
 
 /**
@@ -3505,7 +3662,7 @@ export interface AudienceDefinition {
  * @constructor
  * List of notifications
  *
- * @member {array} [values]
+ * @member {array} values
  * 
  * @member {number} [total] the total count of notifications
  * 
@@ -3513,7 +3670,7 @@ export interface AudienceDefinition {
  * 
  */
 export interface NotificationsListResult {
-  values?: NotificationDetailsResult[];
+  values: NotificationDetailsResult[];
   total?: number;
   nextLink?: string;
 }
@@ -3524,43 +3681,25 @@ export interface NotificationsListResult {
  * @constructor
  * Notification definition object
  *
- * @member {string} name Notification name
- * 
- * @member {string} [title] Notification title
- * 
- * @member {string} body Notification body
- * 
- * @member {string} platformType Notification platform type. Possible values
- * include: 'apns', 'gcm'
- * 
  * @member {object} [notificationTarget]
  * 
  * @member {string} [notificationTarget.type] Polymorhpic Discriminator
  * 
- * @member {object} [customData] Notification custom data(priority,
- * expiration, etc.)
+ * @member {object} notificationContent
+ * 
+ * @member {string} [notificationContent.name] Notification name
+ * 
+ * @member {string} [notificationContent.title] Notification title
+ * 
+ * @member {string} [notificationContent.body] Notification body
+ * 
+ * @member {object} [notificationContent.customData] Notification custom
+ * data(priority, expiration, etc.)
  * 
  */
 export interface NotificationDefinition {
-  name: string;
-  title?: string;
-  body: string;
-  platformType: string;
   notificationTarget?: NotificationTarget;
-  customData?: { [propertyName: string]: string };
-}
-
-/**
- * @class
- * Initializes a new instance of the NotificationResult class.
- * @constructor
- * Notification result
- *
- * @member {date} [sendTime] Notification send time
- * 
- */
-export interface NotificationResult extends NotificationDefinition {
-  sendTime?: Date;
+  notificationContent: NotificationContent;
 }
 
 /**
@@ -3569,7 +3708,9 @@ export interface NotificationResult extends NotificationDefinition {
  * @constructor
  * Notification statistics
  *
- * @member {string} [notificationId] Notification id.
+ * @member {string} notificationId Notification id.
+ * 
+ * @member {date} [sendTime] Notification send time
  * 
  * @member {number} [pnsSendFailure] Number of the notifications failed to
  * send to the push provider.
@@ -3577,15 +3718,16 @@ export interface NotificationResult extends NotificationDefinition {
  * @member {number} [pnsSendSuccess] Number of the notifications successfully
  * sent to push the provider.
  * 
- * @member {string} [state] State of the notification. Possible values
- * include: 'Cancelled', 'Completed', 'Enqueued', 'Processing', 'Unknown'
+ * @member {string} state State of the notification. Possible values include:
+ * 'Cancelled', 'Completed', 'Enqueued', 'Processing', 'Unknown'
  * 
  */
-export interface NotificationDetailsResult extends NotificationResult {
-  notificationId?: string;
+export interface NotificationDetailsResult extends NotificationDefinition {
+  notificationId: string;
+  sendTime?: Date;
   pnsSendFailure?: number;
   pnsSendSuccess?: number;
-  state?: string;
+  state: string;
 }
 
 /**
@@ -3603,15 +3745,38 @@ export interface NotificationTarget {
 
 /**
  * @class
+ * Initializes a new instance of the NotificationContent class.
+ * @constructor
+ * Notification definition object
+ *
+ * @member {string} name Notification name
+ * 
+ * @member {string} [title] Notification title
+ * 
+ * @member {string} body Notification body
+ * 
+ * @member {object} [customData] Notification custom data(priority,
+ * expiration, etc.)
+ * 
+ */
+export interface NotificationContent {
+  name: string;
+  title?: string;
+  body: string;
+  customData?: { [propertyName: string]: string };
+}
+
+/**
+ * @class
  * Initializes a new instance of the NotificationSendSucceededResult class.
  * @constructor
  * Notification send succeeded.
  *
- * @member {string} [notificationId] The unique notification identifier.
+ * @member {string} notificationId The unique notification identifier.
  * 
  */
 export interface NotificationSendSucceededResult {
-  notificationId?: string;
+  notificationId: string;
 }
 
 /**
@@ -3633,15 +3798,10 @@ export interface NotificationConfig {
  * @constructor
  * Generic notification configuration result.
  *
- * @member {string} status Configuration state. Possible values include:
- * 'configured', 'configuring', 'expired', 'not_configured', 'deleted',
- * 'deleting'
- * 
  * @member {string} type Polymorhpic Discriminator
  * 
  */
 export interface NotificationConfigResult {
-  status: string;
   type: string;
 }
 
@@ -4171,6 +4331,73 @@ export interface TestRunSummary {
  */
 export interface DeviceSelection {
   shortId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DeviceSet class.
+ * @constructor
+ * @summary Device Set
+ *
+ * The name and devices of the device set
+ *
+ * @member {string} id Identifier of the device set
+ * 
+ * @member {number} [manufacturerCount] The number of manufacturers in the
+ * device set's device selection
+ * 
+ * @member {string} name Name of the device set
+ * 
+ * @member {string} shortId Short ID of the device set's device selection
+ * 
+ * @member {object} owner
+ * 
+ * @member {string} [owner.type] Type of account
+ * 
+ * @member {string} [owner.id] Account ID
+ * 
+ * @member {string} [owner.displayName] Display name of the account
+ * 
+ * @member {string} [owner.name] Name of the account
+ * 
+ * @member {number} [osVersionCount] The number of os versions in the device
+ * set's device selection
+ * 
+ * @member {array} deviceConfigurations
+ * 
+ */
+export interface DeviceSet {
+  id: string;
+  manufacturerCount?: number;
+  name: string;
+  shortId: string;
+  owner: DeviceSetOwner;
+  osVersionCount?: number;
+  deviceConfigurations: DeviceConfiguration[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DeviceSetOwner class.
+ * @constructor
+ * @summary Device Set Owner
+ *
+ * The owner of a device set
+ *
+ * @member {string} type Type of account
+ * 
+ * @member {string} id Account ID
+ * 
+ * @member {string} [displayName] Display name of the account
+ * 
+ * @member {string} name Name of the account
+ * 
+ */
+export interface DeviceSetOwner {
+  type: string;
+  id: string;
+  displayName?: string;
+  name: string;
 }
 
 /**
@@ -4734,51 +4961,6 @@ export interface ImportDataContainer {
 
 /**
  * @class
- * Initializes a new instance of the PushConfig class.
- * @constructor
- * @member {object} [apnsCredential]
- * 
- * @member {string} [apnsCredential.endpoint]
- * 
- * @member {string} [apnsCredential.apnsCertificate]
- * 
- * @member {object} [gcmCredential]
- * 
- * @member {string} [gcmCredential.googleApiKey]
- * 
- */
-export interface PushConfig {
-  apnsCredential?: PushConfigApnsCredential;
-  gcmCredential?: PushConfigGcmCredential;
-}
-
-/**
- * @class
- * Initializes a new instance of the PushConfigApnsCredential class.
- * @constructor
- * @member {string} [endpoint]
- * 
- * @member {string} [apnsCertificate]
- * 
- */
-export interface PushConfigApnsCredential {
-  endpoint?: string;
-  apnsCertificate?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the PushConfigGcmCredential class.
- * @constructor
- * @member {string} [googleApiKey]
- * 
- */
-export interface PushConfigGcmCredential {
-  googleApiKey?: string;
-}
-
-/**
- * @class
  * Initializes a new instance of the Deployment class.
  * @constructor
  * @member {string} [key]
@@ -4961,17 +5143,6 @@ export interface LiveUpdateStatusMetricMetadata {
 
 /**
  * @class
- * Initializes a new instance of the CrashGroups class.
- * @constructor
- * @member {array} crashGroupsProperty
- * 
- */
-export interface CrashGroups {
-  crashGroupsProperty: CrashGroupAndVersion[];
-}
-
-/**
- * @class
  * Initializes a new instance of the App class.
  * @constructor
  * @member {string} [description] A short text describing the app
@@ -4982,7 +5153,7 @@ export interface CrashGroups {
  * @member {string} [name] The name of the app used in URLs
  * 
  * @member {string} os The OS the app will be running on. Possible values
- * include: 'iOS', 'Android', 'Windows'
+ * include: 'Android', 'iOS', 'Tizen', 'Windows'
  * 
  * @member {string} platform The platform of the app. Possible values include:
  * 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
@@ -4994,4 +5165,37 @@ export interface App {
   name?: string;
   os: string;
   platform: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ListOKResponseItem class.
+ * @constructor
+ * @member {string} [displayName] The display name of the organization
+ * 
+ * @member {string} [name] The slug name of the organization
+ * 
+ * @member {string} [collaboratorRole] The role the current user has within
+ * the organization
+ * 
+ * @member {object} [collaboratorsCount] The number of users that are part of
+ * this organization
+ * 
+ */
+export interface ListOKResponseItem {
+  displayName?: string;
+  name?: string;
+  collaboratorRole?: string;
+  collaboratorsCount?: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CrashGroups class.
+ * @constructor
+ * @member {array} crashGroupsProperty
+ * 
+ */
+export interface CrashGroups {
+  crashGroupsProperty: CrashGroupAndVersion[];
 }

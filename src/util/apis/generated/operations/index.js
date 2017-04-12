@@ -10,15 +10,29 @@
 
 'use strict';
 
-exports.Account = require('./account');
 exports.Distribute = require('./distribute');
-exports.CrashOperations = require('./crashOperations');
-exports.BuildOperations = require('./buildOperations');
+exports.OrgInvitations = require('./orgInvitations');
+exports.DistributionGroupInvitations = require('./distributionGroupInvitations');
+exports.AppInvitations = require('./appInvitations');
+exports.Users = require('./users');
+exports.Releases = require('./releases');
+exports.Apps = require('./apps');
+exports.Organizations = require('./organizations');
+exports.Organization = require('./organization');
+exports.Builds = require('./builds');
+exports.Crashes = require('./crashes');
 exports.Test = require('./test');
+exports.Symbols = require('./symbols');
+exports.MissingSymbolGroups = require('./missingSymbolGroups');
 exports.Tables = require('./tables');
 exports.Azure = require('./azure');
-exports.Push = require('./push');
 exports.Identity = require('./identity');
-exports.Deprecated = require('./deprecated');
+exports.Repositories = require('./repositories');
+exports.RepositoryConfigurations = require('./repositoryConfigurations');
+exports.ReleaseUploads = require('./releaseUploads');
+exports.DistributionGroups = require('./distributionGroups');
 exports.Codepush = require('./codepush');
+exports.Commits = require('./commits');
+exports.BranchConfigurations = require('./branchConfigurations');
 exports.Analytics = require('./analytics');
+exports.Account = require('./account');

@@ -16,7 +16,9 @@ var util = require('util');
  * @constructor
  * Notification statistics
  *
- * @member {string} [notificationId] Notification id.
+ * @member {string} notificationId Notification id.
+ * 
+ * @member {date} [sendTime] Notification send time
  * 
  * @member {number} [pnsSendFailure] Number of the notifications failed to
  * send to the push provider.
@@ -24,15 +26,15 @@ var util = require('util');
  * @member {number} [pnsSendSuccess] Number of the notifications successfully
  * sent to push the provider.
  * 
- * @member {string} [state] State of the notification. Possible values
- * include: 'Cancelled', 'Completed', 'Enqueued', 'Processing', 'Unknown'
+ * @member {string} state State of the notification. Possible values include:
+ * 'Cancelled', 'Completed', 'Enqueued', 'Processing', 'Unknown'
  * 
  */
 function NotificationDetailsResult() {
   NotificationDetailsResult['super_'].call(this);
 }
 
-util.inherits(NotificationDetailsResult, models['NotificationResult']);
+util.inherits(NotificationDetailsResult, models['NotificationDefinition']);
 
 /**
  * Defines the metadata of NotificationDetailsResult
@@ -48,43 +50,6 @@ NotificationDetailsResult.prototype.mapper = function () {
       name: 'Composite',
       className: 'NotificationDetailsResult',
       modelProperties: {
-        name: {
-          required: true,
-          serializedName: 'name',
-          constraints: {
-            MaxLength: 64
-          },
-          type: {
-            name: 'String'
-          }
-        },
-        title: {
-          required: false,
-          serializedName: 'title',
-          constraints: {
-            MaxLength: 128
-          },
-          type: {
-            name: 'String'
-          }
-        },
-        body: {
-          required: true,
-          serializedName: 'body',
-          constraints: {
-            MaxLength: 4000
-          },
-          type: {
-            name: 'String'
-          }
-        },
-        platformType: {
-          required: true,
-          serializedName: 'platform_type',
-          type: {
-            name: 'String'
-          }
-        },
         notificationTarget: {
           required: false,
           serializedName: 'notification_target',
@@ -95,18 +60,19 @@ NotificationDetailsResult.prototype.mapper = function () {
             className: 'NotificationTarget'
           }
         },
-        customData: {
-          required: false,
-          serializedName: 'custom_data',
+        notificationContent: {
+          required: true,
+          serializedName: 'notification_content',
           type: {
-            name: 'Dictionary',
-            value: {
-                required: false,
-                serializedName: 'StringElementType',
-                type: {
-                  name: 'String'
-                }
-            }
+            name: 'Composite',
+            className: 'NotificationContent'
+          }
+        },
+        notificationId: {
+          required: true,
+          serializedName: 'notification_id',
+          type: {
+            name: 'String'
           }
         },
         sendTime: {
@@ -114,13 +80,6 @@ NotificationDetailsResult.prototype.mapper = function () {
           serializedName: 'send_time',
           type: {
             name: 'DateTime'
-          }
-        },
-        notificationId: {
-          required: false,
-          serializedName: 'notification_id',
-          type: {
-            name: 'String'
           }
         },
         pnsSendFailure: {
@@ -138,7 +97,7 @@ NotificationDetailsResult.prototype.mapper = function () {
           }
         },
         state: {
-          required: false,
+          required: true,
           serializedName: 'state',
           type: {
             name: 'String'

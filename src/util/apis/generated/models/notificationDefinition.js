@@ -14,21 +14,20 @@ var models = require('./index');
  * @constructor
  * Notification definition object
  *
- * @member {string} name Notification name
- * 
- * @member {string} [title] Notification title
- * 
- * @member {string} body Notification body
- * 
- * @member {string} platformType Notification platform type. Possible values
- * include: 'apns', 'gcm'
- * 
  * @member {object} [notificationTarget]
  * 
  * @member {string} [notificationTarget.type] Polymorhpic Discriminator
  * 
- * @member {object} [customData] Notification custom data(priority,
- * expiration, etc.)
+ * @member {object} notificationContent
+ * 
+ * @member {string} [notificationContent.name] Notification name
+ * 
+ * @member {string} [notificationContent.title] Notification title
+ * 
+ * @member {string} [notificationContent.body] Notification body
+ * 
+ * @member {object} [notificationContent.customData] Notification custom
+ * data(priority, expiration, etc.)
  * 
  */
 function NotificationDefinition() {
@@ -48,43 +47,6 @@ NotificationDefinition.prototype.mapper = function () {
       name: 'Composite',
       className: 'NotificationDefinition',
       modelProperties: {
-        name: {
-          required: true,
-          serializedName: 'name',
-          constraints: {
-            MaxLength: 64
-          },
-          type: {
-            name: 'String'
-          }
-        },
-        title: {
-          required: false,
-          serializedName: 'title',
-          constraints: {
-            MaxLength: 128
-          },
-          type: {
-            name: 'String'
-          }
-        },
-        body: {
-          required: true,
-          serializedName: 'body',
-          constraints: {
-            MaxLength: 4000
-          },
-          type: {
-            name: 'String'
-          }
-        },
-        platformType: {
-          required: true,
-          serializedName: 'platform_type',
-          type: {
-            name: 'String'
-          }
-        },
         notificationTarget: {
           required: false,
           serializedName: 'notification_target',
@@ -95,18 +57,12 @@ NotificationDefinition.prototype.mapper = function () {
             className: 'NotificationTarget'
           }
         },
-        customData: {
-          required: false,
-          serializedName: 'custom_data',
+        notificationContent: {
+          required: true,
+          serializedName: 'notification_content',
           type: {
-            name: 'Dictionary',
-            value: {
-                required: false,
-                serializedName: 'StringElementType',
-                type: {
-                  name: 'String'
-                }
-            }
+            name: 'Composite',
+            className: 'NotificationContent'
           }
         }
       }

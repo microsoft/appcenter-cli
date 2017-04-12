@@ -14,7 +14,7 @@
  *
  * @member {string} [name] Audience name.
  * 
- * @member {number} [estimatedSize] Estimated audience size.
+ * @member {number} [estimatedCount] Estimated audience size.
  * 
  * @member {string} [state] Audience state. Possible values include:
  * 'Calculating', 'Ready', 'Disabled'
@@ -44,9 +44,9 @@ AudienceSummary.prototype.mapper = function () {
             name: 'String'
           }
         },
-        estimatedSize: {
+        estimatedCount: {
           required: false,
-          serializedName: 'estimatedSize',
+          serializedName: 'estimated_count',
           type: {
             name: 'Number'
           }

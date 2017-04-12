@@ -18,7 +18,7 @@
  * 
  * @member {string} displayName The owner's display name
  * 
- * @member {string} email The owner's email address
+ * @member {string} [email] The owner's email address
  * 
  * @member {string} name The unique name that used to identify the owner
  * 
@@ -65,7 +65,7 @@ Owner.prototype.mapper = function () {
           }
         },
         email: {
-          required: true,
+          required: false,
           serializedName: 'email',
           type: {
             name: 'String'

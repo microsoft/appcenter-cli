@@ -12,39 +12,37 @@ var util = require('util');
 
 /**
  * @class
- * Initializes a new instance of the Audience class.
+ * Initializes a new instance of the AudienceTestResult class.
  * @constructor
  * Audience with details.
  *
  * @member {string} [definition] Audience definition in OData format.
  * 
- * @member {boolean} [enabled]  Default value: true .
- * 
  * @member {object} [customProperties] Custom properties used in the
  * definition.
  * 
- * @member {date} [timestamp] Date the audience was last refreshed.
+ * @member {number} [estimatedTotalCount] Estimated total audience size.
  * 
  */
-function Audience() {
-  Audience['super_'].call(this);
+function AudienceTestResult() {
+  AudienceTestResult['super_'].call(this);
 }
 
-util.inherits(Audience, models['AudienceSummary']);
+util.inherits(AudienceTestResult, models['AudienceSummary']);
 
 /**
- * Defines the metadata of Audience
+ * Defines the metadata of AudienceTestResult
  *
- * @returns {object} metadata of Audience
+ * @returns {object} metadata of AudienceTestResult
  *
  */
-Audience.prototype.mapper = function () {
+AudienceTestResult.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'Audience',
+    serializedName: 'AudienceTestResult',
     type: {
       name: 'Composite',
-      className: 'Audience',
+      className: 'AudienceTestResult',
       modelProperties: {
         name: {
           required: false,
@@ -74,14 +72,6 @@ Audience.prototype.mapper = function () {
             name: 'String'
           }
         },
-        enabled: {
-          required: false,
-          serializedName: 'enabled',
-          defaultValue: true,
-          type: {
-            name: 'Boolean'
-          }
-        },
         customProperties: {
           required: false,
           serializedName: 'custom_properties',
@@ -96,11 +86,11 @@ Audience.prototype.mapper = function () {
             }
           }
         },
-        timestamp: {
+        estimatedTotalCount: {
           required: false,
-          serializedName: 'timestamp',
+          serializedName: 'estimated_total_count',
           type: {
-            name: 'DateTime'
+            name: 'Number'
           }
         }
       }
@@ -108,4 +98,4 @@ Audience.prototype.mapper = function () {
   };
 };
 
-module.exports = Audience;
+module.exports = AudienceTestResult;

@@ -16,7 +16,7 @@ var util = require('util');
  * @constructor
  * List of notifications
  *
- * @member {array} [values]
+ * @member {array} values
  * 
  * @member {number} [total] the total count of notifications
  * 
@@ -41,7 +41,7 @@ NotificationsListResult.prototype.mapper = function () {
       className: 'NotificationsListResult',
       modelProperties: {
         values: {
-          required: false,
+          required: true,
           serializedName: 'values',
           type: {
             name: 'Sequence',

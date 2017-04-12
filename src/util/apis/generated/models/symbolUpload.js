@@ -6,8 +6,6 @@
 
 'use strict';
 
-var models = require('./index');
-
 var util = require('util');
 
 /**
@@ -84,10 +82,9 @@ SymbolUpload.prototype.mapper = function () {
             name: 'Sequence',
             element: {
                 required: false,
-                serializedName: 'SymbolElementType',
+                serializedName: 'StringElementType',
                 type: {
-                  name: 'Composite',
-                  className: 'Symbol'
+                  name: 'String'
                 }
             }
           }

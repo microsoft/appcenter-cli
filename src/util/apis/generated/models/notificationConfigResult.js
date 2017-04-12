@@ -12,10 +12,6 @@
  * @constructor
  * Generic notification configuration result.
  *
- * @member {string} status Configuration state. Possible values include:
- * 'configured', 'configuring', 'expired', 'not_configured', 'deleted',
- * 'deleting'
- * 
  * @member {string} type Polymorhpic Discriminator
  * 
  */
@@ -38,13 +34,6 @@ NotificationConfigResult.prototype.mapper = function () {
       uberParent: 'NotificationConfigResult',
       className: 'NotificationConfigResult',
       modelProperties: {
-        status: {
-          required: true,
-          serializedName: 'status',
-          type: {
-            name: 'String'
-          }
-        },
         type: {
           required: true,
           serializedName: 'type',

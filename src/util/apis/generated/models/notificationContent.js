@@ -6,38 +6,38 @@
 
 'use strict';
 
-var models = require('./index');
-
-var util = require('util');
-
 /**
  * @class
- * Initializes a new instance of the NotificationResult class.
+ * Initializes a new instance of the NotificationContent class.
  * @constructor
- * Notification result
+ * Notification definition object
  *
- * @member {date} [sendTime] Notification send time
+ * @member {string} name Notification name
+ * 
+ * @member {string} [title] Notification title
+ * 
+ * @member {string} body Notification body
+ * 
+ * @member {object} [customData] Notification custom data(priority,
+ * expiration, etc.)
  * 
  */
-function NotificationResult() {
-  NotificationResult['super_'].call(this);
+function NotificationContent() {
 }
 
-util.inherits(NotificationResult, models['NotificationDefinition']);
-
 /**
- * Defines the metadata of NotificationResult
+ * Defines the metadata of NotificationContent
  *
- * @returns {object} metadata of NotificationResult
+ * @returns {object} metadata of NotificationContent
  *
  */
-NotificationResult.prototype.mapper = function () {
+NotificationContent.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'NotificationResult',
+    serializedName: 'NotificationContent',
     type: {
       name: 'Composite',
-      className: 'NotificationResult',
+      className: 'NotificationContent',
       modelProperties: {
         name: {
           required: true,
@@ -69,23 +69,6 @@ NotificationResult.prototype.mapper = function () {
             name: 'String'
           }
         },
-        platformType: {
-          required: true,
-          serializedName: 'platform_type',
-          type: {
-            name: 'String'
-          }
-        },
-        notificationTarget: {
-          required: false,
-          serializedName: 'notification_target',
-          type: {
-            name: 'Composite',
-            polymorphicDiscriminator: 'type',
-            uberParent: 'NotificationTarget',
-            className: 'NotificationTarget'
-          }
-        },
         customData: {
           required: false,
           serializedName: 'custom_data',
@@ -99,17 +82,10 @@ NotificationResult.prototype.mapper = function () {
                 }
             }
           }
-        },
-        sendTime: {
-          required: false,
-          serializedName: 'send_time',
-          type: {
-            name: 'DateTime'
-          }
         }
       }
     }
   };
 };
 
-module.exports = NotificationResult;
+module.exports = NotificationContent;
