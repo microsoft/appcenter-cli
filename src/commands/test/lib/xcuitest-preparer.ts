@@ -67,10 +67,10 @@ export class XCUITestPreparer {
   private async generateTestIpa(): Promise<void> {
     let runnerAppPaths = await pglob.glob(path.join(this.buildDir, "*-Runner.app"));
     if (runnerAppPaths.length == 0) {
-      throw new TestCloudError(`unable to find test runner app within ${this.buildDir}`);
+      throw new TestCloudError(`Unable to find test runner app within ${this.buildDir}`);
     }
     if (runnerAppPaths.length > 1) {
-      throw new TestCloudError(`multiple test runner apps found within ${this.buildDir}`);
+      throw new TestCloudError(`Multiple test runner apps found within ${this.buildDir}`);
     }
     this.testIpaPath = path.join(this.artifactsDir, `${path.parse(runnerAppPaths[0]).name}.ipa`);
     await iba.archiveAppBundle(runnerAppPaths[0], this.testIpaPath);

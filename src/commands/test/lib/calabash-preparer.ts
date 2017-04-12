@@ -40,7 +40,7 @@ export class CalabashPreparer {
     let exitCode = await process.execAndWait(command, this.outMessage, this.outMessage);
 
     if (exitCode !== 0) {
-      throw new TestCloudError(`cannot prepare Calabash artifacts. Returning exit code ${exitCode}.`, exitCode);
+      throw new TestCloudError(`Cannot prepare Calabash artifacts. Returning exit code ${exitCode}.`, exitCode);
     }
 
     return path.join(this.artifactsDir, "manifest.json");

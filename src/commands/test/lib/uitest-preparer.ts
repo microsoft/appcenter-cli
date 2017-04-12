@@ -44,7 +44,7 @@ export class UITestPreparer {
     let exitCode = await process.execAndWait(command);
 
     if (exitCode !== 0) {
-      throw new TestCloudError(`cannot prepare UI Test artifacts. Returning exit code ${exitCode}.`, exitCode);
+      throw new TestCloudError(`Cannot prepare UI Test artifacts. Returning exit code ${exitCode}.`, exitCode);
     }
 
     return path.join(this.artifactsDir, "manifest.json");
