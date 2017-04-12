@@ -221,7 +221,7 @@ export default class UploadSymbols extends AppCommand {
 
   private async executeSymbolsUploadingBeginRequest(client: MobileCenterClient, app: DefaultApp): Promise<models.SymbolUploadBeginResponse> {
     debug("Executing API request to get uploading URL");
-    let symbolUploadingBeginRequest = clientRequest<models.SymbolUploadBeginResponse>((cb) => client.crashOperations.postSymbolUpload(
+    let symbolUploadingBeginRequest = clientRequest<models.SymbolUploadBeginResponse>((cb) => client.symbols.postSymbolUpload(
       app.ownerName,
       app.appName,
       "Apple",
@@ -269,7 +269,7 @@ export default class UploadSymbols extends AppCommand {
 
   private async executeSymbolsUploadingEndRequest(client: MobileCenterClient, app: DefaultApp, symbolUploadId: string, desiredStatus: SymbolsUploadEndRequestStatus): Promise<models.SymbolUpload> {
     debug(`Finishing symbols uploading with desired status: ${desiredStatus}`);
-    let symbolUploadingEndRequest = clientRequest<models.SymbolUpload>((cb) => client.crashOperations.patchSymbolUpload(
+    let symbolUploadingEndRequest = clientRequest<models.SymbolUpload>((cb) => client.symbols.patchSymbolUpload(
       symbolUploadId,
       app.ownerName,
       app.appName,

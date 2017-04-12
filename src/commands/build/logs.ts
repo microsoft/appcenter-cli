@@ -49,7 +49,7 @@ export default class DisplayLogsStatusCommand extends AppCommand {
     let logsResponse: ClientResponse<models.BuildLog>;
     try {
       logsResponse = await out.progress(`Downloading logs for build ${this.buildId}...`,
-        clientRequest<models.BuildLog>((cb) => client.buildOperations.getBuildLogs(buildIdNumber, app.ownerName, app.appName, cb)));
+        clientRequest<models.BuildLog>((cb) => client.builds.getLog(buildIdNumber, app.ownerName, app.appName, cb)));
     } catch (error) {
       debug(`Request failed - ${inspect(error)}`);
       if (error.statusCode === 401) {

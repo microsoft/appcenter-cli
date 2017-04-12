@@ -7,11 +7,11 @@ import { inspect } from "util";
 export async function showDistributionGroupView(client: MobileCenterClient, app: DefaultApp, distributionGroup: string, debug: any) {
   // creating distribution group users list request
   const distributionGroupMembersRequestResponse = clientRequest<models.DistributionGroupUserGetResponse[]>(
-    (cb) => client.account.getDistributionGroupUsers(app.ownerName, app.appName, distributionGroup, cb));
+    (cb) => client.distributionGroups.listUsers(app.ownerName, app.appName, distributionGroup, cb));
 
   // creating releases information request
   const basicReleasesDetailsRequestResponse = clientRequest<models.BasicReleaseDetails[]>(
-    (cb) => client.distribute.getReleasesForDistributionGroup(distributionGroup, app.ownerName, app.appName, cb));
+    (cb) => client.releases.listByDistributionGroup(distributionGroup, app.ownerName, app.appName, cb));
 
   // show spinner and wait for the requests to finish
   await out.progress("Loading distribution group information...", 

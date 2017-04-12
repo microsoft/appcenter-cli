@@ -17,7 +17,7 @@ export default class AppShowCommand extends AppCommand {
   async run(client: MobileCenterClient): Promise<CommandResult> {
     const app = this.app;
 
-    const appDetailsResponse = await out.progress("Getting app details ...", clientRequest<models.AppResponse>(cb => client.account.getApp(app.ownerName, app.appName, cb)));
+    const appDetailsResponse = await out.progress("Getting app details ...", clientRequest<models.AppResponse>(cb => client.apps.get(app.ownerName, app.appName, cb)));
 
     const statusCode = appDetailsResponse.response.statusCode;
 
