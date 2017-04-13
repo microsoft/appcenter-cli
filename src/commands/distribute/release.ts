@@ -138,7 +138,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     let distributionGroupUsersRequestResponse: ClientResponse<models.DistributionGroupUserGetResponse[]>;
     try {
       distributionGroupUsersRequestResponse = await clientRequest<models.DistributionGroupUserGetResponse[]>(
-        (cb) => client.account.getDistributionGroupUsers(this.app.ownerName, this.app.appName, this.distributionGroup, cb));
+        (cb) => client.distributionGroups.listUsers(this.app.ownerName, this.app.appName, this.distributionGroup, cb));
       const statusCode = distributionGroupUsersRequestResponse.response.statusCode;
       if (statusCode >= 400) {
         throw statusCode;
@@ -159,7 +159,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     let createReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadBeginResponse>;
     try {
       createReleaseUploadRequestResponse = await out.progress("Creating release upload...", 
-        clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.distribute.createReleaseUpload(app.ownerName, app.appName, cb)));
+        clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.releaseUploads.create(app.ownerName, app.appName, cb)));
     } catch (error) {
       throw failure(ErrorCodes.Exception, `failed to create release upload for ${this.filePath}`);
     }
@@ -199,7 +199,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     let finishReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadEndResponse>;
     try {
       finishReleaseUploadRequestResponse = await out.progress("Finishing release upload...", 
-        clientRequest<models.ReleaseUploadEndResponse>((cb) => client.distribute.updateReleaseUpload(uploadId, app.ownerName, app.appName, "committed", cb)));
+        clientRequest<models.ReleaseUploadEndResponse>((cb) => client.releaseUploads.complete(uploadId, app.ownerName, app.appName, "committed", cb)));
     } catch (error) {
       throw failure(ErrorCodes.Exception, `failed to finish release upload for ${this.filePath}`);
     }
@@ -211,7 +211,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     let abortReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadEndResponse>;
     try {
       abortReleaseUploadRequestResponse = await out.progress("Aborting release upload...", 
-        clientRequest<models.ReleaseUploadEndResponse>((cb) => client.distribute.updateReleaseUpload(uploadId, app.ownerName, app.appName, "aborted", cb)));
+        clientRequest<models.ReleaseUploadEndResponse>((cb) => client.releaseUploads.complete(uploadId, app.ownerName, app.appName, "aborted", cb)));
     } catch (error) {
       throw new Error(`HTTP ${abortReleaseUploadRequestResponse.response.statusCode} - ${abortReleaseUploadRequestResponse.response.statusMessage}`);
     }
@@ -226,8 +226,8 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async distributeRelease(client: MobileCenterClient, app: DefaultApp, releaseId: number, releaseNotesString: string): Promise<models.ReleaseDetails> {
     let updateReleaseRequestResponse: ClientResponse<models.ReleaseDetails>;
     try {
-      updateReleaseRequestResponse = await out.progress(`Distributing the release ${releaseId}...`,
-        clientRequest<models.ReleaseDetails>(async (cb) => client.distribute.updateRelease(releaseId, app.ownerName, app.appName, {
+      updateReleaseRequestResponse = await out.progress(`Distributing the release...`,
+        clientRequest<models.ReleaseDetails>(async (cb) => client.releases.update(releaseId, app.ownerName, app.appName, {
           distributionGroupName: this.distributionGroup,
           releaseNotes: releaseNotesString
         }, cb)));

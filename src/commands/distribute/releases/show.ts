@@ -27,7 +27,7 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
     try {
       debug("Loading release details");
       const httpRequest = await out.progress("Loading release details...", clientRequest<models.ReleaseDetails>(
-        (cb) => client.distribute.getRelease(this.releaseId, app.ownerName, app.appName, cb)
+        (cb) => client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
       ));
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;
@@ -51,16 +51,15 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
       ["Version", "version"],
       ["Short Version", "shortVersion"],
       ["Release Notes", "releaseNotes"],
-      ["Provisioning Profile Name", "provisioningProfileName"],
       ["Size", "size"],
       ["OS Required", "minOs"],
-      ["Android API Required", "androidMinApiLevel"],
+      releaseDetails.androidMinApiLevel ? ["Android API Required", "androidMinApiLevel"] : ["Provisioning Profile Name", "provisioningProfileName"],
       ["Bundle Identifier", "bundleIdentifier"],
       ["Fingerprint", "fingerprint"],
       ["Uploaded At", "uploadedAt", out.report.asDate],
       ["Download URL", "downloadUrl"],
-      ["Icon URL", "appIconUrl"],
       ["Install URL", "installUrl"],
+      ["Icon URL", "appIconUrl"],
       ["Distribution Group", "distributionGroups", (distributionGroups: models.DistributionGroup[]) => _.get(distributionGroups, "[0].name", "")]
     ], releaseDetails);
    

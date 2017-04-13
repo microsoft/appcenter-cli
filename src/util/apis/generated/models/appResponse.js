@@ -35,7 +35,7 @@ var util = require('util');
  * @member {array} [memberPermissions] The permissions of the calling user
  * 
  * @member {string} os The OS the app will be running on. Possible values
- * include: 'iOS', 'Android', 'Windows'
+ * include: 'Android', 'iOS', 'macOS', 'Tizen', 'Windows'
  * 
  * @member {object} owner
  * 
@@ -54,7 +54,8 @@ var util = require('util');
  * 'user'. Possible values include: 'org', 'user'
  * 
  * @member {string} platform The platform of the app. Possible values include:
- * 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
+ * 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'Unity', 'UWP',
+ * 'Xamarin'
  * 
  * @member {string} origin The origin of this app can only be mobile-center or
  * hockeyapp for now. Possible values include: 'mobile-center', 'hockeyapp'

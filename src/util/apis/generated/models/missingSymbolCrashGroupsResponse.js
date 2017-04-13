@@ -18,7 +18,8 @@ var util = require('util');
  *
  * @member {number} totalCrashCount total number of cashes for all the groups
  * 
- * @member {array} groups
+ * @member {array} groups list of crash groups formed by missing symbols
+ * combination
  * 
  */
 function MissingSymbolCrashGroupsResponse() {

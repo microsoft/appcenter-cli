@@ -480,8 +480,6 @@ Azure.prototype.ping = function (subscriptionId, ownerName, appName, options, ca
 /**
  * @param {string} subscriptionId
  * 
- * @param {string} type Possible values include: 'appsvc', 'push'
- * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
@@ -503,7 +501,7 @@ Azure.prototype.ping = function (subscriptionId, ownerName, appName, options, ca
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Azure.prototype.getDeploymentOperations = function (subscriptionId, type, ownerName, appName, options, callback) {
+Azure.prototype.getDeploymentOperations = function (subscriptionId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -512,13 +510,11 @@ Azure.prototype.getDeploymentOperations = function (subscriptionId, type, ownerN
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  var type = 'appsvc';
   // Validate
   try {
     if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string') {
       throw new Error('subscriptionId cannot be null or undefined and it must be of type string.');
-    }
-    if (type === null || type === undefined || typeof type.valueOf() !== 'string') {
-      throw new Error('type cannot be null or undefined and it must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -637,8 +633,6 @@ Azure.prototype.getDeploymentOperations = function (subscriptionId, type, ownerN
 /**
  * @param {string} subscriptionId
  * 
- * @param {string} type Possible values include: 'appsvc', 'push'
- * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
@@ -660,7 +654,7 @@ Azure.prototype.getDeploymentOperations = function (subscriptionId, type, ownerN
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Azure.prototype.submitDeployment = function (subscriptionId, type, ownerName, appName, options, callback) {
+Azure.prototype.submitDeployment = function (subscriptionId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -669,13 +663,11 @@ Azure.prototype.submitDeployment = function (subscriptionId, type, ownerName, ap
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  var type = 'appsvc';
   // Validate
   try {
     if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string') {
       throw new Error('subscriptionId cannot be null or undefined and it must be of type string.');
-    }
-    if (type === null || type === undefined || typeof type.valueOf() !== 'string') {
-      throw new Error('type cannot be null or undefined and it must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -794,8 +786,6 @@ Azure.prototype.submitDeployment = function (subscriptionId, type, ownerName, ap
 /**
  * @param {string} subscriptionId
  * 
- * @param {string} type Possible values include: 'appsvc', 'push'
- * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
@@ -817,7 +807,7 @@ Azure.prototype.submitDeployment = function (subscriptionId, type, ownerName, ap
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Azure.prototype.getDeployment = function (subscriptionId, type, ownerName, appName, options, callback) {
+Azure.prototype.getDeployment = function (subscriptionId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -826,13 +816,11 @@ Azure.prototype.getDeployment = function (subscriptionId, type, ownerName, appNa
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  var type = 'appsvc';
   // Validate
   try {
     if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string') {
       throw new Error('subscriptionId cannot be null or undefined and it must be of type string.');
-    }
-    if (type === null || type === undefined || typeof type.valueOf() !== 'string') {
-      throw new Error('type cannot be null or undefined and it must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');

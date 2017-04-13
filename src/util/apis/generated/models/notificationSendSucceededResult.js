@@ -12,7 +12,7 @@
  * @constructor
  * Notification send succeeded.
  *
- * @member {string} [notificationId] The unique notification identifier.
+ * @member {string} notificationId The unique notification identifier.
  * 
  */
 function NotificationSendSucceededResult() {
@@ -33,7 +33,7 @@ NotificationSendSucceededResult.prototype.mapper = function () {
       className: 'NotificationSendSucceededResult',
       modelProperties: {
         notificationId: {
-          required: false,
+          required: true,
           serializedName: 'notification_id',
           type: {
             name: 'String'

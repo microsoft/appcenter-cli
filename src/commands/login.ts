@@ -96,7 +96,7 @@ export default class LoginCommand extends Command {
   private getUserInfo(token: string): Promise<ClientResponse<models.UserProfileResponse>> {
     const endpoint = environments(this.environmentName).endpoint;
     const client = this.clientFactory.fromToken(token, endpoint);
-    return clientRequest<models.UserProfileResponse>(cb => client.account.getUserProfile(cb));
+    return clientRequest<models.UserProfileResponse>(cb => client.users.get(cb));
   }
 
   private async removeLoggedInUser(): Promise<void> {

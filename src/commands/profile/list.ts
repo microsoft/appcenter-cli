@@ -13,7 +13,7 @@ export default class ProfileListCommand extends Command {
 
   async run(client: MobileCenterClient): Promise<CommandResult> {
     const userInfo = await out.progress("Getting user information...",
-      clientCall<models.UserProfileResponse>(cb => client.account.getUserProfile(cb)));
+      clientCall<models.UserProfileResponse>(cb => client.users.get(cb)));
 
     reportProfile(userInfo);
     return success();

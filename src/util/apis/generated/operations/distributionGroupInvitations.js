@@ -12,27 +12,22 @@ var WebResource = msRest.WebResource;
 
 /**
  * @class
- * Deprecated
+ * DistributionGroupInvitations
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the MobileCenterClient.
- * Initializes a new instance of the Deprecated class.
+ * Initializes a new instance of the DistributionGroupInvitations class.
  * @constructor
  *
  * @param {MobileCenterClient} client Reference to the service client.
  */
-function Deprecated(client) {
+function DistributionGroupInvitations(client) {
   this.client = client;
 }
 
 /**
- * Invites a new or existing user to an app
+ * Accepts all pending invitations to distribution groups for the specified
+ * user
  *
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {string} userEmail The email of the user to invite
- * 
  * @param {object} [options] Optional Parameters.
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
@@ -51,7 +46,7 @@ function Deprecated(client) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Deprecated.prototype.inviteAppUser = function (ownerName, appName, userEmail, options, callback) {
+DistributionGroupInvitations.prototype.acceptAll = function (options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -60,27 +55,10 @@ Deprecated.prototype.inviteAppUser = function (ownerName, appName, userEmail, op
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  // Validate
-  try {
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-    if (userEmail === null || userEmail === undefined || typeof userEmail.valueOf() !== 'string') {
-      throw new Error('userEmail cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/invitations/{user_email}';
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  requestUrl = requestUrl.replace('{user_email}', encodeURIComponent(userEmail));
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/user/invitations/distribution_groups/accept';
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -103,7 +81,7 @@ Deprecated.prototype.inviteAppUser = function (ownerName, appName, userEmail, op
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 204 && statusCode !== 400 && statusCode !== 403 && statusCode !== 404 && statusCode !== 409) {
+    if (statusCode !== 204 && statusCode !== 400 && statusCode !== 404) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -145,7 +123,7 @@ Deprecated.prototype.inviteAppUser = function (ownerName, appName, userEmail, op
       }
     }
     // Deserialize Response
-    if (statusCode === 403) {
+    if (statusCode === 404) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
@@ -161,44 +139,10 @@ Deprecated.prototype.inviteAppUser = function (ownerName, appName, userEmail, op
         return callback(deserializationError1);
       }
     }
-    // Deserialize Response
-    if (statusCode === 404) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorResponse']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError2 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError2.request = msRest.stripRequest(httpRequest);
-        deserializationError2.response = msRest.stripResponse(response);
-        return callback(deserializationError2);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 409) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorResponse']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError3 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError3.request = msRest.stripRequest(httpRequest);
-        deserializationError3.response = msRest.stripResponse(response);
-        return callback(deserializationError3);
-      }
-    }
 
     return callback(null, result, httpRequest, response);
   });
 };
 
 
-module.exports = Deprecated;
+module.exports = DistributionGroupInvitations;

@@ -28,7 +28,7 @@ var util = require('util');
  * 
  * @member {date} lastModified last update date for the group
  * 
- * @member {array} missingSymbols
+ * @member {array} missingSymbols list of missing symbols
  * 
  * @member {string} status group status. Possible values include: 'active',
  * 'pending', 'closed'

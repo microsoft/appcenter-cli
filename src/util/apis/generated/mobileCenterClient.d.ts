@@ -32,18 +32,32 @@ declare class MobileCenterClient {
     credentials: ServiceClientCredentials;
 
     // Operation groups
-    account: operations.Account;
     distribute: operations.Distribute;
-    crashOperations: operations.CrashOperations;
-    buildOperations: operations.BuildOperations;
+    orgInvitations: operations.OrgInvitations;
+    distributionGroupInvitations: operations.DistributionGroupInvitations;
+    appInvitations: operations.AppInvitations;
+    users: operations.Users;
+    releases: operations.Releases;
+    apps: operations.Apps;
+    organizations: operations.Organizations;
+    organization: operations.Organization;
+    builds: operations.Builds;
+    crashes: operations.Crashes;
     test: operations.Test;
+    symbols: operations.Symbols;
+    missingSymbolGroups: operations.MissingSymbolGroups;
     tables: operations.Tables;
     azure: operations.Azure;
-    push: operations.Push;
     identity: operations.Identity;
-    deprecated: operations.Deprecated;
+    repositories: operations.Repositories;
+    repositoryConfigurations: operations.RepositoryConfigurations;
+    releaseUploads: operations.ReleaseUploads;
+    distributionGroups: operations.DistributionGroups;
     codepush: operations.Codepush;
+    commits: operations.Commits;
+    branchConfigurations: operations.BranchConfigurations;
     analytics: operations.Analytics;
+    account: operations.Account;
     }
 
 export = MobileCenterClient;

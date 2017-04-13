@@ -18,7 +18,7 @@
  * @member {string} [name] The name of the app used in URLs
  * 
  * @member {string} os The OS the app will be running on. Possible values
- * include: 'iOS', 'Android', 'Windows'
+ * include: 'Android', 'iOS', 'Tizen', 'Windows'
  * 
  * @member {string} platform The platform of the app. Possible values include:
  * 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'

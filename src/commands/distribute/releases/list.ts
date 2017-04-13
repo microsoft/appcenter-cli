@@ -15,7 +15,7 @@ export default class ShowReleasesCommand extends AppCommand {
     let releases: models.BasicReleaseDetails[];
     try {
       const httpRequest = await out.progress("Loading list of releases...", clientRequest<models.BasicReleaseDetails[]>(
-        (cb) => client.distribute.getReleases(app.ownerName, app.appName, {
+        (cb) => client.releases.list(app.ownerName, app.appName, {
           publishedOnly: true
         }, cb)));
       releases = httpRequest.result;

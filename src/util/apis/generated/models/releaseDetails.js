@@ -44,6 +44,10 @@ var util = require('util');
  * 
  * @member {string} [provisioningProfileName] The release's release notes.
  * 
+ * @member {string} [provisioningProfileType] The type of the provisioning
+ * profile for the requested app version. Possible values include: 'adhoc',
+ * 'enterprise', 'other'
+ * 
  * @member {number} [size] The release's size in bytes.
  * 
  * @member {string} [minOs] The release's minimum required operating system.
@@ -144,6 +148,13 @@ ReleaseDetails.prototype.mapper = function () {
             name: 'String'
           }
         },
+        provisioningProfileType: {
+          required: false,
+          serializedName: 'provisioning_profile_type',
+          type: {
+            name: 'String'
+          }
+        },
         size: {
           required: false,
           serializedName: 'size',
@@ -214,10 +225,10 @@ ReleaseDetails.prototype.mapper = function () {
             name: 'Sequence',
             element: {
                 required: false,
-                serializedName: 'DistributionGroupElementType',
+                serializedName: 'DistributionGroupWithoutIsLatestElementType',
                 type: {
                   name: 'Composite',
-                  className: 'DistributionGroup'
+                  className: 'DistributionGroupWithoutIsLatest'
                 }
             }
           }

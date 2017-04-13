@@ -12,6 +12,8 @@
  * @constructor
  * @member {object} [status]
  * 
+ * @member {string} [annotation]
+ * 
  */
 function CrashGroupChange() {
 }
@@ -35,6 +37,13 @@ CrashGroupChange.prototype.mapper = function () {
           serializedName: 'status',
           type: {
             name: 'Object'
+          }
+        },
+        annotation: {
+          required: false,
+          serializedName: 'annotation',
+          type: {
+            name: 'String'
           }
         }
       }
