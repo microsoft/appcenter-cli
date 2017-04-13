@@ -48,6 +48,17 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | | |
 | `mobile-center crashes upload-symbols` | Upload the crash symbols for the application |
 | | |
+| `mobile-center distribute release` | Upload release binary and trigger distribution |
+| `mobile-center distribute groups create` | Create new distribution group |
+| `mobile-center distribute groups delete` | Deletes the distribution group |
+| `mobile-center distribute groups download` | Download release package for the distribution group |
+| `mobile-center distribute groups list` | Lists all distribution groups of the app |
+| `mobile-center distribute groups show` | Shows information about the distribution group |
+| `mobile-center distribute groups update` | Update existing distribution group |
+| `mobile-center distribute releases delete` | Deletes the release |
+| `mobile-center distribute releases list` | Shows the list of all releases for the application |
+| `mobile-center distribute releases show` | Shows full details about release |
+| | |
 | `mobile-center profile list` | Get information about logged in user |
 | `mobile-center profile update` | Update user information |
 | | |
@@ -72,7 +83,6 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | `mobile-center tokens create` | Create a new API token |
 | `mobile-center tokens delete` | Delete an API token |
 | `mobile-center tokens list` | Get a list of API tokens |
-
 
 Please use the `mobile-center help` command to get more information about each one.
 
