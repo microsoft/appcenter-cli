@@ -1,5 +1,5 @@
 import * as JsZip from "jszip";
-import { expect } from "chai";
+import { expect, use } from "chai";
 import * as Fs from "fs";
 import * as Pfs from "../../../../src/util/misc/promisfied-fs";
 import { IncomingMessage } from "http";
@@ -8,6 +8,9 @@ import * as Nock from "nock";
 import * as Path from "path";
 import * as Sinon from "sinon";
 import * as Temp from "temp";
+import * as ChaiAsPromised from "chai-as-promised";
+
+use(ChaiAsPromised);
 
 import UploadSymbolsCommand from "../../../../src/commands/crashes/upload-symbols";
 import { MobileCenterClient } from "../../../../src/util/apis";
@@ -174,7 +177,7 @@ describe("upload-symbols command", () => {
       const zipPath = await createZipWithFile();
 
       // Act
-      let result = await executeUploadCommand(["-s", zipPath]);
+      let result = await expect(executeUploadCommand(["-s", zipPath])).to.eventually.be.rejected;
       
       // Assert
       testUploadFailure(result, expectedRequestsScope, skippedRequestsScope);
