@@ -2,7 +2,7 @@
 const debug = require("debug")("mobile-center-cli:util:interaction:out");
 import { inspect } from "util";
 
-import { isDebug, isQuiet, formatIsJson } from "./io-options";
+import { isDebug, isQuiet, formatIsJson, formatIsCsv, formatIsParsingCompatible } from "./io-options";
 
 import * as os from "os";
 import * as wrap from "wordwrap";
@@ -19,7 +19,7 @@ import * as _ from "lodash";
 // to complete.
 //
 export function progress<T>(title: string, action: Promise<T>): Promise<T> {
-  if (!formatIsJson() && !isQuiet()) {
+  if (!formatIsParsingCompatible() && !isQuiet()) {
     const spinner = new Spinner(title);
     spinner.start();
     return action.then(result => {
@@ -40,6 +40,7 @@ export function progress<T>(title: string, action: Promise<T>): Promise<T> {
 // function.
 //
 export function list<T>(formatter: {(item: T): string}, items: T[]): void {
+  console.assert(!formatIsCsv(), "this function doesn't support CSV mode");
   if (!items || Object.keys(items).length === 0) { return; }
 
   if (!formatIsJson()) {
@@ -56,6 +57,7 @@ export function help(t: string): void;
 export function help(): void;
 export function help(...args: any[]) : void
 {
+  console.assert(!formatIsCsv(), "this function doesn't support CSV mode");
   let t: string;
   if (args.length === 0) {
     t = "";
@@ -72,6 +74,7 @@ export function help(...args: any[]) : void
 export function text<T>(converter: {(data: T): string}, data: T): void;
 export function text(t: string): void;
 export function text(...args: any[]): void {
+  console.assert(!formatIsCsv(), "this function doesn't support CSV mode");
   let converter: {(data: any): string};
   let data: any;
   if (args.length === 1) {
@@ -101,6 +104,7 @@ export function text(...args: any[]): void {
 export function table(options: any, data: any[]): void;
 export function table(data: any[]): void;
 export function table(...args: any[]): void {
+  console.assert(!formatIsCsv(), "this function doesn't support CSV mode");
   let options: any;
   let data: any[];
   [options, data] = args;
@@ -329,6 +333,7 @@ interface ReportFunc {
 function makeReport(reportFormat: any, nullMessage: string, data:any): void;
 function makeReport(reportFormat: any, data: any): void;
 function makeReport(...args: any[]): void {
+  console.assert(!formatIsCsv(), "this function doesn't support CSV mode");
   let reportFormat: any;
   let nullMessage: string;
   let data: any;
@@ -380,6 +385,7 @@ report.inspect = function (data: any): string {
 };
 
 export function reportNewLineSeparatedArray(reportFormat: any, data: any[]) {
+  console.assert(!formatIsCsv(), "this function doesn't support CSV mode");
   if (!formatIsJson()) {
     data.forEach((item, index) => {
       if (index) {
@@ -394,6 +400,7 @@ export function reportNewLineSeparatedArray(reportFormat: any, data: any[]) {
 }
 
 export function reportTitledGroupsOfTables(dataGroups: Array<{title: string, reportFormat: any, tables: any[]}>){
+  console.assert(!formatIsCsv(), "this function doesn't support CSV mode");
   if (!formatIsJson()) {
     dataGroups.forEach((dataGroup, index) => {
       if (index) {
@@ -407,3 +414,83 @@ export function reportTitledGroupsOfTables(dataGroups: Array<{title: string, rep
     console.log(JSON.stringify(dataGroups));
   }
 }
+
+export function getNoTableBordersCollapsedVerticallyOptions() {
+  return {
+    chars: {
+      "top": "", "top-mid": "", "top-left": "", "top-right": "",
+      "bottom": "", "bottom-mid": "", "bottom-left": "", "bottom-right": "",
+      "left": "", "left-mid": "", "mid": "", "mid-mid": "",
+      "right": "", "right-mid": "", "middle": " "
+    },
+    style: { "padding-left": 0, "padding-right": 0 },
+    wordWrap: true
+  };
+}
+
+function convertNamedTablesToCsvString (stringTables: NamedTables, columnsCount: number): string {
+  const delimitersCount = columnsCount - 1;
+  const delimitersString = _.repeat(",", delimitersCount);
+  let output: string = "";
+  stringTables.forEach((table, index) => {
+    // tables break
+    if (index) {
+      output += delimitersString + os.EOL;
+    }
+
+    // table name
+    output += table[0] + delimitersString + os.EOL;
+
+    // table contents
+    const contents = _.cloneDeep(table[1]);
+    for (const row of contents) {
+      row.length = columnsCount;
+      output += row.join(",") + os.EOL;
+    }
+  });
+  return output;
+}
+
+function convertNamedTablesToListString (stringTables: NamedTables): string {
+  const delimiter = " ";
+  let output: string = "";
+  stringTables.forEach((table, index) => {
+    // tables break
+    if (index) {
+      output += os.EOL;
+    }
+
+    // table name
+    output += table[0] + os.EOL;
+
+    // table contents
+    const cliTable = new Table(getNoTableBordersCollapsedVerticallyOptions());
+    table[1].forEach((row) => cliTable.push(row));
+    output += cliTable.toString() + os.EOL;
+  });
+  return output;
+}
+
+export type NamedTables = Array<[string, string[][]]>;
+type ObjectToNamedTablesConvertor<T> = (object: T, 
+                                dateFormatter: (date: Date) => string,
+                                percentageFormatter: (percentage: number) => string,
+                              ) => NamedTables;
+
+export function reportObjectAsTitledTables<T>(toNamedTables: ObjectToNamedTablesConvertor<T>, object: T, columnsCount: number) {
+  if (formatIsJson()) {
+    console.log(JSON.stringify(object));
+  } else {
+    let output: string;
+    if (formatIsCsv()) {
+      const stringTables = toNamedTables(object, (date) => date.toISOString(), (percentage) => percentage.toString());
+      output = convertNamedTablesToCsvString(stringTables, columnsCount);
+    } else {
+      const stringTables = toNamedTables(object, (date) => date.toString(), (percentage) => _.round(percentage, 2).toString() + "%");
+      output = convertNamedTablesToListString(stringTables);
+    }
+    
+    console.log(output);
+  }
+}
+

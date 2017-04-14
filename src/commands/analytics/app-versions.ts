@@ -8,6 +8,7 @@ import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../util/profile";
 import * as Os from "os";
+import { parseDate } from "./lib/date-parsing-helper";
 
 const debug = require("debug")("mobile-center-cli:commands:analytics:app-versions");
 
@@ -32,8 +33,13 @@ export default class ShowAppVersionsCommand extends AppCommand {
   public async run(client: MobileCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
-    const startDate = this.getStartDate();
-    const endDate = this.getEndDate();
+    const startDate = parseDate(this.startDate, 
+      new Date(new Date().setHours(0, 0, 0, 0)), 
+      `start date value ${this.startDate} is not a valid date string`);
+
+    const endDate = parseDate(this.endDate,
+      new Date(),
+      `end date value ${this.endDate} is not a valid date string`);
 
     let listOfVersions: models.Version[];
     try {
@@ -55,33 +61,5 @@ export default class ShowAppVersionsCommand extends AppCommand {
     }    
     
     return success();
-  }
-
-  private getStartDate(): Date {
-    if (!_.isNil(this.startDate)) {
-      const timeStamp = Date.parse(this.startDate);
-      if (!_.isNaN(timeStamp)) {
-        return new Date(timeStamp);
-      } else {
-        throw failure(ErrorCodes.InvalidParameter, `start date value ${this.startDate} is not a valid date string`);
-      }
-    } else {
-      // today 00:00 by default
-      return new Date(new Date().setHours(0, 0, 0, 0));
-    }
-  }
-
-  private getEndDate(): Date {
-    if (!_.isNil(this.endDate)) {
-      const timeStamp = Date.parse(this.endDate);
-      if (!_.isNaN(timeStamp)) {
-        return new Date(timeStamp);
-      } else {
-        throw failure(ErrorCodes.InvalidParameter, `end date value ${this.endDate} is not a valid date string`);
-      }
-    } else {
-      // "now" by default
-      return new Date();
-    }
   }
 }
