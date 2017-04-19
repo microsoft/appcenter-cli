@@ -57,6 +57,7 @@
     "event-stream": "^3.3.4",
     "glob": "^7.1.1",
     "inquirer": "^3.0.1",
+    "iso8601-duration": "^1.0.6",
     "jszip": "^3.1.3",
     "lodash": "^4.16.4",
     "mdfind": "^1.0.0",
