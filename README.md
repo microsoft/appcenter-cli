@@ -69,6 +69,8 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | `mobile-center distribute releases list` | Shows the list of all releases for the application |
 | `mobile-center distribute releases show` | Shows full details about release |
 | | |
+| `mobile-center init` | Integrates Mobile Center SDKs into the project |
+| | |
 | `mobile-center orgs create` | Create a new organization |
 | `mobile-center orgs list` | Lists organizations in which current user is collaborator |
 | `mobile-center orgs show` | Show information about organization |

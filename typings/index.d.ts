@@ -25,5 +25,6 @@
 /// <reference path="modules/qs/index.d.ts" />
 /// <reference path="modules/request/index.d.ts" />
 /// <reference path="modules/rimraf/index.d.ts" />
+/// <reference path="modules/semver/index.d.ts" />
 /// <reference path="modules/sinon/index.d.ts" />
 /// <reference path="modules/wordwrap/index.d.ts" />

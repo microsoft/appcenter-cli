@@ -31,6 +31,7 @@
     "opener": "registry:dt/opener#1.4.0+20170121210853",
     "request": "registry:npm/request#2.69.0+20160428223725",
     "rimraf": "registry:npm/rimraf#2.5.0+20160723033700",
+    "semver": "registry:npm/semver#5.0.0+20160723033700",
     "wordwrap": "registry:npm/wordwrap#1.0.0+20160723033700"
   }
 }
