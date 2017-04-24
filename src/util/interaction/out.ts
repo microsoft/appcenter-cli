@@ -399,7 +399,7 @@ export function reportNewLineSeparatedArray(reportFormat: any, data: any[]) {
   }
 }
 
-export function reportTitledGroupsOfTables(dataGroups: Array<{title: string, reportFormat: any, tables: any[]}>){
+export function reportTitledGroupsOfTables(dataGroups: Array<{title: string, reportFormat: any, tables: any[]}>) {
   console.assert(!formatIsCsv(), "this function doesn't support CSV mode");
   if (!formatIsJson()) {
     dataGroups.forEach((dataGroup, index) => {
@@ -415,12 +415,16 @@ export function reportTitledGroupsOfTables(dataGroups: Array<{title: string, rep
   }
 }
 
-export function getNoTableBordersCollapsedVerticallyOptions() {
+function getPaddingFromLevel(level: number) {
+  return _.repeat(" ", level * 4);
+}
+
+export function getNoTableBordersCollapsedVerticallyOptions(leftPadding: string) {
   return {
     chars: {
       "top": "", "top-mid": "", "top-left": "", "top-right": "",
       "bottom": "", "bottom-mid": "", "bottom-left": "", "bottom-right": "",
-      "left": "", "left-mid": "", "mid": "", "mid-mid": "",
+      "left": leftPadding, "left-mid": "", "mid": "", "mid-mid": "",
       "right": "", "right-mid": "", "middle": " "
     },
     style: { "padding-left": 0, "padding-right": 0 },
@@ -431,48 +435,122 @@ export function getNoTableBordersCollapsedVerticallyOptions() {
 function convertNamedTablesToCsvString (stringTables: NamedTables, columnsCount: number): string {
   const delimitersCount = columnsCount - 1;
   const delimitersString = _.repeat(",", delimitersCount);
-  let output: string = "";
-  stringTables.forEach((table, index) => {
-    // tables break
-    if (index) {
-      output += delimitersString + os.EOL;
-    }
 
+  function outputTable(table: INamedTable): string {
+    let tableOutput = "";
     // table name
-    output += table[0] + delimitersString + os.EOL;
+    tableOutput += table.name + delimitersString + os.EOL;
 
     // table contents
-    const contents = _.cloneDeep(table[1]);
-    for (const row of contents) {
-      row.length = columnsCount;
-      output += row.join(",") + os.EOL;
-    }
-  });
-  return output;
+    const contents = _.cloneDeep(table.content);
+    contents.forEach((row, index) => {
+      if (index) {
+        tableOutput += os.EOL;
+      }
+      if (isINamedTable(row)) {
+        tableOutput += outputTable(row);
+      } else {
+        row.length = columnsCount;
+        tableOutput += row.join(",");
+      }
+    });
+
+    return tableOutput;
+  }
+
+  return stringTables.map((table) => outputTable(table)).join(os.EOL + delimitersString + os.EOL);
 }
 
 function convertNamedTablesToListString (stringTables: NamedTables): string {
-  const delimiter = " ";
-  let output: string = "";
-  stringTables.forEach((table, index) => {
-    // tables break
-    if (index) {
-      output += os.EOL;
-    }
+  function outputTable(table: INamedTable, level: number): string {
+    const paddedTable = padTableCells(table);
+    let tableOutput = "";
+    const padding = getPaddingFromLevel(level);
 
     // table name
-    output += table[0] + os.EOL;
+    tableOutput += padding + paddedTable.name + os.EOL;
 
     // table contents
-    const cliTable = new Table(getNoTableBordersCollapsedVerticallyOptions());
-    table[1].forEach((row) => cliTable.push(row));
-    output += cliTable.toString() + os.EOL;
-  });
-  return output;
+    const tableWithMergedStringArrays: any[] = [];
+    const tablePadding = getPaddingFromLevel(level + 1);
+    // merging continuous string[] chains into Table objects
+    for (const row of paddedTable.content){
+      if (isINamedTable(row)) {
+        tableWithMergedStringArrays.push(row);
+      } else {
+        const lastElement = _.last(tableWithMergedStringArrays);
+        let tableObject: any;
+        if (_.isUndefined(lastElement) || isINamedTable(lastElement)) {
+          tableObject = new Table(getNoTableBordersCollapsedVerticallyOptions(tablePadding));
+          tableWithMergedStringArrays.push(tableObject);
+        } else {
+          tableObject = lastElement;
+        }
+
+        tableObject.push(row);
+      }
+    }
+
+    tableWithMergedStringArrays.forEach((rowObject, rowIndex) => {
+      if (rowIndex) {
+        tableOutput += os.EOL;
+      }
+      if (isINamedTable(rowObject)) {
+        tableOutput += outputTable(rowObject, level + 2);
+      } else {
+        tableOutput += rowObject.toString();
+      }
+    });
+
+    return tableOutput;
+  }
+  return stringTables.map((table) => outputTable(table, 0)).join(os.EOL + os.EOL);
 }
 
-export type NamedTables = Array<[string, string[][]]>;
+function padTableCells(table: INamedTable): INamedTable {
+  const content: Array<INamedTable | string[]> = [];
+
+  // calculating max width of columns
+  const columnMaxWidth: number[] = [];
+  for (const row of table.content) {
+    if (row instanceof Array) {
+      row.forEach((cell, index) => columnMaxWidth[index] = Math.max(cell.length, columnMaxWidth[index] || 0));
+    }
+  }
+
+  // padding cells belonging to the same column to make them have same length
+  for (const row of table.content) {
+    let processedRow: string[] | INamedTable;
+    if (row instanceof Array) {
+      processedRow = row.map((cell, index) => _.padEnd(cell, columnMaxWidth[index]));
+    } else {
+      processedRow = row;
+    }
+    content.push(processedRow);
+  }
+
+  return {
+    name: table.name,
+    content
+  };
+}
+
+export interface INamedTable {
+  name: string;
+  content: Array<INamedTable | string[]>;
+}
+
+function isINamedTable(object: any): object is INamedTable {
+  return object != null
+    && typeof(object.name) === "string"
+    && object.content instanceof Array
+    && object.content.every((item: any) => isINamedTable(item) || (item instanceof Array && item.every((itemComponent) => typeof(itemComponent) === "string")));
+}
+
+// number - level of the table (controls left padding of the table and name)
+export type NamedTables = INamedTable[];
 type ObjectToNamedTablesConvertor<T> = (object: T, 
+                                numberFormatter: (num: number) => string,
                                 dateFormatter: (date: Date) => string,
                                 percentageFormatter: (percentage: number) => string,
                               ) => NamedTables;
@@ -483,10 +561,10 @@ export function reportObjectAsTitledTables<T>(toNamedTables: ObjectToNamedTables
   } else {
     let output: string;
     if (formatIsCsv()) {
-      const stringTables = toNamedTables(object, (date) => date.toISOString(), (percentage) => percentage.toString());
+      const stringTables = toNamedTables(object, (num) => num.toString(), (date) => date.toISOString(), (percentage) => percentage.toString());
       output = convertNamedTablesToCsvString(stringTables, columnsCount);
     } else {
-      const stringTables = toNamedTables(object, (date) => date.toString(), (percentage) => _.round(percentage, 2).toString() + "%");
+      const stringTables = toNamedTables(object, (num) => _.round(num, 2).toString(), (date) => date.toString(), (percentage) => _.round(percentage, 2).toString() + "%");
       output = convertNamedTablesToListString(stringTables);
     }
     

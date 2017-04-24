@@ -5,6 +5,7 @@ import { inspect } from "util";
 import * as _ from "lodash";
 import { DefaultApp } from "../../util/profile";
 import { parseDate } from "./lib/date-parsing-helper";
+import { calculatePercentChange } from "./lib/percent-change-helper";
 
 const debug = require("debug")("mobile-center-cli:commands:analytics:sessions");
 const IsoDuration = require("iso8601-duration");
@@ -159,25 +160,25 @@ export default class SessionCommand extends AppCommand {
 
   private outputStatistics(statisticsObject: IJsonOutput): void {
     const maximumNumberOfColumnsInTables = 3;
-    out.reportObjectAsTitledTables((stats: IJsonOutput, dateFormatter, percentageFormatter) => {
+    out.reportObjectAsTitledTables((stats: IJsonOutput, numberFormatter, dateFormatter, percentageFormatter) => {
       const tableArray: out.NamedTables = [];
 
       if (stats.sessions) {
-        tableArray.push([
-          "Session Durations", 
-          stats.sessions.map((group) => [group.bucket, group.count.toString()])
-        ]);
+        tableArray.push({
+          name: "Session Durations", 
+          content: stats.sessions.map((group) => [group.bucket, numberFormatter(group.count)])
+      });
       }
 
       if (stats.statistics) {
-        tableArray.push([
-          "Session Statistics",
-          [
-            ["Total Sessions"].concat(toArray(stats.statistics.totalSessions, percentageFormatter)),
-            ["Average Sessions Per Day"].concat(toArray(stats.statistics.averageSessionsPerDay, percentageFormatter)),
-            ["Average Session Length (sec)", stats.statistics.averageSessionsLength.seconds.toString(), percentageFormatter(stats.statistics.averageSessionsLength.percentage)]
+        tableArray.push({
+          name: "Session Statistics",
+          content: [
+            ["Total Sessions"].concat(toArray(stats.statistics.totalSessions, numberFormatter, percentageFormatter)),
+            ["Average Sessions Per Day"].concat(toArray(stats.statistics.averageSessionsPerDay, numberFormatter, percentageFormatter)),
+            ["Average Session Length (sec)", numberFormatter(stats.statistics.averageSessionsLength.seconds), percentageFormatter(stats.statistics.averageSessionsLength.percentage)]
           ]
-        ]);
+        });
       }
 
       return tableArray;
@@ -203,21 +204,11 @@ interface IJsonOutput {
   };
 }
 
-function calculatePercentChange(currentValue: number, previousValue: number) {
-  if (previousValue !== 0) {
-    return (currentValue - previousValue) / previousValue * 100;
-  } else if (currentValue === 0) {
-    return 0;
-  } else {
-    return 100;
-  }
-}
-
 interface IChangingCount {
   count: number;
   percentage: number;
 }
 
-function toArray(changingCount: IChangingCount, percentageFormatter: (value: number) => string): string[] {
-  return [changingCount.count.toString(), percentageFormatter(changingCount.percentage)];
+function toArray(changingCount: IChangingCount, numberFormatter: (num: number) => string, percentageFormatter: (value: number) => string): string[] {
+  return [numberFormatter(changingCount.count), percentageFormatter(changingCount.percentage)];
 }
