@@ -1,3 +1,4 @@
+import { XmlWalker, XmlTag, XmlBag } from './../util/xml-walker';
 import injectSdkMainActivity from "./inject-sdk-main-activity";
 import injectSdkBuildGradle from "./inject-sdk-build-gradle";
 import { MobileCenterSdkModule } from "../mobilecenter-sdk-module";
@@ -6,7 +7,6 @@ import cleanSdkMainActivity from "./clean-sdk-main-activity";
 import * as fs from "async-file";
 import * as path from "path";
 import * as _ from "lodash"
-const xml2js = require("xml2js");
 const gjs = require("gradlejs");
 
 /**
@@ -139,29 +139,31 @@ async function getMainActivityName(projectPath: string, sourceSets: ISourceSet[]
       continue;
     }
     const manifestContents = await fs.readTextFile(manifestPath, "utf8");
-    const xml = await readXml(manifestContents);
-    if (!xml || !xml.manifest || !xml.manifest.application || !xml.manifest.application[0])
+    
+    const manifestTag = new XmlWalker(manifestContents, new XmlBag()).walk().root;
+    if (!manifestTag || manifestTag.name !== "manifest")
       continue;
-
-    const packageName = xml.manifest.$.package;
-    const application = xml.manifest.application[0];
-    if (!application.activity || !application.activity.length)
+    const applicationTag = _.find(manifestTag.children, x => x.name === "application")
+    if (!applicationTag)
       continue;
-
-    const mainActivity = _.find<any>(application.activity, x =>
-      x["intent-filter"] && x["intent-filter"][0] &&
-      x["intent-filter"][0].action && x["intent-filter"][0].action[0] &&
-      x["intent-filter"][0].action[0].$["android:name"] === "android.intent.action.MAIN" &&
-      x["intent-filter"][0].category && x["intent-filter"][0].category.length &&
-      _.some(x["intent-filter"][0].category, (x: any) => x.$["android:name"] === "android.intent.category.LAUNCHER")
+    const mainActivityTag = _.find(applicationTag.children.filter(x => x.name === "activity"),
+      x => x.children.filter(x => x.name === "intent-filter")
+        .some(x => 
+          x.children
+            .some(x => x.name === "action" && x.attributes["android:name"] === "android.intent.action.MAIN") &&
+          x.children
+            .some(x => x.name === "category" && x.attributes["android:name"] === "android.intent.category.LAUNCHER")
+        )
     );
-    if (!mainActivity)
+    if (!mainActivityTag)
       continue;
-
-    let mainActivityFullName = mainActivity.$["android:name"];
+    
+    let mainActivityFullName = mainActivityTag.attributes["android:name"];
     if (!mainActivityFullName)
       continue;
+    
     if (mainActivityFullName[0] === ".") {
+      const packageName = manifestTag.attributes.package;
       if (!packageName)
         throw new Error("Incorrect manifest file. Package name must be defined.");
 
@@ -172,16 +174,6 @@ async function getMainActivityName(projectPath: string, sourceSets: ISourceSet[]
   }
 
   throw new Error("Main activity is not found.");
-}
-
-async function readXml(xmlContents: string): Promise<any> {
-  return new Promise<any>(function (resolve, reject) {
-    xml2js.parseString(xmlContents, function (err: any, data: any) {
-      if (err)
-        reject(err);
-      resolve(data);
-    });
-  });
 }
 
 async function readMainActivity(projectPath: string, sourceSets: ISourceSet[],

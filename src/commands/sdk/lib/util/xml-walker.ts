@@ -22,12 +22,12 @@ export class XmlWalker<TBag extends XmlBag> extends TextWalker<TBag> {
       bag =>
         this.currentChar === "<",
       bag => {
-        let matches = this.forepart.match(/^<\s*(\w+)\s*([^>]*?)?\s*(\/?)\s*>/);
+        let matches = this.forepart.match(/^<\s*([:-\w]+)\s*([^>]*?)?\s*(\/?)\s*>/);
         if (matches && matches[0] && matches[1]) {
           bag.current = new XmlTag(matches[1], bag.current);
           bag.current.startsAt = this.position;
           bag.current.text = matches[0];
-          bag.current.attributes = matches[2];
+          bag.current.attributes = this.parseAttributes(matches[2]);
 
           if (!bag.root)
             bag.root = bag.current;
@@ -62,7 +62,18 @@ export class XmlWalker<TBag extends XmlBag> extends TextWalker<TBag> {
         }
       }
     );
+  }
 
+  private parseAttributes(source: string): IXmlAttributes {
+    let attributes: IXmlAttributes = {};
+    let regexp: RegExp = /\S*?([:-\w]+)\s*=\s*(["'])(.+)\2/g;
+    let matches: RegExpExecArray;
+    
+    while (matches = regexp.exec(source)) {
+      attributes[matches[1]] = matches[3];
+    }
+
+    return attributes;
   }
 }
 
@@ -82,20 +93,22 @@ export class XmlBag {
 }
 
 export class XmlTag implements ISnippet {
-  attributes: string;
+  attributes: IXmlAttributes = {};
   body: ISnippet;
-  children: XmlTag[];
+  children: XmlTag[] = [];
   startsAt: number;
   text: string;
 
   constructor(
     public name: string,
     public parent?: XmlTag) {
-
-    this.children = [];
   }
 
   get path(): string {
     return this.parent ? `${this.parent.path}/${this.name}` : this.name;
   }
+}
+
+export interface IXmlAttributes { 
+  [name: string]: string 
 }

@@ -37,7 +37,7 @@ export default class TextWalker<TBag> {
     this._traps.push(new TextWalkerTrap<TBag>(condition, handler));
   }
 
-  walk() {
+  walk(): TBag {
     while (!this._isStoped && this.step());
     return this._bag;
   }
