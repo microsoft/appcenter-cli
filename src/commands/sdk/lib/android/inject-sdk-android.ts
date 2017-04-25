@@ -216,7 +216,7 @@ class BuildVariant {
   toString(): string {
     let result = this.buildType;
     if (this.productFlavors)
-      this.productFlavors.forEach(pf => result = pf + result.substr(0, 1).toLocaleUpperCase() + result.substr(1)); //inverse the order?
+      this.productFlavors.forEach(pf => result = pf + result.substr(0, 1).toLocaleUpperCase() + result.substr(1));
     return result;
   }
 }

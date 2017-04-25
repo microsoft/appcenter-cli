@@ -77,7 +77,8 @@ export default class IntegrateSDKCommand extends Command {
     try {
       switch (this.projectType.toLowerCase()) {
         case "android":
-          await injectSdkAndroid(this.projectPath, this.buildVariant, this.sdkVersion, this.appSecret, sdkModules);
+          await out.progress("Integrating SDK into the project...",
+            injectSdkAndroid(this.projectPath, this.buildVariant, this.sdkVersion, this.appSecret, sdkModules));
           break;
 
         case "ios":
@@ -90,6 +91,7 @@ export default class IntegrateSDKCommand extends Command {
       return failure(ErrorCodes.Exception, err);
     }
 
+    out.text("Mobile Center SDK successfully integrated into the project.");
     return success();
   }
 }
