@@ -1,6 +1,4 @@
-import { TextWalkerTrap } from './text-walker-trap';
-
-export class TextWalker<TBag> {
+export default class TextWalker<TBag> {
   private _text: string;
   get text(): string { return this._text; }
 
@@ -72,5 +70,12 @@ export class TextWalker<TBag> {
         trap.handler(this._bag);
       }
     });
+  }
+}
+
+class TextWalkerTrap<TBag> {
+  constructor(
+    public condition: (bag: TBag) => boolean,
+    public handler: (bag: TBag) => void) {
   }
 }

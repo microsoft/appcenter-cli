@@ -1,4 +1,4 @@
-import * as _ from 'lodash'
+import * as _ from "lodash"
 
 export default class TextCutter {
 
@@ -8,7 +8,7 @@ export default class TextCutter {
   }
 
   get result(): string {
-    return this._fragments.map(x => x.text).join('');
+    return this._fragments.map(x => x.text).join("");
   }
 
   private _fragments: Fragment[];
@@ -57,9 +57,9 @@ export default class TextCutter {
   }
 
   cutLineIf(predicate: (line: string) => any): TextCutter {
-    let start = this.seekPrev('\n') || -1;
+    let start = this.seekPrev("\n") || -1;
     start++;
-    let end = this.seekNext('\n') || this._text.length - 1;
+    let end = this.seekNext("\n") || this._text.length - 1;
     let length = end - start + 1;
     let line = this.read(start, end - 1);
 
@@ -81,7 +81,7 @@ export default class TextCutter {
         result += fragments[i];
       result += fragments[fragments.length - 1].text.substr(0, end - fragments[fragments.length - 1].start + 1);
     } else
-      result = '';
+      result = "";
     return result;
   }
 

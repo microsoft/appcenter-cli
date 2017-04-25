@@ -1,8 +1,8 @@
-import { StandardCodeWalker, StandardBag } from './../standard-code-walker';
+import { CodeWalker, CodeBag } from "./../util/code-walker";
 import TextCutter from "../util/text-cuter";
 import removeComments from "../util/remove-comments";
 
-export function cleanSdkBuildGradle(code: string): string {
+export default function cleanSdkBuildGradle(code: string): string {
   let result: string;
   let info = analyzeCode(code);
 
@@ -18,7 +18,7 @@ export function cleanSdkBuildGradle(code: string): string {
       block.modifiedText = textCutter.result;
 
       block.defs.forEach(def => {
-        let regexp = new RegExp('\\W' + def.name + '\\W', 'g');
+        let regexp = new RegExp("\\W" + def.name + "\\W", "g");
         if (regexp.exec(block.modifiedText) && !regexp.exec(block.modifiedText)) {
           textCutter
             .goto(def.position)
@@ -40,23 +40,22 @@ export function cleanSdkBuildGradle(code: string): string {
     shift += block.modifiedText.length - block.originalText.length;
   });
 
-  // //remove empty blocks
-  result = result.replace(/dependencies\s*{\s*}/g, '');
+  // Remove empty blocks
+  result = result.replace(/dependencies\s*{\s*}/g, "");
 
   return result;
 }
 
 function analyzeCode(code: string): CleanBag {
-
   let cleanBag = new CleanBag();
-  let textWalker = new StandardCodeWalker<CleanBag>(code, cleanBag);
+  let textWalker = new CodeWalker<CleanBag>(code, cleanBag);
 
-  //collecting dependencies blocks
+  // Collecting dependencies blocks
   textWalker.addTrap(
     bag =>
       bag.blockLevel === 1 &&
       !bag.currentBlock &&
-      textWalker.prevChar === '{',
+      textWalker.prevChar === "{",
     bag => {
       let matches = removeComments(textWalker.backpart).match(/dependencies\s*{$/);
       if (matches && matches[0]) {
@@ -72,7 +71,7 @@ function analyzeCode(code: string): CleanBag {
     bag =>
       bag.blockLevel === 1 &&
       bag.currentBlock &&
-      textWalker.nextChar === '}',
+      textWalker.nextChar === "}",
     bag => {
       if (bag.currentBlock.compiles.length) {
         bag.currentBlock.originalText = code.substring(bag.currentBlock.startsAt, textWalker.position + 1);
@@ -82,11 +81,11 @@ function analyzeCode(code: string): CleanBag {
     }
   );
 
-  //catching defs
+  // Catching defs
   textWalker.addTrap(
     bag =>
       bag.currentBlock &&
-      textWalker.currentChar === 'd',
+      textWalker.forepart.startsWith("def"),
     bag => {
       let matches = removeComments(textWalker.forepart).match(/^def\s+(\w+)\s*=\s*["'](.+?)["']/);
       if (matches && matches[1] && matches[2])
@@ -99,11 +98,11 @@ function analyzeCode(code: string): CleanBag {
     }
   );
 
-  //catching compiles
+  // Catching compiles
   textWalker.addTrap(
     bag =>
       bag.currentBlock &&
-      textWalker.currentChar === 'c',
+      textWalker.forepart.startsWith("compile"),
     bag => {
       let matches = removeComments(textWalker.forepart).match(/^compile\s*["']com.microsoft.azure.mobile:mobile-center-(analytics|crashes|distribute):[^]+?["']/);
       if (matches && matches[1])
@@ -118,7 +117,7 @@ function analyzeCode(code: string): CleanBag {
   return textWalker.walk();
 }
 
-class CleanBag extends StandardBag {
+class CleanBag extends CodeBag {
   currentBlock: IDependenciesBlock;
   dependenciesBlocks: IDependenciesBlock[] = [];
 }

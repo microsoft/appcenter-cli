@@ -1,14 +1,14 @@
 // sdk integrate command
 
 import { shortName, longName, hasArg } from './../../util/commandline/option-decorators';
-import { Command, CommandArgs, CommandResult, help, failure, ErrorCodes, success, getCurrentApp, required } from "../../util/commandline";
+import { Command, CommandArgs, CommandResult, help, failure, ErrorCodes, success, getCurrentApp, required, defaultValue } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { DefaultApp } from "../../util/profile";
 import { MobileCenterClient } from "../../util/apis";
 
 const debug = require("debug")("mobile-center-cli:commands:apps:list");
 import { inspect } from "util";
-import { injectSdkAndroid } from "./lib/android/inject-sdk-android";
+import injectSdkAndroid from "./lib/android/inject-sdk-android";
 import { MobileCenterSdkModule } from "./lib/mobilecenter-sdk-module";
 
 @help("Integrate Mobile Center SDK into the project")
@@ -44,6 +44,7 @@ export default class IntegrateSDKCommand extends Command {
 
   @help("Build variant (for Android projects)")
   @longName("build-variant")
+  @defaultValue("release")
   @hasArg
   buildVariant: string;
 
@@ -76,8 +77,6 @@ export default class IntegrateSDKCommand extends Command {
     try {
       switch (this.projectType.toLowerCase()) {
         case "android":
-          if (!this.buildVariant)
-            return failure(ErrorCodes.InvalidParameter, "Missing required option --build-variant");
           await injectSdkAndroid(this.projectPath, this.buildVariant, this.sdkVersion, this.appSecret, sdkModules);
           break;
 

@@ -4,7 +4,7 @@ export default function removeComments(text: string, comments: RegExp[] = standa
 
   let result = text;
   comments.forEach(useless => {
-    result = result.replace(useless, ' ');
+    result = result.replace(useless, " ");
   });
 
   return result;

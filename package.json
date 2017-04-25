@@ -36,6 +36,7 @@
     "url": "https://github.com/Microsoft/mobile-center-cli/issues"
   },
   "devDependencies": {
+    "async-file": "^2.0.2",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "gulp": "^3.9.1",

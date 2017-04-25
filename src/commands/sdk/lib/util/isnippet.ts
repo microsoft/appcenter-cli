@@ -1,4 +1,4 @@
-export interface IFragment {
+export interface ISnippet {
   startsAt: number;
   text: string;
 }

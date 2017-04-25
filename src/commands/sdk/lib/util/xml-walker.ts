@@ -1,15 +1,15 @@
-import { IFragment } from "./ifragment";
-import { TextWalker } from "./util/text-walker";
+import { ISnippet } from "./isnippet";
+import TextWalker from "./text-walker";
 
 export class XmlWalker<TBag extends XmlBag> extends TextWalker<TBag> {
 
   constructor(text: string, bag: TBag) {
     super(text, bag);
 
-    //comments
+    // Comments
     this.addTrap(
       bag =>
-        this.forepart.substr(0, 4) === '<!--',
+        this.forepart.startsWith("<!--"),
       bag => {
         let matches = this.forepart.match(/^<!--[^]*?-->/);
         if (matches && matches[0])
@@ -17,10 +17,10 @@ export class XmlWalker<TBag extends XmlBag> extends TextWalker<TBag> {
       }
     );
 
-    // start tag
+    // Start tag
     this.addTrap(
       bag =>
-        this.currentChar === '<',
+        this.currentChar === "<",
       bag => {
         let matches = this.forepart.match(/^<\s*(\w+)\s*([^>]*?)?\s*(\/?)\s*>/);
         if (matches && matches[0] && matches[1]) {
@@ -32,8 +32,8 @@ export class XmlWalker<TBag extends XmlBag> extends TextWalker<TBag> {
           if (!bag.root)
             bag.root = bag.current;
 
-          if (matches[matches.length - 1] === '/') {
-            bag.finishCurrent();
+          if (matches[matches.length - 1] === "/") {
+            bag.completeCurrent();
           }
 
           this.jump(matches[0].length);
@@ -41,15 +41,15 @@ export class XmlWalker<TBag extends XmlBag> extends TextWalker<TBag> {
       }
     );
 
-    // end tag
+    // End tag
     this.addTrap(
       bag =>
-        this.currentChar === '<',
+        this.currentChar === "<",
       bag => {
         let matches = this.forepart.match(/^<\s*\/\s*([^>]*?)?\s*>/);
         if (matches && matches[0] && matches[1]) {
           if (matches[1] !== bag.current.name) {
-            bag.error = new Error('finish tag ' + bag.current.name); //TODO: Normal error description
+            bag.error = new Error("Unexpected tag closing - " + bag.current.name);
             return this.stop();
           }
           let startsAt = bag.current.startsAt + bag.current.text.length;
@@ -58,7 +58,7 @@ export class XmlWalker<TBag extends XmlBag> extends TextWalker<TBag> {
             text: this.text.substring(startsAt, this.position)
           };
           bag.current.text += bag.current.body.text + matches[0];
-          bag.finishCurrent();
+          bag.completeCurrent();
         }
       }
     );
@@ -72,7 +72,7 @@ export class XmlBag {
   error?: Error;
   onTagReaded: (tag: XmlTag) => void;
 
-  finishCurrent() {
+  completeCurrent() {
     if (this.current.parent)
       this.current.parent.children.push(this.current);
     if (this.onTagReaded)
@@ -81,9 +81,9 @@ export class XmlBag {
   }
 }
 
-export class XmlTag implements IFragment {
+export class XmlTag implements ISnippet {
   attributes: string;
-  body: IFragment;
+  body: ISnippet;
   children: XmlTag[];
   startsAt: number;
   text: string;
