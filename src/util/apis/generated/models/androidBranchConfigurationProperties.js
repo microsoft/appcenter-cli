@@ -16,7 +16,7 @@
  * 
  * @member {string} module The Gradle module to build
  * 
- * @member {string} variant The Android build variant to build
+ * @member {string} buildVariant The Android build variant to build
  * 
  * @member {boolean} [runTests] Whether to run unit tests during the build
  * (default). Default value: true .
@@ -56,9 +56,9 @@ AndroidBranchConfigurationProperties.prototype.mapper = function () {
             name: 'String'
           }
         },
-        variant: {
+        buildVariant: {
           required: true,
-          serializedName: 'variant',
+          serializedName: 'buildVariant',
           type: {
             name: 'String'
           }
