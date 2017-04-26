@@ -16,7 +16,7 @@ export function getProjectDescription(app: models.AppResponse, appDir: string,
     case "Android":
       switch (app.platform) {
         case "Java": 
-          let androidJavaProjectDescription = projectDescription as IAndroidJavaProjectDescription;
+          const androidJavaProjectDescription = projectDescription as IAndroidJavaProjectDescription;
           androidJavaProjectDescription.moduleName = branchConfig.toolsets.android.module;
           androidJavaProjectDescription.modulePath = path.join(appDir, branchConfig.toolsets.android.module, "build.gradle");
           androidJavaProjectDescription.buildVariant = branchConfig.toolsets.android.buildVariant;
@@ -29,6 +29,9 @@ export function getProjectDescription(app: models.AppResponse, appDir: string,
     case "iOS":
       switch (app.platform) {
         case "Objective-C-Swift":
+          const iosObjectiveCSwiftProjectDescription = projectDescription as IIosObjectiveCSwiftProjectDescription;
+          iosObjectiveCSwiftProjectDescription.projectOrWorkspacePath = branchConfig.toolsets.xcode.projectOrWorkspacePath;
+          iosObjectiveCSwiftProjectDescription.podfilePath = branchConfig.toolsets.xcode.podfilePath;
           break;
         default:
           throw new Error(`Unsupported OS/Platform "${app.os}/${app.platform}"`);
@@ -56,6 +59,7 @@ export interface IAndroidJavaProjectDescription extends IProjectDescription {
   buildVariant: string;
 }
 
-export interface IiOsObjectiveCSwiftProjectDescription extends IProjectDescription {
-  
+export interface IIosObjectiveCSwiftProjectDescription extends IProjectDescription {
+  podfilePath: string;
+  projectOrWorkspacePath: string;
 }

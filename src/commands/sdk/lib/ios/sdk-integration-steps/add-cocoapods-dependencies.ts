@@ -9,13 +9,13 @@ import { SearchAppDelegateFile } from "./search-app-delegate-file";
 export class AddCocoapodsDependencies extends XcodeSdkIntegrationStep {
   protected nextStep = new SearchAppDelegateFile();
   protected async step() {
-    const podfile = Path.join(this.context.projectRootDirectory, "Podfile");
+    this.context.podfilePath = this.context.podfilePath || Path.join(this.context.projectRootDirectory, "Podfile");
 
-    let content = await this.getContent(podfile);
+    let content = await this.getContent(this.context.podfilePath);
     content = this.addOrRemoveService(content, "pod 'MobileCenter/MobileCenterAnalytics'", this.context.analyticsEnabled);
     content = this.addOrRemoveService(content, "pod 'MobileCenter/MobileCenterCrashes'", this.context.crashesEnabled);
     content = this.addOrRemoveService(content, "pod 'MobileCenter/MobileCenterDistribute'", this.context.distributeEnabled);
-    this.context.enqueueAction(() => FS.writeTextFile(podfile, content, "utf8"));
+    this.context.enqueueAction(() => FS.writeTextFile(this.context.podfilePath, content, "utf8"));
   }
 
   private async getContent(podFile: string): Promise<string> {
