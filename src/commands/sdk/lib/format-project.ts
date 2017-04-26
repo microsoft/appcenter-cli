@@ -1,13 +1,13 @@
 import { out } from "../../../util/interaction";
 import { models } from "../../../util/apis";
-import { IProjectDescription } from "./project-description";
+import { IProjectDescription, IAndroidJavaProjectDescription, IiOsObjectiveCSwiftProjectDescription } from "./project-description";
 
 export function reportProject(projectDescription: IProjectDescription): void {
   switch (projectDescription.os) {
     case "Android":
       switch (projectDescription.platform) {
         case "Java":
-          reportAndroidJava(projectDescription);
+          reportAndroidJava(projectDescription as IAndroidJavaProjectDescription);
           break;
       }
       break;
@@ -20,7 +20,7 @@ export function reportProject(projectDescription: IProjectDescription): void {
   }
 }
 
-function reportAndroidJava(projectDescription: IProjectDescription): void {
+function reportAndroidJava(projectDescription: IAndroidJavaProjectDescription): void {
   out.report(
   [
     [ "App", "displayName"],
@@ -37,8 +37,8 @@ function reportAndroidJava(projectDescription: IProjectDescription): void {
     os: projectDescription.os,
     platform: projectDescription.platform,
     branchName: projectDescription.branchName,
-    moduleName: projectDescription.androidJava.moduleName,
-    modulePath: projectDescription.androidJava.modulePath,
-    buildVariant: projectDescription.androidJava.buildVariant
+    moduleName: projectDescription.moduleName,
+    modulePath: projectDescription.modulePath,
+    buildVariant: projectDescription.buildVariant
   });
 }

@@ -12,7 +12,7 @@ import injectSdkAndroid from "./lib/android/inject-sdk-android";
 import { injectSdkiOS } from "./lib/ios/inject-sdk-ios";
 import { MobileCenterSdkModule } from "./lib/mobilecenter-sdk-module";
 import { reportProject } from "./lib/format-project";
-import { getProjectDescription } from "./lib/project-description";
+import { getProjectDescription, IAndroidJavaProjectDescription, IiOsObjectiveCSwiftProjectDescription } from "./lib/project-description";
 import * as _ from "lodash";
 
 @help("Integrate Mobile Center SDK into the project")
@@ -135,15 +135,17 @@ export default class IntegrateSDKCommand extends AppCommand {
         case "Android":
           switch (projectDescription.platform) {
             case "Java":
+              const androidJavaProjectDescription = projectDescription as IAndroidJavaProjectDescription;
               await out.progress("Integrating SDK into the project...",
-                injectSdkAndroid(projectDescription.androidJava.modulePath,
-                  projectDescription.androidJava.buildVariant, "0.6.1", // TODO: Retrieve SDK version from somewhere
-                  projectDescription.appSecret, sdkModules));
+                injectSdkAndroid(androidJavaProjectDescription.modulePath,
+                  androidJavaProjectDescription.buildVariant, "0.6.1", // TODO: Retrieve SDK version from somewhere
+                  androidJavaProjectDescription.appSecret, sdkModules));
               break;
           }
           break;
 
         case "iOS":
+          const tempProjectDescription = projectDescription as IiOsObjectiveCSwiftProjectDescription;
           /*await out.progress("Integrating SDK into the project...",
             injectSdkiOS(null, projectDescription., this.appSecret, sdkModules));*/
           break;
