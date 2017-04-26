@@ -4,7 +4,7 @@ import { shortName, longName, hasArg } from './../../util/commandline/option-dec
 import { CommandArgs, CommandResult, help, failure, ErrorCodes, success, getCurrentApp, required, defaultValue, AppCommand } from "../../util/commandline";
 import { out, prompt } from "../../util/interaction";
 import { DefaultApp } from "../../util/profile";
-import { MobileCenterClient, clientRequest, models } from "../../util/apis";
+import { MobileCenterClient, clientRequest, models, ClientResponse } from "../../util/apis";
 
 const debug = require("debug")("mobile-center-cli:commands:apps:list");
 import { inspect } from "util";
@@ -12,6 +12,7 @@ import injectSdkAndroid from "./lib/android/inject-sdk-android";
 import { MobileCenterSdkModule } from "./lib/mobilecenter-sdk-module";
 import { reportProject } from "./lib/format-project";
 import { getProjectDescription } from "./lib/project-description";
+import * as _ from "lodash";
 
 @help("Integrate Mobile Center SDK into the project")
 export default class IntegrateSDKCommand extends AppCommand {
@@ -27,7 +28,6 @@ export default class IntegrateSDKCommand extends AppCommand {
   @help("Branch name")
   @shortName("b")
   @longName("branch")
-  @required
   @hasArg
   public branchName: string;
 
@@ -76,13 +76,48 @@ export default class IntegrateSDKCommand extends AppCommand {
 
     const appDetails = appDetailsResponse.result;
 
+    let branchName = this.branchName;
+    
+    // Obtain branch name if it's single
+    if (!branchName) {
+      let branchesStatusesRequestResponse: ClientResponse<models.BranchStatus[]>;
+      try {
+        branchesStatusesRequestResponse = await out.progress(`Getting statuses for branches of app ${app.appName}...`,
+          clientRequest<models.BranchStatus[]>((cb) => client.builds.listBranches(app.ownerName, app.appName, cb)));
+      } catch (error) {
+        debug(`Request failed - ${inspect(error)}`);
+        return failure(ErrorCodes.Exception, "failed to fetch branches list");
+      }
+
+      const branchBuildsHttpResponseCode = branchesStatusesRequestResponse.response.statusCode;
+
+      if (branchBuildsHttpResponseCode >= 400) {
+        debug(`Request failed - HTTP ${branchBuildsHttpResponseCode} ${branchesStatusesRequestResponse.response.statusMessage}`);
+        return failure(ErrorCodes.Exception, "failed to fetch branches list");
+      }
+
+      const branchesWithBuilds = _(branchesStatusesRequestResponse.result)
+        .filter((branch) => !_.isNil(branch.lastBuild))
+        .sortBy((b) => b.lastBuild.sourceBranch)
+        .value();
+
+      if (branchesWithBuilds.length === 0) {
+        return failure(ErrorCodes.NotFound, `There are no configured branches for the app ${app.appName}`);
+      }
+
+      if (branchesWithBuilds.length > 1) {
+        return failure(ErrorCodes.IllegalCommand, 
+          `There are several branches for the app ${app.appName}. Please specify one using --branch option.`);
+      }
+
+      branchName = branchesWithBuilds[0].lastBuild.sourceBranch;
+    }
+
     const branchResponse = await out.progress("Getting branch configuration ...",
       clientRequest<models.BranchConfiguration>(cb =>
-        client.branchConfigurations.get(this.branchName, appDetails.owner.name, appDetails.name, cb)));
+        client.branchConfigurations.get(branchName, appDetails.owner.name, appDetails.name, cb)));
 
     const branchConfig = branchResponse.result;
-
-    const branchName = this.branchName; // TODO: Obtain branch name if it's single
 
     const projectDescription = getProjectDescription(appDetails, appDir, branchName, branchConfig);
 
