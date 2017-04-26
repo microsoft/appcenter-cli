@@ -23,7 +23,7 @@ export function reportProject(projectDescription: IProjectDescription): void {
 function reportAndroidJava(projectDescription: IAndroidJavaProjectDescription): void {
   out.report(
   [
-    [ "App", "displayName"],
+    [ "App", "appName"],
     [ "App Secret", "appSecret" ],
     [ "OS", "os"],
     [ "Platform", "platform"],
@@ -31,14 +31,5 @@ function reportAndroidJava(projectDescription: IAndroidJavaProjectDescription): 
     [ "Gradle module", "moduleName"],
     [ "Module path", "modulePath"],
     [ "Build variant", "buildVariant"],
-  ], {
-    displayName: projectDescription.appName,
-    appSecret: projectDescription.appSecret,
-    os: projectDescription.os,
-    platform: projectDescription.platform,
-    branchName: projectDescription.branchName,
-    moduleName: projectDescription.moduleName,
-    modulePath: projectDescription.modulePath,
-    buildVariant: projectDescription.buildVariant
-  });
+  ], projectDescription);
 }

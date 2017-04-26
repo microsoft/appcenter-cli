@@ -15,10 +15,11 @@ export function getProjectDescription(app: models.AppResponse, appDir: string,
   switch (app.os) {
     case "Android":
       switch (app.platform) {
-        case "Java":
-          (projectDescription as IAndroidJavaProjectDescription).moduleName = branchConfig.toolsets.android.module;
-          (projectDescription as IAndroidJavaProjectDescription).modulePath = path.join(appDir, branchConfig.toolsets.android.module, "build.gradle");
-          (projectDescription as IAndroidJavaProjectDescription).buildVariant = branchConfig.toolsets.android.buildVariant;
+        case "Java": 
+          let androidJavaProjectDescription = projectDescription as IAndroidJavaProjectDescription;
+          androidJavaProjectDescription.moduleName = branchConfig.toolsets.android.module;
+          androidJavaProjectDescription.modulePath = path.join(appDir, branchConfig.toolsets.android.module, "build.gradle");
+          androidJavaProjectDescription.buildVariant = branchConfig.toolsets.android.buildVariant;
           break;
         default:
           throw new Error(`Unsupported OS/Platform "${app.os}/${app.platform}"`);
