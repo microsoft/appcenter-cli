@@ -5,14 +5,16 @@ import { CommandArgs, CommandResult, help, failure, ErrorCodes, success, getCurr
 import { out, prompt } from "../../util/interaction";
 import { DefaultApp } from "../../util/profile";
 import { MobileCenterClient, clientRequest, models, ClientResponse } from "../../util/apis";
+import * as Process from "process";
+import * as Path from "path";
 
 const debug = require("debug")("mobile-center-cli:commands:apps:list");
 import { inspect } from "util";
 import injectSdkAndroid from "./lib/android/inject-sdk-android";
-import { injectSdkiOS } from "./lib/ios/inject-sdk-ios";
+import { injectSdkIos } from "./lib/ios/inject-sdk-ios";
 import { MobileCenterSdkModule } from "./lib/mobilecenter-sdk-module";
 import { reportProject } from "./lib/format-project";
-import { getProjectDescription, IAndroidJavaProjectDescription, IiOsObjectiveCSwiftProjectDescription } from "./lib/project-description";
+import { getProjectDescription, IAndroidJavaProjectDescription, IIosObjectiveCSwiftProjectDescription } from "./lib/project-description";
 import * as _ from "lodash";
 
 @help("Integrate Mobile Center SDK into the project")
@@ -45,7 +47,7 @@ export default class IntegrateSDKCommand extends AppCommand {
   distributeModule: boolean;
 
   async run(client: MobileCenterClient): Promise<CommandResult> {
-    const appDir = this.appDir || "./";
+    const appDir = Path.isAbsolute(this.appDir || "./") ? this.appDir : Path.join(Process.cwd(), this.appDir || "./");
 
     const app = this.app;
 
@@ -145,9 +147,13 @@ export default class IntegrateSDKCommand extends AppCommand {
           break;
 
         case "iOS":
-          const tempProjectDescription = projectDescription as IiOsObjectiveCSwiftProjectDescription;
-          /*await out.progress("Integrating SDK into the project...",
-            injectSdkiOS(null, projectDescription., this.appSecret, sdkModules));*/
+          const iosObjectiveCSwiftProjectDescription = projectDescription as IIosObjectiveCSwiftProjectDescription;
+          await out.progress("Integrating SDK into the project...",
+            injectSdkIos(Path.join(appDir, iosObjectiveCSwiftProjectDescription.projectOrWorkspacePath),
+              Path.join(appDir, iosObjectiveCSwiftProjectDescription.podfilePath),
+              iosObjectiveCSwiftProjectDescription.appSecret,
+              sdkModules/*,
+              "sdk version"*/));
           break;
 
         default:

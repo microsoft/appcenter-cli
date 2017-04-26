@@ -2,12 +2,16 @@ import { SdkIntegrationStepContextBase, SdkIntegrationStepBase } from "../util/s
 import { MobileCenterSdkModule } from "../mobilecenter-sdk-module";
 
 export class XcodeIntegrationStepContext extends SdkIntegrationStepContextBase {
-  constructor(projectPath: string, sdkVersion: string, appSecret: string, sdkModules: MobileCenterSdkModule) {
-    super(projectPath, sdkVersion, appSecret, sdkModules);
+  constructor(projectOrWorkspacePath: string, podfilePath: string, appSecret: string, sdkModules: MobileCenterSdkModule, sdkVersion?: string) {
+    super(appSecret, sdkModules, sdkVersion);
+    this.projectOrWorkspacePath = projectOrWorkspacePath;
+    this.podfilePath = podfilePath;
   }
 
+  public rootPath: string;
   public sdkDirectoryName = "Vendor";
-
+  public projectOrWorkspacePath: string;
+  public podfilePath: string;
   public projectRootDirectory?: string;
   public appDelegateFile?: string;
   public projectName?: string;

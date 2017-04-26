@@ -30,18 +30,16 @@ export class SdkIntegrationError extends Error {
 }
 
 export abstract class SdkIntegrationStepContextBase {
-  public projectPath: string;
   public sdkVersion: string;
   public appSecret: string;
   public sdkModules: MobileCenterSdkModule;
 
   private actions: (() => (Promise<void> | void))[] = [];
 
-  constructor(projectPath: string, sdkVersion: string, appSecret: string, sdkModules: MobileCenterSdkModule) {
-    this.projectPath = projectPath;
-    this.sdkVersion = sdkVersion;
+  constructor(appSecret: string, sdkModules: MobileCenterSdkModule, sdkVersion?: string) {
     this.appSecret = appSecret;
     this.sdkModules = sdkModules;
+    this.sdkVersion = sdkVersion;
   }
 
   public enqueueAction(action: () => (Promise<void> | void)) {
