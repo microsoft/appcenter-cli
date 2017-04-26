@@ -45,17 +45,7 @@ export default class IntegrateSDKCommand extends AppCommand {
   distributeModule: boolean;
 
   async run(client: MobileCenterClient): Promise<CommandResult> {
-    let sdkModules: MobileCenterSdkModule = MobileCenterSdkModule.None;
-    if (this.analyticsModule)
-      sdkModules |= MobileCenterSdkModule.Analytics;
-    if (this.crashesModule)
-      sdkModules |= MobileCenterSdkModule.Crashes;
-    if (this.distributeModule)
-      sdkModules |= MobileCenterSdkModule.Distribute;
-    if (!sdkModules)
-      return failure(ErrorCodes.InvalidParameter, "Please specify at least one SDK module to integrate");
-
-    const appDir = this.appDir || __dirname;
+    const appDir = this.appDir || "./";
 
     const app = this.app;
 
@@ -76,6 +66,16 @@ export default class IntegrateSDKCommand extends AppCommand {
     }
 
     const appDetails = appDetailsResponse.result;
+
+    let sdkModules: MobileCenterSdkModule = MobileCenterSdkModule.None;
+    if (this.analyticsModule)
+      sdkModules |= MobileCenterSdkModule.Analytics;
+    if (this.crashesModule)
+      sdkModules |= MobileCenterSdkModule.Crashes;
+    if (this.distributeModule)
+      sdkModules |= MobileCenterSdkModule.Distribute;
+    if (!sdkModules)
+      return failure(ErrorCodes.InvalidParameter, "Please specify at least one SDK module to integrate");
 
     let branchName = this.branchName;
     
