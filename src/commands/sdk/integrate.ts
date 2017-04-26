@@ -9,6 +9,7 @@ import { MobileCenterClient, clientRequest, models, ClientResponse } from "../..
 const debug = require("debug")("mobile-center-cli:commands:apps:list");
 import { inspect } from "util";
 import injectSdkAndroid from "./lib/android/inject-sdk-android";
+import { injectSdkiOS } from "./lib/ios/inject-sdk-ios";
 import { MobileCenterSdkModule } from "./lib/mobilecenter-sdk-module";
 import { reportProject } from "./lib/format-project";
 import { getProjectDescription } from "./lib/project-description";
@@ -143,6 +144,8 @@ export default class IntegrateSDKCommand extends AppCommand {
           break;
 
         case "iOS":
+          /*await out.progress("Integrating SDK into the project...",
+            injectSdkiOS(null, projectDescription., this.appSecret, sdkModules));*/
           break;
 
         default:
