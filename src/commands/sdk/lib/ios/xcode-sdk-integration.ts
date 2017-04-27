@@ -1,5 +1,5 @@
 import { SdkIntegrationStepContextBase, SdkIntegrationStepBase } from "../util/sdk-integration";
-import { MobileCenterSdkModule } from "../mobilecenter-sdk-module";
+import { MobileCenterSdkModule } from "../models/mobilecenter-sdk-module";
 
 export class XcodeIntegrationStepContext extends SdkIntegrationStepContextBase {
   constructor(projectOrWorkspacePath: string, podfilePath: string, appSecret: string, sdkModules: MobileCenterSdkModule, sdkVersion?: string) {

@@ -1,4 +1,4 @@
-import { MobileCenterSdkModule } from "../mobilecenter-sdk-module";
+import { MobileCenterSdkModule } from "../models/mobilecenter-sdk-module";
 
 export abstract class SdkIntegrationStepBase<T> {
   protected nextStep: SdkIntegrationStepBase<T>;

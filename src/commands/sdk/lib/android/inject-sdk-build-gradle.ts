@@ -1,4 +1,4 @@
-import { MobileCenterSdkModule } from "../mobilecenter-sdk-module";
+import { MobileCenterSdkModule } from "../models/mobilecenter-sdk-module";
 
 export default function injectSdkBuildGradle(code: string, sdkVersion: string, sdkModules: MobileCenterSdkModule): string {
   let lines: string[] = [];

@@ -1,4 +1,4 @@
 export interface ISnippet {
-  startsAt: number;
+  position: number;
   text: string;
 }

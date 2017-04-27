@@ -1,5 +1,5 @@
 import { ActivityBag, ActivityWalker } from "./activity-walker";
-import { MobileCenterSdkModule } from "../mobilecenter-sdk-module";
+import { MobileCenterSdkModule } from "../models/mobilecenter-sdk-module";
 
 export default function injectSdkMainActivity(code: string, activityName: string, appSecret: string, sdkModules: MobileCenterSdkModule): string {
   let result: string;

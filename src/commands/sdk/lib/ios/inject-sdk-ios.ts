@@ -1,4 +1,4 @@
-import { MobileCenterSdkModule } from "../mobilecenter-sdk-module";
+import { MobileCenterSdkModule } from "../models/mobilecenter-sdk-module";
 import { XcodeIntegrationStepContext } from "./xcode-sdk-integration";
 import { SearchProjectPaths } from "./sdk-integration-steps/search-project-paths";
 

@@ -1,4 +1,4 @@
-import { ISnippet } from "./isnippet";
+import { ISnippet } from "./../models/isnippet";
 import TextWalker from "./text-walker";
 
 export class XmlWalker<TBag extends XmlBag> extends TextWalker<TBag> {
@@ -25,7 +25,7 @@ export class XmlWalker<TBag extends XmlBag> extends TextWalker<TBag> {
         let matches = this.forepart.match(/^<\s*([:-\w]+)\s*([^>]*?)?\s*(\/?)\s*>/);
         if (matches && matches[0] && matches[1]) {
           bag.current = new XmlTag(matches[1], bag.current);
-          bag.current.startsAt = this.position;
+          bag.current.position = this.position;
           bag.current.text = matches[0];
           bag.current.attributes = this.parseAttributes(matches[2]);
 
@@ -52,9 +52,9 @@ export class XmlWalker<TBag extends XmlBag> extends TextWalker<TBag> {
             bag.error = new Error("Unexpected tag closing - " + bag.current.name);
             return this.stop();
           }
-          let startsAt = bag.current.startsAt + bag.current.text.length;
+          let startsAt = bag.current.position + bag.current.text.length;
           bag.current.body = {
-            startsAt,
+            position: startsAt,
             text: this.text.substring(startsAt, this.position)
           };
           bag.current.text += bag.current.body.text + matches[0];
@@ -96,7 +96,7 @@ export class XmlTag implements ISnippet {
   attributes: IXmlAttributes = {};
   body: ISnippet;
   children: XmlTag[] = [];
-  startsAt: number;
+  position: number;
   text: string;
 
   constructor(
