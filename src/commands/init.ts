@@ -7,6 +7,11 @@ import { DefaultApp, toDefaultApp } from "../util/profile";
 import { MobileCenterClient, clientRequest, models, ClientResponse } from "../util/apis";
 import * as Process from "process";
 import * as Path from "path";
+import * as Request from "request";
+import * as JsZip from "jszip";
+import * as JsZipHelper from "../util/misc/jszip-helper";
+import * as FS from "async-file";
+import * as Mkdirp from "mkdirp";
 
 const debug = require("debug")("mobile-center-cli:commands:apps:list");
 import { inspect } from "util";
@@ -81,23 +86,17 @@ export default class IntegrateSDKCommand extends Command {
 
     let app: DefaultApp;
     let appResponse: models.AppResponse;
-
     let appName = this.app;
     let createNew = this.createNew;
-    let os = this.os;
-    let platform = this.platform;
     let branchName = this.branchName;
-    let sampleApp = this.sampleApp;
 
-    if (!sampleApp) {
-      const sampleAppDetails = await inquireSampleApp(os, platform);
-      sampleApp = sampleAppDetails.confirm
-      os = sampleAppDetails.os;
-      platform = sampleAppDetails.platform;
-    }
+    const sampleAppDetails = await inquireSampleApp(this.sampleApp, this.os, this.platform);
+    const sampleApp = sampleAppDetails.confirm;
+    const os = sampleAppDetails.os;
+    const platform = sampleAppDetails.platform;
 
     if (sampleApp) {
-      // Denis's code goes here
+      await downloadSample(appDir, os, platform);
     }
 
     if (!appName && !createNew) {
@@ -254,36 +253,47 @@ export default class IntegrateSDKCommand extends Command {
   }
 }
 
-async function inquireSampleApp(os: string, platform: string): Promise<{ confirm: boolean, os: string, platform: string }> {
-  let questions: Questions = [{
-    type: "confirm",
-    name: "confirm",
-    message: "Do you want to download sample app?",
-    default: false
-  }, {
-    type: "list",
-    name: "os",
-    message: "Please specify sample app's OS",
-    choices: ["iOS", "Android"],
-    when: (answers: any) => answers.confirm
-  }, {
-    type: "list",
-    name: "platform",
-    message: "Please specify sample app's platform",
-    choices: answers => {
-      switch (answers.os) {
-        case "iOS": return ["Objective-C-Swift", "React-Native", "Xamarin"];
-        case "Android": return ["Java", "React-Native", "Xamarin"];
-        default: return [];
-      }
-    },
-    when: (answers: any) => answers.confirm
-  }];
+async function inquireSampleApp(sampleApp: boolean, os: string, platform: string): Promise<{ confirm: boolean, os: string, platform: string }> {
+  const questions: Questions = [];
+  if (!sampleApp) {
+    questions.push({
+      type: "confirm",
+      name: "confirm",
+      message: "Do you want to download sample app?",
+      default: false
+    });
+  }
+
+  if (!os) {
+    questions.push({
+      type: "list",
+      name: "os",
+      message: "Please specify sample app's OS",
+      choices: ["Android", "iOS"],
+      when: (answers: any) => answers.confirm || sampleApp
+    });
+  }
+
+  if (!platform) {
+    questions.push({
+      type: "list",
+      name: "platform",
+      message: "Please specify sample app's platform",
+      choices: answers => {
+        switch (answers.os) {
+          case "iOS": return ["Objective-C-Swift", "React-Native", "Xamarin"];
+          case "Android": return ["Java", "React-Native", "Xamarin"];
+          default: return [];
+        }
+      },
+      when: (answers: any) => answers.confirm || sampleApp
+    });
+  }
 
   const answers = await prompt.question(questions);
 
   return {
-    confirm: answers.confirm as boolean,
+    confirm: sampleApp || answers.confirm as boolean,
     os: os || answers.os as string,
     platform: platform || answers.platform as string,
   };
@@ -437,4 +447,69 @@ async function inquireProjectDescription(app: models.AppResponse): Promise<Proje
     projectOrWorkspacePath: answers.projectOrWorkspacePath as string,
     podfilePath: answers.buildVariant as string
   };
+}
+
+async function downloadSample(appDir: string, os: string, platform: string) {
+
+  const uri = getArchiveUrl(os, platform);
+  const response = await downloadFile(uri);
+  await unzip(appDir, response.result);
+
+  function getArchiveUrl(os: string, platform: string) {
+    switch (os) {
+      case "Android":
+        switch (platform) {
+          case "Java": return "https://github.com/MobileCenter/quickstart-android/archive/master.zip";
+          case "React-Native": break;
+          case "Xamarin": return "https://github.com/MobileCenter/quickstart-xamarin/archive/master.zip";
+        }
+      case "iOS":
+        switch (platform) {
+          case "Objective-C-Swift": return "https://github.com/MobileCenter/quickstart-ios/archive/master.zip";
+          case "React-Native": break;
+          case "Xamarin": return "https://github.com/MobileCenter/quickstart-xamarin/archive/master.zip";
+        }
+    }
+
+    throw failure(ErrorCodes.InvalidParameter, "Unsupported OS or platform");
+  }
+
+  async function downloadFile(uri: string): Promise<ClientResponse<Buffer>> {
+    console.log(`Downloading the file.. ${uri}`);
+    return new Promise<ClientResponse<Buffer>>((resolve, reject) => {
+      Request.get(uri, { encoding: null }, (error, response, body: Buffer) => {
+        if (error) {
+          reject(error);
+        } else {
+          console.log(`Downloading finished`);
+          resolve({ result: body, response });
+        }
+      });
+    });
+  }
+
+  async function unzip(directory: string, buffer: Buffer) {
+    console.log(`Unzipping the archive..`);
+
+    const zip = await new JsZip().loadAsync(buffer);
+    for (const file of _.values(zip.files) as JSZipObject[]) {
+      if (file.dir) {
+        continue;
+      }
+
+      const match = /.+?\/(.+)/.exec(file.name);
+      if (!match) {
+        continue;
+      }
+
+      const path = Path.join(directory, match[1]);
+      const dirName = Path.dirname(path);
+      if (!await FS.exists(dirName)) {
+        Mkdirp.sync(dirName);
+      }
+      await FS.writeFile(path, await file.async("arraybuffer"));
+    }
+
+    console.log(`Unzipping finished`);
+  }
 }
