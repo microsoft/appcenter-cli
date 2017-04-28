@@ -183,7 +183,9 @@ export default class IntegrateSDKCommand extends Command {
       const branches = await getBranchesWithBuilds(client, app);
 
       if (branches.length) {
-        branchName = await inquireBranchName(branches)
+        branchName = await inquireBranchName(branches);
+        if (!branchName)
+          inputManually = true;
       } else {
         inputManually = true;
       }
@@ -219,11 +221,13 @@ export default class IntegrateSDKCommand extends Command {
             case "Java":
               const androidJavaProjectDescription = projectDescription as IAndroidJavaProjectDescription;
               const buildGradle = await collectBuildGradleInfo(Path.join(appDir, androidJavaProjectDescription.moduleName, "build.gradle"),
-                androidJavaProjectDescription.buildVariant);
+                  androidJavaProjectDescription.buildVariant);
               const mainActivity = await collectMainActivityInfo(buildGradle);
+
               await out.progress("Integrating SDK into the project...",
-                injectAndroidJava(buildGradle, mainActivity, "0.6.1", // TODO: Retrieve SDK version from somewhere
-                  appResponse.appSecret, sdkModules));
+                  injectAndroidJava(buildGradle, mainActivity, "0.6.1", // TODO: Retrieve SDK version from somewhere
+                      appResponse.appSecret, sdkModules));
+
               break;
           }
           break;
