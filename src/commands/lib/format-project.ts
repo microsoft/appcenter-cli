@@ -1,5 +1,5 @@
-import { out } from "../../../util/interaction";
-import { models } from "../../../util/apis";
+import { out } from "../../util/interaction";
+import { models } from "../../util/apis";
 import { ProjectDescription, IAndroidJavaProjectDescription, IIosObjectiveCSwiftProjectDescription } from "./project-description";
 
 export function reportProject(app: models.AppResponse, projectDescription: ProjectDescription): void {

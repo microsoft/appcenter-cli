@@ -1,6 +1,6 @@
 import * as Path from "path";
 import * as FS from "async-file";
-import * as Helpers from "../../../../../util/misc/helpers";
+import * as Helpers from "../../../../util/misc/helpers";
 import { TextWalkerC, TextWalkerCBag } from "../text-walker-c";
 import { XcodeSdkIntegrationStep, XcodeIntegrationStepContext } from "../xcode-sdk-integration";
 import { SdkIntegrationError } from "../../util/sdk-integration";

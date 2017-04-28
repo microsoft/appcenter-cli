@@ -1,11 +1,11 @@
 import * as Path from "path";
 import * as FS from "async-file";
-import * as Helpers from "../../../../../util/misc/helpers";
+import * as Helpers from "../../../../util/misc/helpers";
 import { TextWalkerC, TextWalkerCBag } from "../text-walker-c";
 import { XcodeSdkIntegrationStep, XcodeIntegrationStepContext } from "../xcode-sdk-integration";
 import { SdkIntegrationError } from "../../util/sdk-integration";
 
-export class InsertSdkInAppDelegateObjectiveC extends XcodeSdkIntegrationStep {
+export class InsertSdkInAppDelegateSwift extends XcodeSdkIntegrationStep {
   protected async step() {
     let appDelegateContent = await FS.readTextFile(this.context.appDelegateFile, "utf8");
     const bag = this.analyze(appDelegateContent);
@@ -16,45 +16,44 @@ export class InsertSdkInAppDelegateObjectiveC extends XcodeSdkIntegrationStep {
     this.context.enqueueAction(() => FS.writeTextFile(this.context.appDelegateFile, appDelegateContent, "utf8"));
   }
 
-  private analyze(appDelegateContent: string): TextWalkerObjectiveCInjectBag {
-    const textWalker = new TextWalkerC(appDelegateContent, new TextWalkerObjectiveCInjectBag());
+  private analyze(appDelegateContent: string): TextWalkerSwiftInjectBag {
+    const textWalker = new TextWalkerC(appDelegateContent, new TextWalkerSwiftInjectBag());
     textWalker.addTrap(bag => bag.significant
       && bag.blockLevel === 0
-      && !bag.isWithinImplementation
-      && /[@#]import\s+?[\w"<>\/\.]+?;?\r?\n$/.test(textWalker.backpart),
+      && !bag.wasWithinClass
+      && /import\s+?[\w\.]+?\r?\n$/.test(textWalker.backpart),
       bag => {
         bag.endOfImportBlockIndex = textWalker.position;
       });
     textWalker.addTrap(bag =>
       bag.significant
-      && bag.blockLevel === 0
-      && textWalker.forepart.startsWith("@implementation"),
+      && bag.blockLevel === 1
+      && textWalker.currentChar === "{",
       bag => {
-        const matches = /^@implementation\s+?\w+?\r?\n/.exec(textWalker.forepart);
+        const matches = /\s*([a-z]+?\s+?|)(class|extension)\s+?\w+?(?!\w).*?$/.exec(textWalker.backpart);
         if (matches && matches[0]) {
-          bag.isWithinImplementation = true;
-          bag.wasWithinImplementation = true;
+          bag.isWithinClass = true;
+          bag.wasWithinClass = true;
         }
       });
     textWalker.addTrap(
       bag =>
-        bag.significant
-        && bag.blockLevel === 0
-        && bag.isWithinImplementation
-        && textWalker.currentChar === "@"
-        && textWalker.forepart.startsWith("@end"),
-      bag => bag.isWithinImplementation = false
+        bag.significant &&
+        bag.blockLevel === 0 &&
+        bag.isWithinClass &&
+        textWalker.currentChar === "}",
+      bag => bag.isWithinClass = false
     );
     textWalker.addTrap(
       bag =>
-        bag.significant
-        && bag.isWithinImplementation
-        && bag.blockLevel === 1
-        && bag.applicationFuncStartIndex < 0
-        && textWalker.currentChar === '{',
+        bag.significant &&
+        bag.isWithinClass &&
+        bag.blockLevel === 2 &&
+        textWalker.currentChar === '{',
       bag => {
-        const matches = /-\s*?\(\s*?[\w\.]+?\s*?\)\s*application(?!\w)[\s\S]*?$/.exec(textWalker.backpart);
-        if (matches) {
+        const matches = /^\s*([a-z]+?\s+?|)func\s+?application\s*?\(/m.exec(textWalker.backpart)
+        if (matches && bag.applicationFuncStartIndex < 0) {
+          bag.isWithinMethod = true;
           bag.applicationFuncStartIndex = textWalker.position + 1;
           bag.isWithinApplicationMethod = true;
         }
@@ -62,22 +61,25 @@ export class InsertSdkInAppDelegateObjectiveC extends XcodeSdkIntegrationStep {
     );
     textWalker.addTrap(
       bag =>
-        bag.significant
-        && bag.blockLevel === 0
-        && bag.isWithinApplicationMethod
-        && textWalker.currentChar === "}",
+        bag.significant &&
+        bag.blockLevel === 1 &&
+        bag.isWithinMethod &&
+        textWalker.currentChar === "}",
       bag => {
-        bag.applicationFuncEndIndex = textWalker.position;
-        bag.isWithinApplicationMethod = false;
+        bag.isWithinMethod = false;
+        if (bag.isWithinApplicationMethod) {
+          bag.applicationFuncEndIndex = textWalker.position;
+          bag.isWithinApplicationMethod = false;
+        }
       }
     );
     textWalker.addTrap(
       bag => bag.significant
         && bag.isWithinApplicationMethod
         && bag.msMobileCenterStartCallStartIndex < 0
-        && /^\[\s*?MSMobileCenter\s+?start/.test(textWalker.forepart),
+        && textWalker.forepart.startsWith("MSMobileCenter.start"),
       bag => {
-        let match = /^\[\s*?MSMobileCenter\s+?start\s*?:[\s\S]+?withServices[\s\S]+?\]\s*\]\s*?;/.exec(textWalker.forepart);
+        let match = /^MSMobileCenter.start\s*?\(".+?",\s*?withServices: .+?\)/.exec(textWalker.forepart);
         if (match) {
           bag.msMobileCenterStartCallStartIndex = textWalker.position;
           bag.msMobileCenterStartCallLength = match[0].length;
@@ -91,7 +93,7 @@ export class InsertSdkInAppDelegateObjectiveC extends XcodeSdkIntegrationStep {
     return textWalker.walk();
   }
 
-  private insertImports(bag: TextWalkerObjectiveCInjectBag, appDelegateContent: string): string {
+  private insertImports(bag: TextWalkerSwiftInjectBag, appDelegateContent: string): string {
     if (bag.endOfImportBlockIndex < 0) {
       bag.endOfImportBlockIndex = 0;
     }
@@ -105,17 +107,17 @@ export class InsertSdkInAppDelegateObjectiveC extends XcodeSdkIntegrationStep {
   }
 
   private addOrRemoveImport(appDelegateContent: string, index: number, item: string, add: boolean) {
-    const match = new RegExp(`@import +${item} *?;\r?\n`).exec(appDelegateContent.substr(0, index));
+    const match = new RegExp(`import +${item}\r?\n`).exec(appDelegateContent.substr(0, index));
     if (match && !add) {
       return Helpers.splice(appDelegateContent, match.index, match[0].length, "");
     } else if (!match && add) {
-      return Helpers.splice(appDelegateContent, index, 0, `@import ${item};\n`);
+      return Helpers.splice(appDelegateContent, index, 0, `import ${item}\n`);
     } else {
       return appDelegateContent;
     }
   }
 
-  private insertStart(bag: TextWalkerObjectiveCInjectBag, appDelegateContent: string): string {
+  private insertStart(bag: TextWalkerSwiftInjectBag, appDelegateContent: string): string {
     if (bag.applicationFuncStartIndex < 0) {
       throw new SdkIntegrationError("Function 'application' is not defined in AppDelegate");
     }
@@ -126,29 +128,30 @@ export class InsertSdkInAppDelegateObjectiveC extends XcodeSdkIntegrationStep {
 
     const services: string[] = [];
     if (this.context.analyticsEnabled) {
-      services.push("[MSAnalytics class]")
+      services.push("MSAnalytics.self");
     }
 
     if (this.context.crashesEnabled) {
-      services.push("[MSCrashes class]")
+      services.push("MSCrashes.self");
     }
 
     if (this.context.distributeEnabled) {
-      services.push("[MSDistribute class]");
+      services.push("MSDistribute.self");
     }
 
-    const start = `[MSMobileCenter start:@"${this.context.appSecret}" withServices:@[${services.join(", ")}]];`
-    appDelegateContent = Helpers.splice(appDelegateContent, bag.applicationFuncStartIndex, 0, `\n    ${start}`);
+    const start = `MSMobileCenter.start("${this.context.appSecret}", withServices: [${services.join(", ")}])`;
+    appDelegateContent = Helpers.splice(appDelegateContent, bag.applicationFuncStartIndex, 0, `\n        ${start}`);
     return appDelegateContent;
   }
 }
 
-class TextWalkerObjectiveCInjectBag extends TextWalkerCBag {
-  isWithinImplementation: boolean = false;
-  wasWithinImplementation: boolean = false;
-  endOfImportBlockIndex: number = -1;
-  applicationFuncStartIndex: number = -1;
+class TextWalkerSwiftInjectBag extends TextWalkerCBag {
+  isWithinClass: boolean = false;
+  wasWithinClass: boolean = false;
+  isWithinMethod: boolean = false;
   isWithinApplicationMethod: boolean = false;
+  applicationFuncStartIndex: number = -1;
+  endOfImportBlockIndex: number = -1;
   applicationFuncEndIndex: number = -1;
   msMobileCenterStartCallStartIndex: number = -1;
   msMobileCenterStartCallLength: number = -1;

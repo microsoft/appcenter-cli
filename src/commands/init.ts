@@ -1,10 +1,10 @@
 // sdk integrate command
 
-import { shortName, longName, hasArg } from './../../util/commandline/option-decorators';
-import { CommandArgs, CommandResult, help, failure, ErrorCodes, success, getCurrentApp, required, defaultValue, Command } from "../../util/commandline";
-import { out, prompt } from "../../util/interaction";
-import { DefaultApp, toDefaultApp } from "../../util/profile";
-import { MobileCenterClient, clientRequest, models, ClientResponse } from "../../util/apis";
+import { shortName, longName, hasArg } from './../util/commandline/option-decorators';
+import { CommandArgs, CommandResult, help, failure, ErrorCodes, success, getCurrentApp, required, defaultValue, Command } from "../util/commandline";
+import { out, prompt } from "../util/interaction";
+import { DefaultApp, toDefaultApp } from "../util/profile";
+import { MobileCenterClient, clientRequest, models, ClientResponse } from "../util/apis";
 import * as Process from "process";
 import * as Path from "path";
 
@@ -18,7 +18,7 @@ import { getProjectDescription, IAndroidJavaProjectDescription, IIosObjectiveCSw
 import * as _ from "lodash";
 import collectBuildGradleInfo from "./lib/android/collect-build-gradle-info";
 import collectMainActivityInfo from "./lib/android/collect-main-activity-info";
-import { Questions, Question, Separator } from "../../util/interaction/prompt";
+import { Questions, Question, Separator } from "../util/interaction/prompt";
 
 @help("Integrate Mobile Center SDK into the project")
 export default class IntegrateSDKCommand extends Command {

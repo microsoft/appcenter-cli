@@ -1,4 +1,4 @@
-import { models } from "../../../util/apis/index";
+import { models } from "../../util/apis/index";
 
 export function getProjectDescription(branchConfig: models.BranchConfiguration): ProjectDescription {
   
