@@ -1,11 +1,13 @@
 import { out } from "../../../util/interaction";
 import { models } from "../../../util/apis";
-import { IProjectDescription, IAndroidJavaProjectDescription, IIosObjectiveCSwiftProjectDescription } from "./project-description";
+import { ProjectDescription, IAndroidJavaProjectDescription, IIosObjectiveCSwiftProjectDescription } from "./project-description";
 
-export function reportProject(projectDescription: IProjectDescription): void {
-  switch (projectDescription.os) {
+export function reportProject(app: models.AppResponse, projectDescription: ProjectDescription): void {
+  reportApp(app);
+
+  switch (app.os) {
     case "Android":
-      switch (projectDescription.platform) {
+      switch (app.platform) {
         case "Java":
           reportAndroidJava(projectDescription as IAndroidJavaProjectDescription);
           break;
@@ -13,7 +15,7 @@ export function reportProject(projectDescription: IProjectDescription): void {
       break;
 
     case "iOS":
-      switch (projectDescription.platform) {
+      switch (app.platform) {
         case "Objective-C-Swift":
           reportIosObjectiveCSwift(projectDescription as IIosObjectiveCSwiftProjectDescription);
           break;
@@ -25,14 +27,19 @@ export function reportProject(projectDescription: IProjectDescription): void {
   }
 }
 
+function reportApp(app: models.AppResponse): void {
+  out.report(
+    [
+      ["App", "name"],
+      ["App secret", "appSecret"],
+      ["OS", "os"],
+      ["Platform", "platform"]
+    ], app);
+}
+
 function reportIosObjectiveCSwift(projectDescription: IIosObjectiveCSwiftProjectDescription): void {
   out.report(
     [
-      ["App", "appName"],
-      ["App secret", "appSecret"],
-      ["OS", "os"],
-      ["Platform", "platform"],
-      ["Branch", "branchName"],
       ["Project or workspace path", "projectOrWorkspacePath"],
       ["Podfile path", "podfilePath"]
     ], projectDescription);
@@ -41,13 +48,7 @@ function reportIosObjectiveCSwift(projectDescription: IIosObjectiveCSwiftProject
 function reportAndroidJava(projectDescription: IAndroidJavaProjectDescription): void {
   out.report(
   [
-    [ "App", "appName"],
-    [ "App secret", "appSecret" ],
-    [ "OS", "os"],
-    [ "Platform", "platform"],
-    [ "Branch", "branchName"],
     [ "Gradle module", "moduleName"],
-    [ "Module path", "modulePath"],
     [ "Build variant", "buildVariant"],
   ], projectDescription);
 }
