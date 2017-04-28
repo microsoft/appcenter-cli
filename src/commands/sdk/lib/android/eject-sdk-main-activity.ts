@@ -8,11 +8,13 @@ export default function ejectSdkMainActivity(mainActivity: IMainActivity): strin
       .goto(x.position)
       .cut(x.text.length)
       .cutEmptyLine());
-  
-  textCutter
-    .goto(mainActivity.startSdkStatement.position)
-    .cut(mainActivity.startSdkStatement.text.length)
-    .cutEmptyLine();
+
+  if (mainActivity.startSdkStatement) {
+    textCutter
+      .goto(mainActivity.startSdkStatement.position)
+      .cut(mainActivity.startSdkStatement.text.length)
+      .cutEmptyLine();
+  }
 
   return textCutter.result;
 }

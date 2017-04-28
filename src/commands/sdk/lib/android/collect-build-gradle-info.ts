@@ -9,7 +9,7 @@ export default async function collectBuildGradleInfo(buildGradlePath: string, bu
   let contents = await fs.readTextFile(buildGradlePath, "utf8");
 
   const buildVariants = await getBuildVariants(contents);
-  const buildVariant = _.find(buildVariants, x => x.toString() === buildVariantName);
+  const buildVariant = _.find(buildVariants, x => x.name === buildVariantName);
   if (!buildVariant)
     throw new Error("Incorrect build variant");
 
@@ -75,7 +75,7 @@ function getBuildVariant(buildType: string, productFlavors?: string[]): IBuildVa
 async function getSourceSets(buildGradleContents: string, buildVariant: IBuildVariant): Promise<ISourceSet[]> {
   let sourceSets: ISourceSet[] = []
 
-  sourceSets.push({ name: buildVariant.toString() });
+  sourceSets.push({ name: buildVariant.name });
   if (buildVariant.productFlavors && buildVariant.productFlavors.length) {
     sourceSets.push({ name: buildVariant.buildType });
     sourceSets.push(...buildVariant.productFlavors.map(x => ({ name: x })));

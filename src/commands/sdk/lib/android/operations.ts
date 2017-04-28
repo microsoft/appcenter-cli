@@ -26,7 +26,7 @@ export async function injectAndroidJava(buildGradle: IBuildGradle, mainActivity:
     sdkVersion: string, appSecret: string, sdkModules: MobileCenterSdkModule): Promise<void> {
   
   let buildGradleContents = ejectSdkBuildGradle(buildGradle);
-  buildGradleContents = injectSdkBuildGradle(buildGradle.contents, sdkVersion, sdkModules);
+  buildGradleContents = injectSdkBuildGradle(buildGradleContents, sdkVersion, sdkModules);
 
   let mainActivityContents = ejectSdkMainActivity(mainActivity);
   mainActivityContents = injectSdkMainActivity(mainActivityContents, mainActivity.name, appSecret, sdkModules);
@@ -52,6 +52,25 @@ export async function ejectAndroidJava(buildGradle: IBuildGradle, mainActivity: 
   await fs.writeFile(mainActivity.path, mainActivityContents, { encoding: "utf8" });
 }
 
+/**
+ * Returns difference between already integrated module set and an arbitrary one
+ * @param mainActivity 
+ * IMainActivity object
+ * @param modules 
+ * Arbitary module set
+ */
+export async function checkAndroidJava(mainActivity: IMainActivity, modules: MobileCenterSdkModule): Promise<IModuleDifference> {
+  const existingModules = mainActivity.startSdkStatement ? 
+    mainActivity.startSdkStatement.modules :
+    MobileCenterSdkModule.None;
+  
+  return {
+    missingModules: ~existingModules & modules & MobileCenterSdkModule.All,
+    excessModules: existingModules & ~modules & MobileCenterSdkModule.All
+  }
+}
 
-
-
+interface IModuleDifference {
+  missingModules: MobileCenterSdkModule,
+  excessModules: MobileCenterSdkModule
+}

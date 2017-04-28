@@ -10,12 +10,14 @@ import * as Path from "path";
 
 const debug = require("debug")("mobile-center-cli:commands:apps:list");
 import { inspect } from "util";
-import { injectAndroidJava } from "./lib/android/operations";
+import { injectAndroidJava, checkAndroidJava } from "./lib/android/operations";
 import { injectSdkIos } from "./lib/ios/inject-sdk-ios";
 import { MobileCenterSdkModule } from "./lib/models/mobilecenter-sdk-module";
 import { reportProject } from "./lib/format-project";
 import { getProjectDescription, IAndroidJavaProjectDescription, IIosObjectiveCSwiftProjectDescription } from "./lib/project-description";
 import * as _ from "lodash";
+import collectBuildGradleInfo from "./lib/android/collect-build-gradle-info";
+import collectMainActivityInfo from "./lib/android/collect-main-activity-info";
 
 @help("Integrate Mobile Center SDK into the project")
 export default class IntegrateSDKCommand extends AppCommand {
@@ -138,10 +140,11 @@ export default class IntegrateSDKCommand extends AppCommand {
           switch (projectDescription.platform) {
             case "Java":
               const androidJavaProjectDescription = projectDescription as IAndroidJavaProjectDescription;
-              /*await out.progress("Integrating SDK into the project...",
-                injectAndroidJava(androidJavaProjectDescription.modulePath,
-                  androidJavaProjectDescription.buildVariant, "0.6.1", // TODO: Retrieve SDK version from somewhere
-                  androidJavaProjectDescription.appSecret, sdkModules));*/
+              const buildGradle = await collectBuildGradleInfo(androidJavaProjectDescription.modulePath, androidJavaProjectDescription.buildVariant);
+              const mainActivity = await collectMainActivityInfo(buildGradle);
+              await out.progress("Integrating SDK into the project...",
+                injectAndroidJava(buildGradle, mainActivity, "0.6.1", // TODO: Retrieve SDK version from somewhere
+                  androidJavaProjectDescription.appSecret, sdkModules));
               break;
           }
           break;
