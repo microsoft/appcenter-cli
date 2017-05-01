@@ -1,6 +1,10 @@
 // Implementation of Mobile Center login command
 
-import { Command, CommandArgs, CommandResult, success, failure, ErrorCodes, help, shortName, longName, hasArg } from "../util/commandline";
+import * as os from "os";
+const opener = require("opener");
+import * as qs from "qs";
+
+import { Command, CommandArgs, CommandResult, success, failure, succeeded, ErrorCodes, help, shortName, longName, hasArg } from "../util/commandline";
 import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser } from "../util/profile";
 import { prompt, out } from "../util/interaction";
 import { models, createMobileCenterClient, clientRequest, ClientResponse } from "../util/apis";
@@ -30,24 +34,79 @@ export default class LoginCommand extends Command {
   password: string;
 
   async runNoClient(): Promise<CommandResult> {
-    if (this.token && (this.userName || this.password)) {
-      return failure(ErrorCodes.InvalidParameter, "You must specify either a token or a user/password, not both");
+    let result = this.validateArguments();
+    try {
+      if (succeeded(result)) {
+
+        await this.removeLoggedInUser();
+
+        let token: TokenValueType;
+        if (this.token) {
+          token = await this.doTokenLogin();
+        } else if (this.isInteractiveEnvironment) {
+          token = await this.doInteractiveLogin();
+        } else {
+          token = await this.doUserNameAndPasswordLogin();
+        }
+
+        let userResponse = await out.progress("Getting user info ...", this.getUserInfo(token.token));
+        saveUser(userResponse.result, { id: token.id, token: token.token }, this.environmentName, !!this.token);
+        out.text(`Logged in as ${userResponse.result.name}`);
+        result = success();
+      }
+    } catch (err) {
+     result =  failure(ErrorCodes.Exception, err.message);
     }
-
-    let questions: any[] = this.userNameQuestion().concat(this.passwordQuestion());
-
-    if (questions.length > 0) {
-      let answers = await prompt.question(questions);
-      Object.assign(this, answers);
-    }
-
-    await this.removeLoggedInUser();
-    const result = await this.doLogin();
-
     return result;
   }
 
-  private userNameQuestion(): any[] {
+  private get isInteractiveEnvironment(): boolean {
+    return !!(environments(this.environmentName).loginEndpoint);
+  }
+
+  private validateArguments(): CommandResult {
+    if (this.isInteractiveEnvironment && (this.userName || this.password) && !this.token) {
+      return failure(ErrorCodes.InvalidParameter, "This environment requires interactive login, do not use the --user or --password switches");
+    }
+    if (!this.isInteractiveEnvironment && (this.userName || this.password) && this.token) {
+      return failure(ErrorCodes.InvalidParameter, "You must specify either a token or a user/password, not both");
+    }
+    return success();
+  }
+
+  private async doUserNameAndPasswordLogin(): Promise<TokenValueType> {
+    const questions: any[] = this.userNameQuestion.concat(this.passwordQuestion);
+    if (questions.length > 0) {
+      const answers = await prompt.question(questions);
+      Object.assign(this, answers);
+    }
+
+    const endpoint = environments(this.environmentName).endpoint;
+    const client = this.clientFactory.fromUserNameAndPassword(this.userName, this.password, endpoint);
+
+    let createTokenResponse = await out.progress("Logging in...",
+      clientRequest<models.ApiTokensCreateResponse>(cb => client.apiTokens.newMethod({ description: "Created from mobile center cli"}, cb)));
+
+    if (createTokenResponse.response.statusCode >= 400) {
+      throw new Error("login was not successful");
+    }
+    return { id: createTokenResponse.result.id, token: createTokenResponse.result.apiToken };
+  }
+
+  private async doInteractiveLogin(): Promise<TokenValueType> {
+    const loginUrl = environments(this.environmentName).loginEndpoint + "?" + qs.stringify({ hostname: os.hostname()});
+
+    out.text(`Opening browser to log in. If the browser does not open, please go to ${loginUrl}, log in, and enter the code returned.`);
+    opener(loginUrl);
+    const token = await prompt("Access code from browser: ");
+    return { id: "NoneGiven", token: token };
+  }
+
+  private async doTokenLogin(): Promise<TokenValueType> {
+    return { id: "SuppliedByUser", token: this.token };
+  }
+
+  private get userNameQuestion(): any[] {
     if (!this.token && !this.userName) {
       return [{
         name: "userName",
@@ -57,7 +116,7 @@ export default class LoginCommand extends Command {
     return [];
   }
 
-  private passwordQuestion(): any[] {
+  private get passwordQuestion(): any[] {
     if (!this.token && !this.password) {
       return [{
         type: "password",
@@ -66,31 +125,6 @@ export default class LoginCommand extends Command {
       }];
     }
     return [];
-  }
-
-  private async doLogin(): Promise<CommandResult> {
-    let token: TokenValueType;
-    let userSupplied = false;
-    if (this.token) {
-      token = { id: "SuppliedByUser", token: this.token };
-      userSupplied = true;
-    } else {
-      let createTokenResponse = await out.progress("Logging in...", this.createAuthToken());
-      if (createTokenResponse.response.statusCode >= 400) {
-        return failure(ErrorCodes.Exception, 'login was not successful');
-      }
-      token = { id: createTokenResponse.result.id, token: createTokenResponse.result.apiToken };
-    }
-    let userResponse = await out.progress("Getting user info ...", this.getUserInfo(token.token));
-    saveUser(userResponse.result, { id: token.id, token: token.token }, this.environmentName, userSupplied);
-    out.text(`Logged in as ${userResponse.result.name}`);
-    return success();
-  }
-
-  private createAuthToken(): Promise<ClientResponse<models.ApiTokensCreateResponse>> {
-    const endpoint = environments(this.environmentName).endpoint;
-    const client = this.clientFactory.fromUserNameAndPassword(this.userName, this.password, endpoint);
-    return clientRequest<models.ApiTokensCreateResponse>(cb => client.apiTokens.newMethod({ description: "Created from mobile center cli"}, cb));
   }
 
   private getUserInfo(token: string): Promise<ClientResponse<models.UserProfileResponse>> {
