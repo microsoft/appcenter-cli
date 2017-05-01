@@ -37,6 +37,11 @@ const environmentsData: EnvironmentsFile = {
       endpoint: "https://api.mobile.azure.com",
       loginEndpoint: null,
       description: "Production"
+    },
+    testCloudLocalDev: {
+      endpoint: "http://localhost:1700",
+      loginEndpoint: null,
+      description: "Test Cloud local dev box development"
     }
   }
 };

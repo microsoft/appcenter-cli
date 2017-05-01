@@ -7,11 +7,8 @@ declare module 'qs' {
 //     Belinda Teh <https://github.com/tehbelinda>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-export = QueryString;
-export as namespace qs;
-
 namespace QueryString {
-    interface IStringifyOptions {
+    export interface IStringifyOptions {
         delimiter?: string;
         strictNullHandling?: boolean;
         skipNulls?: boolean;
@@ -23,7 +20,7 @@ namespace QueryString {
         sort?: (a: any, b: any) => number;
     }
 
-    interface IParseOptions {
+    export interface IParseOptions {
         delimiter?: string | RegExp;
         depth?: number;
         decoder?: (str: string) => any;
@@ -36,7 +33,8 @@ namespace QueryString {
         strictNullHandling?: boolean;
     }
 
-    function stringify(obj: any, options?: IStringifyOptions): string;
-    function parse(str: string, options?: IParseOptions): any;
+    export function stringify(obj: any, options?: IStringifyOptions): string;
+    export function parse(str: string, options?: IParseOptions): any;
 }
+export = QueryString;
 }

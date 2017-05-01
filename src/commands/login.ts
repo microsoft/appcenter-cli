@@ -35,6 +35,7 @@ export default class LoginCommand extends Command {
 
   async runNoClient(): Promise<CommandResult> {
     let result = this.validateArguments();
+    let userSuppliedToken = false;
     try {
       if (succeeded(result)) {
 
@@ -42,15 +43,19 @@ export default class LoginCommand extends Command {
 
         let token: TokenValueType;
         if (this.token) {
+          userSuppliedToken = true;
           token = await this.doTokenLogin();
         } else if (this.isInteractiveEnvironment) {
+          // Don't have ids for this style of login, so can't delete token later.
+          userSuppliedToken = true;
           token = await this.doInteractiveLogin();
         } else {
+          userSuppliedToken = false;
           token = await this.doUserNameAndPasswordLogin();
         }
 
         let userResponse = await out.progress("Getting user info ...", this.getUserInfo(token.token));
-        saveUser(userResponse.result, { id: token.id, token: token.token }, this.environmentName, !!this.token);
+        saveUser(userResponse.result, { id: token.id, token: token.token }, this.environmentName, userSuppliedToken);
         out.text(`Logged in as ${userResponse.result.name}`);
         result = success();
       }
