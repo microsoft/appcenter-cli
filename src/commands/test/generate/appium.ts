@@ -7,7 +7,7 @@ import { Messages } from "../lib/help-messages";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as phttps from "../../../util/misc/promisfied-https";
 
-@help(Messages.TestCloud.Commands.GenerateUITest)
+@help(Messages.TestCloud.Commands.GenerateAppium)
 export default class GenerateAppiumCommand extends GenerateCommand {
   
   constructor(args: CommandArgs) {
