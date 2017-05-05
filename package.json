@@ -63,6 +63,7 @@
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "ms-rest": "^1.15.0",
+    "omelette": "^0.4.0",
     "p-limit": "^1.0.0",
     "request": "^2.76.0",
     "rimraf": "^2.5.4",
