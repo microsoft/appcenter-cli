@@ -1,6 +1,6 @@
 import { Command, CommandArgs, CommandResult, help, runner, success, name, position } from "../util/commandline";
 
-const debug = require("debug")("somona-cli:commands:help");
+const debug = require("debug")("mobile-center-cli:commands:help");
 import { inspect } from "util";
 
 @help("Get command or category help")
