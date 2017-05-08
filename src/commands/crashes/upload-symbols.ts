@@ -3,7 +3,9 @@ import { AppCommand, CommandArgs, CommandResult} from "../../util/commandline";
 import { ErrorCodes, failure, success } from "../../util/commandline";
 import { hasArg, help, longName, shortName } from "../../util/commandline";
 import { out } from "../../util/interaction";
+import { inspect } from "util";
 import { DefaultApp } from "../../util/profile";
+import UploadSymbolsHelper from "./lib/symbols-uploading-helper";
 
 import * as Fs from "fs";
 import * as Pfs from "../../util/misc/promisfied-fs";
@@ -11,9 +13,7 @@ import * as Path from "path";
 
 import * as JsZip from "jszip";
 import * as JsZipHelper from "../../util/misc/jszip-helper";
-import * as Crypto from "crypto";
 import * as _ from "lodash";
-import * as Request from "request";
 
 const debug = require("debug")("mobile-center-cli:commands:apps:crashes:upload-symbols");
 
@@ -60,32 +60,8 @@ export default class UploadSymbols extends AppCommand {
       await out.progress("Adding source map file to ZIP...", this.addSourceMapFileToZip(this.sourceMapPath, zip));
     }
 
-    // get buffer for the prepared ZIP
-    let zipBuffer: Buffer = await this.getZipBuffer(zip);
-
-    // starting ZIP buffer MD5 hash calculation
-    let md5Hash: Promise<string> = this.calculateMd5(zipBuffer);
-
-    // executing API request to get an upload URL
-    let uploadingBeginRequestResult = await out.progress("Executing Symbols Uploading Start API request...", this.executeSymbolsUploadingBeginRequest(client, app));
-
-    // uploading
-    const symbolUploadId = uploadingBeginRequestResult.symbolUploadId;
-
-    try {
-      // doing HTTP PUT for ZIP buffer contents to the upload URL
-      const uploadUrl: string = uploadingBeginRequestResult.uploadUrl;
-      await out.progress("Uploading ZIP...", this.uploadZipFile(uploadUrl, zipBuffer, await md5Hash));
-
-      // sending 'committed' API request to finish uploading
-      let uploadingEndRequestResult: models.SymbolUpload = await out.progress("Executing Symbols Uploading End API request...", this.executeSymbolsUploadingEndRequest(client, app, symbolUploadId, "committed"));
-      out.text(`Symbols were successfully uploaded`);
-    } catch (error) {
-      // uploading failed, aborting upload request
-      let uploadingAbortRequestResult = await out.progress("Uploading failed, executing Symbols Uploading Abort API request...", this.abortUploadingRequest(client, app, symbolUploadId));
-      out.text(`Failed to upload symbols`);
-      throw error;
-    }
+    // upload symbols
+    await out.progress("Uploading symbols...", new UploadSymbolsHelper(client, app, debug).uploadSymbolsZip(zip));
 
     return success();
   }
@@ -101,7 +77,8 @@ export default class UploadSymbols extends AppCommand {
         throw failure(ErrorCodes.InvalidParameter, `path ${filePath} points to non-existent item`);
       } else {
         // other errors
-        throw error;
+        debug(`Failed to get statistics for file system entry ${filePath} - ${inspect(error)}`);
+        throw failure(ErrorCodes.Exception, `failed to get statistics for file system entry ${filePath}`);
       }
     }
   }
@@ -140,7 +117,8 @@ export default class UploadSymbols extends AppCommand {
         debug(`Adding the sub-folder ${dSymPath} to the ZIP archive`);
         await JsZipHelper.addFolderToZipRecursively(dSymPath, zipArchive);
       } catch (error) {
-        throw failure(ErrorCodes.Exception, `unable to add folder ${dSymPath} to the ZIP archive: ${_.toString(error)}`);
+        debug(`Unable to add folder ${dSymPath} to the ZIP archive - ${inspect(error)}`);
+        throw failure(ErrorCodes.Exception, `unable to add folder ${dSymPath} to the ZIP archive`);
       }
     }
     return zipArchive;
@@ -152,7 +130,8 @@ export default class UploadSymbols extends AppCommand {
     try {
       await JsZipHelper.addFolderToZipRecursively(pathToFolder, zipArchive);
     } catch (error) {
-      throw failure(ErrorCodes.Exception, `unable to add folder ${pathToFolder} to the ZIP archive: ${_.toString(error)}`);
+      debug(`Unable to add folder ${pathToFolder} to the ZIP archive - ${inspect(error)}`);
+      throw failure(ErrorCodes.Exception, `unable to add folder ${pathToFolder} to the ZIP archive`);
     }
     return zipArchive;
   }
@@ -163,18 +142,9 @@ export default class UploadSymbols extends AppCommand {
       let zipFileBuffer = await Pfs.readFile(pathToZip);
       return await new JsZip().loadAsync(zipFileBuffer, { checkCRC32: true });
     } catch (error) {
-      throw failure(ErrorCodes.Exception, `failed to read ZIP archive ${pathToZip}: ${this.getErrnoExceptionString(error)}`);
+      debug(`Failed to read ZIP archive - ${inspect(error)}`);
+      throw failure(ErrorCodes.Exception, "failed to read ZIP archive ${pathToZip}");
     }
-  }
-
-  private calculateMd5(buffer: Buffer): Promise<string> {
-    return new Promise<string>((resolve) => {
-      resolve(Crypto.createHash("md5").update(buffer).digest("base64"));
-    });
-  }
-
-  private getErrnoExceptionString(error: NodeJS.ErrnoException): string {
-    return _.toString(error.message);
   }
 
   private async prepareZipFromSymbols(path: string): Promise<JsZip> {
@@ -197,79 +167,6 @@ export default class UploadSymbols extends AppCommand {
     }
   }
 
-  private async executeSymbolsUploadingBeginRequest(client: MobileCenterClient, app: DefaultApp): Promise<models.SymbolUploadBeginResponse> {
-    debug("Executing API request to get uploading URL");
-    let symbolUploadingBeginRequest = clientRequest<models.SymbolUploadBeginResponse>((cb) => client.symbols.postSymbolUpload(
-      app.ownerName,
-      app.appName,
-      "Apple",
-      cb)).catch((error: any) => {
-          throw failure(ErrorCodes.Exception, `failed to start the symbol uploading: ${this.getErrnoExceptionString(error)}`);
-      });
-
-    const uploadingBeginResponse = await symbolUploadingBeginRequest;
-
-    debug("Analyzing upload start request response status code");
-    const uploadingBeginStatusCode = uploadingBeginResponse.response.statusCode;
-    const uploadingBeginStatusMessage = uploadingBeginResponse.response.statusMessage;
-    if (uploadingBeginStatusCode >= 400) {
-      throw failure(ErrorCodes.Exception,
-        `the symbol upload begin API request was rejected: HTTP ${uploadingBeginStatusCode} - ${uploadingBeginStatusMessage}`);
-    }
-
-    return uploadingBeginResponse.result;
-  }
-
-  private uploadZipFile(uploadUrl: string, zippedFileBuffer: Buffer, md5Hash: string): Promise<void> {
-    debug("Uploading the prepared ZIP file");
-    return new Promise<void>((resolve, reject) => {
-      Request.put(uploadUrl, {
-        body: zippedFileBuffer,
-        headers: {
-          "Content-Length": zippedFileBuffer.length,
-          "Content-MD5": md5Hash,
-          "Content-Type": "application/zip",
-          "x-ms-blob-type": "BlockBlob"
-        }
-      })
-      .on("error", (error) => {
-        reject(failure(ErrorCodes.Exception, `ZIP file uploading failed: ${error.message}`));
-      })
-      .on("response", (response) => {
-        if (response.statusCode < 400) {
-          resolve();
-        } else {
-          reject(failure(ErrorCodes.Exception, `ZIP file uploading failed: HTTP ${response.statusCode}`));
-        }
-      });
-    });
-  }
-
-  private async executeSymbolsUploadingEndRequest(client: MobileCenterClient, app: DefaultApp, symbolUploadId: string, desiredStatus: SymbolsUploadEndRequestStatus): Promise<models.SymbolUpload> {
-    debug(`Finishing symbols uploading with desired status: ${desiredStatus}`);
-    let symbolUploadingEndRequest = clientRequest<models.SymbolUpload>((cb) => client.symbols.patchSymbolUpload(
-      symbolUploadId,
-      app.ownerName,
-      app.appName,
-      desiredStatus,
-      cb,
-    )).catch((error: any) => {
-        throw failure(ErrorCodes.Exception,
-          `failed to finalize the symbol upload with status '${desiredStatus}': ${this.getErrnoExceptionString(error)}`);
-    });
-
-    const uploadingEndResponse = await symbolUploadingEndRequest;
-    debug("Analyzing upload end request response status code");
-    const uploadingEndStatusCode = uploadingEndResponse.response.statusCode;
-    const uploadingEndStatusMessage = uploadingEndResponse.response.statusMessage;
-    if (uploadingEndStatusCode >= 400) {
-      throw failure(ErrorCodes.Exception,
-        `the symbol upload end API request was rejected: HTTP ${uploadingEndStatusCode} - ${uploadingEndStatusMessage}`);
-    }
-
-    return uploadingEndResponse.result;
-  }
-
   private validateParameters() {
     // check that user have selected either --symbol or --xcarchive
     if (_.isNil(this.symbolsPath) && _.isNil(this.xcarchivePath)) {
@@ -285,7 +182,8 @@ export default class UploadSymbols extends AppCommand {
     try {
       childrenEntriesList = Fs.readdirSync(parentPath);
     } catch (error) {
-      throw failure(ErrorCodes.Exception, `error when looking into directory ${parentPath} content: ${this.getErrnoExceptionString(error)}`);
+      debug(`error when looking into directory ${parentPath} content - ${inspect(error)}`);
+      throw failure(ErrorCodes.Exception, `error when looking into directory ${parentPath} content`);
     }
 
     return childrenEntriesList
@@ -298,7 +196,8 @@ export default class UploadSymbols extends AppCommand {
             let childStats = Fs.statSync(childPath);
             return childStats.isDirectory();
           } catch (error) {
-            throw failure(ErrorCodes.Exception, `error when getting statistics for the file ${parentPath}: ${this.getErrnoExceptionString(error)}`);
+            debug(`Error when getting statistics for the file ${parentPath} - ${inspect(error)}`);
+            throw failure(ErrorCodes.Exception, `error when getting statistics for the file ${parentPath}`);
           }
       });
   }
@@ -326,19 +225,9 @@ export default class UploadSymbols extends AppCommand {
         let sourceMapFileContent = await Pfs.readFile(path);
         zip.file(sourceMapFileBaseName, sourceMapFileContent);
       } catch (error) {
+        debug(`Unable to add file ${path} to the ZIP - ${inspect(error)}`);
         throw failure(ErrorCodes.Exception, `unable to add file ${path} to the ZIP`);
       }
-  }
-
-  private async getZipBuffer(zip: JsZip): Promise<Buffer> {
-    try {
-      debug("Getting in-memory ZIP archive as Buffer");
-      return await zip.generateAsync({
-        type: "nodebuffer"
-      });
-    } catch (error) {
-       throw failure(ErrorCodes.Exception, `Failed to compress the ZIP file: ${_.toString(error)}`);
-    }
   }
 
   private async prepareZipFromXcArchive(path: string): Promise<JsZip> {
@@ -355,19 +244,7 @@ export default class UploadSymbols extends AppCommand {
         throw failure(ErrorCodes.InvalidParameter, `${path} is not a valid XcArchive folder`);
     }
   }
-
-  private async abortUploadingRequest(client: MobileCenterClient, app: DefaultApp, symbolUploadId: string): Promise<models.SymbolUpload> {
-    debug("Uploading failed, aborting upload request");
-    try {
-      return await this.executeSymbolsUploadingEndRequest(client, app, symbolUploadId, "aborted");
-    } catch (ex) {
-      debug("Failed to correctly abort the uploading request");
-      out.text(`Symbols Uploading Abort failed`);
-    }
-  }
 }
-
-type SymbolsUploadEndRequestStatus = "committed" | "aborted";
 
 enum SymbolFsEntryType {
   Unknown,
