@@ -4,6 +4,7 @@ import * as _ from "lodash";
 import * as os from "os";
 import * as path from "path";
 import * as process from "../../../util/misc/process-helper";
+import { out } from "../../../util/interaction";
 
 const debug = require("debug")("mobile-center-cli:commands:test:lib:uitest-preparer");
 const minimumVersion = [2, 0, 1];
@@ -41,7 +42,7 @@ export class UITestPreparer {
 
     let command = await this.getPrepareCommand();
     debug(`Executing command ${command}`);
-    let exitCode = await process.execAndWait(command);
+    let exitCode = await process.execAndWait(command, this.outMessage, this.outMessage);
 
     if (exitCode !== 0) {
       throw new TestCloudError(`Cannot prepare UI Test artifacts. Returning exit code ${exitCode}.`, exitCode);
@@ -141,5 +142,17 @@ export class UITestPreparer {
     }
 
     return true;
+  }
+
+
+  /*
+    the UITest preparer sometimes prints messages with it's own executable name, such as 
+    "Run 'test-cloud.exe help prepare' for more details". It's confusing for end users,
+    so wer are removing lines that contain the executable name.
+  */
+  private outMessage(line: string) {
+    if (line.indexOf("test-cloud.exe") === -1) {
+      out.text(line);
+    }
   }
 }
