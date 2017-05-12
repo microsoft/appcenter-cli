@@ -227,10 +227,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
     let updateReleaseRequestResponse: ClientResponse<models.ReleaseDetails>;
     try {
       updateReleaseRequestResponse = await out.progress(`Distributing the release...`,
-        clientRequest<models.ReleaseDetails>(async (cb) => client.releases.update(releaseId, app.ownerName, app.appName, {
+        clientRequest<models.ReleaseDetails>(async (cb) => client.releases.update(releaseId, {
           distributionGroupName: this.distributionGroup,
           releaseNotes: releaseNotesString
-        }, cb)));
+        }, app.ownerName, app.appName, cb)));
       const statusCode = updateReleaseRequestResponse.response.statusCode;
       if (statusCode >= 400) {
         throw statusCode;

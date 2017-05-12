@@ -14,7 +14,7 @@ export default class ApiTokenListCommand extends Command {
 
   async run(client: MobileCenterClient): Promise<CommandResult> {
     const apiTokensResponse = await out.progress("Getting API tokens ...",
-      clientRequest<models.ApiTokensGetResponse[]>(cb => client.account.getApiTokens(cb)));
+      clientRequest<models.ApiTokensGetResponse[]>(cb => client.apiTokens.list(cb)));
 
     out.table({ head: ['ID', 'Description', 'Created At'], style: { head: [] } },
       apiTokensResponse.result.map(apiToken => [apiToken.id, apiToken.description, apiToken.createdAt])

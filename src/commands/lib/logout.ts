@@ -12,7 +12,7 @@ export async function logout(client: MobileCenterClient, user: Profile): Promise
       clientRequest(async cb => {
         try {
           debug('Attempting to delete token off server');
-          client.account.deleteApiToken(await user.accessTokenId, cb);
+          client.apiTokens.deleteMethod(await user.accessTokenId, cb);
         } catch(err) {
           debug('Could not retrieve token ID from token store');
           cb(err, null, null, null);

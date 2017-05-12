@@ -90,7 +90,7 @@ export default class LoginCommand extends Command {
   private createAuthToken(): Promise<ClientResponse<models.ApiTokensCreateResponse>> {
     const endpoint = environments(this.environmentName).endpoint;
     const client = this.clientFactory.fromUserNameAndPassword(this.userName, this.password, endpoint);
-    return clientRequest<models.ApiTokensCreateResponse>(cb => client.account.createApiToken({ description: "Created from mobile center cli"}, cb));
+    return clientRequest<models.ApiTokensCreateResponse>(cb => client.apiTokens.newMethod({ description: "Created from mobile center cli"}, cb));
   }
 
   private getUserInfo(token: string): Promise<ClientResponse<models.UserProfileResponse>> {
