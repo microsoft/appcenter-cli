@@ -16,12 +16,12 @@ var util = require('util');
  * @constructor
  * Audience with details.
  *
- * @member {string} [definition] Audience definition in OData format.
- * 
  * @member {boolean} [enabled]  Default value: true .
  * 
  * @member {object} [customProperties] Custom properties used in the
  * definition.
+ * 
+ * @member {number} [estimatedTotalCount] Estimated total audience size.
  * 
  * @member {date} [timestamp] Date the audience was last refreshed.
  * 
@@ -53,6 +53,13 @@ Audience.prototype.mapper = function () {
             name: 'String'
           }
         },
+        description: {
+          required: false,
+          serializedName: 'description',
+          type: {
+            name: 'String'
+          }
+        },
         estimatedCount: {
           required: false,
           serializedName: 'estimated_count',
@@ -60,16 +67,16 @@ Audience.prototype.mapper = function () {
             name: 'Number'
           }
         },
-        state: {
+        definition: {
           required: false,
-          serializedName: 'state',
+          serializedName: 'definition',
           type: {
             name: 'String'
           }
         },
-        definition: {
+        state: {
           required: false,
-          serializedName: 'definition',
+          serializedName: 'state',
           type: {
             name: 'String'
           }
@@ -94,6 +101,13 @@ Audience.prototype.mapper = function () {
                   name: 'String'
                 }
             }
+          }
+        },
+        estimatedTotalCount: {
+          required: false,
+          serializedName: 'estimated_total_count',
+          type: {
+            name: 'Number'
           }
         },
         timestamp: {

@@ -10,7 +10,7 @@
  * @class
  * Initializes a new instance of the DeploymentModification class.
  * @constructor
- * @member {string} [name]
+ * @member {string} name
  * 
  */
 function DeploymentModification() {
@@ -31,8 +31,12 @@ DeploymentModification.prototype.mapper = function () {
       className: 'DeploymentModification',
       modelProperties: {
         name: {
-          required: false,
+          required: true,
           serializedName: 'name',
+          constraints: {
+            MaxLength: 1000,
+            MinLength: 1
+          },
           type: {
             name: 'String'
           }

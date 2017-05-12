@@ -6,11 +6,32 @@
 
 'use strict';
 
+var models = require('./index');
+
 /**
  * @class
  * Initializes a new instance of the AppCrashesInfo class.
  * @constructor
  * @member {boolean} hasCrashes
+ * 
+ * @member {object} features
+ * 
+ * @member {boolean} [features.crashgroupModifyStatus] App supports
+ * modification of crashgroup status
+ * 
+ * @member {boolean} [features.crashgroupModifyAnnotation] App supports
+ * modification of crashgroup annotation
+ * 
+ * @member {boolean} [features.search] App supports search API
+ * 
+ * @member {boolean} [features.crashgroupAnalyticsCrashfreeusers] App supports
+ * the 'crash free user' metric
+ * 
+ * @member {boolean} [features.crashgroupAnalyticsImpactedusers] App supports
+ * the 'impacted users' metric
+ * 
+ * @member {boolean} [features.crashDownloadRaw] App supports download of raw
+ * crashes
  * 
  */
 function AppCrashesInfo() {
@@ -35,6 +56,14 @@ AppCrashesInfo.prototype.mapper = function () {
           serializedName: 'has_crashes',
           type: {
             name: 'Boolean'
+          }
+        },
+        features: {
+          required: true,
+          serializedName: 'features',
+          type: {
+            name: 'Composite',
+            className: 'AppFeatures'
           }
         }
       }

@@ -28,6 +28,8 @@ export interface GetInAppUpdateTokenResponse {
  * 
  * @member {string} [description] The description of the token
  * 
+ * @member {array} [scope] The scope for this token.
+ * 
  * @member {string} createdAt The creation time
  * 
  */
@@ -35,6 +37,7 @@ export interface ApiTokensCreateResponse {
   id: string;
   apiToken: string;
   description?: string;
+  scope?: string[];
   createdAt: string;
 }
 
@@ -44,9 +47,12 @@ export interface ApiTokensCreateResponse {
  * @constructor
  * @member {string} [description] The description of the token
  * 
+ * @member {array} [scope] The scope for this token.
+ * 
  */
 export interface ApiTokensCreateRequest {
   description?: string;
+  scope?: string[];
 }
 
 /**
@@ -57,12 +63,15 @@ export interface ApiTokensCreateRequest {
  * 
  * @member {string} [description] The description of the token
  * 
+ * @member {array} [scope] The scope for this token.
+ * 
  * @member {string} createdAt The creation time
  * 
  */
 export interface ApiTokensGetResponse {
   id: string;
   description?: string;
+  scope?: string[];
   createdAt: string;
 }
 
@@ -163,7 +172,7 @@ export interface AppPatchRequest {
  * include: 'Android', 'iOS', 'Tizen', 'Windows'
  * 
  * @member {string} platform The platform of the app. Possible values include:
- * 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
+ * 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
  * 
  */
 export interface AppRequest {
@@ -390,10 +399,8 @@ export interface UserUpdateRequestInternal {
  * 
  * @member {string} [app.name] The name of the app used in URLs
  * 
- * @member {array} [app.memberPermissions] The permissions of the calling user
- * 
  * @member {string} [app.os] The OS the app will be running on. Possible
- * values include: 'Android', 'iOS', 'macOS', 'Tizen', 'Windows'
+ * values include: 'Android', 'iOS', 'macOS', 'Tizen', 'Windows', 'Custom'
  * 
  * @member {object} [app.owner]
  * 
@@ -413,11 +420,10 @@ export interface UserUpdateRequestInternal {
  * 
  * @member {string} [app.platform] The platform of the app. Possible values
  * include: 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'Unity',
- * 'UWP', 'Xamarin'
+ * 'UWP', 'Xamarin', 'Unknown'
  * 
- * @member {string} [app.origin] The origin of this app can only be
- * mobile-center or hockeyapp for now. Possible values include:
- * 'mobile-center', 'hockeyapp'
+ * @member {string} [app.origin] The creation origin of this app. Possible
+ * values include: 'mobile-center', 'hockeyapp', 'codepush'
  * 
  * @member {string} email The email address of the invited user
  * 
@@ -443,6 +449,9 @@ export interface UserUpdateRequestInternal {
  * 
  * @member {array} [invitedBy.permissions] The permissions the user has for
  * the app
+ * 
+ * @member {string} [invitedBy.origin] The creation origin of this user.
+ * Possible values include: 'mobile-center', 'hockeyapp', 'codepush'
  * 
  * @member {boolean} isExistingUser Indicates whether the invited user already
  * exists
@@ -482,10 +491,8 @@ export interface AppInvitationDetailResponse {
  * 
  * @member {string} name The name of the app used in URLs
  * 
- * @member {array} [memberPermissions] The permissions of the calling user
- * 
  * @member {string} os The OS the app will be running on. Possible values
- * include: 'Android', 'iOS', 'macOS', 'Tizen', 'Windows'
+ * include: 'Android', 'iOS', 'macOS', 'Tizen', 'Windows', 'Custom'
  * 
  * @member {object} owner
  * 
@@ -505,10 +512,10 @@ export interface AppInvitationDetailResponse {
  * 
  * @member {string} platform The platform of the app. Possible values include:
  * 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'Unity', 'UWP',
- * 'Xamarin'
+ * 'Xamarin', 'Unknown'
  * 
- * @member {string} origin The origin of this app can only be mobile-center or
- * hockeyapp for now. Possible values include: 'mobile-center', 'hockeyapp'
+ * @member {string} origin The creation origin of this app. Possible values
+ * include: 'mobile-center', 'hockeyapp', 'codepush'
  * 
  */
 export interface AppResponse {
@@ -519,7 +526,6 @@ export interface AppResponse {
   displayName: string;
   iconUrl?: string;
   name: string;
-  memberPermissions?: string[];
   os: string;
   owner: Owner;
   platform: string;
@@ -575,6 +581,9 @@ export interface Owner {
  * 
  * @member {array} [permissions] The permissions the user has for the app
  * 
+ * @member {string} origin The creation origin of this user. Possible values
+ * include: 'mobile-center', 'hockeyapp', 'codepush'
+ * 
  */
 export interface UserProfileResponse {
   id: string;
@@ -584,20 +593,7 @@ export interface UserProfileResponse {
   email: string;
   name: string;
   permissions?: string[];
-}
-
-/**
- * @class
- * Initializes a new instance of the OrganizationInvitationSimpleDetailResponse class.
- * @constructor
- * @member {string} id The unique ID (UUID) of the invitation
- * 
- * @member {string} email The email address of the invited user
- * 
- */
-export interface OrganizationInvitationSimpleDetailResponse {
-  id: string;
-  email: string;
+  origin: string;
 }
 
 /**
@@ -607,11 +603,14 @@ export interface OrganizationInvitationSimpleDetailResponse {
  * @member {array} [featureFlags] The feature flags that are enabled for this
  * app
  * 
+ * @member {array} [memberPermissions] The permissions of the calling user
+ * 
  * @member {array} [repositories] The repositories associated with this app
  * 
  */
 export interface AppResponseInternal extends AppResponse {
   featureFlags?: string[];
+  memberPermissions?: string[];
   repositories?: AppResponseInternalRepositoriesItem[];
 }
 
@@ -637,9 +636,8 @@ export interface AppResponseInternalRepositoriesItem {
  * 
  * @member {string} name The name of the distribution group used in URLs
  * 
- * @member {string} origin Indicates the origin source of the distribution
- * group, it can be mobile-center or hockeyapp for now. Possible values
- * include: 'mobile-center', 'hockeyapp'
+ * @member {string} origin The creation origin of this distribution group.
+ * Possible values include: 'mobile-center', 'hockeyapp'
  * 
  */
 export interface DistributionGroupResponse {
@@ -746,13 +744,13 @@ export interface DistributionGroupWithUsersResponse {
 
 /**
  * @class
- * Initializes a new instance of the FeatureNameResponse class.
+ * Initializes a new instance of the FeatureFlagsResponse class.
  * @constructor
- * @member {string} name The unique name of the feature
+ * @member {array} featureFlags
  * 
  */
-export interface FeatureNameResponse {
-  name: string;
+export interface FeatureFlagsResponse {
+  featureFlags: string[];
 }
 
 /**
@@ -792,6 +790,20 @@ export interface OrgNameAvailabilityResponse {
 
 /**
  * @class
+ * Initializes a new instance of the OrganizationInvitationSimpleDetailResponse class.
+ * @constructor
+ * @member {string} id The unique ID (UUID) of the invitation
+ * 
+ * @member {string} email The email address of the invited user
+ * 
+ */
+export interface OrganizationInvitationSimpleDetailResponse {
+  id: string;
+  email: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the OrganizationResponse class.
  * @constructor
  * @member {string} id The internal unique id (UUID) of the organization.
@@ -803,12 +815,16 @@ export interface OrgNameAvailabilityResponse {
  * 
  * @member {string} name The slug name of the organization
  * 
+ * @member {string} origin The creation origin of this organization. Possible
+ * values include: 'mobile-center', 'hockeyapp'
+ * 
  */
 export interface OrganizationResponse {
   id: string;
   collaboratorRole: string;
   displayName: string;
   name: string;
+  origin: string;
 }
 
 /**
@@ -848,6 +864,22 @@ export interface OrganizationUserResponse {
 export interface UserNameAvailabilityResponse {
   available: boolean;
   name: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the UserProfileResponseInternal class.
+ * @constructor
+ * @member {array} [featureFlags] The feature flags that are enabled for this
+ * app
+ * 
+ * @member {string} [adminRole] The new admin_role. Possible values include:
+ * 'superAdmin', 'admin', 'devOps', 'notAdmin'
+ * 
+ */
+export interface UserProfileResponseInternal extends UserProfileResponse {
+  featureFlags?: string[];
+  adminRole?: string;
 }
 
 /**
@@ -975,6 +1007,8 @@ export interface AndroidModule {
  * @constructor
  * A collection of projects for each type of toolset
  *
+ * @member {string} [commit] The commit hash of the analyzed commit
+ * 
  * @member {array} [xcode] Xcode projects, with their schemes
  * 
  * @member {array} [javascript] package.json files
@@ -989,6 +1023,7 @@ export interface AndroidModule {
  * 
  */
 export interface ToolsetProjects {
+  commit?: string;
   xcode?: XcodeSchemeContainer[];
   javascript?: string[];
   xamarin?: XamarinSolution[];
@@ -1589,22 +1624,25 @@ export interface DistributionResponse {
 
 /**
  * @class
- * Initializes a new instance of the BuildServiceStatusResponse class.
+ * Initializes a new instance of the BuildServiceStatus class.
  * @constructor
- * @member {string} service
+ * @member {string} [status]
  * 
- * @member {string} message
+ * @member {string} [service]
  * 
- * @member {string} url
+ * @member {string} [message]
  * 
- * @member {string} validUntil
+ * @member {string} [url]
+ * 
+ * @member {number} [validUntil]
  * 
  */
-export interface BuildServiceStatusResponse {
-  service: string;
-  message: string;
-  url: string;
-  validUntil: string;
+export interface BuildServiceStatus {
+  status?: string;
+  service?: string;
+  message?: string;
+  url?: string;
+  validUntil?: number;
 }
 
 /**
@@ -1643,8 +1681,18 @@ export interface ValidationErrorResponse {
  * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
  * time.
  * 
+ * @member {string} [destinationType] The destination type.<br>
+ * <b>group</b>: The release distributed to internal groups and
+ * distribution_groups details will be returned.<br>
+ * <b>store</b>: Coming Soon - The release distributed to external stores and
+ * distribution_stores details will be returned. <br>
+ * . Possible values include: 'group', 'store'
+ * 
  * @member {array} [distributionGroups] a list of distribution groups that are
  * associated with this release.
+ * 
+ * @member {array} [distributionStores] Coming Soon - a list of distribution
+ * stores that are associated with this release.
  * 
  */
 export interface BasicReleaseDetails {
@@ -1652,7 +1700,9 @@ export interface BasicReleaseDetails {
   version?: string;
   shortVersion?: string;
   uploadedAt?: string;
+  destinationType?: string;
   distributionGroups?: DistributionGroup[];
+  distributionStores?: DistributionStore[];
 }
 
 /**
@@ -1671,6 +1721,33 @@ export interface DistributionGroup {
   id?: string;
   name?: string;
   isLatest?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionStore class.
+ * @constructor
+ * @member {string} [id] ID identifying a unique distribution store.
+ * 
+ * @member {string} [name] A name identifying a unique distribution store.
+ * 
+ * @member {boolean} [isLatest] Is the containing release the latest one in
+ * this distribution store.
+ * 
+ * @member {string} [type] type of the distribution store currently stores
+ * type can be intune or googleplay. Possible values include: 'intune',
+ * 'googleplay'
+ * 
+ * @member {string} [publishingStatus] publishing status of the release in the
+ * store.
+ * 
+ */
+export interface DistributionStore {
+  id?: string;
+  name?: string;
+  isLatest?: boolean;
+  type?: string;
+  publishingStatus?: string;
 }
 
 /**
@@ -1734,8 +1811,18 @@ export interface DistributionGroup {
  * mobile device. On iOS devices will be prefixed with
  * `itms-services://?action=download-manifest&url=`
  * 
+ * @member {string} [destinationType] The destination type.<br>
+ * <b>group</b>: The release distributed to internal groups and
+ * distribution_groups details will be returned.<br>
+ * <b>store</b>: Coming Soon - The release distributed to external stores and
+ * distribution_stores details will be returned. <br>
+ * . Possible values include: 'group', 'store'
+ * 
  * @member {array} [distributionGroups] a list of distribution groups that are
  * associated with this release.
+ * 
+ * @member {array} [distributionStores] Coming Soon - a list of distribution
+ * stores that are associated with this release.
  * 
  */
 export interface ReleaseDetails {
@@ -1757,7 +1844,9 @@ export interface ReleaseDetails {
   downloadUrl?: string;
   appIconUrl?: string;
   installUrl?: string;
+  destinationType?: string;
   distributionGroups?: DistributionGroupWithoutIsLatest[];
+  distributionStores?: DistributionStoreWithoutIsLatest[];
 }
 
 /**
@@ -1772,6 +1861,29 @@ export interface ReleaseDetails {
 export interface DistributionGroupWithoutIsLatest {
   id?: string;
   name?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionStoreWithoutIsLatest class.
+ * @constructor
+ * @member {string} [id] ID identifying a unique distribution store.
+ * 
+ * @member {string} [name] A name identifying a unique distribution store.
+ * 
+ * @member {string} [type] type of the distribution store currently stores
+ * type can be intune or googleplay. Possible values include: 'intune',
+ * 'googleplay'
+ * 
+ * @member {string} [publishingStatus] publishing status of the release in the
+ * store.
+ * 
+ */
+export interface DistributionStoreWithoutIsLatest {
+  id?: string;
+  name?: string;
+  type?: string;
+  publishingStatus?: string;
 }
 
 /**
@@ -1827,6 +1939,60 @@ export interface ReleaseUploadEndResponse {
  * @constructor
  * A request containing information for updating a release.
  *
+ * @member {string} [distributionGroupName] OBSOLETE. Will be removed in
+ * future releases. Name of a distribution group. The release will be
+ * associated with this distribution group. If the distribution group doesn't
+ * exist a 400 is returned. If both distribution group name and id are
+ * passed, the id is taking precedence.
+ * 
+ * @member {string} [distributionGroupId] OBSOLETE. Will be removed in future
+ * releases. Id of a distribution group. The release will be associated with
+ * this distribution group. If the distribution group doesn't exist a 400 is
+ * returned. If both distribution group name and id are passed, the id is
+ * taking precedence.
+ * 
+ * @member {string} [destinationName] Name of a distribution group /
+ * distribution store. The release will be associated with this distribution
+ * group or store. If the distribution group / store doesn't exist a 400 is
+ * returned. If both distribution group / store name and id are passed, the
+ * id is taking precedence.
+ * 
+ * @member {string} [destinationId] Id of a distribution group / store. The
+ * release will be associated with this distribution group / store. If the
+ * distribution group / store doesn't exist a 400 is returned. If both
+ * distribution group / store name and id are passed, the id is taking
+ * precedence.
+ * 
+ * @member {string} [destinationType] The destination type.<br>
+ * <b>group</b>: The release distributed to internal groups and
+ * distribution_groups details will be returned.<br>
+ * <b>store</b>: Coming Soon - The release distributed to external stores and
+ * distribution_stores details will be returned. <br>
+ * . Possible values include: 'group', 'store'
+ * 
+ * @member {string} [releaseNotes] Release notes for this release.
+ * 
+ * @member {boolean} [mandatoryUpdate] A boolean which determines whether this
+ * version should be a mandatory update or not.
+ * 
+ */
+export interface ReleaseUpdateRequest {
+  distributionGroupName?: string;
+  distributionGroupId?: string;
+  destinationName?: string;
+  destinationId?: string;
+  destinationType?: string;
+  releaseNotes?: string;
+  mandatoryUpdate?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the RereleaseRequest class.
+ * @constructor
+ * A request containing information for re-releasing an existing release to a
+ * new distribution group.
+ *
  * @member {string} [distributionGroupName] Name of a distribution group. The
  * release will be associated with this distribution group. If the
  * distribution group doesn't exist a 400 is returned. If both distribution
@@ -1839,186 +2005,19 @@ export interface ReleaseUploadEndResponse {
  * 
  * @member {string} [releaseNotes] Release notes for this release.
  * 
+ * @member {boolean} [mandatoryUpdate] A boolean which determines whether this
+ * version should be a mandatory update or not.
+ * 
+ * @member {number} baseReleaseId The ID of the release that should be
+ * re-released
+ * 
  */
-export interface ReleaseUpdateRequest {
+export interface RereleaseRequest {
   distributionGroupName?: string;
   distributionGroupId?: string;
   releaseNotes?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the PackageUploadBeginResponse class.
- * @constructor
- * A response containing information pertaining to starting a package upload
- * process
- *
- * @member {string} uploadId The ID for the current upload
- * 
- * @member {string} uploadUrl The URL where the client needs to upload the
- * package to
- * 
- */
-export interface PackageUploadBeginResponse {
-  uploadId: string;
-  uploadUrl: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the PackageUploadEndRequest class.
- * @constructor
- * A request containing information pertaining to completing a package upload
- * process
- *
- * @member {string} status The desired operation for the upload. Possible
- * values include: 'committed', 'aborted'
- * 
- */
-export interface PackageUploadEndRequest {
-  status: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the PackageUploadEndResponse class.
- * @constructor
- * A response containing information about the uploaded package.
- *
- * @member {string} [packageUrl] A URL to the new package. If upload was
- * aborted will be null.
- * 
- */
-export interface PackageUploadEndResponse {
-  packageUrl?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the PackageUpdateRequest class.
- * @constructor
- * A request containing information for updating a package.
- *
- * @member {string} [distributionGroupName] Name of a distribution group. The
- * package will be associated with this distribution group. If the
- * distribution group doesn't exist a 400 is returned. If both distribution
- * group name and id are passed, the id is taking precedence.
- * 
- * @member {string} [distributionGroupId] Id of a distribution group. The
- * package will be associated with this distribution group. If the
- * distribution group doesn't exist a 400 is returned. If both distribution
- * group name and id are passed, the id is taking precedence.
- * 
- * @member {string} [releaseNotes] Release notes for this package.
- * 
- */
-export interface PackageUpdateRequest {
-  distributionGroupName?: string;
-  distributionGroupId?: string;
-  releaseNotes?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the BasicPackageDetails class.
- * @constructor
- * Basic information on a pacakge
- *
- * @member {string} [packageId] ID identifying this unique package.
- * 
- * @member {string} [version] The package's version.<br>
- * For iOS: CFBundleVersion from info.plist.<br>
- * For Android: android:versionCode from AppManifest.xml.
- * 
- * @member {string} [shortVersion] The package's short version.<br>
- * For iOS: CFBundleShortVersionString from info.plist.<br>
- * For Android: android:versionName from AppManifest.xml.
- * 
- * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
- * time.
- * 
- * @member {array} [distributionGroups] a list of distribution groups that are
- * associated with this package.
- * 
- */
-export interface BasicPackageDetails {
-  packageId?: string;
-  version?: string;
-  shortVersion?: string;
-  uploadedAt?: string;
-  distributionGroups?: DistributionGroup[];
-}
-
-/**
- * @class
- * Initializes a new instance of the PackageDetails class.
- * @constructor
- * Details of an uploaded package
- *
- * @member {string} [packageId] ID identifying this unique package.
- * 
- * @member {string} [status] OBSOLETE. Will be removed in next version. The
- * availability concept is now replaced with distributed. Any 'available'
- * package will be associated with the default distribution group of an
- * app.</br>
- * The package state.<br>
- * <b>available</b>: The uploaded package has been distributed.<br>
- * <b>unavailable</b>: The uploaded package is not visible to the user. <br>
- * . Possible values include: 'available', 'unavailable'
- * 
- * @member {string} [appName] The app's name (extracted from the uploaded
- * package).
- * 
- * @member {string} [version] The package's version.<br>
- * For iOS: CFBundleVersion from info.plist.
- * For Android: android:versionCode from AppManifest.xml.
- * 
- * @member {string} [shortVersion] The package's short version.<br>
- * For iOS: CFBundleShortVersionString from info.plist.
- * For Android: android:versionName from AppManifest.xml.
- * 
- * @member {string} [releaseNotes] The package's release notes.
- * 
- * @member {string} [provisioningProfileName] The package's release notes.
- * 
- * @member {number} [size] The package's size in bytes.
- * 
- * @member {string} [minOs] The package's minimum required operating system.
- * 
- * @member {string} [fingerprint] MD5 checksum of the package binary.
- * 
- * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
- * time.
- * 
- * @member {string} [downloadUrl] The URL that hosts the binary for this
- * package.
- * 
- * @member {string} [appIconUrl] A URL to the app's icon.
- * 
- * @member {string} [installUrl] The href required to install a package on a
- * mobile device. On iOS devices will be prefixed with
- * `itms-services://?action=download-manifest&url=`
- * 
- * @member {array} [distributionGroups] a list of distribution groups that are
- * associated with this package.
- * 
- */
-export interface PackageDetails {
-  packageId?: string;
-  status?: string;
-  appName?: string;
-  version?: string;
-  shortVersion?: string;
-  releaseNotes?: string;
-  provisioningProfileName?: string;
-  size?: number;
-  minOs?: string;
-  fingerprint?: string;
-  uploadedAt?: string;
-  downloadUrl?: string;
-  appIconUrl?: string;
-  installUrl?: string;
-  distributionGroups?: DistributionGroup[];
+  mandatoryUpdate?: boolean;
+  baseReleaseId: number;
 }
 
 /**
@@ -2108,6 +2107,298 @@ export interface DeviceInfoResponse {
   imei?: string;
   ownerId?: string;
   status: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the StoresReleaseDetails class.
+ * @constructor
+ * Details of an uploaded release
+ *
+ * @member {number} [id] ID identifying this unique release.
+ * 
+ * @member {string} [status] OBSOLETE. Will be removed in next version. The
+ * availability concept is now replaced with distributed. Any 'available'
+ * release will be associated with the default distribution group of an
+ * app.</br>
+ * The release state.<br>
+ * <b>available</b>: The uploaded release has been distributed.<br>
+ * <b>unavailable</b>: The uploaded release is not visible to the user. <br>
+ * . Possible values include: 'available', 'unavailable'
+ * 
+ * @member {string} [appName] The app's name (extracted from the uploaded
+ * release).
+ * 
+ * @member {string} [appDisplayName] The app's display name.
+ * 
+ * @member {string} [version] The release's version.<br>
+ * For iOS: CFBundleVersion from info.plist.
+ * For Android: android:versionCode from AppManifest.xml.
+ * 
+ * @member {string} [shortVersion] The release's short version.<br>
+ * For iOS: CFBundleShortVersionString from info.plist.
+ * For Android: android:versionName from AppManifest.xml.
+ * 
+ * @member {string} [releaseNotes] The release's release notes.
+ * 
+ * @member {number} [size] The release's size in bytes.
+ * 
+ * @member {string} [minOs] The release's minimum required operating system.
+ * 
+ * @member {string} [androidMinApiLevel] The release's minimum required
+ * Android API level.
+ * 
+ * @member {string} [bundleIdentifier] The identifier of the apps bundle.
+ * 
+ * @member {string} [fingerprint] MD5 checksum of the release binary.
+ * 
+ * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
+ * time.
+ * 
+ * @member {string} [downloadUrl] The URL that hosts the binary for this
+ * release.
+ * 
+ * @member {string} [installUrl] The href required to install a release on a
+ * mobile device. On iOS devices will be prefixed with
+ * `itms-services://?action=download-manifest&url=`. Possible values include:
+ * 'group', 'store'
+ * 
+ * @member {object} [distributionStores] a list of distribution stores that
+ * are associated with this release.
+ * 
+ */
+export interface StoresReleaseDetails {
+  id?: number;
+  status?: string;
+  appName?: string;
+  appDisplayName?: string;
+  version?: string;
+  shortVersion?: string;
+  releaseNotes?: string;
+  size?: number;
+  minOs?: string;
+  androidMinApiLevel?: string;
+  bundleIdentifier?: string;
+  fingerprint?: string;
+  uploadedAt?: string;
+  downloadUrl?: string;
+  installUrl?: string;
+  distributionStores?: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExternalStoreRequest class.
+ * @constructor
+ * ExternalStoreRequest
+ *
+ * @member {string} [type] store Type. Possible values include: 'googleplay',
+ * 'intune'
+ * 
+ * @member {string} [name] name of the store. In case of googleplay this is
+ * fixed to GooglePlay-Production.
+ * 
+ * @member {object} [intuneDetails]
+ * 
+ * @member {object} [intuneDetails.secretJson]
+ * 
+ * @member {string} [intuneDetails.secretJson.idToken] the id token of user
+ * 
+ * @member {string} [intuneDetails.secretJson.refreshToken] the refresh token
+ * for user
+ * 
+ * @member {string} [intuneDetails.secretJson.refreshTokenExpiry] the expiry
+ * of refresh token
+ * 
+ * @member {string} [intuneDetails.targetAudience] target audience in intune
+ * store
+ * 
+ * @member {string} [intuneDetails.appCategory] app category in intune store
+ * 
+ * @member {string} [intuneDetails.tenantId] tenant id of the intune store
+ * 
+ * @member {object} [googleplayDetails]
+ * 
+ * @member {object} [googleplayDetails.secretJson] Provide service account
+ * details JSON (this is provided by google).
+ * 
+ */
+export interface ExternalStoreRequest {
+  type?: string;
+  name?: string;
+  intuneDetails?: IntuneStoreRequest;
+  googleplayDetails?: GooglePlayStoreRequest;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the IntuneStoreRequest class.
+ * @constructor
+ * @member {object} [secretJson]
+ * 
+ * @member {string} [secretJson.idToken] the id token of user
+ * 
+ * @member {string} [secretJson.refreshToken] the refresh token for user
+ * 
+ * @member {string} [secretJson.refreshTokenExpiry] the expiry of refresh token
+ * 
+ * @member {string} [targetAudience] target audience in intune store
+ * 
+ * @member {string} [appCategory] app category in intune store
+ * 
+ * @member {string} [tenantId] tenant id of the intune store
+ * 
+ */
+export interface IntuneStoreRequest {
+  secretJson?: IntuneSecretDetails;
+  targetAudience?: string;
+  appCategory?: string;
+  tenantId?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the IntuneSecretDetails class.
+ * @constructor
+ * @member {string} [idToken] the id token of user
+ * 
+ * @member {string} [refreshToken] the refresh token for user
+ * 
+ * @member {string} [refreshTokenExpiry] the expiry of refresh token
+ * 
+ */
+export interface IntuneSecretDetails {
+  idToken?: string;
+  refreshToken?: string;
+  refreshTokenExpiry?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GooglePlayStoreRequest class.
+ * @constructor
+ * @member {object} [secretJson] Provide service account details JSON (this is
+ * provided by google).
+ * 
+ */
+export interface GooglePlayStoreRequest {
+  secretJson?: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExternalStoreResponse class.
+ * @constructor
+ * ExternalStoreResponse
+ *
+ * @member {string} [id] Store id
+ * 
+ * @member {string} [name] Store Name
+ * 
+ * @member {string} [type] Store Type
+ * 
+ * @member {object} [intuneDetails] store details for intune
+ * 
+ */
+export interface ExternalStoreResponse {
+  id?: string;
+  name?: string;
+  type?: string;
+  intuneDetails?: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the IntuneStoreResponse class.
+ * @constructor
+ * @member {string} [targetAudience] target audience in intune store
+ * 
+ * @member {string} [appCategory] target app category in intune
+ * 
+ */
+export interface IntuneStoreResponse {
+  targetAudience?: string;
+  appCategory?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the StoresBasicReleaseDetails class.
+ * @constructor
+ * Basic information on a release
+ *
+ * @member {number} [id] ID identifying this unique release.
+ * 
+ * @member {string} [version] The release's version.
+ * For iOS: CFBundleVersion from info.plist.
+ * For Android: android:versionCode from AppManifest.xml.
+ * 
+ * @member {string} [shortVersion] The release's short version.
+ * For iOS: CFBundleShortVersionString from info.plist.
+ * For Android: android:versionName from AppManifest.xml.
+ * 
+ * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
+ * time.
+ * 
+ * @member {array} [distributionStores] a list of distribution stores that are
+ * associated with this release.
+ * 
+ */
+export interface StoresBasicReleaseDetails {
+  id?: number;
+  version?: string;
+  shortVersion?: string;
+  uploadedAt?: string;
+  distributionStores?: StoresDetails[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the StoresDetails class.
+ * @constructor
+ * @member {string} [id] ID identifying a unique distribution store.
+ * 
+ * @member {string} [name] A name identifying a unique distribution store.
+ * 
+ * @member {string} [type] A type identifying the type of distribution store.
+ * Possible values include: 'googleplay', 'intune'
+ * 
+ * @member {string} [publishingStatus] A status identifying the status of
+ * release in the distribution store.
+ * 
+ * @member {boolean} [isLatest] Is the containing release the latest one in
+ * this distribution store.
+ * 
+ */
+export interface StoresDetails {
+  id?: string;
+  name?: string;
+  type?: string;
+  publishingStatus?: string;
+  isLatest?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the StoresBasicDetails class.
+ * @constructor
+ * @member {string} [id] ID identifying a unique distribution store.
+ * 
+ * @member {string} [name] A name identifying a unique distribution store.
+ * 
+ * @member {string} [type] type of the distribution store currently stores
+ * type can be intune or googleplay. Possible values include: 'intune',
+ * 'googleplay'
+ * 
+ * @member {string} [publishingStatus] publishing status of the release in the
+ * store.
+ * 
+ */
+export interface StoresBasicDetails {
+  id?: string;
+  name?: string;
+  type?: string;
+  publishingStatus?: string;
 }
 
 /**
@@ -2231,9 +2522,59 @@ export interface SymbolUploadEndRequest {
  * @constructor
  * @member {boolean} hasCrashes
  * 
+ * @member {object} features
+ * 
+ * @member {boolean} [features.crashgroupModifyStatus] App supports
+ * modification of crashgroup status
+ * 
+ * @member {boolean} [features.crashgroupModifyAnnotation] App supports
+ * modification of crashgroup annotation
+ * 
+ * @member {boolean} [features.search] App supports search API
+ * 
+ * @member {boolean} [features.crashgroupAnalyticsCrashfreeusers] App supports
+ * the 'crash free user' metric
+ * 
+ * @member {boolean} [features.crashgroupAnalyticsImpactedusers] App supports
+ * the 'impacted users' metric
+ * 
+ * @member {boolean} [features.crashDownloadRaw] App supports download of raw
+ * crashes
+ * 
  */
 export interface AppCrashesInfo {
   hasCrashes: boolean;
+  features: AppFeatures;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppFeatures class.
+ * @constructor
+ * @member {boolean} [crashgroupModifyStatus] App supports modification of
+ * crashgroup status
+ * 
+ * @member {boolean} [crashgroupModifyAnnotation] App supports modification of
+ * crashgroup annotation
+ * 
+ * @member {boolean} [search] App supports search API
+ * 
+ * @member {boolean} [crashgroupAnalyticsCrashfreeusers] App supports the
+ * 'crash free user' metric
+ * 
+ * @member {boolean} [crashgroupAnalyticsImpactedusers] App supports the
+ * 'impacted users' metric
+ * 
+ * @member {boolean} [crashDownloadRaw] App supports download of raw crashes
+ * 
+ */
+export interface AppFeatures {
+  crashgroupModifyStatus?: boolean;
+  crashgroupModifyAnnotation?: boolean;
+  search?: boolean;
+  crashgroupAnalyticsCrashfreeusers?: boolean;
+  crashgroupAnalyticsImpactedusers?: boolean;
+  crashDownloadRaw?: boolean;
 }
 
 /**
@@ -2472,6 +2813,38 @@ export interface ReasonStackFrame {
 
 /**
  * @class
+ * Initializes a new instance of the CrashAttachment class.
+ * @constructor
+ * @member {string} appId
+ * 
+ * @member {string} attachmentId
+ * 
+ * @member {string} crashId
+ * 
+ * @member {string} blobLocation
+ * 
+ * @member {string} contentType
+ * 
+ * @member {string} fileName
+ * 
+ * @member {date} createdTime
+ * 
+ * @member {number} size
+ * 
+ */
+export interface CrashAttachment {
+  appId: string;
+  attachmentId: string;
+  crashId: string;
+  blobLocation: string;
+  contentType: string;
+  fileName: string;
+  createdTime: Date;
+  size: number;
+}
+
+/**
+ * @class
  * Initializes a new instance of the CrashRawUrl class.
  * @constructor
  * @member {string} crashRawUrlProperty
@@ -2646,6 +3019,25 @@ export interface MissingSymbol {
 
 /**
  * @class
+ * Initializes a new instance of the CrashLocation class.
+ * @constructor
+ * crash location information
+ *
+ * @member {string} account azure account
+ * 
+ * @member {string} container blob container
+ * 
+ * @member {string} blob blob name
+ * 
+ */
+export interface CrashLocation {
+  account: string;
+  container: string;
+  blob: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the MissingSymbolCrashGroup class.
  * @constructor
  * missing symbol crash group object
@@ -2710,6 +3102,55 @@ export interface MissingSymbolCrashGroupsResponse {
 export interface FailureResponse {
   code: string;
   message: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SearchItemsRequest class.
+ * @constructor
+ * @member {string} search
+ * 
+ */
+export interface SearchItemsRequest {
+  search: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SearchItem class.
+ * @constructor
+ * @member {string} crashId
+ * 
+ * @member {string} [displayId]
+ * 
+ * @member {date} timestamp
+ * 
+ * @member {string} version
+ * 
+ * @member {string} build
+ * 
+ * @member {string} device
+ * 
+ * @member {string} osVersion
+ * 
+ * @member {string} [osType]
+ * 
+ * @member {string} userName
+ * 
+ * @member {string} [userEmail]
+ * 
+ */
+export interface SearchItem {
+  crashId: string;
+  displayId?: string;
+  timestamp: Date;
+  version: string;
+  build: string;
+  device: string;
+  osVersion: string;
+  osType?: string;
+  userName: string;
+  userEmail?: string;
 }
 
 /**
@@ -3510,6 +3951,17 @@ export interface Device {
 
 /**
  * @class
+ * Initializes a new instance of the LogWithProperties class.
+ * @constructor
+ * @member {object} [properties] Additional key/value pair parameters.
+ * 
+ */
+export interface LogWithProperties extends Log {
+  properties?: { [propertyName: string]: string };
+}
+
+/**
+ * @class
  * Initializes a new instance of the EventProperties class.
  * @constructor
  * Event properties during the time range
@@ -3581,7 +4033,11 @@ export interface AudienceListResult {
  *
  * @member {string} [name] Audience name.
  * 
+ * @member {string} [description] Audience description.
+ * 
  * @member {number} [estimatedCount] Estimated audience size.
+ * 
+ * @member {string} [definition] Audience definition in OData format.
  * 
  * @member {string} [state] Audience state. Possible values include:
  * 'Calculating', 'Ready', 'Disabled'
@@ -3589,7 +4045,9 @@ export interface AudienceListResult {
  */
 export interface AudienceSummary {
   name?: string;
+  description?: string;
   estimatedCount?: number;
+  definition?: string;
   state?: string;
 }
 
@@ -3599,20 +4057,20 @@ export interface AudienceSummary {
  * @constructor
  * Audience with details.
  *
- * @member {string} [definition] Audience definition in OData format.
- * 
  * @member {boolean} [enabled]  Default value: true .
  * 
  * @member {object} [customProperties] Custom properties used in the
  * definition.
  * 
+ * @member {number} [estimatedTotalCount] Estimated total audience size.
+ * 
  * @member {date} [timestamp] Date the audience was last refreshed.
  * 
  */
 export interface Audience extends AudienceSummary {
-  definition?: string;
   enabled?: boolean;
   customProperties?: { [propertyName: string]: string };
+  estimatedTotalCount?: number;
   timestamp?: Date;
 }
 
@@ -3620,19 +4078,22 @@ export interface Audience extends AudienceSummary {
  * @class
  * Initializes a new instance of the AudienceTestResult class.
  * @constructor
- * Audience with details.
+ * Audience test result.
  *
  * @member {string} [definition] Audience definition in OData format.
  * 
  * @member {object} [customProperties] Custom properties used in the
  * definition.
  * 
+ * @member {number} [estimatedCount] Estimated audience size.
+ * 
  * @member {number} [estimatedTotalCount] Estimated total audience size.
  * 
  */
-export interface AudienceTestResult extends AudienceSummary {
+export interface AudienceTestResult {
   definition?: string;
   customProperties?: { [propertyName: string]: string };
+  estimatedCount?: number;
   estimatedTotalCount?: number;
 }
 
@@ -3642,6 +4103,8 @@ export interface AudienceTestResult extends AudienceSummary {
  * @constructor
  * Audience definition.
  *
+ * @member {string} [description] Audience description.
+ * 
  * @member {string} definition Audience definition in OData format.
  * 
  * @member {boolean} [enabled]  Default value: true .
@@ -3651,9 +4114,49 @@ export interface AudienceTestResult extends AudienceSummary {
  * 
  */
 export interface AudienceDefinition {
+  description?: string;
   definition: string;
   enabled?: boolean;
   customProperties?: { [propertyName: string]: string };
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AudienceBlobResult class.
+ * @constructor
+ * Audience definition.
+ *
+ * @member {string} [url] Location of the audience blob.
+ * 
+ */
+export interface AudienceBlobResult {
+  url?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AudienceDevicePropertiesListResult class.
+ * @constructor
+ * List of device properties.
+ *
+ * @member {object} values List of device properties.
+ * 
+ */
+export interface AudienceDevicePropertiesListResult {
+  values: { [propertyName: string]: string };
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AudienceDevicePropertyValuesListResult class.
+ * @constructor
+ * List of device property values.
+ *
+ * @member {array} values List of device property values.
+ * 
+ */
+export interface AudienceDevicePropertyValuesListResult {
+  values: string[];
 }
 
 /**
@@ -4348,6 +4851,8 @@ export interface DeviceSelection {
  * 
  * @member {string} name Name of the device set
  * 
+ * @member {string} [slug] Slug of the device set
+ * 
  * @member {string} shortId Short ID of the device set's device selection
  * 
  * @member {object} owner
@@ -4370,6 +4875,7 @@ export interface DeviceSet {
   id: string;
   manufacturerCount?: number;
   name: string;
+  slug?: string;
   shortId: string;
   owner: DeviceSetOwner;
   osVersionCount?: number;
@@ -5062,11 +5568,11 @@ export interface LiveUpdateRelease {
  * @class
  * Initializes a new instance of the DeploymentModification class.
  * @constructor
- * @member {string} [name]
+ * @member {string} name
  * 
  */
 export interface DeploymentModification {
-  name?: string;
+  name: string;
 }
 
 /**
@@ -5143,6 +5649,139 @@ export interface LiveUpdateStatusMetricMetadata {
 
 /**
  * @class
+ * Initializes a new instance of the AlertEmailSettings class.
+ * @constructor
+ * Alerting Email Settings
+ *
+ * @member {array} settings The settings the user has for the app
+ * 
+ */
+export interface AlertEmailSettings {
+  settings: EventSetting[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the EventSetting class.
+ * @constructor
+ * Event Setting
+ *
+ * @member {string} value Frequency of event. Possible values include:
+ * 'Disabled', 'Individual', 'Daily', 'DailyAndIndividual', 'Default'
+ * 
+ * @member {string} [defaultValue] Default frequency of event. Possible values
+ * include: 'Disabled', 'Individual', 'Daily', 'DailyAndIndividual'
+ * 
+ */
+export interface EventSetting {
+  value: string;
+  defaultValue?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AlertUserEmailSettingsResult class.
+ * @constructor
+ * Alerting Default Email Settings of the user
+ *
+ * @member {string} eTag The ETag of the entity
+ * 
+ * @member {boolean} [enabled] Allows to forcefully disable emails on app or
+ * user level
+ * 
+ * @member {string} userId The unique id (UUID) of the user
+ * 
+ * @member {array} settings The settings the user has for the app
+ * 
+ */
+export interface AlertUserEmailSettingsResult {
+  eTag: string;
+  enabled?: boolean;
+  userId: string;
+  settings: EventSetting[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AlertUserAppEmailSettingsResult class.
+ * @constructor
+ * Alerting Email Settings of the user for a particular app
+ *
+ * @member {string} appId Application ID
+ * 
+ * @member {boolean} [userEnabled] A flag indicating if settings are enabled
+ * at user/global level
+ * 
+ */
+export interface AlertUserAppEmailSettingsResult extends AlertUserEmailSettingsResult {
+  appId: string;
+  userEnabled?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AlertingEvent class.
+ * @constructor
+ * Event Setting
+ *
+ * @member {string} eventTimestamp ISO 8601 date time when event was generated
+ * 
+ * @member {string} eventId A unique identifier for this event instance.
+ * Useful for deduplication
+ * 
+ * @member {number} eventVersion Versioning for this eventType. Default value:
+ * 1 .
+ * 
+ * @member {object} [properties] Custom properties for a specific event
+ * 
+ */
+export interface AlertingEvent {
+  eventTimestamp: string;
+  eventId: string;
+  eventVersion: number;
+  properties?: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AlertingError class.
+ * @constructor
+ * Alerting service error
+ *
+ * @member {object} [error]
+ * 
+ * @member {number} [error.code] The status code return by the API. It can be
+ * 400 or 409 or 500.
+ * 
+ * @member {string} [error.requestId] Unique request identifier for tracking
+ * 
+ * @member {string} [error.message] The reason for the request failed
+ * 
+ */
+export interface AlertingError {
+  error?: AlertingErrorError;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AlertingErrorError class.
+ * @constructor
+ * @member {number} [code] The status code return by the API. It can be 400 or
+ * 409 or 500.
+ * 
+ * @member {string} [requestId] Unique request identifier for tracking
+ * 
+ * @member {string} [message] The reason for the request failed
+ * 
+ */
+export interface AlertingErrorError {
+  code?: number;
+  requestId?: string;
+  message?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the App class.
  * @constructor
  * @member {string} [description] A short text describing the app
@@ -5156,7 +5795,7 @@ export interface LiveUpdateStatusMetricMetadata {
  * include: 'Android', 'iOS', 'Tizen', 'Windows'
  * 
  * @member {string} platform The platform of the app. Possible values include:
- * 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
+ * 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
  * 
  */
 export interface App {
@@ -5181,12 +5820,16 @@ export interface App {
  * @member {object} [collaboratorsCount] The number of users that are part of
  * this organization
  * 
+ * @member {string} [origin] The creation origin of this organization.
+ * Possible values include: 'mobile-center', 'hockeyapp'
+ * 
  */
 export interface ListOKResponseItem {
   displayName?: string;
   name?: string;
   collaboratorRole?: string;
   collaboratorsCount?: any;
+  origin?: string;
 }
 
 /**

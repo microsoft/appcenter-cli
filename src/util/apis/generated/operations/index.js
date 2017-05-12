@@ -10,7 +10,7 @@
 
 'use strict';
 
-exports.Distribute = require('./distribute');
+exports.Devices = require('./devices');
 exports.OrgInvitations = require('./orgInvitations');
 exports.DistributionGroupInvitations = require('./distributionGroupInvitations');
 exports.AppInvitations = require('./appInvitations');
@@ -30,9 +30,14 @@ exports.Identity = require('./identity');
 exports.Repositories = require('./repositories');
 exports.RepositoryConfigurations = require('./repositoryConfigurations');
 exports.ReleaseUploads = require('./releaseUploads');
+exports.StoreReleases = require('./storeReleases');
+exports.Stores = require('./stores');
 exports.DistributionGroups = require('./distributionGroups');
-exports.Codepush = require('./codepush');
+exports.DeploymentReleases = require('./deploymentReleases');
+exports.DeploymentMetrics = require('./deploymentMetrics');
+exports.Deployments = require('./deployments');
+exports.CrashGroupsOperations = require('./crashGroupsOperations');
 exports.Commits = require('./commits');
 exports.BranchConfigurations = require('./branchConfigurations');
 exports.Analytics = require('./analytics');
-exports.Account = require('./account');
+exports.ApiTokens = require('./apiTokens');

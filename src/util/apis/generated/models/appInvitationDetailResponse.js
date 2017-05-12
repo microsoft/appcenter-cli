@@ -36,10 +36,8 @@ var util = require('util');
  * 
  * @member {string} [app.name] The name of the app used in URLs
  * 
- * @member {array} [app.memberPermissions] The permissions of the calling user
- * 
  * @member {string} [app.os] The OS the app will be running on. Possible
- * values include: 'Android', 'iOS', 'macOS', 'Tizen', 'Windows'
+ * values include: 'Android', 'iOS', 'macOS', 'Tizen', 'Windows', 'Custom'
  * 
  * @member {object} [app.owner]
  * 
@@ -59,11 +57,10 @@ var util = require('util');
  * 
  * @member {string} [app.platform] The platform of the app. Possible values
  * include: 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'Unity',
- * 'UWP', 'Xamarin'
+ * 'UWP', 'Xamarin', 'Unknown'
  * 
- * @member {string} [app.origin] The origin of this app can only be
- * mobile-center or hockeyapp for now. Possible values include:
- * 'mobile-center', 'hockeyapp'
+ * @member {string} [app.origin] The creation origin of this app. Possible
+ * values include: 'mobile-center', 'hockeyapp', 'codepush'
  * 
  * @member {string} email The email address of the invited user
  * 
@@ -89,6 +86,9 @@ var util = require('util');
  * 
  * @member {array} [invitedBy.permissions] The permissions the user has for
  * the app
+ * 
+ * @member {string} [invitedBy.origin] The creation origin of this user.
+ * Possible values include: 'mobile-center', 'hockeyapp', 'codepush'
  * 
  * @member {boolean} isExistingUser Indicates whether the invited user already
  * exists

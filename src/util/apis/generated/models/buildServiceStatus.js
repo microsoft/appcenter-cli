@@ -8,60 +8,69 @@
 
 /**
  * @class
- * Initializes a new instance of the BuildServiceStatusResponse class.
+ * Initializes a new instance of the BuildServiceStatus class.
  * @constructor
- * @member {string} service
+ * @member {string} [status]
  * 
- * @member {string} message
+ * @member {string} [service]
  * 
- * @member {string} url
+ * @member {string} [message]
  * 
- * @member {string} validUntil
+ * @member {string} [url]
+ * 
+ * @member {number} [validUntil]
  * 
  */
-function BuildServiceStatusResponse() {
+function BuildServiceStatus() {
 }
 
 /**
- * Defines the metadata of BuildServiceStatusResponse
+ * Defines the metadata of BuildServiceStatus
  *
- * @returns {object} metadata of BuildServiceStatusResponse
+ * @returns {object} metadata of BuildServiceStatus
  *
  */
-BuildServiceStatusResponse.prototype.mapper = function () {
+BuildServiceStatus.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'BuildServiceStatusResponse',
+    serializedName: 'BuildServiceStatus',
     type: {
       name: 'Composite',
-      className: 'BuildServiceStatusResponse',
+      className: 'BuildServiceStatus',
       modelProperties: {
+        status: {
+          required: false,
+          serializedName: 'status',
+          type: {
+            name: 'String'
+          }
+        },
         service: {
-          required: true,
+          required: false,
           serializedName: 'service',
           type: {
             name: 'String'
           }
         },
         message: {
-          required: true,
+          required: false,
           serializedName: 'message',
           type: {
             name: 'String'
           }
         },
         url: {
-          required: true,
+          required: false,
           serializedName: 'url',
           type: {
             name: 'String'
           }
         },
         validUntil: {
-          required: true,
+          required: false,
           serializedName: 'valid_until',
           type: {
-            name: 'String'
+            name: 'Number'
           }
         }
       }
@@ -69,4 +78,4 @@ BuildServiceStatusResponse.prototype.mapper = function () {
   };
 };
 
-module.exports = BuildServiceStatusResponse;
+module.exports = BuildServiceStatus;

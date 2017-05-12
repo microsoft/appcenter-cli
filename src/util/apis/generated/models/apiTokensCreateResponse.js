@@ -6,6 +6,8 @@
 
 'use strict';
 
+var util = require('util');
+
 /**
  * @class
  * Initializes a new instance of the ApiTokensCreateResponse class.
@@ -16,6 +18,8 @@
  * again
  * 
  * @member {string} [description] The description of the token
+ * 
+ * @member {array} [scope] The scope for this token.
  * 
  * @member {string} createdAt The creation time
  * 
@@ -56,6 +60,20 @@ ApiTokensCreateResponse.prototype.mapper = function () {
           serializedName: 'description',
           type: {
             name: 'String'
+          }
+        },
+        scope: {
+          required: false,
+          serializedName: 'scope',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'StringElementType',
+                type: {
+                  name: 'String'
+                }
+            }
           }
         },
         createdAt: {

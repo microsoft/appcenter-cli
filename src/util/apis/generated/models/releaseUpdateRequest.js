@@ -12,17 +12,41 @@
  * @constructor
  * A request containing information for updating a release.
  *
- * @member {string} [distributionGroupName] Name of a distribution group. The
- * release will be associated with this distribution group. If the
- * distribution group doesn't exist a 400 is returned. If both distribution
- * group name and id are passed, the id is taking precedence.
+ * @member {string} [distributionGroupName] OBSOLETE. Will be removed in
+ * future releases. Name of a distribution group. The release will be
+ * associated with this distribution group. If the distribution group doesn't
+ * exist a 400 is returned. If both distribution group name and id are
+ * passed, the id is taking precedence.
  * 
- * @member {string} [distributionGroupId] Id of a distribution group. The
- * release will be associated with this distribution group. If the
- * distribution group doesn't exist a 400 is returned. If both distribution
- * group name and id are passed, the id is taking precedence.
+ * @member {string} [distributionGroupId] OBSOLETE. Will be removed in future
+ * releases. Id of a distribution group. The release will be associated with
+ * this distribution group. If the distribution group doesn't exist a 400 is
+ * returned. If both distribution group name and id are passed, the id is
+ * taking precedence.
+ * 
+ * @member {string} [destinationName] Name of a distribution group /
+ * distribution store. The release will be associated with this distribution
+ * group or store. If the distribution group / store doesn't exist a 400 is
+ * returned. If both distribution group / store name and id are passed, the
+ * id is taking precedence.
+ * 
+ * @member {string} [destinationId] Id of a distribution group / store. The
+ * release will be associated with this distribution group / store. If the
+ * distribution group / store doesn't exist a 400 is returned. If both
+ * distribution group / store name and id are passed, the id is taking
+ * precedence.
+ * 
+ * @member {string} [destinationType] The destination type.<br>
+ * <b>group</b>: The release distributed to internal groups and
+ * distribution_groups details will be returned.<br>
+ * <b>store</b>: Coming Soon - The release distributed to external stores and
+ * distribution_stores details will be returned. <br>
+ * . Possible values include: 'group', 'store'
  * 
  * @member {string} [releaseNotes] Release notes for this release.
+ * 
+ * @member {boolean} [mandatoryUpdate] A boolean which determines whether this
+ * version should be a mandatory update or not.
  * 
  */
 function ReleaseUpdateRequest() {
@@ -56,11 +80,39 @@ ReleaseUpdateRequest.prototype.mapper = function () {
             name: 'String'
           }
         },
+        destinationName: {
+          required: false,
+          serializedName: 'destination_name',
+          type: {
+            name: 'String'
+          }
+        },
+        destinationId: {
+          required: false,
+          serializedName: 'destination_id',
+          type: {
+            name: 'String'
+          }
+        },
+        destinationType: {
+          required: false,
+          serializedName: 'destination_type',
+          type: {
+            name: 'String'
+          }
+        },
         releaseNotes: {
           required: false,
           serializedName: 'release_notes',
           type: {
             name: 'String'
+          }
+        },
+        mandatoryUpdate: {
+          required: false,
+          serializedName: 'mandatory_update',
+          type: {
+            name: 'Boolean'
           }
         }
       }

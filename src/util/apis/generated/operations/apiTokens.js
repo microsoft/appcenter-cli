@@ -12,15 +12,15 @@ var WebResource = msRest.WebResource;
 
 /**
  * @class
- * Account
+ * ApiTokens
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the MobileCenterClient.
- * Initializes a new instance of the Account class.
+ * Initializes a new instance of the ApiTokens class.
  * @constructor
  *
  * @param {MobileCenterClient} client Reference to the service client.
  */
-function Account(client) {
+function ApiTokens(client) {
   this.client = client;
 }
 
@@ -47,7 +47,7 @@ function Account(client) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Account.prototype.deleteApiToken = function (apiTokenId, options, callback) {
+ApiTokens.prototype.deleteMethod = function (apiTokenId, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -191,7 +191,7 @@ Account.prototype.deleteApiToken = function (apiTokenId, options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Account.prototype.getApiTokens = function (options, callback) {
+ApiTokens.prototype.list = function (options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -327,6 +327,8 @@ Account.prototype.getApiTokens = function (options, callback) {
  * 
  * @param {string} [options.description] The description of the token
  * 
+ * @param {array} [options.scope] The scope for this token.
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  * 
@@ -342,7 +344,7 @@ Account.prototype.getApiTokens = function (options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Account.prototype.createApiToken = function (options, callback) {
+ApiTokens.prototype.newMethod = function (options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -352,18 +354,27 @@ Account.prototype.createApiToken = function (options, callback) {
     throw new Error('callback cannot be null.');
   }
   var description = (options && options.description !== undefined) ? options.description : undefined;
+  var scope = (options && options.scope !== undefined) ? options.scope : undefined;
   // Validate
   try {
     if (description !== null && description !== undefined && typeof description.valueOf() !== 'string') {
       throw new Error('description must be of type string.');
     }
+    if (util.isArray(scope)) {
+      for (var i = 0; i < scope.length; i++) {
+        if (scope[i] !== null && scope[i] !== undefined && typeof scope[i].valueOf() !== 'string') {
+          throw new Error('scope[i] must be of type string.');
+        }
+      }
+    }
   } catch (error) {
     return callback(error);
   }
   var description1;
-  if (description !== null && description !== undefined) {
+  if ((description !== null && description !== undefined) || (scope !== null && scope !== undefined)) {
       description1 = new client.models['ApiTokensCreateRequest']();
       description1.description = description;
+      description1.scope = scope;
   }
 
   // Construct URL
@@ -486,4 +497,4 @@ Account.prototype.createApiToken = function (options, callback) {
 };
 
 
-module.exports = Account;
+module.exports = ApiTokens;

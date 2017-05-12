@@ -8,39 +8,46 @@
 
 /**
  * @class
- * Initializes a new instance of the PackageUpdateRequest class.
+ * Initializes a new instance of the RereleaseRequest class.
  * @constructor
- * A request containing information for updating a package.
+ * A request containing information for re-releasing an existing release to a
+ * new distribution group.
  *
  * @member {string} [distributionGroupName] Name of a distribution group. The
- * package will be associated with this distribution group. If the
+ * release will be associated with this distribution group. If the
  * distribution group doesn't exist a 400 is returned. If both distribution
  * group name and id are passed, the id is taking precedence.
  * 
  * @member {string} [distributionGroupId] Id of a distribution group. The
- * package will be associated with this distribution group. If the
+ * release will be associated with this distribution group. If the
  * distribution group doesn't exist a 400 is returned. If both distribution
  * group name and id are passed, the id is taking precedence.
  * 
- * @member {string} [releaseNotes] Release notes for this package.
+ * @member {string} [releaseNotes] Release notes for this release.
+ * 
+ * @member {boolean} [mandatoryUpdate] A boolean which determines whether this
+ * version should be a mandatory update or not.
+ * 
+ * @member {number} baseReleaseId The ID of the release that should be
+ * re-released
  * 
  */
-function PackageUpdateRequest() {
+function RereleaseRequest() {
 }
 
 /**
- * Defines the metadata of PackageUpdateRequest
+ * Defines the metadata of RereleaseRequest
  *
- * @returns {object} metadata of PackageUpdateRequest
+ * @returns {object} metadata of RereleaseRequest
  *
  */
-PackageUpdateRequest.prototype.mapper = function () {
+RereleaseRequest.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'PackageUpdateRequest',
+    serializedName: 'RereleaseRequest',
     type: {
       name: 'Composite',
-      className: 'PackageUpdateRequest',
+      className: 'RereleaseRequest',
       modelProperties: {
         distributionGroupName: {
           required: false,
@@ -62,10 +69,24 @@ PackageUpdateRequest.prototype.mapper = function () {
           type: {
             name: 'String'
           }
+        },
+        mandatoryUpdate: {
+          required: false,
+          serializedName: 'mandatory_update',
+          type: {
+            name: 'Boolean'
+          }
+        },
+        baseReleaseId: {
+          required: true,
+          serializedName: 'base_release_id',
+          type: {
+            name: 'Number'
+          }
         }
       }
     }
   };
 };
 
-module.exports = PackageUpdateRequest;
+module.exports = RereleaseRequest;

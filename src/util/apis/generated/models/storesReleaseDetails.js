@@ -6,86 +6,86 @@
 
 'use strict';
 
-var models = require('./index');
-
-var util = require('util');
-
 /**
  * @class
- * Initializes a new instance of the PackageDetails class.
+ * Initializes a new instance of the StoresReleaseDetails class.
  * @constructor
- * Details of an uploaded package
+ * Details of an uploaded release
  *
- * @member {string} [packageId] ID identifying this unique package.
+ * @member {number} [id] ID identifying this unique release.
  * 
  * @member {string} [status] OBSOLETE. Will be removed in next version. The
  * availability concept is now replaced with distributed. Any 'available'
- * package will be associated with the default distribution group of an
+ * release will be associated with the default distribution group of an
  * app.</br>
- * The package state.<br>
- * <b>available</b>: The uploaded package has been distributed.<br>
- * <b>unavailable</b>: The uploaded package is not visible to the user. <br>
+ * The release state.<br>
+ * <b>available</b>: The uploaded release has been distributed.<br>
+ * <b>unavailable</b>: The uploaded release is not visible to the user. <br>
  * . Possible values include: 'available', 'unavailable'
  * 
  * @member {string} [appName] The app's name (extracted from the uploaded
- * package).
+ * release).
  * 
- * @member {string} [version] The package's version.<br>
+ * @member {string} [appDisplayName] The app's display name.
+ * 
+ * @member {string} [version] The release's version.<br>
  * For iOS: CFBundleVersion from info.plist.
  * For Android: android:versionCode from AppManifest.xml.
  * 
- * @member {string} [shortVersion] The package's short version.<br>
+ * @member {string} [shortVersion] The release's short version.<br>
  * For iOS: CFBundleShortVersionString from info.plist.
  * For Android: android:versionName from AppManifest.xml.
  * 
- * @member {string} [releaseNotes] The package's release notes.
+ * @member {string} [releaseNotes] The release's release notes.
  * 
- * @member {string} [provisioningProfileName] The package's release notes.
+ * @member {number} [size] The release's size in bytes.
  * 
- * @member {number} [size] The package's size in bytes.
+ * @member {string} [minOs] The release's minimum required operating system.
  * 
- * @member {string} [minOs] The package's minimum required operating system.
+ * @member {string} [androidMinApiLevel] The release's minimum required
+ * Android API level.
  * 
- * @member {string} [fingerprint] MD5 checksum of the package binary.
+ * @member {string} [bundleIdentifier] The identifier of the apps bundle.
+ * 
+ * @member {string} [fingerprint] MD5 checksum of the release binary.
  * 
  * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
  * time.
  * 
  * @member {string} [downloadUrl] The URL that hosts the binary for this
- * package.
+ * release.
  * 
- * @member {string} [appIconUrl] A URL to the app's icon.
- * 
- * @member {string} [installUrl] The href required to install a package on a
+ * @member {string} [installUrl] The href required to install a release on a
  * mobile device. On iOS devices will be prefixed with
- * `itms-services://?action=download-manifest&url=`
+ * `itms-services://?action=download-manifest&url=`. Possible values include:
+ * 'group', 'store'
  * 
- * @member {array} [distributionGroups] a list of distribution groups that are
- * associated with this package.
+ * @member {object} [distributionStores] a list of distribution stores that
+ * are associated with this release.
  * 
  */
-function PackageDetails() {
+function StoresReleaseDetails() {
 }
 
 /**
- * Defines the metadata of PackageDetails
+ * Defines the metadata of StoresReleaseDetails
  *
- * @returns {object} metadata of PackageDetails
+ * @returns {object} metadata of StoresReleaseDetails
  *
  */
-PackageDetails.prototype.mapper = function () {
+StoresReleaseDetails.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'PackageDetails',
+    serializedName: 'StoresReleaseDetails',
     type: {
       name: 'Composite',
-      className: 'PackageDetails',
+      className: 'StoresReleaseDetails',
       modelProperties: {
-        packageId: {
+        id: {
           required: false,
-          serializedName: 'package_id',
+          serializedName: 'id',
           type: {
-            name: 'String'
+            name: 'Number'
           }
         },
         status: {
@@ -98,6 +98,13 @@ PackageDetails.prototype.mapper = function () {
         appName: {
           required: false,
           serializedName: 'app_name',
+          type: {
+            name: 'String'
+          }
+        },
+        appDisplayName: {
+          required: false,
+          serializedName: 'app_display_name',
           type: {
             name: 'String'
           }
@@ -123,13 +130,6 @@ PackageDetails.prototype.mapper = function () {
             name: 'String'
           }
         },
-        provisioningProfileName: {
-          required: false,
-          serializedName: 'provisioning_profile_name',
-          type: {
-            name: 'String'
-          }
-        },
         size: {
           required: false,
           serializedName: 'size',
@@ -140,6 +140,20 @@ PackageDetails.prototype.mapper = function () {
         minOs: {
           required: false,
           serializedName: 'min_os',
+          type: {
+            name: 'String'
+          }
+        },
+        androidMinApiLevel: {
+          required: false,
+          serializedName: 'android_min_api_level',
+          type: {
+            name: 'String'
+          }
+        },
+        bundleIdentifier: {
+          required: false,
+          serializedName: 'bundle_identifier',
           type: {
             name: 'String'
           }
@@ -165,13 +179,6 @@ PackageDetails.prototype.mapper = function () {
             name: 'String'
           }
         },
-        appIconUrl: {
-          required: false,
-          serializedName: 'app_icon_url',
-          type: {
-            name: 'String'
-          }
-        },
         installUrl: {
           required: false,
           serializedName: 'install_url',
@@ -179,19 +186,11 @@ PackageDetails.prototype.mapper = function () {
             name: 'String'
           }
         },
-        distributionGroups: {
+        distributionStores: {
           required: false,
-          serializedName: 'distribution_groups',
+          serializedName: 'distribution_stores',
           type: {
-            name: 'Sequence',
-            element: {
-                required: false,
-                serializedName: 'DistributionGroupElementType',
-                type: {
-                  name: 'Composite',
-                  className: 'DistributionGroup'
-                }
-            }
+            name: 'Object'
           }
         }
       }
@@ -199,4 +198,4 @@ PackageDetails.prototype.mapper = function () {
   };
 };
 
-module.exports = PackageDetails;
+module.exports = StoresReleaseDetails;

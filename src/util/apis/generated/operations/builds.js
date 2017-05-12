@@ -911,8 +911,7 @@ Builds.prototype.update = function (buildId, ownerName, appName, options, callba
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object.
- *                      See {@link BuildServiceStatusResponse} for more
- *                      information.
+ *                      See {@link BuildServiceStatus} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -997,7 +996,7 @@ Builds.prototype.getStatusByAppId = function (ownerName, appName, options, callb
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['BuildServiceStatusResponse']().mapper();
+          var resultMapper = new client.models['BuildServiceStatus']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {

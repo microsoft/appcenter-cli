@@ -12,6 +12,8 @@
  * @constructor
  * Audience definition.
  *
+ * @member {string} [description] Audience description.
+ * 
  * @member {string} definition Audience definition in OData format.
  * 
  * @member {boolean} [enabled]  Default value: true .
@@ -37,9 +39,22 @@ AudienceDefinition.prototype.mapper = function () {
       name: 'Composite',
       className: 'AudienceDefinition',
       modelProperties: {
+        description: {
+          required: false,
+          serializedName: 'description',
+          constraints: {
+            MaxLength: 128
+          },
+          type: {
+            name: 'String'
+          }
+        },
         definition: {
           required: true,
           serializedName: 'definition',
+          constraints: {
+            MaxLength: 2000
+          },
           type: {
             name: 'String'
           }

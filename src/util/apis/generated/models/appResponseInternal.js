@@ -17,6 +17,8 @@ var util = require('util');
  * @member {array} [featureFlags] The feature flags that are enabled for this
  * app
  * 
+ * @member {array} [memberPermissions] The permissions of the calling user
+ * 
  * @member {array} [repositories] The repositories associated with this app
  * 
  */
@@ -89,20 +91,6 @@ AppResponseInternal.prototype.mapper = function () {
             name: 'String'
           }
         },
-        memberPermissions: {
-          required: false,
-          serializedName: 'member_permissions',
-          type: {
-            name: 'Sequence',
-            element: {
-                required: false,
-                serializedName: 'StringElementType',
-                type: {
-                  name: 'String'
-                }
-            }
-          }
-        },
         os: {
           required: true,
           serializedName: 'os',
@@ -135,6 +123,20 @@ AppResponseInternal.prototype.mapper = function () {
         featureFlags: {
           required: false,
           serializedName: 'feature_flags',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'StringElementType',
+                type: {
+                  name: 'String'
+                }
+            }
+          }
+        },
+        memberPermissions: {
+          required: false,
+          serializedName: 'member_permissions',
           type: {
             name: 'Sequence',
             element: {

@@ -19,6 +19,9 @@
  * 
  * @member {string} name The slug name of the organization
  * 
+ * @member {string} origin The creation origin of this organization. Possible
+ * values include: 'mobile-center', 'hockeyapp'
+ * 
  */
 function OrganizationResponse() {
 }
@@ -61,6 +64,13 @@ OrganizationResponse.prototype.mapper = function () {
         name: {
           required: true,
           serializedName: 'name',
+          type: {
+            name: 'String'
+          }
+        },
+        origin: {
+          required: true,
+          serializedName: 'origin',
           type: {
             name: 'String'
           }

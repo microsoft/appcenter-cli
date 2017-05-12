@@ -14,9 +14,8 @@
  * 
  * @member {string} name The name of the distribution group used in URLs
  * 
- * @member {string} origin Indicates the origin source of the distribution
- * group, it can be mobile-center or hockeyapp for now. Possible values
- * include: 'mobile-center', 'hockeyapp'
+ * @member {string} origin The creation origin of this distribution group.
+ * Possible values include: 'mobile-center', 'hockeyapp'
  * 
  */
 function DistributionGroupResponse() {

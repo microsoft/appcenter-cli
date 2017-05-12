@@ -20,6 +20,9 @@
  * @member {object} [collaboratorsCount] The number of users that are part of
  * this organization
  * 
+ * @member {string} [origin] The creation origin of this organization.
+ * Possible values include: 'mobile-center', 'hockeyapp'
+ * 
  */
 function ListOKResponseItem() {
 }
@@ -64,6 +67,13 @@ ListOKResponseItem.prototype.mapper = function () {
           serializedName: 'collaborators_count',
           type: {
             name: 'Object'
+          }
+        },
+        origin: {
+          required: false,
+          serializedName: 'origin',
+          type: {
+            name: 'String'
           }
         }
       }

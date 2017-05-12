@@ -12,49 +12,49 @@ var util = require('util');
 
 /**
  * @class
- * Initializes a new instance of the BasicPackageDetails class.
+ * Initializes a new instance of the StoresBasicReleaseDetails class.
  * @constructor
- * Basic information on a pacakge
+ * Basic information on a release
  *
- * @member {string} [packageId] ID identifying this unique package.
+ * @member {number} [id] ID identifying this unique release.
  * 
- * @member {string} [version] The package's version.<br>
- * For iOS: CFBundleVersion from info.plist.<br>
+ * @member {string} [version] The release's version.
+ * For iOS: CFBundleVersion from info.plist.
  * For Android: android:versionCode from AppManifest.xml.
  * 
- * @member {string} [shortVersion] The package's short version.<br>
- * For iOS: CFBundleShortVersionString from info.plist.<br>
+ * @member {string} [shortVersion] The release's short version.
+ * For iOS: CFBundleShortVersionString from info.plist.
  * For Android: android:versionName from AppManifest.xml.
  * 
  * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
  * time.
  * 
- * @member {array} [distributionGroups] a list of distribution groups that are
- * associated with this package.
+ * @member {array} [distributionStores] a list of distribution stores that are
+ * associated with this release.
  * 
  */
-function BasicPackageDetails() {
+function StoresBasicReleaseDetails() {
 }
 
 /**
- * Defines the metadata of BasicPackageDetails
+ * Defines the metadata of StoresBasicReleaseDetails
  *
- * @returns {object} metadata of BasicPackageDetails
+ * @returns {object} metadata of StoresBasicReleaseDetails
  *
  */
-BasicPackageDetails.prototype.mapper = function () {
+StoresBasicReleaseDetails.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'BasicPackageDetails',
+    serializedName: 'StoresBasicReleaseDetails',
     type: {
       name: 'Composite',
-      className: 'BasicPackageDetails',
+      className: 'StoresBasicReleaseDetails',
       modelProperties: {
-        packageId: {
+        id: {
           required: false,
-          serializedName: 'package_id',
+          serializedName: 'id',
           type: {
-            name: 'String'
+            name: 'Number'
           }
         },
         version: {
@@ -78,17 +78,17 @@ BasicPackageDetails.prototype.mapper = function () {
             name: 'String'
           }
         },
-        distributionGroups: {
+        distributionStores: {
           required: false,
-          serializedName: 'distribution_groups',
+          serializedName: 'distribution_stores',
           type: {
             name: 'Sequence',
             element: {
                 required: false,
-                serializedName: 'DistributionGroupElementType',
+                serializedName: 'StoresDetailsElementType',
                 type: {
                   name: 'Composite',
-                  className: 'DistributionGroup'
+                  className: 'StoresDetails'
                 }
             }
           }
@@ -98,4 +98,4 @@ BasicPackageDetails.prototype.mapper = function () {
   };
 };
 
-module.exports = BasicPackageDetails;
+module.exports = StoresBasicReleaseDetails;
