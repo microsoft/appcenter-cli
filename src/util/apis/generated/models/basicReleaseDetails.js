@@ -29,8 +29,18 @@ var util = require('util');
  * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
  * time.
  * 
+ * @member {string} [destinationType] The destination type.<br>
+ * <b>group</b>: The release distributed to internal groups and
+ * distribution_groups details will be returned.<br>
+ * <b>store</b>: Coming Soon - The release distributed to external stores and
+ * distribution_stores details will be returned. <br>
+ * . Possible values include: 'group', 'store'
+ * 
  * @member {array} [distributionGroups] a list of distribution groups that are
  * associated with this release.
+ * 
+ * @member {array} [distributionStores] Coming Soon - a list of distribution
+ * stores that are associated with this release.
  * 
  */
 function BasicReleaseDetails() {
@@ -78,6 +88,13 @@ BasicReleaseDetails.prototype.mapper = function () {
             name: 'String'
           }
         },
+        destinationType: {
+          required: false,
+          serializedName: 'destination_type',
+          type: {
+            name: 'String'
+          }
+        },
         distributionGroups: {
           required: false,
           serializedName: 'distribution_groups',
@@ -89,6 +106,21 @@ BasicReleaseDetails.prototype.mapper = function () {
                 type: {
                   name: 'Composite',
                   className: 'DistributionGroup'
+                }
+            }
+          }
+        },
+        distributionStores: {
+          required: false,
+          serializedName: 'distribution_stores',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'DistributionStoreElementType',
+                type: {
+                  name: 'Composite',
+                  className: 'DistributionStore'
                 }
             }
           }

@@ -25,6 +25,8 @@ var util = require('util');
  * 
  * @member {string} name Name of the device set
  * 
+ * @member {string} [slug] Slug of the device set
+ * 
  * @member {string} shortId Short ID of the device set's device selection
  * 
  * @member {object} owner
@@ -77,6 +79,13 @@ DeviceSet.prototype.mapper = function () {
         name: {
           required: true,
           serializedName: 'name',
+          type: {
+            name: 'String'
+          }
+        },
+        slug: {
+          required: false,
+          serializedName: 'slug',
           type: {
             name: 'String'
           }

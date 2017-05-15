@@ -16,6 +16,8 @@ var util = require('util');
  * @constructor
  * A collection of projects for each type of toolset
  *
+ * @member {string} [commit] The commit hash of the analyzed commit
+ * 
  * @member {array} [xcode] Xcode projects, with their schemes
  * 
  * @member {array} [javascript] package.json files
@@ -46,6 +48,13 @@ ToolsetProjects.prototype.mapper = function () {
       name: 'Composite',
       className: 'ToolsetProjects',
       modelProperties: {
+        commit: {
+          required: false,
+          serializedName: 'commit',
+          type: {
+            name: 'String'
+          }
+        },
         xcode: {
           required: false,
           serializedName: 'xcode',

@@ -25,6 +25,224 @@ function DistributionGroups(client) {
 }
 
 /**
+ * Remove the users from the distribution group
+ *
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {string} distributionGroupName The name of the distribution group
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {array} [options.userEmails] The list of emails of the users
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+DistributionGroups.prototype.removeUser = function (ownerName, appName, distributionGroupName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  var userEmails = (options && options.userEmails !== undefined) ? options.userEmails : undefined;
+  // Validate
+  try {
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (distributionGroupName === null || distributionGroupName === undefined || typeof distributionGroupName.valueOf() !== 'string') {
+      throw new Error('distributionGroupName cannot be null or undefined and it must be of type string.');
+    }
+    if (util.isArray(userEmails)) {
+      for (var i = 0; i < userEmails.length; i++) {
+        if (userEmails[i] !== null && userEmails[i] !== undefined && typeof userEmails[i].valueOf() !== 'string') {
+          throw new Error('userEmails[i] must be of type string.');
+        }
+      }
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  var members;
+  if (userEmails !== null && userEmails !== undefined) {
+      members = new client.models['DistributionGroupUserRequest']();
+      members.userEmails = userEmails;
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/members/bulk_delete';
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  requestUrl = requestUrl.replace('{distribution_group_name}', encodeURIComponent(distributionGroupName));
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'POST';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (members !== null && members !== undefined) {
+      var requestModelMapper = new client.models['DistributionGroupUserRequest']().mapper();
+      requestModel = client.serialize(requestModelMapper, members, 'members');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(members, {depth: null})));
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 403 && statusCode !== 404) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'DistributionGroupUserDeleteResponseElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'DistributionGroupUserDeleteResponse'
+                  }
+              }
+            }
+          };
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 400) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ErrorResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError1.request = msRest.stripRequest(httpRequest);
+        deserializationError1.response = msRest.stripResponse(response);
+        return callback(deserializationError1);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 403) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ErrorResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError2 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError2.request = msRest.stripRequest(httpRequest);
+        deserializationError2.response = msRest.stripResponse(response);
+        return callback(deserializationError2);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 404) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ErrorResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError3 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError3.request = msRest.stripRequest(httpRequest);
+        deserializationError3.response = msRest.stripResponse(response);
+        return callback(deserializationError3);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
  * Returns a list of member details in the distribution group specified
  *
  * @param {string} ownerName The name of the owner
@@ -359,224 +577,6 @@ DistributionGroups.prototype.addUser = function (ownerName, appName, distributio
                   type: {
                     name: 'Composite',
                     className: 'DistributionGroupUserPostResponse'
-                  }
-              }
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 400) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorResponse']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 403) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorResponse']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError2 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError2.request = msRest.stripRequest(httpRequest);
-        deserializationError2.response = msRest.stripResponse(response);
-        return callback(deserializationError2);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 404) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorResponse']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError3 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError3.request = msRest.stripRequest(httpRequest);
-        deserializationError3.response = msRest.stripResponse(response);
-        return callback(deserializationError3);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
- * Remove the users from the distribution group
- *
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {string} distributionGroupName The name of the distribution group
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {array} [options.userEmails] The list of emails of the users
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {object} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-DistributionGroups.prototype.removeUser = function (ownerName, appName, distributionGroupName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  var userEmails = (options && options.userEmails !== undefined) ? options.userEmails : undefined;
-  // Validate
-  try {
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-    if (distributionGroupName === null || distributionGroupName === undefined || typeof distributionGroupName.valueOf() !== 'string') {
-      throw new Error('distributionGroupName cannot be null or undefined and it must be of type string.');
-    }
-    if (util.isArray(userEmails)) {
-      for (var i = 0; i < userEmails.length; i++) {
-        if (userEmails[i] !== null && userEmails[i] !== undefined && typeof userEmails[i].valueOf() !== 'string') {
-          throw new Error('userEmails[i] must be of type string.');
-        }
-      }
-    }
-  } catch (error) {
-    return callback(error);
-  }
-  var members;
-  if (userEmails !== null && userEmails !== undefined) {
-      members = new client.models['DistributionGroupUserRequest']();
-      members.userEmails = userEmails;
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/members';
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  requestUrl = requestUrl.replace('{distribution_group_name}', encodeURIComponent(distributionGroupName));
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'DELETE';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  // Serialize Request
-  var requestContent = null;
-  var requestModel = null;
-  try {
-    if (members !== null && members !== undefined) {
-      var requestModelMapper = new client.models['DistributionGroupUserRequest']().mapper();
-      requestModel = client.serialize(requestModelMapper, members, 'members');
-      requestContent = JSON.stringify(requestModel);
-    }
-  } catch (error) {
-    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
-        'payload - "%s"', error.message, util.inspect(members, {depth: null})));
-    return callback(serializationError);
-  }
-  httpRequest.body = requestContent;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 403 && statusCode !== 404) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'DistributionGroupUserDeleteResponseElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'DistributionGroupUserDeleteResponse'
                   }
               }
             }

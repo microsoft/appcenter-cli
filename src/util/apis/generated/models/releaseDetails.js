@@ -71,8 +71,18 @@ var util = require('util');
  * mobile device. On iOS devices will be prefixed with
  * `itms-services://?action=download-manifest&url=`
  * 
+ * @member {string} [destinationType] The destination type.<br>
+ * <b>group</b>: The release distributed to internal groups and
+ * distribution_groups details will be returned.<br>
+ * <b>store</b>: Coming Soon - The release distributed to external stores and
+ * distribution_stores details will be returned. <br>
+ * . Possible values include: 'group', 'store'
+ * 
  * @member {array} [distributionGroups] a list of distribution groups that are
  * associated with this release.
+ * 
+ * @member {array} [distributionStores] Coming Soon - a list of distribution
+ * stores that are associated with this release.
  * 
  */
 function ReleaseDetails() {
@@ -218,6 +228,13 @@ ReleaseDetails.prototype.mapper = function () {
             name: 'String'
           }
         },
+        destinationType: {
+          required: false,
+          serializedName: 'destination_type',
+          type: {
+            name: 'String'
+          }
+        },
         distributionGroups: {
           required: false,
           serializedName: 'distribution_groups',
@@ -229,6 +246,21 @@ ReleaseDetails.prototype.mapper = function () {
                 type: {
                   name: 'Composite',
                   className: 'DistributionGroupWithoutIsLatest'
+                }
+            }
+          }
+        },
+        distributionStores: {
+          required: false,
+          serializedName: 'distribution_stores',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'DistributionStoreWithoutIsLatestElementType',
+                type: {
+                  name: 'Composite',
+                  className: 'DistributionStoreWithoutIsLatest'
                 }
             }
           }

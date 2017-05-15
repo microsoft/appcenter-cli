@@ -28,6 +28,9 @@ var util = require('util');
  * 
  * @member {array} [permissions] The permissions the user has for the app
  * 
+ * @member {string} origin The creation origin of this user. Possible values
+ * include: 'mobile-center', 'hockeyapp', 'codepush'
+ * 
  */
 function UserProfileResponse() {
 }
@@ -100,6 +103,13 @@ UserProfileResponse.prototype.mapper = function () {
                   name: 'String'
                 }
             }
+          }
+        },
+        origin: {
+          required: true,
+          serializedName: 'origin',
+          type: {
+            name: 'String'
           }
         }
       }

@@ -21,7 +21,7 @@
  * include: 'Android', 'iOS', 'Tizen', 'Windows'
  * 
  * @member {string} platform The platform of the app. Possible values include:
- * 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
+ * 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'UWP', 'Xamarin'
  * 
  */
 function App() {

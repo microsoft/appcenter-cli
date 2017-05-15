@@ -8,8 +8,6 @@
 
 var models = require('./index');
 
-var util = require('util');
-
 /**
  * @class
  * Initializes a new instance of the AppResponse class.
@@ -32,10 +30,8 @@ var util = require('util');
  * 
  * @member {string} name The name of the app used in URLs
  * 
- * @member {array} [memberPermissions] The permissions of the calling user
- * 
  * @member {string} os The OS the app will be running on. Possible values
- * include: 'Android', 'iOS', 'macOS', 'Tizen', 'Windows'
+ * include: 'Android', 'iOS', 'macOS', 'Tizen', 'Windows', 'Custom'
  * 
  * @member {object} owner
  * 
@@ -55,10 +51,10 @@ var util = require('util');
  * 
  * @member {string} platform The platform of the app. Possible values include:
  * 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'Unity', 'UWP',
- * 'Xamarin'
+ * 'Xamarin', 'Unknown'
  * 
- * @member {string} origin The origin of this app can only be mobile-center or
- * hockeyapp for now. Possible values include: 'mobile-center', 'hockeyapp'
+ * @member {string} origin The creation origin of this app. Possible values
+ * include: 'mobile-center', 'hockeyapp', 'codepush'
  * 
  */
 function AppResponse() {
@@ -125,20 +121,6 @@ AppResponse.prototype.mapper = function () {
           serializedName: 'name',
           type: {
             name: 'String'
-          }
-        },
-        memberPermissions: {
-          required: false,
-          serializedName: 'member_permissions',
-          type: {
-            name: 'Sequence',
-            element: {
-                required: false,
-                serializedName: 'StringElementType',
-                type: {
-                  name: 'String'
-                }
-            }
           }
         },
         os: {

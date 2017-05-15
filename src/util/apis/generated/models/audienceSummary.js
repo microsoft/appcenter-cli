@@ -14,7 +14,11 @@
  *
  * @member {string} [name] Audience name.
  * 
+ * @member {string} [description] Audience description.
+ * 
  * @member {number} [estimatedCount] Estimated audience size.
+ * 
+ * @member {string} [definition] Audience definition in OData format.
  * 
  * @member {string} [state] Audience state. Possible values include:
  * 'Calculating', 'Ready', 'Disabled'
@@ -44,11 +48,25 @@ AudienceSummary.prototype.mapper = function () {
             name: 'String'
           }
         },
+        description: {
+          required: false,
+          serializedName: 'description',
+          type: {
+            name: 'String'
+          }
+        },
         estimatedCount: {
           required: false,
           serializedName: 'estimated_count',
           type: {
             name: 'Number'
+          }
+        },
+        definition: {
+          required: false,
+          serializedName: 'definition',
+          type: {
+            name: 'String'
           }
         },
         state: {

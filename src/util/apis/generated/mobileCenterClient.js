@@ -50,7 +50,7 @@ function MobileCenterClient(credentials, baseUri, options) {
   }
   this.credentials = credentials;
 
-  this.distribute = new operations.Distribute(this);
+  this.devices = new operations.Devices(this);
   this.orgInvitations = new operations.OrgInvitations(this);
   this.distributionGroupInvitations = new operations.DistributionGroupInvitations(this);
   this.appInvitations = new operations.AppInvitations(this);
@@ -70,12 +70,17 @@ function MobileCenterClient(credentials, baseUri, options) {
   this.repositories = new operations.Repositories(this);
   this.repositoryConfigurations = new operations.RepositoryConfigurations(this);
   this.releaseUploads = new operations.ReleaseUploads(this);
+  this.storeReleases = new operations.StoreReleases(this);
+  this.stores = new operations.Stores(this);
   this.distributionGroups = new operations.DistributionGroups(this);
-  this.codepush = new operations.Codepush(this);
+  this.deploymentReleases = new operations.DeploymentReleases(this);
+  this.deploymentMetrics = new operations.DeploymentMetrics(this);
+  this.deployments = new operations.Deployments(this);
+  this.crashGroupsOperations = new operations.CrashGroupsOperations(this);
   this.commits = new operations.Commits(this);
   this.branchConfigurations = new operations.BranchConfigurations(this);
   this.analytics = new operations.Analytics(this);
-  this.account = new operations.Account(this);
+  this.apiTokens = new operations.ApiTokens(this);
   this.models = models;
   msRest.addSerializationMixin(this);
 }

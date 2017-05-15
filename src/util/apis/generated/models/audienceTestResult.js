@@ -6,29 +6,24 @@
 
 'use strict';
 
-var models = require('./index');
-
-var util = require('util');
-
 /**
  * @class
  * Initializes a new instance of the AudienceTestResult class.
  * @constructor
- * Audience with details.
+ * Audience test result.
  *
  * @member {string} [definition] Audience definition in OData format.
  * 
  * @member {object} [customProperties] Custom properties used in the
  * definition.
  * 
+ * @member {number} [estimatedCount] Estimated audience size.
+ * 
  * @member {number} [estimatedTotalCount] Estimated total audience size.
  * 
  */
 function AudienceTestResult() {
-  AudienceTestResult['super_'].call(this);
 }
-
-util.inherits(AudienceTestResult, models['AudienceSummary']);
 
 /**
  * Defines the metadata of AudienceTestResult
@@ -44,27 +39,6 @@ AudienceTestResult.prototype.mapper = function () {
       name: 'Composite',
       className: 'AudienceTestResult',
       modelProperties: {
-        name: {
-          required: false,
-          serializedName: 'name',
-          type: {
-            name: 'String'
-          }
-        },
-        estimatedCount: {
-          required: false,
-          serializedName: 'estimated_count',
-          type: {
-            name: 'Number'
-          }
-        },
-        state: {
-          required: false,
-          serializedName: 'state',
-          type: {
-            name: 'String'
-          }
-        },
         definition: {
           required: false,
           serializedName: 'definition',
@@ -84,6 +58,13 @@ AudienceTestResult.prototype.mapper = function () {
                   name: 'String'
                 }
             }
+          }
+        },
+        estimatedCount: {
+          required: false,
+          serializedName: 'estimated_count',
+          type: {
+            name: 'Number'
           }
         },
         estimatedTotalCount: {

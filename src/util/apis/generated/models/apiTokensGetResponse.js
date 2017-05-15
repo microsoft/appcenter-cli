@@ -6,6 +6,8 @@
 
 'use strict';
 
+var util = require('util');
+
 /**
  * @class
  * Initializes a new instance of the ApiTokensGetResponse class.
@@ -13,6 +15,8 @@
  * @member {string} id The unique id (UUID) of the api token
  * 
  * @member {string} [description] The description of the token
+ * 
+ * @member {array} [scope] The scope for this token.
  * 
  * @member {string} createdAt The creation time
  * 
@@ -46,6 +50,20 @@ ApiTokensGetResponse.prototype.mapper = function () {
           serializedName: 'description',
           type: {
             name: 'String'
+          }
+        },
+        scope: {
+          required: false,
+          serializedName: 'scope',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'StringElementType',
+                type: {
+                  name: 'String'
+                }
+            }
           }
         },
         createdAt: {

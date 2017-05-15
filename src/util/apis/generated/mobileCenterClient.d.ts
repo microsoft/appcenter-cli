@@ -32,7 +32,7 @@ declare class MobileCenterClient {
     credentials: ServiceClientCredentials;
 
     // Operation groups
-    distribute: operations.Distribute;
+    devices: operations.Devices;
     orgInvitations: operations.OrgInvitations;
     distributionGroupInvitations: operations.DistributionGroupInvitations;
     appInvitations: operations.AppInvitations;
@@ -52,12 +52,17 @@ declare class MobileCenterClient {
     repositories: operations.Repositories;
     repositoryConfigurations: operations.RepositoryConfigurations;
     releaseUploads: operations.ReleaseUploads;
+    storeReleases: operations.StoreReleases;
+    stores: operations.Stores;
     distributionGroups: operations.DistributionGroups;
-    codepush: operations.Codepush;
+    deploymentReleases: operations.DeploymentReleases;
+    deploymentMetrics: operations.DeploymentMetrics;
+    deployments: operations.Deployments;
+    crashGroupsOperations: operations.CrashGroupsOperations;
     commits: operations.Commits;
     branchConfigurations: operations.BranchConfigurations;
     analytics: operations.Analytics;
-    account: operations.Account;
+    apiTokens: operations.ApiTokens;
     }
 
 export = MobileCenterClient;

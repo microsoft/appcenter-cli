@@ -25,14 +25,12 @@ function Releases(client) {
 }
 
 /**
- * Get a release with hash `release_hash`. If multiple releases matches the
- * release_hash, return the latest one. If `release_hash` is `latest`, return
- * the latest release that was distributed to the current user (from all the
- * distribution groups).
+ * Get a release with hash 'release_hash' or the 'latest' from all the
+ * distribution groups assigned to the current user.
  *
  * @param {string} appSecret The secret of the target application
  * 
- * @param {string} releaseHash The hash of the release, or `latest` to get the
+ * @param {string} releaseHash The hash of the release or 'latest' to get the
  * latest release from all the distribution groups assigned to the current
  * user.
  * 
@@ -109,7 +107,7 @@ Releases.prototype.getLatestByHash = function (appSecret, releaseHash, internalA
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 404 && statusCode !== 500) {
+    if (statusCode !== 200 && statusCode !== 404) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -165,23 +163,6 @@ Releases.prototype.getLatestByHash = function (appSecret, releaseHash, internalA
         deserializationError1.request = msRest.stripRequest(httpRequest);
         deserializationError1.response = msRest.stripResponse(response);
         return callback(deserializationError1);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 500) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError2 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError2.request = msRest.stripRequest(httpRequest);
-        deserializationError2.response = msRest.stripResponse(response);
-        return callback(deserializationError2);
       }
     }
 
@@ -356,23 +337,49 @@ Releases.prototype.getLatestByUser = function (releaseId, ownerName, appName, op
  *
  * @param {number} releaseId The ID of the release
  * 
+ * @param {object} body The release information.
+ * 
+ * @param {string} [body.distributionGroupName] OBSOLETE. Will be removed in
+ * future releases. Name of a distribution group. The release will be
+ * associated with this distribution group. If the distribution group doesn't
+ * exist a 400 is returned. If both distribution group name and id are
+ * passed, the id is taking precedence.
+ * 
+ * @param {string} [body.distributionGroupId] OBSOLETE. Will be removed in
+ * future releases. Id of a distribution group. The release will be
+ * associated with this distribution group. If the distribution group doesn't
+ * exist a 400 is returned. If both distribution group name and id are
+ * passed, the id is taking precedence.
+ * 
+ * @param {string} [body.destinationName] Name of a distribution group /
+ * distribution store. The release will be associated with this distribution
+ * group or store. If the distribution group / store doesn't exist a 400 is
+ * returned. If both distribution group / store name and id are passed, the
+ * id is taking precedence.
+ * 
+ * @param {string} [body.destinationId] Id of a distribution group / store.
+ * The release will be associated with this distribution group / store. If
+ * the distribution group / store doesn't exist a 400 is returned. If both
+ * distribution group / store name and id are passed, the id is taking
+ * precedence.
+ * 
+ * @param {string} [body.destinationType] The destination type.<br>
+ * <b>group</b>: The release distributed to internal groups and
+ * distribution_groups details will be returned.<br>
+ * <b>store</b>: Coming Soon - The release distributed to external stores and
+ * distribution_stores details will be returned. <br>
+ * . Possible values include: 'group', 'store'
+ * 
+ * @param {string} [body.releaseNotes] Release notes for this release.
+ * 
+ * @param {boolean} [body.mandatoryUpdate] A boolean which determines whether
+ * this version should be a mandatory update or not.
+ * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
  * 
  * @param {object} [options] Optional Parameters.
- * 
- * @param {string} [options.distributionGroupName] Name of a distribution
- * group. The release will be associated with this distribution group. If the
- * distribution group doesn't exist a 400 is returned. If both distribution
- * group name and id are passed, the id is taking precedence.
- * 
- * @param {string} [options.distributionGroupId] Id of a distribution group.
- * The release will be associated with this distribution group. If the
- * distribution group doesn't exist a 400 is returned. If both distribution
- * group name and id are passed, the id is taking precedence.
- * 
- * @param {string} [options.releaseNotes] Release notes for this release.
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -389,7 +396,7 @@ Releases.prototype.getLatestByUser = function (releaseId, ownerName, appName, op
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Releases.prototype.update = function (releaseId, ownerName, appName, options, callback) {
+Releases.prototype.update = function (releaseId, body, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -398,13 +405,13 @@ Releases.prototype.update = function (releaseId, ownerName, appName, options, ca
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  var distributionGroupName = (options && options.distributionGroupName !== undefined) ? options.distributionGroupName : undefined;
-  var distributionGroupId = (options && options.distributionGroupId !== undefined) ? options.distributionGroupId : undefined;
-  var releaseNotes = (options && options.releaseNotes !== undefined) ? options.releaseNotes : undefined;
   // Validate
   try {
     if (releaseId === null || releaseId === undefined || typeof releaseId !== 'number') {
       throw new Error('releaseId cannot be null or undefined and it must be of type number.');
+    }
+    if (body === null || body === undefined) {
+      throw new Error('body cannot be null or undefined.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -412,24 +419,8 @@ Releases.prototype.update = function (releaseId, ownerName, appName, options, ca
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
-    if (distributionGroupName !== null && distributionGroupName !== undefined && typeof distributionGroupName.valueOf() !== 'string') {
-      throw new Error('distributionGroupName must be of type string.');
-    }
-    if (distributionGroupId !== null && distributionGroupId !== undefined && typeof distributionGroupId.valueOf() !== 'string') {
-      throw new Error('distributionGroupId must be of type string.');
-    }
-    if (releaseNotes !== null && releaseNotes !== undefined && typeof releaseNotes.valueOf() !== 'string') {
-      throw new Error('releaseNotes must be of type string.');
-    }
   } catch (error) {
     return callback(error);
-  }
-  var body;
-  if ((distributionGroupName !== null && distributionGroupName !== undefined) || (distributionGroupId !== null && distributionGroupId !== undefined) || (releaseNotes !== null && releaseNotes !== undefined)) {
-      body = new client.models['ReleaseUpdateRequest']();
-      body.distributionGroupName = distributionGroupName;
-      body.distributionGroupId = distributionGroupId;
-      body.releaseNotes = releaseNotes;
   }
 
   // Construct URL
@@ -474,7 +465,7 @@ Releases.prototype.update = function (releaseId, ownerName, appName, options, ca
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400) {
+    if (statusCode !== 200 && statusCode !== 201 && statusCode !== 400 && statusCode !== 403 && statusCode !== 404) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -516,6 +507,23 @@ Releases.prototype.update = function (releaseId, ownerName, appName, options, ca
       }
     }
     // Deserialize Response
+    if (statusCode === 201) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ReleaseDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError1.request = msRest.stripRequest(httpRequest);
+        deserializationError1.response = msRest.stripResponse(response);
+        return callback(deserializationError1);
+      }
+    }
+    // Deserialize Response
     if (statusCode === 400) {
       var parsedResponse = null;
       try {
@@ -526,10 +534,44 @@ Releases.prototype.update = function (releaseId, ownerName, appName, options, ca
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
-        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
+        var deserializationError2 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError2.request = msRest.stripRequest(httpRequest);
+        deserializationError2.response = msRest.stripResponse(response);
+        return callback(deserializationError2);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 403) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError3 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError3.request = msRest.stripRequest(httpRequest);
+        deserializationError3.response = msRest.stripResponse(response);
+        return callback(deserializationError3);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 404) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError4 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError4.request = msRest.stripRequest(httpRequest);
+        deserializationError4.response = msRest.stripResponse(response);
+        return callback(deserializationError4);
       }
     }
 
@@ -616,7 +658,7 @@ Releases.prototype.deleteMethod = function (releaseId, ownerName, appName, optio
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 404 && statusCode !== 500) {
+    if (statusCode !== 200 && statusCode !== 404 && statusCode !== 409 && statusCode !== 500) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -680,6 +722,167 @@ Releases.prototype.deleteMethod = function (releaseId, ownerName, appName, optio
 };
 
 /**
+ * This API can be used to create a release based on an existing release. The
+ * release will reuse most of the properties of the base release such as the
+ * binary but might differ e.g. in its distribution group, release notes, and
+ * mandatory updates flag based on the info given. To create a new release
+ * that doesn't base on an existing one, you should use the `release_uploads`
+ * APIs.
+ *
+ * @param {object} body The release information.
+ * 
+ * @param {string} [body.distributionGroupName] Name of a distribution group.
+ * The release will be associated with this distribution group. If the
+ * distribution group doesn't exist a 400 is returned. If both distribution
+ * group name and id are passed, the id is taking precedence.
+ * 
+ * @param {string} [body.distributionGroupId] Id of a distribution group. The
+ * release will be associated with this distribution group. If the
+ * distribution group doesn't exist a 400 is returned. If both distribution
+ * group name and id are passed, the id is taking precedence.
+ * 
+ * @param {string} [body.releaseNotes] Release notes for this release.
+ * 
+ * @param {boolean} [body.mandatoryUpdate] A boolean which determines whether
+ * this version should be a mandatory update or not.
+ * 
+ * @param {number} body.baseReleaseId The ID of the release that should be
+ * re-released
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *                      See {@link ReleaseDetails} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Releases.prototype.rerelease = function (body, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (body === null || body === undefined) {
+      throw new Error('body cannot be null or undefined.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/releases';
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'POST';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (body !== null && body !== undefined) {
+      var requestModelMapper = new client.models['RereleaseRequest']().mapper();
+      requestModel = client.serialize(requestModelMapper, body, 'body');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(body, {depth: null})));
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 201) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 201) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ReleaseDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
  * Return detailed information about releases.
  *
  * @param {string} ownerName The name of the owner
@@ -688,13 +891,9 @@ Releases.prototype.deleteMethod = function (releaseId, ownerName, appName, optio
  * 
  * @param {object} [options] Optional Parameters.
  * 
- * @param {boolean} [options.publishedOnly] when true, filters out releases
- * that were uplaoded but were never distributed. Releases that under deleted
+ * @param {boolean} [options.publishedOnly] when *true*, filters out releases
+ * that were uploaded but were never distributed. Releases that under deleted
  * distribution groups will not be filtered out.
- * 
- * @param {string} [options.filter] OBSOLETE. Will be removed in next version.
- * An OData style filter. Currently only support the 'eq' comparision type.
- * E.g. ?$filter=status eq 'Available'
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -721,14 +920,10 @@ Releases.prototype.list = function (ownerName, appName, options, callback) {
     throw new Error('callback cannot be null.');
   }
   var publishedOnly = (options && options.publishedOnly !== undefined) ? options.publishedOnly : undefined;
-  var filter = (options && options.filter !== undefined) ? options.filter : undefined;
   // Validate
   try {
     if (publishedOnly !== null && publishedOnly !== undefined && typeof publishedOnly !== 'boolean') {
       throw new Error('publishedOnly must be of type boolean.');
-    }
-    if (filter !== null && filter !== undefined && typeof filter.valueOf() !== 'string') {
-      throw new Error('filter must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -748,9 +943,6 @@ Releases.prototype.list = function (ownerName, appName, options, callback) {
   var queryParameters = [];
   if (publishedOnly !== null && publishedOnly !== undefined) {
     queryParameters.push('published_only=' + encodeURIComponent(publishedOnly.toString()));
-  }
-  if (filter !== null && filter !== undefined) {
-    queryParameters.push('$filter=' + encodeURIComponent(filter));
   }
   if (queryParameters.length > 0) {
     requestUrl += '?' + queryParameters.join('&');
@@ -1220,7 +1412,7 @@ Releases.prototype.deleteWithDistributionGroupId = function (distributionGroupNa
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 403 && statusCode !== 404) {
+    if (statusCode !== 200 && statusCode !== 403 && statusCode !== 404 && statusCode !== 409) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -1285,7 +1477,7 @@ Releases.prototype.deleteWithDistributionGroupId = function (distributionGroupNa
       }
     }
     // Deserialize Response
-    if (statusCode === 404) {
+    if (statusCode === 409) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);

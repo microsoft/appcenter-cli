@@ -137,6 +137,10 @@ LiveUpdateRelease.prototype.mapper = function () {
         rollout: {
           required: false,
           serializedName: 'rollout',
+          constraints: {
+            InclusiveMaximum: 100,
+            InclusiveMinimum: 1
+          },
           type: {
             name: 'Number'
           }
