@@ -9429,6 +9429,44 @@
         }
       }
     },
+    "ApiTokensPostRequest": {
+      "properties": {
+        "description": {
+          "description": "The description of the token",
+          "type": "string"
+        },
+        "encrypted_token": {
+          "description": "An encrypted value of the token.",
+          "type": "string"
+        },
+        "scope": {
+          "description": "The scope for this token. An array of supported roles.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "all",
+              "in_app_update",
+              "viewer"
+            ]
+          }
+        },
+        "token_hash": {
+          "description": "The hashed value of api token",
+          "type": "string"
+        },
+        "token_type": {
+          "description": "The token's type. public:managed by the user; in_app_update:special token for in-app update scenario; buid:dedicated for CI usage for now; session:for CLI session management; default is \"public\".'",
+          "type": "string",
+          "enum": [
+            "public",
+            "in_app_update",
+            "build",
+            "session"
+          ]
+        }
+      }
+    },
     "AppPatchRequest": {
       "properties": {
         "description": {
@@ -9444,6 +9482,47 @@
           "type": "string"
         }
       }
+    },
+    "AppPrivatePatchRequest": {
+      "properties": {
+        "azure_subscription_id": {
+          "description": "The unique ID (UUID) of the Azure subscription associate with the app",
+          "type": "string"
+        }
+      }
+    },
+    "AppRepoPatchRequest": {
+      "properties": {
+        "repo_url": {
+          "description": "The absolute URL of the repository",
+          "type": "string"
+        }
+      }
+    },
+    "AppRepoPostRequest": {
+      "properties": {
+        "repo_url": {
+          "description": "The absolute URL of the repository",
+          "type": "string"
+        },
+        "repo_provider": {
+          "description": "The provider of the repository",
+          "type": "string",
+          "enum": [
+            "github",
+            "bitbucket",
+            "vsts"
+          ]
+        },
+        "user_id": {
+          "description": "The unique id (UUID) of the user who configured the repository",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repo_url",
+        "user_id"
+      ]
     },
     "AppRequest": {
       "properties": {
@@ -9518,6 +9597,52 @@
         }
       }
     },
+    "EmailVerificationRequest": {
+      "properties": {
+        "token": {
+          "description": "The verification token that was sent to the user",
+          "type": "string"
+        }
+      },
+      "required": [
+        "token"
+      ]
+    },
+    "ExternalUserRequest": {
+      "properties": {
+        "app_invitation": {
+          "description": "The token of the app invitation which lead to signup",
+          "type": "string"
+        },
+        "tester_invitation": {
+          "description": "The token of the test invitation which lead to signup",
+          "type": "string"
+        },
+        "organization_invitation": {
+          "description": "The token of the organization invitation which lead to signup",
+          "type": "string"
+        },
+        "avatar_url": {
+          "description": "The avatar URL of the user",
+          "type": "string"
+        },
+        "display_name": {
+          "description": "The full name of the user. Might for example be first and last name",
+          "type": "string"
+        },
+        "email": {
+          "description": "The email address of the user",
+          "type": "string"
+        },
+        "name": {
+          "description": "The unique name that is used to identify the user. If no explicit value is given, a default will be auto-generated from the `display_name` value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email"
+      ]
+    },
     "FeaturePatchRequest": {
       "properties": {
         "description": {
@@ -9575,6 +9700,47 @@
         "admin_role"
       ]
     },
+    "InternalUserRequest": {
+      "properties": {
+        "app_invitation": {
+          "description": "The token of the app invitation which lead to signup",
+          "type": "string"
+        },
+        "tester_invitation": {
+          "description": "The token of the test invitation which lead to signup",
+          "type": "string"
+        },
+        "organization_invitation": {
+          "description": "The token of the organization invitation which lead to signup",
+          "type": "string"
+        },
+        "avatar_url": {
+          "description": "The avatar URL of the user",
+          "type": "string"
+        },
+        "display_name": {
+          "description": "The full name of the user. Might for example be first and last name",
+          "type": "string"
+        },
+        "email": {
+          "description": "The email address of the user",
+          "type": "string"
+        },
+        "name": {
+          "description": "The unique name that is used to identify the user.",
+          "type": "string"
+        },
+        "password": {
+          "description": "The password of the user. Needs to be at least 8 characters long and contain at least one lower- and one uppercase letter.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "name",
+        "password"
+      ]
+    },
     "OrganizationPatchRequest": {
       "properties": {
         "display_name": {
@@ -9610,6 +9776,48 @@
           ]
         }
       }
+    },
+    "PasswordUpdateRequest": {
+      "properties": {
+        "new_password": {
+          "description": "The new password that will be set for the user. Needs to be at least 8 characters long and contain at least one lower- and one uppercase letter.",
+          "type": "string"
+        },
+        "old_password": {
+          "description": "The old password, if needed.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "new_password"
+      ]
+    },
+    "ResendVerificationRequest": {
+      "properties": {
+        "name": {
+          "description": "The email or name of the user to resend verification",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ResetPasswordUsingTokenRequest": {
+      "properties": {
+        "new_password": {
+          "description": "The new password. Needs to be at least 8 characters long and contain at least one lower- and one uppercase letter.",
+          "type": "string"
+        },
+        "token": {
+          "description": "The reset password token that was sent to the user",
+          "type": "string"
+        }
+      },
+      "required": [
+        "token",
+        "new_password"
+      ]
     },
     "UserAppPermissionsUpdateRequest": {
       "properties": {
@@ -9660,6 +9868,14 @@
         "user_email"
       ]
     },
+    "UserNameUpdateRequest": {
+      "properties": {
+        "name": {
+          "description": "The new, unique name that is used to identify.",
+          "type": "string"
+        }
+      }
+    },
     "UserUpdateRequest": {
       "properties": {
         "display_name": {
@@ -9687,6 +9903,138 @@
           "type": "string"
         }
       }
+    },
+    "ApiTokenDeleteResponse": {
+      "properties": {
+        "id": {
+          "description": "The unique id (UUID) of the api token",
+          "type": "string"
+        },
+        "token_hash": {
+          "description": "The hashed value of api token",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "token_hash"
+      ]
+    },
+    "ApiTokenGetUserResponse": {
+      "properties": {
+        "user_email": {
+          "description": "The user email",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "The unique id (UUID) of the user",
+          "type": "string"
+        },
+        "token_scope": {
+          "description": "The token's scope. A list of allowed roles.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "all",
+              "in_app_update",
+              "viewer"
+            ]
+          }
+        },
+        "user_origin": {
+          "description": "The creation origin of the user who created this api token",
+          "type": "string",
+          "enum": [
+            "mobile-center",
+            "hockeyapp",
+            "codepush"
+          ]
+        }
+      },
+      "required": [
+        "user_id",
+        "user_email",
+        "user_origin"
+      ]
+    },
+    "ApiTokenResponse": {
+      "properties": {
+        "id": {
+          "description": "The unique id (UUID) of the api token",
+          "type": "string"
+        },
+        "created_at": {
+          "description": "The creation time",
+          "type": "string"
+        },
+        "scope": {
+          "description": "The token's scope. A list of allowed roles.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "all",
+              "in_app_update",
+              "viewer"
+            ]
+          }
+        },
+        "encrypted_token": {
+          "description": "The encrypted value of a token. This value will only be returned for token of type in_app_update."
+        },
+        "description": {
+          "description": "The description of the token",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "created_at"
+      ]
+    },
+    "AppGroupResponse": {
+      "properties": {
+        "id": {
+          "description": "The unique ID (UUID) of the app",
+          "type": "string"
+        },
+        "group_id": {
+          "description": "The unique ID (UUID) of the group that the app belongs to",
+          "type": "string"
+        },
+        "os": {
+          "description": "The OS the app will be running on",
+          "type": "string",
+          "enum": [
+            "Android",
+            "iOS",
+            "macOS",
+            "Tizen",
+            "Windows",
+            "Custom"
+          ]
+        },
+        "platform": {
+          "description": "The platform of the app",
+          "type": "string",
+          "enum": [
+            "Cordova",
+            "Java",
+            "Objective-C-Swift",
+            "React-Native",
+            "Unity",
+            "UWP",
+            "Xamarin",
+            "Unknown"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "group_id",
+        "platform"
+      ]
     },
     "AppInvitationDetailResponse": {
       "properties": {
@@ -9737,6 +10085,67 @@
         "invited_by",
         "invite_type",
         "app"
+      ]
+    },
+    "AppPrivatePatchResponse": {
+      "properties": {
+        "id": {
+          "description": "The unique ID (UUID) of the app",
+          "type": "string"
+        },
+        "azure_subscription_id": {
+          "description": "The unique ID (UUID) of the Azure subscription associate with the app",
+          "type": "string"
+        },
+        "display_name": {
+          "description": "The display name of the app",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the app used in URLs",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "azure_subscription_id",
+        "display_name",
+        "name"
+      ]
+    },
+    "AppRepoResponse": {
+      "properties": {
+        "id": {
+          "description": "The unique id (UUID) of the repository integration",
+          "type": "string"
+        },
+        "app_id": {
+          "description": "The unique id (UUID) of the app that this repository integration belongs to",
+          "type": "string"
+        },
+        "repo_url": {
+          "description": "The absolute URL of the repository",
+          "type": "string"
+        },
+        "repo_provider": {
+          "description": "The provider of the repository",
+          "type": "string",
+          "enum": [
+            "github",
+            "bitbucket",
+            "vsts"
+          ]
+        },
+        "user_id": {
+          "description": "The unique id (UUID) of the user who configured the repository",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "app_id",
+        "user_id",
+        "repo_url"
       ]
     },
     "AppResponse": {
@@ -9863,6 +10272,51 @@
             }
           }
         }
+      ]
+    },
+    "AppUserPermissionResponse": {
+      "properties": {
+        "app_id": {
+          "description": "The unique id (UUID) of the user",
+          "type": "string"
+        },
+        "permissions": {
+          "description": "The permissions the user has for the app",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "developer",
+              "member",
+              "tester"
+            ]
+          }
+        },
+        "user_email": {
+          "description": "The email of the user",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "The unique id (UUID) of the user",
+          "type": "string"
+        },
+        "app_origin": {
+          "description": "The creation origin of this app",
+          "type": "string",
+          "enum": [
+            "mobile-center",
+            "hockeyapp",
+            "codepush"
+          ]
+        }
+      },
+      "required": [
+        "app_id",
+        "user_id",
+        "user_email",
+        "permissions",
+        "app_origin"
       ]
     },
     "DistributionGroupResponse": {
@@ -10042,6 +10496,48 @@
         "state"
       ]
     },
+    "InternalUserSignupResponse": {
+      "properties": {
+        "id": {
+          "description": "The unique id (UUID) of the user",
+          "type": "string"
+        },
+        "display_name": {
+          "description": "The full name of the user. Might for example be first and last name",
+          "type": "string"
+        },
+        "email": {
+          "description": "The email address of the user",
+          "type": "string"
+        },
+        "external_provider": {
+          "description": "The name of the external auth provider",
+          "type": "string"
+        },
+        "external_user_id": {
+          "description": "The user ID given by the external provider",
+          "type": "string"
+        },
+        "name": {
+          "description": "The unique name that is used to identify the user.",
+          "type": "string"
+        },
+        "status": {
+          "description": "The current status of the user record after signup",
+          "type": "string",
+          "enum": [
+            "Complete",
+            "NeedsVerification"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "display_name",
+        "email",
+        "name"
+      ]
+    },
     "OrgNameAvailabilityResponse": {
       "properties": {
         "available": {
@@ -10056,6 +10552,35 @@
       "required": [
         "available",
         "name"
+      ]
+    },
+    "OrganizationInvitationDetailResponse": {
+      "properties": {
+        "id": {
+          "description": "The unique ID (UUID) of the invitation",
+          "type": "string"
+        },
+        "organization": {
+          "$ref": "#/definitions/OrganizationResponse"
+        },
+        "email": {
+          "description": "The email address of the invited user",
+          "type": "string"
+        },
+        "invited_by": {
+          "$ref": "#/definitions/UserProfileResponse"
+        },
+        "is_existing_user": {
+          "description": "Indicates whether the invited user already exists",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "is_existing_user",
+        "invited_by",
+        "organization"
       ]
     },
     "OrganizationInvitationSimpleDetailResponse": {
@@ -10138,6 +10663,60 @@
         "joined_at",
         "name",
         "role"
+      ]
+    },
+    "StatusResponse": {
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status"
+      ]
+    },
+    "UserAuthResponse": {
+      "properties": {
+        "id": {
+          "description": "The unique id (UUID) of the user",
+          "type": "string"
+        },
+        "display_name": {
+          "description": "The full name of the user. Might for example be first and last name",
+          "type": "string"
+        },
+        "email": {
+          "description": "The email address of the user",
+          "type": "string"
+        },
+        "external_provider": {
+          "description": "The name of the external auth provider",
+          "type": "string"
+        },
+        "external_user_id": {
+          "description": "The user ID given by the external provider",
+          "type": "string"
+        },
+        "name": {
+          "description": "The unique name that is used to identify the user",
+          "type": "string"
+        },
+        "origin": {
+          "description": "The creation origin of this user",
+          "type": "string",
+          "enum": [
+            "mobile-center",
+            "hockeyapp",
+            "codepush"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "display_name",
+        "email",
+        "name",
+        "origin"
       ]
     },
     "UserNameAvailabilityResponse": {
@@ -10971,6 +11550,145 @@
         }
       }
     },
+    "PrivateReleaseDetails": {
+      "description": "Details of an uploaded release",
+      "properties": {
+        "id": {
+          "description": "ID identifying this unique release.",
+          "type": "number"
+        },
+        "status": {
+          "description": "OBSOLETE. Will be removed in next version. The availability concept is now replaced with distributed. Any 'available' release will be associated with the default distribution group of an app.</br>   \nThe release state.<br> \n<b>available</b>: The uploaded release has been distributed.<br>\n<b>unavailable</b>: The uploaded release is not visible to the user. <br>\n",
+          "type": "string",
+          "enum": [
+            "available",
+            "unavailable"
+          ]
+        },
+        "app_name": {
+          "description": "The app's name (extracted from the uploaded release).",
+          "type": "string"
+        },
+        "app_display_name": {
+          "description": "The app's display name.",
+          "type": "string"
+        },
+        "version": {
+          "description": "The release's version.<br>\nFor iOS: CFBundleVersion from info.plist.\nFor Android: android:versionCode from AppManifest.xml.\n",
+          "type": "string"
+        },
+        "short_version": {
+          "description": "The release's short version.<br>\nFor iOS: CFBundleShortVersionString from info.plist.\nFor Android: android:versionName from AppManifest.xml.  \n",
+          "type": "string"
+        },
+        "release_notes": {
+          "description": "The release's release notes.",
+          "type": "string"
+        },
+        "provisioning_profile_name": {
+          "description": "The release's release notes.",
+          "type": "string"
+        },
+        "provisioning_profile_type": {
+          "description": "The type of the provisioning profile for the requested app version.",
+          "type": "string",
+          "enum": [
+            "adhoc",
+            "enterprise",
+            "other"
+          ]
+        },
+        "size": {
+          "description": "The release's size in bytes.",
+          "type": "number"
+        },
+        "min_os": {
+          "description": "The release's minimum required operating system.",
+          "type": "string"
+        },
+        "android_min_api_level": {
+          "description": "The release's minimum required Android API level.",
+          "type": "string"
+        },
+        "bundle_identifier": {
+          "description": "The identifier of the apps bundle.",
+          "type": "string"
+        },
+        "fingerprint": {
+          "description": "MD5 checksum of the release binary.",
+          "type": "string"
+        },
+        "uploaded_at": {
+          "description": "UTC time in ISO 8601 format of the uploaded time.",
+          "type": "string"
+        },
+        "download_url": {
+          "description": "The URL that hosts the binary for this release.",
+          "type": "string"
+        },
+        "app_icon_url": {
+          "description": "A URL to the app's icon.",
+          "type": "string"
+        },
+        "install_url": {
+          "description": "The href required to install a release on a mobile device. On iOS devices will be prefixed with `itms-services://?action=download-manifest&url=`",
+          "type": "string"
+        },
+        "distribution_group_id": {
+          "description": "the destination where release is distributed",
+          "type": "string"
+        },
+        "publishing_status": {
+          "description": "the publishing status of distributed release",
+          "type": "string"
+        },
+        "destination_type": {
+          "description": "The destination type.<br> \n<b>group</b>: The release distributed to internal groups and distribution_groups details will be returned.<br>\n<b>store</b>: Coming Soon - The release distributed to external stores and distribution_stores details will be returned. <br>\n",
+          "type": "string",
+          "enum": [
+            "group",
+            "store"
+          ]
+        }
+      }
+    },
+    "PrivateBasicReleaseDetails": {
+      "description": "Basic information on a release for private apis",
+      "properties": {
+        "id": {
+          "description": "ID identifying this unique release.",
+          "type": "number"
+        },
+        "version": {
+          "description": "The release's version.<br>\nFor iOS: CFBundleVersion from info.plist.<br>\nFor Android: android:versionCode from AppManifest.xml.\n",
+          "type": "string"
+        },
+        "short_version": {
+          "description": "The release's short version.<br>\nFor iOS: CFBundleShortVersionString from info.plist.<br>\nFor Android: android:versionName from AppManifest.xml.  \n",
+          "type": "string"
+        },
+        "uploaded_at": {
+          "description": "UTC time in ISO 8601 format of the uploaded time.",
+          "type": "string"
+        },
+        "distribution_group_id": {
+          "description": "the destination id of release where it is distributed.",
+          "type": "string"
+        },
+        "destination_type": {
+          "description": "The destination type.<br> \n<b>group</b>: The release distributed to internal groups and distribution_groups details will be returned.<br>\n<b>store</b>: Coming Soon - The release distributed to external stores and distribution_stores details will be returned. <br>\n",
+          "type": "string",
+          "enum": [
+            "group",
+            "store"
+          ]
+        },
+        "is_latest": {
+          "description": "Indicates if this is the latest release in the group.",
+          "type": "boolean"
+        }
+      }
+    },
     "BasicReleaseDetails": {
       "description": "Basic information on a release",
       "properties": {
@@ -11201,6 +11919,15 @@
         }
       }
     },
+    "PrivateReleaseUpdateRequest": {
+      "description": "A request containing information for updating a release.",
+      "properties": {
+        "publishing_status": {
+          "description": "The store publishing status.",
+          "type": "string"
+        }
+      }
+    },
     "RereleaseRequest": {
       "description": "A request containing information for re-releasing an existing release to a new distribution group.",
       "properties": {
@@ -11309,6 +12036,31 @@
         "publishing_status": {
           "description": "publishing status of the release in the store.",
           "type": "string"
+        }
+      }
+    },
+    "DevicesResponse": {
+      "description": "A response containing an array of device UDIDs.",
+      "required": [
+        "udids",
+        "provisioning_profile_type"
+      ],
+      "properties": {
+        "provisioning_profile_type": {
+          "description": "The type of the provisioning profile for the requested app version.",
+          "type": "string",
+          "enum": [
+            "adhoc",
+            "enterprise",
+            "other"
+          ]
+        },
+        "udids": {
+          "type": "array",
+          "items": {
+            "description": "The UDID of the device.",
+            "type": "string"
+          }
         }
       }
     },
@@ -11559,6 +12311,31 @@
         }
       }
     },
+    "StoreSecretResponse": {
+      "description": "StoreSecretResponse",
+      "properties": {
+        "id": {
+          "description": "Store id",
+          "type": "string"
+        },
+        "name": {
+          "description": "Store Name",
+          "type": "string"
+        },
+        "type": {
+          "description": "Store Type",
+          "type": "string"
+        },
+        "secret": {
+          "description": "Secret Json",
+          "type": "string"
+        },
+        "tenant_id": {
+          "description": "Tenant Id for Intune",
+          "type": "string"
+        }
+      }
+    },
     "IntuneStoreResponse": {
       "properties": {
         "target_audience": {
@@ -11586,6 +12363,18 @@
         },
         "tenant_id": {
           "description": "tenant id of the intune store",
+          "type": "string"
+        }
+      }
+    },
+    "PatchReleaseRequest": {
+      "properties": {
+        "status": {
+          "description": "updated status of release",
+          "type": "string"
+        },
+        "dest_publish_id": {
+          "description": "Destination Publish Id",
           "type": "string"
         }
       }
@@ -11646,6 +12435,25 @@
         }
       }
     },
+    "StoreDestinationDetails": {
+      "properties": {
+        "dest_publish_id": {
+          "description": "destination ID identifying a unique id in distribution store.",
+          "type": "string"
+        },
+        "store_type": {
+          "description": "type of store.",
+          "type": "string",
+          "enum": [
+            "intune"
+          ]
+        },
+        "appId": {
+          "description": "app id of application.",
+          "type": "string"
+        }
+      }
+    },
     "StoresBasicDetails": {
       "properties": {
         "id": {
@@ -11669,6 +12477,32 @@
           "type": "string"
         }
       }
+    },
+    "AppIdMasterRequest": {
+      "description": "AppIdMasterRequest",
+      "properties": {
+        "created_month": {
+          "description": "PartitionKey year-month",
+          "type": "string"
+        }
+      }
+    },
+    "AppIdMasterResponse": {
+      "description": "AppIdMasterResponse",
+      "properties": {
+        "created_month": {
+          "description": "PartitionKey year-month",
+          "type": "string"
+        },
+        "app_id": {
+          "description": "App id",
+          "type": "string"
+        },
+        "checksum": {
+          "description": "Checksum"
+        }
+      },
+      "type": "string"
     },
     "Symbol": {
       "properties": {
@@ -11737,6 +12571,33 @@
       "items": {
         "$ref": "#/definitions/Symbol"
       }
+    },
+    "SymbolStatusResponse": {
+      "description": "A response containing information pertaining to a symbol status",
+      "properties": {
+        "symbol_id": {
+          "description": "The unique id for this symbol (uuid)",
+          "type": "string"
+        },
+        "app_id": {
+          "description": "The application that this symbol belongs to",
+          "type": "string"
+        },
+        "status": {
+          "description": "Whether the symbol is ignored.",
+          "type": "string",
+          "enum": [
+            "available",
+            "ignored",
+            "missing"
+          ]
+        }
+      },
+      "required": [
+        "symbol_id",
+        "app_id",
+        "status"
+      ]
     },
     "SymbolUpload": {
       "description": "A single symbol upload entity",
@@ -11854,6 +12715,13 @@
       },
       "required": [
         "status"
+      ]
+    },
+    "CrashGroupStatusEnum": {
+      "enum": [
+        "open",
+        "closed",
+        "ignored"
       ]
     },
     "AppCrashesInfo": {
@@ -12367,6 +13235,14 @@
         }
       }
     },
+    "SymbolStatusEnum": {
+      "description": "enumeration of symbol statuses",
+      "enum": [
+        "missing",
+        "ignored",
+        "available"
+      ]
+    },
     "MissingSymbol": {
       "description": "missing symbol",
       "required": [
@@ -12426,6 +13302,87 @@
           "description": "blob name"
         }
       }
+    },
+    "ParkedCrash": {
+      "description": "parked crash",
+      "required": [
+        "app_id",
+        "app_ver",
+        "app_build",
+        "missing_symbols",
+        "crash_id",
+        "sdk_platform",
+        "location"
+      ],
+      "properties": {
+        "app_id": {
+          "type": "string",
+          "description": "application id"
+        },
+        "app_ver": {
+          "type": "string",
+          "description": "application version"
+        },
+        "app_build": {
+          "type": "string",
+          "description": "application build"
+        },
+        "missing_symbols": {
+          "$ref": "#/definitions/MissingSymbols",
+          "description": "list of missing symbols"
+        },
+        "crash_id": {
+          "type": "string",
+          "description": "id of the crash"
+        },
+        "sdk_platform": {
+          "type": "string",
+          "description": "platform of the sdk that sent crash"
+        },
+        "sdk_wrapper": {
+          "type": "string",
+          "description": "name of the sdk wrapper that sent crash"
+        },
+        "location": {
+          "$ref": "#/definitions/CrashLocation",
+          "description": "crash location"
+        }
+      }
+    },
+    "SymbolUpdateInfo": {
+      "description": "symbol update message",
+      "required": [
+        "symbol_id",
+        "app_id",
+        "status"
+      ],
+      "properties": {
+        "symbol_id": {
+          "type": "string",
+          "description": "UUID of the symbol"
+        },
+        "app_id": {
+          "type": "string",
+          "description": "application id"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "missing",
+            "ignored",
+            "available"
+          ],
+          "description": "symbol upload status"
+        }
+      }
+    },
+    "MissingSymbolCrashGroupStatusEnum": {
+      "description": "enumeration of missing symbol grash group statuses",
+      "enum": [
+        "active",
+        "pending",
+        "closed"
+      ]
     },
     "MissingSymbolCrashGroup": {
       "description": "missing symbol crash group object",
@@ -13424,6 +14381,127 @@
         "app_build"
       ]
     },
+    "StartSessionLog": {
+      "type": "object",
+      "description": "Required explicit begin session log (a marker event for analytics service).",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Log"
+        }
+      ],
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Session ID.\n"
+        }
+      },
+      "required": [
+        "session_id"
+      ]
+    },
+    "PageLog": {
+      "type": "object",
+      "description": "Page view log (as in screens or activities).",
+      "allOf": [
+        {
+          "$ref": "#/definitions/LogWithProperties"
+        }
+      ],
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Session ID.\n"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the page.\n"
+        }
+      },
+      "required": [
+        "name",
+        "session_id"
+      ]
+    },
+    "EventLog": {
+      "type": "object",
+      "description": "Event log.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/LogWithProperties"
+        }
+      ],
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Session ID.\n"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for this event.\n"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the event.\n"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "session_id"
+      ]
+    },
+    "PushInstallationLog": {
+      "type": "object",
+      "description": "Push installation Information.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Log"
+        }
+      ],
+      "properties": {
+        "push_token": {
+          "type": "string",
+          "description": "The PNS handle for this installation.\n"
+        }
+      },
+      "required": [
+        "push_token"
+      ]
+    },
+    "ErrorLog": {
+      "type": "object",
+      "description": "Error log.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Log"
+        }
+      ],
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Session ID.\n"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Error identifier."
+        },
+        "app_launch_toffset": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Corresponds to the number of milliseconds elapsed between the time the error occurred and the app was launched.\n"
+        }
+      },
+      "required": [
+        "session_id",
+        "id"
+      ]
+    },
     "EventProperties": {
       "description": "Event properties during the time range",
       "type": "object",
@@ -13816,6 +14894,67 @@
         "type"
       ]
     },
+    "NotificationTargetAudiences": {
+      "description": "Notification target audiences.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationTarget"
+        }
+      ],
+      "properties": {
+        "audiences": {
+          "description": "List of target audiences.",
+          "type": "array",
+          "items": {
+            "description": "Audience Id.",
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "audiences"
+      ]
+    },
+    "NotificationTargetUsers": {
+      "description": "Notification target users.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationTarget"
+        }
+      ],
+      "properties": {
+        "users": {
+          "description": "List of target users.",
+          "type": "array",
+          "items": {
+            "description": "User Id.",
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "users"
+      ]
+    },
+    "NotificationTargetDevices": {
+      "description": "Notification target devices. If null, all devices will be targeted(broadcast).",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationTarget"
+        }
+      ],
+      "properties": {
+        "devices": {
+          "description": "List of target devices.",
+          "type": "array",
+          "items": {
+            "description": "Device Id",
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    },
     "NotificationConfig": {
       "description": "Generic notification configuration.",
       "type": "object",
@@ -13827,6 +14966,112 @@
       },
       "required": [
         "type"
+      ]
+    },
+    "NotificationConfigApple": {
+      "description": "Apple notification certificate configuration.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationConfig"
+        }
+      ],
+      "properties": {
+        "endpoint_type": {
+          "$ref": "#/definitions/AppleNotificationEndpointType"
+        },
+        "cert_encoded": {
+          "description": "Base64 encoded certificate string.",
+          "type": "string"
+        },
+        "cert_filename": {
+          "description": "Certificate file name",
+          "type": "string"
+        },
+        "cert_key": {
+          "description": "Certificate password",
+          "type": "string"
+        }
+      },
+      "required": [
+        "endpoint_type",
+        "cert_encoded",
+        "cert_filename",
+        "cert_key"
+      ]
+    },
+    "NotificationConfigAppleToken": {
+      "description": "Apple notification auth token configuration.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationConfig"
+        }
+      ],
+      "properties": {
+        "key_id": {
+          "description": "A 10-character key identifier (kid).",
+          "type": "string"
+        },
+        "app_name": {
+          "description": "The name of the application.",
+          "type": "string"
+        },
+        "app_id": {
+          "description": "A 10-character Team ID (iss).",
+          "type": "string"
+        },
+        "token": {
+          "description": "Provider Authentication Token.",
+          "type": "string"
+        },
+        "endpoint_type": {
+          "$ref": "#/definitions/AppleNotificationEndpointType"
+        }
+      },
+      "required": [
+        "key_id",
+        "app_name",
+        "app_id",
+        "token",
+        "endpoint_type"
+      ]
+    },
+    "NotificationConfigGoogle": {
+      "description": "Google notification configuration.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationConfig"
+        }
+      ],
+      "properties": {
+        "google_api_key": {
+          "description": "GCM API key.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "google_api_key"
+      ]
+    },
+    "NotificationConfigWindows": {
+      "description": "WNS notification configuration.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationConfig"
+        }
+      ],
+      "properties": {
+        "package_sid": {
+          "description": "Package security identifier (SID).",
+          "type": "string"
+        },
+        "secret_key": {
+          "description": "Secret key.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_sid",
+        "secret_key"
       ]
     },
     "NotificationConfigResult": {
@@ -13841,12 +15086,113 @@
         "type"
       ]
     },
+    "NotificationConfigAppleResult": {
+      "description": "Apple notification certificate configuration result.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationConfigResult"
+        }
+      ],
+      "properties": {
+        "endpoint_type": {
+          "$ref": "#/definitions/AppleNotificationEndpointType"
+        },
+        "cert_expiration": {
+          "description": "Certificate expiration date.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "cert_filename": {
+          "description": "Certificate file name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "endpoint_type",
+        "cert_expiration",
+        "cert_filename"
+      ]
+    },
+    "NotificationConfigAppleTokenResult": {
+      "description": "Apple notification auth token configuration result.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationConfigResult"
+        }
+      ],
+      "properties": {
+        "key_id": {
+          "description": "A 10-character key identifier (kid).",
+          "type": "string"
+        },
+        "app_name": {
+          "description": "The name of the application.",
+          "type": "string"
+        },
+        "app_id": {
+          "description": "A 10-character Team ID (iss).",
+          "type": "string"
+        },
+        "endpoint_type": {
+          "$ref": "#/definitions/AppleNotificationEndpointType"
+        }
+      },
+      "required": [
+        "key_id",
+        "app_name",
+        "app_id",
+        "endpoint_type"
+      ]
+    },
+    "NotificationConfigGoogleResult": {
+      "description": "Google notification configuration result.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationConfigResult"
+        }
+      ],
+      "properties": {
+        "google_api_key": {
+          "description": "GCM API key.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "google_api_key"
+      ]
+    },
+    "NotificationConfigWindowsResult": {
+      "description": "WNS notification configuration result.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationConfigResult"
+        }
+      ],
+      "properties": {
+        "package_sid": {
+          "description": "Package security identifier (SID).",
+          "type": "string"
+        }
+      },
+      "required": [
+        "package_sid"
+      ]
+    },
     "AppleNotificationEndpointType": {
       "description": "Type of endpoint the certificate or token are associated with",
       "type": "string",
       "enum": [
         "production",
         "sandbox"
+      ]
+    },
+    "NotificationPlatformType": {
+      "description": "Notification platform type",
+      "type": "string",
+      "enum": [
+        "apns",
+        "gcm",
+        "wns"
       ]
     },
     "DeviceConfiguration": {
@@ -14547,6 +15893,97 @@
         }
       }
     },
+    "StepReport": {
+      "required": [
+        "finishedSnapshots",
+        "deviceScreenshots"
+      ],
+      "properties": {
+        "finishedSnapshots": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deviceScreenshots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "device_snapshot_id": {
+                "type": "string"
+              },
+              "stacktrace": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "crash_data": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "status": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "screenshot": {
+                "required": [
+                  "urls",
+                  "rotation",
+                  "landscape"
+                ],
+                "properties": {
+                  "urls": {
+                    "required": [
+                      "original",
+                      "small",
+                      "medium",
+                      "large"
+                    ],
+                    "properties": {
+                      "original": {
+                        "type": "string"
+                      },
+                      "small": {
+                        "type": "string"
+                      },
+                      "medium": {
+                        "type": "string"
+                      },
+                      "large": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "rotation": {
+                    "type": "number"
+                  },
+                  "landscape": {
+                    "type": "boolean"
+                  }
+                },
+                "type": "object"
+              },
+              "log_file": {
+                "type": "string"
+              },
+              "appium_log_file": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
     "TestCloudErrorDetails": {
       "title": "Test Cloud Error Details",
       "description": "Details of a failed operation",
@@ -14754,6 +16191,121 @@
         "exit_code": {
           "description": "Exit code for the client",
           "type": "integer"
+        }
+      }
+    },
+    "PerformanceReport": {
+      "title": "Performance Report",
+      "description": "Report data for a single test (a.k.a. scenario)",
+      "properties": {
+        "device_snapshot_id": {
+          "type": "string"
+        },
+        "performance_data": {
+          "required": [
+            "steps",
+            "elapsed-secs-end",
+            "elapsed-secs-start",
+            "elapsed-secs",
+            "id"
+          ],
+          "properties": {
+            "steps": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "avg-cpu": {
+                    "type": "number"
+                  },
+                  "avg-mem": {
+                    "type": "number"
+                  },
+                  "samples": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "cpu": {
+                          "type": "number"
+                        },
+                        "mem": {
+                          "type": "number"
+                        },
+                        "elapsed-secs": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  },
+                  "elapsed-secs-end": {
+                    "type": "number"
+                  },
+                  "elapsed-secs-start": {
+                    "type": "number"
+                  },
+                  "elapsed-secs": {
+                    "type": "number"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "elapsed-secs-end": {
+              "type": "number"
+            },
+            "elapsed-secs-start": {
+              "type": "number"
+            },
+            "elapsed-secs": {
+              "type": "number"
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "video": {
+          "required": [
+            "video_metadata",
+            "video_url"
+          ],
+          "properties": {
+            "video_metadata": {
+              "type": "object",
+              "properties": {
+                "events": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "millis": {
+                        "type": "number"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "video_url": {
+              "type": "string"
+            }
+          }
         }
       }
     },
@@ -15117,6 +16669,19 @@
         "event_id",
         "event_timestamp",
         "event_version"
+      ]
+    },
+    "EventResponseResult": {
+      "description": "Object returned in response to accepting an event occurance",
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "description": "Unique request identifier for tracking",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id"
       ]
     },
     "AlertingError": {
