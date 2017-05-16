@@ -1,13 +1,9 @@
-import * as _ from "lodash";
 import * as Path from "path";
 import * as Fs from "fs";
-import * as OptionDecorators from "./option-decorators";
 
 const omelette = require("omelette");
 
 const appName = "mobile-center";
-const helpCommand = "help";
-const helpCommandFile = helpCommand + ".js";
 
 function getAutoCompleteObject() {
   return omelette(appName);
@@ -20,13 +16,12 @@ export function executeAutoComplete() {
     const reply = data.reply;
     const argsLine = line.substring(appName.length);
     const args = argsLine.match(/\S+/g) || [];
-    const rootPath = Path.normalize(Path.join(__dirname, "..", "..", "commands"));
-    const lineEndsWithWhitespaceChar = /\s{1}/.test(_.last(line));
-    const helpMode = _.head(args) === helpCommand;
-    const pathToHelpCommand = Path.join(rootPath, helpCommandFile);
-    const getReply = getReplyHandler(lineEndsWithWhitespaceChar, helpMode, pathToHelpCommand);
+    const lineEndsWithWhitespaceChar = /\s{1}/.test(last(line));
+    const autocompleteTree = JSON.parse(Fs.readFileSync(Path.join(__dirname, "..", "..", "autocomplete-tree.json"), "utf8")) as IAutocompleteTree;
+    const expandedAutoCompleteTree = getAutoCompleteTreeWithExpandedHelp(autocompleteTree);
+    const getReply = getReplyHandler(lineEndsWithWhitespaceChar);
 
-    reply(getReply(helpMode ? _.tail(args) : args, rootPath));
+    reply(getReply(args, expandedAutoCompleteTree));
   });  
   
   autoCompleteObject.init();
@@ -43,30 +38,28 @@ export function setupAutoCompleteForShell(path?: string, shell?: string): any {
   autoCompleteObject.setupShellInitFile(path);
 }
 
-function getReplyHandler(lineEndsWithWhitespaceChar: boolean, helpMode: boolean, pathToHelpCommand: string): (args: string[], path: string) => string[] {
-  return function getReply(args: string[], path: string): string[] {
-    const currentArg = _.head(args);
-    const currentDirEntities = Fs.readdirSync(path).filter((entry) => entry !== "lib" && entry !== "category.txt" && Path.extname(entry) !== ".map" && (!helpMode || entry !== helpCommandFile));
-    const commandsAndCategoriesToEntities = new Map<string, string>(currentDirEntities.map((entity) => <[string, string]> [Path.parse(entity).name, entity]));
+function getReplyHandler(lineEndsWithWhitespaceChar: boolean): (args: string[], autocompleteTree: IAutocompleteTree) => string[] {
+  return function getReply(args: string[], autocompleteTree: IAutocompleteTree): string[] {
+    const currentArg = head(args);
+    const commandsAndCategories = Object.keys(autocompleteTree);
 
-    if (_.isUndefined(currentArg)) {
+    if (currentArg === undefined) {
       // no more args - show all of the items at the current level
-      return Array.from(commandsAndCategoriesToEntities.keys());
+      return commandsAndCategories;
     } else {
       // check what arg points to
-      const entity = commandsAndCategoriesToEntities.get(currentArg);
+      const entity = autocompleteTree[currentArg];
       if (entity) {
         // arg points to an existing command or category
-        const pathToEntity = Path.join(path, entity);
-        const restOfArgs = _.tail(args);
+        const restOfArgs = tail(args);
         if (restOfArgs.length || lineEndsWithWhitespaceChar) {
-          if (Path.extname(entity)) {
+          if (entity instanceof Array) {
             // it is command
             const getCommandReply = getCommandReplyHandler(lineEndsWithWhitespaceChar);
-            return getCommandReply(restOfArgs, getOptionNames(pathToEntity, helpMode, pathToHelpCommand));
+            return getCommandReply(restOfArgs, entity);
           } else {
             // it is category
-            return getReply(restOfArgs, pathToEntity);
+            return getReply(restOfArgs, entity);
           }
         } else {
           // if last arg has no trailing whitespace, it should be added
@@ -74,7 +67,7 @@ function getReplyHandler(lineEndsWithWhitespaceChar: boolean, helpMode: boolean,
         }
       } else {
         // arg points to nothing specific - return commands and categories which start with arg
-        return Array.from(commandsAndCategoriesToEntities.keys()).filter((commandOrCategory) => commandOrCategory.startsWith(currentArg));
+        return commandsAndCategories.filter((commandOrCategory) => commandOrCategory.startsWith(currentArg));
       }
     }
   };
@@ -82,12 +75,12 @@ function getReplyHandler(lineEndsWithWhitespaceChar: boolean, helpMode: boolean,
 
 function getCommandReplyHandler(lineEndsWithWhitespaceChar: boolean): (args: string[], optionNames: IOptionNames[]) => string[] {
   return function getCommandReply(args: string[], optionsNames: IOptionNames[]): string[] {  
-    const currentArg = _.head(args);
-    if (_.isUndefined(currentArg)) {
+    const currentArg = head(args);
+    if (currentArg === undefined) {
       // no more args, returning remaining optionsNames
       return optionsNames.map((option) => option.long || option.short);
     } else {
-      const restOfArgs = _.tail(args);
+      const restOfArgs = tail(args);
       if (restOfArgs.length || lineEndsWithWhitespaceChar) {
         const filteredOptions = optionsNames.filter((option) => option.long !== currentArg && option.short !== currentArg);
         return getCommandReply(restOfArgs, filteredOptions);
@@ -103,24 +96,65 @@ function getCommandReplyHandler(lineEndsWithWhitespaceChar: boolean): (args: str
         return candidates;
       }
     }
-  }
+  };
 }
 
 interface IOptionNames {
-  short: string;
-  long: string;
+  short?: string;
+  long?: string;
 }
 
-function getOptionNames(pathToCommand: string, helpMode: boolean, pathToHelpCommand: string): IOptionNames[] {
-  // loading command class
-  // if help mode ("help" command is invoked), options for "help" command should be shown
-  const command = require(helpMode ? pathToHelpCommand : pathToCommand).default;
+interface IAutocompleteTree {
+  [entity: string]: IAutocompleteTree | IOptionNames[];
+}
 
-  // getting command options
-  const optionsDescriptionsObject = OptionDecorators.getOptionsDescription(command.prototype);
-  const optionsDescriptions = Object.keys(optionsDescriptionsObject).map((key) => optionsDescriptionsObject[key]);
-  return optionsDescriptions.map((option) => ({ 
-    short: option.shortName ? "-" + option.shortName : null,
-    long: option.longName ? "--" + option.longName : null
-  }));
+function getAutoCompleteTreeWithExpandedHelp(originalTree: IAutocompleteTree): IAutocompleteTree {
+  // "help" command prefixes command path to show help for it
+  const helpTree = cloneDeep(originalTree, (entry) => entry instanceof Array ? cloneDeep(originalTree["help"]) : undefined);
+  delete helpTree["help"];
+
+  const expandedTree = cloneDeep(originalTree);  
+  expandedTree["help"] = helpTree;
+
+  return expandedTree;
+}
+
+// utility functions (to avoid loading lodash for performance reasons)
+
+function last(line: string): string {
+  return line.substr(-1, 1);
+}
+
+function head<T>(array: T[]): T {
+  return array[0];
+}
+
+function tail<T>(array: T[]): T[] {
+  return array.slice(1);
+}
+
+function cloneDeep<T>(item: T): T;
+function cloneDeep(item: any, handler: (item: any) => any): any;
+function cloneDeep(...args: any[]): any {
+  const item = args[0];
+  const handler = args[1];
+  const handlerResult = handler && handler(item);
+  if (handlerResult !== undefined) {
+    return handlerResult;
+  }
+
+  if (item instanceof Array) {
+    return item.map((subItem) => cloneDeep(subItem, handler));
+  }
+
+  if (item instanceof Object) {
+    const cloneObject: {[key: string]: any} = {};
+    const keys = Object.keys(item);
+    for (const key of keys) {
+      cloneObject[key] = cloneDeep(item[key], handler);
+    }
+    return cloneObject;
+  }
+
+  return item;
 }

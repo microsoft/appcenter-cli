@@ -9,6 +9,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const ts = require('gulp-typescript');
 const util = require('util');
 const autorest = require('./scripts/autorest');
+const autocompleteTree = require('./scripts/autocomplete-tree');
 
 let tsProject = ts.createProject('tsconfig.json');
 
@@ -48,9 +49,17 @@ gulp.task('copy-generated-client', function () {
     .pipe(gulp.dest('dist/util/apis/generated'));
 });
 
-gulp.task('build', [ 'build-ts', 'copy-assets', 'copy-generated-client' ]);
+gulp.task('generate-autocomplete-tree', function () {
+  autocompleteTree.generateAndSave();
+});
 
-gulp.task('build-sourcemaps', [ 'build-ts-sourcemaps', 'copy-assets', 'copy-generated-client' ]);
+gulp.task('build', function(done) {
+  runSeq([ 'build-ts', 'copy-assets', 'copy-generated-client' ], 'generate-autocomplete-tree', done);
+});
+
+gulp.task('build-sourcemaps', function(done) {
+  runSeq([ 'build-ts-sourcemaps', 'copy-assets', 'copy-generated-client' ], 'generate-autocomplete-tree', done);
+});
 
 gulp.task('clean-sourcemaps', function (cb) {
   return gulp.src('dist/**/*.js.map')
