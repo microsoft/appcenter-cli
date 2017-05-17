@@ -3,6 +3,7 @@ import * as path from "path";
 import * as _ from "lodash";
 import * as rimraf from "rimraf";
 import * as temp from "temp";
+import * as mkDirP from "mkdirp";
 
 export async function stat(path: string | Buffer): Promise<fs.Stats> {
   return (await callFs(fs.stat, path))[0];
@@ -57,6 +58,20 @@ export function exists(path: string | Buffer): Promise<boolean> {
 
 export function mkdir(path: string | Buffer): Promise<void> {
   return callFs(fs.mkdir, path).then(() => {});
+}
+
+export function mkdirp (path: string): Promise<string>;
+export function mkdirp (path: string, opts: mkDirP.Opts): Promise<string>;
+export function mkdirp (...args: any[]): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
+    mkDirP.apply(null, args.concat([(err: Error, made: string) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(made);
+      }
+    }]));    
+  });
 }
 
 export function mkTempDir(affixes: string): Promise<string> {

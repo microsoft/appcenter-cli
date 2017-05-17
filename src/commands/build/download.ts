@@ -4,7 +4,6 @@ import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
 import * as Process from "process";
-import * as MkDirP from "mkdirp";
 import * as Request from "request";
 import * as JsZip from "jszip";
 import * as JsZipHelper from "../../util/misc/jszip-helper";
@@ -16,7 +15,7 @@ const debug = require("debug")("mobile-center-cli:commands:build:download");
 
 @help("Download the binary, logs or symbols for a completed build")
 export default class DownloadBuildStatusCommand extends AppCommand {
-  private static readonly applicationPackagesExtensions: string[] = [".apk", ".ipa"];
+  private static readonly applicationPackagesExtensions: string[] = [".apk", ".ipa", ".xcarchive"];
 
   private static readonly buildType = "build";
   private static readonly logsType = "logs";
@@ -68,31 +67,28 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     const downloadedContent = await this.downloadContent(uri);
 
     debug(`Creating (if necessary) destination folder ${this.directory}`);
-    MkDirP.sync(this.directory);
+    await out.progress("Creating destination folder... ", Pfs.mkdirp(this.directory));
 
-    let outputFileBuffer: Buffer;
-    let outputExtension: string;
+    let outputPath: string;
     if (this.type === DownloadBuildStatusCommand.buildType) {
       debug("Reading received ZIP archive");
-      const fileZipObject = await this.getApkOrIpaZipObject(downloadedContent);
-      
-      debug("Extracting APK/IPA");
-      outputFileBuffer = await fileZipObject.async("nodebuffer");
+      const zip = await out.progress("Reading downloaded ZIP...", new JsZip().loadAsync(downloadedContent));
+      const payloadZipEntry = this.getPayload(zip);
+      const extension = Path.extname(payloadZipEntry.name).substring(1);
 
-      outputExtension = Path.extname(fileZipObject.name).slice(1);
+      if (payloadZipEntry.dir) {
+        // xcarchive
+        outputPath = await out.progress("Unpacking .xcarchive folder...", this.unpackAndWriteDirectory(zip, extension, buildInfo.sourceBranch, payloadZipEntry.name));
+      } else {
+        // IPA or APK
+        const payload = await out.progress("Extracting application package...", payloadZipEntry.async("nodebuffer"));
+        outputPath = await out.progress("Writing application package...", this.writeFile(payload, extension, buildInfo.sourceBranch));
+      }
     } else {
-      outputFileBuffer = downloadedContent;
-      outputExtension = "zip";
+      outputPath = await this.writeFile(downloadedContent, "zip", buildInfo.sourceBranch);
     }
 
-    debug("Preparing name for resulting file");
-    const fileName = await this.generateNameForOutputFile(buildInfo.sourceBranch, outputExtension);
-
-    debug(`Writing file ${fileName}`);
-    let outputFilePath = Path.join(this.directory, fileName);
-    await Pfs.writeFile(Path.join(this.directory, fileName), outputFileBuffer);
-
-    out.text((pathObject) => `Downloaded content was saved to ${pathObject.path}`,  {path: Path.resolve(outputFilePath)});
+    out.text((pathObject) => `Downloaded content was saved to ${pathObject.path}`,  {path: Path.resolve(outputPath)});
 
     return success();
   }
@@ -114,7 +110,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     // looking for apk or ipa
     return  _.find(
       <JSZipObject[]> _.values(zip.files), 
-      (file) => !file.dir && _.includes(DownloadBuildStatusCommand.applicationPackagesExtensions, Path.extname(file.name).toLowerCase()));
+      (file) => _.includes(DownloadBuildStatusCommand.applicationPackagesExtensions, Path.extname(file.name).toLowerCase()));
   }
 
   private async generateNameForOutputFile(branchName: string, extension: string): Promise<string> {
@@ -206,5 +202,33 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     }
 
     return downloadFileRequestResponse.result;
+  }
+  
+  private getPayload(zip: JSZip): JSZipObject {
+    // looking for apk, ipa or xcarchive
+    return  _.find(
+        <JSZipObject[]> _.values(zip.files), 
+        (file) => _.includes(DownloadBuildStatusCommand.applicationPackagesExtensions, Path.extname(file.name).toLowerCase()));
+  }
+
+  private async writeFile(buffer: Buffer, extension: string, sourceBranch: string): Promise<string> {
+    debug("Preparing name for resulting file");
+    const fileName = await this.generateNameForOutputFile(sourceBranch, extension);
+
+    debug(`Writing file ${fileName}`);
+    const filePath = Path.join(this.directory, fileName);
+    await Pfs.writeFile(filePath, buffer);
+    return filePath;
+  }
+
+  private async unpackAndWriteDirectory(directoryZip: JSZip, extension: string, sourceBranch: string, root: string): Promise<string> {
+    debug("Preparing name for resulting directory");
+    const directoryName = await this.generateNameForOutputFile(sourceBranch, extension);
+    
+    debug(`Writing xcarchive directory ${directoryName}`);
+    const directoryPath: string = Path.join(this.directory, directoryName);
+    await Pfs.mkdirp(directoryPath);
+    await JsZipHelper.unpackZipToPath(directoryPath, directoryZip, root);
+    return directoryPath;
   }
 }
