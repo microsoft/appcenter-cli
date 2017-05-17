@@ -40,7 +40,7 @@ util.inherits(ErrorLog, models['Log']);
 ErrorLog.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'ErrorLog',
+    serializedName: 'error',
     type: {
       name: 'Composite',
       className: 'ErrorLog',

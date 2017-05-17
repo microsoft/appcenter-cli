@@ -39,7 +39,7 @@ util.inherits(NotificationConfigAppleResult, models['NotificationConfigResult'])
 NotificationConfigAppleResult.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'NotificationConfigAppleResult',
+    serializedName: 'apns_config',
     type: {
       name: 'Composite',
       className: 'NotificationConfigAppleResult',

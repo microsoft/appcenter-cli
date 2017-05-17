@@ -34,7 +34,7 @@ util.inherits(NotificationConfigGoogleResult, models['NotificationConfigResult']
 NotificationConfigGoogleResult.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'NotificationConfigGoogleResult',
+    serializedName: 'gcm_config',
     type: {
       name: 'Composite',
       className: 'NotificationConfigGoogleResult',

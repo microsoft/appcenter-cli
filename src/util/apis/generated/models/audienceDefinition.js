@@ -74,9 +74,10 @@ AudienceDefinition.prototype.mapper = function () {
             name: 'Dictionary',
             value: {
                 required: false,
-                serializedName: 'StringElementType',
+                serializedName: 'device_property_typeElementType',
                 type: {
-                  name: 'String'
+                  name: 'Enum',
+                  allowedValues: [ 'string', 'number', 'boolean', 'date_time' ]
                 }
             }
           }

@@ -5741,6 +5741,67 @@ export interface DeviceFrameDefinition {
 
 /**
  * @class
+ * Initializes a new instance of the DeviceSetConfiguration class.
+ * @constructor
+ * @member {uuid} [id] The unique id of the device configuration
+ * 
+ * @member {object} [image]
+ * 
+ * @member {string} [image.thumb]
+ * 
+ * @member {object} [model]
+ * 
+ * @member {string} [model.name]
+ * 
+ * @member {string} [model.manufacturer]
+ * 
+ * @member {string} [model.releaseDate]
+ * 
+ * @member {string} [model.formFactor]
+ * 
+ * @member {string} [os]
+ * 
+ */
+export interface DeviceSetConfiguration {
+  id?: string;
+  image?: DeviceSetConfigurationImage;
+  model?: DeviceSetModel;
+  os?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DeviceSetConfigurationImage class.
+ * @constructor
+ * @member {string} [thumb]
+ * 
+ */
+export interface DeviceSetConfigurationImage {
+  thumb?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DeviceSetModel class.
+ * @constructor
+ * @member {string} [name]
+ * 
+ * @member {string} [manufacturer]
+ * 
+ * @member {string} [releaseDate]
+ * 
+ * @member {string} [formFactor]
+ * 
+ */
+export interface DeviceSetModel {
+  name?: string;
+  manufacturer?: string;
+  releaseDate?: string;
+  formFactor?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the TestRun class.
  * @constructor
  * @summary Test Run
@@ -5939,8 +6000,6 @@ export interface DeviceSelection {
  * 
  * @member {string} [slug] Slug of the device set
  * 
- * @member {string} shortId Short ID of the device set's device selection
- * 
  * @member {object} owner
  * 
  * @member {string} [owner.type] Type of account
@@ -5962,10 +6021,9 @@ export interface DeviceSet {
   manufacturerCount?: number;
   name: string;
   slug?: string;
-  shortId: string;
   owner: DeviceSetOwner;
   osVersionCount?: number;
-  deviceConfigurations: DeviceConfiguration[];
+  deviceConfigurations: DeviceSetConfiguration[];
 }
 
 /**

@@ -41,7 +41,7 @@ util.inherits(NotificationConfigAppleTokenResult, models['NotificationConfigResu
 NotificationConfigAppleTokenResult.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'NotificationConfigAppleTokenResult',
+    serializedName: 'apns_token_config',
     type: {
       name: 'Composite',
       className: 'NotificationConfigAppleTokenResult',

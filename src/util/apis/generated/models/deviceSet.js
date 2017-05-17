@@ -27,8 +27,6 @@ var util = require('util');
  * 
  * @member {string} [slug] Slug of the device set
  * 
- * @member {string} shortId Short ID of the device set's device selection
- * 
  * @member {object} owner
  * 
  * @member {string} [owner.type] Type of account
@@ -90,13 +88,6 @@ DeviceSet.prototype.mapper = function () {
             name: 'String'
           }
         },
-        shortId: {
-          required: true,
-          serializedName: 'shortId',
-          type: {
-            name: 'String'
-          }
-        },
         owner: {
           required: true,
           serializedName: 'owner',
@@ -119,10 +110,10 @@ DeviceSet.prototype.mapper = function () {
             name: 'Sequence',
             element: {
                 required: false,
-                serializedName: 'DeviceConfigurationElementType',
+                serializedName: 'DeviceSetConfigurationElementType',
                 type: {
                   name: 'Composite',
-                  className: 'DeviceConfiguration'
+                  className: 'DeviceSetConfiguration'
                 }
             }
           }

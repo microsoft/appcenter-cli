@@ -14365,6 +14365,7 @@
     "StartSessionLog": {
       "type": "object",
       "description": "Required explicit begin session log (a marker event for analytics service).",
+      "x-ms-discriminator-value": "start_session",
       "allOf": [
         {
           "$ref": "#/definitions/Log"
@@ -14384,6 +14385,7 @@
     "PageLog": {
       "type": "object",
       "description": "Page view log (as in screens or activities).",
+      "x-ms-discriminator-value": "page",
       "allOf": [
         {
           "$ref": "#/definitions/LogWithProperties"
@@ -14408,6 +14410,7 @@
     "EventLog": {
       "type": "object",
       "description": "Event log.",
+      "x-ms-discriminator-value": "event",
       "allOf": [
         {
           "$ref": "#/definitions/LogWithProperties"
@@ -14438,6 +14441,7 @@
     "PushInstallationLog": {
       "type": "object",
       "description": "Push installation Information.",
+      "x-ms-discriminator-value": "push_installation",
       "allOf": [
         {
           "$ref": "#/definitions/Log"
@@ -14456,6 +14460,7 @@
     "ErrorLog": {
       "type": "object",
       "description": "Error log.",
+      "x-ms-discriminator-value": "error",
       "allOf": [
         {
           "$ref": "#/definitions/Log"
@@ -14574,6 +14579,9 @@
           "type": "string"
         },
         "state": {
+          "x-ms-enum": {
+            "name": "AudienceProcessingState"
+          },
           "description": "Audience state.",
           "type": "string",
           "enum": [
@@ -14606,7 +14614,11 @@
               "number",
               "boolean",
               "date_time"
-            ]
+            ],
+            "x-ms-enum": {
+              "name": "device_property_type",
+              "modelAsString": false
+            }
           }
         },
         "estimated_total_count": {
@@ -14638,7 +14650,11 @@
               "number",
               "boolean",
               "date_time"
-            ]
+            ],
+            "x-ms-enum": {
+              "name": "device_property_type",
+              "modelAsString": false
+            }
           }
         },
         "estimated_count": {
@@ -14681,7 +14697,11 @@
               "number",
               "boolean",
               "date_time"
-            ]
+            ],
+            "x-ms-enum": {
+              "name": "device_property_type",
+              "modelAsString": false
+            }
           }
         }
       },
@@ -14713,7 +14733,11 @@
               "number",
               "boolean",
               "date_time"
-            ]
+            ],
+            "x-ms-enum": {
+              "name": "device_property_type",
+              "modelAsString": false
+            }
           }
         }
       },
@@ -14795,7 +14819,11 @@
             "Enqueued",
             "Processing",
             "Unknown"
-          ]
+          ],
+          "x-ms-enum": {
+            "name": "notification_states",
+            "modelAsString": true
+          }
         }
       },
       "required": [
@@ -14877,6 +14905,7 @@
     },
     "NotificationTargetAudiences": {
       "description": "Notification target audiences.",
+      "x-ms-discriminator-value": "audiences_target",
       "allOf": [
         {
           "$ref": "#/definitions/NotificationTarget"
@@ -14898,6 +14927,7 @@
     },
     "NotificationTargetUsers": {
       "description": "Notification target users.",
+      "x-ms-discriminator-value": "users_target",
       "allOf": [
         {
           "$ref": "#/definitions/NotificationTarget"
@@ -14919,6 +14949,7 @@
     },
     "NotificationTargetDevices": {
       "description": "Notification target devices. If null, all devices will be targeted(broadcast).",
+      "x-ms-discriminator-value": "devices_target",
       "allOf": [
         {
           "$ref": "#/definitions/NotificationTarget"
@@ -14951,6 +14982,7 @@
     },
     "NotificationConfigApple": {
       "description": "Apple notification certificate configuration.",
+      "x-ms-discriminator-value": "apns_config",
       "allOf": [
         {
           "$ref": "#/definitions/NotificationConfig"
@@ -14982,6 +15014,7 @@
     },
     "NotificationConfigAppleToken": {
       "description": "Apple notification auth token configuration.",
+      "x-ms-discriminator-value": "apns_token_config",
       "allOf": [
         {
           "$ref": "#/definitions/NotificationConfig"
@@ -15018,6 +15051,7 @@
     },
     "NotificationConfigGoogle": {
       "description": "Google notification configuration.",
+      "x-ms-discriminator-value": "gcm_config",
       "allOf": [
         {
           "$ref": "#/definitions/NotificationConfig"
@@ -15035,6 +15069,7 @@
     },
     "NotificationConfigWindows": {
       "description": "WNS notification configuration.",
+      "x-ms-discriminator-value": "wns_config",
       "allOf": [
         {
           "$ref": "#/definitions/NotificationConfig"
@@ -15069,6 +15104,7 @@
     },
     "NotificationConfigAppleResult": {
       "description": "Apple notification certificate configuration result.",
+      "x-ms-discriminator-value": "apns_config",
       "allOf": [
         {
           "$ref": "#/definitions/NotificationConfigResult"
@@ -15096,6 +15132,7 @@
     },
     "NotificationConfigAppleTokenResult": {
       "description": "Apple notification auth token configuration result.",
+      "x-ms-discriminator-value": "apns_token_config",
       "allOf": [
         {
           "$ref": "#/definitions/NotificationConfigResult"
@@ -15127,6 +15164,7 @@
     },
     "NotificationConfigGoogleResult": {
       "description": "Google notification configuration result.",
+      "x-ms-discriminator-value": "gcm_config",
       "allOf": [
         {
           "$ref": "#/definitions/NotificationConfigResult"
@@ -15144,6 +15182,7 @@
     },
     "NotificationConfigWindowsResult": {
       "description": "WNS notification configuration result.",
+      "x-ms-discriminator-value": "wns_config",
       "allOf": [
         {
           "$ref": "#/definitions/NotificationConfigResult"
@@ -15165,7 +15204,11 @@
       "enum": [
         "production",
         "sandbox"
-      ]
+      ],
+      "x-ms-enum": {
+        "name": "AppleNotificationEndpointType",
+        "modelAsString": true
+      }
     },
     "NotificationPlatformType": {
       "description": "Notification platform type",
@@ -15174,7 +15217,11 @@
         "apns",
         "gcm",
         "wns"
-      ]
+      ],
+      "x-ms-enum": {
+        "name": "NotificationPlatformType",
+        "modelAsString": true
+      }
     },
     "DeviceConfiguration": {
       "properties": {
@@ -15212,6 +15259,28 @@
         },
         "marketShare": {
           "type": "number"
+        }
+      }
+    },
+    "DeviceSetConfiguration": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The unique id of the device configuration"
+        },
+        "image": {
+          "properties": {
+            "thumb": {
+              "type": "string"
+            }
+          }
+        },
+        "model": {
+          "$ref": "#/definitions/DeviceSetModel"
+        },
+        "os": {
+          "type": "string"
         }
       }
     },
@@ -15258,6 +15327,22 @@
         },
         "availabilityCount": {
           "type": "number"
+        }
+      }
+    },
+    "DeviceSetModel": {
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "manufacturer": {
+          "type": "string"
+        },
+        "releaseDate": {
+          "type": "string"
+        },
+        "formFactor": {
+          "type": "string"
         }
       }
     },
@@ -15544,10 +15629,6 @@
           "description": "Slug of the device set",
           "type": "string"
         },
-        "shortId": {
-          "description": "Short ID of the device set's device selection",
-          "type": "string"
-        },
         "owner": {
           "$ref": "#/definitions/DeviceSetOwner"
         },
@@ -15558,14 +15639,13 @@
         "deviceConfigurations": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/DeviceConfiguration"
+            "$ref": "#/definitions/DeviceSetConfiguration"
           }
         }
       },
       "required": [
         "id",
         "name",
-        "shortId",
         "owner",
         "deviceConfigurations"
       ]

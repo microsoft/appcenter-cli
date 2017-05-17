@@ -36,7 +36,7 @@ util.inherits(NotificationConfigWindows, models['NotificationConfig']);
 NotificationConfigWindows.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'NotificationConfigWindows',
+    serializedName: 'wns_config',
     type: {
       name: 'Composite',
       className: 'NotificationConfigWindows',

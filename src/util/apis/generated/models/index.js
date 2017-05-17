@@ -257,6 +257,9 @@ exports.DeviceCpu = require('./deviceCpu');
 exports.DeviceMemory = require('./deviceMemory');
 exports.DeviceFrame = require('./deviceFrame');
 exports.DeviceFrameDefinition = require('./deviceFrameDefinition');
+exports.DeviceSetConfiguration = require('./deviceSetConfiguration');
+exports.DeviceSetConfigurationImage = require('./deviceSetConfigurationImage');
+exports.DeviceSetModel = require('./deviceSetModel');
 exports.TestRun = require('./testRun');
 exports.TestRunStatistics = require('./testRunStatistics');
 exports.TestSeries = require('./testSeries');
@@ -317,23 +320,23 @@ exports.CrashGroups = require('./crashGroups');
 exports.discriminators = {
   'Log' : exports.Log,
   'Log.LogWithProperties' : exports.LogWithProperties,
-  'Log.StartSessionLog' : exports.StartSessionLog,
-  'Log.PageLog' : exports.PageLog,
-  'Log.EventLog' : exports.EventLog,
-  'Log.PushInstallationLog' : exports.PushInstallationLog,
-  'Log.ErrorLog' : exports.ErrorLog,
+  'Log.start_session' : exports.StartSessionLog,
+  'Log.page' : exports.PageLog,
+  'Log.event' : exports.EventLog,
+  'Log.push_installation' : exports.PushInstallationLog,
+  'Log.error' : exports.ErrorLog,
   'NotificationTarget' : exports.NotificationTarget,
-  'NotificationTarget.NotificationTargetAudiences' : exports.NotificationTargetAudiences,
-  'NotificationTarget.NotificationTargetUsers' : exports.NotificationTargetUsers,
-  'NotificationTarget.NotificationTargetDevices' : exports.NotificationTargetDevices,
+  'NotificationTarget.audiences_target' : exports.NotificationTargetAudiences,
+  'NotificationTarget.users_target' : exports.NotificationTargetUsers,
+  'NotificationTarget.devices_target' : exports.NotificationTargetDevices,
   'NotificationConfig' : exports.NotificationConfig,
-  'NotificationConfig.NotificationConfigApple' : exports.NotificationConfigApple,
-  'NotificationConfig.NotificationConfigAppleToken' : exports.NotificationConfigAppleToken,
-  'NotificationConfig.NotificationConfigGoogle' : exports.NotificationConfigGoogle,
-  'NotificationConfig.NotificationConfigWindows' : exports.NotificationConfigWindows,
+  'NotificationConfig.apns_config' : exports.NotificationConfigApple,
+  'NotificationConfig.apns_token_config' : exports.NotificationConfigAppleToken,
+  'NotificationConfig.gcm_config' : exports.NotificationConfigGoogle,
+  'NotificationConfig.wns_config' : exports.NotificationConfigWindows,
   'NotificationConfigResult' : exports.NotificationConfigResult,
-  'NotificationConfigResult.NotificationConfigAppleResult' : exports.NotificationConfigAppleResult,
-  'NotificationConfigResult.NotificationConfigAppleTokenResult' : exports.NotificationConfigAppleTokenResult,
-  'NotificationConfigResult.NotificationConfigGoogleResult' : exports.NotificationConfigGoogleResult,
-  'NotificationConfigResult.NotificationConfigWindowsResult' : exports.NotificationConfigWindowsResult
+  'NotificationConfigResult.apns_config' : exports.NotificationConfigAppleResult,
+  'NotificationConfigResult.apns_token_config' : exports.NotificationConfigAppleTokenResult,
+  'NotificationConfigResult.gcm_config' : exports.NotificationConfigGoogleResult,
+  'NotificationConfigResult.wns_config' : exports.NotificationConfigWindowsResult
 };
