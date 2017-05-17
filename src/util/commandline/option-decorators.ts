@@ -14,14 +14,19 @@ const unknownHelpTextKey = Symbol("UnknownDescription");
 export const classHelpTextKey = Symbol("ClassHelpText");
 
 export function getOptionsDescription(target: any): OptionsDescription {
+  // option description can be overridden in children class
   function getRecursive(accumulator: OptionsDescription, target: any): OptionsDescription {
-    if (!target) {
+    if (target) {
+      getRecursive(accumulator, Object.getPrototypeOf(target));
+    } else {
       return accumulator;
     }
+
     if (target.hasOwnProperty(optionDescriptionKey)) {
       assign(accumulator, target[optionDescriptionKey]);
     }
-    return getRecursive(accumulator, Object.getPrototypeOf(target));
+
+    return accumulator;
   }
 
   return getRecursive({}, target);

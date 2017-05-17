@@ -2,7 +2,7 @@
 import * as Result from "./command-result";
 import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription } from "./option-decorators";
 import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "./option-parser";
-import { setDebug, isDebug, setQuiet, setFormatJson, out } from "../interaction";
+import { setDebug, isDebug, setQuiet, OutputFormatSupport, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
 import { getUser, environments, telemetryIsEnabled } from "../profile";
@@ -37,6 +37,11 @@ export class Command {
 
   // Support for login command
   protected clientFactory: MobileCenterClientFactory;
+
+  // Additional output formats (except "list" which is used by default) which are supported by this command
+  protected readonly additionalSupportedOutputFormats: OutputFormatSupport = {
+    json: setFormatJson
+  };
 
   // Default arguments supported by every command
 
@@ -101,19 +106,11 @@ export class Command {
     }
 
     if (this.format) {
-        switch(this.format) {
-          case null:
-          case "":
-            break;
-          case "json":
-            setFormatJson();
-            break;
-
-          default:
-            return Promise.resolve(
-              Result.failure(Result.ErrorCodes.InvalidParameter, `Unknown output format ${this.format}`)
-            );
-        }
+      if (this.format in this.additionalSupportedOutputFormats) {
+        this.additionalSupportedOutputFormats[this.format]();
+      } else if (this.format != null && this.format !== "") {
+        return Promise.resolve(Result.failure(Result.ErrorCodes.InvalidParameter, `Unknown output format ${this.format}`));
+      }
     }
     this.clientFactory = createMobileCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry));
     return this.runNoClient();
