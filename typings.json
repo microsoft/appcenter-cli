@@ -10,7 +10,6 @@
     "event-stream": "registry:dt/event-stream#0.0.0+20160216030252",
     "jszip": "registry:dt/jszip#0.0.0+20170110193107",
     "node": "registry:dt/node#6.0.0+20160915134512",
-    "node-fetch": "registry:dt/node-fetch#0.0.0+20160711094047",
     "promptly": "registry:dt/promptly#1.1.1+20160316155526",
     "rx": "npm:rx/ts/rx.all.d.ts"
   },
@@ -25,6 +24,7 @@
     "lodash": "registry:npm/lodash#4.0.0+20161015015725",
     "minimist": "registry:npm/minimist#1.0.0+20160723033700",
     "mkdirp": "registry:npm/mkdirp#0.5.0+20160723033700",
+    "node-fetch": "registry:dt/node-fetch#1.6.0+20161224095027",
     "request": "registry:npm/request#2.69.0+20160428223725",
     "rimraf": "registry:npm/rimraf#2.5.0+20160723033700",
     "wordwrap": "registry:npm/wordwrap#1.0.0+20160723033700"
