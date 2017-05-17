@@ -34,7 +34,7 @@ util.inherits(StartSessionLog, models['Log']);
 StartSessionLog.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'StartSessionLog',
+    serializedName: 'start_session',
     type: {
       name: 'Composite',
       className: 'StartSessionLog',

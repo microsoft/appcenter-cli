@@ -34,7 +34,7 @@ util.inherits(PushInstallationLog, models['Log']);
 PushInstallationLog.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'PushInstallationLog',
+    serializedName: 'push_installation',
     type: {
       name: 'Composite',
       className: 'PushInstallationLog',

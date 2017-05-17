@@ -34,7 +34,7 @@ util.inherits(NotificationConfigWindowsResult, models['NotificationConfigResult'
 NotificationConfigWindowsResult.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'NotificationConfigWindowsResult',
+    serializedName: 'wns_config',
     type: {
       name: 'Composite',
       className: 'NotificationConfigWindowsResult',

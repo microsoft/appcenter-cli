@@ -78,7 +78,8 @@ Audience.prototype.mapper = function () {
           required: false,
           serializedName: 'state',
           type: {
-            name: 'String'
+            name: 'Enum',
+            allowedValues: [ 'Calculating', 'Ready', 'Disabled' ]
           }
         },
         enabled: {
@@ -96,9 +97,10 @@ Audience.prototype.mapper = function () {
             name: 'Dictionary',
             value: {
                 required: false,
-                serializedName: 'StringElementType',
+                serializedName: 'device_property_typeElementType',
                 type: {
-                  name: 'String'
+                  name: 'Enum',
+                  allowedValues: [ 'string', 'number', 'boolean', 'date_time' ]
                 }
             }
           }

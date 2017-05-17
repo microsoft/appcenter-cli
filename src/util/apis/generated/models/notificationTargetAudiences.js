@@ -34,7 +34,7 @@ util.inherits(NotificationTargetAudiences, models['NotificationTarget']);
 NotificationTargetAudiences.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'NotificationTargetAudiences',
+    serializedName: 'audiences_target',
     type: {
       name: 'Composite',
       className: 'NotificationTargetAudiences',

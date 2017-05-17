@@ -73,7 +73,8 @@ AudienceSummary.prototype.mapper = function () {
           required: false,
           serializedName: 'state',
           type: {
-            name: 'String'
+            name: 'Enum',
+            allowedValues: [ 'Calculating', 'Ready', 'Disabled' ]
           }
         }
       }

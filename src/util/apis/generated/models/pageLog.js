@@ -36,7 +36,7 @@ util.inherits(PageLog, models['LogWithProperties']);
 PageLog.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'PageLog',
+    serializedName: 'page',
     type: {
       name: 'Composite',
       className: 'PageLog',

@@ -41,7 +41,7 @@ util.inherits(NotificationConfigApple, models['NotificationConfig']);
 NotificationConfigApple.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'NotificationConfigApple',
+    serializedName: 'apns_config',
     type: {
       name: 'Composite',
       className: 'NotificationConfigApple',

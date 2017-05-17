@@ -38,7 +38,7 @@ util.inherits(EventLog, models['LogWithProperties']);
 EventLog.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'EventLog',
+    serializedName: 'event',
     type: {
       name: 'Composite',
       className: 'EventLog',
