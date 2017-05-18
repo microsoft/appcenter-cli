@@ -35,7 +35,7 @@ const environmentsData: EnvironmentsFile = {
     },
     prod: {
       endpoint: "https://api.mobile.azure.com",
-      loginEndpoint: "https://mobile.aure/com/cli-login",
+      loginEndpoint: "https://mobile.azure.com/cli-login",
       description: "Production"
     },
     testCloudLocalDev: {
