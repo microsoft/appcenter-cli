@@ -1,9 +1,9 @@
 const _ = require("lodash");
 const Fs = require("fs");
 const Path = require("path");
-const OptionDecorators = require("../dist/util/commandline/option-decorators");
+let OptionDecorators; // OptionDecorators.js is not yet compiled at this point, it should be loaded later
 
-const rootPath = "dist";
+const rootPath = Path.resolve("dist");
 const commandsPath = Path.join(rootPath, "commands");
 const treeFile = "autocomplete-tree.json";
 const treeFilePath = Path.join(rootPath, treeFile);
@@ -12,6 +12,7 @@ const treeFilePath = Path.join(rootPath, treeFile);
  * Generates autocomplete tree and saves it to file
  */
 function generateAndSave() {
+  OptionDecorators = require("../dist/util/commandline/option-decorators"); // OptionDecorators.js is available here
   const treeObject = generateAutoCompleteTree(commandsPath);
 
   // saving tree
@@ -66,7 +67,7 @@ function getDirEntriesOrNull(path) {
  * @returns {object[]}
  */
 function getOptionsForCommand(path) {
-  const command = require(Path.resolve(path)).default;
+  const command = require(path).default;
 
   // getting command options
   const optionsDescriptionsObject = OptionDecorators.getOptionsDescription(command.prototype);
