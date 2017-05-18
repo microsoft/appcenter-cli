@@ -20,7 +20,7 @@ const environmentsData: EnvironmentsFile = {
   environments: {
     dev: {
       endpoint: "https://bifrost-dev.trafficmanager.net",
-      loginEndpoint: null,
+      loginEndpoint: "https://asgard-dev.trafficmanager.net/cli-login",
       description: "Development"
     },
     int: {
@@ -30,12 +30,12 @@ const environmentsData: EnvironmentsFile = {
     },
     staging: {
       endpoint: "https://bifrost-staging.trafficmanager.net",
-      loginEndpoint: null,
+      loginEndpoint: "https://asgard-staging.trafficmanager.net/cli-login",
       description: "Staging"
     },
     prod: {
       endpoint: "https://api.mobile.azure.com",
-      loginEndpoint: null,
+      loginEndpoint: "https://mobile.aure/com/cli-login",
       description: "Production"
     },
     testCloudLocalDev: {
