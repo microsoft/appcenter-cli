@@ -22,7 +22,7 @@ will be used to record and playback mock http traffic. [Note: this isn't set up 
 Install the latese version of Node 6 from [here](https://nodejs.org). If you are on a Mac, we recommend
 a 64-bit version.
 
-Also have a working git installation. The code is available from this [repo](https://github.com/Microsoft/MobileCenter-cli).
+Also have a working git installation. The code is available from this [repo](https://github.com/Microsoft/mobile-center-cli).
 
 
 ### Optional Tools
