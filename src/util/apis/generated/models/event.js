@@ -62,7 +62,7 @@ Event.prototype.mapper = function () {
         },
         deviceCount: {
           required: false,
-          serializedName: 'deviceCount',
+          serializedName: 'device_count',
           type: {
             name: 'Number'
           }

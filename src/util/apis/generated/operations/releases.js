@@ -34,8 +34,6 @@ function Releases(client) {
  * latest release from all the distribution groups assigned to the current
  * user.
  * 
- * @param {string} internalAppId The app ID
- * 
  * @param {object} [options] Optional Parameters.
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
@@ -53,7 +51,7 @@ function Releases(client) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Releases.prototype.getLatestByHash = function (appSecret, releaseHash, internalAppId, options, callback) {
+Releases.prototype.getLatestByHash = function (appSecret, releaseHash, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -69,9 +67,6 @@ Releases.prototype.getLatestByHash = function (appSecret, releaseHash, internalA
     }
     if (releaseHash === null || releaseHash === undefined || typeof releaseHash.valueOf() !== 'string') {
       throw new Error('releaseHash cannot be null or undefined and it must be of type string.');
-    }
-    if (internalAppId === null || internalAppId === undefined || typeof internalAppId.valueOf() !== 'string') {
-      throw new Error('internalAppId cannot be null or undefined and it must be of type string.');
     }
   } catch (error) {
     return callback(error);
@@ -89,9 +84,6 @@ Releases.prototype.getLatestByHash = function (appSecret, releaseHash, internalA
   httpRequest.headers = {};
   httpRequest.url = requestUrl;
   // Set Headers
-  if (internalAppId !== undefined && internalAppId !== null) {
-    httpRequest.headers['internal-app-id'] = internalAppId;
-  }
   if(options) {
     for(var headerName in options['customHeaders']) {
       if (options['customHeaders'].hasOwnProperty(headerName)) {
@@ -185,6 +177,10 @@ Releases.prototype.getLatestByHash = function (appSecret, releaseHash, internalA
  * 
  * @param {object} [options] Optional Parameters.
  * 
+ * @param {string} [options.udid] when supplied, this call will also check if
+ * the given UDID is provisioned. Will be ignored for non-iOS platforms. The
+ * value will be returned in the property is_udid_provisioned.
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  * 
@@ -209,10 +205,14 @@ Releases.prototype.getLatestByUser = function (releaseId, ownerName, appName, op
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  var udid = (options && options.udid !== undefined) ? options.udid : undefined;
   // Validate
   try {
     if (releaseId === null || releaseId === undefined || typeof releaseId.valueOf() !== 'string') {
       throw new Error('releaseId cannot be null or undefined and it must be of type string.');
+    }
+    if (udid !== null && udid !== undefined && typeof udid.valueOf() !== 'string') {
+      throw new Error('udid must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -230,6 +230,13 @@ Releases.prototype.getLatestByUser = function (releaseId, ownerName, appName, op
   requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  var queryParameters = [];
+  if (udid !== null && udid !== undefined) {
+    queryParameters.push('udid=' + encodeURIComponent(udid));
+  }
+  if (queryParameters.length > 0) {
+    requestUrl += '?' + queryParameters.join('&');
+  }
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();

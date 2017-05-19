@@ -347,13 +347,6 @@
             "in": "path",
             "description": "The hash of the release or 'latest' to get the latest release from all the distribution groups assigned to the current user.",
             "required": true
-          },
-          {
-            "name": "internal-app-id",
-            "type": "string",
-            "in": "header",
-            "description": "The app ID",
-            "required": true
           }
         ],
         "responses": {
@@ -2272,7 +2265,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/symbols/{symbol_id}/ignore": {
       "post": {
         "description": "Marks a symbol by id (uuid) as ignored",
-        "operationId": "Symbols_postIgnoreSymbol",
+        "operationId": "symbols_ignore",
         "parameters": [
           {
             "$ref": "#/parameters/path_symbol_id"
@@ -2323,7 +2316,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/symbols/{symbol_id}": {
       "get": {
         "description": "Returns a particular symbol by id (uuid) for the provided application",
-        "operationId": "Symbols_getSymbol",
+        "operationId": "symbols_get",
         "parameters": [
           {
             "$ref": "#/parameters/path_symbol_id"
@@ -2374,7 +2367,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/symbols": {
       "get": {
         "description": "Returns the list of all symbols for the provided application",
-        "operationId": "Symbols_getSymbols",
+        "operationId": "symbols_list",
         "parameters": [
           {
             "$ref": "#/parameters/owner_name"
@@ -2416,7 +2409,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/symbol_uploads/{symbol_upload_id}": {
       "get": {
         "description": "Gets a symbol upload by id for the specified application",
-        "operationId": "Symbols_getSymbolUpload",
+        "operationId": "symbolUploads_get",
         "parameters": [
           {
             "$ref": "#/parameters/path_symbol_upload_id"
@@ -2465,7 +2458,7 @@
       },
       "patch": {
         "description": "Commits or aborts the symbol upload process for a new set of symbols for the specified application",
-        "operationId": "Symbols_patchSymbolUpload",
+        "operationId": "symbolUploads_complete",
         "parameters": [
           {
             "$ref": "#/parameters/path_symbol_upload_id"
@@ -2520,61 +2513,12 @@
         "tags": [
           "crash"
         ]
-      },
-      "delete": {
-        "description": "Deletes a symbol upload by id for the specified application",
-        "operationId": "Symbols_deleteSymbolUpload",
-        "parameters": [
-          {
-            "$ref": "#/parameters/path_symbol_upload_id"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SymbolUpload"
-            }
-          },
-          "403": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal error",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "crash"
-        ]
       }
     },
     "/v0.1/apps/{owner_name}/{app_name}/symbol_uploads": {
       "get": {
         "description": "Gets a list of all uploads for the specified application",
-        "operationId": "Symbols_getSymbolUploads",
+        "operationId": "symbolUploads_list",
         "parameters": [
           {
             "$ref": "#/parameters/owner_name"
@@ -2614,7 +2558,7 @@
       },
       "post": {
         "description": "Begins the symbol upload process for a new set of symbols for the specified application",
-        "operationId": "Symbols_postSymbolUpload",
+        "operationId": "symbolUploads_create",
         "parameters": [
           {
             "name": "body",
@@ -4100,6 +4044,43 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/provisioning_profile": {
+      "get": {
+        "description": "Return information about the provisioning profile",
+        "parameters": [
+          {
+            "name": "release_id",
+            "type": "number",
+            "in": "path",
+            "description": "The release_id",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ProvisioningProfile"
+            }
+          }
+        },
+        "operationId": "provisioning_profile",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}": {
       "get": {
         "description": "Get a release with id `release_id`. if `release_id` is `latest`, return the latest release that was distributed to the current user (from all the distribution groups).",
@@ -4111,6 +4092,13 @@
             "in": "path",
             "description": "The ID of the release, or `latest` to get the latest release from all the distribution groups assigned to the current user.",
             "required": true
+          },
+          {
+            "name": "udid",
+            "type": "string",
+            "in": "query",
+            "description": "when supplied, this call will also check if the given UDID is provisioned. Will be ignored for non-iOS platforms. The value will be returned in the property is_udid_provisioned.",
+            "required": false
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -11074,6 +11062,9 @@
         },
         "toolsets": {
           "$ref": "#/definitions/BranchConfigurationToolsets"
+        },
+        "artifactVersioning": {
+          "$ref": "#/definitions/BranchConfigurationArtifactVersioning"
         }
       },
       "additionalProperties": {
@@ -11097,6 +11088,18 @@
         },
         "android": {
           "$ref": "#/definitions/AndroidBranchConfigurationProperties"
+        }
+      }
+    },
+    "BranchConfigurationArtifactVersioning": {
+      "description": "The versioning configuration for artifacts built for this branch",
+      "properties": {
+        "buildNumberFormat": {
+          "type": "string",
+          "enum": [
+            "buildId",
+            "timestamp"
+          ]
         }
       }
     },
@@ -11818,6 +11821,10 @@
           "items": {
             "$ref": "#/definitions/DistributionStoreWithoutIsLatest"
           }
+        },
+        "is_udid_provisioned": {
+          "description": "In calls that allow passing `udid` in the query string, this value will hold the provisioning status of that UDID in this release. Will be ignored for non-iOS platforms.",
+          "type": "boolean"
         }
       }
     },
@@ -12017,6 +12024,28 @@
         "publishing_status": {
           "description": "publishing status of the release in the store.",
           "type": "string"
+        }
+      }
+    },
+    "ProvisioningProfile": {
+      "required": [
+        "provisioning_profile_type"
+      ],
+      "properties": {
+        "provisioning_profile_type": {
+          "type": "string",
+          "enum": [
+            "adhoc",
+            "enterprise",
+            "other"
+          ]
+        },
+        "udids": {
+          "type": "array",
+          "items": {
+            "description": "The UDID of the device.",
+            "type": "string"
+          }
         }
       }
     },
@@ -13693,25 +13722,9 @@
       }
     },
     "SessionCounts": {
-      "type": "object",
-      "properties": {
-        "total_count": {
-          "description": "total session count",
-          "type": "integer",
-          "format": "int64"
-        },
-        "previous_total_count": {
-          "description": "previous total session count",
-          "type": "integer",
-          "format": "int64"
-        },
-        "sessions": {
-          "description": "the total session count for each interval",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DateTimeCounts"
-          }
-        }
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DateTimeCounts"
       }
     },
     "SessionsPerDevice": {
@@ -14022,6 +14035,24 @@
         }
       }
     },
+    "LogTraceDefinition": {
+      "type": "object",
+      "required": [
+        "app_secret"
+      ],
+      "properties": {
+        "app_secret": {
+          "type": "string"
+        },
+        "install_id": {
+          "type": "string"
+        },
+        "expiration": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
     "CrashGroupContainer": {
       "type": "object",
       "required": [
@@ -14081,7 +14112,7 @@
           "type": "string",
           "format": "string"
         },
-        "deviceCount": {
+        "device_count": {
           "type": "integer",
           "format": "int64"
         },
@@ -17106,6 +17137,15 @@
       "required": false,
       "type": "string",
       "format": "date-time",
+      "x-ms-parameter-location": "method"
+    },
+    "LogTraceParameter": {
+      "name": "log_trace",
+      "in": "body",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/LogTraceDefinition"
+      },
       "x-ms-parameter-location": "method"
     },
     "CrashGroupParameter": {

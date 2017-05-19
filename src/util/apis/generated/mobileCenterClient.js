@@ -63,12 +63,14 @@ function MobileCenterClient(credentials, baseUri, options) {
   this.crashes = new operations.Crashes(this);
   this.test = new operations.Test(this);
   this.symbols = new operations.Symbols(this);
+  this.symbolUploads = new operations.SymbolUploads(this);
   this.missingSymbolGroups = new operations.MissingSymbolGroups(this);
   this.tables = new operations.Tables(this);
   this.azure = new operations.Azure(this);
   this.identity = new operations.Identity(this);
   this.repositories = new operations.Repositories(this);
   this.repositoryConfigurations = new operations.RepositoryConfigurations(this);
+  this.provisioning = new operations.Provisioning(this);
   this.releaseUploads = new operations.ReleaseUploads(this);
   this.storeReleases = new operations.StoreReleases(this);
   this.stores = new operations.Stores(this);

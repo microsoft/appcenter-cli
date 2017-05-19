@@ -45,12 +45,14 @@ declare class MobileCenterClient {
     crashes: operations.Crashes;
     test: operations.Test;
     symbols: operations.Symbols;
+    symbolUploads: operations.SymbolUploads;
     missingSymbolGroups: operations.MissingSymbolGroups;
     tables: operations.Tables;
     azure: operations.Azure;
     identity: operations.Identity;
     repositories: operations.Repositories;
     repositoryConfigurations: operations.RepositoryConfigurations;
+    provisioning: operations.Provisioning;
     releaseUploads: operations.ReleaseUploads;
     storeReleases: operations.StoreReleases;
     stores: operations.Stores;
