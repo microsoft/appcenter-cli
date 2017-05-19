@@ -1,8 +1,8 @@
-// Management for the current environment. Loads from the
-// environments.json file in this directory
+// Management for the current environment.
 
 export interface EnvironmentInfo {
   endpoint: string;
+  loginEndpoint: string;
   description?: string;
 }
 
@@ -20,22 +20,27 @@ const environmentsData: EnvironmentsFile = {
   environments: {
     dev: {
       endpoint: "https://bifrost-dev.trafficmanager.net",
+      loginEndpoint: "https://asgard-dev.trafficmanager.net/cli-login",
       description: "Development"
     },
     int: {
       endpoint: "https://bifrost-int.trafficmanager.net",
+      loginEndpoint: "https://asgard-int.trafficmanager.net/cli-login",
       description: "Integration"
     },
     staging: {
       endpoint: "https://bifrost-staging.trafficmanager.net",
+      loginEndpoint: "https://asgard-staging.trafficmanager.net/cli-login",
       description: "Staging"
     },
     prod: {
       endpoint: "https://api.mobile.azure.com",
+      loginEndpoint: "https://mobile.azure.com/cli-login",
       description: "Production"
     },
     testCloudLocalDev: {
       endpoint: "http://localhost:1700",
+      loginEndpoint: null,
       description: "Test Cloud local dev box development"
     }
   }
