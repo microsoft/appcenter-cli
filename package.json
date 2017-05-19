@@ -46,7 +46,8 @@
     "nock": "^8.0.0",
     "run-sequence": "^1.2.2",
     "sinon": "^1.17.6",
-    "typescript": "^2.1.4"
+    "ts-node": "^3.0.4",
+    "typescript": "^2.3.2"
   },
   "dependencies": {
     "bplist": "0.0.4",
@@ -68,8 +69,6 @@
     "rimraf": "^2.5.4",
     "rx": "^4.1.0",
     "temp": "^0.8.3",
-    "ts-node": "^3.0.4",
-    "typescript": "^2.3.2",
     "uuid": "^3.0.1",
     "wordwrap": "^1.0.0"
   }
