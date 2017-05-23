@@ -9,10 +9,18 @@ import * as Path from "path";
 import * as Sinon from "sinon";
 import * as Temp from "temp";
 import * as ChaiAsPromised from "chai-as-promised";
+import * as MockRequire from "mock-require";
 
 use(ChaiAsPromised);
 
+// Mocking AzureBlobUploadHelper
+import AzureBlobUploadHelperMock from "./lib/azure-blob-uploader-helper-mock";
+MockRequire("../../../../src/commands/crashes/lib/azure-blob-upload-helper", {
+  default: AzureBlobUploadHelperMock
+});
 import UploadSymbolsCommand from "../../../../src/commands/crashes/upload-symbols";
+MockRequire.stopAll();
+
 import { MobileCenterClient } from "../../../../src/util/apis";
 import { CommandArgs, CommandResult } from "../../../../src/util/commandline";
 
@@ -26,6 +34,7 @@ describe("upload-symbols command", () => {
   const fakeSymbolUploadingId = "fakeSymbolUploadingId";
   const fakeUploadUrl = "/upload/here";
   const fakeHost = "http://localhost:1700";
+  const fakeFullUploadUrl = fakeHost + fakeUploadUrl;
 
   const symbolsFile1Name = "symbolsFile1";
   const symbolsFile2Name = "symbolsFile2";
@@ -43,7 +52,6 @@ describe("upload-symbols command", () => {
 
   let tmpFolderPath: string;
   
-  let uploaderSpy: Sinon.SinonSpy;
   let postSymbolSpy: Sinon.SinonSpy;
   let patchSymbolSpy: Sinon.SinonSpy;
   let abortSymbolUploadSpy: Sinon.SinonSpy;
@@ -57,7 +65,6 @@ describe("upload-symbols command", () => {
 
   beforeEach(() => {
     tmpFolderPath = Temp.mkdirSync("uploadSymbolsTest");
-    uploaderSpy = Sinon.spy();
     postSymbolSpy = Sinon.spy();
     patchSymbolSpy = Sinon.spy();
     abortSymbolUploadSpy = Sinon.spy();
@@ -65,8 +72,8 @@ describe("upload-symbols command", () => {
 
   describe("when network requests are successful", () => {
     beforeEach(() => {
-        expectedRequestsScope = setupSuccessfulPostUploadResponse(setupSuccessfulPutUploadResponse(setupSuccessfulPatchUploadResponse(Nock(fakeHost))));
-        skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
+      expectedRequestsScope = _.flow(setupSuccessfulPatchUploadResponse, setupSuccessfulPostUploadResponse)(Nock(fakeHost));
+      skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
     });
 
     it("uploads ZIP with symbols", async () => {
@@ -78,9 +85,9 @@ describe("upload-symbols command", () => {
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-      let uploadedZipEntries = getEntitiesList(await getUploadedZip());
-      expect(uploadedZipEntries.length).to.eql(1, "Only one entry is expected to be in the ZIP");
-      expect(uploadedZipEntries).to.contain(symbolsFile1Name, "Test file should be inside the uploaded ZIP");
+      const [url, uploadedZipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
+      expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
+      expect(uploadedZipPath).to.eql(zipPath, "Zip file should be passed as it is");
     });
 
     it("uploads dSym folder", async () => {
@@ -92,7 +99,10 @@ describe("upload-symbols command", () => {
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-      let uploadedZipEntries = getEntitiesList(await getUploadedZip());
+      const [url, zipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
+      expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
+
+      let uploadedZipEntries = getEntitiesList(await getUploadedZip(zipPath));
       expect(uploadedZipEntries.length).to.eql(2, "Only two entries are expected to be in the ZIP");
       expect(uploadedZipEntries).to.contain(Path.join(dSymFolder1Name, symbolsFile1Name), "Test file should be inside the uploaded ZIP");
       expect(uploadedZipEntries).to.contain(dSymFolder1Name + Path.sep, ".dSYM folder should be inside the uploaded ZIP");
@@ -107,7 +117,10 @@ describe("upload-symbols command", () => {
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-      let uploadedZipEntries = getEntitiesList(await getUploadedZip());
+      const [url, zipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
+      expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
+
+      let uploadedZipEntries = getEntitiesList(await getUploadedZip(zipPath));
       expect(uploadedZipEntries.length).to.eql(4, "Only four entries are expected to be in the ZIP");
       expect(uploadedZipEntries).to.contain(dSymFolder1Name + Path.sep, "First .dSYM folder should be inside the uploaded ZIP");
       expect(uploadedZipEntries).to.contain(dSymFolder2Name + Path.sep, "Second .dSYM folder should be inside the uploaded ZIP");
@@ -124,7 +137,10 @@ describe("upload-symbols command", () => {
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-      let uploadedZipEntries = getEntitiesList(await getUploadedZip());
+      const [url, zipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
+      expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
+
+      let uploadedZipEntries = getEntitiesList(await getUploadedZip(zipPath));
       expect(uploadedZipEntries.length).to.eql(4, "Only four entries are expected to be in the ZIP");
       expect(uploadedZipEntries).to.contain(dSymFolder1Name + Path.sep, "First .dSYM folder should be inside the uploaded ZIP");
       expect(uploadedZipEntries).to.contain(dSymFolder2Name + Path.sep, "Second .dSYM folder should be inside the uploaded ZIP");
@@ -142,7 +158,11 @@ describe("upload-symbols command", () => {
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-      let uploadedZipEntries = getEntitiesList(await getUploadedZip());
+      const [url, uploadedZipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
+      expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
+      expect(uploadedZipPath).not.to.eql(zipPath, "Uploaded ZIP path should be different from original ZIP path");
+
+      let uploadedZipEntries = getEntitiesList(await getUploadedZip(uploadedZipPath));
       expect(uploadedZipEntries.length).to.eql(2, "Only two entries are expected to be in the ZIP");
       expect(uploadedZipEntries).to.contain(symbolsFile1Name, "Test file should be inside the uploaded ZIP");
       expect(uploadedZipEntries).to.contain(mappingsFileName, "Mappings file should be inside the uploaded ZIP");
@@ -150,15 +170,19 @@ describe("upload-symbols command", () => {
 
     it("uploads ZIP with updated sourcemap file", async() => {
       // Arrange
-      const zipFilePath = await createZipWithFileAndMappings();
+      const zipPath = await createZipWithFileAndMappings();
       const newMappingsFilePath = createMappingsFile(alternativeMappingsFileContent);
 
       // Act
-      let result = await executeUploadCommand(["-s", zipFilePath, "-m", newMappingsFilePath]);
+      let result = await executeUploadCommand(["-s", zipPath, "-m", newMappingsFilePath]);
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-      let uploadedZip = await getUploadedZip();
+      const [url, uploadedZipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
+      expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
+      expect(uploadedZipPath).not.to.eql(zipPath, "Uploaded ZIP path should be different from original ZIP path");
+
+      let uploadedZip = await getUploadedZip(uploadedZipPath);
       let mappingsFileEntry = uploadedZip.file(mappingsFileName);
       expect(mappingsFileEntry).to.not.eql(null, "Mappings file should exist in the uploaded ZIP");
       let content = await mappingsFileEntry.async("string");
@@ -167,8 +191,12 @@ describe("upload-symbols command", () => {
   });
 
   describe("when upload fails", () => {
+    before(() => {
+      AzureBlobUploadHelperMock.throwOnUpload = true;
+    });
+
     beforeEach(() => {
-        expectedRequestsScope = setupSuccessfulPostUploadResponse(setupFailedPutUploadResponse(setupSuccessfulAbortUploadResponse(Nock(fakeHost))));
+        expectedRequestsScope = _.flow(setupSuccessfulAbortUploadResponse, setupSuccessfulPostUploadResponse)(Nock(fakeHost));
         skippedRequestsScope = setupSuccessfulPatchUploadResponse(Nock(fakeHost));
     });
 
@@ -181,6 +209,10 @@ describe("upload-symbols command", () => {
       
       // Assert
       testUploadFailure(result, expectedRequestsScope, skippedRequestsScope);
+    });
+
+    after(() => {
+      AzureBlobUploadHelperMock.throwOnUpload = false;
     });
   });
 
@@ -292,8 +324,9 @@ describe("upload-symbols command", () => {
     };
   }
 
-  async function getUploadedZip(): Promise<JsZip> {
-    return await new JsZip().loadAsync(new Buffer(uploaderSpy.lastCall.args[0], "hex"));
+  async function getUploadedZip(zip: string): Promise<JsZip> {
+    const zipContent = await Pfs.readFile(zip);
+    return await new JsZip().loadAsync(zipContent);
   }
 
   function getEntitiesList(zip: JsZip): string[] {
@@ -324,18 +357,6 @@ describe("upload-symbols command", () => {
         upload_url: fakeHost + fakeUploadUrl
       };
     }));
-  }
-
-  function setupSuccessfulPutUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.put(fakeUploadUrl).reply(200, (uri: any, requestBody: any) => {
-      uploaderSpy(requestBody);
-    });
-  }
-
-  function setupFailedPutUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.put(fakeUploadUrl).reply(500, (uri: any, requestBody: any) => {
-      uploaderSpy(requestBody);
-    });
   }
 
   function setupSuccessfulPatchUploadResponse(nockScope: Nock.Scope): Nock.Scope {

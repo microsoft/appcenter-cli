@@ -1,11 +1,13 @@
 import { clientRequest, MobileCenterClient, models } from "../../util/apis";
-import { AppCommand, CommandArgs, CommandResult } from "../../util/commandline";
+import { AppCommand, CommandResult } from "../../util/commandline";
 import { ErrorCodes, failure, success } from "../../util/commandline";
 import { help, name, position } from "../../util/commandline";
 import { inspect } from "util";
 import { out } from "../../util/interaction";
 import { DefaultApp } from "../../util/profile";
 import UploadSymbolsHelper from "./lib/symbols-uploading-helper";
+import { getSymbolsZipFromXcarchive } from "./lib/subfolder-symbols-helper";
+import { createTempFileFromZip } from "./lib/temp-zip-file-helper";
 
 import * as Pfs from "../../util/misc/promisfied-fs";
 import * as Path from "path";
@@ -26,10 +28,6 @@ export default class UploadMissingSymbols extends AppCommand {
   @position(0)
   @name("search-path")
   public symbolsPath: string;
-
-  constructor(args: CommandArgs) {
-    super(args);
-  }
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
     if (Os.platform() !== "darwin") {
@@ -111,8 +109,9 @@ export default class UploadMissingSymbols extends AppCommand {
   private async uploadFoundSymbols(uuidToPath: Map<string, string>, client: MobileCenterClient, app: DefaultApp): Promise<number> {
     // packing and uploading each found dSYM package
     const helper = new UploadSymbolsHelper(client, app, debug);
-    const paths = Array.from(uuidToPath.values()).filter((path) => !_.isNull(path));
-    for (const path of paths) {
+    const paths = Array.from(uuidToPath.values()).filter((path) => !_.isNull(path)).map((path) => Path.resolve(path));
+    const uniquePaths = _.uniq(paths);
+    for (const path of uniquePaths) {
       await this.uploadSymbolsZip(path, helper);
     }
 
@@ -131,14 +130,19 @@ export default class UploadMissingSymbols extends AppCommand {
   private executeMdfindSearch(uuid: string): Promise<string | null> {
     return new Promise<string>((resolve, reject) => {
       const context = mdfind({query: `com_apple_xcode_dsym_uuids == ${uuid}`});
+      let result: string = null;
       context.output
         .on("data", (data: any) => {
-          // stop search after first item was found
-          context.terminate();
-          resolve(data.kMDItemPath);
+          // *.xcarchive symbols have higher priority over non-archive symbols
+          result = data.kMDItemPath;
+          if (Path.extname(result) === ".xcarchive") {
+            // stop search and return xcarchive
+            context.terminate();
+            resolve(result);
+          }
         })
         .on("error", (err: any) => reject(err))
-        .on("end", () => resolve(null)); // nothing was found
+        .on("end", () => resolve(result)); // return what was found (or null if nothing was found)
     }).catch((error) => {
       debug(`Failed to find symbols for ${uuid} using mdfind - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, `failed to find symbols for ${uuid} using mdfind`);
@@ -245,14 +249,22 @@ export default class UploadMissingSymbols extends AppCommand {
   }
 
   private async uploadSymbolsZip(path: string, helper: UploadSymbolsHelper): Promise<void> {
-    const zip = new JsZip();
-    try {
-      await JsZipHelper.addFolderToZipRecursively(path, zip);
-    } catch (error) {
-      debug(`Unable to add ${path} to the ZIP archive - ${inspect(error)}`);
-      throw failure(ErrorCodes.Exception, `unable to add ${path} to the ZIP archive`);
+    let zip: JsZip;
+    if (Path.extname(path) === ".xcarchive") {
+      // *.xcarchive has symbols inside
+      zip = await getSymbolsZipFromXcarchive(path, debug);
+    } else {
+      try {
+        zip = new JsZip();
+        await JsZipHelper.addFolderToZipRecursively(path, zip);
+      } catch (error) {
+        debug(`Unable to add ${path} to the ZIP archive - ${inspect(error)}`);
+        throw failure(ErrorCodes.Exception, `unable to add ${path} to the ZIP archive`);
+      }
     }
 
-    await helper.uploadSymbolsZip(zip);
+    const tempFilePath = await createTempFileFromZip(zip);
+
+    await helper.uploadSymbolsZip(tempFilePath);
   }
 }

@@ -5,6 +5,8 @@ import * as rimraf from "rimraf";
 import * as temp from "temp";
 import * as mkDirP from "mkdirp";
 
+temp.track();
+
 export async function stat(path: string | Buffer): Promise<fs.Stats> {
   return (await callFs(fs.stat, path))[0];
 }
@@ -140,8 +142,10 @@ export function close(fd: number): Promise<void> {
   return callFs(fs.close, fd).then(() => {});
 }
 
-export function openTempFile(affixes: string): Promise<{path: string, fd: number}> {
-  return callTemp(temp.open, affixes);
+export function openTempFile(prefix: string): Promise<{path: string, fd: number}>;
+export function openTempFile(options: { prefix?: string, suffix?: string, dir?: string}): Promise<{path: string, fd: number}>
+export function openTempFile(...args: any[]): Promise<{path: string, fd: number}> {
+  return callTemp(temp.open, ...args);
 }
 
  export async function fileExists(path: string): Promise<boolean> {

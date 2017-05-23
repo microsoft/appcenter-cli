@@ -2,22 +2,12 @@ import { clientRequest, MobileCenterClient, models } from "../../../util/apis";
 import { ErrorCodes, failure } from "../../../util/commandline";
 import { DefaultApp } from "../../../util/profile";
 import { inspect } from "util";
-
-import * as JsZip from "jszip";
-import * as Crypto from "crypto";
-import * as _ from "lodash";
-import * as Request from "request";
+import AzureBlobUploadHelper from "./azure-blob-upload-helper";
 
 export default class SymbolsUploadingHelper {
   constructor(private client: MobileCenterClient, private app: DefaultApp, private debug: Function) {}
 
-  public async uploadSymbolsZip(zip: JsZip): Promise<void> {
-    // get buffer for the prepared ZIP
-    const zipBuffer: Buffer = await this.getZipBuffer(zip);
-
-    // starting ZIP buffer MD5 hash calculation
-    const md5Hash: Promise<string> = this.calculateMd5(zipBuffer);
-
+  public async uploadSymbolsZip(zip: string): Promise<void> {
     // executing API request to get an upload URL
     const uploadingBeginRequestResult = await this.executeSymbolsUploadingBeginRequest(this.client, this.app);
 
@@ -25,34 +15,17 @@ export default class SymbolsUploadingHelper {
     const symbolUploadId = uploadingBeginRequestResult.symbolUploadId;
 
     try {
-      // doing HTTP PUT for ZIP buffer contents to the upload URL
+      // putting ZIP to the specified URL
       const uploadUrl: string = uploadingBeginRequestResult.uploadUrl;
-      await this.uploadZipFile(uploadUrl, zipBuffer, await md5Hash);
+      await new AzureBlobUploadHelper(this.debug).upload(uploadUrl, zip);      
 
       // sending 'committed' API request to finish uploading
       const uploadingEndRequestResult: models.SymbolUpload = await this.executeSymbolsUploadingEndRequest(this.client, this.app, symbolUploadId, "committed");
     } catch (error) {
       // uploading failed, aborting upload request
-      const uploadingAbortRequestResult = await this.abortUploadingRequest(this.client, this.app, symbolUploadId);
+      await this.abortUploadingRequest(this.client, this.app, symbolUploadId);
       throw error;
     }
-  }
-
-  private async getZipBuffer(zip: JsZip): Promise<Buffer> {
-    try {
-      this.debug("Getting in-memory ZIP archive as Buffer");
-      return await zip.generateAsync({
-        type: "nodebuffer"
-      });
-    } catch (error) {
-       throw failure(ErrorCodes.Exception, `Failed to compress the ZIP file: ${_.toString(error)}`);
-    }
-  }
-
-  private calculateMd5(buffer: Buffer): Promise<string> {
-    return new Promise<string>((resolve) => {
-      resolve(Crypto.createHash("md5").update(buffer).digest("base64"));
-    });
   }
 
   private async executeSymbolsUploadingBeginRequest(client: MobileCenterClient, app: DefaultApp): Promise<models.SymbolUploadBeginResponse> {
@@ -75,31 +48,6 @@ export default class SymbolsUploadingHelper {
     }
 
     return uploadingBeginResponse.result;
-  }
-
-  private uploadZipFile(uploadUrl: string, zippedFileBuffer: Buffer, md5Hash: string): Promise<void> {
-    this.debug("Uploading the prepared ZIP file");
-    return new Promise<void>((resolve, reject) => {
-      Request.put(uploadUrl, {
-        body: zippedFileBuffer,
-        headers: {
-          "Content-Length": zippedFileBuffer.length,
-          "Content-MD5": md5Hash,
-          "Content-Type": "application/zip",
-          "x-ms-blob-type": "BlockBlob"
-        }
-      })
-      .on("error", (error) => {
-        reject(failure(ErrorCodes.Exception, `ZIP file uploading failed: ${error.message}`));
-      })
-      .on("response", (response) => {
-        if (response.statusCode < 400) {
-          resolve();
-        } else {
-          reject(failure(ErrorCodes.Exception, `ZIP file uploading failed: HTTP ${response.statusCode}`));
-        }
-      });
-    });
   }
 
   private async executeSymbolsUploadingEndRequest(client: MobileCenterClient, app: DefaultApp, symbolUploadId: string, desiredStatus: SymbolsUploadEndRequestStatus): Promise<models.SymbolUpload> {

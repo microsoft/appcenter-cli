@@ -1,6 +1,7 @@
 import * as JsZip from "jszip";
 import * as Path from "path";
 import * as Pfs from "./promisfied-fs";
+import * as Fs from "fs";
 
 /**
  * Unpacks ZIP file contents to the specified folder (it should already exist)
@@ -28,9 +29,10 @@ export async function unpackZipToPath(path: string, zip: JSZip, root: string = "
 /**
  * Writes zip file to the specified location
  */
-export async function writeZipToPath(path: string, zip: JSZip): Promise<void> {
+export async function writeZipToPath(path: string, zip: JSZip, compression: "STORE" | "DEFLATE"): Promise<void> {
   let zipBuffer = await (<Promise<Buffer>> zip.generateAsync({
-    type: "nodebuffer"
+    type: "nodebuffer",
+    compression
   }));
 
   await Pfs.writeFile(path, zipBuffer);
@@ -49,8 +51,8 @@ export async function addFolderToZipRecursively(path: string, zip: JsZip): Promi
     if (subEntityStats.isDirectory()) {
       await addFolderToZipRecursively(subEntityPath, folderZip);
     } else {
-      let fileBuffer = await Pfs.readFile(subEntityPath);
-      folderZip.file(subEntityName, fileBuffer);
+      const fileStream = Fs.createReadStream(subEntityPath);
+      folderZip.file(subEntityName, fileStream);
     }
   }
 }
