@@ -538,7 +538,7 @@ Users.prototype.updateOrgRole = function (orgName, userName, options, callback) 
 };
 
 /**
- * Updates the given organization user
+ * Removes a user from an organization.
  *
  * @param {string} orgName The organization's name
  * 

@@ -444,7 +444,7 @@
         ]
       },
       "delete": {
-        "description": "Updates the given organization user",
+        "description": "Removes a user from an organization.",
         "parameters": [
           {
             "$ref": "#/parameters/organization_name"
@@ -14276,7 +14276,9 @@
             "page",
             "start_session",
             "error",
-            "push_installation"
+            "push_installation",
+            "start_service",
+            "custom_properties"
           ],
           "description": "Log type.\n"
         },
@@ -14431,6 +14433,153 @@
       },
       "required": [
         "session_id"
+      ]
+    },
+    "StartServiceLog": {
+      "type": "object",
+      "description": "Describe a MobileCenter.Start API call from the SDK.",
+      "x-ms-discriminator-value": "start_service",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Log"
+        }
+      ],
+      "properties": {
+        "services": {
+          "type": "array",
+          "description": "The list of services of the MobileCenter Start API call.",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "CustomPropertyLog": {
+      "type": "object",
+      "description": "Set or remove custom properties.",
+      "x-ms-discriminator-value": "custom_properties",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Log"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "type": "array",
+          "description": "Custom property changes.",
+          "minItems": 1,
+          "maxItems": 60,
+          "items": {
+            "$ref": "#/definitions/CustomProperty"
+          }
+        }
+      }
+    },
+    "CustomProperty": {
+      "type": "object",
+      "discriminator": "type",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z][a-zA-Z0-9]*$"
+        }
+      },
+      "required": [
+        "type",
+        "name"
+      ]
+    },
+    "StringProperty": {
+      "type": "object",
+      "description": "String property.",
+      "x-ms-discriminator-value": "string",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CustomProperty"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "String property value."
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "NumberProperty": {
+      "type": "object",
+      "description": "Number property.",
+      "x-ms-discriminator-value": "number",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CustomProperty"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "description": "Number property value."
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "BooleanProperty": {
+      "type": "object",
+      "description": "Boolean property.",
+      "x-ms-discriminator-value": "boolean",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CustomProperty"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "boolean",
+          "description": "Boolean property value."
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "DateTimeProperty": {
+      "type": "object",
+      "description": "Date and time property.",
+      "x-ms-discriminator-value": "date_time",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CustomProperty"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date time property value."
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "ClearProperty": {
+      "type": "object",
+      "description": "Clear an existing property.",
+      "x-ms-discriminator-value": "clear",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CustomProperty"
+        }
       ]
     },
     "PageLog": {
@@ -16781,6 +16930,25 @@
         "event_id",
         "event_timestamp",
         "event_version"
+      ]
+    },
+    "NewAppReleaseAlertingEvent": {
+      "description": "New app release alerting event",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AlertingEvent"
+        },
+        {
+          "properties": {
+            "user_ids": {
+              "description": "List of users who need to receive an email notification. If this is not null, then only sending emails will be triggered even if the event requires calling webhooks or doing other actions.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
       ]
     },
     "EventResponseResult": {

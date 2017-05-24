@@ -4832,6 +4832,109 @@ export interface StartSessionLog extends Log {
 
 /**
  * @class
+ * Initializes a new instance of the StartServiceLog class.
+ * @constructor
+ * Describe a MobileCenter.Start API call from the SDK.
+ *
+ * @member {array} [services] The list of services of the MobileCenter Start
+ * API call.
+ * 
+ */
+export interface StartServiceLog extends Log {
+  services?: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CustomPropertyLog class.
+ * @constructor
+ * Set or remove custom properties.
+ *
+ * @member {array} [properties] Custom property changes.
+ * 
+ */
+export interface CustomPropertyLog extends Log {
+  properties?: CustomProperty[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CustomProperty class.
+ * @constructor
+ * @member {string} name
+ * 
+ * @member {string} type Polymorhpic Discriminator
+ * 
+ */
+export interface CustomProperty {
+  name: string;
+  type: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the StringProperty class.
+ * @constructor
+ * String property.
+ *
+ * @member {string} value String property value.
+ * 
+ */
+export interface StringProperty extends CustomProperty {
+  value: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NumberProperty class.
+ * @constructor
+ * Number property.
+ *
+ * @member {number} value Number property value.
+ * 
+ */
+export interface NumberProperty extends CustomProperty {
+  value: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the BooleanProperty class.
+ * @constructor
+ * Boolean property.
+ *
+ * @member {boolean} value Boolean property value.
+ * 
+ */
+export interface BooleanProperty extends CustomProperty {
+  value: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DateTimeProperty class.
+ * @constructor
+ * Date and time property.
+ *
+ * @member {date} value Date time property value.
+ * 
+ */
+export interface DateTimeProperty extends CustomProperty {
+  value: Date;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ClearProperty class.
+ * @constructor
+ * Clear an existing property.
+ *
+ */
+export interface ClearProperty extends CustomProperty {
+}
+
+/**
+ * @class
  * Initializes a new instance of the PageLog class.
  * @constructor
  * Page view log (as in screens or activities).
@@ -7188,6 +7291,22 @@ export interface AlertingEvent {
   eventId: string;
   eventVersion: number;
   properties?: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NewAppReleaseAlertingEvent class.
+ * @constructor
+ * New app release alerting event
+ *
+ * @member {array} [userIds] List of users who need to receive an email
+ * notification. If this is not null, then only sending emails will be
+ * triggered even if the event requires calling webhooks or doing other
+ * actions.
+ * 
+ */
+export interface NewAppReleaseAlertingEvent extends AlertingEvent {
+  userIds?: string[];
 }
 
 /**

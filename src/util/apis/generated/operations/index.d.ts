@@ -442,7 +442,7 @@ export interface Users {
     updateOrgRole(orgName: string, userName: string, callback: ServiceCallback<any>): void;
 
     /**
-     * Updates the given organization user
+     * Removes a user from an organization.
      *
      * @param {string} orgName The organization's name
      * 

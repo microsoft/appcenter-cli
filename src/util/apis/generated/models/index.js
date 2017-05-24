@@ -215,6 +215,14 @@ exports.Log = require('./log');
 exports.Device = require('./device');
 exports.LogWithProperties = require('./logWithProperties');
 exports.StartSessionLog = require('./startSessionLog');
+exports.StartServiceLog = require('./startServiceLog');
+exports.CustomPropertyLog = require('./customPropertyLog');
+exports.CustomProperty = require('./customProperty');
+exports.StringProperty = require('./stringProperty');
+exports.NumberProperty = require('./numberProperty');
+exports.BooleanProperty = require('./booleanProperty');
+exports.DateTimeProperty = require('./dateTimeProperty');
+exports.ClearProperty = require('./clearProperty');
 exports.PageLog = require('./pageLog');
 exports.EventLog = require('./eventLog');
 exports.PushInstallationLog = require('./pushInstallationLog');
@@ -313,6 +321,7 @@ exports.EventSetting = require('./eventSetting');
 exports.AlertUserEmailSettingsResult = require('./alertUserEmailSettingsResult');
 exports.AlertUserAppEmailSettingsResult = require('./alertUserAppEmailSettingsResult');
 exports.AlertingEvent = require('./alertingEvent');
+exports.NewAppReleaseAlertingEvent = require('./newAppReleaseAlertingEvent');
 exports.EventResponseResult = require('./eventResponseResult');
 exports.AlertingError = require('./alertingError');
 exports.AlertingErrorError = require('./alertingErrorError');
@@ -323,6 +332,14 @@ exports.discriminators = {
   'Log' : exports.Log,
   'Log.LogWithProperties' : exports.LogWithProperties,
   'Log.start_session' : exports.StartSessionLog,
+  'Log.start_service' : exports.StartServiceLog,
+  'Log.custom_properties' : exports.CustomPropertyLog,
+  'CustomProperty' : exports.CustomProperty,
+  'CustomProperty.string' : exports.StringProperty,
+  'CustomProperty.number' : exports.NumberProperty,
+  'CustomProperty.boolean' : exports.BooleanProperty,
+  'CustomProperty.date_time' : exports.DateTimeProperty,
+  'CustomProperty.clear' : exports.ClearProperty,
   'Log.page' : exports.PageLog,
   'Log.event' : exports.EventLog,
   'Log.push_installation' : exports.PushInstallationLog,
