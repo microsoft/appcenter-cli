@@ -55,7 +55,7 @@ export default class RunXCUITestCommand extends RunTestsCommand {
 
   private async generateAppIpa(): Promise<void> {
     let appPaths = (await pfs.readdir(this.buildDir)).filter(
-      (appPath) => /[^-Runner].app$/.test(appPath)
+      (appPath) => /^(?:.(?!-Runner\.app))+\.app$/.test(appPath)
     );
 
     if (appPaths.length == 0) {
