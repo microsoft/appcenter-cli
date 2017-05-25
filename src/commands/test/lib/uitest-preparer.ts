@@ -83,7 +83,11 @@ export class UITestPreparer {
 
   private async getTestCloudExecutablePath(): Promise<string> {
     let toolsDir = this.uiTestToolsDir || await this.findXamarinUITestNugetDir(this.buildDir);
-    return path.join(toolsDir, "test-cloud.exe");
+    let testCloudPath = path.join(toolsDir, "test-cloud.exe");
+    if (testCloudPath.includes(" ")) {
+      testCloudPath = `"${testCloudPath}"`;
+    }
+    return testCloudPath;
   }
 
   private async findXamarinUITestNugetDir(root: string): Promise<string> {
@@ -146,7 +150,7 @@ export class UITestPreparer {
 
 
   /*
-    the UITest preparer sometimes prints messages with it's own executable name, such as 
+    the UITest preparer sometimes prints messages with it's own executable name, such as
     "Run 'test-cloud.exe help prepare' for more details". It's confusing for end users,
     so wer are removing lines that contain the executable name.
   */
