@@ -57,10 +57,9 @@ export default class SymbolsUploadingHelper {
 
   private async executeSymbolsUploadingBeginRequest(client: MobileCenterClient, app: DefaultApp): Promise<models.SymbolUploadBeginResponse> {
     this.debug("Executing API request to get uploading URL");
-    const uploadingBeginResponse = await clientRequest<models.SymbolUploadBeginResponse>((cb) => client.symbols.postSymbolUpload(
+    const uploadingBeginResponse = await clientRequest<models.SymbolUploadBeginResponse>((cb) => client.symbolUploads.create(
       app.ownerName,
       app.appName,
-      "Apple",
       cb)).catch((error: any) => {
         this.debug(`Failed to start the symbol uploading - ${inspect(error)}`);
         throw failure(ErrorCodes.Exception, "failed to start the symbol uploading");
@@ -104,7 +103,7 @@ export default class SymbolsUploadingHelper {
 
   private async executeSymbolsUploadingEndRequest(client: MobileCenterClient, app: DefaultApp, symbolUploadId: string, desiredStatus: SymbolsUploadEndRequestStatus): Promise<models.SymbolUpload> {
     this.debug(`Finishing symbols uploading with desired status: ${desiredStatus}`);
-    const uploadingEndResponse = await clientRequest<models.SymbolUpload>((cb) => client.symbols.patchSymbolUpload(
+    const uploadingEndResponse = await clientRequest<models.SymbolUpload>((cb) => client.symbolUploads.complete(
       symbolUploadId,
       app.ownerName,
       app.appName,

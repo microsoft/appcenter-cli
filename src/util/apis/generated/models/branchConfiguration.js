@@ -91,6 +91,11 @@ var models = require('./index');
  * @member {boolean} [toolsets.android.runLint] Whether to run lint checks
  * during the build (default)
  * 
+ * @member {object} [artifactVersioning]
+ * 
+ * @member {string} [artifactVersioning.buildNumberFormat] Possible values
+ * include: 'buildId', 'timestamp'
+ * 
  */
 function BranchConfiguration() {
 }
@@ -143,6 +148,14 @@ BranchConfiguration.prototype.mapper = function () {
           type: {
             name: 'Composite',
             className: 'BranchConfigurationToolsets'
+          }
+        },
+        artifactVersioning: {
+          required: false,
+          serializedName: 'artifactVersioning',
+          type: {
+            name: 'Composite',
+            className: 'BranchConfigurationArtifactVersioning'
           }
         }
       }

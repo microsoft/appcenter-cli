@@ -545,8 +545,7 @@ Analytics.prototype.sessionDurationsDistribution = function (start, ownerName, a
  *
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
- *                      {object} [result]   - The deserialized result object.
- *                      See {@link SessionCounts} for more information.
+ *                      {array} [result]   - The deserialized result object.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -667,7 +666,21 @@ Analytics.prototype.sessionCounts = function (start, interval, ownerName, appNam
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['SessionCounts']().mapper();
+          var resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'DateTimeCountsElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'DateTimeCounts'
+                  }
+              }
+            }
+          };
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {

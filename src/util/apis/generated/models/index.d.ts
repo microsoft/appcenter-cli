@@ -1738,6 +1738,11 @@ export interface Commit {
  * @member {boolean} [toolsets.android.runLint] Whether to run lint checks
  * during the build (default)
  * 
+ * @member {object} [artifactVersioning]
+ * 
+ * @member {string} [artifactVersioning.buildNumberFormat] Possible values
+ * include: 'buildId', 'timestamp'
+ * 
  */
 export interface BranchConfiguration {
   id: number;
@@ -1745,6 +1750,7 @@ export interface BranchConfiguration {
   testsEnabled?: boolean;
   signed?: boolean;
   toolsets?: BranchConfigurationToolsets;
+  artifactVersioning?: BranchConfigurationArtifactVersioning;
 }
 
 /**
@@ -1942,6 +1948,20 @@ export interface AndroidBranchConfigurationProperties {
   variant: string;
   runTests?: boolean;
   runLint?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the BranchConfigurationArtifactVersioning class.
+ * @constructor
+ * The versioning configuration for artifacts built for this branch
+ *
+ * @member {string} [buildNumberFormat] Possible values include: 'buildId',
+ * 'timestamp'
+ * 
+ */
+export interface BranchConfigurationArtifactVersioning {
+  buildNumberFormat?: string;
 }
 
 /**
@@ -2459,6 +2479,10 @@ export interface DistributionStore {
  * @member {array} [distributionStores] Coming Soon - a list of distribution
  * stores that are associated with this release.
  * 
+ * @member {boolean} [isUdidProvisioned] In calls that allow passing `udid` in
+ * the query string, this value will hold the provisioning status of that
+ * UDID in this release. Will be ignored for non-iOS platforms.
+ * 
  */
 export interface ReleaseDetails {
   id?: number;
@@ -2482,6 +2506,7 @@ export interface ReleaseDetails {
   destinationType?: string;
   distributionGroups?: DistributionGroupWithoutIsLatest[];
   distributionStores?: DistributionStoreWithoutIsLatest[];
+  isUdidProvisioned?: boolean;
 }
 
 /**
@@ -2666,6 +2691,21 @@ export interface RereleaseRequest {
   releaseNotes?: string;
   mandatoryUpdate?: boolean;
   baseReleaseId: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ProvisioningProfile class.
+ * @constructor
+ * @member {string} provisioningProfileType Possible values include: 'adhoc',
+ * 'enterprise', 'other'
+ * 
+ * @member {array} [udids]
+ * 
+ */
+export interface ProvisioningProfile {
+  provisioningProfileType: string;
+  udids?: string[];
 }
 
 /**
@@ -4153,23 +4193,6 @@ export interface Version {
 
 /**
  * @class
- * Initializes a new instance of the SessionCounts class.
- * @constructor
- * @member {number} [totalCount] total session count
- * 
- * @member {number} [previousTotalCount] previous total session count
- * 
- * @member {array} [sessions] the total session count for each interval
- * 
- */
-export interface SessionCounts {
-  totalCount?: number;
-  previousTotalCount?: number;
-  sessions?: DateTimeCounts[];
-}
-
-/**
- * @class
  * Initializes a new instance of the SessionsPerDevice class.
  * @constructor
  * @member {number} [averageSessionsPerUser] average seesion per user
@@ -4445,6 +4468,23 @@ export interface CrashGroupOperatingSystems {
 export interface CrashGroupOperatingSystem {
   operatingSystemName?: string;
   crashCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the LogTraceDefinition class.
+ * @constructor
+ * @member {string} appSecret
+ * 
+ * @member {string} [installId]
+ * 
+ * @member {date} [expiration]
+ * 
+ */
+export interface LogTraceDefinition {
+  appSecret: string;
+  installId?: string;
+  expiration?: Date;
 }
 
 /**
@@ -4788,6 +4828,109 @@ export interface LogWithProperties extends Log {
  */
 export interface StartSessionLog extends Log {
   sessionId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the StartServiceLog class.
+ * @constructor
+ * Describe a MobileCenter.Start API call from the SDK.
+ *
+ * @member {array} [services] The list of services of the MobileCenter Start
+ * API call.
+ * 
+ */
+export interface StartServiceLog extends Log {
+  services?: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CustomPropertyLog class.
+ * @constructor
+ * Set or remove custom properties.
+ *
+ * @member {array} [properties] Custom property changes.
+ * 
+ */
+export interface CustomPropertyLog extends Log {
+  properties?: CustomProperty[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CustomProperty class.
+ * @constructor
+ * @member {string} name
+ * 
+ * @member {string} type Polymorhpic Discriminator
+ * 
+ */
+export interface CustomProperty {
+  name: string;
+  type: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the StringProperty class.
+ * @constructor
+ * String property.
+ *
+ * @member {string} value String property value.
+ * 
+ */
+export interface StringProperty extends CustomProperty {
+  value: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NumberProperty class.
+ * @constructor
+ * Number property.
+ *
+ * @member {number} value Number property value.
+ * 
+ */
+export interface NumberProperty extends CustomProperty {
+  value: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the BooleanProperty class.
+ * @constructor
+ * Boolean property.
+ *
+ * @member {boolean} value Boolean property value.
+ * 
+ */
+export interface BooleanProperty extends CustomProperty {
+  value: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DateTimeProperty class.
+ * @constructor
+ * Date and time property.
+ *
+ * @member {date} value Date time property value.
+ * 
+ */
+export interface DateTimeProperty extends CustomProperty {
+  value: Date;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ClearProperty class.
+ * @constructor
+ * Clear an existing property.
+ *
+ */
+export interface ClearProperty extends CustomProperty {
 }
 
 /**
@@ -7148,6 +7291,22 @@ export interface AlertingEvent {
   eventId: string;
   eventVersion: number;
   properties?: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NewAppReleaseAlertingEvent class.
+ * @constructor
+ * New app release alerting event
+ *
+ * @member {array} [userIds] List of users who need to receive an email
+ * notification. If this is not null, then only sending emails will be
+ * triggered even if the event requires calling webhooks or doing other
+ * actions.
+ * 
+ */
+export interface NewAppReleaseAlertingEvent extends AlertingEvent {
+  userIds?: string[];
 }
 
 /**

@@ -442,7 +442,7 @@ export interface Users {
     updateOrgRole(orgName: string, userName: string, callback: ServiceCallback<any>): void;
 
     /**
-     * Updates the given organization user
+     * Removes a user from an organization.
      *
      * @param {string} orgName The organization's name
      * 
@@ -513,8 +513,6 @@ export interface Releases {
      * latest release from all the distribution groups assigned to the current
      * user.
      * 
-     * @param {string} internalAppId The app ID
-     * 
      * @param {object} [options] Optional Parameters.
      * 
      * @param {object} [options.customHeaders] Headers that will be added to the
@@ -523,8 +521,8 @@ export interface Releases {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getLatestByHash(appSecret: string, releaseHash: string, internalAppId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getLatestByHash(appSecret: string, releaseHash: string, internalAppId: string, callback: ServiceCallback<any>): void;
+    getLatestByHash(appSecret: string, releaseHash: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getLatestByHash(appSecret: string, releaseHash: string, callback: ServiceCallback<any>): void;
 
     /**
      * Get a release with id `release_id`. if `release_id` is `latest`, return the
@@ -541,13 +539,17 @@ export interface Releases {
      * 
      * @param {object} [options] Optional Parameters.
      * 
+     * @param {string} [options.udid] when supplied, this call will also check if
+     * the given UDID is provisioned. Will be ignored for non-iOS platforms. The
+     * value will be returned in the property is_udid_provisioned.
+     * 
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      * 
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getLatestByUser(releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getLatestByUser(releaseId: string, ownerName: string, appName: string, options: { udid? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     getLatestByUser(releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
@@ -2311,8 +2313,8 @@ export interface Symbols {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    postIgnoreSymbol(symbolId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    postIgnoreSymbol(symbolId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    ignore(symbolId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    ignore(symbolId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
      * Returns a particular symbol by id (uuid) for the provided application
@@ -2331,8 +2333,8 @@ export interface Symbols {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getSymbol(symbolId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getSymbol(symbolId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    get(symbolId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    get(symbolId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
      * Returns the list of all symbols for the provided application
@@ -2349,8 +2351,17 @@ export interface Symbols {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getSymbols(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getSymbols(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    list(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * SymbolUploads
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the MobileCenterClient.
+ */
+export interface SymbolUploads {
 
     /**
      * Gets a symbol upload by id for the specified application
@@ -2369,8 +2380,8 @@ export interface Symbols {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getSymbolUpload(symbolUploadId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getSymbolUpload(symbolUploadId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    get(symbolUploadId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    get(symbolUploadId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
      * Commits or aborts the symbol upload process for a new set of symbols for
@@ -2393,28 +2404,8 @@ export interface Symbols {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    patchSymbolUpload(symbolUploadId: string, ownerName: string, appName: string, status: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    patchSymbolUpload(symbolUploadId: string, ownerName: string, appName: string, status: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * Deletes a symbol upload by id for the specified application
-     *
-     * @param {string} symbolUploadId The ID of the symbol upload
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    deleteSymbolUpload(symbolUploadId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    deleteSymbolUpload(symbolUploadId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    complete(symbolUploadId: string, ownerName: string, appName: string, status: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    complete(symbolUploadId: string, ownerName: string, appName: string, status: string, callback: ServiceCallback<any>): void;
 
     /**
      * Gets a list of all uploads for the specified application
@@ -2431,8 +2422,8 @@ export interface Symbols {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getSymbolUploads(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getSymbolUploads(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    list(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
      * Begins the symbol upload process for a new set of symbols for the specified
@@ -2453,8 +2444,8 @@ export interface Symbols {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    postSymbolUpload(ownerName: string, appName: string, options: { clientCallback? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    postSymbolUpload(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    create(ownerName: string, appName: string, options: { clientCallback? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    create(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 }
 
 /**
@@ -3145,6 +3136,35 @@ export interface RepositoryConfigurations {
      */
     remove(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     remove(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * Provisioning
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the MobileCenterClient.
+ */
+export interface Provisioning {
+
+    /**
+     * Return information about the provisioning profile
+     *
+     * @param {number} releaseId The release_id
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    profile(releaseId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ProvisioningProfile>): void;
+    profile(releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<models.ProvisioningProfile>): void;
 }
 
 /**
@@ -4135,8 +4155,8 @@ export interface Analytics {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    sessionCounts(start: Date|string, interval: string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SessionCounts>): void;
-    sessionCounts(start: Date|string, interval: string, ownerName: string, appName: string, callback: ServiceCallback<models.SessionCounts>): void;
+    sessionCounts(start: Date|string, interval: string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DateTimeCounts[]>): void;
+    sessionCounts(start: Date|string, interval: string, ownerName: string, appName: string, callback: ServiceCallback<models.DateTimeCounts[]>): void;
 
     /**
      * Places in the time range

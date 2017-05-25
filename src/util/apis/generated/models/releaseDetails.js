@@ -84,6 +84,10 @@ var util = require('util');
  * @member {array} [distributionStores] Coming Soon - a list of distribution
  * stores that are associated with this release.
  * 
+ * @member {boolean} [isUdidProvisioned] In calls that allow passing `udid` in
+ * the query string, this value will hold the provisioning status of that
+ * UDID in this release. Will be ignored for non-iOS platforms.
+ * 
  */
 function ReleaseDetails() {
 }
@@ -263,6 +267,13 @@ ReleaseDetails.prototype.mapper = function () {
                   className: 'DistributionStoreWithoutIsLatest'
                 }
             }
+          }
+        },
+        isUdidProvisioned: {
+          required: false,
+          serializedName: 'is_udid_provisioned',
+          type: {
+            name: 'Boolean'
           }
         }
       }
