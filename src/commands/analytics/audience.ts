@@ -181,41 +181,41 @@ export default class AudienceCommand extends AppCommand {
 
   private outputStatistics(statisticsObject: IStatisticsObject): void {
     const maximumNumberOfColumnsInTables = 4;
-    out.reportObjectAsTitledTables((stats: IStatisticsObject, dateFormatter, percentageFormatter) => {
+    out.reportObjectAsTitledTables((stats: IStatisticsObject, numberFormatter, dateFormatter, percentageFormatter) => {
       const tableArray: out.NamedTables = [];
 
       if (stats.devices) {
-        tableArray.push([
-          "Devices", 
-          stats.devices.map((device) => toArray(device, percentageFormatter))
-        ]);
+        tableArray.push({
+          name: "Devices", 
+          content: stats.devices.map((device) => toArray(device, numberFormatter, percentageFormatter))
+        });
       }
 
       if (stats.countries) {
-        tableArray.push([
-          "Countries", 
-          stats.countries.map((country) => toArray(country, percentageFormatter))
-        ]);
+        tableArray.push({
+          name: "Countries", 
+          content: stats.countries.map((country) => toArray(country, numberFormatter, percentageFormatter))
+        });
       }
 
       if (stats.languages) {
-        tableArray.push([
-          "Languages",
-          stats.languages.map((language) => toArray(language, percentageFormatter))
-        ]);
+        tableArray.push({
+          name: "Languages",
+          content: stats.languages.map((language) => toArray(language, numberFormatter, percentageFormatter))
+        });
       }
 
       if (stats.activeUsers) {
-        tableArray.push([
-          "Active Users",
-          [["Date", "Monthly", "Weekly", "Daily"]]
+        tableArray.push({
+          name: "Active Users",
+          content: [["Date", "Monthly", "Weekly", "Daily"]]
             .concat(stats.activeUsers.map((activeUsersStatistics) => [
               dateFormatter(activeUsersStatistics.date),
-              activeUsersStatistics.monthly.toString(),
-              activeUsersStatistics.weekly.toString(),
-              activeUsersStatistics.daily.toString()
+              numberFormatter(activeUsersStatistics.monthly),
+              numberFormatter(activeUsersStatistics.weekly),
+              numberFormatter(activeUsersStatistics.daily)
             ]))
-        ]);
+        });
       }
 
       return tableArray;
@@ -236,8 +236,8 @@ interface IStatisticsForValue {
   percentage: number;
 }
 
-function toArray(stats: IStatisticsForValue, percentageFormatter: (percentage: number) => string): string[] {
-  return [stats.value, stats.count.toString(), percentageFormatter(stats.percentage)];
+function toArray(stats: IStatisticsForValue, numberFormatter: (num: number) => string, percentageFormatter: (percentage: number) => string): string[] {
+  return [stats.value, numberFormatter(stats.count), percentageFormatter(stats.percentage)];
 }
 
 function calculatePercentage(count: number, total: number): number {
