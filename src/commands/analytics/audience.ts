@@ -29,7 +29,7 @@ export default class AudienceCommand extends AppCommand {
   public endDate: string;
 
   @help("Specify app version to show statistics for")
-  @shortName("r")
+  @shortName("V")
   @longName("app-version")
   @hasArg
   public appVersion: string;

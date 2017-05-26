@@ -37,7 +37,7 @@ export default class ShowCommand extends AppCommand {
   public endDate: string;
 
   @help("Filter the list of events by app version")
-  @shortName("r")
+  @shortName("V")
   @longName("app-version")
   @hasArg
   public appVersion: string;
