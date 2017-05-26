@@ -1729,7 +1729,7 @@ export interface Commit {
  * 
  * @member {string} [toolsets.android.module] The Gradle module to build
  * 
- * @member {string} [toolsets.android.variant] The Android build variant to
+ * @member {string} [toolsets.android.buildVariant] The Android build variant to
  * build
  * 
  * @member {boolean} [toolsets.android.runTests] Whether to run unit tests
@@ -1814,7 +1814,7 @@ export interface BranchConfiguration {
  * 
  * @member {string} [android.module] The Gradle module to build
  * 
- * @member {string} [android.variant] The Android build variant to build
+ * @member {string} [android.buildVariant] The Android build variant to build
  * 
  * @member {boolean} [android.runTests] Whether to run unit tests during the
  * build (default)
@@ -1933,7 +1933,7 @@ export interface XamarinBranchConfigurationProperties {
  * 
  * @member {string} module The Gradle module to build
  * 
- * @member {string} variant The Android build variant to build
+ * @member {string} buildVariant The Android build variant to build
  * 
  * @member {boolean} [runTests] Whether to run unit tests during the build
  * (default). Default value: true .
@@ -1945,7 +1945,7 @@ export interface XamarinBranchConfigurationProperties {
 export interface AndroidBranchConfigurationProperties {
   gradleWrapperPath?: string;
   module: string;
-  variant: string;
+  buildVariant: string;
   runTests?: boolean;
   runLint?: boolean;
 }

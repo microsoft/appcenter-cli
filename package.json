@@ -36,6 +36,7 @@
     "url": "https://github.com/Microsoft/mobile-center-cli/issues"
   },
   "devDependencies": {
+    "async-file": "^2.0.2",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "gulp": "^3.9.1",
@@ -58,6 +59,7 @@
     "debug": "^2.2.0",
     "event-stream": "^3.3.4",
     "glob": "^7.1.1",
+    "gradlejs": "^1.0.0",
     "inquirer": "^3.0.1",
     "iso8601-duration": "^1.0.6",
     "jszip": "^3.1.3",

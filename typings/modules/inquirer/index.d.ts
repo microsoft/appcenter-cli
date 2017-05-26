@@ -184,7 +184,7 @@ export interface Question {
  * A key/value hash containing the client answers in each prompt.
  */
 export interface Answers {
-    [key: string]: string|boolean;
+    [key: string]: string|boolean|string[];
 }
 
 export namespace UI {
