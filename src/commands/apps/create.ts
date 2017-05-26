@@ -32,14 +32,14 @@ export default class AppCreateCommand extends Command {
   @hasArg
   name: string;
 
-  @help("The OS the app will be running on")
+  @help("The OS the app will be running on. Supported values: Android, iOS, Windows")
   @shortName("o")
   @longName("os")
   @required
   @hasArg
   os: string;
 
-  @help("The platform of the app")
+  @help("The platform of the app. Supported values: Java, Objective-C-Swift, React-Native, UWP, Xamarin")
   @shortName("p")
   @longName("platform")
   @required
