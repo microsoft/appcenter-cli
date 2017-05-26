@@ -21,7 +21,7 @@ function createFakeAppFile(appFilePath: string, entryNames: string[]): Promise<s
           zip.file(entryName, new Buffer("Fake file"));
         }
 
-        JsZipHelper.writeZipToPath(inputFile, zip).then(() => resolve(inputFile), (writingError) => reject(writingError));
+        JsZipHelper.writeZipToPath(inputFile, zip, "STORE").then(() => resolve(inputFile), (writingError) => reject(writingError));
       }
       catch (err) {
         reject(err);

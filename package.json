@@ -43,6 +43,7 @@
     "gulp-sourcemaps": "^2.2.0",
     "gulp-typescript": "^3.0.2",
     "mocha": "^3.0.2",
+    "mock-require": "^2.0.2",
     "nock": "^8.0.0",
     "run-sequence": "^1.2.2",
     "sinon": "^1.17.6",
@@ -50,6 +51,7 @@
     "typescript": "^2.3.2"
   },
   "dependencies": {
+    "azure-storage": "^2.1.0",
     "bplist": "0.0.4",
     "cli-spinner": "^0.2.5",
     "cli-table2": "^0.2.0",
