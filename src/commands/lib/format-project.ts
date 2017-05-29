@@ -1,47 +1,59 @@
-import { IAndroidJavaProjectDescription, IIosObjectiveCSwiftProjectDescription, ProjectDescription } from "./models/project-description";
+import { IAndroidJavaProjectDescription, IIosObjectiveCSwiftProjectDescription, IProjectDescription, IReactNativeProjectDescription } from "./models/project-description";
 
 import { IRemoteApp } from "./models/i-remote-app";
 import { MobileCenterSdkModule } from "./models/mobilecenter-sdk-module";
 import { out } from "../../util/interaction";
 
-export function reportProject(app: IRemoteApp, projectDescription: ProjectDescription, sdkModules: MobileCenterSdkModule, sdkVersion: string): void {
+export function reportProject(projectDescriptions: (IProjectDescription & IRemoteApp)[], sdkModules: MobileCenterSdkModule, sdkVersion: string): void {
   out.text("");
   out.text("We have finished collecting all neccessary info.");
   out.text("Here is a short summary:");
 
   const data: string[][] = [];
-  data.push(["Mobile Center App:", `${app.ownerName}/${app.appName}`]);
-  data.push(["App Secret:", app.appSecret]);
-  data.push(["OS:", app.os]);
-  data.push(["Platform:", app.platform]);
-  data.push(["SDK Version:", sdkVersion]);
-  
-  switch (app.os) {
-    case "Android":
-      switch (app.platform) {
-        case "Java":
-          const androidJavaProject = projectDescription as IAndroidJavaProjectDescription;
-          data.push([ "Gradle Module:", androidJavaProject.moduleName ]);
-          data.push([ "Build Variant:", androidJavaProject.buildVariant ]);
-          break;
-      }
-      break;
+  for (const projectDescription of projectDescriptions) {
+    if (!projectDescription) {
+      continue;
+    }
 
-    case "iOS":
-      switch (app.platform) {
-        case "Objective-C-Swift":
-          const iOsProject = projectDescription as IIosObjectiveCSwiftProjectDescription;
-          data.push([ "Project/Workspace path:", iOsProject.projectOrWorkspacePath ]);
-          data.push([ "Podfile path:", iOsProject.podfilePath ]);
-          break;
-      }
-      break;
+    data.push(["Mobile Center App:", `${projectDescription.ownerName}/${projectDescription.appName}`]);
+    data.push(["App Secret:", projectDescription.appSecret]);
+    data.push(["OS:", projectDescription.os]);
+    data.push(["Platform:", projectDescription.platform]);
+    data.push(["SDK Version:", sdkVersion]);
 
-    default:
-      break;
+    switch (projectDescription.os.toLowerCase()) {
+      case "android":
+        switch (projectDescription.platform.toLowerCase()) {
+          case "react-native":
+            const reactNativeProject = projectDescription as IReactNativeProjectDescription;
+            data.push(["Project path:", reactNativeProject.reactNativeProjectPath]);
+          case "java":
+            const androidJavaProject = projectDescription as IAndroidJavaProjectDescription;
+            data.push(["Gradle Module:", androidJavaProject.moduleName]);
+            data.push(["Build Variant:", androidJavaProject.buildVariant]);
+            break;
+        }
+        break;
+
+      case "ios":
+        switch (projectDescription.platform.toLowerCase()) {
+          case "react-native":
+            const reactNativeProject = projectDescription as IReactNativeProjectDescription;
+            data.push(["Project path:", reactNativeProject.reactNativeProjectPath]);
+          case "objective-c-swift":
+            const iOsProject = projectDescription as IIosObjectiveCSwiftProjectDescription;
+            data.push(["Project/Workspace path:", iOsProject.projectOrWorkspacePath]);
+            //data.push(["Podfile path:", iOsProject.podfilePath]);
+            break;
+        }
+        break;
+
+      default:
+        break;
+    }
   }
 
-  data.push([ "SDK(s) to integrate:", getSdks(sdkModules) ]);
+  data.push(["SDK(s) to integrate:", getSdks(sdkModules)]);
 
   out.table(data);
 }

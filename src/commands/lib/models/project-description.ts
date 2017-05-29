@@ -1,4 +1,4 @@
-export type ProjectDescription = IAndroidJavaProjectDescription | IIosObjectiveCSwiftProjectDescription;
+export type IProjectDescription = IAndroidJavaProjectDescription | IIosObjectiveCSwiftProjectDescription | IReactNativeProjectDescription;
 
 export interface IAndroidJavaProjectDescription {
   moduleName: string;
@@ -8,4 +8,8 @@ export interface IAndroidJavaProjectDescription {
 export interface IIosObjectiveCSwiftProjectDescription {
   podfilePath: string;
   projectOrWorkspacePath: string;
+}
+
+export interface IReactNativeProjectDescription {
+  reactNativeProjectPath: string;
 }

@@ -7,29 +7,29 @@ import { ErrorCodes, failure } from "../../util/commandline/index";
 import { Question, Questions } from "../../util/interaction/prompt";
 import { out, prompt } from "../../util/interaction/index";
 
-import { ILocalApp } from './models/i-local-app';
 import { IRemoteApp } from './models/i-remote-app';
-import { ProjectDescription } from "./models/project-description";
+import { IProjectDescription } from "./models/project-description";
 import collectBuildGradleInfo from "./android/collect-build-gradle-info";
 import { glob } from "../../util/misc/promisfied-glob";
 
 type BranchConfigurations = { [branchName: string]: models.BranchConfiguration };
 
 export async function getProjectDescription(client: MobileCenterClient,
-  localApp: ILocalApp,
+  appDir: string,
   remoteApp: IRemoteApp,
   branchName: string,
+  reactNativeProjectPath: string,
   androidModule: string,
   androidBuildVariant: string,
   iosProjectPath: string,
-  iosPodfilePath: string): Promise<ProjectDescription> {
-  
+  iosPodfilePath: string): Promise<IProjectDescription> {
+
   out.text("");
   out.text("And now we are going to collect some information about your project.");
   out.text("We can fetch it either from your build configuration");
   out.text("on the Mobile Center portal or ask you to provide it manually.");
   let inputManually = false;
-  let projectDescription: ProjectDescription;
+  let projectDescription: IProjectDescription;
 
   const branches = await getBranchesWithBuilds(client, remoteApp);
   const branchConfigurations = await getBranchConfigurations(client, remoteApp, branches);
@@ -45,36 +45,25 @@ export async function getProjectDescription(client: MobileCenterClient,
     if (branchResponse.response.statusCode >= 400) {
       inputManually = true;
     } else {
-      if (branchResponse.result.toolsets.android) {
-        return {
-          moduleName: branchResponse.result.toolsets.android.module,
-          buildVariant: branchResponse.result.toolsets.android.buildVariant
-        }
-      }
-      if (branchResponse.result.toolsets.xcode) {
-        return {
-          projectOrWorkspacePath: branchResponse.result.toolsets.xcode.projectOrWorkspacePath,
-          podfilePath: branchResponse.result.toolsets.xcode.podfilePath
-        }
-      }
-      throw new Error("Unsupported OS/Platform");
+      return await getProjectDescriptionFromBranch(remoteApp, appDir, branchResponse, reactNativeProjectPath, androidModule, androidBuildVariant, iosProjectPath, iosPodfilePath);
     }
   }
 
   if (inputManually)
-    return inquireProjectDescription(remoteApp, localApp.dir, androidModule, androidBuildVariant, iosProjectPath, iosPodfilePath);
+    return inquireProjectDescription(remoteApp, appDir, androidModule, reactNativeProjectPath, androidBuildVariant, iosProjectPath, iosPodfilePath);
 }
 
 export async function getProjectDescriptionNonInteractive(client: MobileCenterClient,
-  localApp: ILocalApp,
   remoteApp: IRemoteApp,
+  appDir: string,
   branchName: string,
+  reactNativeProjectPath: string,
   androidModule: string,
   androidBuildVariant: string,
   iosProjectPath: string,
-  iosPodfilePath: string): Promise<ProjectDescription> {
+  iosPodfilePath: string): Promise<IProjectDescription> {
 
-  let projectDescription: ProjectDescription;
+  let projectDescription: IProjectDescription;
 
   const branches = await getBranchesWithBuilds(client, remoteApp);
 
@@ -86,22 +75,33 @@ export async function getProjectDescriptionNonInteractive(client: MobileCenterCl
     if (branchResponse.response.statusCode >= 400) {
       throw failure(ErrorCodes.Exception, "An error during getting branch configuration.");
     } else {
-      if (branchResponse.result.toolsets.android) {
-        return {
-          moduleName: androidModule || branchResponse.result.toolsets.android.module,
-          buildVariant: androidBuildVariant || branchResponse.result.toolsets.android.buildVariant
-        }
-      }
-      if (branchResponse.result.toolsets.xcode) {
-        return {
-          projectOrWorkspacePath: iosProjectPath || branchResponse.result.toolsets.xcode.projectOrWorkspacePath,
-          podfilePath: iosPodfilePath || branchResponse.result.toolsets.xcode.podfilePath
-        }
-      }
+      return await getProjectDescriptionFromBranch(remoteApp, appDir, branchResponse, reactNativeProjectPath, androidModule, androidBuildVariant, iosProjectPath, iosPodfilePath);
+    }
+  }
+
+  if ((remoteApp.os.toLowerCase() === "android" && remoteApp.os.toLowerCase() === "ios") && remoteApp.platform.toLowerCase() === "react-native") {
+    if (remoteApp.os.toLowerCase() === "android") {
+      if (!reactNativeProjectPath)
+        throw failure(ErrorCodes.IllegalCommand, "You must specify --packageJsonPath argument.");
+
+      androidModule = androidModule || (await findReactNativeGradleModules(appDir, reactNativeProjectPath))[0];
+      return {
+        moduleName: androidModule,
+        buildVariant: androidBuildVariant,
+        reactNativeProjectPath: reactNativeProjectPath && path.normalize(reactNativeProjectPath)
+      };
+    } else {
+      iosProjectPath = iosProjectPath || (await findReactNativeIosProjectsAndWorkspaces(appDir, reactNativeProjectPath))[0];
+      return {
+        projectOrWorkspacePath: iosProjectPath,
+        podfilePath: iosPodfilePath,
+        reactNativeProjectPath: reactNativeProjectPath && path.normalize(reactNativeProjectPath)
+      };
     }
   }
 
   if (remoteApp.os.toLowerCase() === "android" && remoteApp.platform.toLowerCase() === "java") {
+
     if (!androidModule || !androidBuildVariant)
       throw failure(ErrorCodes.IllegalCommand, "You must specify --android-module and --android-build-variant arguments.");
     return {
@@ -110,7 +110,7 @@ export async function getProjectDescriptionNonInteractive(client: MobileCenterCl
     }
   }
 
-  if (remoteApp.os.toLowerCase() === "ios" && remoteApp.platform.toLowerCase() === "objective-c-swift") {
+  if (remoteApp.os.toLowerCase() === "ios" && remoteApp.platform.toLowerCase() === "objective-c-swift" || remoteApp.platform.toLowerCase() === "react-native") {
     if (!iosProjectPath)
       throw failure(ErrorCodes.IllegalCommand, "You must specify --ios-project-path argument.");
     return {
@@ -120,6 +120,48 @@ export async function getProjectDescriptionNonInteractive(client: MobileCenterCl
   }
 
   throw failure(ErrorCodes.Exception, "Unsupported OS/Platform");
+}
+
+async function getProjectDescriptionFromBranch(
+  remoteApp: IRemoteApp,
+  appDir: string,
+  branchResponse: ClientResponse<models.BranchConfiguration>,
+  reactNativeProjectPath: string,
+  androidModule: string,
+  androidBuildVariant: string,
+  iosProjectPath: string,
+  iosPodfilePath: string) {
+  if (remoteApp.platform.toLowerCase() === "react-native" && !androidModule) {
+    if (branchResponse.result.toolsets.android) {
+      return {
+        moduleName: androidModule || path.join(path.dirname(branchResponse.result.toolsets.android.gradleWrapperPath), "app"),
+        buildVariant: androidBuildVariant || branchResponse.result.toolsets.android.buildVariant,
+        reactNativeProjectPath: path.normalize(reactNativeProjectPath || path.dirname(branchResponse.result.toolsets.javascript.packageJsonPath))
+      }
+    }
+    if (branchResponse.result.toolsets.xcode) {
+      return {
+        projectOrWorkspacePath: iosProjectPath || branchResponse.result.toolsets.xcode.projectOrWorkspacePath,
+        podfilePath: iosPodfilePath || branchResponse.result.toolsets.xcode.podfilePath,
+        reactNativeProjectPath: path.normalize(reactNativeProjectPath || path.dirname(branchResponse.result.toolsets.javascript.packageJsonPath))
+      }
+    }
+  } else {
+    if (branchResponse.result.toolsets.android) {
+      return {
+        moduleName: androidModule || branchResponse.result.toolsets.android.module,
+        buildVariant: androidBuildVariant || branchResponse.result.toolsets.android.buildVariant
+      }
+    }
+    if (branchResponse.result.toolsets.xcode) {
+      return {
+        projectOrWorkspacePath: iosProjectPath || branchResponse.result.toolsets.xcode.projectOrWorkspacePath,
+        podfilePath: iosPodfilePath || branchResponse.result.toolsets.xcode.podfilePath
+      }
+    }
+  }
+
+  throw new Error("Unsupported OS/Platform");
 }
 
 async function getBranchesWithBuilds(client: MobileCenterClient, app: IRemoteApp): Promise<models.BranchStatus[]> {
@@ -188,27 +230,54 @@ async function inquireBranchName(branches: models.BranchStatus[], branchConfigur
   }
 }
 
-async function inquireProjectDescription(app: IRemoteApp, dir: string,
+async function inquireProjectDescription(
+  app: IRemoteApp,
+  appDir: string,
+  reactNativeProjectPath: string,
   androidModule: string,
   androidBuildVariant: string,
   iosProjectPath: string,
-  iosPodfilePath: string): Promise<ProjectDescription> {
+  iosPodfilePath: string): Promise<IProjectDescription> {
 
-  if (app.os.toLowerCase() === "android" && app.platform.toLowerCase() === "java") {
-    const gradleModules = await findGradleModules(dir);
-    if (!gradleModules.length)
+  if (app.platform.toLowerCase() === "react-native") {
+    const reactNativeProjectsPaths = await findReactNativeProjects(appDir);
+    if (!reactNativeProjectsPaths || !reactNativeProjectsPaths.length)
+      throw failure(ErrorCodes.Exception, "No React-Native projects found.");
+    const question: Question = {
+      type: "list",
+      name: "reactNativeProjectPath",
+      message: "Package.json path:",
+      choices: reactNativeProjectsPaths.map(path.normalize)
+    };
+
+    const answers = await prompt.autoAnsweringQuestion(question, reactNativeProjectPath && path.normalize(reactNativeProjectPath));
+    reactNativeProjectPath = (answers as any).reactNativeProjectPath as string;
+    return {
+      reactNativeProjectPath: reactNativeProjectPath && path.normalize(reactNativeProjectPath)
+    };
+  }
+
+  if (app.os.toLowerCase() === "android") {
+    let gradleModules: string[];
+    if (app.platform.toLowerCase() === "java") {
+      gradleModules = await findGradleModules(appDir);
+    } else {
+      gradleModules = await findReactNativeGradleModules(appDir, reactNativeProjectPath);
+    }
+
+    if (!gradleModules || !gradleModules.length)
       throw failure(ErrorCodes.Exception, "No Android/Java modules found.")
 
-    let question: Question = {
+    const question: Question = {
       type: "list",
       name: "moduleName",
       message: "Gradle Module name:",
-      choices: gradleModules
+      choices: gradleModules.map(path.normalize)
     };
-    const answers = await prompt.autoAnsweringQuestion(question, androidModule);
-    const moduleName = answers.moduleName as string;
+    const answers = await prompt.autoAnsweringQuestion(question, androidModule && path.normalize(androidModule));
+    const moduleName = (answers as any).moduleName as string;
     if (moduleName) {
-      const filePath = path.join(dir, moduleName, "build.gradle");
+      const filePath = path.join(appDir, moduleName, "build.gradle");
       const buildGradle = await collectBuildGradleInfo(filePath);
       if (buildGradle.buildVariants && buildGradle.buildVariants.length) {
         let question: Question = {
@@ -218,17 +287,31 @@ async function inquireProjectDescription(app: IRemoteApp, dir: string,
           choices: buildGradle.buildVariants.map(x => x.name)
         };
         const answers = await prompt.autoAnsweringQuestion(question, androidBuildVariant);
-        return {
-          moduleName,
-          buildVariant: answers.buildVariant as string
-        };
+
+        if (app.platform.toLowerCase() === "java") {
+          return {
+            moduleName,
+            buildVariant: (answers as any).buildVariant as string
+          };
+        } else {
+          return {
+            moduleName,
+            buildVariant: (answers as any).buildVariant as string,
+            reactNativeProjectPath: reactNativeProjectPath && path.normalize(reactNativeProjectPath)
+          };
+        }
       } else
         throw new Error(`Incorrect file format: ${filePath}`);
     }
   }
 
-  if (app.os.toLowerCase() === "ios" && app.platform.toLowerCase() === "objective-c-swift") {
-    const projectsAndWorkspaces = await findProjectsAndWorkspaces(dir);
+  if (app.os.toLowerCase() === "ios") {
+    let projectsAndWorkspaces: string[];
+    if (app.platform.toLowerCase() === "objective-c-swift") {
+      projectsAndWorkspaces = await findIosProjectsAndWorkspaces(appDir);
+    } else {
+      projectsAndWorkspaces = await findReactNativeIosProjectsAndWorkspaces(appDir, reactNativeProjectPath);
+    }
     if (!projectsAndWorkspaces.length)
       throw failure(ErrorCodes.Exception, "No XCode projects/workspaces found.")
 
@@ -236,34 +319,64 @@ async function inquireProjectDescription(app: IRemoteApp, dir: string,
       type: "list",
       name: "projectOrWorkspacePath",
       message: "Project/Workspace path:",
-      choices: projectsAndWorkspaces
+      choices: projectsAndWorkspaces.map(path.normalize)
     };
-    let answers = await prompt.autoAnsweringQuestion(question, iosProjectPath);
-    const projectOrWorkspacePathAnswer = answers.projectOrWorkspacePath as string;
+    let answers = await prompt.autoAnsweringQuestion(question, iosProjectPath && path.normalize(iosProjectPath));
+    const projectOrWorkspacePathAnswer = (answers as any).projectOrWorkspacePath as string;
 
-    return {
-      projectOrWorkspacePath: projectOrWorkspacePathAnswer,
-      podfilePath: iosPodfilePath
-    };
+    if (app.platform.toLowerCase() === "objective-c-swift") {
+      return {
+        projectOrWorkspacePath: projectOrWorkspacePathAnswer,
+        podfilePath: iosPodfilePath
+      };
+    } else {
+      return {
+        projectOrWorkspacePath: projectOrWorkspacePathAnswer,
+        podfilePath: iosPodfilePath,
+        reactNativeProjectPath: reactNativeProjectPath && path.normalize(reactNativeProjectPath)
+      };
+    }
   }
 
   throw new Error(`Unsupported OS/Platform: ${app.os}/${app.platform}`);
 }
 
-async function findGradleModules(dir: string): Promise<string[]> {
-  const files = await glob(path.join(dir, "**/build.gradle"));
+async function findReactNativeProjects(appDir: string) {
+  const files = await glob(path.join(appDir, "**/package.json"), { ignore: ["**/node_modules/**/*"] });
+  const reactNativeProjectsPaths: string[] = [];
+  for (const file of files) {
+    if ((await glob(path.join(path.dirname(file), "index.android.js"))).length || (await glob(path.join(path.dirname(file), "index.ios.js"))).length) {
+      reactNativeProjectsPaths.push(path.dirname(file));
+    }
+  }
+
+  return reactNativeProjectsPaths.map(p => path.relative(appDir, p)).sort((a, b) => a.split("/").length - b.split("/").length);
+}
+
+async function findReactNativeGradleModules(appDir: string, reactNativeProjectPath: string) {
+  const modules = await findGradleModules(path.join(appDir, reactNativeProjectPath));
+  return modules.sort((a, b) => a.split("/").length - b.split("/").length);
+}
+
+async function findReactNativeIosProjectsAndWorkspaces(appDir: string, reactNativeProjectPath: string) {
+  const modules = await findIosProjectsAndWorkspaces(path.join(appDir, reactNativeProjectPath));
+  return modules.sort((a, b) => a.split("/").length - b.split("/").length);
+}
+
+async function findGradleModules(appDir: string): Promise<string[]> {
+  const files = await glob(path.join(appDir, "**/build.gradle"), { ignore: ["**/node_modules/**/*"] });
   const modules: string[] = [];
   for (let file of files) {
     let contents = await fs.readTextFile(file);
     if (/apply plugin:\s*['"]com\.android\.application['"]/m.test(contents)) {
-        modules.push(path.relative(dir, path.dirname(file)) || ".");
+      modules.push(path.relative(appDir, path.dirname(file)) || ".");
     }
   }
-  return modules;
+  return modules.sort((a, b) => a.split("/").length - b.split("/").length);;
 }
 
-async function findProjectsAndWorkspaces(dir: string): Promise<string[]> {
-  let dirs = await glob(path.join(dir, "**/*.*(xcworkspace|xcodeproj)/"));
+async function findIosProjectsAndWorkspaces(appDir: string): Promise<string[]> {
+  let dirs = await glob(path.join(appDir, "**/*.*(xcworkspace|xcodeproj)/"), { ignore: ["**/node_modules/**/*"] });
 
   const xcworkspaceDirs = dirs
     .filter(x => path.extname(x).toLowerCase() === ".xcworkspace")
@@ -272,5 +385,5 @@ async function findProjectsAndWorkspaces(dir: string): Promise<string[]> {
   dirs = dirs.filter(x => path.extname(x).toLowerCase() === ".xcworkspace"
     || !~xcworkspaceDirs.indexOf(path.join(path.dirname(x), path.basename(x, path.extname(x)))));
 
-  return dirs.map(d => path.relative(dir, d));
+  return dirs.map(d => path.relative(appDir, d)).sort((a, b) => a.split("/").length - b.split("/").length);
 }

@@ -6,20 +6,20 @@ import { out, prompt } from "../../util/interaction";
 import { MobileCenterSdkModule } from "./models/mobilecenter-sdk-module";
 import { Question } from "../../util/interaction/prompt";
 
-export async function getSdkModules(analytics: boolean, crashes: boolean, distribute: boolean, push: boolean): Promise<MobileCenterSdkModule> {
+export async function getSdkModules(platform: string, analytics: boolean, crashes: boolean, distribute: boolean, push: boolean): Promise<MobileCenterSdkModule> {
   out.text("");
   out.text("We almost done. The final thing to do is to select");
   out.text("a set of Mobile Center SDK modules to integrate.");
-  return inquireSdkModules(analytics, crashes, distribute, push);
+  return inquireSdkModules(platform, analytics, crashes, distribute, push);
 }
 
-export async function getSdkModulesNonInteractive(analytics: boolean, crashes: boolean, distribute: boolean, push: boolean): Promise<MobileCenterSdkModule> {
+export async function getSdkModulesNonInteractive(platform: string, analytics: boolean, crashes: boolean, distribute: boolean, push: boolean): Promise<MobileCenterSdkModule> {
   let sdkModules = MobileCenterSdkModule.None;
   if (analytics)
     sdkModules |= MobileCenterSdkModule.Analytics;
   if (crashes)
     sdkModules |= MobileCenterSdkModule.Crashes;
-  if (distribute)
+  if (distribute && platform.toLowerCase() != "react-native")
     sdkModules |= MobileCenterSdkModule.Distribute;
   if (push)
     sdkModules |= MobileCenterSdkModule.Push;
@@ -30,24 +30,32 @@ export async function getSdkModulesNonInteractive(analytics: boolean, crashes: b
   return sdkModules;
 }
 
-async function inquireSdkModules(analytics: boolean, crashes: boolean, distribute: boolean, push: boolean): Promise<MobileCenterSdkModule> {
+async function inquireSdkModules(platform: string, analytics: boolean, crashes: boolean, distribute: boolean, push: boolean): Promise<MobileCenterSdkModule> {
+  let choises = [];
+  choises.push({
+    name: "Analytics",
+    value: "analytics"
+  });
+  choises.push({
+    name: "Crashes",
+    value: "crashes"
+  });
+  if (platform.toLowerCase() != "react-native") {
+    choises.push({
+      name: "Distribute",
+      value: "distribute"
+    });
+  };
+  choises.push({
+    name: "Push",
+    value: "push"
+  });
+
   let questions: Question = {
     type: "checkbox",
     name: "modules",
     message: "Which modules do you want to integrate?",
-    choices: [{
-      name: "Analytics",
-      value: "analytics"
-    }, {
-      name: "Crashes",
-      value: "crashes"
-    }, {
-      name: "Distribute",
-      value: "distribute"
-    }, {
-      name: "Push",
-      value: "push"
-    }],
+    choices: choises,
     validate: (x: any) => {
       return x && x.length ? true : "Please choose at least one module";
     }
@@ -58,7 +66,7 @@ async function inquireSdkModules(analytics: boolean, crashes: boolean, distribut
     modules.push("analytics");
   if (crashes)
     modules.push("crashes");
-  if (distribute)
+  if (distribute && platform.toLowerCase() != "react-native")
     modules.push("distribute");
   if (push)
     modules.push("push");

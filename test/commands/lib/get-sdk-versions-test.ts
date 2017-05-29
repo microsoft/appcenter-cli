@@ -2,7 +2,7 @@ import { getLatestSdkVersion } from "../../../src/commands/lib/get-sdk-versions"
 
 import { expect } from "chai";
 
-describe("GetLatestSdkVersion", () => {
+xdescribe("GetLatestSdkVersion", () => {
   function isValidVersion(version: string): boolean {
     return /(\d+)\.(\d+)\.(\d+)/.test(version);
   }

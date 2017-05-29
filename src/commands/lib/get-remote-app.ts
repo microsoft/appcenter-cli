@@ -15,13 +15,13 @@ export async function getRemoteApp(client: MobileCenterClient,
   appDir: string): Promise<IRemoteApp> {
 
   out.text("");
-  out.text("It's time to specify which Mobile Center app");
+  out.text(`It's time to specify which ${getOsPlatformText(os, platform)} Mobile Center app`);
   out.text("is associated with your local code.");
   if (!createNew) {
     let apps = await fetchApps(client);
     apps = apps.filter(app =>
       (!os || app.os.toLowerCase() === os.toLowerCase()) &&
-      (!platform || app.platform.toLowerCase() === platform.toLowerCase()))
+      (!platform || app.platform.toLowerCase() === platform.toLowerCase()));
 
     const appSecret = await getAppSecret(os, appDir);
     if (appSecret) {
@@ -47,10 +47,22 @@ export async function getRemoteApp(client: MobileCenterClient,
   }
 }
 
+function getOsPlatformText(os: string, platform: string) {
+  os = os && ({ ios: "iOS", android: "Android" } as any)[os.toLowerCase()];
+  platform = platform && ({
+    'java': "Java",
+    'react-native': "React-Native",
+    'xamarin': "Xamarin",
+    'objective-c-swift': "Objective-C/Swift"
+  } as any)[platform.toLowerCase()];
+
+  return (os || "") + ((os && platform) ? "/" : "") + (platform || "");
+}
+
 async function getAppSecret(os: string, appDir: string) {
-  switch (os) {
+  switch (os.toLowerCase()) {
     case "android": return null;
-    case "iOS": return await getAppSecretIos(appDir);
+    case "ios": return await getAppSecretIos(appDir);
   }
 }
 
@@ -61,7 +73,7 @@ export async function getRemoteAppNonInteractive(client: MobileCenterClient,
   createNew: boolean): Promise<IRemoteApp> {
 
   if (!appName)
-    throw failure(ErrorCodes.IllegalCommand, "In non-interactive mode you must use --app argument.");
+    throw failure(ErrorCodes.IllegalCommand, "In non-interactive mode you must use --app(-android/-ios) argument.");
 
   if (createNew) {
     const appRequest: models.AppRequest = {

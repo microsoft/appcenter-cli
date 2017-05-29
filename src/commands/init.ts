@@ -4,11 +4,11 @@ import * as _ from "lodash";
 import * as path from "path";
 
 import { Command, CommandArgs, CommandResult, ErrorCodes, defaultValue, failure, getCurrentApp, help, required, success } from "../util/commandline";
-import { IAndroidJavaProjectDescription, IIosObjectiveCSwiftProjectDescription, ProjectDescription } from "./lib/models/project-description";
+import { IAndroidJavaProjectDescription, IIosObjectiveCSwiftProjectDescription, IReactNativeProjectDescription, IProjectDescription } from "./lib/models/project-description";
 import { checkAndroidJava, injectAndroidJava } from "./lib/android/operations";
 import { getLocalApp, getLocalAppNonInteractive } from "./lib/get-local-app";
 import { getProjectDescription, getProjectDescriptionNonInteractive } from "./lib/get-project-description";
-import { getRemoteApp, getRemoteAppNonInteractive } from "./lib/get-remote-app";
+import { getRemoteApp, getRemoteAppNonInteractive} from "./lib/get-remote-app";
 import { getSdkModules, getSdkModulesNonInteractive } from "./lib/get-sdk-modules";
 import { hasArg, longName, shortName } from './../util/commandline/option-decorators';
 import { out, prompt } from "../util/interaction";
@@ -19,6 +19,7 @@ import collectBuildGradleInfo from "./lib/android/collect-build-gradle-info";
 import collectMainActivityInfo from "./lib/android/collect-main-activity-info";
 import { getLatestSdkVersion } from "./lib/get-sdk-versions";
 import { injectSdkIos } from "./lib/ios/inject-sdk-ios";
+import { injectSdkReactNative } from "./lib/react-native/inject-sdk-react-native";
 import { reportProject } from "./lib/format-project";
 
 @help("Integrates Mobile Center SDKs into the project")
@@ -32,6 +33,16 @@ export default class IntegrateSDKCommand extends Command {
   @longName("app")
   @hasArg
   appName: string;
+
+  @help("Specify react native android application for command to act on")
+  @longName("app-android")
+  @hasArg
+  appNameAndroid: string;
+
+  @help("Specify react native iOS application for command to act on")
+  @longName("app-ios")
+  @hasArg
+  appNameIos: string;
 
   @help("Specify application for command to act on")
   @shortName("n")
@@ -81,6 +92,11 @@ export default class IntegrateSDKCommand extends Command {
   @longName("sample-app")
   sampleApp: boolean;
 
+  @help("Project root path for React-Native app")
+  @longName("react-native-project-path")
+  @hasArg
+  reactNativeProjectPath: string;
+
   @help("Gradle module name for Android app")
   @longName("android-module")
   @hasArg
@@ -100,6 +116,14 @@ export default class IntegrateSDKCommand extends Command {
   @longName("ios-podfile-path")
   @hasArg
   iosPodfilePath: string;
+
+  @help("Enable user tracking automatically")
+  @longName("enable-user-tracking-auto")
+  enableUserTrackingAuto: boolean;
+
+  @help("Send crashes automatically")
+  @longName("send-crashes-auto")
+  sendCrashesAuto: boolean;
 
   @help("Non-interactive mode")
   @longName("non-interactive")
@@ -145,82 +169,147 @@ export default class IntegrateSDKCommand extends Command {
         platform = localApp.platform;
       }
 
-      const remoteApp = this.nonInteractive ?
-        await getRemoteAppNonInteractive(client, this.appName, os, platform, this.createNew) :
-        await getRemoteApp(client, this.appName, os, platform, this.createNew, appDir);
-        
-      if (!localApp) {
-        localApp = {
-          dir: appDir,
-          os: remoteApp.os,
-          platform: remoteApp.platform 
-        };
+      const getRemoteAppProjectDescription: (os: string, appName: string) => Promise<IProjectDescription & IRemoteApp> =
+        async function (os: string, appName: string) {
+          const remoteApp = this.nonInteractive ?
+            await getRemoteAppNonInteractive(client, appName, os, platform, this.createNew) :
+            await getRemoteApp(client, appName, os, platform, this.createNew, appDir);
+
+          const projectDescription = this.nonInteractive ?
+            await getProjectDescriptionNonInteractive(
+              client,
+              remoteApp, appDir,
+              this.branchName,
+              this.reactNativeProjectPath,
+              this.androidModule,
+              this.androidBuildVariant,
+              this.iosProjectPath,
+              this.iosPodfilePath) :
+            await getProjectDescription(
+              client,
+              appDir,
+              remoteApp,
+              this.branchName,
+              this.reactNativeProjectPath,
+              this.androidModule,
+              this.androidBuildVariant,
+              this.iosProjectPath,
+              this.iosPodfilePath);
+          this.reactNativeProjectPath = this.reactNativeProjectPath || (projectDescription as IReactNativeProjectDescription).reactNativeProjectPath;
+          return _.merge(projectDescription, remoteApp);
+        }.bind(this);
+
+      let remoteAppProjectDescription: IProjectDescription & IRemoteApp;
+      let remoteAppProjectDescriptionAndroid: IAndroidJavaProjectDescription & IRemoteApp;
+      let remoteAppProjectDescriptionIos: IIosObjectiveCSwiftProjectDescription & IRemoteApp;
+      if (platform.toLocaleLowerCase() === "react-native") {
+        remoteAppProjectDescriptionAndroid = await getRemoteAppProjectDescription("android", this.appNameAndroid) as IAndroidJavaProjectDescription & IRemoteApp;
+        remoteAppProjectDescriptionIos = await getRemoteAppProjectDescription("ios", this.appNameIos) as IIosObjectiveCSwiftProjectDescription & IRemoteApp;
+
+        if (!remoteAppProjectDescriptionAndroid && !remoteAppProjectDescriptionIos || !this.reactNativeProjectPath) {
+          return failure(ErrorCodes.Exception, "There are no projects to integrate");
+        }
+      } else {
+        remoteAppProjectDescription = await getRemoteAppProjectDescription(os, this.appName);
       }
-
-      const projectDescription = this.nonInteractive ? 
-        await getProjectDescriptionNonInteractive(client, localApp, remoteApp, 
-          this.branchName, 
-          this.androidModule, 
-          this.androidBuildVariant,
-          this.iosProjectPath,
-          this.iosPodfilePath) :
-        await getProjectDescription(client, localApp, remoteApp, 
-          this.branchName, 
-          this.androidModule, 
-          this.androidBuildVariant,
-          this.iosProjectPath,
-          this.iosPodfilePath);
-
-      const sdkModules = this.nonInteractive ?
-        await getSdkModulesNonInteractive(this.analytics, this.crashes, this.distribute, this.push) :
-        await getSdkModules(this.analytics, this.crashes, this.distribute, this.push);
-      
-      const latestSdkVersion = await getLatestSdkVersion(remoteApp.platform.toLowerCase());
-      reportProject(remoteApp, projectDescription, sdkModules, latestSdkVersion);
 
       if (!this.nonInteractive && !await prompt.confirm("Do you really want to integrate SDK(s) into the project?")) {
         out.text("Mobile Center SDKs integration was cancelled");
         return success();
       }
 
-      switch (remoteApp.os.toLowerCase()) {
+      let javaLatestSdkVersion, objectiveCSwiftLatestSdkVersion, reactNativeLatestSdkVersion, latestSdkVersion;
+      switch (platform.toLowerCase()) {
+        case "java": javaLatestSdkVersion = latestSdkVersion = await getLatestSdkVersion("java"); break;
+        case "objective-c-swift": objectiveCSwiftLatestSdkVersion = latestSdkVersion = await getLatestSdkVersion("objective-c-swift"); break;
+        case "react-native":
+          javaLatestSdkVersion = await getLatestSdkVersion("java");
+          objectiveCSwiftLatestSdkVersion = await getLatestSdkVersion("objective-c-swift");
+          reactNativeLatestSdkVersion = latestSdkVersion = await getLatestSdkVersion("react-native");
+          break;
+      }
+
+      const sdkModules = this.nonInteractive ?
+        await getSdkModulesNonInteractive(platform, this.analytics, this.crashes, this.distribute, this.push) :
+        await getSdkModules(platform, this.analytics, this.crashes, this.distribute, this.push);
+
+      reportProject([remoteAppProjectDescription, remoteAppProjectDescriptionAndroid, remoteAppProjectDescriptionIos], sdkModules, latestSdkVersion);
+
+      switch (os && os.toLowerCase()) {
         case "android":
-          switch (remoteApp.platform.toLowerCase()) {
+          switch (platform.toLowerCase()) {
             case "java":
-              const androidJavaProjectDescription = projectDescription as IAndroidJavaProjectDescription;
+              const androidJavaProjectDescription = remoteAppProjectDescription as IAndroidJavaProjectDescription;
               const buildGradle = await collectBuildGradleInfo(path.join(appDir, androidJavaProjectDescription.moduleName, "build.gradle"));
               const mainActivity = await collectMainActivityInfo(buildGradle, androidJavaProjectDescription.buildVariant);
 
               await out.progress("Integrating SDKs into the project...",
                 injectAndroidJava(buildGradle,
                   mainActivity,
-                  latestSdkVersion,
-                  remoteApp.appSecret,
+                  javaLatestSdkVersion,
+                  remoteAppProjectDescription.appSecret,
                   sdkModules));
               break;
           }
           break;
 
         case "ios":
-          const iosObjectiveCSwiftProjectDescription = projectDescription as IIosObjectiveCSwiftProjectDescription;
+          const iosObjectiveCSwiftProjectDescription = remoteAppProjectDescription as IIosObjectiveCSwiftProjectDescription;
           await out.progress("Integrating SDKs into the project...",
             injectSdkIos(path.join(appDir, iosObjectiveCSwiftProjectDescription.projectOrWorkspacePath),
               iosObjectiveCSwiftProjectDescription.podfilePath && path.join(appDir, iosObjectiveCSwiftProjectDescription.podfilePath),
-              remoteApp.appSecret,
+              remoteAppProjectDescription.appSecret,
               sdkModules,
-              latestSdkVersion));
+              objectiveCSwiftLatestSdkVersion));
           break;
 
         default:
+          switch (platform.toLowerCase()) {
+            case "react-native":
+              const reactNativeProjectPath = path.join(appDir, this.reactNativeProjectPath);
+
+              const buildGradle = remoteAppProjectDescriptionAndroid && remoteAppProjectDescriptionAndroid.moduleName
+                && await collectBuildGradleInfo(path.join(appDir, remoteAppProjectDescriptionAndroid.moduleName, "build.gradle"));
+              const mainActivity = remoteAppProjectDescriptionAndroid && remoteAppProjectDescriptionAndroid.buildVariant
+                && await collectMainActivityInfo(buildGradle, remoteAppProjectDescriptionAndroid.buildVariant);
+              const appSecretAndroid = remoteAppProjectDescriptionAndroid && remoteAppProjectDescriptionAndroid.appSecret;
+
+              const projectOrWorkspacePath = remoteAppProjectDescriptionIos && remoteAppProjectDescriptionIos.projectOrWorkspacePath
+                && path.join(appDir, remoteAppProjectDescriptionIos.projectOrWorkspacePath);
+              const podfilePath = remoteAppProjectDescriptionIos && remoteAppProjectDescriptionIos.podfilePath
+                && path.join(appDir, remoteAppProjectDescriptionIos.podfilePath);
+              const appSecretIos = remoteAppProjectDescriptionIos && remoteAppProjectDescriptionIos.appSecret;
+
+              //TODO: 
+              //await out.progress("Integrating SDKs into the project...",
+              await injectSdkReactNative(
+                  reactNativeProjectPath,
+                  projectOrWorkspacePath,
+                  podfilePath,
+                  appSecretAndroid,
+                  buildGradle,
+                  mainActivity,
+                  appSecretIos,
+                  sdkModules,
+                  reactNativeLatestSdkVersion,
+                  javaLatestSdkVersion,
+                  objectiveCSwiftLatestSdkVersion,
+                  this.enableUserTrackingAuto,
+                  this.sendCrashesAuto);
+              break;
+          }
           break;
       }
 
       out.text("");
       out.text("Congratulations! We have successfully integrated SDK(s) into the project.");
-      
-      if (remoteApp.os.toLowerCase() === "ios" && remoteApp.platform.toLowerCase() === "objective-c-swift") {
+
+      if (((os && os.toLowerCase()) === "ios" && platform.toLowerCase() === "objective-c-swift")
+        || (platform.toLowerCase() === "react-native" && remoteAppProjectDescriptionIos)) {
         out.text("***NOTE: We have inserted all neccessary dependencies in the Podfile.");
-        out.text("But don't forget to run `pod install` to install your newly defined pod.");
+        if (process.platform != 'darwin') {
+          out.text("But don't forget to run `pod install` to install your newly defined pod.");
+        }
       }
 
     } catch (err) {
@@ -229,6 +318,8 @@ export default class IntegrateSDKCommand extends Command {
     return success();
   }
 }
+
+
 
 function normalizeOs(os: string): string {
   switch (os && os.toLowerCase()) {

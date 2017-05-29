@@ -24,7 +24,7 @@ export async function getLocalApp(dir: string,
   const detectedApp = await detectLocalApp(dir);
   if (detectedApp) {
     out.text("");
-    out.text(`An existing ${detectedApp.os}/${detectedApp.platform} app has been detected.`);
+    out.text(`An existing ${detectedApp.os ? detectedApp.os + "/" : ""}${detectedApp.platform} app has been detected.`);
     if (await prompt.confirm("Do you want to use it?"))
     return detectedApp;
   } 
@@ -58,12 +58,12 @@ export async function getLocalAppNonInteractive(dir: string,
   sampleApp: boolean): Promise<ILocalApp> {
 
   if (sampleApp) {
-    if (!os || !platform)
-      throw failure(ErrorCodes.IllegalCommand, "In non-interactive mode --os and --platform arguments are expected.");
+    if (!platform)
+      throw failure(ErrorCodes.IllegalCommand, "In non-interactive mode at least --platform argument is expected.");
     return downloadSampleApp(dir, { os, platform });
   }
 
-  return os && platform ? { dir, os, platform } : null;
+  return detectLocalApp(dir);
 }
 
 async function downloadSampleApp(dir: string, app: IAppBase): Promise<ILocalApp> {
@@ -78,7 +78,7 @@ async function downloadSampleApp(dir: string, app: IAppBase): Promise<ILocalApp>
   };
 
   function getArchiveUrl(os: string, platform: string): { uri: string, name: string } {
-    switch (os.toLowerCase()) {
+    switch (os && os.toLowerCase()) {
       case "android":
         switch (platform.toLowerCase()) {
           case "java": return { uri: "https://github.com/MobileCenter/quickstart-android/archive/master.zip", name: "android-sample" };
@@ -132,6 +132,16 @@ async function detectLocalApp(dir: string): Promise<ILocalApp> {
       dir,
       os: 'Android',
       platform: "Java"
+    };
+  const reactNativeFiles = [
+    ...await glob(path.join(dir, "index.ios.js")),
+    ...await glob(path.join(dir, "index.android.js")),
+    ...await glob(path.join(dir, "package.json"))];
+  if (reactNativeFiles.length)
+    return {
+      dir,
+      os: null,
+      platform: "React-Native"
     };
   return null;
 }
