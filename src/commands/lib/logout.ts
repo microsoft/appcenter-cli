@@ -7,19 +7,25 @@ const debug = require("debug")("mobile-center-cli:commands:lib:logout");
 export async function logout(client: MobileCenterClient, user: Profile): Promise<void> {
   // Only delete token off the server if CLI created it.
   if (!user.tokenSuppliedByUser) {
+    let tokenId: string;
     try {
     await out.progress("Logging out current user...",
       clientRequest(async cb => {
         try {
-          debug('Attempting to delete token off server');
-          client.apiTokens.deleteMethod(await user.accessTokenId, cb);
+          tokenId = await user.accessTokenId;
+          if (!tokenId) {
+            tokenId = "current";
+          }
+          debug(`Attempting to delete token id ${tokenId} off server`);
+          client.apiTokens.deleteMethod(tokenId, cb);
         } catch(err) {
-          debug('Could not retrieve token ID from token store');
+          debug('Could not retrieve current token from token store');
           cb(err, null, null, null);
         }
       }));
     } catch (err) {
       // Noop, it's ok if deletion fails
+      debug(`Deletion of token id ${tokenId} from server failed, error ${err}`);
     }
   }
   try {
