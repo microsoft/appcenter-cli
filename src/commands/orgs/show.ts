@@ -5,6 +5,7 @@ import { MobileCenterClient, models, clientRequest, ClientResponse } from "../..
 const debug = require("debug")("mobile-center-cli:commands:orgs:show");
 import { inspect } from "util";
 import { getPortalOrgLink } from "../../util/portal/portal-helper";
+import { getOrgUsers, pickAdmins } from "./lib/org-users-helper";
 
 @help("Show information about organization")
 export default class OrgShowCommand extends Command {
@@ -16,9 +17,9 @@ export default class OrgShowCommand extends Command {
   name: string;
 
   async run(client: MobileCenterClient, portalBaseUrl: string): Promise<CommandResult> {    
-    const [users, apps, organizationDetails] = await out.progress("Loading organization information...", Promise.all([this.getOrgUsers(client, this.name), this.getOrgApps(client, this.name), this.getOrgDetails(client, this.name)]));
+    const [users, apps, organizationDetails] = await out.progress("Loading organization information...", Promise.all([getOrgUsers(client, this.name, debug), this.getOrgApps(client, this.name), this.getOrgDetails(client, this.name)]));
 
-    const admins = users.filter((user) => user.role === "admin");
+    const admins = pickAdmins(users);
 
     out.report([
       ["Display name", "displayName"],
@@ -29,24 +30,6 @@ export default class OrgShowCommand extends Command {
     ], { displayName: organizationDetails.displayName, url: getPortalOrgLink(portalBaseUrl, this.name), admins, appsCount: apps.length, collaboratorsCount: users.length });
 
     return success();
-  }
-
-  private async getOrgUsers(client: MobileCenterClient, organization: string): Promise<models.OrganizationUserResponse[]> {
-    try {
-      const httpResponse = await clientRequest<models.OrganizationUserResponse[]>((cb) => client.users.listForOrg(organization, cb));
-      if (httpResponse.response.statusCode < 400) {
-        return httpResponse.result;
-      } else {
-        throw httpResponse.response;
-      }
-    } catch (error) {
-      if (error.statusCode === 404) {
-        throw failure(ErrorCodes.InvalidParameter, `organization ${organization} doesn't exist`);
-      } else {
-        debug(`Failed to load list of organization users - ${inspect(error)}`);
-        throw failure(ErrorCodes.Exception, "failed to load list of organization users");
-      }
-    }
   }
 
   private async getOrgApps(client: MobileCenterClient, organization: string): Promise<models.AppResponse[]> {
