@@ -54,8 +54,10 @@ export default class LoginCommand extends Command {
         }
 
         let userResponse = await out.progress("Getting user info ...", this.getUserInfo(token.token));
-        saveUser(userResponse.result, { id: token.id, token: token.token }, this.environmentName, userSuppliedToken);
+        await saveUser(userResponse.result, { id: token.id, token: token.token }, this.environmentName, userSuppliedToken);
         out.text(`Logged in as ${userResponse.result.name}`);
+        // Force early exit to avoid long standing delays if token deletion is slow
+        process.exit(0);
         result = success();
       }
     } catch (err) {
