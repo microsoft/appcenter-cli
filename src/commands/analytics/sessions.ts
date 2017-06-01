@@ -37,7 +37,7 @@ export default class SessionCommand extends AppCommand {
   public appVersion: string;
 
   @help("Show session durations")
-  @longName("duration")
+  @longName("durations")
   public duration: boolean;
 
   @help("Show session statistics")
