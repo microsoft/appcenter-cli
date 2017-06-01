@@ -9,18 +9,19 @@ import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../util/profile";
 import * as Os from "os";
 import { parseDate } from "./lib/date-parsing-helper";
+import { startDateHelpMessage, endDateHelpMessage } from "./lib/analytics-constants";
 
 const debug = require("debug")("mobile-center-cli:commands:analytics:app-versions");
 
 @help("Shows versions of the application")
 export default class ShowAppVersionsCommand extends AppCommand {
-  @help("Start date (e.g. '1970/01/01 00:00' (system time zone), RFC2822 and ISO 8601 date strings are also supported)")
+  @help(startDateHelpMessage)
   @shortName("s")
   @longName("start")
   @hasArg
   public startDate: string;
 
-  @help("End date (e.g. '1970/01/01 00:00' (system time zone), RFC2822 and ISO 8601 date strings are also supported)")
+  @help(endDateHelpMessage)
   @shortName("e")
   @longName("end")
   @hasArg

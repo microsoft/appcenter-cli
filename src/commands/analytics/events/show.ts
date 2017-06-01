@@ -6,6 +6,7 @@ import * as _ from "lodash";
 import { DefaultApp } from "../../../util/profile";
 import { parseDate } from "../lib/date-parsing-helper";
 import { calculatePercentChange } from "../lib/percent-change-helper";
+import { startDateHelpMessage, endDateHelpMessage } from "../lib/analytics-constants";
 
 const debug = require("debug")("mobile-center-cli:commands:analytics:events:show");
 const pLimit = require("p-limit");
@@ -24,13 +25,13 @@ export default class ShowCommand extends AppCommand {
   @longName("properties")
   public properties: boolean;
 
-  @help("Start date (e.g. '1970/01/01 00:00' (system time zone), RFC2822 and ISO 8601 date strings are also supported)")
+  @help(startDateHelpMessage)
   @shortName("s")
   @longName("start")
   @hasArg
   public startDate: string;
 
-  @help("End date (e.g. '1970/01/01 00:00' (system time zone), RFC2822 and ISO 8601 date strings are also supported)")
+  @help(endDateHelpMessage)
   @shortName("e")
   @longName("end")
   @hasArg
