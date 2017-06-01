@@ -159,7 +159,6 @@ export default class SessionCommand extends AppCommand {
   }
 
   private outputStatistics(statisticsObject: IJsonOutput): void {
-    const maximumNumberOfColumnsInTables = 3;
     out.reportObjectAsTitledTables((stats: IJsonOutput, numberFormatter, dateFormatter, percentageFormatter) => {
       const tableArray: out.NamedTables = [];
 
@@ -182,7 +181,7 @@ export default class SessionCommand extends AppCommand {
       }
 
       return tableArray;
-    }, statisticsObject, maximumNumberOfColumnsInTables);
+    }, statisticsObject);
   }
 }
 

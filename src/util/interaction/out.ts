@@ -535,6 +535,20 @@ function padTableCells(table: INamedTable): INamedTable {
   };
 }
 
+function calculateNumberOfColumns(tables: Array<INamedTable | string[]>): number {
+  if (tables.length) {
+    return _.max(tables.map((table) => {
+      if (table instanceof Array) {
+        return table.length || 1;
+      } else {
+        return calculateNumberOfColumns(table.content);
+      }
+    }));
+  } else {
+    return 1;
+  }
+}
+
 export interface INamedTable {
   name: string;
   content: Array<INamedTable | string[]>;
@@ -555,14 +569,14 @@ type ObjectToNamedTablesConvertor<T> = (object: T,
                                 percentageFormatter: (percentage: number) => string,
                               ) => NamedTables;
 
-export function reportObjectAsTitledTables<T>(toNamedTables: ObjectToNamedTablesConvertor<T>, object: T, columnsCount: number) {
+export function reportObjectAsTitledTables<T>(toNamedTables: ObjectToNamedTablesConvertor<T>, object: T) {
   if (formatIsJson()) {
     console.log(JSON.stringify(object));
   } else {
     let output: string;
     if (formatIsCsv()) {
       const stringTables = toNamedTables(object, (num) => num.toString(), (date) => date.toISOString(), (percentage) => percentage.toString());
-      output = convertNamedTablesToCsvString(stringTables, columnsCount);
+      output = convertNamedTablesToCsvString(stringTables, calculateNumberOfColumns(stringTables));
     } else {
       const stringTables = toNamedTables(object, (num) => _.round(num, 2).toString(), (date) => date.toString(), (percentage) => _.round(percentage, 2).toString() + "%");
       output = convertNamedTablesToListString(stringTables);
