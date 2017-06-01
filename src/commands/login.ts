@@ -46,8 +46,7 @@ export default class LoginCommand extends Command {
           userSuppliedToken = true;
           token = await this.doTokenLogin();
         } else if (this.isInteractiveEnvironment) {
-          // Don't have ids for this style of login, so can't delete token later.
-          userSuppliedToken = true;
+          userSuppliedToken = false;
           token = await this.doInteractiveLogin();
         } else {
           userSuppliedToken = false;
@@ -55,8 +54,10 @@ export default class LoginCommand extends Command {
         }
 
         let userResponse = await out.progress("Getting user info ...", this.getUserInfo(token.token));
-        saveUser(userResponse.result, { id: token.id, token: token.token }, this.environmentName, userSuppliedToken);
+        await saveUser(userResponse.result, { id: token.id, token: token.token }, this.environmentName, userSuppliedToken);
         out.text(`Logged in as ${userResponse.result.name}`);
+        // Force early exit to avoid long standing delays if token deletion is slow
+        process.exit(0);
         result = success();
       }
     } catch (err) {
@@ -104,7 +105,7 @@ export default class LoginCommand extends Command {
     out.text(`Opening browser to log in. If the browser does not open, please go to ${loginUrl}, log in, and enter the code returned.`);
     opener(loginUrl);
     const token = await prompt("Access code from browser: ");
-    return { id: "NoneGiven", token: token };
+    return { id: null, token: token };
   }
 
   private async doTokenLogin(): Promise<TokenValueType> {
@@ -115,7 +116,7 @@ export default class LoginCommand extends Command {
     if (!this.token && !this.userName) {
       return [{
         name: "userName",
-        message:"Username or email: "
+        message: "Username or email: "
       }];
     }
     return [];
