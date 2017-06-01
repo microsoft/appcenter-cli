@@ -32,6 +32,14 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | `mobile-center login` | Login to Mobile Center |
 | `mobile-center logout` | Logout from Mobile Center |
 | | |
+| `mobile-center setup-autocomplete` | Setups autocompletion for the shell |
+| | |
+| `mobile-center analytics app-versions` | Shows versions of the application |
+| `mobile-center analytics audience` | Show audience statistics |
+| `mobile-center analytics sessions` | Show statistics for sessions |
+| `mobile-center analytics events delete` | Delete event |
+| `mobile-center analytics events show` | Show statistics for events |
+| | |
 | `mobile-center apps create` | Create a new app |
 | `mobile-center apps delete` | Delete an app |
 | `mobile-center apps get-current` | Get the application that's set as default for all CLI commands |
@@ -46,6 +54,7 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | `mobile-center build branches list` | Show list of branches |
 | `mobile-center build branches show` | Show branch build status |
 | | |
+| `mobile-center crashes upload-missing-symbols` | Upload missing crash symbols for the application (only from macOS) |
 | `mobile-center crashes upload-symbols` | Upload the crash symbols for the application |
 | | |
 | `mobile-center distribute release` | Upload release binary and trigger distribution |
@@ -66,7 +75,7 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | `mobile-center telemetry on` | Turn on the sending of telemetry |
 | | |
 | `mobile-center test status` | Checks the status of the started test run. |
-| `mobile-center test generate appium` | Generates a Xamarin.UITest project |
+| `mobile-center test generate appium` | Generates an Appium project |
 | `mobile-center test generate uitest` | Generates a Xamarin.UITest project |
 | `mobile-center test prepare appium` | Creates an artifacts directory with Appium tests. |
 | `mobile-center test prepare calabash` | Creates an artifacts directory with Calabash tests. |
