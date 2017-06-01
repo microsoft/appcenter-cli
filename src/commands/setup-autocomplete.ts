@@ -32,7 +32,7 @@ export default class SetupAutoCompleteCommand extends Command {
       return failure(ErrorCodes.InvalidParameter, `${this.shell} is not supported. Only ${SetupAutoCompleteCommand.supportedShells.join(", ")} are supported`);
     }
 
-    if (_.isNil(this.shell) && (!process.env.SHELL || !process.env.SHELL.match(`/${SetupAutoCompleteCommand.supportedShells.join("|")}/`))) {
+    if (_.isNil(this.shell) && (!process.env.SHELL || !process.env.SHELL.match(SetupAutoCompleteCommand.supportedShells.join("|")))) {
       return failure(ErrorCodes.InvalidParameter, "current shell cannot be detected, please specify it explicitly");
     }
 

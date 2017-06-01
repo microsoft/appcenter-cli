@@ -43,13 +43,9 @@ function runCli() {
 }
 
 if (ensureNodeVersion()) {
-  if(process.argv.indexOf("--compgen") === -1) {
-    runCli();
-  } else {
-    // return autocomplete result and exit
-    var commandLine = require('../dist/util/commandline');
-    commandLine.executeAutoComplete();
-  }
+  var commandLine = require('../dist/util/commandline');
+  commandLine.executeAutoComplete();   // if it is an autocomplete run, then it exits here
+  runCli();
 } else {
   process.exit(1);
 }
