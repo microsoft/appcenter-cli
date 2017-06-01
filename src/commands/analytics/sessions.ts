@@ -166,7 +166,7 @@ export default class SessionCommand extends AppCommand {
       if (stats.sessions) {
         tableArray.push({
           name: "Session Durations", 
-          content: stats.sessions.map((group) => [group.bucket, numberFormatter(group.count)])
+          content: [["", "Count"]].concat(stats.sessions.map((group) => [group.bucket, numberFormatter(group.count)]))
       });
       }
 
@@ -174,6 +174,7 @@ export default class SessionCommand extends AppCommand {
         tableArray.push({
           name: "Session Statistics",
           content: [
+            ["", "Count", "Change"],
             ["Total Sessions"].concat(toArray(stats.statistics.totalSessions, numberFormatter, percentageFormatter)),
             ["Average Sessions Per Day"].concat(toArray(stats.statistics.averageSessionsPerDay, numberFormatter, percentageFormatter)),
             ["Average Session Length (sec)", numberFormatter(stats.statistics.averageSessionsLength.seconds), percentageFormatter(stats.statistics.averageSessionsLength.percentage)]
