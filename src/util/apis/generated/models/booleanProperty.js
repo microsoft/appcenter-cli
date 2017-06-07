@@ -44,7 +44,7 @@ BooleanProperty.prototype.mapper = function () {
           serializedName: 'name',
           constraints: {
             MaxLength: 128,
-            Pattern: '^[a-zA-Z][a-zA-Z0-9]*$'
+            Pattern: '^[a-zA-Z][a-zA-Z0-9\-_]*$'
           },
           type: {
             name: 'String'

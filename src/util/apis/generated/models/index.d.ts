@@ -155,9 +155,9 @@ export interface SuccessResponse {
  * 
  * @member {string} [tokenType] The token's type. public:managed by the user;
  * in_app_update:special token for in-app update scenario; buid:dedicated for
- * CI usage for now; session:for CLI session management; default is
- * "public".'. Possible values include: 'public', 'in_app_update', 'build',
- * 'session'
+ * CI usage for now; session:for CLI session management; tester_app: used for
+ * tester mobile app; default is "public".'. Possible values include:
+ * 'public', 'in_app_update', 'build', 'session', 'tester_app'
  * 
  */
 export interface ApiTokensPostRequest {
@@ -597,11 +597,13 @@ export interface ApiTokenDeleteResponse {
  * @class
  * Initializes a new instance of the ApiTokenGetUserResponse class.
  * @constructor
+ * @member {string} tokenId The token's unique id (UUID)
+ * 
+ * @member {array} tokenScope The token's scope. A list of allowed roles.
+ * 
  * @member {string} userEmail The user email
  * 
  * @member {string} userId The unique id (UUID) of the user
- * 
- * @member {array} [tokenScope] The token's scope. A list of allowed roles.
  * 
  * @member {string} userOrigin The creation origin of the user who created
  * this api token. Possible values include: 'mobile-center', 'hockeyapp',
@@ -609,9 +611,10 @@ export interface ApiTokenDeleteResponse {
  * 
  */
 export interface ApiTokenGetUserResponse {
+  tokenId: string;
+  tokenScope: string[];
   userEmail: string;
   userId: string;
-  tokenScope?: string[];
   userOrigin: string;
 }
 
@@ -980,6 +983,10 @@ export interface AppResponseInternalRepositoriesItem {
  * @member {string} appOrigin The creation origin of this app. Possible values
  * include: 'mobile-center', 'hockeyapp', 'codepush'
  * 
+ * @member {string} appSecret A unique and secret key used to identify the app
+ * in communication with the ingestion endpoint for crash reporting and
+ * analytics
+ * 
  */
 export interface AppUserPermissionResponse {
   appId: string;
@@ -987,6 +994,7 @@ export interface AppUserPermissionResponse {
   userEmail: string;
   userId: string;
   appOrigin: string;
+  appSecret: string;
 }
 
 /**
@@ -1304,6 +1312,54 @@ export interface OrganizationUserResponse {
 
 /**
  * @class
+ * Initializes a new instance of the TeamRequest class.
+ * @constructor
+ * @member {string} displayName The display name of the team
+ * 
+ * @member {string} [name] The name of the team
+ * 
+ * @member {string} [description] The description of the team
+ * 
+ */
+export interface TeamRequest {
+  displayName: string;
+  name?: string;
+  description?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TeamResponse class.
+ * @constructor
+ * @member {string} id The internal unique id (UUID) of the team.
+ * 
+ * @member {string} name The name of the team
+ * 
+ * @member {string} displayName The display name of the team
+ * 
+ * @member {string} [description] The description of the team
+ * 
+ */
+export interface TeamResponse {
+  id: string;
+  name: string;
+  displayName: string;
+  description?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppTeamResponse class.
+ * @constructor
+ * @member {array} [permissions] The permissions the team has for the app
+ * 
+ */
+export interface AppTeamResponse extends TeamResponse {
+  permissions?: string[];
+}
+
+/**
+ * @class
  * Initializes a new instance of the StatusResponse class.
  * @constructor
  * @member {string} status
@@ -1311,6 +1367,28 @@ export interface OrganizationUserResponse {
  */
 export interface StatusResponse {
   status: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TeamUserResponse class.
+ * @constructor
+ * @member {string} email The email address of the user
+ * 
+ * @member {string} displayName The full name of the user. Might for example
+ * be first and last name
+ * 
+ * @member {string} name The unique name that is used to identify the user.
+ * 
+ * @member {string} role The role of the user has within the team. Possible
+ * values include: 'maintainer', 'collaborator'
+ * 
+ */
+export interface TeamUserResponse {
+  email: string;
+  displayName: string;
+  name: string;
+  role: string;
 }
 
 /**
@@ -1425,10 +1503,17 @@ export interface WebSocketContainer {
  * 
  * @member {boolean} hasTestAction Does scheme have a test action?
  * 
+ * @member {string} [archiveConfiguration] Build configuration set in Archive
+ * action
+ * 
+ * @member {string} [targetToArchive] The Id of the target to archive
+ * 
  */
 export interface XcodeScheme {
   name: string;
   hasTestAction: boolean;
+  archiveConfiguration?: string;
+  targetToArchive?: string;
 }
 
 /**
@@ -1441,11 +1526,17 @@ export interface XcodeScheme {
  * 
  * @member {string} [podfilePath] Path to CococaPods file, if present
  * 
+ * @member {object} [cartfilePath] Path to Carthage file, if present
+ * 
+ * @member {string} [xcodeProjectSha] repo object Id of the pbxproject
+ * 
  */
 export interface XcodeSchemeContainer {
   path: string;
   sharedSchemes: XcodeScheme[];
   podfilePath?: string;
+  cartfilePath?: any;
+  xcodeProjectSha?: string;
 }
 
 /**
@@ -1668,6 +1759,8 @@ export interface Commit {
  * 
  * @member {boolean} [testsEnabled]
  * 
+ * @member {boolean} [badgeIsEnabled]
+ * 
  * @member {boolean} [signed]
  * 
  * @member {object} [toolsets]
@@ -1678,6 +1771,9 @@ export interface Commit {
  * project/workspace path
  * 
  * @member {string} [toolsets.xcode.podfilePath] Path to CococaPods file, if
+ * present
+ * 
+ * @member {string} [toolsets.xcode.cartfilePath] Path to Carthage file, if
  * present
  * 
  * @member {string} [toolsets.xcode.provisioningProfileEncoded]
@@ -1748,6 +1844,7 @@ export interface BranchConfiguration {
   id: number;
   trigger?: string;
   testsEnabled?: boolean;
+  badgeIsEnabled?: boolean;
   signed?: boolean;
   toolsets?: BranchConfigurationToolsets;
   artifactVersioning?: BranchConfigurationArtifactVersioning;
@@ -1764,6 +1861,8 @@ export interface BranchConfiguration {
  * @member {string} [xcode.projectOrWorkspacePath] Xcode project/workspace path
  * 
  * @member {string} [xcode.podfilePath] Path to CococaPods file, if present
+ * 
+ * @member {string} [xcode.cartfilePath] Path to Carthage file, if present
  * 
  * @member {string} [xcode.provisioningProfileEncoded]
  * 
@@ -1840,6 +1939,8 @@ export interface BranchConfigurationToolsets {
  * 
  * @member {string} [podfilePath] Path to CococaPods file, if present
  * 
+ * @member {string} [cartfilePath] Path to Carthage file, if present
+ * 
  * @member {string} [provisioningProfileEncoded]
  * 
  * @member {string} [certificateEncoded]
@@ -1862,6 +1963,7 @@ export interface BranchConfigurationToolsets {
 export interface XcodeBranchConfigurationProperties {
   projectOrWorkspacePath: string;
   podfilePath?: string;
+  cartfilePath?: string;
   provisioningProfileEncoded?: string;
   certificateEncoded?: string;
   certificatePassword?: string;
@@ -2066,6 +2168,22 @@ export interface RepoInfo {
  * 
  */
 export interface XcodeVersion {
+  name?: string;
+  current?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the MonoVersion class.
+ * @constructor
+ * The Mono version
+ *
+ * @member {string} [name] The version name
+ * 
+ * @member {boolean} [current] If the version is current
+ * 
+ */
+export interface MonoVersion {
   name?: string;
   current?: boolean;
 }
@@ -2817,6 +2935,50 @@ export interface DeviceInfoResponse {
 
 /**
  * @class
+ * Initializes a new instance of the PublishDevicesRequest class.
+ * @constructor
+ * The publising information.
+ *
+ * @member {string} username The username for the Apple Developer account to
+ * publish the devices to.
+ * 
+ * @member {string} password The password for the Apple Developer account to
+ * publish the devices to.
+ * 
+ * @member {boolean} [publishAllDevices] When set to true, all unprovisioned
+ * devices will be published to the Apple Developer account.  When false,
+ * only the provided devices will be published to the Apple Developer account.
+ * 
+ * @member {array} [devices] Array of device UDID's to be published to the
+ * Apple Developer account.
+ * 
+ */
+export interface PublishDevicesRequest {
+  username: string;
+  password: string;
+  publishAllDevices?: boolean;
+  devices?: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the PublishDevicesResponse class.
+ * @constructor
+ * The information for a single iOS device
+ *
+ * @member {string} profileFileName The file name for the provisioning profile.
+ * 
+ * @member {string} profileBase64 The updated provisioning profile base64
+ * encoded.
+ * 
+ */
+export interface PublishDevicesResponse {
+  profileFileName: string;
+  profileBase64: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the StoresReleaseDetails class.
  * @constructor
  * Details of an uploaded release
@@ -3167,14 +3329,14 @@ export interface StoresBasicDetails {
 
 /**
  * @class
- * Initializes a new instance of the AppIdMasterRequest class.
+ * Initializes a new instance of the IntuneAppsRequest class.
  * @constructor
- * AppIdMasterRequest
+ * IntuneAppsRequest
  *
  * @member {string} [createdMonth] PartitionKey year-month
  * 
  */
-export interface AppIdMasterRequest {
+export interface IntuneAppsRequest {
   createdMonth?: string;
 }
 
@@ -3943,6 +4105,20 @@ export interface MissingSymbolCrashGroup {
 export interface MissingSymbolCrashGroupsResponse {
   totalCrashCount: number;
   groups: MissingSymbolCrashGroup[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the MissingSymbolCrashGroupsInfoResponse class.
+ * @constructor
+ * missing symbol groups
+ *
+ * @member {number} totalCrashCount total number of crashes for all missing
+ * symbol groups
+ * 
+ */
+export interface MissingSymbolCrashGroupsInfoResponse {
+  totalCrashCount: number;
 }
 
 /**
@@ -4808,6 +4984,114 @@ export interface Device {
 
 /**
  * @class
+ * Initializes a new instance of the GenericLogContainer class.
+ * @constructor
+ * @member {boolean} [exceededMaxLimit] indicates if the number of available
+ * logs are more than the max allowed return limit(100).
+ * 
+ * @member {date} [lastReceivedLogTimestamp] the timestamp of the last log
+ * received. This value can be used as the start time parameter in the
+ * consecutive API call.
+ * 
+ * @member {array} logs the list of logs
+ * 
+ */
+export interface GenericLogContainer {
+  exceededMaxLimit?: boolean;
+  lastReceivedLogTimestamp?: Date;
+  logs: GenericLog[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GenericLog class.
+ * @constructor
+ * Generic log.
+ *
+ * @member {string} type Log type.
+ * . Possible values include: 'event', 'page', 'start_session', 'error',
+ * 'push_installation', 'start_service', 'custom_properties'
+ * 
+ * @member {date} timestamp Log creation timestamp.
+ * 
+ * @member {uuid} installId Install ID.
+ * 
+ * @member {uuid} [sessionId] Session ID.
+ * 
+ * @member {string} [eventId] Event ID.
+ * 
+ * @member {string} [eventName] Event name.
+ * 
+ * @member {string} [properties] Event specific properties.
+ * 
+ * @member {object} device
+ * 
+ * @member {string} [device.sdkName] Name of the SDK. Consists of the name of
+ * the SDK and the platform, e.g. "avalanchesdk.ios", "hockeysdk.android".
+ * 
+ * @member {string} [device.sdkVersion] Version of the SDK in semver format,
+ * e.g. "1.2.0" or "0.12.3-alpha.1".
+ * 
+ * @member {string} [device.wrapperSdkVersion] Version of the wrapper SDK in
+ * semver format. When the SDK is embedding another base SDK (for example
+ * Xamarin.Android wraps Android), the Xamarin specific version is populated
+ * into this field while sdkVersion refers to the original Android SDK.
+ * 
+ * @member {string} [device.wrapperSdkName] Name of the wrapper SDK. Consists
+ * of the name of the SDK and the wrapper platform, e.g.
+ * "avalanchesdk.xamarin", "hockeysdk.cordova".
+ * 
+ * @member {string} [device.model] Device model (example: iPad2,3).
+ * 
+ * @member {string} [device.oemName] Device manufacturer (example: HTC).
+ * 
+ * @member {string} [device.osName] OS name (example: iOS). The following OS
+ * names are standardized (non-exclusive): Android, iOS, macOS, tvOS, Windows.
+ * 
+ * @member {string} [device.osVersion] OS version (example: 9.3.0).
+ * 
+ * @member {string} [device.osBuild] OS build code (example: LMY47X).
+ * 
+ * @member {number} [device.osApiLevel] API level when applicable like in
+ * Android (example: 15).
+ * 
+ * @member {string} [device.locale] Language code (example: en_US).
+ * 
+ * @member {number} [device.timeZoneOffset] The offset in minutes from UTC for
+ * the device time zone, including daylight savings time.
+ * 
+ * @member {string} [device.screenSize] Screen size of the device in pixels
+ * (example: 640x480).
+ * 
+ * @member {string} [device.appVersion] Application version name, e.g. 1.1.0
+ * 
+ * @member {string} [device.carrierName] Carrier name (for mobile devices).
+ * 
+ * @member {string} [device.carrierCode] Carrier country code (for mobile
+ * devices).
+ * 
+ * @member {string} [device.carrierCountry] Carrier country.
+ * 
+ * @member {string} [device.appBuild] The app's build number, e.g. 42.
+ * 
+ * @member {string} [device.appNamespace] The bundle identifier, package
+ * identifier, or namespace, depending on what the individual plattforms use,
+ * .e.g com.microsoft.example.
+ * 
+ */
+export interface GenericLog {
+  type: string;
+  timestamp: Date;
+  installId: string;
+  sessionId?: string;
+  eventId?: string;
+  eventName?: string;
+  properties?: string;
+  device: Device;
+}
+
+/**
+ * @class
  * Initializes a new instance of the LogWithProperties class.
  * @constructor
  * @member {object} [properties] Additional key/value pair parameters.
@@ -5215,9 +5499,135 @@ export interface AudienceDevicePropertyValuesListResult {
  * 
  */
 export interface NotificationsListResult {
-  values: NotificationDetailsResult[];
+  values: NotificationOverviewResult[];
   total?: number;
   nextLink?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationOverviewResult class.
+ * @constructor
+ * Notification statistics
+ *
+ * @member {string} notificationId Notification id.
+ * 
+ * @member {string} [name] Notification name
+ * 
+ * @member {object} [notificationTarget]
+ * 
+ * @member {string} [notificationTarget.type] Polymorhpic Discriminator
+ * 
+ * @member {date} [sendTime] Notification send time
+ * 
+ * @member {number} [pnsSendFailure] Number of the notifications failed to
+ * send to the push provider.
+ * 
+ * @member {number} [pnsSendSuccess] Number of the notifications successfully
+ * sent to push the provider.
+ * 
+ * @member {string} state State of the notification. Possible values include:
+ * 'Cancelled', 'Completed', 'Enqueued', 'Processing', 'Unknown'
+ * 
+ */
+export interface NotificationOverviewResult {
+  notificationId: string;
+  name?: string;
+  notificationTarget?: NotificationTarget;
+  sendTime?: Date;
+  pnsSendFailure?: number;
+  pnsSendSuccess?: number;
+  state: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationTarget class.
+ * @constructor
+ * Generic notification target.
+ *
+ * @member {string} type Polymorhpic Discriminator
+ * 
+ */
+export interface NotificationTarget {
+  type: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationDetailsResult class.
+ * @constructor
+ * Notification statistics
+ *
+ * @member {object} notificationContent
+ * 
+ * @member {string} [notificationContent.name] Notification name
+ * 
+ * @member {string} [notificationContent.title] Notification title
+ * 
+ * @member {string} [notificationContent.body] Notification body
+ * 
+ * @member {object} [notificationContent.customData] Notification custom
+ * data(priority, expiration, etc.)
+ * 
+ * @member {array} [failureOutcomes] Failture outcome counts
+ * 
+ */
+export interface NotificationDetailsResult extends NotificationOverviewResult {
+  notificationContent: NotificationContent;
+  failureOutcomes?: NotificationFailureOutcomeCount[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationContent class.
+ * @constructor
+ * Notification definition object
+ *
+ * @member {string} name Notification name
+ * 
+ * @member {string} [title] Notification title
+ * 
+ * @member {string} body Notification body
+ * 
+ * @member {object} [customData] Notification custom data(priority,
+ * expiration, etc.)
+ * 
+ */
+export interface NotificationContent {
+  name: string;
+  title?: string;
+  body: string;
+  customData?: { [propertyName: string]: string };
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationFailureOutcomeCount class.
+ * @constructor
+ * Notification failure outcome count
+ *
+ * @member {string} [failureReason] The reason of the notification failure
+ * 
+ * @member {number} [count] count of this type of failure
+ * 
+ */
+export interface NotificationFailureOutcomeCount {
+  failureReason?: string;
+  count?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationIdList class.
+ * @constructor
+ * List of notification Ids
+ *
+ * @member {array} values List of notification Ids.
+ * 
+ */
+export interface NotificationIdList {
+  values: string[];
 }
 
 /**
@@ -5245,70 +5655,6 @@ export interface NotificationsListResult {
 export interface NotificationDefinition {
   notificationTarget?: NotificationTarget;
   notificationContent: NotificationContent;
-}
-
-/**
- * @class
- * Initializes a new instance of the NotificationDetailsResult class.
- * @constructor
- * Notification statistics
- *
- * @member {string} notificationId Notification id.
- * 
- * @member {date} [sendTime] Notification send time
- * 
- * @member {number} [pnsSendFailure] Number of the notifications failed to
- * send to the push provider.
- * 
- * @member {number} [pnsSendSuccess] Number of the notifications successfully
- * sent to push the provider.
- * 
- * @member {string} state State of the notification. Possible values include:
- * 'Cancelled', 'Completed', 'Enqueued', 'Processing', 'Unknown'
- * 
- */
-export interface NotificationDetailsResult extends NotificationDefinition {
-  notificationId: string;
-  sendTime?: Date;
-  pnsSendFailure?: number;
-  pnsSendSuccess?: number;
-  state: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the NotificationTarget class.
- * @constructor
- * Generic notification target.
- *
- * @member {string} type Polymorhpic Discriminator
- * 
- */
-export interface NotificationTarget {
-  type: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the NotificationContent class.
- * @constructor
- * Notification definition object
- *
- * @member {string} name Notification name
- * 
- * @member {string} [title] Notification title
- * 
- * @member {string} body Notification body
- * 
- * @member {object} [customData] Notification custom data(priority,
- * expiration, etc.)
- * 
- */
-export interface NotificationContent {
-  name: string;
-  title?: string;
-  body: string;
-  customData?: { [propertyName: string]: string };
 }
 
 /**
@@ -5535,6 +5881,48 @@ export interface NotificationConfigGoogleResult extends NotificationConfigResult
  */
 export interface NotificationConfigWindowsResult extends NotificationConfigResult {
   packageSid: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfig class.
+ * @constructor
+ * Export job configuration
+ *
+ * @member {string} type Possible values include: 'BlobStorage', 'AppInsights'
+ * 
+ * @member {string} storage Target storage secret
+ * 
+ * @member {object} metadata Export metadata
+ * 
+ */
+export interface ExportConfig {
+  type: string;
+  storage: string;
+  metadata: { [propertyName: string]: string };
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfigResult class.
+ * @constructor
+ * Export job configuration result
+ *
+ * @member {string} id Export Id
+ * 
+ * @member {string} type Possible values include: 'BlobStorage', 'AppInsights'
+ * 
+ * @member {object} metadata Export metadata
+ * 
+ * @member {string} state State of the export job. Possible values include:
+ * 'Enabled', 'Disabled', 'Pending', 'Deleted', 'Invalid'
+ * 
+ */
+export interface ExportConfigResult {
+  id: string;
+  type: string;
+  metadata: { [propertyName: string]: string };
+  state: string;
 }
 
 /**
@@ -7200,6 +7588,147 @@ export interface LiveUpdateStatusMetricMetadata {
 
 /**
  * @class
+ * Initializes a new instance of the AlertOperationResult class.
+ * @constructor
+ * Generic result for any alerting API operation
+ *
+ * @member {string} requestId Unique request identifier for tracking
+ * 
+ */
+export interface AlertOperationResult {
+  requestId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AlertWebhook class.
+ * @constructor
+ * Alerting webhook
+ *
+ * @member {string} name display name of the webhook
+ * 
+ * @member {string} url target url of the webhook
+ * 
+ * @member {boolean} enabled Allows eanble/disable webhook
+ * 
+ * @member {boolean} callOnNewCrashGroup Shows if webhook is called on new
+ * crash group created event
+ * 
+ * @member {boolean} callOnNewAppRelease Shows if webhook is called on new app
+ * release event
+ * 
+ */
+export interface AlertWebhook {
+  name: string;
+  url: string;
+  enabled: boolean;
+  callOnNewCrashGroup: boolean;
+  callOnNewAppRelease: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AlertWebhookEntry class.
+ * @constructor
+ * Alerting webhook with ETag and IDs
+ *
+ * @member {string} [appId] The unique id (UUID) of the application
+ * 
+ * @member {string} webhookId The unique id (UUID) of the web hook
+ * 
+ * @member {string} eTag The ETag of the entry
+ * 
+ * @member {object} webhook
+ * 
+ * @member {string} [webhook.name] display name of the webhook
+ * 
+ * @member {string} [webhook.url] target url of the webhook
+ * 
+ * @member {boolean} [webhook.enabled] Allows eanble/disable webhook
+ * 
+ * @member {boolean} [webhook.callOnNewCrashGroup] Shows if webhook is called
+ * on new crash group created event
+ * 
+ * @member {boolean} [webhook.callOnNewAppRelease] Shows if webhook is called
+ * on new app release event
+ * 
+ */
+export interface AlertWebhookEntry {
+  appId?: string;
+  webhookId: string;
+  eTag: string;
+  webhook: AlertWebhook;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AlertWebhookResult class.
+ * @constructor
+ * Alerting webhook entry wrapped as operation result
+ *
+ * @member {object} [webhookEntry]
+ * 
+ * @member {string} [webhookEntry.appId] The unique id (UUID) of the
+ * application
+ * 
+ * @member {string} [webhookEntry.webhookId] The unique id (UUID) of the web
+ * hook
+ * 
+ * @member {string} [webhookEntry.eTag] The ETag of the entry
+ * 
+ * @member {object} [webhookEntry.webhook]
+ * 
+ * @member {string} [webhookEntry.webhook.name] display name of the webhook
+ * 
+ * @member {string} [webhookEntry.webhook.url] target url of the webhook
+ * 
+ * @member {boolean} [webhookEntry.webhook.enabled] Allows eanble/disable
+ * webhook
+ * 
+ * @member {boolean} [webhookEntry.webhook.callOnNewCrashGroup] Shows if
+ * webhook is called on new crash group created event
+ * 
+ * @member {boolean} [webhookEntry.webhook.callOnNewAppRelease] Shows if
+ * webhook is called on new app release event
+ * 
+ */
+export interface AlertWebhookResult extends AlertOperationResult {
+  webhookEntry?: AlertWebhookEntry;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AlertWebhooksResult class.
+ * @constructor
+ * List of alerting webhooks wrapped as operation result
+ *
+ * @member {array} [webhookEntries]
+ * 
+ */
+export interface AlertWebhooksResult extends AlertOperationResult {
+  webhookEntries?: AlertWebhookEntry[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AlertWebhookPingResult class.
+ * @constructor
+ * Alerting webhook ping operation result
+ *
+ * @member {number} [responseStatusCode] HTTP status code returned in response
+ * from calling webhook
+ * 
+ * @member {string} [responseReason] Reason returned in response from calling
+ * webhook
+ * 
+ */
+export interface AlertWebhookPingResult extends AlertOperationResult {
+  responseStatusCode?: number;
+  responseReason?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the AlertEmailSettings class.
  * @constructor
  * Alerting Email Settings
@@ -7235,21 +7764,21 @@ export interface EventSetting {
  * @constructor
  * Alerting Default Email Settings of the user
  *
- * @member {string} eTag The ETag of the entity
+ * @member {string} [eTag] The ETag of the entity
  * 
  * @member {boolean} [enabled] Allows to forcefully disable emails on app or
  * user level
  * 
- * @member {string} userId The unique id (UUID) of the user
+ * @member {string} [userId] The unique id (UUID) of the user
  * 
- * @member {array} settings The settings the user has for the app
+ * @member {array} [settings] The settings the user has for the app
  * 
  */
-export interface AlertUserEmailSettingsResult {
-  eTag: string;
+export interface AlertUserEmailSettingsResult extends AlertOperationResult {
+  eTag?: string;
   enabled?: boolean;
-  userId: string;
-  settings: EventSetting[];
+  userId?: string;
+  settings?: EventSetting[];
 }
 
 /**
@@ -7258,14 +7787,14 @@ export interface AlertUserEmailSettingsResult {
  * @constructor
  * Alerting Email Settings of the user for a particular app
  *
- * @member {string} appId Application ID
+ * @member {string} [appId] Application ID
  * 
  * @member {boolean} [userEnabled] A flag indicating if settings are enabled
  * at user/global level
  * 
  */
 export interface AlertUserAppEmailSettingsResult extends AlertUserEmailSettingsResult {
-  appId: string;
+  appId?: string;
   userEnabled?: boolean;
 }
 
@@ -7273,7 +7802,7 @@ export interface AlertUserAppEmailSettingsResult extends AlertUserEmailSettingsR
  * @class
  * Initializes a new instance of the AlertingEvent class.
  * @constructor
- * Event Setting
+ * Alerting event
  *
  * @member {string} eventTimestamp ISO 8601 date time when event was generated
  * 
@@ -7283,7 +7812,9 @@ export interface AlertUserAppEmailSettingsResult extends AlertUserEmailSettingsR
  * @member {number} eventVersion Versioning for this eventType. Default value:
  * 1 .
  * 
- * @member {object} [properties] Custom properties for a specific event
+ * @member {object} [properties] Obsolete. Use emailProperties.
+ * 
+ * @member {object} [emailProperties] Email properties for a specific event
  * 
  */
 export interface AlertingEvent {
@@ -7291,6 +7822,171 @@ export interface AlertingEvent {
   eventId: string;
   eventVersion: number;
   properties?: any;
+  emailProperties?: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NewCrashGroupAlertingEvent class.
+ * @constructor
+ * New crash group alerting event
+ *
+ * @member {string} eventId A unique identifier for this event instance.
+ * Useful for deduplication
+ * 
+ * @member {string} eventTimestamp ISO 8601 date time when event was generated
+ * 
+ * @member {number} eventVersion Versioning for this eventType. Default value:
+ * 1 .
+ * 
+ * @member {object} [properties] Obsolete. Use emailProperties.
+ * 
+ * @member {object} [emailProperties] Email properties for a specific event
+ * 
+ * @member {object} [newCrashGroupWebhookProperties]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.publicIdentifier]
+ * 
+ * @member {object} [newCrashGroupWebhookProperties.crashReason]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.crashReason.id]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.crashReason.appId]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.crashReason.createdAt]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.crashReason.updatedAt]
+ * 
+ * @member {number} [newCrashGroupWebhookProperties.crashReason.status]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.crashReason.reason]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.crashReason.lastCrashAt]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.crashReason.appBuild]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.crashReason.appVersion]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.crashReason.method]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.crashReason.file]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.crashReason.class]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.crashReason.line]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.title]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.text]
+ * 
+ * @member {string} [newCrashGroupWebhookProperties.url]
+ * 
+ */
+export interface NewCrashGroupAlertingEvent {
+  eventId: string;
+  eventTimestamp: string;
+  eventVersion: number;
+  properties?: any;
+  emailProperties?: any;
+  newCrashGroupWebhookProperties?: NewCrashGroupWebhookProperties;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NewCrashGroupWebhookProperties class.
+ * @constructor
+ * Webhook properties for new crash group alerting event
+ *
+ * @member {string} publicIdentifier
+ * 
+ * @member {object} crashReason
+ * 
+ * @member {string} [crashReason.id]
+ * 
+ * @member {string} [crashReason.appId]
+ * 
+ * @member {string} [crashReason.createdAt]
+ * 
+ * @member {string} [crashReason.updatedAt]
+ * 
+ * @member {number} [crashReason.status]
+ * 
+ * @member {string} [crashReason.reason]
+ * 
+ * @member {string} [crashReason.lastCrashAt]
+ * 
+ * @member {string} [crashReason.appBuild]
+ * 
+ * @member {string} [crashReason.appVersion]
+ * 
+ * @member {string} [crashReason.method]
+ * 
+ * @member {string} [crashReason.file]
+ * 
+ * @member {string} [crashReason.class]
+ * 
+ * @member {string} [crashReason.line]
+ * 
+ * @member {string} title
+ * 
+ * @member {string} text
+ * 
+ * @member {string} url
+ * 
+ */
+export interface NewCrashGroupWebhookProperties {
+  publicIdentifier: string;
+  crashReason: NewCrashGroupWebhookPropertiesCrashReason;
+  title: string;
+  text: string;
+  url: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NewCrashGroupWebhookPropertiesCrashReason class.
+ * @constructor
+ * @member {string} [id]
+ * 
+ * @member {string} [appId]
+ * 
+ * @member {string} [createdAt]
+ * 
+ * @member {string} [updatedAt]
+ * 
+ * @member {number} [status]
+ * 
+ * @member {string} [reason]
+ * 
+ * @member {string} [lastCrashAt]
+ * 
+ * @member {string} [appBuild]
+ * 
+ * @member {string} [appVersion]
+ * 
+ * @member {string} [method]
+ * 
+ * @member {string} [file]
+ * 
+ * @member {string} [class]
+ * 
+ * @member {string} [line]
+ * 
+ */
+export interface NewCrashGroupWebhookPropertiesCrashReason {
+  id?: string;
+  appId?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  status?: number;
+  reason?: string;
+  lastCrashAt?: string;
+  appBuild?: string;
+  appVersion?: string;
+  method?: string;
+  file?: string;
+  class?: string;
+  line?: string;
 }
 
 /**
@@ -7304,9 +8000,196 @@ export interface AlertingEvent {
  * triggered even if the event requires calling webhooks or doing other
  * actions.
  * 
+ * @member {object} [newAppReleaseWebhookProperties]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.publicIdentifier]
+ * 
+ * @member {object} [newAppReleaseWebhookProperties.appVersion]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.version]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.shortversion]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.title]
+ * 
+ * @member {number} [newAppReleaseWebhookProperties.appVersion.timestamp]
+ * 
+ * @member {number} [newAppReleaseWebhookProperties.appVersion.appsize]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.notes]
+ * 
+ * @member {boolean} [newAppReleaseWebhookProperties.appVersion.mandatory]
+ * 
+ * @member {boolean} [newAppReleaseWebhookProperties.appVersion.external]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.deviceFamily]
+ * 
+ * @member {number} [newAppReleaseWebhookProperties.appVersion.id]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.appId]
+ * 
+ * @member {string}
+ * [newAppReleaseWebhookProperties.appVersion.minimumOsVersion]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.buildUrl]
+ * 
+ * @member {number} [newAppReleaseWebhookProperties.appVersion.status]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.expiredAt]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.createdAt]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.updatedAt]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.sdkVersion]
+ * 
+ * @member {boolean} [newAppReleaseWebhookProperties.appVersion.blockCrashes]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.appOwner]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.title]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.text]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.url]
+ * 
  */
 export interface NewAppReleaseAlertingEvent extends AlertingEvent {
   userIds?: string[];
+  newAppReleaseWebhookProperties?: NewAppReleaseWebhookProperties;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NewAppReleaseWebhookProperties class.
+ * @constructor
+ * Webhook properties for new app release alerting event
+ *
+ * @member {string} publicIdentifier
+ * 
+ * @member {object} appVersion
+ * 
+ * @member {string} [appVersion.version]
+ * 
+ * @member {string} [appVersion.shortversion]
+ * 
+ * @member {string} [appVersion.title]
+ * 
+ * @member {number} [appVersion.timestamp]
+ * 
+ * @member {number} [appVersion.appsize]
+ * 
+ * @member {string} [appVersion.notes]
+ * 
+ * @member {boolean} [appVersion.mandatory]
+ * 
+ * @member {boolean} [appVersion.external]
+ * 
+ * @member {string} [appVersion.deviceFamily]
+ * 
+ * @member {number} [appVersion.id]
+ * 
+ * @member {string} [appVersion.appId]
+ * 
+ * @member {string} [appVersion.minimumOsVersion]
+ * 
+ * @member {string} [appVersion.buildUrl]
+ * 
+ * @member {number} [appVersion.status]
+ * 
+ * @member {string} [appVersion.expiredAt]
+ * 
+ * @member {string} [appVersion.createdAt]
+ * 
+ * @member {string} [appVersion.updatedAt]
+ * 
+ * @member {string} [appVersion.sdkVersion]
+ * 
+ * @member {boolean} [appVersion.blockCrashes]
+ * 
+ * @member {string} [appVersion.appOwner]
+ * 
+ * @member {string} title
+ * 
+ * @member {string} text
+ * 
+ * @member {string} url
+ * 
+ */
+export interface NewAppReleaseWebhookProperties {
+  publicIdentifier: string;
+  appVersion: NewAppReleaseWebhookPropertiesAppVersion;
+  title: string;
+  text: string;
+  url: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NewAppReleaseWebhookPropertiesAppVersion class.
+ * @constructor
+ * @member {string} [version]
+ * 
+ * @member {string} [shortversion]
+ * 
+ * @member {string} [title]
+ * 
+ * @member {number} [timestamp]
+ * 
+ * @member {number} [appsize]
+ * 
+ * @member {string} [notes]
+ * 
+ * @member {boolean} [mandatory]
+ * 
+ * @member {boolean} [external]
+ * 
+ * @member {string} [deviceFamily]
+ * 
+ * @member {number} [id]
+ * 
+ * @member {string} [appId]
+ * 
+ * @member {string} [minimumOsVersion]
+ * 
+ * @member {string} [buildUrl]
+ * 
+ * @member {number} [status]
+ * 
+ * @member {string} [expiredAt]
+ * 
+ * @member {string} [createdAt]
+ * 
+ * @member {string} [updatedAt]
+ * 
+ * @member {string} [sdkVersion]
+ * 
+ * @member {boolean} [blockCrashes]
+ * 
+ * @member {string} [appOwner]
+ * 
+ */
+export interface NewAppReleaseWebhookPropertiesAppVersion {
+  version?: string;
+  shortversion?: string;
+  title?: string;
+  timestamp?: number;
+  appsize?: number;
+  notes?: string;
+  mandatory?: boolean;
+  external?: boolean;
+  deviceFamily?: string;
+  id?: number;
+  appId?: string;
+  minimumOsVersion?: string;
+  buildUrl?: string;
+  status?: number;
+  expiredAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  sdkVersion?: string;
+  blockCrashes?: boolean;
+  appOwner?: string;
 }
 
 /**
@@ -7315,11 +8198,8 @@ export interface NewAppReleaseAlertingEvent extends AlertingEvent {
  * @constructor
  * Object returned in response to accepting an event occurance
  *
- * @member {string} requestId Unique request identifier for tracking
- * 
  */
-export interface EventResponseResult {
-  requestId: string;
+export interface EventResponseResult extends AlertOperationResult {
 }
 
 /**
@@ -7328,35 +8208,14 @@ export interface EventResponseResult {
  * @constructor
  * Alerting service error
  *
- * @member {object} [error]
- * 
- * @member {number} [error.code] The status code return by the API. It can be
- * 400 or 409 or 500.
- * 
- * @member {string} [error.requestId] Unique request identifier for tracking
- * 
- * @member {string} [error.message] The reason for the request failed
- * 
- */
-export interface AlertingError {
-  error?: AlertingErrorError;
-}
-
-/**
- * @class
- * Initializes a new instance of the AlertingErrorError class.
- * @constructor
  * @member {number} [code] The status code return by the API. It can be 400 or
- * 409 or 500.
- * 
- * @member {string} [requestId] Unique request identifier for tracking
+ * 404 or 409 or 500.
  * 
  * @member {string} [message] The reason for the request failed
  * 
  */
-export interface AlertingErrorError {
+export interface AlertingError extends AlertOperationResult {
   code?: number;
-  requestId?: string;
   message?: string;
 }
 

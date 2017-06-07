@@ -47,10 +47,10 @@ NotificationsListResult.prototype.mapper = function () {
             name: 'Sequence',
             element: {
                 required: false,
-                serializedName: 'NotificationDetailsResultElementType',
+                serializedName: 'NotificationOverviewResultElementType',
                 type: {
                   name: 'Composite',
-                  className: 'NotificationDetailsResult'
+                  className: 'NotificationOverviewResult'
                 }
             }
           }

@@ -16,7 +16,7 @@ var util = require('util');
  * @constructor
  * Alerting Email Settings of the user for a particular app
  *
- * @member {string} appId Application ID
+ * @member {string} [appId] Application ID
  * 
  * @member {boolean} [userEnabled] A flag indicating if settings are enabled
  * at user/global level
@@ -42,8 +42,15 @@ AlertUserAppEmailSettingsResult.prototype.mapper = function () {
       name: 'Composite',
       className: 'AlertUserAppEmailSettingsResult',
       modelProperties: {
-        eTag: {
+        requestId: {
           required: true,
+          serializedName: 'request_id',
+          type: {
+            name: 'String'
+          }
+        },
+        eTag: {
+          required: false,
           serializedName: 'eTag',
           type: {
             name: 'String'
@@ -57,14 +64,14 @@ AlertUserAppEmailSettingsResult.prototype.mapper = function () {
           }
         },
         userId: {
-          required: true,
+          required: false,
           serializedName: 'userId',
           type: {
             name: 'String'
           }
         },
         settings: {
-          required: true,
+          required: false,
           serializedName: 'settings',
           type: {
             name: 'Sequence',
@@ -79,7 +86,7 @@ AlertUserAppEmailSettingsResult.prototype.mapper = function () {
           }
         },
         appId: {
-          required: true,
+          required: false,
           serializedName: 'appId',
           type: {
             name: 'String'

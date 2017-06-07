@@ -6,17 +6,22 @@
 
 'use strict';
 
+var models = require('./index');
+
+var util = require('util');
+
 /**
  * @class
  * Initializes a new instance of the EventResponseResult class.
  * @constructor
  * Object returned in response to accepting an event occurance
  *
- * @member {string} requestId Unique request identifier for tracking
- * 
  */
 function EventResponseResult() {
+  EventResponseResult['super_'].call(this);
 }
+
+util.inherits(EventResponseResult, models['AlertOperationResult']);
 
 /**
  * Defines the metadata of EventResponseResult

@@ -8,29 +8,29 @@
 
 /**
  * @class
- * Initializes a new instance of the AppIdMasterRequest class.
+ * Initializes a new instance of the IntuneAppsRequest class.
  * @constructor
- * AppIdMasterRequest
+ * IntuneAppsRequest
  *
  * @member {string} [createdMonth] PartitionKey year-month
  * 
  */
-function AppIdMasterRequest() {
+function IntuneAppsRequest() {
 }
 
 /**
- * Defines the metadata of AppIdMasterRequest
+ * Defines the metadata of IntuneAppsRequest
  *
- * @returns {object} metadata of AppIdMasterRequest
+ * @returns {object} metadata of IntuneAppsRequest
  *
  */
-AppIdMasterRequest.prototype.mapper = function () {
+IntuneAppsRequest.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'AppIdMasterRequest',
+    serializedName: 'IntuneAppsRequest',
     type: {
       name: 'Composite',
-      className: 'AppIdMasterRequest',
+      className: 'IntuneAppsRequest',
       modelProperties: {
         createdMonth: {
           required: false,
@@ -44,4 +44,4 @@ AppIdMasterRequest.prototype.mapper = function () {
   };
 };
 
-module.exports = AppIdMasterRequest;
+module.exports = IntuneAppsRequest;

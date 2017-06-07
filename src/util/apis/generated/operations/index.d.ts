@@ -1156,6 +1156,24 @@ export interface Builds {
     listXcodeVersions(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
+     * Gets the Mono versions available to this app
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    listMonoVersions(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    listMonoVersions(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
      * Get the build log
      *
      * @param {number} buildId The build ID
@@ -1420,6 +1438,26 @@ export interface Crashes {
      */
     getAppCrashesInfo(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppCrashesInfo>): void;
     getAppCrashesInfo(ownerName: string, appName: string, callback: ServiceCallback<models.AppCrashesInfo>): void;
+
+    /**
+     * Get session logs by crash ID
+     *
+     * @param {string} crashId The id of the a crash
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    listSessionLogs(crashId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.LogContainer>): void;
+    listSessionLogs(crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.LogContainer>): void;
 
     /**
      * Gets url to download attachment
@@ -2457,6 +2495,26 @@ export interface SymbolUploads {
 export interface MissingSymbolGroups {
 
     /**
+     * @summary Gets application level statistics for all missing symbol groups
+     *
+     * Gets application level statistics for all missing symbol groups
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    info(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.MissingSymbolCrashGroupsInfoResponse>): void;
+    info(ownerName: string, appName: string, callback: ServiceCallback<models.MissingSymbolCrashGroupsInfoResponse>): void;
+
+    /**
      * @summary Gets missing symbol crash group by its id
      *
      * Gets missing symbol crash group by its id
@@ -3426,8 +3484,8 @@ export interface Stores {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    listByApplicationId(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExternalStoreResponse[]>): void;
-    listByApplicationId(ownerName: string, appName: string, callback: ServiceCallback<models.ExternalStoreResponse[]>): void;
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExternalStoreResponse[]>): void;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.ExternalStoreResponse[]>): void;
 }
 
 /**
@@ -3767,6 +3825,61 @@ export interface Deployments {
      */
     list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Deployment[]>): void;
     list(ownerName: string, appName: string, callback: ServiceCallback<models.Deployment[]>): void;
+
+    /**
+     * Creates a CodePush Deployment (e.g. 'Staging') for the given app
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {string} name
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.key]
+     * 
+     * @param {object} [options.latestRelease]
+     * 
+     * @param {string} [options.latestRelease.targetBinaryRange]
+     * 
+     * @param {string} [options.latestRelease.blobUrl]
+     * 
+     * @param {string} [options.latestRelease.description]
+     * 
+     * @param {boolean} [options.latestRelease.isDisabled]
+     * 
+     * @param {boolean} [options.latestRelease.isMandatory]
+     * 
+     * @param {string} [options.latestRelease.label]
+     * 
+     * @param {string} [options.latestRelease.originalDeployment] Set on 'Promote'
+     * 
+     * @param {string} [options.latestRelease.originalLabel] Set on 'Promote' and
+     * 'Rollback'
+     * 
+     * @param {string} [options.latestRelease.hash]
+     * 
+     * @param {string} [options.latestRelease.releasedBy]
+     * 
+     * @param {string} [options.latestRelease.releaseMethod] The release method is
+     * unknown if unspecified. Possible values include: 'Upload', 'Promote',
+     * 'Rollback'
+     * 
+     * @param {number} [options.latestRelease.rollout]
+     * 
+     * @param {number} [options.latestRelease.size]
+     * 
+     * @param {number} [options.latestRelease.uploadTime]
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    create(ownerName: string, appName: string, name: string, options: { key? : string, latestRelease? : models.LiveUpdateRelease, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Deployment>): void;
+    create(ownerName: string, appName: string, name: string, callback: ServiceCallback<models.Deployment>): void;
 }
 
 /**
@@ -4288,6 +4401,29 @@ export interface Analytics {
      */
     languageCounts(start: Date|string, ownerName: string, appName: string, options: { end? : Date, count? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Languages>): void;
     languageCounts(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.Languages>): void;
+
+    /**
+     * Logs received between the specified start time and the current time. The
+     * API will return a maximum of 100 logs per call.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {date} [options.start] Start date time in data in ISO 8601 date time
+     * format. It must be within the current day in the UTC timezone. The default
+     * value is the start time of the current day in UTC timezone.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    genericLogFlow(ownerName: string, appName: string, options: { start? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GenericLogContainer>): void;
+    genericLogFlow(ownerName: string, appName: string, callback: ServiceCallback<models.GenericLogContainer>): void;
 
     /**
      * Event properties value counts during the time range in descending order.

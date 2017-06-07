@@ -23,9 +23,9 @@ var util = require('util');
  * 
  * @member {string} [tokenType] The token's type. public:managed by the user;
  * in_app_update:special token for in-app update scenario; buid:dedicated for
- * CI usage for now; session:for CLI session management; default is
- * "public".'. Possible values include: 'public', 'in_app_update', 'build',
- * 'session'
+ * CI usage for now; session:for CLI session management; tester_app: used for
+ * tester mobile app; default is "public".'. Possible values include:
+ * 'public', 'in_app_update', 'build', 'session', 'tester_app'
  * 
  */
 function ApiTokensPostRequest() {

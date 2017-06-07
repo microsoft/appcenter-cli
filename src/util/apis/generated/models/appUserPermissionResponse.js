@@ -23,6 +23,10 @@ var util = require('util');
  * @member {string} appOrigin The creation origin of this app. Possible values
  * include: 'mobile-center', 'hockeyapp', 'codepush'
  * 
+ * @member {string} appSecret A unique and secret key used to identify the app
+ * in communication with the ingestion endpoint for crash reporting and
+ * analytics
+ * 
  */
 function AppUserPermissionResponse() {
 }
@@ -79,6 +83,13 @@ AppUserPermissionResponse.prototype.mapper = function () {
         appOrigin: {
           required: true,
           serializedName: 'app_origin',
+          type: {
+            name: 'String'
+          }
+        },
+        appSecret: {
+          required: true,
+          serializedName: 'app_secret',
           type: {
             name: 'String'
           }

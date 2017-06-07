@@ -16,18 +16,21 @@ var util = require('util');
  * @constructor
  * Alerting Default Email Settings of the user
  *
- * @member {string} eTag The ETag of the entity
+ * @member {string} [eTag] The ETag of the entity
  * 
  * @member {boolean} [enabled] Allows to forcefully disable emails on app or
  * user level
  * 
- * @member {string} userId The unique id (UUID) of the user
+ * @member {string} [userId] The unique id (UUID) of the user
  * 
- * @member {array} settings The settings the user has for the app
+ * @member {array} [settings] The settings the user has for the app
  * 
  */
 function AlertUserEmailSettingsResult() {
+  AlertUserEmailSettingsResult['super_'].call(this);
 }
+
+util.inherits(AlertUserEmailSettingsResult, models['AlertOperationResult']);
 
 /**
  * Defines the metadata of AlertUserEmailSettingsResult
@@ -43,8 +46,15 @@ AlertUserEmailSettingsResult.prototype.mapper = function () {
       name: 'Composite',
       className: 'AlertUserEmailSettingsResult',
       modelProperties: {
-        eTag: {
+        requestId: {
           required: true,
+          serializedName: 'request_id',
+          type: {
+            name: 'String'
+          }
+        },
+        eTag: {
+          required: false,
           serializedName: 'eTag',
           type: {
             name: 'String'
@@ -58,14 +68,14 @@ AlertUserEmailSettingsResult.prototype.mapper = function () {
           }
         },
         userId: {
-          required: true,
+          required: false,
           serializedName: 'userId',
           type: {
             name: 'String'
           }
         },
         settings: {
-          required: true,
+          required: false,
           serializedName: 'settings',
           type: {
             name: 'Sequence',

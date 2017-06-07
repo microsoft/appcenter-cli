@@ -20,6 +20,8 @@ var models = require('./index');
  * 
  * @member {string} [xcode.podfilePath] Path to CococaPods file, if present
  * 
+ * @member {string} [xcode.cartfilePath] Path to Carthage file, if present
+ * 
  * @member {string} [xcode.provisioningProfileEncoded]
  * 
  * @member {string} [xcode.certificateEncoded]

@@ -2612,6 +2612,43 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/symbol_groups_info": {
+      "get": {
+        "description": "Gets application level statistics for all missing symbol groups",
+        "summary": "Gets application level statistics for all missing symbol groups",
+        "operationId": "missingSymbolGroups_info",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MissingSymbolCrashGroupsInfoResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/FailureResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "crash"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/symbol_groups/{symbol_group_id}": {
       "get": {
         "description": "Gets missing symbol crash group by its id",
@@ -4661,6 +4698,42 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/mono_versions": {
+      "get": {
+        "description": "Gets the Mono versions available to this app",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MonoVersions"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ValidationErrorResponse"
+            }
+          }
+        },
+        "operationId": "builds_listMonoVersions",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "build"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/invitations/{user_email}": {
       "post": {
         "deprecated": true,
@@ -5267,7 +5340,7 @@
             }
           }
         },
-        "operationId": "stores_listByApplicationId",
+        "operationId": "stores_list",
         "security": [
           {
             "APIToken": []
@@ -6373,6 +6446,49 @@
         "tags": [
           "codepush"
         ]
+      },
+      "post": {
+        "description": "Creates a CodePush Deployment (e.g. 'Staging') for the given app",
+        "operationId": "deployments_create",
+        "parameters": [
+          {
+            "name": "deployment",
+            "description": "Deployment to be created",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Deployment"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Deployment"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "codepush"
+        ]
       }
     },
     "/v0.1/apps/{owner_name}/{app_name}/crashes_info": {
@@ -6409,6 +6525,45 @@
         ],
         "tags": [
           "crash"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/crashes/{crash_id}/session_logs": {
+      "get": {
+        "operationId": "Crashes_ListSessionLogs",
+        "description": "Get session logs by crash ID",
+        "parameters": [
+          {
+            "$ref": "#/parameters/CrashIdParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session logs of specific crash",
+            "schema": {
+              "$ref": "#/definitions/LogContainer"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
         ]
       }
     },
@@ -8114,6 +8269,45 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/generic_log_flow": {
+      "get": {
+        "operationId": "Analytics_GenericLogFlow",
+        "description": "Logs received between the specified start time and the current time. The API will return a maximum of 100 logs per call.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/LogFlowStartTimeParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of logs for the requested time range.",
+            "schema": {
+              "$ref": "#/definitions/GenericLogContainer"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/analytics/events/{event_name}/properties/{event_property_name}/counts": {
       "get": {
         "operationId": "Analytics_EventPropertyCounts",
@@ -9425,13 +9619,14 @@
           "type": "string"
         },
         "token_type": {
-          "description": "The token's type. public:managed by the user; in_app_update:special token for in-app update scenario; buid:dedicated for CI usage for now; session:for CLI session management; default is \"public\".'",
+          "description": "The token's type. public:managed by the user; in_app_update:special token for in-app update scenario; buid:dedicated for CI usage for now; session:for CLI session management; tester_app: used for tester mobile app; default is \"public\".'",
           "type": "string",
           "enum": [
             "public",
             "in_app_update",
             "build",
-            "session"
+            "session",
+            "tester_app"
           ]
         }
       }
@@ -9891,12 +10086,8 @@
     },
     "ApiTokenGetUserResponse": {
       "properties": {
-        "user_email": {
-          "description": "The user email",
-          "type": "string"
-        },
-        "user_id": {
-          "description": "The unique id (UUID) of the user",
+        "token_id": {
+          "description": "The token's unique id (UUID)",
           "type": "string"
         },
         "token_scope": {
@@ -9911,6 +10102,14 @@
             ]
           }
         },
+        "user_email": {
+          "description": "The user email",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "The unique id (UUID) of the user",
+          "type": "string"
+        },
         "user_origin": {
           "description": "The creation origin of the user who created this api token",
           "type": "string",
@@ -9922,6 +10121,8 @@
         }
       },
       "required": [
+        "token_id",
+        "token_scope",
         "user_id",
         "user_email",
         "user_origin"
@@ -10278,6 +10479,10 @@
             "hockeyapp",
             "codepush"
           ]
+        },
+        "app_secret": {
+          "description": "A unique and secret key used to identify the app in communication with the ingestion endpoint for crash reporting and analytics",
+          "type": "string"
         }
       },
       "required": [
@@ -10285,7 +10490,8 @@
         "user_id",
         "user_email",
         "permissions",
-        "app_origin"
+        "app_origin",
+        "app_secret"
       ]
     },
     "DistributionGroupResponse": {
@@ -10634,6 +10840,74 @@
         "role"
       ]
     },
+    "TeamRequest": {
+      "properties": {
+        "display_name": {
+          "description": "The display name of the team",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the team",
+          "type": "string"
+        },
+        "description": {
+          "description": "The description of the team",
+          "type": "string"
+        }
+      },
+      "required": [
+        "display_name"
+      ]
+    },
+    "TeamResponse": {
+      "properties": {
+        "id": {
+          "description": "The internal unique id (UUID) of the team.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The name of the team",
+          "type": "string"
+        },
+        "display_name": {
+          "description": "The display name of the team",
+          "type": "string"
+        },
+        "description": {
+          "description": "The description of the team",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "display_name"
+      ]
+    },
+    "AppTeamResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/TeamResponse"
+        },
+        {
+          "properties": {
+            "permissions": {
+              "description": "The permissions the team has for the app",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "owner",
+                  "developer",
+                  "member",
+                  "tester"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
     "StatusResponse": {
       "properties": {
         "status": {
@@ -10642,6 +10916,36 @@
       },
       "required": [
         "status"
+      ]
+    },
+    "TeamUserResponse": {
+      "properties": {
+        "email": {
+          "description": "The email address of the user",
+          "type": "string"
+        },
+        "display_name": {
+          "description": "The full name of the user. Might for example be first and last name",
+          "type": "string"
+        },
+        "name": {
+          "description": "The unique name that is used to identify the user.",
+          "type": "string"
+        },
+        "role": {
+          "description": "The role of the user has within the team",
+          "type": "string",
+          "enum": [
+            "maintainer",
+            "collaborator"
+          ]
+        }
+      },
+      "required": [
+        "email",
+        "display_name",
+        "name",
+        "role"
       ]
     },
     "UserAuthResponse": {
@@ -10880,6 +11184,14 @@
         "hasTestAction": {
           "description": "Does scheme have a test action?",
           "type": "boolean"
+        },
+        "archiveConfiguration": {
+          "description": "Build configuration set in Archive action",
+          "type": "string"
+        },
+        "targetToArchive": {
+          "description": "The Id of the target to archive",
+          "type": "string"
         }
       },
       "required": [
@@ -10902,6 +11214,13 @@
         },
         "podfilePath": {
           "description": "Path to CococaPods file, if present",
+          "type": "string"
+        },
+        "cartfilePath": {
+          "description": "Path to Carthage file, if present"
+        },
+        "xcodeProjectSha": {
+          "description": "repo object Id of the pbxproject",
           "type": "string"
         }
       },
@@ -11057,6 +11376,9 @@
         "testsEnabled": {
           "type": "boolean"
         },
+        "badgeIsEnabled": {
+          "type": "boolean"
+        },
         "signed": {
           "type": "boolean"
         },
@@ -11112,6 +11434,10 @@
         },
         "podfilePath": {
           "description": "Path to CococaPods file, if present",
+          "type": "string"
+        },
+        "cartfilePath": {
+          "description": "Path to Carthage file, if present",
           "type": "string"
         },
         "provisioningProfileEncoded": {
@@ -11360,6 +11686,26 @@
     },
     "XcodeVersion": {
       "description": "The Xcode version",
+      "properties": {
+        "name": {
+          "description": "The version name",
+          "type": "string"
+        },
+        "current": {
+          "description": "If the version is current",
+          "type": "boolean"
+        }
+      }
+    },
+    "MonoVersions": {
+      "description": "A list of Mono versions",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MonoVersion"
+      }
+    },
+    "MonoVersion": {
+      "description": "The Mono version",
       "properties": {
         "name": {
           "description": "The version name",
@@ -12172,6 +12518,51 @@
         }
       }
     },
+    "PublishDevicesRequest": {
+      "description": "The publising information.",
+      "required": [
+        "username",
+        "password"
+      ],
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "The username for the Apple Developer account to publish the devices to."
+        },
+        "password": {
+          "type": "string",
+          "description": "The password for the Apple Developer account to publish the devices to."
+        },
+        "publish_all_devices": {
+          "type": "boolean",
+          "description": "When set to true, all unprovisioned devices will be published to the Apple Developer account.  When false, only the provided devices will be published to the Apple Developer account."
+        },
+        "devices": {
+          "type": "array",
+          "description": "Array of device UDID's to be published to the Apple Developer account.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "PublishDevicesResponse": {
+      "description": "The information for a single iOS device",
+      "required": [
+        "profile_file_name",
+        "profile_base64"
+      ],
+      "properties": {
+        "profile_file_name": {
+          "type": "string",
+          "description": "The file name for the provisioning profile."
+        },
+        "profile_base64": {
+          "type": "string",
+          "description": "The updated provisioning profile base64 encoded."
+        }
+      }
+    },
     "StoresReleaseDetails": {
       "description": "Details of an uploaded release",
       "properties": {
@@ -12488,8 +12879,8 @@
         }
       }
     },
-    "AppIdMasterRequest": {
-      "description": "AppIdMasterRequest",
+    "IntuneAppsRequest": {
+      "description": "IntuneAppsRequest",
       "properties": {
         "created_month": {
           "description": "PartitionKey year-month",
@@ -12497,8 +12888,8 @@
         }
       }
     },
-    "AppIdMasterResponse": {
-      "description": "AppIdMasterResponse",
+    "IntuneAppsResponse": {
+      "description": "IntuneAppsResponse",
       "properties": {
         "created_month": {
           "description": "PartitionKey year-month",
@@ -13470,6 +13861,18 @@
         }
       }
     },
+    "MissingSymbolCrashGroupsInfoResponse": {
+      "description": "missing symbol groups",
+      "required": [
+        "total_crash_count"
+      ],
+      "properties": {
+        "total_crash_count": {
+          "description": "total number of crashes for all missing symbol groups",
+          "type": "integer"
+        }
+      }
+    },
     "FailureResponse": {
       "description": "failure response object",
       "required": [
@@ -14245,6 +14648,86 @@
         "logs"
       ]
     },
+    "GenericLogContainer": {
+      "type": "object",
+      "properties": {
+        "exceeded_max_limit": {
+          "description": "indicates if the number of available logs are more than the max allowed return limit(100).",
+          "type": "boolean"
+        },
+        "last_received_log_timestamp": {
+          "description": "the timestamp of the last log received. This value can be used as the start time parameter in the consecutive API call.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "logs": {
+          "minItems": 0,
+          "description": "the list of logs",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GenericLog"
+          }
+        }
+      },
+      "required": [
+        "logs"
+      ]
+    },
+    "GenericLog": {
+      "type": "object",
+      "description": "Generic log.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "event",
+            "page",
+            "start_session",
+            "error",
+            "push_installation",
+            "start_service",
+            "custom_properties"
+          ],
+          "description": "Log type.\n"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Log creation timestamp.\n"
+        },
+        "install_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Install ID.\n"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Session ID.\n"
+        },
+        "event_id": {
+          "type": "string",
+          "description": "Event ID.\n"
+        },
+        "event_name": {
+          "type": "string",
+          "description": "Event name.\n"
+        },
+        "properties": {
+          "type": "string",
+          "description": "Event specific properties.\n"
+        },
+        "device": {
+          "$ref": "#/definitions/Device"
+        }
+      },
+      "required": [
+        "type",
+        "timestamp",
+        "install_id",
+        "device"
+      ]
+    },
     "Log": {
       "type": "object",
       "discriminator": "type",
@@ -14466,7 +14949,7 @@
         "name": {
           "type": "string",
           "maxLength": 128,
-          "pattern": "^[a-zA-Z][a-zA-Z0-9]*$"
+          "pattern": "^[a-zA-Z][a-zA-Z0-9\\-_]*$"
         }
       },
       "required": [
@@ -14947,7 +15430,7 @@
         "values": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/NotificationDetailsResult"
+            "$ref": "#/definitions/NotificationOverviewResult"
           }
         },
         "total": {
@@ -14963,17 +15446,21 @@
         "values"
       ]
     },
-    "NotificationDetailsResult": {
+    "NotificationOverviewResult": {
       "description": "Notification statistics",
-      "allOf": [
-        {
-          "$ref": "#/definitions/NotificationDefinition"
-        }
-      ],
+      "type": "object",
       "properties": {
         "notification_id": {
           "description": "Notification id.",
           "type": "string"
+        },
+        "name": {
+          "description": "Notification name",
+          "type": "string",
+          "maxLength": 64
+        },
+        "notification_target": {
+          "$ref": "#/definitions/NotificationTarget"
         },
         "send_time": {
           "description": "Notification send time",
@@ -15009,6 +15496,46 @@
       "required": [
         "notification_id",
         "state"
+      ]
+    },
+    "NotificationDetailsResult": {
+      "description": "Notification statistics",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationOverviewResult"
+        }
+      ],
+      "properties": {
+        "notification_content": {
+          "$ref": "#/definitions/NotificationContent"
+        },
+        "failure_outcomes": {
+          "description": "Failture outcome counts",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NotificationFailureOutcomeCount"
+          }
+        }
+      },
+      "required": [
+        "notification_id",
+        "state",
+        "notification_content"
+      ]
+    },
+    "NotificationIdList": {
+      "description": "List of notification Ids",
+      "properties": {
+        "values": {
+          "description": "List of notification Ids.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "values"
       ]
     },
     "NotificationDefinition": {
@@ -15401,6 +15928,100 @@
       "x-ms-enum": {
         "name": "NotificationPlatformType",
         "modelAsString": true
+      }
+    },
+    "NotificationFailureOutcomeCount": {
+      "description": "Notification failure outcome count",
+      "type": "object",
+      "properties": {
+        "failure_reason": {
+          "description": "The reason of the notification failure",
+          "type": "string"
+        },
+        "count": {
+          "description": "count of this type of failure",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "ExportConfig": {
+      "description": "Export job configuration",
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/ExportType"
+        },
+        "storage": {
+          "description": "Target storage secret",
+          "type": "string",
+          "maxLength": 128
+        },
+        "metadata": {
+          "description": "Export metadata",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "storage",
+        "metadata"
+      ]
+    },
+    "ExportConfigResult": {
+      "description": "Export job configuration result",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Export Id",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/ExportType"
+        },
+        "metadata": {
+          "description": "Export metadata",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "state": {
+          "description": "State of the export job",
+          "type": "string",
+          "enum": [
+            "Enabled",
+            "Disabled",
+            "Pending",
+            "Deleted",
+            "Invalid"
+          ],
+          "x-ms-enum": {
+            "name": "ExportState",
+            "modelAsString": false
+          }
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "metadata",
+        "state"
+      ]
+    },
+    "ExportType": {
+      "description": "Export type",
+      "type": "string",
+      "enum": [
+        "BlobStorage",
+        "AppInsights"
+      ],
+      "x-ms-enum": {
+        "name": "ExportType",
+        "modelAsString": false
       }
     },
     "DeviceConfiguration": {
@@ -16775,6 +17396,140 @@
         }
       }
     },
+    "AlertOperationResult": {
+      "description": "Generic result for any alerting API operation",
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "description": "Unique request identifier for tracking",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id"
+      ]
+    },
+    "AlertWebhook": {
+      "description": "Alerting webhook",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "display name of the webhook",
+          "type": "string"
+        },
+        "url": {
+          "description": "target url of the webhook",
+          "type": "string"
+        },
+        "enabled": {
+          "description": "Allows eanble/disable webhook",
+          "type": "boolean"
+        },
+        "callOnNewCrashGroup": {
+          "description": "Shows if webhook is called on new crash group created event",
+          "type": "boolean"
+        },
+        "callOnNewAppRelease": {
+          "description": "Shows if webhook is called on new app release event",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "url",
+        "enabled",
+        "callOnNewCrashGroup",
+        "callOnNewAppRelease"
+      ]
+    },
+    "AlertWebhookEntry": {
+      "description": "Alerting webhook with ETag and IDs",
+      "type": "object",
+      "properties": {
+        "appId": {
+          "description": "The unique id (UUID) of the application",
+          "type": "string"
+        },
+        "webhookId": {
+          "description": "The unique id (UUID) of the web hook",
+          "type": "string"
+        },
+        "eTag": {
+          "description": "The ETag of the entry",
+          "type": "string"
+        },
+        "webhook": {
+          "$ref": "#/definitions/AlertWebhook"
+        }
+      },
+      "required": [
+        "webhookId",
+        "eTag",
+        "webhook"
+      ]
+    },
+    "AlertWebhookResult": {
+      "description": "Alerting webhook entry wrapped as operation result",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AlertOperationResult"
+        },
+        {
+          "properties": {
+            "webhookEntry": {
+              "$ref": "#/definitions/AlertWebhookEntry"
+            }
+          },
+          "required": [
+            "webhookEntry"
+          ]
+        }
+      ]
+    },
+    "AlertWebhooksResult": {
+      "description": "List of alerting webhooks wrapped as operation result",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AlertOperationResult"
+        },
+        {
+          "properties": {
+            "webhookEntries": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AlertWebhookEntry"
+              }
+            }
+          },
+          "required": [
+            "webhookEntries"
+          ]
+        }
+      ]
+    },
+    "AlertWebhookPingResult": {
+      "description": "Alerting webhook ping operation result",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AlertOperationResult"
+        },
+        {
+          "properties": {
+            "response_status_code": {
+              "description": "HTTP status code returned in response from calling webhook",
+              "type": "integer"
+            },
+            "response_reason": {
+              "description": "Reason returned in response from calling webhook",
+              "type": "string"
+            }
+          },
+          "required": [
+            "response_status_code"
+          ]
+        }
+      ]
+    },
     "AlertEmailSettings": {
       "description": "Alerting Email Settings",
       "type": "object",
@@ -16794,31 +17549,39 @@
     "AlertUserEmailSettingsResult": {
       "description": "Alerting Default Email Settings of the user",
       "type": "object",
-      "properties": {
-        "eTag": {
-          "description": "The ETag of the entity",
-          "type": "string"
+      "allOf": [
+        {
+          "$ref": "#/definitions/AlertOperationResult"
         },
-        "enabled": {
-          "description": "Allows to forcefully disable emails on app or user level",
-          "type": "boolean"
-        },
-        "userId": {
-          "description": "The unique id (UUID) of the user",
-          "type": "string"
-        },
-        "settings": {
-          "description": "The settings the user has for the app",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/EventSetting"
-          }
+        {
+          "properties": {
+            "eTag": {
+              "description": "The ETag of the entity",
+              "type": "string"
+            },
+            "enabled": {
+              "description": "Allows to forcefully disable emails on app or user level",
+              "type": "boolean"
+            },
+            "userId": {
+              "description": "The unique id (UUID) of the user",
+              "type": "string"
+            },
+            "settings": {
+              "description": "The settings the user has for the app",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EventSetting"
+              }
+            }
+          },
+          "required": [
+            "eTag",
+            "enabled",
+            "userId",
+            "settings"
+          ]
         }
-      },
-      "required": [
-        "eTag",
-        "userId",
-        "settings"
       ]
     },
     "AlertUserAppEmailSettingsResult": {
@@ -16827,23 +17590,28 @@
       "allOf": [
         {
           "$ref": "#/definitions/AlertUserEmailSettingsResult"
+        },
+        {
+          "properties": {
+            "request_id": {
+              "description": "Unique request",
+              "type": "string"
+            },
+            "appId": {
+              "description": "Application ID",
+              "type": "string"
+            },
+            "user_enabled": {
+              "description": "A flag indicating if settings are enabled at user/global level",
+              "type": "boolean"
+            }
+          }
         }
       ],
-      "properties": {
-        "appId": {
-          "description": "Application ID",
-          "type": "string"
-        },
-        "user_enabled": {
-          "description": "A flag indicating if settings are enabled at user/global level",
-          "type": "boolean"
-        }
-      },
       "required": [
-        "eTag",
+        "request_id",
         "appId",
-        "userId",
-        "settings"
+        "user_enabled"
       ]
     },
     "EventSetting": {
@@ -16885,7 +17653,7 @@
       ]
     },
     "AlertingEvent": {
-      "description": "Event Setting",
+      "description": "Alerting event",
       "type": "object",
       "properties": {
         "event_timestamp": {
@@ -16902,8 +17670,47 @@
           "default": 1
         },
         "properties": {
-          "description": "Custom properties for a specific event",
+          "description": "Obsolete. Use emailProperties.",
           "type": "object"
+        },
+        "emailProperties": {
+          "description": "Email properties for a specific event",
+          "type": "object"
+        }
+      },
+      "required": [
+        "event_id",
+        "event_timestamp",
+        "event_version"
+      ]
+    },
+    "NewCrashGroupAlertingEvent": {
+      "description": "New crash group alerting event",
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "description": "A unique identifier for this event instance. Useful for deduplication",
+          "type": "string"
+        },
+        "event_timestamp": {
+          "description": "ISO 8601 date time when event was generated",
+          "type": "string"
+        },
+        "event_version": {
+          "description": "Versioning for this eventType.",
+          "type": "integer",
+          "default": 1
+        },
+        "properties": {
+          "description": "Obsolete. Use emailProperties.",
+          "type": "object"
+        },
+        "emailProperties": {
+          "description": "Email properties for a specific event",
+          "type": "object"
+        },
+        "newCrashGroupWebhookProperties": {
+          "$ref": "#/definitions/NewCrashGroupWebhookProperties"
         }
       },
       "required": [
@@ -16926,51 +17733,237 @@
               "items": {
                 "type": "string"
               }
+            },
+            "newAppReleaseWebhookProperties": {
+              "$ref": "#/definitions/NewAppReleaseWebhookProperties"
             }
           }
         }
       ]
     },
-    "EventResponseResult": {
-      "description": "Object returned in response to accepting an event occurance",
+    "NewCrashGroupWebhookProperties": {
+      "description": "Webhook properties for new crash group alerting event",
       "type": "object",
       "properties": {
-        "request_id": {
-          "description": "Unique request identifier for tracking",
+        "public_identifier": {
+          "type": "string"
+        },
+        "crash_reason": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "app_id": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "updated_at": {
+              "type": "string"
+            },
+            "status": {
+              "type": "integer"
+            },
+            "reason": {
+              "type": "string"
+            },
+            "last_crash_at": {
+              "type": "string"
+            },
+            "app_build": {
+              "type": "string"
+            },
+            "app_version": {
+              "type": "string"
+            },
+            "method": {
+              "type": "string"
+            },
+            "file": {
+              "type": "string"
+            },
+            "class": {
+              "type": "string"
+            },
+            "line": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "app_id",
+            "created_at",
+            "updated_at",
+            "status",
+            "reason",
+            "last_crash_at",
+            "app_build",
+            "app_version",
+            "method"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "url": {
           "type": "string"
         }
       },
       "required": [
-        "request_id"
+        "public_identifier",
+        "crash_reason",
+        "title",
+        "text",
+        "url"
+      ]
+    },
+    "NewAppReleaseWebhookProperties": {
+      "description": "Webhook properties for new app release alerting event",
+      "type": "object",
+      "properties": {
+        "public_identifier": {
+          "type": "string"
+        },
+        "app_version": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "type": "string"
+            },
+            "shortversion": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "timestamp": {
+              "type": "integer"
+            },
+            "appsize": {
+              "type": "integer"
+            },
+            "notes": {
+              "type": "string"
+            },
+            "mandatory": {
+              "type": "boolean"
+            },
+            "external": {
+              "type": "boolean"
+            },
+            "device_family": {
+              "type": "string"
+            },
+            "id": {
+              "type": "integer"
+            },
+            "app_id": {
+              "type": "string"
+            },
+            "minimum_os_version": {
+              "type": "string"
+            },
+            "build_url": {
+              "type": "string"
+            },
+            "status": {
+              "type": "integer"
+            },
+            "expired_at": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "updated_at": {
+              "type": "string"
+            },
+            "sdk_version": {
+              "type": "string"
+            },
+            "block_crashes": {
+              "type": "boolean"
+            },
+            "app_owner": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "version",
+            "shortversion",
+            "title",
+            "timestamp",
+            "appsize",
+            "device_family",
+            "id",
+            "app_id",
+            "minimum_os_version",
+            "build_url",
+            "status",
+            "created_at",
+            "sdk_version",
+            "app_owner"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "public_identifier",
+        "app_version",
+        "title",
+        "text",
+        "url"
+      ]
+    },
+    "EventResponseResult": {
+      "description": "Object returned in response to accepting an event occurance",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AlertOperationResult"
+        }
       ]
     },
     "AlertingError": {
       "description": "Alerting service error",
-      "type": "object",
-      "properties": {
-        "error": {
-          "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AlertOperationResult"
+        },
+        {
           "properties": {
             "code": {
-              "description": "The status code return by the API. It can be 400 or 409 or 500.",
+              "description": "The status code return by the API. It can be 400 or 404 or 409 or 500.",
               "type": "integer",
               "enum": [
                 400,
+                404,
                 409,
                 500
               ]
-            },
-            "request_id": {
-              "description": "Unique request identifier for tracking",
-              "type": "string"
             },
             "message": {
               "description": "The reason for the request failed",
               "type": "string"
             }
-          }
+          },
+          "required": [
+            "code"
+          ]
         }
-      }
+      ]
     }
   },
   "parameters": {
@@ -17029,6 +18022,14 @@
       "type": "string",
       "in": "path",
       "description": "The organization's name",
+      "required": true,
+      "x-ms-parameter-location": "method"
+    },
+    "team_name": {
+      "name": "team_name",
+      "type": "string",
+      "in": "path",
+      "description": "The team's name",
       "required": true,
       "x-ms-parameter-location": "method"
     },
@@ -17334,6 +18335,15 @@
       },
       "x-ms-parameter-location": "method"
     },
+    "CrashIdParameter": {
+      "name": "crash_id",
+      "in": "path",
+      "description": "The id of the a crash",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
     "EventParameter": {
       "name": "event_name",
       "in": "path",
@@ -17521,6 +18531,14 @@
       "format": "int64",
       "x-ms-parameter-location": "method"
     },
+    "IncludeArchivedParameter": {
+      "name": "include_archived",
+      "in": "query",
+      "description": "Include arhived push notifications",
+      "required": false,
+      "type": "boolean",
+      "x-ms-parameter-location": "method"
+    },
     "NotificationParameter": {
       "name": "properties",
       "in": "body",
@@ -17528,6 +18546,16 @@
       "required": true,
       "schema": {
         "$ref": "#/definitions/NotificationDefinition"
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "NotificationArchiveParameter": {
+      "name": "notification_ids",
+      "in": "body",
+      "description": "List of notification ids",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/NotificationIdList"
       },
       "x-ms-parameter-location": "method"
     },
@@ -17581,6 +18609,14 @@
       "required": true,
       "x-ms-parameter-location": "method"
     },
+    "WebhookIdParameter": {
+      "name": "webhook_id",
+      "type": "string",
+      "in": "path",
+      "description": "The unique ID (UUID) of the webhook",
+      "required": true,
+      "x-ms-parameter-location": "method"
+    },
     "EmailSettingsParameter": {
       "name": "emailSettings",
       "in": "body",
@@ -17588,6 +18624,16 @@
       "required": true,
       "schema": {
         "$ref": "#/definitions/AlertEmailSettings"
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "WebhookParameter": {
+      "name": "webHook",
+      "in": "body",
+      "description": "Alerting webhook.",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/AlertWebhook"
       },
       "x-ms-parameter-location": "method"
     }
