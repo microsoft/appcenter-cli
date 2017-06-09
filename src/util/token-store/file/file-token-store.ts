@@ -9,7 +9,7 @@
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import * as rx from "rx";
+import * as rx from "rx-lite";
 import { toPairs } from "lodash";
 
 import { profileDirName } from "../../misc/constants";
