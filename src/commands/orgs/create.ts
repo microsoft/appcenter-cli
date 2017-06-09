@@ -5,6 +5,7 @@ import { MobileCenterClient, models, clientRequest } from "../../util/apis";
 const debug = require("debug")("mobile-center-cli:commands:orgs:create");
 import { inspect } from "util";
 import { getPortalOrgLink } from "../../util/portal/portal-helper";
+import { getOrgUsers, pickAdmins } from "./lib/org-users-helper";
 
 @help("Create a new organization")
 export default class OrgCreateCommand extends Command {
@@ -43,18 +44,7 @@ export default class OrgCreateCommand extends Command {
       }
     }
 
-    let admins: models.OrganizationUserResponse[];
-    try {
-      const httpResponse = await out.progress("Loading list of users...", clientRequest<models.OrganizationUserResponse[]>((cb) => client.users.listForOrg(organizationInfo.name, cb)));
-      if (httpResponse.response.statusCode < 400) {
-        admins = httpResponse.result.filter((user) => user.role === "admin");        
-      } else {
-        throw httpResponse.response;
-      }
-    } catch (error) {
-      debug(`Failed to get list of organization users - ${inspect(error)}`);
-      return failure(ErrorCodes.Exception, "failed to load list of organization users");
-    }
+    const admins: models.OrganizationUserResponse[] = pickAdmins(await getOrgUsers(client, organizationInfo.name, debug));
 
     out.text(`Successfully created organization ${this.name}`);
     out.report([
