@@ -5,7 +5,7 @@ import { inspect } from "util";
 import * as _ from "lodash";
 import * as Pfs from "../../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../../util/profile";
-import * as emailListStringHelper from "./lib/email-list-string-helper";
+import { getUsersList } from "../../../util/misc/list-of-users-helper";
 
 const debug = require("debug")("mobile-center-cli:commands:distribute:groups:create");
 
@@ -37,13 +37,11 @@ export default class CreateDistributionGroupCommand extends AppCommand {
     this.validateParameters();
 
     // getting string with testers' emails
-    const testersEmailsString = await this.getTestersString();
+    debug("Getting list of testers");
+    const testersEmails = await out.progress("Loading testers list file...", getUsersList(this.testers, this.testersListFile, debug));
 
     debug("Creating distribution group");
     await this.createDistributionGroup(client, app);
-
-    // extracting emails from testers' emails string
-    const testersEmails = emailListStringHelper.extractEmailsFromString(testersEmailsString);
 
     // add testers if any were specified
     if (testersEmails.length) {
@@ -64,26 +62,6 @@ export default class CreateDistributionGroupCommand extends AppCommand {
   private validateParameters() {
     if (!_.isNil(this.testers) && !_.isNil(this.testersListFile)) {
       throw failure(ErrorCodes.InvalidParameter, "parameters 'testers' and 'testers-file' are mutually exclusive");
-    }
-  }
-
-  private async getTestersString(): Promise<string> {
-    if (!_.isNil(this.testers)) {
-      return this.testers;
-    } else if (!_.isNil(this.testersListFile)) {
-      try {
-        debug("Reading file with the list of testers");
-        return await out.progress("Loading testers list file...", Pfs.readFile(this.testersListFile, "utf8"));
-      } catch (error) {
-        if ((<NodeJS.ErrnoException> error).code === "ENOENT") {
-          throw failure(ErrorCodes.InvalidParameter, `file ${this.testersListFile} doesn't exists`);
-        } else {
-          debug(`Failed to read file with list of testers - ${inspect(error)}`);
-          throw failure(ErrorCodes.Exception, `failed to read file ${this.testersListFile}`);
-        }
-      }
-    } else {
-      return "";
     }
   }
 

@@ -5,7 +5,7 @@ import { inspect } from "util";
 import * as _ from "lodash";
 import * as Pfs from "../../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../../util/profile";
-import * as emailListStringHelper from "./lib/email-list-string-helper";
+import { getUsersList } from "../../../util/misc/list-of-users-helper";
 
 const debug = require("debug")("mobile-center-cli:commands:distribute:groups:update");
 
@@ -55,18 +55,12 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     this.validateParameters();
 
     // validating parameters and loading provided files (if any)
-    const testersToAdd = this.getStringWithTestersToAdd();
-    const testersToDelete = this.getStringWithTestersToDelete();
+    const testersToAdd = getUsersList(this.testersToAdd, this.testersToAddListFile, debug);
+    const testersToDelete = getUsersList(this.testersToDelete, this.testersToDeleteListFile, debug);
     const newDistributionGroupNameValidation = this.isDistributionGroupNameFree(client, app, this.newDistributionGroupName);
 
     // showing spinner while parameters are validated
-    await out.progress("Validating parameters...", Promise.all([testersToAdd, testersToDelete, newDistributionGroupNameValidation]));
-
-    // getting emails of testers to add
-    const testersToAddEmails = emailListStringHelper.extractEmailsFromString(await testersToAdd);
-
-    // getting string with emails of testers to delete
-    const testersToDeleteEmails = emailListStringHelper.extractEmailsFromString(await testersToDelete);
+    const [testersToAddEmails, testersToDeleteEmails] = await out.progress("Validating parameters...", Promise.all([testersToAdd, testersToDelete, newDistributionGroupNameValidation]));
 
     let deletedTestersEmails: string[];
     if (testersToDeleteEmails.length) {
@@ -110,46 +104,6 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     }
     if (!_.isNil(this.testersToDelete) && !_.isNil(this.testersToDeleteListFile)) {
       throw failure(ErrorCodes.InvalidParameter, "parameters 'delete-testers' and 'delete-testers-file' are mutually exclusive");
-    }
-  }
-
-  private async getStringWithTestersToAdd(): Promise<string> {
-    if (!_.isNil(this.testersToAdd)) {
-      return this.testersToAdd;
-    } else if (!_.isNil(this.testersToAddListFile)) {
-      try {
-        debug("Reading file with the list of testers to add");
-        return await out.progress("Loading file with list of testers to add...", Pfs.readFile(this.testersToAddListFile, "utf8"));
-      } catch (error) {
-        if ((<NodeJS.ErrnoException> error).code === "ENOENT") {
-          throw failure(ErrorCodes.InvalidParameter, `file ${this.testersToAddListFile} doesn't exists`);
-        } else {
-          debug(`Failed to read file with list of testers to add - ${inspect(error)}`);
-          throw failure(ErrorCodes.Exception, `failed to read file ${this.testersToAddListFile}`);
-        }
-      }
-    } else {
-      return "";
-    }
-  }
-
-  private async getStringWithTestersToDelete(): Promise<string> {
-    if (!_.isNil(this.testersToDelete)) {
-      return this.testersToDelete;
-    } else if (!_.isNil(this.testersToDeleteListFile)) {
-      try {
-        debug("Reading file with the list of testers to delete");
-        return await out.progress("Loading file with list of testers to delete...", Pfs.readFile(this.testersToDeleteListFile, "utf8"));
-      } catch (error) {
-        if ((<NodeJS.ErrnoException> error).code === "ENOENT") {
-          throw failure(ErrorCodes.InvalidParameter, `file ${this.testersToDeleteListFile} doesn't exists`);
-        } else {
-          debug(`Failed to read file with list of testers to delete - ${inspect(error)}`);
-          throw failure(ErrorCodes.Exception, `failed to read file ${this.testersToDeleteListFile}`);
-        }
-      }
-    } else {
-      return "";
     }
   }
 
