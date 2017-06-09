@@ -3,7 +3,9 @@ import * as _ from "lodash";
 import * as Path from "path";
 import * as Pfs from "../util/misc/promisfied-fs";
 import * as mkdirp from "mkdirp";
+import * as Process from "process";
 import { setupAutoCompleteForShell } from "../util/commandline/autocomplete";
+import { out } from "../util/interaction";
 
 const debug = require("debug")("mobile-center-cli:commands:setup-autocomplete");
 import { inspect } from "util";
@@ -12,7 +14,7 @@ import { inspect } from "util";
 export default class SetupAutoCompleteCommand extends Command {
   private static readonly supportedShells = ["bash", "zsh", "fish"];
 
-  @help("Shell to generate autocompletion code for. Supported values - bash, zsh, fish. Default: current shell")
+  @help("Shell to generate autocompletion code for. Supported values - bash, zsh, fish. Default: shell specified in $SHELL")
   @shortName("s")
   @longName("shell")
   @hasArg
@@ -39,6 +41,12 @@ export default class SetupAutoCompleteCommand extends Command {
     if (!_.isNil(this.shellProfilePath)) {
       mkdirp.sync(Path.dirname(this.shellProfilePath));
     }
+
+    Process.on("exit", (code: number ) => {
+      if (code === 0) {
+        out.text("Please restart shell to apply changes");
+      }
+    });
 
     setupAutoCompleteForShell(this.shellProfilePath, this.shell);
     // Omelette exits process, no need to return command result
