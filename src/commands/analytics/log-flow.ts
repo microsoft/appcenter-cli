@@ -39,21 +39,17 @@ export default class ShowLogFlowCommand extends AppCommand {
     const streamingOutput = new StreamingArrayOutput();
     streamingOutput.start();
 
-    let options: {start: Date};
-    await ContinuousPollingHelper.pollContinuously(async (requestsDone: number) => {
+    let options: {start: Date} = null;
+    await ContinuousPollingHelper.pollContinuously(async () => {
       try {
         debug ("Loading logs");
         // start time is not specified for the first request
-        return await clientRequest<models.LogContainer>(
-          (cb) => requestsDone ? 
-            client.analytics.logFlow(app.ownerName, app.appName, options, cb) : 
-            client.analytics.logFlow(app.ownerName, app.appName, cb), 
-          );        
+        return await clientRequest((cb) => client.analytics.genericLogFlow(app.ownerName, app.appName, options, cb));
       } catch (error) {
         debug(`Failed to load the logs - ${inspect(error)}`);
         throw failure(ErrorCodes.Exception, "failed to load the logs");
       }
-    }, (response: ClientResponse<models.LogContainer>, responsesProcessed: number) => {
+    }, (response: ClientResponse<models.GenericLogContainer>, responsesProcessed: number) => {
       // processing http response
       const result = response.result;
       if (result.logs.length) {
@@ -90,7 +86,7 @@ export default class ShowLogFlowCommand extends AppCommand {
     }
   }
 
-  private filterLogs(logs: models.Log[], installId: string): models.Log[] {
+  private filterLogs(logs: models.GenericLog[], installId: string): models.GenericLog[] {
     if (!_.isNil(installId)) {
       return logs.filter((logEntry) => logEntry.installId === installId);
     } else {
@@ -98,7 +94,7 @@ export default class ShowLogFlowCommand extends AppCommand {
     }
   }
 
-  private showLogEntry(output: StreamingArrayOutput, logEntry: models.Log): void {
+  private showLogEntry(output: StreamingArrayOutput, logEntry: models.GenericLog): void {
     // setting common properties
     let logStringArray: string[] = [logEntry.timestamp.toString(), logEntry.installId, logEntry.type];
     const jsonObject: ILogEntryJsonObject = {
@@ -108,42 +104,25 @@ export default class ShowLogFlowCommand extends AppCommand {
     };
 
     // adding log id
-    if (isEventLog(logEntry)) {
+    if (logEntry.type === "event") {
       // event name for event log
-      logStringArray.push(logEntry.name);
-      jsonObject.logId = logEntry.name;
-    } else if (isILogWithSessionId(logEntry)) {
+      logStringArray.push(logEntry.eventName);
+      jsonObject.logId = logEntry.eventName;
+    } else if (logEntry.sessionId != null) {
       // session id for logs with such property
       logStringArray.push(logEntry.sessionId);
       jsonObject.logId = logEntry.sessionId;
     }
 
     // adding properties
-    if (isLogWithProperties(logEntry)) {
-      if (_.size(logEntry.properties)) {
-        logStringArray = logStringArray.concat(_.toPairs(logEntry.properties).map((pair) => pair.join(": ")));
-      }
-      jsonObject.properties = logEntry.properties;
+    if (logEntry.properties != null) {
+      const logProperties: { [propertyName: string]: string } = JSON.parse(logEntry.properties);
+      logStringArray = logStringArray.concat(_.toPairs(logProperties).map((pair) => pair.join(": ")));
+      jsonObject.properties = logProperties;
     }
 
     output.text(() => logStringArray.join(", "), jsonObject);
   }
-}
-
-function isLogWithProperties(log: models.Log): log is models.LogWithProperties {
-  return  _.isPlainObject(_.get(log, "properties"));
-}
-
-function isEventLog(log: models.Log): log is models.EventLog {
-  return isLogWithProperties(log) && log.type === "event";
-}
-
-interface ILogWithSessionId extends models.Log {
-  sessionId: string;
-}
-
-function isILogWithSessionId(log: models.Log): log is ILogWithSessionId {
-  return _.isString(_.get(log, "sessionId"));
 }
 
 interface ILogEntryJsonObject {
