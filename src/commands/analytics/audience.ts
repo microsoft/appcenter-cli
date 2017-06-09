@@ -187,21 +187,21 @@ export default class AudienceCommand extends AppCommand {
       if (stats.devices) {
         tableArray.push({
           name: "Devices", 
-          content: stats.devices.map((device) => toArray(device, numberFormatter, percentageFormatter))
+          content: [["", "Count", "Change"]].concat(stats.devices.map((device) => toArray(device, numberFormatter, percentageFormatter)))
         });
       }
 
       if (stats.countries) {
         tableArray.push({
           name: "Countries", 
-          content: stats.countries.map((country) => toArray(country, numberFormatter, percentageFormatter))
+          content: [["", "Count", "Change"]].concat(stats.countries.map((country) => toArray(country, numberFormatter, percentageFormatter)))
         });
       }
 
       if (stats.languages) {
         tableArray.push({
           name: "Languages",
-          content: stats.languages.map((language) => toArray(language, numberFormatter, percentageFormatter))
+          content: [["", "Count", "Change"]].concat(stats.languages.map((language) => toArray(language, numberFormatter, percentageFormatter)))
         });
       }
 
