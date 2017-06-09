@@ -181,7 +181,6 @@ export default class AudienceCommand extends AppCommand {
   }
 
   private outputStatistics(statisticsObject: IStatisticsObject): void {
-    const maximumNumberOfColumnsInTables = 4;
     out.reportObjectAsTitledTables((stats: IStatisticsObject, numberFormatter, dateFormatter, percentageFormatter) => {
       const tableArray: out.NamedTables = [];
 
@@ -220,7 +219,7 @@ export default class AudienceCommand extends AppCommand {
       }
 
       return tableArray;
-    }, statisticsObject, maximumNumberOfColumnsInTables);
+    }, statisticsObject);
   }
 }
 

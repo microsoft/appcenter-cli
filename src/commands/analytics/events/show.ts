@@ -169,7 +169,6 @@ export default class ShowCommand extends AppCommand {
   }
 
   private outputStatistics(statistics: IEventStatistics[]) {
-    const maximumNumberOfColumnsInTables = 7;
     out.reportObjectAsTitledTables((events, numberFormatter, dateFormatter, percentageFormatter) => {
       const table: out.NamedTables = [];
       const eventsTable: out.INamedTable = {
@@ -194,7 +193,7 @@ export default class ShowCommand extends AppCommand {
       }
 
       return table;
-    }, statistics, maximumNumberOfColumnsInTables);
+    }, statistics);
   }
 }
 
