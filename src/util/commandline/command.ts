@@ -5,7 +5,7 @@ import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "
 import { setDebug, isDebug, setQuiet, OutputFormatSupport, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
-import { getUser, environments, telemetryIsEnabled } from "../profile";
+import { getUser, environments, telemetryIsEnabled, getPortalUrlForEndpoint } from "../profile";
 import { MobileCenterClient, createMobileCenterClient, MobileCenterClientFactory } from "../apis";
 import * as path from "path";
 import * as PortalHelper from "../portal/portal-helper";
@@ -140,7 +140,7 @@ export class Command {
       }
     }
     if (client && endpoint) {
-      return this.run(client, PortalHelper.getPortalBaseUrl(endpoint));
+      return this.run(client, getPortalUrlForEndpoint(endpoint));
     }
     return Promise.resolve(Result.notLoggedIn(`${scriptName} ${this.command.join(" ")}`));
   }

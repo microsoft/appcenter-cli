@@ -3,6 +3,7 @@
 export interface EnvironmentInfo {
   endpoint: string;
   loginEndpoint: string;
+  portalEndpoint: string;
   description?: string;
 }
 
@@ -21,26 +22,31 @@ const environmentsData: EnvironmentsFile = {
     dev: {
       endpoint: "https://bifrost-dev.trafficmanager.net",
       loginEndpoint: "https://asgard-dev.trafficmanager.net/cli-login",
+      portalEndpoint: "https://asgard-dev.trafficmanager.net",
       description: "Development"
     },
     int: {
       endpoint: "https://bifrost-int.trafficmanager.net",
       loginEndpoint: "https://asgard-int.trafficmanager.net/cli-login",
+      portalEndpoint: "https://asgard-int.trafficmanager.net",
       description: "Integration"
     },
     staging: {
       endpoint: "https://bifrost-staging.trafficmanager.net",
       loginEndpoint: "https://asgard-staging.trafficmanager.net/cli-login",
+      portalEndpoint: "https://asgard-staging.trafficmanager.net",
       description: "Staging"
     },
     prod: {
       endpoint: "https://api.mobile.azure.com",
       loginEndpoint: "https://mobile.azure.com/cli-login",
+      portalEndpoint: "https://mobile.azure.com",
       description: "Production"
     },
     testCloudLocalDev: {
       endpoint: "http://localhost:1700",
       loginEndpoint: null,
+      portalEndpoint: null,
       description: "Test Cloud local dev box development"
     }
   }
@@ -56,4 +62,15 @@ export function allEnvironments(): EnvironmentsFile {
 
 export function defaultEnvironmentName(): string {
   return environmentsData.defaultEnvironment;
+}
+
+export function getPortalUrlForEndpoint(endpoint: string) {
+  for (const environmentName of Object.keys(environmentsData.environments)) {
+    const environment = environmentsData.environments[environmentName];
+    if (environment.endpoint === endpoint) {
+      return environment.portalEndpoint;
+    }
+  }
+
+  throw new Error(`Unknown API endpoint - ${endpoint}`);
 }
