@@ -21,6 +21,8 @@ var models = require('./index');
  * 
  * @member {boolean} [testsEnabled]
  * 
+ * @member {boolean} [badgeIsEnabled]
+ * 
  * @member {boolean} [signed]
  * 
  * @member {object} [toolsets]
@@ -31,6 +33,9 @@ var models = require('./index');
  * project/workspace path
  * 
  * @member {string} [toolsets.xcode.podfilePath] Path to CococaPods file, if
+ * present
+ * 
+ * @member {string} [toolsets.xcode.cartfilePath] Path to Carthage file, if
  * present
  * 
  * @member {string} [toolsets.xcode.provisioningProfileEncoded]
@@ -131,6 +136,13 @@ BranchConfiguration.prototype.mapper = function () {
         testsEnabled: {
           required: false,
           serializedName: 'testsEnabled',
+          type: {
+            name: 'Boolean'
+          }
+        },
+        badgeIsEnabled: {
+          required: false,
+          serializedName: 'badgeIsEnabled',
           type: {
             name: 'Boolean'
           }

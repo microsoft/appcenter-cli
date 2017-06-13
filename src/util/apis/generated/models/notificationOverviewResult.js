@@ -8,47 +8,48 @@
 
 var models = require('./index');
 
-var util = require('util');
-
 /**
  * @class
- * Initializes a new instance of the NotificationDetailsResult class.
+ * Initializes a new instance of the NotificationOverviewResult class.
  * @constructor
  * Notification statistics
  *
- * @member {object} notificationContent
+ * @member {string} notificationId Notification id.
  * 
- * @member {string} [notificationContent.name] Notification name
+ * @member {string} [name] Notification name
  * 
- * @member {string} [notificationContent.title] Notification title
+ * @member {object} [notificationTarget]
  * 
- * @member {string} [notificationContent.body] Notification body
+ * @member {string} [notificationTarget.type] Polymorhpic Discriminator
  * 
- * @member {object} [notificationContent.customData] Notification custom
- * data(priority, expiration, etc.)
+ * @member {date} [sendTime] Notification send time
  * 
- * @member {array} [failureOutcomes] Failture outcome counts
+ * @member {number} [pnsSendFailure] Number of the notifications failed to
+ * send to the push provider.
+ * 
+ * @member {number} [pnsSendSuccess] Number of the notifications successfully
+ * sent to push the provider.
+ * 
+ * @member {string} state State of the notification. Possible values include:
+ * 'Cancelled', 'Completed', 'Enqueued', 'Processing', 'Unknown'
  * 
  */
-function NotificationDetailsResult() {
-  NotificationDetailsResult['super_'].call(this);
+function NotificationOverviewResult() {
 }
 
-util.inherits(NotificationDetailsResult, models['NotificationOverviewResult']);
-
 /**
- * Defines the metadata of NotificationDetailsResult
+ * Defines the metadata of NotificationOverviewResult
  *
- * @returns {object} metadata of NotificationDetailsResult
+ * @returns {object} metadata of NotificationOverviewResult
  *
  */
-NotificationDetailsResult.prototype.mapper = function () {
+NotificationOverviewResult.prototype.mapper = function () {
   return {
     required: false,
-    serializedName: 'NotificationDetailsResult',
+    serializedName: 'NotificationOverviewResult',
     type: {
       name: 'Composite',
-      className: 'NotificationDetailsResult',
+      className: 'NotificationOverviewResult',
       modelProperties: {
         notificationId: {
           required: true,
@@ -104,33 +105,10 @@ NotificationDetailsResult.prototype.mapper = function () {
           type: {
             name: 'String'
           }
-        },
-        notificationContent: {
-          required: true,
-          serializedName: 'notification_content',
-          type: {
-            name: 'Composite',
-            className: 'NotificationContent'
-          }
-        },
-        failureOutcomes: {
-          required: false,
-          serializedName: 'failure_outcomes',
-          type: {
-            name: 'Sequence',
-            element: {
-                required: false,
-                serializedName: 'NotificationFailureOutcomeCountElementType',
-                type: {
-                  name: 'Composite',
-                  className: 'NotificationFailureOutcomeCount'
-                }
-            }
-          }
         }
       }
     }
   };
 };
 
-module.exports = NotificationDetailsResult;
+module.exports = NotificationOverviewResult;

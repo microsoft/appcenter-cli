@@ -21,6 +21,59 @@ var util = require('util');
  * triggered even if the event requires calling webhooks or doing other
  * actions.
  * 
+ * @member {object} [newAppReleaseWebhookProperties]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.publicIdentifier]
+ * 
+ * @member {object} [newAppReleaseWebhookProperties.appVersion]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.version]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.shortversion]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.title]
+ * 
+ * @member {number} [newAppReleaseWebhookProperties.appVersion.timestamp]
+ * 
+ * @member {number} [newAppReleaseWebhookProperties.appVersion.appsize]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.notes]
+ * 
+ * @member {boolean} [newAppReleaseWebhookProperties.appVersion.mandatory]
+ * 
+ * @member {boolean} [newAppReleaseWebhookProperties.appVersion.external]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.deviceFamily]
+ * 
+ * @member {number} [newAppReleaseWebhookProperties.appVersion.id]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.appId]
+ * 
+ * @member {string}
+ * [newAppReleaseWebhookProperties.appVersion.minimumOsVersion]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.buildUrl]
+ * 
+ * @member {number} [newAppReleaseWebhookProperties.appVersion.status]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.expiredAt]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.createdAt]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.updatedAt]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.sdkVersion]
+ * 
+ * @member {boolean} [newAppReleaseWebhookProperties.appVersion.blockCrashes]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.appVersion.appOwner]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.title]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.text]
+ * 
+ * @member {string} [newAppReleaseWebhookProperties.url]
+ * 
  */
 function NewAppReleaseAlertingEvent() {
   NewAppReleaseAlertingEvent['super_'].call(this);
@@ -71,6 +124,13 @@ NewAppReleaseAlertingEvent.prototype.mapper = function () {
             name: 'Object'
           }
         },
+        emailProperties: {
+          required: false,
+          serializedName: 'emailProperties',
+          type: {
+            name: 'Object'
+          }
+        },
         userIds: {
           required: false,
           serializedName: 'user_ids',
@@ -83,6 +143,14 @@ NewAppReleaseAlertingEvent.prototype.mapper = function () {
                   name: 'String'
                 }
             }
+          }
+        },
+        newAppReleaseWebhookProperties: {
+          required: false,
+          serializedName: 'newAppReleaseWebhookProperties',
+          type: {
+            name: 'Composite',
+            className: 'NewAppReleaseWebhookProperties'
           }
         }
       }

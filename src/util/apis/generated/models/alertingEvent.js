@@ -10,7 +10,7 @@
  * @class
  * Initializes a new instance of the AlertingEvent class.
  * @constructor
- * Event Setting
+ * Alerting event
  *
  * @member {string} eventTimestamp ISO 8601 date time when event was generated
  * 
@@ -20,7 +20,9 @@
  * @member {number} eventVersion Versioning for this eventType. Default value:
  * 1 .
  * 
- * @member {object} [properties] Custom properties for a specific event
+ * @member {object} [properties] Obsolete. Use emailProperties.
+ * 
+ * @member {object} [emailProperties] Email properties for a specific event
  * 
  */
 function AlertingEvent() {
@@ -65,6 +67,13 @@ AlertingEvent.prototype.mapper = function () {
         properties: {
           required: false,
           serializedName: 'properties',
+          type: {
+            name: 'Object'
+          }
+        },
+        emailProperties: {
+          required: false,
+          serializedName: 'emailProperties',
           type: {
             name: 'Object'
           }

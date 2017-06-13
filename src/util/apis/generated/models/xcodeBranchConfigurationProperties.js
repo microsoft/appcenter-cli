@@ -16,6 +16,8 @@
  * 
  * @member {string} [podfilePath] Path to CococaPods file, if present
  * 
+ * @member {string} [cartfilePath] Path to Carthage file, if present
+ * 
  * @member {string} [provisioningProfileEncoded]
  * 
  * @member {string} [certificateEncoded]
@@ -62,6 +64,13 @@ XcodeBranchConfigurationProperties.prototype.mapper = function () {
         podfilePath: {
           required: false,
           serializedName: 'podfilePath',
+          type: {
+            name: 'String'
+          }
+        },
+        cartfilePath: {
+          required: false,
+          serializedName: 'cartfilePath',
           type: {
             name: 'String'
           }

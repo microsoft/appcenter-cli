@@ -14,6 +14,11 @@
  * 
  * @member {boolean} hasTestAction Does scheme have a test action?
  * 
+ * @member {string} [archiveConfiguration] Build configuration set in Archive
+ * action
+ * 
+ * @member {string} [targetToArchive] The Id of the target to archive
+ * 
  */
 function XcodeScheme() {
 }
@@ -44,6 +49,20 @@ XcodeScheme.prototype.mapper = function () {
           serializedName: 'hasTestAction',
           type: {
             name: 'Boolean'
+          }
+        },
+        archiveConfiguration: {
+          required: false,
+          serializedName: 'archiveConfiguration',
+          type: {
+            name: 'String'
+          }
+        },
+        targetToArchive: {
+          required: false,
+          serializedName: 'targetToArchive',
+          type: {
+            name: 'String'
           }
         }
       }

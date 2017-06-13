@@ -8,24 +8,25 @@
 
 var models = require('./index');
 
+var util = require('util');
+
 /**
  * @class
  * Initializes a new instance of the AlertingError class.
  * @constructor
  * Alerting service error
  *
- * @member {object} [error]
+ * @member {number} [code] The status code return by the API. It can be 400 or
+ * 404 or 409 or 500.
  * 
- * @member {number} [error.code] The status code return by the API. It can be
- * 400 or 409 or 500.
- * 
- * @member {string} [error.requestId] Unique request identifier for tracking
- * 
- * @member {string} [error.message] The reason for the request failed
+ * @member {string} [message] The reason for the request failed
  * 
  */
 function AlertingError() {
+  AlertingError['super_'].call(this);
 }
+
+util.inherits(AlertingError, models['AlertOperationResult']);
 
 /**
  * Defines the metadata of AlertingError
@@ -41,12 +42,25 @@ AlertingError.prototype.mapper = function () {
       name: 'Composite',
       className: 'AlertingError',
       modelProperties: {
-        error: {
-          required: false,
-          serializedName: 'error',
+        requestId: {
+          required: true,
+          serializedName: 'request_id',
           type: {
-            name: 'Composite',
-            className: 'AlertingErrorError'
+            name: 'String'
+          }
+        },
+        code: {
+          required: false,
+          serializedName: 'code',
+          type: {
+            name: 'Number'
+          }
+        },
+        message: {
+          required: false,
+          serializedName: 'message',
+          type: {
+            name: 'String'
           }
         }
       }

@@ -517,7 +517,7 @@ Stores.prototype.create = function (body, ownerName, appName, options, callback)
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Stores.prototype.listByApplicationId = function (ownerName, appName, options, callback) {
+Stores.prototype.list = function (ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
