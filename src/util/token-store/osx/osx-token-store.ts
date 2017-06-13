@@ -4,7 +4,7 @@
 // Access to the OSX keychain - list, add, get password, remove
 //
 import * as _ from "lodash";
-import * as rx from "rx";
+import * as rx from "rx-lite";
 import * as childProcess from "child_process";
 import * as es from "event-stream";
 import * as os from "os";

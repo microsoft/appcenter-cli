@@ -12,7 +12,9 @@
     "node": "registry:dt/node#6.0.0+20160915134512",
     "node-fetch": "registry:dt/node-fetch#0.0.0+20160711094047",
     "promptly": "registry:dt/promptly#1.1.1+20160316155526",
-    "rx": "npm:rx/ts/rx.all.d.ts"
+    "rx-core": "registry:dt/rx-core#4.0.0+20170223151516",
+    "rx-core-binding": "registry:dt/rx-core-binding#4.0.0+20170223151516",
+    "rx-lite": "registry:dt/rx-lite#4.0.0+20170109060831"
   },
   "devDependencies": {
     "mock-require": "registry:dt/mock-require#1.3.0+20160818233916",

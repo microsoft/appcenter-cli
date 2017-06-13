@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import * as _ from "lodash";
 import * as es from "event-stream";
-import * as rx from "rx";
+import * as rx from "rx-lite";
 import * as os from "os";
 import * as childProcess from "child_process";
 import { inspect } from "util";
@@ -189,7 +189,7 @@ describe('storing data in keychain', function () {
   after(() => keychain.remove(testUser));
 
   it('should have at least one item', async function (): Promise<void> {
-    let c = await keychain.list().count().toPromise();
+    let c = await (keychain.list() as any).count().toPromise();
     expect(c).to.be.above(0);
   });
 

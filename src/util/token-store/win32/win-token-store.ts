@@ -4,7 +4,7 @@
 //
 
 import * as childProcess from "child_process";
-import { Observable, Observer } from "rx";
+import { Observable, Observer } from "rx-lite";
 import * as stream from "stream";
 import * as es from "event-stream";
 import * as path from "path";

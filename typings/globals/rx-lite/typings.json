@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/a0a9fe2efe4aa8a9c6ad765d6ccc471341964332/rx-lite/index.d.ts",
+    "raw": "registry:dt/rx-lite#4.0.0+20170109060831",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/a0a9fe2efe4aa8a9c6ad765d6ccc471341964332/rx-lite/index.d.ts"
+  }
+}
