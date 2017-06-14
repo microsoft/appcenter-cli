@@ -1,0 +1,10 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/types/npm-chalk/de4e16749edee61299866480e2f0ae2396ccdad1/typings.json",
+    "raw": "registry:npm/chalk#1.1.1+20160812215109",
+    "main": "index.d.ts",
+    "version": "1.1.1",
+    "name": "chalk"
+  }
+}

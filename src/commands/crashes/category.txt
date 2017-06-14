@@ -1,1 +1,1 @@
-Command to upload symbols to get symbolicated crash reports on Mobile Center
+Upload symbols to get symbolicated crash reports

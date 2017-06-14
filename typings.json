@@ -22,6 +22,7 @@
     "sinon": "registry:npm/sinon#1.16.0+20160723033700"
   },
   "dependencies": {
+    "chalk": "registry:npm/chalk#1.1.1+20160812215109",
     "debug": "registry:npm/debug#2.0.0+20160723033700",
     "glob": "registry:npm/glob#6.0.0+20160723033700",
     "inquirer": "registry:npm/inquirer#1.0.0+20160723033700",

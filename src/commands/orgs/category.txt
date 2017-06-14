@@ -1,1 +1,1 @@
-Commands for manipulating organizations
+View and manage organizations

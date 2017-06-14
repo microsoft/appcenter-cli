@@ -6,6 +6,7 @@ import { CommandResult, success } from "./command-result";
 import { out } from "../interaction";
 import { scriptName } from "../misc";
 import { getClassHelpText } from "./option-decorators";
+import * as chalk from "chalk";
 
 const Table = require("cli-table2");
 const debug = require("debug")("mobile-center-cli:util:commandline:category-command");
@@ -22,10 +23,14 @@ export class CategoryCommand extends Command {
       return this.showVersion();
     }
 
-    out.help(`${scriptName} ${this.command.join(" ")}`);
     out.help();
     out.help(this.categoryHelp());
     out.help();
+    const command = "<command>";
+    const commandTemplate = [scriptName].concat(this.command, [command]).join(" ");
+    out.help(`Usage: ${chalk.bold(commandTemplate)}`);
+    out.help();
+    out.help("Commands:");
 
     const categoryContents = this.categoryDirContents();
     const subCategoriesHelp = this.subCategories(categoryContents);
@@ -39,8 +44,6 @@ export class CategoryCommand extends Command {
     const tableObject = new Table(out.getOptionsForTwoColumnTableWithNoBorders(firstColumnWidth));
     helpTable.forEach((row) => tableObject.push(row));
     out.help(tableObject.toString());
-
-    out.help();
 
     return success();
   }
@@ -70,7 +73,7 @@ export class CategoryCommand extends Command {
   subCategories(contents: [string, fs.Stats][]): string[][] {
     return contents.filter(item => item[1].isDirectory() && item[0] !== "lib")
       .map(item => {
-         return [ `    ${scriptName} ${this.command.concat(item[0]).join(" ")}    `, this.categoryHelp(item[0])];
+         return [chalk.bold(`    ${item[0]}    `), this.categoryHelp(item[0])];
       });
   }
 
@@ -78,21 +81,12 @@ export class CategoryCommand extends Command {
     // Locate commands in category directory
     return contents.filter(item => item[1].isFile() && /\.[tj]s$/.test(item[0]))
       .map(item => {
-        return [`    ${this.commandName(item)}    `, this.commandHelp(item)];
+        return [chalk.bold(`    ${this.commandName(item)}    `), this.commandHelp(item)];
       });
   }
 
   commandName(item: [string, fs.Stats]): string {
-    const commandName = path.basename(item[0], path.extname(item[0]));
-    let commandScript: string[];
-    if (this.command.length > 0) {
-      commandScript = [scriptName].concat(this.command).concat([commandName]);
-    }
-    else {
-      commandScript = [scriptName, commandName];
-    }
-
-    return commandScript.join(" ");
+    return path.parse(item[0]).name;
   }
 
   commandHelp(item: [string, fs.Stats]): string {

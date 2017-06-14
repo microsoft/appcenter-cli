@@ -1,1 +1,1 @@
-Commands for queueing builds, getting build status and downloading binaries and logs for completed builds
+Queue builds, get build status and download binaries and logs for completed builds

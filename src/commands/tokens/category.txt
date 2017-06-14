@@ -1,1 +1,1 @@
-Commands to manage API tokens in Mobile Center
+View and manage API tokens
