@@ -5,7 +5,7 @@ import { TestCloudUploader, StartedTestRun } from "./test-cloud-uploader";
 import { TestCloudError } from "./test-cloud-error";
 import { StateChecker } from "./state-checker";
 import { MobileCenterClient } from "../../../util/apis";
-import { out } from "../../../util/interaction";
+import { StreamingArrayOutput } from "../../../util/interaction";
 import { parseTestParameters } from "./parameters-parser";
 import { parseIncludedFiles } from "./included-files-parser";
 import { progressWithResult } from "./interaction";
@@ -15,6 +15,7 @@ import * as _ from "lodash";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as temp from "temp";
+import * as os from "os";
 
 export abstract class RunTestsCommand extends AppCommand {
 
@@ -70,6 +71,7 @@ export abstract class RunTestsCommand extends AppCommand {
   timeoutSec: number;
 
   protected isAppPathRquired = true;
+  private readonly streamingOutput = new StreamingArrayOutput();
 
   constructor(args: CommandArgs) {
     super(args);
@@ -104,25 +106,27 @@ export abstract class RunTestsCommand extends AppCommand {
     await this.validateOptions();
     try {
       let artifactsDir = await this.getArtifactsDir();
-
+      this.streamingOutput.start();
       try {
         let manifestPath = await progressWithResult("Preparing tests", this.prepareManifest(artifactsDir));
         await this.addIncludedFilesAndTestParametersToManifest(manifestPath);
         let testRun = await this.uploadAndStart(client, manifestPath);
 
-        out.text(`Test run id: "${testRun.testRunId}"`);
-        out.text("Accepted devices: ");
-        out.list(item => `  - ${item}`, testRun.acceptedDevices);
-
-        if (testRun.rejectedDevices && testRun.rejectedDevices.length > 0) {
-          out.text("Rejected devices: ");
-          out.list(item => `  - ${item}`, testRun.rejectedDevices);
-        }
+        this.streamingOutput.text(function (testRun){
+          let report: string = `Test run id: "${testRun.testRunId}"` + os.EOL;
+          report += "Accepted devices: " + os.EOL;
+          testRun.acceptedDevices.map(item => `  - ${item}`).forEach(text => report+=text + os.EOL);
+          if (testRun.rejectedDevices && testRun.rejectedDevices.length > 0) {
+            report += "Rejected devices: " + os.EOL;
+            testRun.rejectedDevices.map(item => `  - ${item}`).forEach(text => report+=text + os.EOL);
+          }
+          return report;
+        }, testRun );
 
         if (!this.async) {
           await this.waitForCompletion(client, testRun.testRunId);
         }
-
+        this.streamingOutput.finish();
         return success();
       }
       finally {
@@ -131,6 +135,7 @@ export abstract class RunTestsCommand extends AppCommand {
     }
     catch (err) {
       let exitCode = err.exitCode || ErrorCodes.Exception;
+      this.streamingOutput.finish();
       return failure(exitCode, err.message);
     }
   }
@@ -185,7 +190,7 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   private async waitForCompletion(client: MobileCenterClient, testRunId: string): Promise<void> {
-    let checker = new StateChecker(client, testRunId, this.app.ownerName, this.app.appName);
+    let checker = new StateChecker(client, testRunId, this.app.ownerName, this.app.appName, this.streamingOutput);
     let exitCode = await checker.checkUntilCompleted(this.timeoutSec);
 
     if (exitCode !== 0) {
