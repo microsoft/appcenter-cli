@@ -91,7 +91,7 @@ export default class LoginCommand extends Command {
     const client = this.clientFactory.fromUserNameAndPassword(this.userName, this.password, endpoint);
 
     let createTokenResponse = await out.progress("Logging in...",
-      clientRequest<models.ApiTokensCreateResponse>(cb => client.apiTokens.newMethod({ description: "Created from mobile center cli"}, cb)));
+      clientRequest<models.ApiTokensCreateResponse>(cb => client.apiTokens.newMethod({ description: "Mobile Center CLI"}, cb)));
 
     if (createTokenResponse.response.statusCode >= 400) {
       throw new Error("login was not successful");
