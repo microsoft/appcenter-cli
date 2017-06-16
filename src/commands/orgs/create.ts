@@ -9,18 +9,18 @@ import { getOrgUsers, pickAdmins } from "./lib/org-users-helper";
 
 @help("Create a new organization")
 export default class OrgCreateCommand extends Command {
-  @help("Name of the organization")
-  @shortName("n")
-  @longName("name")
-  @required
-  @hasArg
-  name: string;
-
   @help("Display name of the organization")
   @shortName("d")
   @longName("display-name")
+  @required
   @hasArg
   displayName: string;
+
+  @help("Name of the organization")
+  @shortName("n")
+  @longName("name")
+  @hasArg
+  name: string;
 
   async run(client: MobileCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     
@@ -37,7 +37,7 @@ export default class OrgCreateCommand extends Command {
       }
     } catch (error) {
       if (error.statusCode === 409) {
-        return failure(ErrorCodes.InvalidParameter, `organization ${this.name} already exists`);
+        return failure(ErrorCodes.InvalidParameter, `organization ${this.name || this.displayName} already exists`);
       } else {
         debug(`Failed to create organization - ${inspect(error)}`);
         return failure(ErrorCodes.Exception, "failed to create organization");
@@ -46,13 +46,13 @@ export default class OrgCreateCommand extends Command {
 
     const admins: models.OrganizationUserResponse[] = pickAdmins(await getOrgUsers(client, organizationInfo.name, debug));
 
-    out.text(`Successfully created organization ${this.name}`);
+    out.text(`Successfully created organization ${organizationInfo.name}`);
     out.report([
       ["Name", "name"],
       ["Display name", "displayName"],
       ["URL", "url"],
       ["Admins", "admins", (adminsArray: models.OrganizationUserResponse[]) => adminsArray.map((admin) => admin.name).join(", ")]
-    ], { name: this.name, displayName: this.displayName, url: getPortalOrgLink(portalBaseUrl, this.name), admins});
+    ], { name: organizationInfo.name, displayName: organizationInfo.displayName, url: getPortalOrgLink(portalBaseUrl, organizationInfo.name), admins});
 
     return success();
   }
