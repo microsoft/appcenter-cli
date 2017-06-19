@@ -26,8 +26,9 @@ export default class OrgShowCommand extends Command {
       ["URL", "url"],
       ["Admins", "admins", (adminsArray: models.OrganizationUserResponse[]) => adminsArray.map((admin) => admin.name).join(", ")],
       ["Apps", "appsCount"],
-      ["Collaborators", "collaboratorsCount"]
-    ], { displayName: organizationDetails.displayName, url: getPortalOrgLink(portalBaseUrl, this.name), admins, appsCount: apps.length, collaboratorsCount: users.length });
+      ["Collaborators", "collaboratorsCount"],
+      ["Origin", "origin"]
+    ], { displayName: organizationDetails.displayName, url: getPortalOrgLink(portalBaseUrl, this.name), admins, appsCount: apps.length, collaboratorsCount: users.length, origin: organizationDetails.origin });
 
     return success();
   }

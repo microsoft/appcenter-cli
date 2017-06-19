@@ -9,19 +9,24 @@ import { inspect } from "util";
 export default class OrgListCommand extends Command {
   async run(client: MobileCenterClient): Promise<CommandResult> {
     // every user is a collaborator of it's own group and of zero or more external groups
-    const [currentUserName, externalOrgsNames] = await out.progress("Loading list of organizations...", Promise.all([this.getCurrentUserName(client), this.getOrgsNamesList(client)]));
-    const orgsNames = [[currentUserName]].concat(externalOrgsNames.map((name) => [name]));
+    const orgs = await out.progress("Loading list of organizations...", this.getOrgsNamesList(client));
+    const table = [["Display Name", "Name", "Origin"]]
+      .concat(orgs.map((names) => [names.displayName, names.name, names.origin]));
 
-    out.table(out.getNoTableBordersOptions(), orgsNames);
+    out.table(out.getNoTableBordersCollapsedVerticallyOptions(""), table);
 
     return success();
   }
 
-  private async getOrgsNamesList(client: MobileCenterClient): Promise<string[]> {
+  private async getOrgsNamesList(client: MobileCenterClient): Promise<IEntity[]> {
     try {
       const httpResponse = await clientRequest<models.OrganizationResponse[]>((cb) => client.organizations.list(cb));
       if (httpResponse.response.statusCode < 400) {
-        return httpResponse.result.map((org) => org.name);
+        return httpResponse.result.map((org) => ({
+          name: org.name,
+          displayName: org.displayName,
+          origin: org.origin
+        }));
       } else {
         throw httpResponse.response;
       }
@@ -30,18 +35,10 @@ export default class OrgListCommand extends Command {
       throw failure(ErrorCodes.Exception, "failed to load list of organization for the user");
     }
   }
+}
 
-  private async getCurrentUserName(client: MobileCenterClient): Promise<string> {
-    try {
-      const httpResponse = await clientRequest<models.UserProfileResponse>((cb) => client.users.get(cb));
-      if (httpResponse.response.statusCode < 400) {
-        return httpResponse.result.name;
-      } else {
-        throw httpResponse.response;
-      }
-    } catch (error) {
-      debug(`Failed to get current user profile - ${inspect(error)}`);
-      throw failure(ErrorCodes.Exception, "failed to get current user profile");
-    }
-  }
+interface IEntity {
+  name: string;
+  displayName: string;
+  origin: string;
 }
