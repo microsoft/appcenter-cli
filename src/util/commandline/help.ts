@@ -81,7 +81,8 @@ function getOptionsHelpTable(commandPrototype: any): any {
 }
 
 function getSwitchOptionsHelp(commandPrototype: any): string[][] {
-  const options = values(getOptionsDescription(commandPrototype)).map(toSwitchOptionHelp);
+  // options from a top prototype are added first, reversing order
+  const options = _(getOptionsDescription(commandPrototype)).values().map(toSwitchOptionHelp).reverse().value();
   debug(`Command has ${options.length} switch options:`);
   debug(options.map(o => `${o.shortName}|${o.longName}`).join("/"));
   return options.map((optionHelp) => [`    ${switchText(optionHelp)}    `, optionHelp.helpText]);
