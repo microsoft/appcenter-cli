@@ -6,6 +6,7 @@ import { isDebug, isQuiet, formatIsJson, formatIsCsv, formatIsParsingCompatible 
 
 import * as os from "os";
 import * as wrap from "wordwrap";
+import * as tty from "tty";
 
 const Table = require("cli-table2");
 const Spinner = require("cli-spinner").Spinner;
@@ -19,7 +20,8 @@ import * as _ from "lodash";
 // to complete.
 //
 export function progress<T>(title: string, action: Promise<T>): Promise<T> {
-  if (!formatIsParsingCompatible() && !isQuiet()) {
+  const stdoutIsTerminal = tty.isatty(1);
+  if (!formatIsParsingCompatible() && !isQuiet() && stdoutIsTerminal) {
     const spinner = new Spinner(title);
     spinner.start();
     return action.then(result => {
