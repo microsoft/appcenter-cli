@@ -5,7 +5,7 @@ import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "
 import { setDebug, isDebug, setQuiet, OutputFormatSupport, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
-import { getUser, environments, telemetryIsEnabled, getPortalUrlForEndpoint } from "../profile";
+import { getUser, environments, telemetryIsEnabled, getPortalUrlForEndpoint, getEnvFromEnvironmentVar, getTokenFromEnvironmentVar, mobileCenterAccessTokenEnvVar } from "../profile";
 import { MobileCenterClient, createMobileCenterClient, MobileCenterClientFactory } from "../apis";
 import * as path from "path";
 import * as PortalHelper from "../portal/portal-helper";
@@ -121,22 +121,29 @@ export class Command {
   // the login command
   protected runNoClient(): Promise<Result.CommandResult> {
     if (this.environmentName && !this.token) {
-      return Promise.resolve(Result.illegal("Cannot specify environment without giving token"));
+      return Promise.resolve(Result.failure(Result.ErrorCodes.IllegalCommand, "Cannot specify environment without giving token"));
     }
 
     let client: MobileCenterClient;
     let endpoint: string;
     if (this.token) {
-      let environment = environments(this.environmentName);
       debug(`Creating mobile center client for command from token for environment ${this.environmentName}`);
-      client = this.clientFactory.fromToken(this.token, environment.endpoint);
-      endpoint = environment.endpoint;
+      [client, endpoint] = this.getClientAndEndpointForToken(this.environmentName, this.token);
     } else {
-      let user = getUser();
-      if (user) {
+      // creating client for either logged in user or environment variable token
+      const user = getUser();
+      const tokenFromEnvVar = getTokenFromEnvironmentVar();
+      const envFromEnvVar = getEnvFromEnvironmentVar();
+      const isLogoutCommand = this.command[0] === "logout";
+      if (user && tokenFromEnvVar && !isLogoutCommand) { // logout command should be executed even if both user and env token are set - it just logs out user
+        return Promise.resolve(Result.failure(Result.ErrorCodes.IllegalCommand, `logged in user and token in environment variable ${mobileCenterAccessTokenEnvVar} cannot be used together`));
+      } else if (user) {
         debug(`Creating mobile center client for command for current logged in user`);
         client = this.clientFactory.fromProfile(user);
         endpoint = user.endpoint;
+      } else if (tokenFromEnvVar) {
+        debug(`Creating mobile center client from token specified in environment variable for environment ${this.environmentName}`);
+        [client, endpoint] = this.getClientAndEndpointForToken(envFromEnvVar, tokenFromEnvVar);
       }
     }
     if (client && endpoint) {
@@ -155,5 +162,10 @@ export class Command {
     const packageJson: any = require(packageJsonPath);
     out.text(s => s,`${scriptName} version ${packageJson.version}`);
     return Result.success();
+  }
+  
+  protected getClientAndEndpointForToken(environmentString: string, token: string): [MobileCenterClient, string] {
+    const environment = environments(environmentString);
+    return [this.clientFactory.fromToken(token, environment.endpoint), environment.endpoint];
   }
 }

@@ -5,7 +5,7 @@ const opener = require("opener");
 import * as qs from "qs";
 
 import { Command, CommandArgs, CommandResult, success, failure, succeeded, ErrorCodes, help, shortName, longName, hasArg } from "../util/commandline";
-import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser } from "../util/profile";
+import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser, getTokenFromEnvironmentVar, mobileCenterAccessTokenEnvVar } from "../util/profile";
 import { prompt, out } from "../util/interaction";
 import { models, createMobileCenterClient, clientRequest, ClientResponse } from "../util/apis";
 import { TokenValueType } from "../util/token-store";
@@ -72,10 +72,13 @@ export default class LoginCommand extends Command {
 
   private validateArguments(): CommandResult {
     if (this.isInteractiveEnvironment && (this.userName || this.password) && !this.token) {
-      return failure(ErrorCodes.InvalidParameter, "This environment requires interactive login, do not use the --user or --password switches");
+      return failure(ErrorCodes.InvalidParameter, "this environment requires interactive login, do not use the --user or --password switches");
     }
     if (!this.isInteractiveEnvironment && (this.userName || this.password) && this.token) {
-      return failure(ErrorCodes.InvalidParameter, "You must specify either a token or a user/password, not both");
+      return failure(ErrorCodes.InvalidParameter, "you must specify either a token or a user/password, not both");
+    }
+    if (getTokenFromEnvironmentVar()) {
+      return failure(ErrorCodes.IllegalCommand, `can't login when token is set in environment variable ${mobileCenterAccessTokenEnvVar}`);
     }
     return success();
   }
