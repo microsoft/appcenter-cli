@@ -36,6 +36,7 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | | |
 | `mobile-center analytics app-versions` | Shows versions of the application |
 | `mobile-center analytics audience` | Show audience statistics |
+| `mobile-center analytics log-flow` | Command to see the incoming logs in real time |
 | `mobile-center analytics sessions` | Show statistics for sessions |
 | `mobile-center analytics events delete` | Delete event |
 | `mobile-center analytics events show` | Show statistics for events |
@@ -68,6 +69,14 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | `mobile-center distribute releases list` | Shows the list of all releases for the application |
 | `mobile-center distribute releases show` | Shows full details about release |
 | | |
+| `mobile-center orgs create` | Create a new organization |
+| `mobile-center orgs list` | Lists organizations in which current user is collaborator |
+| `mobile-center orgs show` | Show information about organization |
+| `mobile-center orgs update` | Update organization information |
+| `mobile-center orgs apps list` | Lists applications of organization |
+| `mobile-center orgs collaborators list` | Lists collaborators of organization |
+| `mobile-center orgs collaborators update` | Update list of organization collaborators |
+| | |
 | `mobile-center profile list` | Get information about logged in user |
 | `mobile-center profile update` | Update user information |
 | | |
@@ -77,21 +86,22 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | `mobile-center test status` | Checks the status of the started test run. |
 | `mobile-center test generate appium` | Generates an Appium project |
 | `mobile-center test generate uitest` | Generates a Xamarin.UITest project |
-| `mobile-center test prepare appium` | Creates an artifacts directory with Appium tests. |
-| `mobile-center test prepare calabash` | Creates an artifacts directory with Calabash tests. |
-| `mobile-center test prepare espresso` | Creates an artifacts directory with Espresso tests. |
-| `mobile-center test prepare uitest` | Creates an artifacts directory with Xamarin UI Tests. |
-| `mobile-center test prepare xcuitest` | Creates an artifacts directory with XCUITest tests. |
-| `mobile-center test run appium` | Starts a test run with Appium tests. |
-| `mobile-center test run calabash` | Starts a test run with Calabash tests. |
-| `mobile-center test run espresso` | Starts a test run with Espresso tests. |
-| `mobile-center test run manifest` | Starts a test run with previously prepared artifacts. |
-| `mobile-center test run uitest` | Starts a test run with Xamarin UI Tests. |
-| `mobile-center test run xcuitest` | Starts a test run with XCUITest tests. |
+| `mobile-center test prepare appium` | Creates an artifacts directory with Appium tests |
+| `mobile-center test prepare calabash` | Creates an artifacts directory with Calabash tests |
+| `mobile-center test prepare espresso` | Creates an artifacts directory with Espresso tests |
+| `mobile-center test prepare uitest` | Creates an artifacts directory with Xamarin UI Tests |
+| `mobile-center test prepare xcuitest` | Creates an artifacts directory with XCUITest tests |
+| `mobile-center test run appium` | Starts a test run with Appium tests |
+| `mobile-center test run calabash` | Starts a test run with Calabash tests |
+| `mobile-center test run espresso` | Starts a test run with Espresso tests |
+| `mobile-center test run manifest` | Starts a test run with previously prepared artifacts |
+| `mobile-center test run uitest` | Starts a test run with Xamarin UI Tests |
+| `mobile-center test run xcuitest` | Starts a test run with XCUITest tests |
 | | |
 | `mobile-center tokens create` | Create a new API token |
 | `mobile-center tokens delete` | Delete an API token |
 | `mobile-center tokens list` | Get a list of API tokens |
+
 
 Please use the `mobile-center help` command to get more information about each one.
 
