@@ -1,6 +1,6 @@
 {
   "name": "mobile-center-cli",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "Command line tool for Microsoft Mobile Center",
   "keywords": [
     "microsoft",
