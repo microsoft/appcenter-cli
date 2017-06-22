@@ -55,8 +55,8 @@ export default class ShowAppVersionsCommand extends AppCommand {
     }
 
     if (this.devices) {
-      const outputArray = [["Version", "Number of devices"]].concat(listOfVersions.map((version) => [version.versionProperty, String(version.count)]));
-      out.table(out.getNoTableBordersOptions(), outputArray);
+      const outputArray = listOfVersions.map((version) => [version.versionProperty, String(version.count)]);
+      out.table(out.getCommandOutputTableOptions(["Version", "Number Of Devices"]), outputArray);
     } else {
       out.text((versions) => versions.join(Os.EOL), listOfVersions.map((version) => version.versionProperty));
     }    

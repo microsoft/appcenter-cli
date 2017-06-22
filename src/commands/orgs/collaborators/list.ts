@@ -19,7 +19,7 @@ export default class OrgCollaboratorsListCommand extends Command {
   async run(client: MobileCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     const users: models.OrganizationUserResponse[] = await getOrgUsers(client, this.name, debug);
 
-    out.table(out.getNoTableBordersCollapsedVerticallyOptions(""), [["Name", "Display Name", "Email"]].concat(users.map((user) => [user.name, user.displayName, user.email])));
+    out.table(out.getCommandOutputTableOptions(["Name", "Display Name", "Email"]), users.map((user) => [user.name, user.displayName, user.email]));
 
     return success();
   }

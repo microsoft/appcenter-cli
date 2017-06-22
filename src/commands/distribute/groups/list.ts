@@ -1,7 +1,6 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, help, success} from "../../../util/commandline";
 import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
 import { out } from "../../../util/interaction";
-import * as IoOptions from "../../../util/interaction/io-options";
 import { inspect } from "util";
 import * as _ from "lodash";
 
@@ -70,49 +69,11 @@ export default class ListDistributionGroupsCommand extends AppCommand {
     // Waiting for spinner to stop
     await requestsCompletedPromise;
 
-    const outputArray = [["Group", "Users"]].concat(_.zip(distributionGroupsNames, userCounts));
+    const outputArray = _.zip(distributionGroupsNames, userCounts);
 
     // Printing the result table
-    out.text("");
-    this.printTwoColumnTableWithHeader(outputArray);
+    out.table(out.getCommandOutputTableOptions(["Group", "Users"]), outputArray);
 
     return success();
-  }
-
-  private printTwoColumnTableWithHeader(tableData: string[][]): void {
-    if (!IoOptions.formatIsJson()) {
-      let firstColumnWidth: number = 0;
-      let secondColumnWidth: number = 0;
-      const styledTable: Object[][] = [];
-      for (const tableRow of tableData){
-        firstColumnWidth = Math.max(tableRow[0].length, firstColumnWidth);
-        secondColumnWidth = Math.max(tableRow[1].length, secondColumnWidth);
-        styledTable.push([{content: tableRow[0]}, { hAlign: "center", content: tableRow[1]}]);
-      }
-
-      const header = styledTable.slice(0, 1);
-      const divider = [[{content: _.repeat("-", firstColumnWidth)}, {content: _.repeat("-", secondColumnWidth)}]];
-      const body = styledTable.slice(1);
-      
-      const outputTable = header.concat(divider, body);
-
-      out.table(this.getTwoColumnTableOptions(firstColumnWidth, secondColumnWidth), outputTable);  
-    } else {
-      out.table(tableData);
-    }
-  }
-
-  private getTwoColumnTableOptions(firstColumnWidth: number, secondColumnWidth: number): Object {
-    return {
-      chars: {
-        "bottom": "", "bottom-left": "", "bottom-mid": "", "bottom-right": "",        
-        "left": "", "left-mid": "", "mid": "", "mid-mid": "", "middle": " ",        
-        "right": "", "right-mid": "",
-        "top": "", "top-left": "", "top-mid": "", "top-right": "",
-      },
-      colWidths: [firstColumnWidth, secondColumnWidth],
-      style: { "padding-left": 0, "padding-right": 0 },
-      wordWrap: true
-    };
   }
 }

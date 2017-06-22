@@ -123,20 +123,13 @@ export function table(...args: any[]): void {
   }
 }
 
-//
-// Formatting helper for cli-table2 - no table outlines. 
-// It may be used for table output of command result
-//
-export function getNoTableBordersOptions() {
-  return {
-    chars: {
-      "top": "", "top-mid": "", "top-left": "", "top-right": "",
-      "bottom": "", "bottom-mid": "", "bottom-left": "", "bottom-right": "",
-      "left": "", "left-mid": "", "mid": " ", "mid-mid": "",
-      "right": "", "right-mid": "", "middle": " "
-    },
-    style: { "padding-left": 0, "padding-right": 0 },
-    wordWrap: true
+// Formatting helper for cli-table2 - default command output table style
+export function getCommandOutputTableOptions(header: string[]): object {
+  return { 
+    head: header, 
+    style: { 
+      head: [] 
+    } 
   };
 }
 
@@ -150,9 +143,17 @@ export function getOptionsForTwoColumnTableWithNoBorders(firstColumnWidth: numbe
   const availableWidth = consoleWidth - 2;
   const secondColumnWidth = availableWidth - firstColumnWidth;
 
-  return _.extend(getNoTableBordersOptions(), {
+  return {
+    chars: {
+      "top": "", "top-mid": "", "top-left": "", "top-right": "",
+      "bottom": "", "bottom-mid": "", "bottom-left": "", "bottom-right": "",
+      "left": "", "left-mid": "", "mid": " ", "mid-mid": "",
+      "right": "", "right-mid": "", "middle": " "
+    },
+    style: { "padding-left": 0, "padding-right": 0 },
     colWidths: [firstColumnWidth, secondColumnWidth],
-  });
+    wordWrap: true
+  };
 };
 
 //
@@ -419,7 +420,7 @@ function getPaddingFromLevel(level: number) {
   return _.repeat(" ", level * 4);
 }
 
-export function getNoTableBordersCollapsedVerticallyOptions(leftPadding: string) {
+function getNoTableBordersCollapsedVerticallyOptions(leftPadding: string) {
   return {
     chars: {
       "top": "", "top-mid": "", "top-left": "", "top-right": "",
@@ -585,4 +586,3 @@ export function reportObjectAsTitledTables<T>(toNamedTables: ObjectToNamedTables
     console.log(output);
   }
 }
-
