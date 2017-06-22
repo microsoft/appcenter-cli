@@ -32,6 +32,7 @@ export module Messages {
       export const RunXCUITest = "Starts a test run with XCUITest tests.";
 
       export const Status = "Checks the status of the started test run.";
+      export const Stop = "Stop the started test run.";
     }
 
     export module Arguments {
@@ -69,6 +70,8 @@ export module Messages {
       export const UITestsKeyPassword = 'Password to the matching private key in the keystore. Corresponds to the "-keypass" argument in jarsigner';
       export const UITestsSignInfo = "Use Signing Info for signing the test server.";
       export const UITestsToolsDir = "Path to the directory containing the Xamarin UI Tests tools including test-cloud.exe";
+
+      export const StopTestRunId = "ID of the started test run";
 
       export const StatusTestRunId = "ID of the started test run";
       export const StatusContinuous = "Continuously checks the test run status until it completes";
