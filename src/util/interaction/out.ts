@@ -416,24 +416,40 @@ export function reportTitledGroupsOfTables(dataGroups: Array<{title: string, rep
   }
 }
 
-function getPaddingFromLevel(level: number) {
+function getMarginStringFromLevel(level: number) {
   return _.repeat(" ", level * 4);
 }
 
-function getNoTableBordersCollapsedVerticallyOptions(leftPadding: string) {
+//
+// Formatting helper for cli-table2 - table with borders which can be moved to the right
+// It is used to show sub-tables
+//
+function getTableWithLeftMarginOptions(leftMargin: string) {
   return {
     chars: {
-      "top": "", "top-mid": "", "top-left": "", "top-right": "",
-      "bottom": "", "bottom-mid": "", "bottom-left": "", "bottom-right": "",
-      "left": leftPadding, "left-mid": "", "mid": "", "mid-mid": "",
-      "right": "", "right-mid": "", "middle": " "
+       "top": "─"
+      , "top-mid": "┬"
+      , "top-left":  leftMargin + "┌"
+      , "top-right": "┐"
+      , "bottom": "─"
+      , "bottom-mid": "┴"
+      , "bottom-left": leftMargin + "└"
+      , "bottom-right": "┘"
+      , "left": leftMargin + "│"
+      , "left-mid": leftMargin + "├"
+      , "mid": "─"
+      , "mid-mid": "┼"
+      , "right": "│"
+      , "right-mid": "┤"
+      , "middle": "│"
     },
     style: { "padding-left": 0, "padding-right": 0 },
     wordWrap: true
   };
 }
 
-function convertNamedTablesToCsvString (stringTables: NamedTables, columnsCount: number): string {
+function convertNamedTablesToCsvString(stringTables: NamedTables): string {
+  const columnsCount = calculateNumberOfColumns(stringTables);
   const delimitersCount = columnsCount - 1;
   const delimitersString = _.repeat(",", delimitersCount);
 
@@ -462,18 +478,17 @@ function convertNamedTablesToCsvString (stringTables: NamedTables, columnsCount:
   return stringTables.map((table) => outputTable(table)).join(os.EOL + delimitersString + os.EOL);
 }
 
-function convertNamedTablesToListString (stringTables: NamedTables): string {
+function convertNamedTablesToListString(stringTables: NamedTables): string {
   function outputTable(table: INamedTable, level: number): string {
     const paddedTable = padTableCells(table);
     let tableOutput = "";
-    const padding = getPaddingFromLevel(level);
+    const marginString = getMarginStringFromLevel(level);
 
     // table name
-    tableOutput += padding + paddedTable.name + os.EOL;
+    tableOutput += marginString + paddedTable.name + os.EOL;
 
     // table contents
     const tableWithMergedStringArrays: any[] = [];
-    const tablePadding = getPaddingFromLevel(level + 1);
     // merging continuous string[] chains into Table objects
     for (const row of paddedTable.content){
       if (isINamedTable(row)) {
@@ -482,7 +497,7 @@ function convertNamedTablesToListString (stringTables: NamedTables): string {
         const lastElement = _.last(tableWithMergedStringArrays);
         let tableObject: any;
         if (_.isUndefined(lastElement) || isINamedTable(lastElement)) {
-          tableObject = new Table(getNoTableBordersCollapsedVerticallyOptions(tablePadding));
+          tableObject = new Table(getTableWithLeftMarginOptions(marginString));
           tableWithMergedStringArrays.push(tableObject);
         } else {
           tableObject = lastElement;
@@ -508,32 +523,55 @@ function convertNamedTablesToListString (stringTables: NamedTables): string {
   return stringTables.map((table) => outputTable(table, 0)).join(os.EOL + os.EOL);
 }
 
-function padTableCells(table: INamedTable): INamedTable {
-  const content: Array<INamedTable | string[]> = [];
+function getMapKey(level: number, cellIndex: number): string {
+  return [level, cellIndex].join();
+}
 
-  // calculating max width of columns
-  const columnMaxWidth: number[] = [];
-  for (const row of table.content) {
-    if (row instanceof Array) {
-      row.forEach((cell, index) => columnMaxWidth[index] = Math.max(cell.length, columnMaxWidth[index] || 0));
+// returns map of max table cell width across tables on the same level - it is used to nicely align table columns vertically
+// key is [level, cellIndex].join()
+function calculateTableCellsMaxWidthAcrossLevels(wholeTable: INamedTable): Map<string, number> {
+  function calculate(table: INamedTable, level: number, levelAndCellIndexToMaxWidth: Map<string, number>): Map<string, number> {
+    for (const entry of table.content) {
+      if (entry instanceof Array) {
+        // row
+        entry.forEach((cell, cellIndex) => {
+          const key = getMapKey(level, cellIndex);
+          levelAndCellIndexToMaxWidth.set(key, _.max([levelAndCellIndexToMaxWidth.get(key), cell.length]));
+        });
+      } else {
+        // inner table
+        calculate(entry, level + 1, levelAndCellIndexToMaxWidth);
+      }
     }
+
+    return levelAndCellIndexToMaxWidth;
+  }
+  return calculate(wholeTable, 0, new Map<string, number>());
+}
+
+function padTableCells(wholeTable: INamedTable): INamedTable {
+  // calculating max widths for the cells
+  const levelAndCellIndexToMaxWidth = calculateTableCellsMaxWidthAcrossLevels(wholeTable);
+
+  // recursively pad content
+  function pad(table: INamedTable, level: number): INamedTable {
+    const paddedContent = table.content.map((entry) => {
+      if (entry instanceof Array) {
+        // row
+        return entry.map((cellContent, cellIndex) => _.padEnd(cellContent, levelAndCellIndexToMaxWidth.get(getMapKey(level, cellIndex))));
+      } else { 
+        // inner table
+        return pad(entry, level + 1);
+      }
+    });
+
+    return {
+      name: table.name,
+      content: paddedContent
+    };
   }
 
-  // padding cells belonging to the same column to make them have same length
-  for (const row of table.content) {
-    let processedRow: string[] | INamedTable;
-    if (row instanceof Array) {
-      processedRow = row.map((cell, index) => _.padEnd(cell, columnMaxWidth[index]));
-    } else {
-      processedRow = row;
-    }
-    content.push(processedRow);
-  }
-
-  return {
-    name: table.name,
-    content
-  };
+  return pad(wholeTable, 0);
 }
 
 function calculateNumberOfColumns(tables: Array<INamedTable | string[]>): number {
@@ -565,10 +603,9 @@ function isINamedTable(object: any): object is INamedTable {
 // number - level of the table (controls left padding of the table and name)
 export type NamedTables = INamedTable[];
 type ObjectToNamedTablesConvertor<T> = (object: T, 
-                                numberFormatter: (num: number) => string,
-                                dateFormatter: (date: Date) => string,
-                                percentageFormatter: (percentage: number) => string,
-                              ) => NamedTables;
+                                        numberFormatter: (num: number) => string,
+                                        dateFormatter: (date: Date) => string,
+                                        percentageFormatter: (percentage: number) => string) => NamedTables;
 
 export function reportObjectAsTitledTables<T>(toNamedTables: ObjectToNamedTablesConvertor<T>, object: T) {
   if (formatIsJson()) {
@@ -577,7 +614,7 @@ export function reportObjectAsTitledTables<T>(toNamedTables: ObjectToNamedTables
     let output: string;
     if (formatIsCsv()) {
       const stringTables = toNamedTables(object, (num) => num.toString(), (date) => date.toISOString(), (percentage) => percentage.toString());
-      output = convertNamedTablesToCsvString(stringTables, calculateNumberOfColumns(stringTables));
+      output = convertNamedTablesToCsvString(stringTables);
     } else {
       const stringTables = toNamedTables(object, (num) => _.round(num, 2).toString(), (date) => date.toString(), (percentage) => _.round(percentage, 2).toString() + "%");
       output = convertNamedTablesToListString(stringTables);
