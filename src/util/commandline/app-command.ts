@@ -78,7 +78,7 @@ export function getCurrentApp(optValue: string): ResultOrValue<DefaultApp> {
 
   function fromProfile(): ResultOrValue<DefaultApp> {
     let profile = getUser();
-    if (profile.defaultApp) {
+    if (profile && profile.defaultApp) {
       return ResultOrValue.fromValue(profile.defaultApp);
     }
   }
