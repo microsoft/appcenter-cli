@@ -166,6 +166,9 @@ export class Command {
   
   protected getClientAndEndpointForToken(environmentString: string, token: string): [MobileCenterClient, string] {
     const environment = environments(environmentString);
+    if (!environment) {
+      throw Result.failure(Result.ErrorCodes.InvalidParameter, `${environmentString} is not valid environment name`);
+    }
     return [this.clientFactory.fromToken(token, environment.endpoint), environment.endpoint];
   }
 }
