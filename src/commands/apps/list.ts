@@ -6,6 +6,8 @@ import { MobileCenterClient, models, clientRequest } from "../../util/apis";
 const debug = require("debug")("mobile-center-cli:commands:apps:list");
 import { inspect } from "util";
 
+import * as _ from "lodash";
+
 @help("Get list of configured applications")
 export default class AppsListCommand extends Command {
   constructor(args: CommandArgs) {
@@ -24,7 +26,7 @@ export default class AppsListCommand extends Command {
 
   async run(client: MobileCenterClient): Promise<CommandResult> {
     const appsResponse = await out.progress("Getting app list ...",
-      clientRequest<models.AppResponse[]>(cb => client.apps.list(cb)));
+      clientRequest<models.AppResponse[]>((cb) => client.apps.list(cb)));
 
     if (appsResponse.response.statusCode >= 400) {
       return failure(ErrorCodes.Exception, "Unknown error when loading apps");
@@ -32,7 +34,8 @@ export default class AppsListCommand extends Command {
 
     const defaultApp = getCurrentApp(null);
     debug(`Current app = ${inspect(defaultApp)}`);
-    out.list(app => this.formatApp(defaultApp.value, app), appsResponse.result);
+    const sortedApps = _.sortBy(appsResponse.result, (app) => (app.owner.name + app.name).toLowerCase());
+    out.list((app) => this.formatApp(defaultApp.value, app), sortedApps);
 
     return success();
   }
