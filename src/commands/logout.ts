@@ -2,6 +2,7 @@ import { Command, CommandArgs, CommandResult, help, success } from "../util/comm
 import { MobileCenterClient } from "../util/apis";
 import { getUser } from "../util/profile";
 import { logout } from "./lib/logout";
+import { out } from "../util/interaction";
 
 @help("Logout from Mobile Center")
 export default class LogoutCommand extends Command {
@@ -11,6 +12,9 @@ export default class LogoutCommand extends Command {
 
   async run(client: MobileCenterClient): Promise<CommandResult> {
     await logout(client, getUser());
-    return success();
+    out.text("Successfully logged out");
+    // Force early exit to avoid long standing delays if token deletion is slow
+    process.exit(0);
+    return success(); // unreachable code, but it is required to keep TS compiler happy
   }
 }

@@ -8,12 +8,15 @@ const debug = require("debug")("mobile-center-cli:commands:lib:logout");
 const maxTokenDeletionTimeoutSec = 10;
 
 export async function logout(client: MobileCenterClient, user: Profile): Promise<void> {
+  await out.progress("Logging out current user...", performLogout(client, user));
+}
+
+async function performLogout(client: MobileCenterClient, user: Profile): Promise<void> { 
   // Only delete token off the server if CLI created it.
   if (!user.tokenSuppliedByUser) {
     let tokenId: string;
     try {
-      await out.progress("Logging out current user...",
-        Promise.race([
+      await Promise.race([
           clientRequest(async cb => {
             try {
               tokenId = await user.accessTokenId;
@@ -31,8 +34,7 @@ export async function logout(client: MobileCenterClient, user: Profile): Promise
             // TODO: Investigate if there's a way to explicitly cancel the outstanding call.
             resolve();
           }, maxTokenDeletionTimeoutSec * 1000))
-        ])
-      );
+        ]);
     } catch (err) {
       // Noop, it's ok if deletion fails
       debug(`Deletion of token id ${tokenId} from server failed, error ${err}`);
