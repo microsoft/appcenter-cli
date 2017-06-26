@@ -1,4 +1,4 @@
-import { Command, CommandArgs, CommandResult, help, runner, success, name, position } from "../util/commandline";
+import { Command, CommandArgs, CommandResult, help, runner, success, name, position, isCommandFailedResult, ErrorCodes, failure } from "../util/commandline";
 
 const debug = require("debug")("mobile-center-cli:commands:help");
 import { inspect } from "util";
@@ -24,11 +24,12 @@ export default class HelpCommand extends Command {
     // Try to load help for the command in question
     // We just load the command and run the help
     const cmdRunner = runner(__dirname);
-    if (!this.commandToGetHelpFor) {
-     await cmdRunner([]);
+    const result = !this.commandToGetHelpFor ? await cmdRunner([]) : await cmdRunner(this.commandToGetHelpFor.concat(["-h"]));
+
+    if (isCommandFailedResult(result) && result.errorCode === ErrorCodes.NoSuchCommand) {
+      return failure(ErrorCodes.NoSuchCommand, `command ${this.commandToGetHelpFor.join(" ")} doesn't exist`);
     } else {
-      await cmdRunner(this.commandToGetHelpFor.concat(["-h"]));
+      return result;
     }
-    return success();
   }
 }
