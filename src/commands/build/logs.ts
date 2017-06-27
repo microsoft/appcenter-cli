@@ -1,6 +1,6 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
 import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
-import { StreamingArrayOutput } from "../../util/interaction";
+import { out, StreamingArrayOutput } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
 import * as ContinuousPollingHelper from "../../util/continuous-polling/continuous-polling-helper";
@@ -54,6 +54,7 @@ export default class DisplayLogsStatusCommand extends AppCommand {
     streamingOutput.start();
 
     let skippedAndShownLogsCount: number;
+    let someLogsWereOutput = false;
     await ContinuousPollingHelper.pollContinuously(async () => {
       try {
         debug(`Downloading logs for build ${this.buildId}`);
@@ -81,14 +82,16 @@ export default class DisplayLogsStatusCommand extends AppCommand {
         skippedAndShownLogsCount = logs.length;
       }
 
-      if (!this.showContinuously && filteredLogs.length === 0) {
-        streamingOutput.text(_.constant(""), "No log entries were found");
-      } else {
-        for (const log of filteredLogs) {
-          streamingOutput.text(_.constant(log), log);
-        }
+      for (const log of filteredLogs) {
+        streamingOutput.text(_.constant(log), log);
       }
+      someLogsWereOutput = someLogsWereOutput || filteredLogs.length > 0;
     }, this.showContinuously, DisplayLogsStatusCommand.delayBetweenRequests, `Downloading logs for build ${this.buildId}...`);
+
+    if (!someLogsWereOutput) {
+      // no logs were shown, notify users that none were received
+      out.text("No log entries received");
+    }
 
     streamingOutput.finish();
 

@@ -60,7 +60,11 @@ export default class ShowBranchesListBuildStatusCommand extends AppCommand {
     const commits = commitInfoRequestResponse.result;
 
     const buildReportObjects = branchesWithBuilds.map((branch, index) => getBuildReportObject(branch.lastBuild, commits[index], app, portalBaseUrl));
-    reportBuilds(buildReportObjects);
+    if (buildReportObjects.length) {
+      reportBuilds(buildReportObjects);
+    } else {
+      out.text(() => "No branches with builds found", []);
+    }
 
     return success();
   }
