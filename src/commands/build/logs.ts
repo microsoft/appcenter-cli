@@ -60,10 +60,13 @@ export default class DisplayLogsStatusCommand extends AppCommand {
         return await clientRequest<models.BuildLog>((cb) => client.builds.getLog(buildIdNumber, app.ownerName, app.appName, cb));
       } catch (error) {
         debug(`Request failed - ${inspect(error)}`);
-        if (error.statusCode === 401) {
-          throw failure(ErrorCodes.Exception, "failed to get build logs because the authentication has failed");
-        } else {
-          throw failure(ErrorCodes.Exception, "failed to get build logs");
+        switch (error.statusCode) {
+          case 401:
+            throw failure(ErrorCodes.Exception, "failed to get build logs because the authentication has failed");
+          case 404:
+            throw failure(ErrorCodes.InvalidParameter, `failed to get build logs because build ${buildIdNumber} doesn't exist`);
+          default:
+            throw failure(ErrorCodes.Exception, "failed to get build logs");
         }
       }
     }, (response, responsesProcessed) => {
