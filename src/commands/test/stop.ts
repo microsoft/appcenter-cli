@@ -17,7 +17,7 @@ export default class StopCommand extends AppCommand {
 
   async run(client: MobileCenterClient): Promise<CommandResult> {
 
-    this.stopTestRun(client, this.testRunId);
+    await this.stopTestRun(client, this.testRunId);
 
     return success();
   }
