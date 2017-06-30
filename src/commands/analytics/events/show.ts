@@ -173,7 +173,7 @@ export default class ShowCommand extends AppCommand {
       const table: out.NamedTables = [];
       const eventsTable: out.INamedTable = {
         name: "Events",
-        content: []
+        content: [["Name", "Count", "Count Change", "Users", "User Change", "Per User", "Per Session"]]
       };
 
       table.push(eventsTable);
@@ -186,7 +186,8 @@ export default class ShowCommand extends AppCommand {
           for (const property of event.properties) {
             eventsTable.content.push({
               name: property.name,
-              content: property.valuesStatistics.map((valueStats) => [valueStats.value, numberFormatter(valueStats.count), percentageFormatter(valueStats.countChange)])
+              content: [["Value", "Count", "Count Change"]].concat(
+                property.valuesStatistics.map((valueStats) => [valueStats.value, numberFormatter(valueStats.count), percentageFormatter(valueStats.countChange)]))
             });
           }
         }

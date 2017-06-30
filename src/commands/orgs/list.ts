@@ -10,10 +10,9 @@ export default class OrgListCommand extends Command {
   async run(client: MobileCenterClient): Promise<CommandResult> {
     // every user is a collaborator of it's own group and of zero or more external groups
     const orgs = await out.progress("Loading list of organizations...", this.getOrgsNamesList(client));
-    const table = [["Display Name", "Name", "Origin"]]
-      .concat(orgs.map((names) => [names.displayName, names.name, names.origin]));
+    const table = orgs.map((names) => [names.displayName, names.name, names.origin]);
 
-    out.table(out.getNoTableBordersCollapsedVerticallyOptions(""), table);
+    out.table(out.getCommandOutputTableOptions(["Display Name", "Name", "Origin"]), table);
 
     return success();
   }
