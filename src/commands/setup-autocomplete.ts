@@ -10,7 +10,7 @@ import { out } from "../util/interaction";
 const debug = require("debug")("mobile-center-cli:commands:setup-autocomplete");
 import { inspect } from "util";
 
-@help("Setups autocompletion for the shell")
+@help("Setup autocompletion for the shell")
 export default class SetupAutoCompleteCommand extends Command {
   private static readonly supportedShells = ["bash", "zsh", "fish"];
 

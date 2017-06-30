@@ -13,6 +13,7 @@
 /// <reference path="globals/temp/index.d.ts" />
 /// <reference path="modules/async/index.d.ts" />
 /// <reference path="modules/azure-storage/index.d.ts" />
+/// <reference path="modules/chalk/index.d.ts" />
 /// <reference path="modules/debug/index.d.ts" />
 /// <reference path="modules/glob/index.d.ts" />
 /// <reference path="modules/inquirer/index.d.ts" />
