@@ -36,7 +36,8 @@ function runCli() {
   runner(process.argv.slice(2))
     .then(function (result) {
       if (commandLine.failed(result)) {
-        console.log(`Command failed: ${result.errorMessage}`);
+        const chalk = require("chalk");
+        console.log(`${chalk.bold.red("Error:")} ${result.errorMessage}`);
         process.exit(result.errorCode);
       }
     });
