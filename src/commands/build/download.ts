@@ -153,8 +153,12 @@ export default class DownloadBuildStatusCommand extends AppCommand {
       buildStatusRequestResponse = await out.progress(`Getting status of build ${this.buildId}...`,
         clientRequest<models.Build>((cb) => client.builds.get(buildIdNumber, app.ownerName, app.appName, cb)));
     } catch (error) {
-      debug(`Request failed - ${inspect(error)}`);
-      throw failure(ErrorCodes.Exception, `failed to get status of build ${this.buildId}`);
+      if (error.statusCode === 404) {
+        throw failure(ErrorCodes.InvalidParameter, `build ${buildIdNumber} was not found`);
+      } else {
+        debug(`Request failed - ${inspect(error)}`);
+        throw failure(ErrorCodes.Exception, `failed to get status of build ${this.buildId}`);
+      }
     }
 
     const buildInfo = buildStatusRequestResponse.result;

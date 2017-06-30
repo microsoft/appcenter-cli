@@ -32,8 +32,12 @@ export default class QueueBuildCommand extends AppCommand {
           debug: this.debugLogs
         }, cb)));
     } catch (error) {
-      debug(`Request failed - ${inspect(error)}`);
-      return failure(ErrorCodes.Exception, "failed to queue build request");
+      if (error.statusCode === 400) {
+        return failure(ErrorCodes.IllegalCommand, `app ${app.appName} is not configured for building`);
+      } else {
+        debug(`Request failed - ${inspect(error)}`);
+        return failure(ErrorCodes.Exception, "failed to queue build request");
+      }
     }
 
     const buildId = queueBuildRequestResponse.result.id;

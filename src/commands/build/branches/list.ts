@@ -26,8 +26,13 @@ export default class ShowBranchesListBuildStatusCommand extends AppCommand {
     const branchBuildsHttpResponseCode = branchesStatusesRequestResponse.response.statusCode;
 
     if (branchBuildsHttpResponseCode >= 400) {
-      debug(`Request failed - HTTP ${branchBuildsHttpResponseCode} ${branchesStatusesRequestResponse.response.statusMessage}`);
-      return failure(ErrorCodes.Exception, "failed to fetch branches list");
+      switch (branchBuildsHttpResponseCode) {
+        case 400: 
+          return failure(ErrorCodes.IllegalCommand, `app ${app.appName} is not configured for building`);
+        default:
+          debug(`Request failed - HTTP ${branchBuildsHttpResponseCode} ${branchesStatusesRequestResponse.response.statusMessage}`);
+          return failure(ErrorCodes.Exception, "failed to fetch branches list");
+      }
     }
 
     const branchesWithBuilds = _(branchesStatusesRequestResponse.result)
