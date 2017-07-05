@@ -131,7 +131,7 @@ export function getCommandOutputTableOptions(header: string[]): object {
     head: header, 
     style: { 
       head: [] 
-    } 
+    }
   };
 }
 
@@ -149,8 +149,8 @@ export function getOptionsForTwoColumnTableWithNoBorders(firstColumnWidth: numbe
     chars: {
       "top": "", "top-mid": "", "top-left": "", "top-right": "",
       "bottom": "", "bottom-mid": "", "bottom-left": "", "bottom-right": "",
-      "left": "", "left-mid": "", "mid": " ", "mid-mid": "",
-      "right": "", "right-mid": "", "middle": " "
+      "left": "", "left-mid": "", "mid": "", "mid-mid": "",
+      "right": "", "right-mid": "", "middle": ""
     },
     style: { "padding-left": 0, "padding-right": 0 },
     colWidths: [firstColumnWidth, secondColumnWidth],
@@ -543,11 +543,11 @@ function calculateTableCellsMaxWidthAcrossLevels(wholeTable: INamedTable): Map<s
       } else {
         // inner table
         calculate(entry, level + 1, levelAndCellIndexToMaxWidth);
-      }
     }
+  }
 
     return levelAndCellIndexToMaxWidth;
-  }
+    }
   return calculate(wholeTable, 0, new Map<string, number>());
 }
 
@@ -564,13 +564,13 @@ function padTableCells(wholeTable: INamedTable): INamedTable {
       } else { 
         // inner table
         return pad(entry, level + 1);
-      }
+  }
     });
 
-    return {
-      name: table.name,
+  return {
+    name: table.name,
       content: paddedContent
-    };
+  };
   }
 
   return pad(wholeTable, 0);
@@ -605,8 +605,8 @@ function isINamedTable(object: any): object is INamedTable {
 // number - level of the table (controls left padding of the table and name)
 export type NamedTables = INamedTable[];
 type ObjectToNamedTablesConvertor<T> = (object: T, 
-                                        numberFormatter: (num: number) => string,
-                                        dateFormatter: (date: Date) => string,
+                                numberFormatter: (num: number) => string,
+                                dateFormatter: (date: Date) => string,
                                         percentageFormatter: (percentage: number) => string) => NamedTables;
 
 export function reportObjectAsTitledTables<T>(toNamedTables: ObjectToNamedTablesConvertor<T>, object: T) {
