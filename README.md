@@ -29,10 +29,10 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | Command                               | Description                                                    |
 | ------------------------------------- | -------------------------------------------------------------- |
 | `mobile-center help` | Get command or category help |
-| `mobile-center login` | Login to Mobile Center |
-| `mobile-center logout` | Logout from Mobile Center |
+| `mobile-center login` | Log the CLI into Mobile Center |
+| `mobile-center logout` | Log the CLI out of Mobile Center |
 | | |
-| `mobile-center setup-autocomplete` | Setups autocompletion for the shell |
+| `mobile-center setup-autocomplete` | Setup autocompletion for the shell |
 | | |
 | `mobile-center analytics app-versions` | Shows versions of the application |
 | `mobile-center analytics audience` | Show audience statistics |
@@ -82,8 +82,8 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | | |
 | `mobile-center telemetry off` | Turn off the sending of telemetry |
 | `mobile-center telemetry on` | Turn on the sending of telemetry |
-| | |
 | `mobile-center test status` | Checks the status of the started test run. |
+| `mobile-center test stop` | Stop the started test run. |
 | `mobile-center test generate appium` | Generates an Appium project |
 | `mobile-center test generate uitest` | Generates a Xamarin.UITest project |
 | `mobile-center test prepare appium` | Creates an artifacts directory with Appium tests |
@@ -91,10 +91,10 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | `mobile-center test prepare espresso` | Creates an artifacts directory with Espresso tests |
 | `mobile-center test prepare uitest` | Creates an artifacts directory with Xamarin UI Tests |
 | `mobile-center test prepare xcuitest` | Creates an artifacts directory with XCUITest tests |
-| `mobile-center test run appium` | Starts a test run with Appium tests |
+| `mobile-center test run appium` | Starts a test run with Appium tests. |
 | `mobile-center test run calabash` | Starts a test run with Calabash tests |
-| `mobile-center test run espresso` | Starts a test run with Espresso tests |
-| `mobile-center test run manifest` | Starts a test run with previously prepared artifacts |
+| `mobile-center test run espresso` | Starts a test run with Espresso tests. |
+| `mobile-center test run manifest` | Starts a test run with previously prepared artifacts. |
 | `mobile-center test run uitest` | Starts a test run with Xamarin UI Tests |
 | `mobile-center test run xcuitest` | Starts a test run with XCUITest tests |
 | | |
