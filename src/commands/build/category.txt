@@ -1,1 +1,1 @@
-Queue builds, get build status and download binaries and logs for completed builds
+Start builds, get their status, and download artifacts

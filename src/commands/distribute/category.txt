@@ -1,1 +1,1 @@
-View and manage releases and distribution groups
+Send builds to testers and manage distribution groups

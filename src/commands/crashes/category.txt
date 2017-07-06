@@ -1,1 +1,1 @@
-Upload symbols to get symbolicated crash reports
+Upload symbols for better crash reports

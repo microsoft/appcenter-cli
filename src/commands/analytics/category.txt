@@ -1,1 +1,1 @@
-Commands to get various usage metrics for the app
+View events, audience info, sessions, and other anayltics for apps

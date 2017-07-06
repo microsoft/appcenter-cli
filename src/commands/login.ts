@@ -15,7 +15,7 @@ import { inspect } from "util";
 
 const debug = require("debug")("mobile-center-cli:commands:login");
 
-@help("Log the CLI into Mobile Center")
+@help("Log in")
 export default class LoginCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);

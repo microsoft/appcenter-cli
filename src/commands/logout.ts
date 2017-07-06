@@ -4,7 +4,7 @@ import { getUser } from "../util/profile";
 import { logout } from "./lib/logout";
 import { out } from "../util/interaction";
 
-@help("Log the CLI out of Mobile Center")
+@help("Log out")
 export default class LogoutCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);

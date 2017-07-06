@@ -1,1 +1,1 @@
-Mobile Center is a service that lets you build, test, distribute and monitor your mobile apps
+Mobile Center helps you build, test, distribute, and monitor mobile apps.

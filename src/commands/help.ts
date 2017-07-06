@@ -3,7 +3,7 @@ import { Command, CommandArgs, CommandResult, help, runner, success, name, posit
 const debug = require("debug")("mobile-center-cli:commands:help");
 import { inspect } from "util";
 
-@help("Get command or category help")
+@help("Get help using mobile-center commands")
 export default class HelpCommand extends Command {
 
   @name("command...")
