@@ -124,24 +124,18 @@ export abstract class RunTestsCommand extends AppCommand {
         }, testRun );
 
         if (!this.async) {
-          let exitCode = await this.waitForCompletion(client, testRun.testRunId);
-
-          switch (exitCode) {
-            case 1:
-              return failure(exitCode, `Tests ran to completion, but at least one test failed. Returning exit code ${exitCode}.`);
-            case 2:
-              return failure(exitCode, `Cannot run tests. Returning exit code ${exitCode}.`);
-          }
+          await this.waitForCompletion(client, testRun.testRunId);
         }
+        this.streamingOutput.finish();
         return success();
       }
       finally {
         await this.cleanupArtifactsDir(artifactsDir);
-        this.streamingOutput.finish();
       }
     }
     catch (err) {
       let exitCode = err.exitCode || ErrorCodes.Exception;
+      this.streamingOutput.finish();
       return failure(exitCode, err.message);
     }
   }
@@ -195,9 +189,13 @@ export abstract class RunTestsCommand extends AppCommand {
     return await uploader.uploadAndStart();
   }
 
-  private waitForCompletion(client: MobileCenterClient, testRunId: string): Promise<number> {
+  private async waitForCompletion(client: MobileCenterClient, testRunId: string): Promise<void> {
     let checker = new StateChecker(client, testRunId, this.app.ownerName, this.app.appName, this.streamingOutput);
-    return checker.checkUntilCompleted(this.timeoutSec);
+    let exitCode = await checker.checkUntilCompleted(this.timeoutSec);
+
+    if (exitCode !== 0) {
+      throw new TestCloudError(`Cannot run Test Cloud tests. Returning exit code ${exitCode}.`, exitCode);
+    }
   }
 
   protected async addIncludedFiles(artifactsDir: string, manifest: ITestCloudManifestJson): Promise<void> {
