@@ -178,13 +178,14 @@ export interface Question {
    */
   when?: boolean | ((answers: Answers) => boolean);
   paginated?: boolean;
+  pageSize?: number;
 }
 
 /**
  * A key/value hash containing the client answers in each prompt.
  */
 export interface Answers {
-    [key: string]: string|boolean;
+    [key: string]: string|boolean|string[];
 }
 
 export namespace UI {

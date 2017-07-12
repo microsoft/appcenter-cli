@@ -1,8 +1,11 @@
 // Functions to read information from the user
 
+import * as _ from "lodash";
 import * as inquirer from "inquirer";
+
 import { isQuiet } from "./io-options";
-export { Questions, Answers, Separator } from "inquirer";
+
+export { Questions, Question, Answers, Separator } from "inquirer";
 
 export function prompt(message: string): Promise<string> {
   return prompt.question([
@@ -22,9 +25,9 @@ export namespace prompt {
         default: !!defaultResponse
       }
     ])
-    .then(answers => {
-      return answers["confirm"];
-    });
+      .then(answers => {
+        return answers["confirm"];
+      });
   }
 
   export function confirmWithTimeout(message: string, timeoutMS: number, defaultResponse?: boolean): Promise<boolean> {
@@ -62,7 +65,7 @@ export namespace prompt {
         name: "result",
         message: message
       }])
-    .then(answers => answers["result"]);
+      .then(answers => answers["result"]);
   };
 
   export function question(questions: inquirer.Questions): Promise<inquirer.Answers> {
@@ -90,4 +93,57 @@ export namespace prompt {
     // don't line up.
     return Promise.resolve(inquirer.prompt(questions));
   };
+
+  /**
+   * Automatically picks up an option if either 
+   * it's the only choice in the list 
+   * or autoAnswer is provided.
+   * 
+   * @param question Question object to ask
+   * @param autoAnswer If provided & exists in choices list, then used as auto answer
+   */
+  export function autoAnsweringQuestion(question: inquirer.Question, autoAnswer?: string | string[] | boolean): Promise<inquirer.Answers> {
+    if (question.type === "checkbox" && autoAnswer && _.isArray(autoAnswer)) {
+      question.default = autoAnswer;
+      question.pageSize = 1;
+      const pr: any = inquirer.prompt(question);
+      pr.ui.activePrompt.getCurrentValue();
+      pr.ui.activePrompt.onEnd({ value: autoAnswer });
+      return pr;
+    }
+
+    if (question.type === "confirm" && _.isBoolean(autoAnswer)) {
+      question.default = autoAnswer;
+      const pr: any = inquirer.prompt(question);
+      pr.ui.activePrompt.onEnd(autoAnswer ? "y" : "n");
+      return pr;
+    }
+
+    if (question.type === "input" && autoAnswer) {
+      question.default = autoAnswer;
+      const pr: any = inquirer.prompt(question);
+      pr.ui.activePrompt.onEnd({ value: autoAnswer });
+      return pr;
+    }
+
+    if (question.type === "list" && question.choices) {
+      if (!autoAnswer && question.choices.length === 1)
+        autoAnswer = (<any>question.choices)[0];
+
+      if (autoAnswer) {
+        const answer = _(question.choices)
+          .find((x: string) => x.toLowerCase() === String(autoAnswer).toLowerCase())
+
+        if (answer) {
+          question.default = answer;
+          question.pageSize = 1;
+          const pr: any = inquirer.prompt(question);
+          pr.ui.activePrompt.onSubmit(answer);
+          return pr;
+        }
+      }
+    }
+
+    return prompt.question(question);
+  }
 }

@@ -71,7 +71,7 @@ var models = require('./index');
  * 
  * @member {string} [android.module] The Gradle module to build
  * 
- * @member {string} [android.variant] The Android build variant to build
+ * @member {string} [android.buildVariant] The Android build variant to build
  * 
  * @member {boolean} [android.runTests] Whether to run unit tests during the
  * build (default)
