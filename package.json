@@ -47,8 +47,8 @@
     "nock": "^8.0.0",
     "run-sequence": "^1.2.2",
     "sinon": "^1.17.6",
-    "ts-node": "^3.0.4",
-    "typescript": "^2.3.2"
+    "ts-node": "^3.3.0",
+    "typescript": "^2.4.2"
   },
   "dependencies": {
     "azure-storage": "^2.1.0",

@@ -9,7 +9,7 @@ export function prompt(message: string): Promise<string> {
     {
       name: "result", message: message
     }])
-    .then(answers => answers["result"]);
+    .then(answers => answers["result"].toString());
 }
 
 export namespace prompt {
@@ -22,9 +22,7 @@ export namespace prompt {
         default: !!defaultResponse
       }
     ])
-    .then(answers => {
-      return answers["confirm"];
-    });
+    .then(answers => !!answers["confirm"]);
   }
 
   export function confirmWithTimeout(message: string, timeoutMS: number, defaultResponse?: boolean): Promise<boolean> {
@@ -41,7 +39,7 @@ export namespace prompt {
 
       let promptCompleted = confirmPrompt.then(answers => {
         clearTimeout(timerId);
-        return answers["confirm"];
+        return !!answers["confirm"];
       });
 
       let timeoutPromise: Promise<boolean> = new Promise((resolve, reject) => {
@@ -62,7 +60,7 @@ export namespace prompt {
         name: "result",
         message: message
       }])
-    .then(answers => answers["result"]);
+    .then(answers => answers["result"].toString());
   };
 
   export function question(questions: inquirer.Questions): Promise<inquirer.Answers> {
