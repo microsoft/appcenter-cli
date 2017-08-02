@@ -71,5 +71,5 @@ function getSavedTelemetryOption(): Promise<boolean> {
 
 export function saveTelemetryOption(enabled: boolean) {
   mkdirp.sync(getProfileDir());
-  fs.writeFileSync(telemetryFileName(), JSON.stringify(enabled), "utf8");
+  fs.writeFileSync(telemetryFileName(), JSON.stringify(enabled), { encoding: "utf8" });
 }
