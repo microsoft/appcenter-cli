@@ -5,7 +5,7 @@ import { inspect } from "util";
 import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
 const _ = require("lodash");
 
-const debug = require("debug")("mobile-center-cli:commands:codepush:deployments:list");
+const debug = require("debug")("mobile-center-cli:commands:codepush:deployments:ls");
 
 @help("List the deployments associated with an app")
 export default class LsCommand extends AppCommand {
