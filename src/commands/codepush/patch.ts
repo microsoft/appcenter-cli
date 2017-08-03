@@ -6,7 +6,7 @@ import { MobileCenterClient, models, clientRequest } from "../../util/apis";
 
 const debug = require("debug")("mobile-center-cli:commands:codepush:deployments:list");
 
-@help("Get Codepush deployments, create new codepush deployment")
+@help("Update the metadata for an existing release")
 export default class DeploymentsCommand extends AppCommand {
   constructor(args: CommandArgs) {
     super(args);
@@ -14,21 +14,6 @@ export default class DeploymentsCommand extends AppCommand {
 
   async run(client: MobileCenterClient): Promise<CommandResult> {
     const app = this.app;
-
-    let deployments: models.Deployment[];
-
-    try {
-      const httpRequest = await out.progress("Getting codepush deployments ...", clientRequest<models.Deployment[]>(
-        (cb) => client.deployments.list(app.ownerName, app.appName, cb)));
-      deployments = httpRequest.result;
-    } catch (error) {
-      debug(`Failed to get list of codepush deployments - ${inspect(error)}`);
-      return failure(ErrorCodes.Exception, "failed to get list of deployments for the app");
-    }
-
-    out.reportNewLineSeparatedArray([
-      ["Name", "name"]
-    ], deployments);
 
     return success();
   }
