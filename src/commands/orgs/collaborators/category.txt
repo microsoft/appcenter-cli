@@ -1,1 +1,1 @@
-Commands for manipulating list of organization collaborators
+Manage an organization's collaborators

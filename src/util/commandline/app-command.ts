@@ -14,7 +14,7 @@ export class AppCommand extends Command {
   @shortName("a")
   @longName("app")
   @hasArg
-  @help("Specify application for command to act on")
+  @help("Specify app")
   private appOption: string;
 
   // Figure out which application to work on

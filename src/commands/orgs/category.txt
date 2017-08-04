@@ -1,1 +1,1 @@
-View and manage organizations
+Manage organizations

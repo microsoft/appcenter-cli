@@ -1,1 +1,1 @@
-Manage sending of telemetry information to Mobile Center
+Manage telemetry preferences

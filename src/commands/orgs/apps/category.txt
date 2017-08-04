@@ -1,1 +1,1 @@
-Commands for manipulating list of applications belonging to organization
+Manage an organization's apps

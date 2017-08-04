@@ -1,1 +1,1 @@
-View and manage API tokens
+Manage API tokens

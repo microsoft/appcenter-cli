@@ -46,41 +46,41 @@ export class Command {
   // Default arguments supported by every command
 
   @longName("debug")
-  @help("Output additional debug information for this command")
+  @help("Display extra output for debugging")
   public debug: boolean;
 
   @longName("output")
   @hasArg
-  @help("Format of output for this command: json")
+  @help("Output format: json")
   public format: string;
 
   @longName("token")
   @hasArg
-  @help("API Token to use for this command")
+  @help("API token")
   public token: string;
 
   @longName("env")
   @hasArg
-  @help("Environment to connect to when using api token")
+  @help("Environment when using API token")
   public environmentName: string;
 
   @shortName("h")
   @longName("help")
-  @help("Display help for this command")
+  @help("Display help for current command")
   public help: boolean;
 
   @longName("quiet")
-  @help("Auto-confirm any requests, do not prompt for input")
+  @help("Auto-confirm any prompts without waiting for input")
   public quiet: boolean;
 
   @shortName("v")
   @longName("version")
-  @help("Display command's version")
+  @help("Display mobile-center version")
   public version: boolean;
 
 
   @longName("disable-telemetry")
-  @help("Do not send any CLI telemetry for this command, overriding defaults")
+  @help("Disable telemetry for this command")
   public disableTelemetry: boolean;
 
   // Entry point for runner. DO NOT override in command definition!
