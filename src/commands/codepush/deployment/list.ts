@@ -26,9 +26,9 @@ export default class ListCommand extends AppCommand {
     } catch (error) {
       debug(`Failed to get list of Codepush deployments - ${inspect(error)}`);
       if (error.statusCode === 404) {
-        const appNotFoundErrorMsg = "The app name does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command " + chalk.bold("mobile-center apps list") + " to see what apps you have access to.";
+        const appNotFoundErrorMsg = `The app ${app.ownerName}\\${app.appName} does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command ${chalk.bold("mobile-center apps list")} to see what apps you have access to.`;
         return failure(ErrorCodes.InvalidParameter, appNotFoundErrorMsg);
-      } else {        
+      } else {
         return failure(ErrorCodes.Exception, "failed to get list of deployments for the app");
       }
     }
