@@ -1,1 +1,1 @@
-codepush in mobile center
+View and manage CodePush deployments and releases
