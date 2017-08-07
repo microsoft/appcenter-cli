@@ -18,7 +18,7 @@ export default class ListCommand extends AppCommand {
     const app = this.app;
     let deployments: models.Deployment[];
     try {
-      const httpRequest = await out.progress("Getting Codepush deployments...", clientRequest<models.Deployment[]>(
+      const httpRequest = await out.progress("Getting CodePush deployments...", clientRequest<models.Deployment[]>(
         (cb) => client.deployments.list(app.ownerName, app.appName, cb)));
       deployments = httpRequest.result;
       out.table(out.getCommandOutputTableOptions(["Name", "Key"]), deployments.map((deployment) => [deployment.name, deployment.key]));
