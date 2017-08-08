@@ -90,14 +90,24 @@ export default class PatchCommand extends AppCommand {
       return failure(ErrorCodes.Exception, "Invalid binary version(s) for a release.");      
     }
 
-    let patch: models.LiveUpdateReleaseModification = {
-      targetBinaryRange: this.targetBinaryRange,
-      isMandatory: this.isMandatory === 'true' || this.isMandatory === 'True',
-      isDisabled: this.isDisabled === 'true' || this.isDisabled === 'True',
-      description: this.description,
-      rollout: parseInt(this.rollout)
+    let patch: models.LiveUpdateReleaseModification;
+    if (this.rollout!=null) {
+      patch = {
+        targetBinaryRange: this.targetBinaryRange,
+        isMandatory: this.isMandatory === 'true' || this.isMandatory === 'True',
+        isDisabled: this.isDisabled === 'true' || this.isDisabled === 'True',
+        description: this.description,
+        rollout: parseInt(this.rollout)
+      }
+    } else {
+      patch = {
+        targetBinaryRange: this.targetBinaryRange,
+        isMandatory: this.isMandatory === 'true' || this.isMandatory === 'True',
+        isDisabled: this.isDisabled === 'true' || this.isDisabled === 'True',
+        description: this.description,
+      }
     }
-
+    
     try {
       const httpRequest = await out.progress("Patching CodePush release...", clientRequest<models.LiveUpdateRelease>(
         (cb) => client.deploymentReleases.update(this.deploymentName, this.releaseLabel, patch, app.ownerName, app.appName, cb)));
