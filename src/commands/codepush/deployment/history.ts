@@ -1,16 +1,13 @@
-import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, getCurrentApp, shortName, longName, required, hasArg, position, name } from "../../../util/commandline";
+import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, position, name } from "../../../util/commandline";
 import { out } from "../../../util/interaction";
-import { DefaultApp } from "../../../util/profile";
 import { inspect } from "util";
-import { MobileCenterClient, models, clientRequest, clientCall } from "../../../util/apis";
+import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
 import { formatDate } from "./lib/date-helper";
-const _ = require("lodash");
-const chalk = require("chalk");
-const format = require('date-fns/format');
+import * as chalk from "chalk";
 
 const debug = require("debug")("mobile-center-cli:commands:codepush:deployments:history");
 
-@help("Display the release history for a deployment")
+@help("Display the release history for a CodePush deployment")
 export default class HistoryCommand extends AppCommand {
 
   @help("CodePush deployment name")
@@ -30,18 +27,20 @@ export default class HistoryCommand extends AppCommand {
       const httpRequest = await out.progress("Getting CodePush releases...", clientRequest<models.LiveUpdateRelease[]>(
         (cb) => client.deploymentReleases.get(this.deploymentName, app.ownerName, app.appName, cb)));
       releases = httpRequest.result;
-      out.table(out.getCommandOutputTableOptions(["Label", "Release Time", "App Version", "Mandatory", "Description"]), releases.map((release) => [release.label, formatDate(release.uploadTime), release.targetBinaryRange, release.isMandatory, release.description]));
+      out.table(out.getCommandOutputTableOptions(["Label", "Release Time", "App Version", "Mandatory", "Description"]), 
+        releases.map((release) => 
+          [release.label, formatDate(release.uploadTime), release.targetBinaryRange, release.isMandatory, release.description]));
       return success();
     } catch (error) {
       debug(`Failed to get list of CodePush deployments - ${inspect(error)}`);
       if (error.statusCode === 404) {
         const appNotFoundErrorMsg = `The app ${app.ownerName}/${app.appName} does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command ${chalk.bold("mobile-center apps list")} to see what apps you have access to.`;
-        return failure(ErrorCodes.InvalidParameter, appNotFoundErrorMsg);
+        return failure(ErrorCodes.NotFound, appNotFoundErrorMsg);
       } else if (error.statusCode === 400) {
         const deploymentNotExistErrorMsg = `The deployment ${chalk.bold(this.deploymentName)} does not exist.`;
         return failure(ErrorCodes.Exception, deploymentNotExistErrorMsg);
       } else {
-        return failure(ErrorCodes.Exception, "failed to get list of releases for the app");
+        return failure(ErrorCodes.Exception, error.message);
       }
     }
   }

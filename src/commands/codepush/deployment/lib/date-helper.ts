@@ -1,13 +1,13 @@
-import * as moment from "moment";
+import * as differenceInMinutes from 'date-fns/difference_in_minutes';
+import * as format from 'date-fns/format';
 
 export function formatDate(unixOffset: number): string {
-    var date: moment.Moment = moment(unixOffset);
-    var now: moment.Moment = moment();
-    if (Math.abs(now.diff(date, "days")) < 30) {
-        return date.fromNow();                  // "2 hours ago"
-    } else if (now.year() === date.year()) {
-        return date.format("MMM D");            // "Nov 6"
+    let formattedDateString: string;
+    const date = new Date(unixOffset);
+    if (differenceInMinutes(Date.now(), date) < 2) {
+      formattedDateString = "Just now";
     } else {
-        return date.format("MMM D, YYYY");      // "Nov 6, 2014"
+      formattedDateString = format(date, "MMM DD, hh:mm A");
     }
+    return formattedDateString;
 }
