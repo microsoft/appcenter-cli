@@ -1,10 +1,9 @@
 import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, getCurrentApp, shortName, longName, required, hasArg, position, name } from "../../util/commandline";
 import { out } from "../../util/interaction";
-import { DefaultApp } from "../../util/profile";
 import { inspect } from "util";
 import { MobileCenterClient, models, clientRequest, clientCall } from "../../util/apis";
-const _ = require("lodash");
-const chalk = require("chalk");
+import * as _ from "lodash";
+import * as chalk from "chalk";
 import * as semver from "semver";
 
 const debug = require("debug")("mobile-center-cli:commands:codepush:patch");
@@ -12,43 +11,39 @@ const debug = require("debug")("mobile-center-cli:commands:codepush:patch");
 @help("Update the metadata for an existing release")
 export default class PatchCommand extends AppCommand {
   
-  @help("CodePush deployment name")
+  @help("CodePush deployment name.")
   @required
   @name("ExistingDeploymentName")
   @position(0)
   public deploymentName: string;
 
-  @help("CodePush release label")
+  @help("Label of the release to update. Defaults to the latest release within the specified deployment.")
   @required
   @name("ExistingReleaseLabel")
   @position(1)
   public releaseLabel: string;
 
-  @help("update whether the release should be considered mandatory or not")
+  @help("Specifies whether this release should be considered mandatory. Putting -m flag means mandatory.")
   @shortName("m")
-  @longName("mandatory")
-  @hasArg
-  public isMandatory: string;
+  public isMandatory: boolean;
 
-  @help("update the description associated with the release")
+  @help("Specifies whether this release should be immediately downloadable. Putting -x flag means disabled.")
   @shortName("x")
-  @longName("disabled")
-  @hasArg
-  public isDisabled: string;
+  public isDisabled: boolean;
 
-  @help("update the semver range that indicates which binary version(s) a release")
+  @help("Semver expression that specifies the binary app version(s) this release is targeting (e.g. 1.1.0, ~1.2.3).")
   @shortName("t")
   @longName("targetBinaryVersion")
   @hasArg
   public targetBinaryRange: string;
 
-  @help("update the description associated with the release")
-  @shortName("des")
+  @help("Description of the changes made to the app with this release.")
+  @shortName("d")
   @longName("description")
   @hasArg
   public description: string;
 
-  @help("allows you to increase the rollout percentage of the target release")
+  @help("Percentage of users this release should be immediately available to. This attribute can only be increased from the current value.")
   @shortName("r")
   @longName("rollout")
   @hasArg
@@ -63,49 +58,30 @@ export default class PatchCommand extends AppCommand {
     const app = this.app;
     let release: models.LiveUpdateRelease;
 
-    if (this.targetBinaryRange == null && this.isDisabled == null && this.isMandatory == null && this.description == null && this.rollout == null) {
+    if (this.targetBinaryRange === null && this.isDisabled === null && this.isMandatory === null && this.description === null && this.rollout === null) {
       return failure(ErrorCodes.Exception, "At least one property must be specified to patch a release.");
     }
 
-    if (this.isMandatory != null) {
-      if (this.isMandatory != 'true' && this.isMandatory != 'false') {
-        return failure(ErrorCodes.Exception, `Mandatory value should be either ${chalk.bold(true)} or ${chalk.bold(false)}.`);  
+    if (this.rollout != null && this.rollout !== undefined) {
+      if (parseInt(this.rollout) < 0 || parseInt(this.rollout) > 100 || !/^(100|[1-9][0-9]|[1-9])$/.test(this.rollout)) {
+        return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
       }
     }
 
-    if (this.isDisabled != null) {
-      if (this.isDisabled != 'true' && this.isDisabled != 'false') {
-        return failure(ErrorCodes.Exception, `Disabled value should be either ${chalk.bold(true)} or ${chalk.bold(false)}.`);  
-      }
+    const isValidVersion = (version: string): boolean => !!semver.valid(version) || /^\d+\.\d+$/.test(version) || /^\d+$/.test(version);
+    if (this.targetBinaryRange !== null && this.targetBinaryRange !== undefined && !isValidVersion(this.targetBinaryRange)) {
+      return failure(ErrorCodes.Exception, "Invalid binary version(s) for a release.");
     }
+
+    let patch : models.LiveUpdateReleaseModification = {
+      targetBinaryRange: this.targetBinaryRange,
+      isMandatory: this.isMandatory,
+      isDisabled: this.isDisabled,
+      description: this.description,
+    };
 
     if (this.rollout != null) {
-      if (parseInt(this.rollout) < 0 || parseInt(this.rollout) > 100) {
-        return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold(0)} or ${chalk.bold(100)}.`);
-      }
-    }
-
-    const isValidVersion = (version: string): boolean => !!semver.valid(version) || /^\d+\.\d+$/.test(version);
-    if (this.targetBinaryRange != null && !isValidVersion(this.targetBinaryRange)) {
-      return failure(ErrorCodes.Exception, "Invalid binary version(s) for a release.");      
-    }
-
-    let patch: models.LiveUpdateReleaseModification;
-    if (this.rollout!=null) {
-      patch = {
-        targetBinaryRange: this.targetBinaryRange,
-        isMandatory: this.isMandatory === 'true' || this.isMandatory === 'True',
-        isDisabled: this.isDisabled === 'true' || this.isDisabled === 'True',
-        description: this.description,
-        rollout: parseInt(this.rollout)
-      }
-    } else {
-      patch = {
-        targetBinaryRange: this.targetBinaryRange,
-        isMandatory: this.isMandatory === 'true' || this.isMandatory === 'True',
-        isDisabled: this.isDisabled === 'true' || this.isDisabled === 'True',
-        description: this.description,
-      }
+      patch.rollout = parseInt(this.rollout);
     }
     
     try {
