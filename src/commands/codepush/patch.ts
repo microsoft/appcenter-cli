@@ -2,7 +2,6 @@ import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, succ
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import { MobileCenterClient, models, clientRequest, clientCall } from "../../util/apis";
-import * as _ from "lodash";
 import * as chalk from "chalk";
 import * as semver from "semver";
 
@@ -62,14 +61,14 @@ export default class PatchCommand extends AppCommand {
       return failure(ErrorCodes.Exception, "At least one property must be specified to patch a release.");
     }
 
-    if (this.rollout != null && this.rollout !== undefined) {
-      if (parseInt(this.rollout) < 0 || parseInt(this.rollout) > 100 || !/^(100|[1-9][0-9]|[1-9])$/.test(this.rollout)) {
+    if (this.rollout != null) {
+      if (!/^(100|[1-9][0-9]|[1-9])$/.test(this.rollout)) {
         return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
       }
     }
 
     const isValidVersion = (version: string): boolean => !!semver.valid(version) || /^\d+\.\d+$/.test(version) || /^\d+$/.test(version);
-    if (this.targetBinaryRange !== null && this.targetBinaryRange !== undefined && !isValidVersion(this.targetBinaryRange)) {
+    if (this.targetBinaryRange != null && !isValidVersion(this.targetBinaryRange)) {
       return failure(ErrorCodes.Exception, "Invalid binary version(s) for a release.");
     }
 
