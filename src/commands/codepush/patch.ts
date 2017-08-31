@@ -12,13 +12,13 @@ export default class PatchCommand extends AppCommand {
   
   @help("Specifies one existing deployment name.")
   @required
-  @name("--existing-deployment-name")
+  @name("existing-deployment-name")
   @position(0)
   public deploymentName: string;
 
   @help("Specifies label of one existing release to update. (Defaults to the latest release within the specified deployment)")
   @required
-  @name("--existing-release-label")
+  @name("existing-release-label")
   @position(1)
   public releaseLabel: string;
 
