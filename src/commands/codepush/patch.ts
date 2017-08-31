@@ -7,42 +7,42 @@ import * as semver from "semver";
 
 const debug = require("debug")("mobile-center-cli:commands:codepush:patch");
 
-@help("Update the metadata for an existing release")
+@help("Update the metadata for an existing CodePush release")
 export default class PatchCommand extends AppCommand {
   
-  @help("CodePush deployment name.")
+  @help("Specifies one existing deployment name.")
   @required
-  @name("ExistingDeploymentName")
+  @name("--existing-deployment-name")
   @position(0)
   public deploymentName: string;
 
-  @help("Label of the release to update. Defaults to the latest release within the specified deployment.")
+  @help("Specifies label of one existing release to update. (Defaults to the latest release within the specified deployment)")
   @required
-  @name("ExistingReleaseLabel")
+  @name("--existing-release-label")
   @position(1)
   public releaseLabel: string;
 
-  @help("Specifies whether this release should be considered mandatory. Putting -m flag means mandatory.")
+  @help("Specifies whether this release should be considered mandatory. (Putting -m flag means mandatory)")
   @shortName("m")
   public isMandatory: boolean;
 
-  @help("Specifies whether this release should be immediately downloadable. Putting -x flag means disabled.")
+  @help("Specifies whether this release should be immediately downloadable. (Putting -x flag means disabled)")
   @shortName("x")
   public isDisabled: boolean;
 
-  @help("Semver expression that specifies the binary app version(s) this release is targeting (e.g. 1.1.0, ~1.2.3).")
+  @help("Specifies binary app version(s) that specifies this release is targeting for. (The value must be a semver expression such as 1.1.0, ~1.2.3)")
   @shortName("t")
-  @longName("targetBinaryVersion")
+  @longName("target-binary-version")
   @hasArg
   public targetBinaryRange: string;
 
-  @help("Description of the changes made to the app with this release.")
+  @help("Specifies description of the changes made to the app with this release.")
   @shortName("d")
   @longName("description")
   @hasArg
   public description: string;
 
-  @help("Percentage of users this release should be immediately available to. This attribute can only be increased from the current value.")
+  @help("Specifies percentage of users this release should be immediately available to. (The specified number must be an integer between 1 and 100)")
   @shortName("r")
   @longName("rollout")
   @hasArg
