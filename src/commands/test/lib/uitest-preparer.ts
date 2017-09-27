@@ -20,6 +20,12 @@ export class UITestPreparer {
   public keyPassword: string;
   public signInfo: string;
   public uiTestToolsDir: string;
+  public fixture: string[];
+  public includeCategory: string[];
+  public excludeCategory: string[];
+  public nunitXml: string;
+  public testChunk: boolean;
+  public fixtureChunk: boolean;
 
   constructor(artifactsDir: string, buildDir: string, appPath: string) {
     if (!artifactsDir) {
@@ -76,6 +82,30 @@ export class UITestPreparer {
 
     if (this.signInfo) {
       command += ` --sign-info "${this.signInfo}"`;
+    }
+
+    if (this.fixture) {
+      command += ` --fixture "${this.fixture}"`;
+    }
+
+    if (this.includeCategory) {
+      command += ` --include "${this.includeCategory}"`;
+    }
+
+    if (this.excludeCategory) {
+      command += ` --exclude "${this.excludeCategory}"`;
+    }
+
+    if (this.nunitXml) {
+      command += ` --nunit-xml "${this.nunitXml}"`;
+    }
+
+    if (this.testChunk) {
+      command += ` --test-chunk "${this.testChunk}"`;
+    }
+
+    if (this.fixtureChunk) {
+      command += ` --fixture-chunk "${this.fixtureChunk}"`;
     }
 
     return command;
