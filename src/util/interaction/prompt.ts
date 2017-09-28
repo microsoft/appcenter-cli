@@ -66,7 +66,9 @@ export namespace prompt {
   export function question(questions: inquirer.Questions): Promise<inquirer.Answers> {
     if (isQuiet()) {
       if (!Array.isArray(questions)) {
-        questions = [questions];
+        // Casting is done here due to incompatibility between typings and @types package
+        questions = [<inquirer.Question>questions];
+        
       }
       let answers: any = questions.reduce((answers: any, q: inquirer.Question) => {
         if (answers instanceof Error) {

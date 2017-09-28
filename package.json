@@ -48,9 +48,16 @@
     "run-sequence": "^1.2.2",
     "sinon": "^1.17.6",
     "ts-node": "^3.3.0",
-    "typescript": "^2.4.2"
+    "typescript": "^2.5.2"
   },
   "dependencies": {
+    "@types/async": "^2.0.42",
+    "@types/chalk": "^0.4.31",
+    "@types/debug": "0.0.30",
+    "@types/glob": "^5.0.32",
+    "@types/inquirer": "0.0.35",
+    "@types/lodash": "^4.14.74",
+    "@types/node": "^6.0.88",
     "@types/semver": "^5.3.33",
     "azure-storage": "^2.1.0",
     "bplist": "0.0.4",
