@@ -85,7 +85,9 @@ export class UITestPreparer {
     }
 
     if (this.fixture) {
-      command += ` --fixture "${this.fixture}"`;
+      this.fixture.forEach(item => {
+        command += ` --fixture "${item}"`;
+      });
     }
 
     if (this.includeCategory) {
