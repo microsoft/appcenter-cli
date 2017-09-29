@@ -89,11 +89,15 @@ export class UITestPreparer {
     }
 
     if (this.includeCategory) {
-      command += ` --include "${this.includeCategory}"`;
+      this.includeCategory.forEach(category => {
+        command += ` --include "${category}"`;
+      });
     }
 
     if (this.excludeCategory) {
-      command += ` --exclude "${this.excludeCategory}"`;
+      this.excludeCategory.forEach(category => {
+        command += ` --exclude "${category}"`;
+      });
     }
 
     if (this.nunitXml) {
