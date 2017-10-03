@@ -2,6 +2,10 @@ export function getPortalBuildLink(portalBaseUrl: string, appOwner: string, appN
   return `${portalBaseUrl}/users/${appOwner}/apps/${appName}/build/branches/${branchName}/builds/${buildId}`;
 }
 
+export function getPortalTestLink(portalBaseUrl: string, appOwner: string, appName: string, seriesName: string, testRunId: string): string {
+  return `${portalBaseUrl}/users/${appOwner}/apps/${appName}/test/series/${seriesName}/runs/${testRunId}`;
+}
+
 export function getPortalOrgLink(portalBaseUrl: string, orgName: string): string {
   return `${portalBaseUrl}/orgs/${orgName}`;
 }
