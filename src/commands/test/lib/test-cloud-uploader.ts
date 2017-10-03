@@ -1,11 +1,13 @@
 import { MobileCenterClient, models, clientCall, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
+import { getUser } from "../../../util/profile";
 import { progressWithResult } from "./interaction";
 import { TestManifest, TestRunFile } from "./test-manifest";
 import { TestManifestReader } from "./test-manifest-reader";
 import { AppValidator } from "./app-validator";
 import { parseRange, getByteRange } from "./byte-range-helper";
 import { getDSymFile } from "./dsym-dir-helper";
+import { getOrgsNamesList } from "../../orgs/lib/org-users-helper";
 import * as PortalHelper from "../../../util/portal/portal-helper";
 import * as _ from "lodash";
 import * as fs from "fs";
@@ -68,11 +70,20 @@ export class TestCloudUploader {
   }
 
   public async uploadAndStart(): Promise<StartedTestRun> {
+    let orgs = await getOrgsNamesList(this._client, debug);
+    let isOrg = false;
+    for (let org of orgs) {
+      if (org.name === this._userName)
+      {
+        isOrg = true;
+      }
+    }
+    
     let manifest = await progressWithResult<TestManifest>(
       "Validating arguments",
       this.validateAndParseManifest());
 
-    let testRun = await progressWithResult("Creating new test run", this.createTestRun());
+    let testRun = await progressWithResult("Creating new test run", this.createTestRun(isOrg));
     debug(`Test run id: ${testRun.testRunId}`);
 
     let appFile = await progressWithResult("Validating application file", this.validateAndCreateAppFile(manifest));
@@ -113,7 +124,7 @@ export class TestCloudUploader {
     return result;
   }
 
-  private createTestRun(): Promise<StartedTestRun> {
+  private createTestRun(isOrg: boolean): Promise<StartedTestRun> {
      return new Promise<StartedTestRun>((resolve, reject) => {
        this._client.test.createTestRun(
          this._userName,
@@ -129,7 +140,7 @@ export class TestCloudUploader {
                 acceptedDevices: [],
                 rejectedDevices: [],
                 testRunId: testRunId,
-                testRunUrl: PortalHelper.getPortalTestLink(this._portalBaseUrl, this._userName, this._appName, this.testSeries, testRunId)
+                testRunUrl: PortalHelper.getPortalTestLink(this._portalBaseUrl, isOrg, this._userName, this._appName, this.testSeries, testRunId)
               });
           }
       });
