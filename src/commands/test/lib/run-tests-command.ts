@@ -149,6 +149,13 @@ export abstract class RunTestsCommand extends AppCommand {
     }
     catch (err) {
       let exitCode = err.exitCode || ErrorCodes.Exception;
+      
+      if (err.message.indexOf("Not Found") !== -1)
+      {
+        return failure(exitCode, `Requested resource not found - please check --app: ${this.identifier}`)
+      }
+
+      
       return failure(exitCode, err.message);
     }
   }
