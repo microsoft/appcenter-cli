@@ -6,6 +6,7 @@ import { TestCloudError } from "./test-cloud-error";
 import { StateChecker } from "./state-checker";
 import { MobileCenterClient } from "../../../util/apis";
 import { StreamingArrayOutput } from "../../../util/interaction";
+import { getUser } from "../../../util/profile";
 import { parseTestParameters } from "./parameters-parser";
 import { parseIncludedFiles } from "./included-files-parser";
 import { progressWithResult } from "./interaction";
@@ -149,14 +150,28 @@ export abstract class RunTestsCommand extends AppCommand {
     }
     catch (err) {
       let exitCode = err.exitCode || ErrorCodes.Exception;
-      
+      let message : string = null;
+      let profile = getUser();
+
+      let helpMessage = `Further error details: For help, please send the following information to us by going to https://mobile.azure.com/apps and starting a new conversation (using the icon in the bottom right corner of the screen)${os.EOL}
+        Environment: ${os.platform()}${os.EOL}
+        User Email: ${profile.email}${os.EOL}
+        User Name: ${profile.userName}${os.EOL}
+        User Id: ${profile.userId}${os.EOL}
+        App Upload Id: ${this.identifier}${os.EOL}
+        Timestamp: ${Date.now()}${os.EOL}
+        Operation: ${this.constructor.name}${os.EOL}`;
+
       if (err.message.indexOf("Not Found") !== -1)
       {
-        return failure(exitCode, `Requested resource not found - please check --app: ${this.identifier}`)
+        message = `Requested resource not found - please check --app: ${this.identifier}${os.EOL}${os.EOL}${helpMessage}`;
+      }
+      else
+      {
+        message = `${err.message}${os.EOL}${os.EOL}${helpMessage}`;
       }
 
-      
-      return failure(exitCode, err.message);
+      return failure(exitCode, message);
     }
   }
 
