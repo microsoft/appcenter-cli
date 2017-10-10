@@ -1,115 +1,106 @@
-# Introduction
+UberScriptQuery
+============
 
-Mobile Center command line interface is a unified tool for running Mobile Center services from the command line. Our aim is to offer a concise and powerful tool for our developers to use Mobile Center services and easily script a sequence of commands that they'd like to execute. You can currently login and view/configure all the apps that you have access to in Mobile Center.
+UberScriptQuery is a script query wrapper to run Spark SQL jobs.
 
-Although our current feature set is minimal, all the existing Mobile Center services will be added going forward. Note that the Mobile Center CLI is currently in public preview.
+Why did we build this? Apache Spark is a great tool to do data processing, yet people usually end up writing many similar Spark jobs. There is substantial development cost to write and maintain all these jobs. Additionally, Spark is still mostly for developers, and other people such as data analysts or data scientists may still feel that Spark has a steep learning curve.
 
-# Prerequisites
+To make Spark easier, we define a high level SQL-like DSL (Domain Specific Language) on top of Spark. People can use that DSL to write Spark jobs without worrying about Spark internal details. Another benefit to define such a DSL is to break up complicated logic or SQL query to a declarative script, which is easy to review and maintain. Our result? UberScriptQuery, a SQL-like DSL to make writing Spark jobs super easy.
 
-Mobile Center CLI requires Node.js version 6.3 or better. Do not use Node.js 7.1.0, there is a known issue that breaks the CLI code (and many other projects) on Windows 10. This bug has been fixed in later releases of Node.js 7.
+DSL Example
+============
 
-# Installation
+The following is a quick example for the UberScriptQuery DSL. It queries data from a MySQL database and Hadoop file, joins them together, and saves the result to another MySQL data table.
 
 ```
-npm install -g mobile-center-cli
+-- Define variables
+datePath = '2017/01/10';
+  
+-- Load data from mysql
+clients = sql jdbc set connectionString='jdbc:mysql://server:3306/database';
+  select clientId, clientName from dim_client;
+  
+-- Load data from hadoop
+orders = file json hdfs:///dir/to/files/${datePath}/*;
+  
+-- Join data from two tables
+result = select clientName, productName, totalCount, orderId, orderDescription 
+  from orders
+  join clients on clients.clientId = orders.clientId;
+  
+-- Write result to mysql output table
+-- The output table will be auto created if not exist, and will have:
+-- Primary Key Columns: clientName,productName,orderId
+-- Index Columns: clientName,orderId
+-- Text Columns: orderDescription
+  
+writeJdbc('jdbc:mysql://server:3306/database',
+  'jdbcTable',
+  'clientName,productName,orderId',
+  'clientName,orderId',
+  'orderDescription',
+  'Append',
+  result);
+  
+-- Send email via MailGun
+sendMailGunEmail('https://api.mailgun.net/v3/sandbox549566ecba1d49fab0d7b53d4cfb01a4.mailgun.org/messages',
+  'MailGun_ApiKey',
+  'from_email@example.com',
+  'to_email@example.com',
+  'Email Title - Job Done',
+  'Email Content - Successfully queried data on ${datePath}');
+
 ```
 
-Once installed, use the `mobile-center` command. See below for the available commands.
+DSL Features
+============
 
-# Getting Help
+1. **Flexible Input/Output**: it supports multiple input/output data sources with different formats, including database and Hadoop. It is also possible to add other data sources like Cassandra and Elasticsearch.
 
-To get a top level list of the available commands, run `mobile-center help`.
+2. **Multiple SQL Statements**: it allows executing multiple SQL Statements, storing temporary results in another table, and referencing them in other SQL statements. This avoids a huge complicated single SQL statement, and makes the logic very clear and easy to maintain.
 
-To get help on a specific command or category, run `mobile-center help command` or pass the `-h` flag to any command or category name.
+3. **Variable Substitution**: it allows defining variables with names/values, and substitute these variable in the script body. It also allows variable overwriting from outside of the script, so people can run the same script with different variable bindings.
 
-# Commands
+4. **Custom Action**: it supports Actions like writeJdbc() in the previous DSL example. It also allows users to write their own Actions and plug into the script.
 
-Below is the list of commands currently supported by Mobile Center CLI:
+5. **Upsert Result to Database**: it implements an "upsert" based JDBC writer, and can insert/update database records in a single operation. This makes it easy to provide "Exactly Once" semantic support for Spark Jobs.
 
-| Command                               | Description                                                    |
-| ------------------------------------- | -------------------------------------------------------------- |
-| `mobile-center help` | Get command or category help |
-| `mobile-center login` | Log the CLI into Mobile Center |
-| `mobile-center logout` | Log the CLI out of Mobile Center |
-| | |
-| `mobile-center setup-autocomplete` | Setup autocompletion for the shell |
-| | |
-| `mobile-center analytics app-versions` | Shows versions of the application |
-| `mobile-center analytics audience` | Show audience statistics |
-| `mobile-center analytics log-flow` | Command to see the incoming logs in real time |
-| `mobile-center analytics sessions` | Show statistics for sessions |
-| `mobile-center analytics events delete` | Delete event |
-| `mobile-center analytics events show` | Show statistics for events |
-| | |
-| `mobile-center apps create` | Create a new app |
-| `mobile-center apps delete` | Delete an app |
-| `mobile-center apps get-current` | Get the application that's set as default for all CLI commands |
-| `mobile-center apps list` | Get list of configured applications |
-| `mobile-center apps set-current` | Set default application for all CLI commands |
-| `mobile-center apps show` | Get the details of an app |
-| `mobile-center apps update` | Update an app |
-| | |
-| `mobile-center build download` | Download the binary, logs or symbols for a completed build |
-| `mobile-center build logs` | Displays log for build |
-| `mobile-center build queue` | Queue a new build |
-| `mobile-center build branches list` | Show list of branches |
-| `mobile-center build branches show` | Show branch build status |
-| | |
-| `mobile-center crashes upload-missing-symbols` | Upload missing crash symbols for the application (only from macOS) |
-| `mobile-center crashes upload-symbols` | Upload the crash symbols for the application |
-| | |
-| `mobile-center distribute release` | Upload release binary and trigger distribution |
-| `mobile-center distribute groups create` | Create new distribution group |
-| `mobile-center distribute groups delete` | Deletes the distribution group |
-| `mobile-center distribute groups download` | Download release package for the distribution group |
-| `mobile-center distribute groups list` | Lists all distribution groups of the app |
-| `mobile-center distribute groups show` | Shows information about the distribution group |
-| `mobile-center distribute groups update` | Update existing distribution group |
-| `mobile-center distribute releases delete` | Deletes the release |
-| `mobile-center distribute releases list` | Shows the list of all releases for the application |
-| `mobile-center distribute releases show` | Shows full details about release |
-| | |
-| `mobile-center orgs create` | Create a new organization |
-| `mobile-center orgs list` | Lists organizations in which current user is collaborator |
-| `mobile-center orgs show` | Show information about organization |
-| `mobile-center orgs update` | Update organization information |
-| `mobile-center orgs apps list` | Lists applications of organization |
-| `mobile-center orgs collaborators list` | Lists collaborators of organization |
-| `mobile-center orgs collaborators update` | Update list of organization collaborators |
-| | |
-| `mobile-center profile list` | Get information about logged in user |
-| `mobile-center profile update` | Update user information |
-| | |
-| `mobile-center telemetry off` | Turn off the sending of telemetry |
-| `mobile-center telemetry on` | Turn on the sending of telemetry |
-| `mobile-center test status` | Checks the status of the started test run. |
-| `mobile-center test stop` | Stop the started test run. |
-| `mobile-center test generate appium` | Generates an Appium project |
-| `mobile-center test generate uitest` | Generates a Xamarin.UITest project |
-| `mobile-center test prepare appium` | Creates an artifacts directory with Appium tests |
-| `mobile-center test prepare calabash` | Creates an artifacts directory with Calabash tests |
-| `mobile-center test prepare espresso` | Creates an artifacts directory with Espresso tests |
-| `mobile-center test prepare uitest` | Creates an artifacts directory with Xamarin UI Tests |
-| `mobile-center test prepare xcuitest` | Creates an artifacts directory with XCUITest tests |
-| `mobile-center test run appium` | Starts a test run with Appium tests. |
-| `mobile-center test run calabash` | Starts a test run with Calabash tests |
-| `mobile-center test run espresso` | Starts a test run with Espresso tests. |
-| `mobile-center test run manifest` | Starts a test run with previously prepared artifacts. |
-| `mobile-center test run uitest` | Starts a test run with Xamarin UI Tests |
-| `mobile-center test run xcuitest` | Starts a test run with XCUITest tests |
-| | |
-| `mobile-center tokens create` | Create a new API token |
-| `mobile-center tokens delete` | Delete an API token |
-| `mobile-center tokens list` | Get a list of API tokens |
+Quick Start
+============
 
+Build this project with Maven with Java 1.8:
+```
+mvn package -DskipTests
+```
 
-Please use the `mobile-center help` command to get more information about each one.
+Run the following command to execute your first UberScriptQuery job:
+```
+java -cp target/UberScriptQuery-1.1.01.jar com.uber.uberscriptquery.examples.QueryExampleJob \
+  -query "result = select cast(unix_timestamp() as timestamp) as time, 'Hello World' as message; printTable(result);" 
+```
 
-# Contributing
+The following is another example to run with variable overwriting (note we use '&#92;${message}' in following command because of escaping $ in bash command, in programming code, it should be like '${message}'):
+```
+java -cp target/UberScriptQuery-1.1.01.jar com.uber.uberscriptquery.examples.QueryExampleJob \
+  -query "message = 'Hello World'; result = select cast(unix_timestamp() as timestamp) as time, '\${message}' as message; printTable(result);" \
+  -queryOverwrite "message = 'Hello New World';"
+```
 
-Please see the [contributing](./contributing.md) file
-for an introduction to the codebase and what the various moving parts are.
+You could also integrate the UberScriptQuery Engine into your own code, and run the script in your own job:
+```
+QueryEngine engine = new QueryEngine();
+engine.executeScript(script, sparkSession);
+```
 
-# Code of Conduct
+There are more detailed sample codes in this class:
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact opencode@microsoft.com with any additional questions or comments.
+```
+com.uber.uberscriptquery.examples.QueryExecutionExample
+```
+
+Future Work
+============
+
+1. Support more data sources, e.g. Cassandra and Elasticsearch.
+
+2. Support "upsert" into more databases like PostgreSQL. Now it only supports MySQL and H2 database.

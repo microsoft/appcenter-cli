@@ -1,0 +1,43 @@
+SparkScript
+Copyright (c) 2017 Uber Technologies, Inc.
+
+I. Included Software
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+Licensed under the Apache License 2.0.
+
+This product includes software developed at
+Spark (http://spark.apache.org/).
+Licensed under the Apache License 2.0.
+
+This product includes software developed at
+Hadoop (http://hadoop.apache.org/).
+Licensed under the Apache License 2.0.
+
+This product includes software developed at
+scala (http://www.scala-lang.org/).
+Licensed under the BSD 3-Clause License.
+
+This product includes software developed at
+freemarker (http://freemarker.org/).
+Licensed under the Apache License 2.0.
+
+This product includes software developed at
+jayway/JsonPath (https://github.com/jayway/JsonPath).
+Licensed under the Apache License 2.0.
+
+This product includes software developed at
+mysql connector (https://dev.mysql.com/downloads/connector/j/).
+Licensed under the GPL License.
+
+This software contains unmodified binary redistributions for
+H2 database engine (http://www.h2database.com/),
+which is dual licensed and available under the MPL 2.0
+(Mozilla Public License) or under the EPL 1.0 (Eclipse Public License).
+An original copy of the license agreement can be found at:
+http://www.h2database.com/html/license.html
+
+
+II. License Summary
+- Apache License 2.0
