@@ -1,0 +1,2 @@
+java -cp target/UberScriptQuery-1.1.01.jar com.uber.uberscriptquery.examples.QueryExampleJob \
+  -query "result = select cast(unix_timestamp() as timestamp) as time, 'Hello World' as message; printTable(result);" 
