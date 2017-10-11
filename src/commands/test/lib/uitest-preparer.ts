@@ -1,5 +1,6 @@
 import { TestCloudError } from "./test-cloud-error";
 import { glob } from "../../../util/misc/promisfied-glob";
+import { directoryExists, fileExists } from "../../../util/misc/promisfied-fs";
 import * as _ from "lodash";
 import * as os from "os";
 import * as path from "path";
@@ -119,10 +120,28 @@ export class UITestPreparer {
 
   private async getTestCloudExecutablePath(): Promise<string> {
     let toolsDir = this.uiTestToolsDir || await this.findXamarinUITestNugetDir(this.buildDir);
+
+    if (!await directoryExists(toolsDir))
+    {
+      throw new Error(`Cannot find test-cloud.exe, the path specified by "--uitest-tools-dir" was not found.${os.EOL}` +
+        `Please check that "${toolsDir}" is a valid directory and contains test-cloud.exe.${os.EOL}` +
+        `Minimum required version is "${this.getMinimumVersionString()}".`);
+    }
+
     let testCloudPath = path.join(toolsDir, "test-cloud.exe");
     if (testCloudPath.includes(" ")) {
       testCloudPath = `"${testCloudPath}"`;
     }
+
+    if (!await fileExists(testCloudPath))
+    {
+      throw new Error(`Cannot find test-cloud.exe, the exe was not found in the path specified by "--uitest-tools-dir".${os.EOL}` +
+        `Please check that ${testCloudPath} points to a test-cloud.exe.${os.EOL}` +
+        `Minimum required version is "${this.getMinimumVersionString()}".`);
+    }
+
+    debug(`Using test cloud tools path: ${testCloudPath}`);
+
     return testCloudPath;
   }
 
