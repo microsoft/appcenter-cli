@@ -129,15 +129,16 @@ export class UITestPreparer {
     }
 
     let testCloudPath = path.join(toolsDir, "test-cloud.exe");
-    if (testCloudPath.includes(" ")) {
-      testCloudPath = `"${testCloudPath}"`;
-    }
 
     if (!await fileExists(testCloudPath))
     {
       throw new Error(`Cannot find test-cloud.exe, the exe was not found in the path specified by "--uitest-tools-dir".${os.EOL}` +
         `Please check that ${testCloudPath} points to a test-cloud.exe.${os.EOL}` +
         `Minimum required version is "${this.getMinimumVersionString()}".`);
+    }
+
+    if (testCloudPath.includes(" ")) {
+      testCloudPath = `"${testCloudPath}"`;
     }
 
     debug(`Using test cloud tools path: ${testCloudPath}`);
