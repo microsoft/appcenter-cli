@@ -1,6 +1,6 @@
 import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName } from "../../util/commandline";
 import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton"
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as chalk from "chalk";
@@ -11,7 +11,7 @@ import { isValidOS, isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectA
 var childProcess = require("child_process");
 export var execSync = childProcess.execSync;
 
-const debug = require("debug")("mobile-center-cli:commands:codepush:release-cordova");
+const debug = require("debug")("appcenter-cli:commands:codepush:release-cordova");
 
 @help("Release a Cordova update to an app deployment")
 export default class CodePushReleaseCordovaCommand extends CodePushReleaseCommandSkeleton {
@@ -34,7 +34,7 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
 
   private platform: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     if (!(await isValidDeployment(client, this.app, this.specifiedDeploymentName))) {
       return failure(ErrorCodes.InvalidParameter, `Deployment "${this.specifiedDeploymentName}" does not exist.`);
     } else {

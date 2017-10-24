@@ -1,5 +1,5 @@
 {
-  "name": "mobile-center-cli",
+  "name": "appcenter-cli",
   "version": "0.12.0",
   "description": "Command line tool for Microsoft Mobile Center",
   "keywords": [
@@ -14,7 +14,7 @@
   },
   "main": "dist/index.js",
   "bin": {
-    "mobile-center": "./bin/mobile-center.js"
+    "appcenter": "./bin/appcenter.js"
   },
   "preferGlobal": true,
   "scripts": {

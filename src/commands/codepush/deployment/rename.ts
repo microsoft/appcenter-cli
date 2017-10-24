@@ -1,14 +1,14 @@
 import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, position, name } from "../../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import * as chalk from "chalk";
 import { inspect } from "util";
 
-const debug = require("debug")("mobile-center-cli:commands:codepush:deployment:rename");
+const debug = require("debug")("appcenter-cli:commands:codepush:deployment:rename");
 
 @help("Rename CodePush deployment")
 export default class CodePushRenameDeploymentCommand extends AppCommand {
-  
+
   @help("Specifies CodePush deployment name to be renamed")
   @name("current-deployment-name")
   @position(0)
@@ -25,12 +25,12 @@ export default class CodePushRenameDeploymentCommand extends AppCommand {
     super(args);
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     try {
       debug("Renaming CodePush deployments");
-      const httpResponse = await out.progress(`Renaming CodePush deployments...`, 
+      const httpResponse = await out.progress(`Renaming CodePush deployments...`,
         clientRequest((cb) => client.codePushDeployments.update(this.currentDeploymentName, app.ownerName, app.appName, this.newDeploymentName, cb)));
     } catch (error) {
       debug(`Failed to rename deployments - ${inspect(error)}`);
@@ -45,7 +45,7 @@ export default class CodePushRenameDeploymentCommand extends AppCommand {
       }
     }
 
-    out.text(`Successfully renamed the ${this.currentDeploymentName} deployment to ${this.newDeploymentName} for the ${this.identifier} app.`);  
+    out.text(`Successfully renamed the ${this.currentDeploymentName} deployment to ${this.newDeploymentName} for the ${this.identifier} app.`);
     return success();
   }
 }

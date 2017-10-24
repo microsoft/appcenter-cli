@@ -1,5 +1,5 @@
-import MobileCenterClient = require("./generated/mobileCenterClient");
+import AppCenterClient = require("./generated/AppCenterClient");
 import * as models from "./generated/models";
 
-export { MobileCenterClient, models };
-export { MobileCenterClientFactory, createMobileCenterClient, clientCall, clientRequest, ClientResponse } from "./create-client";
+export { AppCenterClient, models };
+export { AppCenterClientFactory, createAppCenterClient, clientCall, clientRequest, ClientResponse } from "./create-client";

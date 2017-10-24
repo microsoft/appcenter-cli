@@ -1,9 +1,9 @@
 import { AppCommand, CommandResult, help, success, shortName, longName, required, hasArg, ErrorCodes, failure } from "../../../util/commandline";
-import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 
-const debug = require("debug")("mobile-center-cli:commands:distribute:groups:show");
+const debug = require("debug")("appcenter-cli:commands:distribute:groups:show");
 
 @help("Shows information about the distribution group")
 export default class ShowDistributionGroupCommand extends AppCommand {
@@ -14,7 +14,7 @@ export default class ShowDistributionGroupCommand extends AppCommand {
   @hasArg
   public distributionGroup: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     // creating distribution group users list request

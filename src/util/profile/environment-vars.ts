@@ -1,12 +1,12 @@
 import * as process from "process";
 import { defaultEnvironmentName } from "./environments";
 
-export const mobileCenterAccessTokenEnvVar = "MOBILE_CENTER_ACCESS_TOKEN";
+export const appCenterAccessTokenEnvVar = "APPCENTER_ACCESS_TOKEN";
 
 export function getTokenFromEnvironmentVar(): string {
-  return process.env[mobileCenterAccessTokenEnvVar];
+  return process.env[appCenterAccessTokenEnvVar];
 }
 
 export function getEnvFromEnvironmentVar(): string {
-  return process.env["MOBILE_CENTER_ENV"] || defaultEnvironmentName();
+  return process.env["APPCENTER_ENV"] || defaultEnvironmentName();
 }

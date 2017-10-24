@@ -1,8 +1,8 @@
 import { Command, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
 import { out } from "../../util/interaction";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
-const debug = require("debug")("mobile-center-cli:commands:orgs:create");
+const debug = require("debug")("appcenter-cli:commands:orgs:create");
 import { inspect } from "util";
 import { getPortalOrgLink } from "../../util/portal/portal-helper";
 import { getOrgUsers, pickAdmins } from "./lib/org-users-helper";
@@ -22,8 +22,8 @@ export default class OrgCreateCommand extends Command {
   @hasArg
   name: string;
 
-  async run(client: MobileCenterClient, portalBaseUrl: string): Promise<CommandResult> {
-    
+  async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
+
     let organizationInfo: models.OrganizationResponse;
     try {
       const httpResponse = await out.progress("Creating new organization...", clientRequest<models.OrganizationResponse>((cb) => client.organizations.createOrUpdate({
@@ -31,7 +31,7 @@ export default class OrgCreateCommand extends Command {
         name: this.name
       }, cb)));
       if (httpResponse.response.statusCode < 400) {
-        organizationInfo = httpResponse.result;        
+        organizationInfo = httpResponse.result;
       } else {
         throw httpResponse.response;
       }

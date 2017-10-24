@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import { Command, CommandArgs, CommandResult,
          help, success, longName, required, hasArg,
          failure, ErrorCodes } from "../../../util/commandline";
-import { MobileCenterClient } from "../../../util/apis";
+import { AppCenterClient } from "../../../util/apis";
 import { Messages } from "../lib/help-messages";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as JsZip from "jszip";
@@ -15,7 +15,7 @@ export abstract class GenerateCommand extends Command {
   @required
   @hasArg
   platform: string;
-  
+
   @help(Messages.TestCloud.Arguments.GenerateOutputPath)
   @longName("output-path")
   @required
@@ -47,7 +47,7 @@ export abstract class GenerateCommand extends Command {
     }
 
     await this.validateOptions();
-    
+
     if (await pfs.exists(this.outputPath)) {
       let files = await pfs.readdir(this.outputPath);
       if (!(files.length === 0)) {
@@ -56,7 +56,7 @@ export abstract class GenerateCommand extends Command {
     }
 
     let zipFilePath = (await pfs.openTempFile(null)).path;
-    
+
     await phttps.getToFile(await this.zipUrl(), zipFilePath);
 
     let zipFile = await pfs.readFile(zipFilePath);

@@ -1,12 +1,12 @@
 import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, position, name } from "../../../util/commandline";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
-import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { formatDate } from "./lib/date-helper";
-import * as chalk from "chalk";
 import { scriptName } from "../../../util/misc";
+import * as chalk from "chalk";
 
-const debug = require("debug")("mobile-center-cli:commands:codepush:deployments:history");
+const debug = require("debug")("appcenter-cli:commands:codepush:deployments:history");
 
 @help("Display the release history for a CodePush deployment")
 export default class CodePushDeploymentHistoryCommand extends AppCommand {
@@ -21,15 +21,15 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
     super(args);
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
     let releases: models.CodePushRelease[];
     try {
       const httpRequest = await out.progress("Getting CodePush releases...", clientRequest<models.CodePushRelease[]>(
         (cb) => client.codePushDeploymentReleases.get(this.deploymentName, app.ownerName, app.appName, cb)));
       releases = httpRequest.result;
-      out.table(out.getCommandOutputTableOptions(["Label", "Release Time", "App Version", "Mandatory", "Description"]), 
-        releases.map((release) => 
+      out.table(out.getCommandOutputTableOptions(["Label", "Release Time", "App Version", "Mandatory", "Description"]),
+        releases.map((release) =>
           [release.label, formatDate(release.uploadTime), release.targetBinaryRange, release.isMandatory, release.description]));
       return success();
     } catch (error) {

@@ -1,5 +1,5 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -7,7 +7,7 @@ import * as Pfs from "../../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../../util/profile";
 import { getUsersList } from "../../../util/misc/list-of-users-helper";
 
-const debug = require("debug")("mobile-center-cli:commands:distribute:groups:update");
+const debug = require("debug")("appcenter-cli:commands:distribute:groups:update");
 
 @help("Update existing distribution group")
 export default class UpdateDistributionGroupCommand extends AppCommand {
@@ -48,7 +48,7 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
   @hasArg
   public testersToDeleteListFile: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     // validate that string and file properties are not specified simultaneously
@@ -90,8 +90,8 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
       out.text("Updating the list of testers was partially successful");
     }
 
-    out.text((result) => `Distribution group ${result.name} was successfully updated`, { name: currentGroupName, addedTesters: addedTestersEmails, deletedTesters: deletedTestersEmails});   
-    
+    out.text((result) => `Distribution group ${result.name} was successfully updated`, { name: currentGroupName, addedTesters: addedTestersEmails, deletedTesters: deletedTestersEmails});
+
     return success();
   }
 
@@ -107,7 +107,7 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     }
   }
 
-  private async isDistributionGroupNameFree(client: MobileCenterClient, app: DefaultApp, name: string) {
+  private async isDistributionGroupNameFree(client: AppCenterClient, app: DefaultApp, name: string) {
     if (!_.isNil(name)) {
       try {
         const httpRequest = await clientRequest<models.DistributionGroupResponse>((cb) => client.distributionGroups.get(app.ownerName, app.appName, name, cb));
@@ -125,9 +125,9 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     }
   }
 
-  private async deleteTestersFromDistributionGroup(client: MobileCenterClient, app: DefaultApp, userEmails: string[]): Promise<string[]> {
+  private async deleteTestersFromDistributionGroup(client: AppCenterClient, app: DefaultApp, userEmails: string[]): Promise<string[]> {
     try {
-      const httpResponse = await out.progress("Deleting testers from the distribution group...", 
+      const httpResponse = await out.progress("Deleting testers from the distribution group...",
         clientRequest<models.DistributionGroupUserDeleteResponse[]>((cb) => client.distributionGroups.removeUser(app.ownerName, app.appName, this.distributionGroup, {
           userEmails
         }, cb)));
@@ -146,7 +146,7 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     }
   }
 
-  private async addTestersToDistributionGroup(client: MobileCenterClient, app: DefaultApp, userEmails: string[]): Promise<string[]> {
+  private async addTestersToDistributionGroup(client: AppCenterClient, app: DefaultApp, userEmails: string[]): Promise<string[]> {
     try {
       const httpResponse = await out.progress("Adding testers to the distribution group...",
         clientRequest<models.DistributionGroupUserPostResponse[]>((cb) => client.distributionGroups.addUser(app.ownerName, app.appName, this.distributionGroup, {
@@ -167,9 +167,9 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     }
   }
 
-  private async renameDistributionGroup(client: MobileCenterClient, app: DefaultApp, newName: string): Promise<string> {
+  private async renameDistributionGroup(client: AppCenterClient, app: DefaultApp, newName: string): Promise<string> {
     try {
-      const httpResponse = await out.progress("Renaming the distribution group...", 
+      const httpResponse = await out.progress("Renaming the distribution group...",
         clientRequest<models.DistributionGroupResponse>((cb) => client.distributionGroups.update(app.ownerName, app.appName, this.distributionGroup, {
           name: newName,
         }, cb)));
@@ -177,10 +177,10 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
         throw httpResponse.response.statusCode;
       } else {
         return newName;
-      }      
+      }
     } catch (error) {
       switch (error) {
-        case 400: 
+        case 400:
           throw failure(ErrorCodes.InvalidParameter, `${this.distributionGroup} group can't be renamed`);
         case 404:
           throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} doesn't exist`);

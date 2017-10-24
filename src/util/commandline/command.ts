@@ -5,12 +5,12 @@ import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "
 import { setDebug, isDebug, setQuiet, OutputFormatSupport, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
-import { getUser, environments, telemetryIsEnabled, getPortalUrlForEndpoint, getEnvFromEnvironmentVar, getTokenFromEnvironmentVar, mobileCenterAccessTokenEnvVar } from "../profile";
-import { MobileCenterClient, createMobileCenterClient, MobileCenterClientFactory } from "../apis";
+import { getUser, environments, telemetryIsEnabled, getPortalUrlForEndpoint, getEnvFromEnvironmentVar, getTokenFromEnvironmentVar, appCenterAccessTokenEnvVar } from "../profile";
+import { AppCenterClient, createAppCenterClient, AppCenterClientFactory } from "../apis";
 import * as path from "path";
 import * as PortalHelper from "../portal/portal-helper";
 
-const debug = require("debug")("mobile-center-cli:util:commandline:command");
+const debug = require("debug")("appcenter-cli:util:commandline:command");
 import { inspect } from "util";
 
 export interface CommandArgs {
@@ -36,7 +36,7 @@ export class Command {
   protected commandPath: string;
 
   // Support for login command
-  protected clientFactory: MobileCenterClientFactory;
+  protected clientFactory: AppCenterClientFactory;
 
   // Additional output formats (except "list" which is used by default) which are supported by this command
   protected readonly additionalSupportedOutputFormats: OutputFormatSupport = {
@@ -75,7 +75,7 @@ export class Command {
 
   @shortName("v")
   @longName("version")
-  @help("Display mobile-center version")
+  @help(`Display ${scriptName} version`)
   public version: boolean;
 
 
@@ -112,11 +112,11 @@ export class Command {
         return Promise.resolve(Result.failure(Result.ErrorCodes.InvalidParameter, `Unknown output format ${this.format}`));
       }
     }
-    this.clientFactory = createMobileCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry));
+    this.clientFactory = createAppCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry));
     return this.runNoClient();
   }
 
-  // Entry point to load mobile center client.
+  // Entry point to load appcenter client.
   // Override this if your command needs to do something special with login - typically just
   // the login command
   protected runNoClient(): Promise<Result.CommandResult> {
@@ -124,10 +124,10 @@ export class Command {
       return Promise.resolve(Result.failure(Result.ErrorCodes.IllegalCommand, "Cannot specify environment without giving token"));
     }
 
-    let client: MobileCenterClient;
+    let client: AppCenterClient;
     let endpoint: string;
     if (this.token) {
-      debug(`Creating mobile center client for command from token for environment ${this.environmentName}`);
+      debug(`Creating appcenter client for command from token for environment ${this.environmentName}`);
       [client, endpoint] = this.getClientAndEndpointForToken(this.environmentName, this.token);
     } else {
       // creating client for either logged in user or environment variable token
@@ -136,13 +136,13 @@ export class Command {
       const envFromEnvVar = getEnvFromEnvironmentVar();
       const isLogoutCommand = this.command[0] === "logout";
       if (user && tokenFromEnvVar && !isLogoutCommand) { // logout command should be executed even if both user and env token are set - it just logs out user
-        return Promise.resolve(Result.failure(Result.ErrorCodes.IllegalCommand, `logged in user and token in environment variable ${mobileCenterAccessTokenEnvVar} cannot be used together`));
+        return Promise.resolve(Result.failure(Result.ErrorCodes.IllegalCommand, `logged in user and token in environment variable ${appCenterAccessTokenEnvVar} cannot be used together`));
       } else if (user) {
-        debug(`Creating mobile center client for command for current logged in user`);
+        debug(`Creating appcenter client for command for current logged in user`);
         client = this.clientFactory.fromProfile(user);
         endpoint = user.endpoint;
       } else if (tokenFromEnvVar) {
-        debug(`Creating mobile center client from token specified in environment variable for environment ${this.environmentName}`);
+        debug(`Creating appcenter client from token specified in environment variable for environment ${this.environmentName}`);
         [client, endpoint] = this.getClientAndEndpointForToken(envFromEnvVar, tokenFromEnvVar);
       }
     }
@@ -153,7 +153,7 @@ export class Command {
   }
 
   // Entry point for command author - override this!
-  protected run(client: MobileCenterClient, portalBaseUrl: string): Promise<Result.CommandResult> {
+  protected run(client: AppCenterClient, portalBaseUrl: string): Promise<Result.CommandResult> {
     throw new Error("Dev error, should be overridden!");
   }
 
@@ -163,8 +163,8 @@ export class Command {
     out.text(s => s,`${scriptName} version ${packageJson.version}`);
     return Result.success();
   }
-  
-  protected getClientAndEndpointForToken(environmentString: string, token: string): [MobileCenterClient, string] {
+
+  protected getClientAndEndpointForToken(environmentString: string, token: string): [AppCenterClient, string] {
     const environment = environments(environmentString);
     if (!environment) {
       throw Result.failure(Result.ErrorCodes.InvalidParameter, `${environmentString} is not valid environment name`);

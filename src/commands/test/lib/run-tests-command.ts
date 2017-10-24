@@ -4,7 +4,7 @@ import { AppCommand, CommandArgs, CommandResult,
 import { TestCloudUploader, StartedTestRun } from "./test-cloud-uploader";
 import { TestCloudError } from "./test-cloud-error";
 import { StateChecker } from "./state-checker";
-import { MobileCenterClient } from "../../../util/apis";
+import { AppCenterClient } from "../../../util/apis";
 import { StreamingArrayOutput } from "../../../util/interaction";
 import { getUser } from "../../../util/profile";
 import { parseTestParameters } from "./parameters-parser";
@@ -101,7 +101,7 @@ export abstract class RunTestsCommand extends AppCommand {
   protected async validateOptions(): Promise<void> {
   }
 
-  public async run(client: MobileCenterClient, portalBaseUrl: string): Promise<CommandResult> {
+  public async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     if (this.isAppPathRquired && !this.appPath) {
       throw new Error("Argument --app-path is required");
     }
@@ -201,10 +201,10 @@ export abstract class RunTestsCommand extends AppCommand {
   private artifactsDir: string;
 
   protected async getArtifactsDir(): Promise<string> {
-    return this.artifactsDir || (this.artifactsDir = await pfs.mkTempDir("mobile-center-upload"));
+    return this.artifactsDir || (this.artifactsDir = await pfs.mkTempDir("appcenter-upload"));
   }
 
-  protected async uploadAndStart(client: MobileCenterClient, manifestPath: string, portalBaseUrl: string): Promise<StartedTestRun> {
+  protected async uploadAndStart(client: AppCenterClient, manifestPath: string, portalBaseUrl: string): Promise<StartedTestRun> {
     let uploader = new TestCloudUploader(
       client,
       this.app.ownerName,
@@ -226,7 +226,7 @@ export abstract class RunTestsCommand extends AppCommand {
     return await uploader.uploadAndStart();
   }
 
-  private waitForCompletion(client: MobileCenterClient, testRunId: string): Promise<number> {
+  private waitForCompletion(client: AppCenterClient, testRunId: string): Promise<number> {
     let checker = new StateChecker(client, testRunId, this.app.ownerName, this.app.appName, this.streamingOutput);
     return checker.checkUntilCompleted(this.timeoutSec);
   }

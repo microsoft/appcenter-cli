@@ -13,11 +13,12 @@ import * as stream from "stream";
 import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../token-store";
 import { createOsxSecurityParsingStream, OsxSecurityParsingStream } from "./osx-keychain-parser";
 
-const debug = require("debug")("mobile-center-cli:util:token-store:osx:osx-token-store");
+const debug = require("debug")("appcenter-cli:util:token-store:osx:osx-token-store");
 import { inspect } from "util";
 
 const securityPath = '/usr/bin/security';
-const serviceName = "mobile-center-cli";
+const serviceName = "appcenter-cli";
+const oldServiceName = "mobile-center-cli";
 
 export class OsxTokenStore implements TokenStore {
 	list(): rx.Observable<TokenEntry> {
@@ -56,11 +57,11 @@ export class OsxTokenStore implements TokenStore {
 		});
 	}
 
-	get(key: TokenKeyType): Promise<TokenEntry> {
+	get(key: TokenKeyType, useOldName: boolean = false): Promise<TokenEntry> {
 		var args = [
 			"find-generic-password",
 			"-a", key,
-			"-s", serviceName,
+			"-s", useOldName ? oldServiceName : serviceName,
 			"-g"
 		];
 
@@ -69,7 +70,7 @@ export class OsxTokenStore implements TokenStore {
 			reject = _.once(reject);
 
 			childProcess.execFile(securityPath, args, (err: Error, stdout: string, stderr: string) => {
-				if (err) { return reject(); }
+				if (err) { return reject(err); }
 				const match = /^password: (?:0x[0-9A-F]+. )?"(.*)"$/m.exec(stderr);
 				if (match) {
 					let accessToken = match[1].replace(/\\134/g, "\\");
@@ -108,7 +109,7 @@ export class OsxTokenStore implements TokenStore {
 	  var args = [
 	    "add-generic-password",
 	    "-a", key,
-	    "-D", "mobile-center cli password",
+	    "-D", "appcenter cli password",
 	    "-s", serviceName,
 	    "-w", value.token,
 	    "-G", value.id,

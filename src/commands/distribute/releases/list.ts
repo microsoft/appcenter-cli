@@ -1,15 +1,15 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, help, success } from "../../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
 
-const debug = require("debug")("mobile-center-cli:commands:distribute:releases:list");
+const debug = require("debug")("appcenter-cli:commands:distribute:releases:list");
 
 @help("Shows the list of all releases for the application")
 export default class ShowReleasesCommand extends AppCommand {
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     let releases: models.BasicReleaseDetailsResponse[];

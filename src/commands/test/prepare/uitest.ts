@@ -7,7 +7,7 @@ import * as outExtensions from "../lib/interaction";
 import * as process from "../../../util/misc/process-helper";
 import { Messages } from "../lib/help-messages";
 
-const debug = require("debug")("mobile-center-cli:commands:tests:prepare");
+const debug = require("debug")("appcenter-cli:commands:tests:prepare");
 
 @help(Messages.TestCloud.Commands.PrepareUITests)
 export default class PrepareUITestCommand extends PrepareTestsCommand {

@@ -1,5 +1,5 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success, defaultValue } from "../../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
 import * as fs from "fs";
@@ -59,11 +59,11 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
 
   protected targetBinaryVersion: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     throw new Error("For dev purposes only!");
   }
 
-  protected async release(client: MobileCenterClient): Promise<CommandResult> {
+  protected async release(client: AppCenterClient): Promise<CommandResult> {
     this.rollout = Number(this.specifiedRollout);
 
     const validationResult: CommandResult =  await this.validate(client);
@@ -91,8 +91,8 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
             packageParameter: fs.createReadStream(updateContentsZipPath),
             deploymentName1: this.deploymentName,
             description: this.description,
-            disabled: this.disabled, 
-            mandatory: this.mandatory, 
+            disabled: this.disabled,
+            mandatory: this.mandatory,
             noDuplicateReleaseError: this.noDuplicateReleaseError,
             rollout: this.rollout,
           },
@@ -111,7 +111,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     }
   }
 
-  private async validate(client: MobileCenterClient): Promise<CommandResult> {
+  private async validate(client: AppCenterClient): Promise<CommandResult> {
     if (isBinaryOrZip(this.updateContentsPath)) {
       return failure(ErrorCodes.InvalidParameter, "It is unnecessary to package releases in a .zip or binary file. Please specify the direct path to the update content's directory (e.g. /platforms/ios/www) or file (e.g. main.jsbundle).");
     }
@@ -126,7 +126,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
 
     if (!this.deploymentName && !(await isValidDeployment(client, this.app, this.specifiedDeploymentName))) {
       return failure(ErrorCodes.InvalidParameter, `Deployment "${this.specifiedDeploymentName}" does not exist.`);
-    } 
+    }
 
     return success();
   }

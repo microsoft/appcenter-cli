@@ -14,11 +14,11 @@ var WebResource = msRest.WebResource;
  * @class
  * Analytics
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  * Initializes a new instance of the Analytics class.
  * @constructor
  *
- * @param {MobileCenterClient} client Reference to the service client.
+ * @param {AppCenterClient} client Reference to the service client.
  */
 function Analytics(client) {
   this.client = client;

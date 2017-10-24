@@ -1,9 +1,9 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
-import { MobileCenterClient, clientRequest, models } from "../../../util/apis";
+import { AppCenterClient, clientRequest, models } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
 
-const debug = require("debug")("mobile-center-cli:commands:distribute:releases:delete");
+const debug = require("debug")("appcenter-cli:commands:distribute:releases:delete");
 
 @help("Deletes the release")
 export default class DeleteReleaseCommand extends AppCommand {
@@ -14,7 +14,7 @@ export default class DeleteReleaseCommand extends AppCommand {
   @hasArg
   public releaseId: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     const releaseId = Number(this.releaseId);
@@ -56,7 +56,7 @@ export default class DeleteReleaseCommand extends AppCommand {
       }
     } catch (error) {
       if (error.code === "partially_deleted") {
-        return failure(ErrorCodes.Exception, `release ${this.releaseId} was removed from all distribution groups, but couldn't be deleted from Mobile Center`);
+        return failure(ErrorCodes.Exception, `release ${this.releaseId} was removed from all distribution groups, but couldn't be deleted from AppCenter`);
       } else {
         debug(`Failed to remove the release - ${inspect(error)}`);
         return failure(ErrorCodes.Exception, `failed to delete the release`);

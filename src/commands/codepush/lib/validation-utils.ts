@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as semver from "semver";
-import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { DefaultApp } from "../../../util/profile";
 
 // Allow plain integer versions (as well as '1.0' values) for now, e.g. '1' is valid here and we assume that it is equal to '1.0.0'. 
@@ -13,7 +13,7 @@ export function isValidRollout(rollout: number): boolean {
   return (rollout && rollout > 0 && rollout <= 100);
 }
 
-export async function isValidDeployment(client: MobileCenterClient, app: DefaultApp, deploymentName: string): Promise<boolean> {
+export async function isValidDeployment(client: AppCenterClient, app: DefaultApp, deploymentName: string): Promise<boolean> {
   const httpRequest = await clientRequest<models.CodePushRelease>(
     (cb) => client.codePushDeployments.get(deploymentName, app.ownerName, app.appName, cb));
 

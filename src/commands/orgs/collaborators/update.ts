@@ -1,5 +1,5 @@
 import { Command, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -9,7 +9,7 @@ import { DefaultApp } from "../../../util/profile";
 import { getUsersList } from "../../../util/misc/list-of-users-helper";
 import { getOrgUsers } from "../lib/org-users-helper";
 
-const debug = require("debug")("mobile-center-cli:commands:orgs:collaborators:update");
+const debug = require("debug")("appcenter-cli:commands:orgs:collaborators:update");
 const pLimit = require("p-limit");
 
 @help("Update list of organization collaborators")
@@ -69,7 +69,7 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
   @hasArg
   adminsToMakeCollaboratorsFile: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     // validate that string and file properties are not specified simultaneously
     this.validateParameters();
 
@@ -82,7 +82,7 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
     const usersJoinedOrgPromise = getOrgUsers(client, this.name, debug);
 
     // showing spinner while prerequisites are being loaded
-    const [collaboratorsToAdd, collaboratorsToDelete, collaboratorsToMakeAdmins, adminsToMakeCollaborators, usersInvitedToOrg, usersJoinedOrg] = await out.progress("Loading prerequisites...", 
+    const [collaboratorsToAdd, collaboratorsToDelete, collaboratorsToMakeAdmins, adminsToMakeCollaborators, usersInvitedToOrg, usersJoinedOrg] = await out.progress("Loading prerequisites...",
       Promise.all([collaboratorsToAddPromise, collaboratorsToDeletePromise, collaboratorsToMakeAdminsPromise, adminsToMakeCollaboratorsPromise, usersInvitedToOrgPromise, usersJoinedOrgPromise]));
 
     let addedCollaborators: string[];
@@ -113,7 +113,7 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
       const joinedUserEmailsToUserObject = this.toUserEmailMap(usersJoinedOrg.filter((user) => deletedCollaborators.indexOf(user.email) === -1));
 
       toAdmins = await out.progress("Changing role to admins...", this.changeUsersRole(client, collaboratorsToMakeAdmins, joinedUserEmailsToUserObject, "admin"));
-      
+
       // updating roles after setting admins
       Array.from(joinedUserEmailsToUserObject.values()).filter((user) => collaboratorsToMakeAdmins.indexOf(user.email) > -1).forEach((user) => user.role = "admin");
 
@@ -125,7 +125,7 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
 
     out.text((result) => {
       const stringArray: string[] = [];
-      
+
       if (result.addedCollaborators.length) {
         stringArray.push(`Successfully added ${result.addedCollaborators.length} collaborators to organization`);
       }
@@ -141,7 +141,7 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
 
       return stringArray.join(Os.EOL);
     }, {addedCollaborators, deletedCollaborators, toAdmins, toCollaborators});
-    
+
     return success();
   }
 
@@ -166,7 +166,7 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
     }
   }
 
-  private async getUsersInvitedToOrg(client: MobileCenterClient): Promise<string[]> {
+  private async getUsersInvitedToOrg(client: AppCenterClient): Promise<string[]> {
     try {
       const httpRequest = await clientRequest<models.AppInvitationDetailResponse[]>((cb) => client.orgInvitations.listPending(this.name, cb));
       if (httpRequest.response.statusCode < 400) {
@@ -188,18 +188,18 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
     return pLimit(10);
   }
 
-  private async addCollaborators(client: MobileCenterClient, collaborators: string[], usersInvitedToOrg: string[], usersJoinedOrg: string[]): Promise<string[]> {
+  private async addCollaborators(client: AppCenterClient, collaborators: string[], usersInvitedToOrg: string[], usersJoinedOrg: string[]): Promise<string[]> {
     const limiter = this.getLimiter();
     const filteredCollaborators = _.difference(collaborators, usersJoinedOrg); // no need to add users already joined org
 
     await Promise.all(filteredCollaborators
-      .map((collaborator) => 
+      .map((collaborator) =>
         limiter(() => usersInvitedToOrg.some((invited) => invited === collaborator) ? this.resendInvitationToUser(client, collaborator) : this.sendInvitationToUser(client, collaborator))));
-    
+
     return filteredCollaborators;
   }
 
-  private async sendInvitationToUser(client: MobileCenterClient, collaborator: string): Promise<void> {
+  private async sendInvitationToUser(client: AppCenterClient, collaborator: string): Promise<void> {
     try {
       const httpResponse = await clientRequest((cb) => client.orgInvitations.create(this.name, collaborator, cb));
       if (httpResponse.response.statusCode >= 400) {
@@ -215,7 +215,7 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
     }
   }
 
-  private async resendInvitationToUser(client: MobileCenterClient, collaborator: string): Promise<void> {
+  private async resendInvitationToUser(client: AppCenterClient, collaborator: string): Promise<void> {
     try {
       const httpResponse = await clientRequest((cb) => client.orgInvitations.sendNewInvitation(this.name, collaborator, cb));
       if (httpResponse.response.statusCode >= 400) {
@@ -231,7 +231,7 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
     }
   }
 
-  private async deleteCollaborators(client: MobileCenterClient, collaborators: string[], usersInvitedToOrg: string[], joinedUserEmailsToUserObject: Map<string, models.OrganizationUserResponse>): Promise<string[]> {
+  private async deleteCollaborators(client: AppCenterClient, collaborators: string[], usersInvitedToOrg: string[], joinedUserEmailsToUserObject: Map<string, models.OrganizationUserResponse>): Promise<string[]> {
     const limiter = this.getLimiter();
     const userActions: Array<Promise<void>> = [];
     const collaboratorsForDeletion: string[] = [];
@@ -245,7 +245,7 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
         // user was invited to the org, cancel invite
         userActions.push(limiter(() => this.cancelUserInvitation(client, collaborator)));
         collaboratorsForDeletion.push(collaborator);
-      } 
+      }
       // otherwise nothing to do
     }
 
@@ -254,7 +254,7 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
     return collaboratorsForDeletion;
   }
 
-  private async cancelUserInvitation(client: MobileCenterClient, collaborator: string): Promise<void> {
+  private async cancelUserInvitation(client: AppCenterClient, collaborator: string): Promise<void> {
     try {
       const httpResponse = await clientRequest((cb) => client.orgInvitations.deleteMethod(this.name, collaborator, cb));
       if (httpResponse.response.statusCode >= 400) {
@@ -270,7 +270,7 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
     }
   }
 
-  private async deleteUserFromOrganization(client: MobileCenterClient, collaboratorName: string): Promise<void> {
+  private async deleteUserFromOrganization(client: AppCenterClient, collaboratorName: string): Promise<void> {
     try {
       const httpResponse = await clientRequest((cb) => client.users.removeFromOrg(this.name, collaboratorName, cb));
       if (httpResponse.response.statusCode >= 400) {
@@ -286,7 +286,7 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
     }
   }
 
-  private async changeUsersRole(client: MobileCenterClient, collaborators: string[], userJoinedOrgToRole: Map<string, models.OrganizationUserResponse>, role: UserRole): Promise<string[]> {
+  private async changeUsersRole(client: AppCenterClient, collaborators: string[], userJoinedOrgToRole: Map<string, models.OrganizationUserResponse>, role: UserRole): Promise<string[]> {
     const limiter = this.getLimiter();
     // no need to change role for non-collaborators and collaborators with target role
     const filteredCollaboratorsNames = collaborators
@@ -298,7 +298,7 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
     return filteredCollaboratorsNames;
   }
 
-  private async changeUserRole(client: MobileCenterClient, collaboratorName: string, role: UserRole): Promise<void> {
+  private async changeUserRole(client: AppCenterClient, collaboratorName: string, role: UserRole): Promise<void> {
     try {
       const httpResponse = await clientRequest((cb) => client.users.updateOrgRole(this.name, collaboratorName, {
         role

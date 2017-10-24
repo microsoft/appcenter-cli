@@ -1,9 +1,9 @@
 import { Command, CommandArgs, CommandResult, help, success } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportTokenInfo } from "./lib/format-token";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
-const debug = require("debug")("mobile-center-cli:commands:apps:list");
+const debug = require("debug")("appcenter-cli:commands:apps:list");
 import { inspect } from "util";
 
 @help("Get a list of API tokens")
@@ -12,7 +12,7 @@ export default class ApiTokenListCommand extends Command {
     super(args);
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     const apiTokensResponse = await out.progress("Getting API tokens ...",
       clientRequest<models.ApiTokensGetResponse[]>((cb) => client.apiTokens.list(cb)));
 

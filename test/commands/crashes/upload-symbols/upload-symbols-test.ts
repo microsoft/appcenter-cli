@@ -21,7 +21,7 @@ MockRequire("../../../../src/commands/crashes/lib/azure-blob-upload-helper", {
 import UploadSymbolsCommand from "../../../../src/commands/crashes/upload-symbols";
 MockRequire.stopAll();
 
-import { MobileCenterClient } from "../../../../src/util/apis";
+import { AppCenterClient } from "../../../../src/util/apis";
 import { CommandArgs, CommandResult } from "../../../../src/util/commandline";
 
 Temp.track();
@@ -51,7 +51,7 @@ describe("upload-symbols command", () => {
   const alternativeMappingsFileContent = "Alternative Mappings";
 
   let tmpFolderPath: string;
-  
+
   let postSymbolSpy: Sinon.SinonSpy;
   let patchSymbolSpy: Sinon.SinonSpy;
   let abortSymbolUploadSpy: Sinon.SinonSpy;
@@ -206,7 +206,7 @@ describe("upload-symbols command", () => {
 
       // Act
       let result = await expect(executeUploadCommand(["-s", zipPath])).to.eventually.be.rejected;
-      
+
       // Assert
       testUploadFailure(result, expectedRequestsScope, skippedRequestsScope);
     });
@@ -250,7 +250,7 @@ describe("upload-symbols command", () => {
     const testZipFilePath = Path.join(tmpFolderPath, testZipFile);
     let zip = new JsZip();
     let testFileContent = await Pfs.readFile(symbolsFilePath);
-    zip.file(symbolsFile1Name, testFileContent);  
+    zip.file(symbolsFile1Name, testFileContent);
 
     // writing zip file
     await Pfs.writeFile(testZipFilePath, await zip.generateAsync({

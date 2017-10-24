@@ -1,17 +1,17 @@
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { Profile, deleteUser } from "../../util/profile";
 import { out } from "../../util/interaction";
 
-const debug = require("debug")("mobile-center-cli:commands:lib:logout");
+const debug = require("debug")("appcenter-cli:commands:lib:logout");
 
 // How long to wait before giving up on the token being deleted
 const maxTokenDeletionTimeoutSec = 10;
 
-export async function logout(client: MobileCenterClient, user: Profile): Promise<void> {
+export async function logout(client: AppCenterClient, user: Profile): Promise<void> {
   await out.progress("Logging out current user...", performLogout(client, user));
 }
 
-async function performLogout(client: MobileCenterClient, user: Profile): Promise<void> { 
+async function performLogout(client: AppCenterClient, user: Profile): Promise<void> {
   // Only delete token off the server if CLI created it.
   if (!user.tokenSuppliedByUser) {
     let tokenId: string;

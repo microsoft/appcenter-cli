@@ -1,114 +1,115 @@
 # Introduction
 
-Mobile Center command line interface is a unified tool for running Mobile Center services from the command line. Our aim is to offer a concise and powerful tool for our developers to use Mobile Center services and easily script a sequence of commands that they'd like to execute. You can currently login and view/configure all the apps that you have access to in Mobile Center.
+Visual Studio App Center command line interface (cli) is a unified tool for running AppCenter services from the command line.
+Our aim is to offer a concise and powerful tool for our developers to use AppCenter services and easily script a sequence of
+commands that they'd like to execute. You can currently login and view/configure all the apps that you have access to in AppCenter.
 
-Although our current feature set is minimal, all the existing Mobile Center services will be added going forward. Note that the Mobile Center CLI is currently in public preview.
+Note that the AppCenter CLI is currently in public preview.
 
 # Prerequisites
 
-Mobile Center CLI requires Node.js version 6.3 or better. Do not use Node.js 7.1.0, there is a known issue that breaks the CLI code (and many other projects) on Windows 10. This bug has been fixed in later releases of Node.js 7.
+AppCenter CLI requires Node.js version 6.3 or better. Do not use Node.js 7.1.0, there is a known issue that breaks the CLI code (and many other projects) on Windows 10. This bug has been fixed in later releases of Node.js 7.
 
 # Installation
 
 ```
-npm install -g mobile-center-cli
+npm install -g appcenter-cli
 ```
 
-Once installed, use the `mobile-center` command. See below for the available commands.
+Once installed, use the `appcenter` command. See below for the available commands.
 
 # Getting Help
 
-To get a top level list of the available commands, run `mobile-center help`.
+To get a top level list of the available commands, run `appcenter help`.
 
-To get help on a specific command or category, run `mobile-center help command` or pass the `-h` flag to any command or category name.
+To get help on a specific command or category, run `appcenter help command` or pass the `-h` flag to any command or category name.
 
 # Commands
 
-Below is the list of commands currently supported by Mobile Center CLI:
+Below is the list of commands currently supported by Visual Studio App Center CLI:
 
 | Command                               | Description                                                    |
 | ------------------------------------- | -------------------------------------------------------------- |
-| `mobile-center help` | Get help using mobile-center commands |
-| `mobile-center login` | Log in |
-| `mobile-center logout` | Log out |
-| `mobile-center setup-autocomplete` | Setup tab completion for your shell |
+| `appcenter help` | Get help using appcenter commands |
+| `appcenter login` | Log in |
+| `appcenter logout` | Log out |
+| `appcenter setup-autocomplete` | Setup tab completion for your shell |
 | | |
-| `mobile-center analytics app-versions` | Shows versions of the application |
-| `mobile-center analytics audience` | Show audience statistics |
-| `mobile-center analytics log-flow` | Command to see the incoming logs in real time |
-| `mobile-center analytics sessions` | Show statistics for sessions |
-| `mobile-center analytics events delete` | Delete event |
-| `mobile-center analytics events show` | Show statistics for events |
+| `appcenter analytics app-versions` | Shows versions of the application |
+| `appcenter analytics audience` | Show audience statistics |
+| `appcenter analytics log-flow` | Command to see the incoming logs in real time |
+| `appcenter analytics sessions` | Show statistics for sessions |
+| `appcenter analytics events delete` | Delete event |
+| `appcenter analytics events show` | Show statistics for events |
 | | |
-| `mobile-center apps create` | Create a new app |
-| `mobile-center apps delete` | Delete an app |
-| `mobile-center apps get-current` | Get the application that's set as default for all CLI commands |
-| `mobile-center apps list` | Get list of configured applications |
-| `mobile-center apps set-current` | Set default application for all CLI commands |
-| `mobile-center apps show` | Get the details of an app |
-| `mobile-center apps update` | Update an app |
+| `appcenter apps create` | Create a new app |
+| `appcenter apps delete` | Delete an app |
+| `appcenter apps get-current` | Get the application that's set as default for all CLI commands |
+| `appcenter apps list` | Get list of configured applications |
+| `appcenter apps set-current` | Set default application for all CLI commands |
+| `appcenter apps show` | Get the details of an app |
+| `appcenter apps update` | Update an app |
 | | |
-| `mobile-center build download` | Download the binary, logs or symbols for a completed build |
-| `mobile-center build logs` | Displays log for build |
-| `mobile-center build queue` | Queue a new build |
-| `mobile-center build branches list` | Show list of branches |
-| `mobile-center build branches show` | Show branch build status |
+| `appcenter build download` | Download the binary, logs or symbols for a completed build |
+| `appcenter build logs` | Displays log for build |
+| `appcenter build queue` | Queue a new build |
+| `appcenter build branches list` | Show list of branches |
+| `appcenter build branches show` | Show branch build status |
 | | |
-| `mobile-center codepush patch` | Update the metadata for an existing CodePush release |
-| `mobile-center codepush deployment add` | Add a new deployment to an app |
-| `mobile-center codepush deployment history` | Display the release history for a CodePush deployment |
-| `mobile-center codepush deployment list` | List the deployments associated with an app |
+| `appcenter codepush patch` | Update the metadata for an existing CodePush release |
+| `appcenter codepush deployment add` | Add a new deployment to an app |
+| `appcenter codepush deployment history` | Display the release history for a CodePush deployment |
+| `appcenter codepush deployment list` | List the deployments associated with an app |
 | | |
-| `mobile-center crashes upload-missing-symbols` | Upload missing crash symbols for the application (only from macOS) |
-| `mobile-center crashes upload-symbols` | Upload the crash symbols for the application |
+| `appcenter crashes upload-missing-symbols` | Upload missing crash symbols for the application (only from macOS) |
+| `appcenter crashes upload-symbols` | Upload the crash symbols for the application |
 | | |
-| `mobile-center distribute release` | Upload release binary and trigger distribution |
-| `mobile-center distribute groups create` | Create new distribution group |
-| `mobile-center distribute groups delete` | Deletes the distribution group |
-| `mobile-center distribute groups download` | Download release package for the distribution group |
-| `mobile-center distribute groups list` | Lists all distribution groups of the app |
-| `mobile-center distribute groups show` | Shows information about the distribution group |
-| `mobile-center distribute groups update` | Update existing distribution group |
-| `mobile-center distribute releases delete` | Deletes the release |
-| `mobile-center distribute releases list` | Shows the list of all releases for the application |
-| `mobile-center distribute releases show` | Shows full details about release |
+| `appcenter distribute release` | Upload release binary and trigger distribution |
+| `appcenter distribute groups create` | Create new distribution group |
+| `appcenter distribute groups delete` | Deletes the distribution group |
+| `appcenter distribute groups download` | Download release package for the distribution group |
+| `appcenter distribute groups list` | Lists all distribution groups of the app |
+| `appcenter distribute groups show` | Shows information about the distribution group |
+| `appcenter distribute groups update` | Update existing distribution group |
+| `appcenter distribute releases delete` | Deletes the release |
+| `appcenter distribute releases list` | Shows the list of all releases for the application |
+| `appcenter distribute releases show` | Shows full details about release |
 | | |
-| `mobile-center orgs create` | Create a new organization |
-| `mobile-center orgs list` | Lists organizations in which current user is collaborator |
-| `mobile-center orgs show` | Show information about organization |
-| `mobile-center orgs update` | Update organization information |
-| `mobile-center orgs apps list` | Lists applications of organization |
-| `mobile-center orgs collaborators list` | Lists collaborators of organization |
-| `mobile-center orgs collaborators update` | Update list of organization collaborators |
+| `appcenter orgs create` | Create a new organization |
+| `appcenter orgs list` | Lists organizations in which current user is collaborator |
+| `appcenter orgs show` | Show information about organization |
+| `appcenter orgs update` | Update organization information |
+| `appcenter orgs apps list` | Lists applications of organization |
+| `appcenter orgs collaborators list` | Lists collaborators of organization |
+| `appcenter orgs collaborators update` | Update list of organization collaborators |
 | | |
-| `mobile-center profile list` | Get information about logged in user |
-| `mobile-center profile update` | Update user information |
+| `appcenter profile list` | Get information about logged in user |
+| `appcenter profile update` | Update user information |
 | | |
-| `mobile-center telemetry off` | Turn off the sending of telemetry |
-| `mobile-center telemetry on` | Turn on the sending of telemetry |
+| `appcenter telemetry off` | Turn off the sending of telemetry |
+| `appcenter telemetry on` | Turn on the sending of telemetry |
 | | |
-| `mobile-center test status` | Checks the status of the started test run. |
-| `mobile-center test stop` | Stop the started test run. |
-| `mobile-center test generate appium` | Generates an Appium project |
-| `mobile-center test generate uitest` | Generates a Xamarin.UITest project |
-| `mobile-center test prepare appium` | Creates an artifacts directory with Appium tests. |
-| `mobile-center test prepare calabash` | Creates an artifacts directory with Calabash tests. |
-| `mobile-center test prepare espresso` | Creates an artifacts directory with Espresso tests. |
-| `mobile-center test prepare uitest` | Creates an artifacts directory with Xamarin UI Tests. |
-| `mobile-center test prepare xcuitest` | Creates an artifacts directory with XCUITest tests. |
-| `mobile-center test run appium` | Starts a test run with Appium tests. |
-| `mobile-center test run calabash` | Starts a test run with Calabash tests. |
-| `mobile-center test run espresso` | Starts a test run with Espresso tests. |
-| `mobile-center test run manifest` | Starts a test run with previously prepared artifacts. |
-| `mobile-center test run uitest` | Starts a test run with Xamarin UI Tests. |
-| `mobile-center test run xcuitest` | Starts a test run with XCUITest tests. |
+| `appcenter test status` | Checks the status of the started test run |
+| `appcenter test stop` | Stop the started test run |
+| `appcenter test generate appium` | Generates an Appium project |
+| `appcenter test generate uitest` | Generates a Xamarin.UITest project |
+| `appcenter test prepare appium` | Creates an artifacts directory with Appium tests |
+| `appcenter test prepare calabash` | Creates an artifacts directory with Calabash tests |
+| `appcenter test prepare espresso` | Creates an artifacts directory with Espresso tests |
+| `appcenter test prepare uitest` | Creates an artifacts directory with Xamarin UI Tests |
+| `appcenter test prepare xcuitest` | Creates an artifacts directory with XCUITest tests |
+| `appcenter test run appium` | Starts a test run with Appium tests |
+| `appcenter test run calabash` | Starts a test run with Calabash tests |
+| `appcenter test run espresso` | Starts a test run with Espresso tests |
+| `appcenter test run manifest` | Starts a test run with previously prepared artifacts |
+| `appcenter test run uitest` | Starts a test run with Xamarin UI Tests |
+| `appcenter test run xcuitest` | Starts a test run with XCUITest tests |
 | | |
-| `mobile-center tokens create` | Create a new API token |
-| `mobile-center tokens delete` | Delete an API token |
-| `mobile-center tokens list` | Get a list of API tokens |
+| `appcenter tokens create` | Create a new API token |
+| `appcenter tokens delete` | Delete an API token |
+| `appcenter tokens list` | Get a list of API tokens |
 
-
-Please use the `mobile-center help` command to get more information about each one.
+Please use the `appcenter help` command to get more information about each one.
 
 # Contributing
 

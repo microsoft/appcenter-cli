@@ -1,9 +1,9 @@
 import * as Path from "path";
 import * as Fs from "fs";
-
+import { scriptName } from "../misc";
 const omelette = require("omelette");
 
-const appName = "mobile-center";
+const appName = scriptName;
 
 function getAutoCompleteObject() {
   return omelette(appName);
@@ -22,8 +22,8 @@ export function executeAutoComplete() {
     const getReply = getReplyHandler(lineEndsWithWhitespaceChar);
 
     reply(getReply(args, expandedAutoCompleteTree));
-  });  
-  
+  });
+
   autoCompleteObject.init();
 }
 
@@ -74,7 +74,7 @@ function getReplyHandler(lineEndsWithWhitespaceChar: boolean): (args: string[], 
 }
 
 function getCommandReplyHandler(lineEndsWithWhitespaceChar: boolean): (args: string[], optionNames: IOptionNames[]) => string[] {
-  return function getCommandReply(args: string[], optionsNames: IOptionNames[]): string[] {  
+  return function getCommandReply(args: string[], optionsNames: IOptionNames[]): string[] {
     const currentArg = head(args);
     if (currentArg === undefined) {
       // no more args, returning remaining optionsNames
@@ -113,7 +113,7 @@ function getAutoCompleteTreeWithExpandedHelp(originalTree: IAutocompleteTree): I
   const helpTree = cloneDeep(originalTree, (entry) => entry instanceof Array ? cloneDeep(originalTree["help"]) : undefined);
   delete helpTree["help"];
 
-  const expandedTree = cloneDeep(originalTree);  
+  const expandedTree = cloneDeep(originalTree);
   expandedTree["help"] = helpTree;
 
   return expandedTree;

@@ -14,9 +14,9 @@ const telemetryOptionFile: string = "telemetryEnabled.json";
 const telemetryDisableEnvironmentVar = "MOBILE_CENTER_TELEMETRY";
 
 const telemetryPromptText = os.EOL +
-"Mobile Center CLI would like to collect data about how users use CLI commands " +
+"App Center CLI would like to collect data about how users use CLI commands " +
  "and some problems they encounter. Participation is voluntary and when you choose to participate your " +
- "device automatically sends information to Microsoft about how you use Mobile Center CLI." +
+ "device automatically sends information to Microsoft about how you use App Center CLI." +
  os.EOL +
  "For more information, please see our privacy policy at https://aka.ms/mobilecenterprivacy" +
  os.EOL;

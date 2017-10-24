@@ -1,12 +1,12 @@
 import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success } from "../../../util/commandline";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
-import { MobileCenterClient, models, clientRequest, clientCall } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest, clientCall } from "../../../util/apis";
 import * as _ from "lodash";
 import * as chalk from "chalk";
 import { scriptName } from "../../../util/misc";
 
-const debug = require("debug")("mobile-center-cli:commands:codepush:deployments:list");
+const debug = require("debug")("appcenter-cli:commands:codepush:deployments:list");
 
 @help("List the deployments associated with an app")
 export default class CodePushDeploymentListListCommand extends AppCommand {
@@ -15,7 +15,7 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
     super(args);
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
     let deployments: models.Deployment[];
     try {

@@ -1,8 +1,8 @@
 import { Command, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../../util/commandline";
 import { out } from "../../../util/interaction";
-import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 
-const debug = require("debug")("mobile-center-cli:commands:orgs:collaborators:list");
+const debug = require("debug")("appcenter-cli:commands:orgs:collaborators:list");
 import { inspect } from "util";
 import { getPortalOrgLink } from "../../../util/portal/portal-helper";
 import { getOrgUsers } from "../lib/org-users-helper";
@@ -16,7 +16,7 @@ export default class OrgCollaboratorsListCommand extends Command {
   @hasArg
   name: string;
 
-  async run(client: MobileCenterClient, portalBaseUrl: string): Promise<CommandResult> {
+  async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     const users: models.OrganizationUserResponse[] = await getOrgUsers(client, this.name, debug);
 
     out.table(out.getCommandOutputTableOptions(["Name", "Display Name", "Email"]), users.map((user) => [user.name, user.displayName, user.email]));

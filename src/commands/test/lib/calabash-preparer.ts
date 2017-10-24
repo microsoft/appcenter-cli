@@ -4,7 +4,7 @@ import * as path from "path";
 import * as process from "../../../util/misc/process-helper";
 import { out } from "../../../util/interaction";
 
-const debug = require("debug")("mobile-center-cli:commands:test:lib:calabash-preparer");
+const debug = require("debug")("appcenter-cli:commands:test:lib:calabash-preparer");
 
 export class CalabashPreparer {
   private readonly appPath: string;
@@ -72,7 +72,7 @@ export class CalabashPreparer {
 
   private generateTestParameterArgs(): string {
     let result: string = "";
-  
+
     if (this.testParameters) {
       this.testParameters.forEach(p => {
         let parsedParameter = parseTestParameter(p);
@@ -84,22 +84,22 @@ export class CalabashPreparer {
           result += `${parsedParameter.value}`;
         }
       });
-    }    
+    }
 
     return result;
   }
 
   /*
-   The Calabash `test-cloud prepare` command uses different argument names than the Mobile Center CLI.
-   We cannot easily change that: the `test-cloud prepare` uses argument names that are consistent with other 
-   `test-cloud` commands, while the `mobile-center test run calabash` uses argument names that are consistent with 
-   other Mobile Center CLI commands.
+   The Calabash `test-cloud prepare` command uses different argument names than the AooCenter CLI.
+   We cannot easily change that: the `test-cloud prepare` uses argument names that are consistent with other
+   `test-cloud` commands, while the `appcenter test run calabash` uses argument names that are consistent with
+   other AppCenter CLI commands.
 
-   As a result, user who uses Mobile Center CLI will see misleading error messages, such as:
+   As a result, user who uses AppCenter CLI will see misleading error messages, such as:
     `The --profile option was set without a --config option.`
-   
-   However, when user tries again with the --config option, he will see another error message, since the correct name 
-   for Mobile Center CLI is `--config-path`.
+
+   However, when user tries again with the --config option, he will see another error message, since the correct name
+   for AppCenter CLI is `--config-path`.
 
    The easiest way to make the experience better is to translate the messages.
   */

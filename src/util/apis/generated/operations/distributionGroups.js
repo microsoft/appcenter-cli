@@ -14,11 +14,11 @@ var WebResource = msRest.WebResource;
  * @class
  * DistributionGroups
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  * Initializes a new instance of the DistributionGroups class.
  * @constructor
  *
- * @param {MobileCenterClient} client Reference to the service client.
+ * @param {AppCenterClient} client Reference to the service client.
  */
 function DistributionGroups(client) {
   this.client = client;

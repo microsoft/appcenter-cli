@@ -3,9 +3,9 @@
 import { AppCommand, CommandArgs, CommandResult, help, success, failure, ErrorCodes } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportApp } from "./lib/format-app";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
-const debug = require("debug")("mobile-center-cli:commands:apps:show");
+const debug = require("debug")("appcenter-cli:commands:apps:show");
 import { inspect } from "util";
 
 @help("Get the details of an app")
@@ -14,7 +14,7 @@ export default class AppShowCommand extends AppCommand {
     super(args);
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     const appDetailsResponse = await out.progress("Getting app details ...", clientRequest<models.AppResponse>(cb => client.apps.get(app.ownerName, app.appName, cb)));

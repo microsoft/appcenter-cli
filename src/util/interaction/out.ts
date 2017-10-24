@@ -1,5 +1,5 @@
 // Functions to support outputting stuff to the user
-const debug = require("debug")("mobile-center-cli:util:interaction:out");
+const debug = require("debug")("appcenter-cli:util:interaction:out");
 import { inspect } from "util";
 
 import { isDebug, isQuiet, formatIsJson, formatIsCsv, formatIsParsingCompatible } from "./io-options";
@@ -127,10 +127,10 @@ export function table(...args: any[]): void {
 
 // Formatting helper for cli-table2 - default command output table style
 export function getCommandOutputTableOptions(header: string[]): object {
-  return { 
-    head: header, 
-    style: { 
-      head: [] 
+  return {
+    head: header,
+    style: {
+      head: []
     }
   };
 }
@@ -180,7 +180,7 @@ export function getOptionsForTwoColumnTableWithNoBorders(firstColumnWidth: numbe
 //       ["Username", "userName" ],
 //       [ "Display Name", "displayName" ],
 //       [ "Email", "email"]
-//     ], "No logged in user. Use 'mobile-center login' command to log in.",
+//     ], "No logged in user. Use 'appcenter login' command to log in.",
 //     user);
 //
 // "userName", "displayName", and "email" are names of properties on the user object being
@@ -200,7 +200,7 @@ export function getOptionsForTwoColumnTableWithNoBorders(firstColumnWidth: numbe
 //       [ "Username", "name.userName" ],
 //       [ "Display Name", "name.displayName" ],
 //       [ "Email", "email"]
-//     ], "No logged in user. Use 'mobile-center login' command to log in.",
+//     ], "No logged in user. Use 'appcenter login' command to log in.",
 //     user);
 //
 // Each report format entry can have a formatter supplied with it. This is a function that
@@ -561,7 +561,7 @@ function padTableCells(wholeTable: INamedTable): INamedTable {
       if (entry instanceof Array) {
         // row
         return entry.map((cellContent, cellIndex) => _.padEnd(cellContent, levelAndCellIndexToMaxWidth.get(getMapKey(level, cellIndex))));
-      } else { 
+      } else {
         // inner table
         return pad(entry, level + 1);
   }
@@ -604,7 +604,7 @@ function isINamedTable(object: any): object is INamedTable {
 
 // number - level of the table (controls left padding of the table and name)
 export type NamedTables = INamedTable[];
-type ObjectToNamedTablesConvertor<T> = (object: T, 
+type ObjectToNamedTablesConvertor<T> = (object: T,
                                 numberFormatter: (num: number) => string,
                                 dateFormatter: (date: Date) => string,
                                         percentageFormatter: (percentage: number) => string) => NamedTables;
@@ -621,7 +621,7 @@ export function reportObjectAsTitledTables<T>(toNamedTables: ObjectToNamedTables
       const stringTables = toNamedTables(object, (num) => _.round(num, 2).toString(), (date) => date.toString(), (percentage) => _.round(percentage, 2).toString() + "%");
       output = convertNamedTablesToListString(stringTables);
     }
-    
+
     console.log(output);
   }
 }

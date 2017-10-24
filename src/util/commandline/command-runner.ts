@@ -6,7 +6,7 @@ import * as Finder from "./command-finder";
 import * as Loader from "./command-loader";
 import { setDebug, isDebug, setFormatJson } from "../interaction";
 
-const debug = require("debug")("mobile-center-cli:util:commandline:command-runner");
+const debug = require("debug")("appcenter-cli:util:commandline:command-runner");
 import { inspect } from "util";
 
 export interface CommandRunner {

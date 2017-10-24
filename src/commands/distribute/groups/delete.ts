@@ -1,9 +1,9 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
-import { MobileCenterClient, clientRequest } from "../../../util/apis";
+import { AppCenterClient, clientRequest } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
 
-const debug = require("debug")("mobile-center-cli:commands:distribute:groups:delete");
+const debug = require("debug")("appcenter-cli:commands:distribute:groups:delete");
 
 @help("Deletes the distribution group")
 export default class DeleteDistributionGroupCommand extends AppCommand {
@@ -14,7 +14,7 @@ export default class DeleteDistributionGroupCommand extends AppCommand {
   @hasArg
   public distributionGroup: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     if (!await prompt.confirm(`Do you really want to delete distribution group ${this.distributionGroup}?`)) {
@@ -23,7 +23,7 @@ export default class DeleteDistributionGroupCommand extends AppCommand {
     }
 
     try {
-      const httpResponse = await out.progress(`Removing the distribution group...`, 
+      const httpResponse = await out.progress(`Removing the distribution group...`,
         clientRequest((cb) => client.distributionGroups.deleteMethod(app.appName, app.ownerName, this.distributionGroup, cb)));
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.response.statusCode;

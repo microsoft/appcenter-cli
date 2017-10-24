@@ -37,7 +37,7 @@ interface DoneFunc {
 // Dummy data for parsing tests
 const entries = {
   entry1:
-`Target Name: MobileCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/
+`Target Name: AppCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/
 Type: Generic
 User Name: creds.exe`,
   entry2:
@@ -82,7 +82,7 @@ describe('credstore output parsing', function () {
 
     it('should have expected target', function () {
       expect(parsingResult[0].targetName).to
-        .equal('MobileCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/');
+        .equal('AppCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/');
     });
 
     it('should not have a credential', function () {
@@ -109,7 +109,7 @@ describe('credstore output parsing', function () {
 
     it('should have expected targets', function () {
       expect(parsingResult[0].targetName).to
-        .equal('MobileCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/');
+        .equal('AppCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/');
       expect(parsingResult[1].targetName).to
         .equal('AzureXplatCli:target=userId:someotheruser@domain.example::resourceId:https\\://management.core.windows.net/');
     });
