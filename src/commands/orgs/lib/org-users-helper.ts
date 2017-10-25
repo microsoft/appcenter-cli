@@ -2,6 +2,8 @@ import { MobileCenterClient, models, clientRequest, ClientResponse } from "../..
 import { failure, ErrorCodes } from "../../../util/commandline";
 import { inspect } from "util";
 
+const debug = require("debug")("mobile-center-cli:commands:orgs:lib:org-users-helper");
+
 export async function getOrgUsers(client: MobileCenterClient, organization: string, debug: Function): Promise<models.OrganizationUserResponse[]> {
   try {
     const httpResponse = await clientRequest<models.OrganizationUserResponse[]>((cb) => client.users.listForOrg(organization, cb));
@@ -20,7 +22,7 @@ export async function getOrgUsers(client: MobileCenterClient, organization: stri
   }
 }
 
-export async function getOrgsNamesList(client: MobileCenterClient, debug: Function): Promise<IEntity[]> {
+export async function getOrgsNamesList(client: MobileCenterClient): Promise<IEntity[]> {
   try {
     const httpResponse = await clientRequest<models.OrganizationResponse[]>((cb) => client.organizations.list(cb));
     if (httpResponse.response.statusCode < 400) {
