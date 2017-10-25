@@ -70,7 +70,7 @@ export class TestCloudUploader {
   }
 
   public async uploadAndStart(): Promise<StartedTestRun> {
-    let orgs = await getOrgsNamesList(this._client, debug);
+    let orgs = await getOrgsNamesList(this._client);
     let isOrg = false;
     for (let org of orgs) {
       if (org.name === this._userName)
