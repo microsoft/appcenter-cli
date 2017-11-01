@@ -8,65 +8,38 @@
 
 var models = require('./index');
 
+var util = require('util');
+
 /**
  * @class
  * Initializes a new instance of the NewCrashGroupAlertingEvent class.
  * @constructor
  * New crash group alerting event
  *
- * @member {string} eventId A unique identifier for this event instance.
- * Useful for deduplication
+ * @member {object} [crashGroupProperties] Properties of new crash group
  * 
- * @member {string} eventTimestamp ISO 8601 date time when event was generated
+ * @member {string} [crashGroupProperties.id]
  * 
- * @member {number} eventVersion Versioning for this eventType. Default value:
- * 1 .
+ * @member {string} [crashGroupProperties.name]
  * 
- * @member {object} [properties] Obsolete. Use emailProperties.
+ * @member {string} [crashGroupProperties.reason]
  * 
- * @member {object} [emailProperties] Email properties for a specific event
+ * @member {string} [crashGroupProperties.url]
  * 
- * @member {object} [newCrashGroupWebhookProperties]
+ * @member {string} [crashGroupProperties.appDisplayName]
  * 
- * @member {string} [newCrashGroupWebhookProperties.publicIdentifier]
+ * @member {string} [crashGroupProperties.appPlatform]
  * 
- * @member {object} [newCrashGroupWebhookProperties.crashReason]
+ * @member {string} [crashGroupProperties.appVersion]
  * 
- * @member {string} [newCrashGroupWebhookProperties.crashReason.id]
- * 
- * @member {string} [newCrashGroupWebhookProperties.crashReason.appId]
- * 
- * @member {string} [newCrashGroupWebhookProperties.crashReason.createdAt]
- * 
- * @member {string} [newCrashGroupWebhookProperties.crashReason.updatedAt]
- * 
- * @member {number} [newCrashGroupWebhookProperties.crashReason.status]
- * 
- * @member {string} [newCrashGroupWebhookProperties.crashReason.reason]
- * 
- * @member {string} [newCrashGroupWebhookProperties.crashReason.lastCrashAt]
- * 
- * @member {string} [newCrashGroupWebhookProperties.crashReason.appBuild]
- * 
- * @member {string} [newCrashGroupWebhookProperties.crashReason.appVersion]
- * 
- * @member {string} [newCrashGroupWebhookProperties.crashReason.method]
- * 
- * @member {string} [newCrashGroupWebhookProperties.crashReason.file]
- * 
- * @member {string} [newCrashGroupWebhookProperties.crashReason.class]
- * 
- * @member {string} [newCrashGroupWebhookProperties.crashReason.line]
- * 
- * @member {string} [newCrashGroupWebhookProperties.title]
- * 
- * @member {string} [newCrashGroupWebhookProperties.text]
- * 
- * @member {string} [newCrashGroupWebhookProperties.url]
+ * @member {array} [crashGroupProperties.stackTrace]
  * 
  */
 function NewCrashGroupAlertingEvent() {
+  NewCrashGroupAlertingEvent['super_'].call(this);
 }
+
+util.inherits(NewCrashGroupAlertingEvent, models['AlertingEvent']);
 
 /**
  * Defines the metadata of NewCrashGroupAlertingEvent
@@ -82,13 +55,6 @@ NewCrashGroupAlertingEvent.prototype.mapper = function () {
       name: 'Composite',
       className: 'NewCrashGroupAlertingEvent',
       modelProperties: {
-        eventId: {
-          required: true,
-          serializedName: 'event_id',
-          type: {
-            name: 'String'
-          }
-        },
         eventTimestamp: {
           required: true,
           serializedName: 'event_timestamp',
@@ -96,12 +62,11 @@ NewCrashGroupAlertingEvent.prototype.mapper = function () {
             name: 'String'
           }
         },
-        eventVersion: {
+        eventId: {
           required: true,
-          serializedName: 'event_version',
-          defaultValue: 1,
+          serializedName: 'event_id',
           type: {
-            name: 'Number'
+            name: 'String'
           }
         },
         properties: {
@@ -111,19 +76,12 @@ NewCrashGroupAlertingEvent.prototype.mapper = function () {
             name: 'Object'
           }
         },
-        emailProperties: {
+        crashGroupProperties: {
           required: false,
-          serializedName: 'emailProperties',
-          type: {
-            name: 'Object'
-          }
-        },
-        newCrashGroupWebhookProperties: {
-          required: false,
-          serializedName: 'newCrashGroupWebhookProperties',
+          serializedName: 'crash_group_properties',
           type: {
             name: 'Composite',
-            className: 'NewCrashGroupWebhookProperties'
+            className: 'NewCrashGroupAlertingEventCrashGroupProperties'
           }
         }
       }

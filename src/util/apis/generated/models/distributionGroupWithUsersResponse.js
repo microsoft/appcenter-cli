@@ -20,6 +20,11 @@ var util = require('util');
  * 
  * @member {number} totalUserCount The count of users in the distribution group
  * 
+ * @member {number} notifiedUserCount The count of non-pending users in the
+ * distribution group who will be notified by new releases
+ * 
+ * @member {boolean} [isPublic] Whether the distribution group is public
+ * 
  * @member {array} users The distribution group users
  * 
  */
@@ -59,6 +64,20 @@ DistributionGroupWithUsersResponse.prototype.mapper = function () {
           serializedName: 'total_user_count',
           type: {
             name: 'Number'
+          }
+        },
+        notifiedUserCount: {
+          required: true,
+          serializedName: 'notified_user_count',
+          type: {
+            name: 'Number'
+          }
+        },
+        isPublic: {
+          required: false,
+          serializedName: 'is_public',
+          type: {
+            name: 'Boolean'
           }
         },
         users: {

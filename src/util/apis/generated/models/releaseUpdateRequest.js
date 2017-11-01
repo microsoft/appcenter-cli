@@ -6,6 +6,10 @@
 
 'use strict';
 
+var models = require('./index');
+
+var util = require('util');
+
 /**
  * @class
  * Initializes a new instance of the ReleaseUpdateRequest class.
@@ -13,40 +17,38 @@
  * A request containing information for updating a release.
  *
  * @member {string} [distributionGroupName] OBSOLETE. Will be removed in
- * future releases. Name of a distribution group. The release will be
- * associated with this distribution group. If the distribution group doesn't
- * exist a 400 is returned. If both distribution group name and id are
- * passed, the id is taking precedence.
+ * future releases - use destinations instead. Name of a distribution group.
+ * The release will be associated with this distribution group. If the
+ * distribution group doesn't exist a 400 is returned. If both distribution
+ * group name and id are passed, the id is taking precedence.
  * 
  * @member {string} [distributionGroupId] OBSOLETE. Will be removed in future
- * releases. Id of a distribution group. The release will be associated with
- * this distribution group. If the distribution group doesn't exist a 400 is
- * returned. If both distribution group name and id are passed, the id is
- * taking precedence.
+ * releases - use destinations instead. Id of a distribution group. The
+ * release will be associated with this distribution group. If the
+ * distribution group doesn't exist a 400 is returned. If both distribution
+ * group name and id are passed, the id is taking precedence.
  * 
- * @member {string} [destinationName] Name of a distribution group /
- * distribution store. The release will be associated with this distribution
- * group or store. If the distribution group / store doesn't exist a 400 is
- * returned. If both distribution group / store name and id are passed, the
+ * @member {string} [destinationName] OBSOLETE. Will be removed in future
+ * releases - use destinations instead. Name of a destination. The release
+ * will be associated with this destination. If the destination doesn't exist
+ * a 400 is returned. If both distribution group name and id are passed, the
  * id is taking precedence.
  * 
- * @member {string} [destinationId] Id of a distribution group / store. The
- * release will be associated with this distribution group / store. If the
- * distribution group / store doesn't exist a 400 is returned. If both
- * distribution group / store name and id are passed, the id is taking
- * precedence.
+ * @member {string} [destinationId] OBSOLETE. Will be removed in future
+ * releases - use destinations instead. Id of a destination. The release will
+ * be associated with this destination. If the destination doesn't exist a
+ * 400 is returned. If both destination name and id are passed, the id is
+ * taking precedence.
  * 
- * @member {string} [destinationType] The destination type.<br>
- * <b>group</b>: The release distributed to internal groups and
- * distribution_groups details will be returned.<br>
- * <b>store</b>: Coming Soon - The release distributed to external stores and
- * distribution_stores details will be returned. <br>
- * . Possible values include: 'group', 'store'
+ * @member {string} [destinationType] Not used anymore.
  * 
  * @member {string} [releaseNotes] Release notes for this release.
  * 
  * @member {boolean} [mandatoryUpdate] A boolean which determines whether this
  * version should be a mandatory update or not.
+ * 
+ * @member {array} [destinations] Distribute this release under the following
+ * list of destinations (store groups or distribution groups).
  * 
  */
 function ReleaseUpdateRequest() {
@@ -113,6 +115,21 @@ ReleaseUpdateRequest.prototype.mapper = function () {
           serializedName: 'mandatory_update',
           type: {
             name: 'Boolean'
+          }
+        },
+        destinations: {
+          required: false,
+          serializedName: 'destinations',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'DestinationIdElementType',
+                type: {
+                  name: 'Composite',
+                  className: 'DestinationId'
+                }
+            }
           }
         }
       }

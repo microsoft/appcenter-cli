@@ -14,7 +14,7 @@
  *
  * @member {string} [name] The version name
  * 
- * @member {boolean} [current] If the version is current
+ * @member {boolean} [current] If the Mono is latest stable
  * 
  */
 function MonoVersion() {

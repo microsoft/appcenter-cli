@@ -20,6 +20,9 @@
  * @member {string} deviceName The device description, in the format "iPhone 7
  * Plus (A1784)"
  * 
+ * @member {string} [fullDeviceName] A combination of the device model name
+ * and the owner name.
+ * 
  * @member {string} osBuild The last known OS version running on the device
  * 
  * @member {string} osVersion The last known OS version running on the device
@@ -69,6 +72,13 @@ DeviceInfoResponse.prototype.mapper = function () {
         deviceName: {
           required: true,
           serializedName: 'device_name',
+          type: {
+            name: 'String'
+          }
+        },
+        fullDeviceName: {
+          required: false,
+          serializedName: 'full_device_name',
           type: {
             name: 'String'
           }

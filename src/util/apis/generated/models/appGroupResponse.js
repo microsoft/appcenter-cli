@@ -15,11 +15,15 @@
  * @member {string} groupId The unique ID (UUID) of the group that the app
  * belongs to
  * 
- * @member {string} [os] The OS the app will be running on. Possible values
- * include: 'Android', 'iOS', 'macOS', 'Tizen', 'Windows', 'Custom'
+ * @member {string} [displayName] The display name of the app
+ * 
+ * @member {string} name The name of the app used in URLs
+ * 
+ * @member {string} os The OS the app will be running on. Possible values
+ * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Custom'
  * 
  * @member {string} platform The platform of the app. Possible values include:
- * 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'Unity', 'UWP',
+ * 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native', 'Unity',
  * 'Xamarin', 'Unknown'
  * 
  */
@@ -54,8 +58,22 @@ AppGroupResponse.prototype.mapper = function () {
             name: 'String'
           }
         },
-        os: {
+        displayName: {
           required: false,
+          serializedName: 'display_name',
+          type: {
+            name: 'String'
+          }
+        },
+        name: {
+          required: true,
+          serializedName: 'name',
+          type: {
+            name: 'String'
+          }
+        },
+        os: {
+          required: true,
           serializedName: 'os',
           type: {
             name: 'String'

@@ -26,6 +26,14 @@ var models = require('./index');
  * 
  * @member {string} [xcode.certificateEncoded]
  * 
+ * @member {string} [xcode.provisioningProfileFileId]
+ * 
+ * @member {string} [xcode.certificateFileId]
+ * 
+ * @member {string} [xcode.provisioningProfileUploadId]
+ * 
+ * @member {string} [xcode.certificateUploadId]
+ * 
  * @member {string} [xcode.certificatePassword]
  * 
  * @member {string} [xcode.scheme]
@@ -40,6 +48,15 @@ var models = require('./index');
  * 
  * @member {boolean} [xcode.automaticSigning]
  * 
+ * @member {string} [xcode.xcodeProjectSha] The selected pbxproject hash to
+ * the repositroy
+ * 
+ * @member {string} [xcode.archiveConfiguration] The build configuration of
+ * the target to archive
+ * 
+ * @member {string} [xcode.targetToArchive] The target id of the selected
+ * scheme to archive
+ * 
  * @member {object} [javascript]
  * 
  * @member {string} [javascript.packageJsonPath] Path to package.json file for
@@ -47,6 +64,9 @@ var models = require('./index');
  * 
  * @member {boolean} [javascript.runTests] Whether to run Jest unit tests, via
  * npm test, during the build
+ * 
+ * @member {string} [javascript.reactNativeVersion] Version of React Native
+ * from package.json files
  * 
  * @member {object} [xamarin]
  * 
@@ -63,6 +83,10 @@ var models = require('./index');
  * @member {string} [xamarin.p12Pwd]
  * 
  * @member {string} [xamarin.provProfile]
+ * 
+ * @member {string} [xamarin.monoVersion]
+ * 
+ * @member {string} [xamarin.sdkBundle]
  * 
  * @member {object} [android]
  * 

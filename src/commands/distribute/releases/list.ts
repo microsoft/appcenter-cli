@@ -12,10 +12,10 @@ export default class ShowReleasesCommand extends AppCommand {
   public async run(client: MobileCenterClient): Promise<CommandResult> {
     const app = this.app;
 
-    let releases: models.BasicReleaseDetails[];
+    let releases: models.BasicReleaseDetailsResponse[];
     try {
-      const httpRequest = await out.progress("Loading list of releases...", clientRequest<models.BasicReleaseDetails[]>(
-        (cb) => client.releases.list(app.ownerName, app.appName, {
+      const httpRequest = await out.progress("Loading list of releases...", clientRequest<models.BasicReleaseDetailsResponse[]>(
+        (cb) => client.releasesOperations.list(app.ownerName, app.appName, {
           publishedOnly: true
         }, cb)));
       releases = httpRequest.result;

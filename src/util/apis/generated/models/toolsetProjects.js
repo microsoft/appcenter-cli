@@ -8,8 +8,6 @@
 
 var models = require('./index');
 
-var util = require('util');
-
 /**
  * @class
  * Initializes a new instance of the ToolsetProjects class.
@@ -18,17 +16,37 @@ var util = require('util');
  *
  * @member {string} [commit] The commit hash of the analyzed commit
  * 
- * @member {array} [xcode] Xcode projects, with their schemes
+ * @member {object} [xcode]
  * 
- * @member {array} [javascript] package.json files
+ * @member {array} [xcode.xcodeSchemeContainers] The Xcode scheme containers
  * 
- * @member {array} [xamarin] Xamarin solutions
+ * @member {object} [javascript]
+ * 
+ * @member {array} [javascript.packageJsonPaths] Paths for detected
+ * package.json files
+ * 
+ * @member {array} [javascript.javascriptSolutions] The React Native solutions
+ * detected
+ * 
+ * @member {object} [xamarin]
+ * 
+ * @member {array} [xamarin.xamarinSolutions] Xamarin solutions for the toolset
  * 
  * @member {object} [android]
  * 
  * @member {array} [android.androidModules] Android Gradle modules
  * 
  * @member {string} [android.gradleWrapperPath] The path of the Gradle wrapper
+ * 
+ * @member {object} [buildscripts]
+ * 
+ * @member {object} [uwp]
+ * 
+ * @member {array} [uwp.uwpSolutions] The UWP solutions detected
+ * 
+ * @member {object} [testcloud]
+ * 
+ * @member {array} [testcloud.projects] The TestCloud projects detected
  * 
  */
 function ToolsetProjects() {
@@ -59,44 +77,24 @@ ToolsetProjects.prototype.mapper = function () {
           required: false,
           serializedName: 'xcode',
           type: {
-            name: 'Sequence',
-            element: {
-                required: false,
-                serializedName: 'XcodeSchemeContainerElementType',
-                type: {
-                  name: 'Composite',
-                  className: 'XcodeSchemeContainer'
-                }
-            }
+            name: 'Composite',
+            className: 'XcodeToolset'
           }
         },
         javascript: {
           required: false,
           serializedName: 'javascript',
           type: {
-            name: 'Sequence',
-            element: {
-                required: false,
-                serializedName: 'StringElementType',
-                type: {
-                  name: 'String'
-                }
-            }
+            name: 'Composite',
+            className: 'JavaScriptToolset'
           }
         },
         xamarin: {
           required: false,
           serializedName: 'xamarin',
           type: {
-            name: 'Sequence',
-            element: {
-                required: false,
-                serializedName: 'XamarinSolutionElementType',
-                type: {
-                  name: 'Composite',
-                  className: 'XamarinSolution'
-                }
-            }
+            name: 'Composite',
+            className: 'XamarinToolset'
           }
         },
         android: {
@@ -105,6 +103,37 @@ ToolsetProjects.prototype.mapper = function () {
           type: {
             name: 'Composite',
             className: 'AndroidProject'
+          }
+        },
+        buildscripts: {
+          required: false,
+          serializedName: 'buildscripts',
+          type: {
+            name: 'Dictionary',
+            value: {
+                required: false,
+                serializedName: 'ToolsetProjectElementType',
+                type: {
+                  name: 'Composite',
+                  className: 'ToolsetProject'
+                }
+            }
+          }
+        },
+        uwp: {
+          required: false,
+          serializedName: 'uwp',
+          type: {
+            name: 'Composite',
+            className: 'UWPToolset'
+          }
+        },
+        testcloud: {
+          required: false,
+          serializedName: 'testcloud',
+          type: {
+            name: 'Composite',
+            className: 'TestCloudToolset'
           }
         }
       }

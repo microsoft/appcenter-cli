@@ -6,20 +6,23 @@
 
 'use strict';
 
+var models = require('./index');
+
+var util = require('util');
+
 /**
  * @class
  * Initializes a new instance of the DistributionGroup class.
  * @constructor
- * @member {string} [id] ID identifying a unique distribution group.
- * 
- * @member {string} [name] A name identifying a unique distribution group.
- * 
  * @member {boolean} [isLatest] Is the containing release the latest one in
  * this distribution group.
  * 
  */
 function DistributionGroup() {
+  DistributionGroup['super_'].call(this);
 }
+
+util.inherits(DistributionGroup, models['DestinationId']);
 
 /**
  * Defines the metadata of DistributionGroup
@@ -35,16 +38,16 @@ DistributionGroup.prototype.mapper = function () {
       name: 'Composite',
       className: 'DistributionGroup',
       modelProperties: {
-        id: {
+        name: {
           required: false,
-          serializedName: 'id',
+          serializedName: 'name',
           type: {
             name: 'String'
           }
         },
-        name: {
+        id: {
           required: false,
-          serializedName: 'name',
+          serializedName: 'id',
           type: {
             name: 'String'
           }

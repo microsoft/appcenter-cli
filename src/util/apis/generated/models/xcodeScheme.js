@@ -6,6 +6,8 @@
 
 'use strict';
 
+var models = require('./index');
+
 /**
  * @class
  * Initializes a new instance of the XcodeScheme class.
@@ -17,7 +19,13 @@
  * @member {string} [archiveConfiguration] Build configuration set in Archive
  * action
  * 
- * @member {string} [targetToArchive] The Id of the target to archive
+ * @member {object} [archiveProject]
+ * 
+ * @member {string} [archiveProject.archiveTargetId] The Id of the target to
+ * archive
+ * 
+ * @member {string} [archiveProject.projectName] The project to archive
+ * container name
  * 
  */
 function XcodeScheme() {
@@ -58,11 +66,12 @@ XcodeScheme.prototype.mapper = function () {
             name: 'String'
           }
         },
-        targetToArchive: {
+        archiveProject: {
           required: false,
-          serializedName: 'targetToArchive',
+          serializedName: 'archiveProject',
           type: {
-            name: 'String'
+            name: 'Composite',
+            className: 'XcodeArchiveProject'
           }
         }
       }

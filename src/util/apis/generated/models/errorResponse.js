@@ -16,7 +16,7 @@ var models = require('./index');
  * 
  * @member {string} [error.code] Possible values include: 'BadRequest',
  * 'Conflict', 'NotAcceptable', 'NotFound', 'InternalServerError',
- * 'Unauthorized'
+ * 'Unauthorized', 'TooManyRequests'
  * 
  * @member {string} [error.message]
  * 

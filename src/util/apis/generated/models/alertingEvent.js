@@ -17,12 +17,7 @@
  * @member {string} eventId A unique identifier for this event instance.
  * Useful for deduplication
  * 
- * @member {number} eventVersion Versioning for this eventType. Default value:
- * 1 .
- * 
  * @member {object} [properties] Obsolete. Use emailProperties.
- * 
- * @member {object} [emailProperties] Email properties for a specific event
  * 
  */
 function AlertingEvent() {
@@ -56,24 +51,9 @@ AlertingEvent.prototype.mapper = function () {
             name: 'String'
           }
         },
-        eventVersion: {
-          required: true,
-          serializedName: 'event_version',
-          defaultValue: 1,
-          type: {
-            name: 'Number'
-          }
-        },
         properties: {
           required: false,
           serializedName: 'properties',
-          type: {
-            name: 'Object'
-          }
-        },
-        emailProperties: {
-          required: false,
-          serializedName: 'emailProperties',
           type: {
             name: 'Object'
           }

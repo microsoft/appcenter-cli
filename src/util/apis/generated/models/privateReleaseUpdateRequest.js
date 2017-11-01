@@ -12,7 +12,8 @@
  * @constructor
  * A request containing information for updating a release.
  *
- * @member {string} [publishingStatus] The store publishing status.
+ * @member {string} [publishingStatus] The store publishing status. Possible
+ * values include: 'failed', 'submitted', 'published'
  * 
  */
 function PrivateReleaseUpdateRequest() {

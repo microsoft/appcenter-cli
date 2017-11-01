@@ -22,8 +22,8 @@ export default class ShowDistributionGroupCommand extends AppCommand {
       (cb) => client.distributionGroups.listUsers(app.ownerName, app.appName, this.distributionGroup, cb));
 
     // creating releases information request
-    const basicReleasesDetailsRequestResponse = clientRequest<models.BasicReleaseDetails[]>(
-      (cb) => client.releases.listByDistributionGroup(this.distributionGroup, app.ownerName, app.appName, cb));
+    const basicReleasesDetailsRequestResponse = clientRequest<models.BasicReleaseDetailsResponse[]>(
+      (cb) => client.releasesOperations.listByDistributionGroup(this.distributionGroup, app.ownerName, app.appName, cb));
 
     // show spinner and wait for the requests to finish
     await out.progress("Loading distribution group information...", 
@@ -47,7 +47,7 @@ export default class ShowDistributionGroupCommand extends AppCommand {
       }
     }
 
-    let basicReleasesDetails: models.BasicReleaseDetails[];
+    let basicReleasesDetails: models.BasicReleaseDetailsResponse[];
     try {
       debug(`Getting releases details for distribution group ${this.distributionGroup}`);
       let response = await basicReleasesDetailsRequestResponse;

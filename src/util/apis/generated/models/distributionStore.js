@@ -6,27 +6,30 @@
 
 'use strict';
 
+var models = require('./index');
+
+var util = require('util');
+
 /**
  * @class
  * Initializes a new instance of the DistributionStore class.
  * @constructor
- * @member {string} [id] ID identifying a unique distribution store.
- * 
- * @member {string} [name] A name identifying a unique distribution store.
- * 
  * @member {boolean} [isLatest] Is the containing release the latest one in
  * this distribution store.
  * 
  * @member {string} [type] type of the distribution store currently stores
- * type can be intune or googleplay. Possible values include: 'intune',
- * 'googleplay'
+ * type can be intune, googleplay or windows. Possible values include:
+ * 'intune', 'googleplay', 'windows'
  * 
  * @member {string} [publishingStatus] publishing status of the release in the
  * store.
  * 
  */
 function DistributionStore() {
+  DistributionStore['super_'].call(this);
 }
+
+util.inherits(DistributionStore, models['DestinationId']);
 
 /**
  * Defines the metadata of DistributionStore
@@ -42,16 +45,16 @@ DistributionStore.prototype.mapper = function () {
       name: 'Composite',
       className: 'DistributionStore',
       modelProperties: {
-        id: {
+        name: {
           required: false,
-          serializedName: 'id',
+          serializedName: 'name',
           type: {
             name: 'String'
           }
         },
-        name: {
+        id: {
           required: false,
-          serializedName: 'name',
+          serializedName: 'id',
           type: {
             name: 'String'
           }

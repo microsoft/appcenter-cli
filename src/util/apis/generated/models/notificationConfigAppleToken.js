@@ -18,9 +18,9 @@ var util = require('util');
  *
  * @member {string} keyId A 10-character key identifier (kid).
  * 
- * @member {string} appName The name of the application.
+ * @member {string} id Application ID.
  * 
- * @member {string} appId A 10-character Team ID (iss).
+ * @member {string} prefix Application prefix.
  * 
  * @member {string} token Provider Authentication Token.
  * 
@@ -62,16 +62,16 @@ NotificationConfigAppleToken.prototype.mapper = function () {
             name: 'String'
           }
         },
-        appName: {
+        id: {
           required: true,
-          serializedName: 'app_name',
+          serializedName: 'id',
           type: {
             name: 'String'
           }
         },
-        appId: {
+        prefix: {
           required: true,
-          serializedName: 'app_id',
+          serializedName: 'prefix',
           type: {
             name: 'String'
           }

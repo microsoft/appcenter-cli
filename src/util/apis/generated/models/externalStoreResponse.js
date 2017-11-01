@@ -18,7 +18,14 @@
  * 
  * @member {string} [type] Store Type
  * 
+ * @member {string} [track] Store track. Possible values include:
+ * 'production', 'alpha', 'beta', 'testflight-internal', 'testflight-external'
+ * 
  * @member {object} [intuneDetails] store details for intune
+ * 
+ * @member {string} [serviceConnectionId] Id for the shared service
+ * connection. In case of Apple AppStore, this connection will be used to
+ * create and connect to the Apple AppStore in Mobile Center.
  * 
  */
 function ExternalStoreResponse() {
@@ -59,11 +66,25 @@ ExternalStoreResponse.prototype.mapper = function () {
             name: 'String'
           }
         },
+        track: {
+          required: false,
+          serializedName: 'track',
+          type: {
+            name: 'String'
+          }
+        },
         intuneDetails: {
           required: false,
           serializedName: 'intune_details',
           type: {
             name: 'Object'
+          }
+        },
+        serviceConnectionId: {
+          required: false,
+          serializedName: 'service_connection_id',
+          type: {
+            name: 'String'
           }
         }
       }
