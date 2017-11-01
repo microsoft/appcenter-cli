@@ -62,6 +62,7 @@
     "@types/debug": "0.0.30",
     "@types/glob": "^5.0.32",
     "@types/inquirer": "0.0.35",
+    "@types/jszip": "^3.1.2",
     "@types/lodash": "^4.14.74",
     "@types/minimist": "^1.2.0",
     "@types/node": "^6.0.88",
