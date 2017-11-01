@@ -49,6 +49,36 @@ export default class RunUITestsCommand extends RunTestsCommand {
   @hasArg
   uiTestToolsDir: string;
 
+  @help(Messages.TestCloud.Arguments.Fixture)
+  @longName("fixture")
+  @hasArg
+  fixture: string[];
+
+  @help(Messages.TestCloud.Arguments.IncludeCategory)
+  @longName("include-category")
+  @hasArg
+  includeCategory: string[];
+
+  @help(Messages.TestCloud.Arguments.ExcludeCategory)
+  @longName("exclude-category")
+  @hasArg
+  excludeCategory: string[];
+
+  @help(Messages.TestCloud.Arguments.NUnitXml)
+  @longName("nunit-xml")
+  @hasArg
+  nunitXml: string;
+
+  @help(Messages.TestCloud.Arguments.TestChunk)
+  @longName("test-chunk")
+  @hasArg
+  testChunk: boolean;
+
+  @help(Messages.TestCloud.Arguments.FixtureChunk)
+  @longName("fixture-chunk")
+  @hasArg
+  fixtureChunk: boolean;
+
   constructor(args: CommandArgs) {
     super(args);
   }
@@ -72,6 +102,12 @@ export default class RunUITestsCommand extends RunTestsCommand {
     preparer.keyAlias = this.keyAlias;
     preparer.keyPassword = this.keyPassword;
     preparer.uiTestToolsDir = this.uiTestToolsDir;
+    preparer.fixture = this.fixture;
+    preparer.includeCategory = this.includeCategory;
+    preparer.excludeCategory = this.excludeCategory;
+    preparer.nunitXml = this.nunitXml;
+    preparer.testChunk = this.testChunk;
+    preparer.fixtureChunk = this.fixtureChunk;
 
     return preparer.prepare();
   }

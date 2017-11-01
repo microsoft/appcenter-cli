@@ -1,5 +1,6 @@
 import { TestCloudError } from "./test-cloud-error";
 import { glob } from "../../../util/misc/promisfied-glob";
+import { directoryExists, fileExists } from "../../../util/misc/promisfied-fs";
 import * as _ from "lodash";
 import * as os from "os";
 import * as path from "path";
@@ -20,6 +21,12 @@ export class UITestPreparer {
   public keyPassword: string;
   public signInfo: string;
   public uiTestToolsDir: string;
+  public fixture: string[];
+  public includeCategory: string[];
+  public excludeCategory: string[];
+  public nunitXml: string;
+  public testChunk: boolean;
+  public fixtureChunk: boolean;
 
   constructor(artifactsDir: string, buildDir: string, appPath: string) {
     if (!artifactsDir) {
@@ -78,15 +85,64 @@ export class UITestPreparer {
       command += ` --sign-info "${this.signInfo}"`;
     }
 
+    if (this.fixture) {
+      this.fixture.forEach(item => {
+        command += ` --fixture "${item}"`;
+      });
+    }
+
+    if (this.includeCategory) {
+      this.includeCategory.forEach(category => {
+        command += ` --include "${category}"`;
+      });
+    }
+
+    if (this.excludeCategory) {
+      this.excludeCategory.forEach(category => {
+        command += ` --exclude "${category}"`;
+      });
+    }
+
+    if (this.nunitXml) {
+      command += ` --nunit-xml "${this.nunitXml}"`;
+    }
+
+    if (this.testChunk) {
+      command += ` --test-chunk "${this.testChunk}"`;
+    }
+
+    if (this.fixtureChunk) {
+      command += ` --fixture-chunk "${this.fixtureChunk}"`;
+    }
+
     return command;
   }
 
   private async getTestCloudExecutablePath(): Promise<string> {
     let toolsDir = this.uiTestToolsDir || await this.findXamarinUITestNugetDir(this.buildDir);
+
+    if (!await directoryExists(toolsDir))
+    {
+      throw new Error(`Cannot find test-cloud.exe, the path specified by "--uitest-tools-dir" was not found.${os.EOL}` +
+        `Please check that "${toolsDir}" is a valid directory and contains test-cloud.exe.${os.EOL}` +
+        `Minimum required version is "${this.getMinimumVersionString()}".`);
+    }
+
     let testCloudPath = path.join(toolsDir, "test-cloud.exe");
+
+    if (!await fileExists(testCloudPath))
+    {
+      throw new Error(`Cannot find test-cloud.exe, the exe was not found in the path specified by "--uitest-tools-dir".${os.EOL}` +
+        `Please check that ${testCloudPath} points to a test-cloud.exe.${os.EOL}` +
+        `Minimum required version is "${this.getMinimumVersionString()}".`);
+    }
+
     if (testCloudPath.includes(" ")) {
       testCloudPath = `"${testCloudPath}"`;
     }
+
+    debug(`Using test cloud tools path: ${testCloudPath}`);
+
     return testCloudPath;
   }
 
