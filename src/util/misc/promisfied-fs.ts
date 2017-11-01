@@ -156,6 +156,22 @@ export async function directoryExists(path: string): Promise<boolean> {
    return await pathExists(path, false);
  }
 
+export async function access(path: string | Buffer, mode: number): Promise<void> {
+  return callFs(fs.access, path, mode).then(() => {});
+}
+
+export async function walk(dir: string): Promise<string[]> {
+  var results: string[] = [];
+  var list: string[] = await readdir(dir);
+  list.forEach(async (file: string): Promise<string[]|void> => {
+    file = path.join(dir, file);
+    var fileStats = await stat(file);
+    if (fileStats && fileStats.isDirectory()) results = results.concat(await walk(file));
+    else results.push(file);
+  });
+  return results;
+}
+
 async function pathExists(path: string, isFile: boolean): Promise<boolean> {
   let stats: fs.Stats = null;
   
