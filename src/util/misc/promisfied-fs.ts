@@ -161,15 +161,16 @@ export async function access(path: string | Buffer, mode: number): Promise<void>
 }
 
 export async function walk(dir: string): Promise<string[]> {
-  var results: string[] = [];
-  var list: string[] = await readdir(dir);
-  list.forEach(async (file: string): Promise<string[]|void> => {
-    file = path.join(dir, file);
-    var fileStats = await stat(file);
-    if (fileStats && fileStats.isDirectory()) results = results.concat(await walk(file));
-    else results.push(file);
-  });
-  return results;
+  var stats = await stat(dir);
+  if (stats.isDirectory()) {
+      var files: string[] = [];
+      for (let file of await readdir(dir)) {
+          files = files.concat(await walk(path.join(dir, file)));
+      }
+      return files;
+  } else {
+      return [dir];
+  }
 }
 
 async function pathExists(path: string, isFile: boolean): Promise<boolean> {

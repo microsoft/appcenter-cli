@@ -67,13 +67,10 @@ export default async function sign(privateKeyPath: string, updateContentsPath: s
 
             try { 
                 await pfs.writeFile(signatureFilePath, signedJwt);
+                console.log(`Generated a release signature and wrote it to ${signatureFilePath}`);
+                resolve(null);
             } catch (error){
-                if (error) {
-                    reject(error);
-                } else {
-                    console.log(`Generated a release signature and wrote it to ${signatureFilePath}`);
-                    resolve(null);
-                }
+                reject(error);
             }
         });
     });
