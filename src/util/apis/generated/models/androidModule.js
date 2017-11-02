@@ -16,8 +16,13 @@ var util = require('util');
  * 
  * @member {array} [productFlavors] The product flavors of the Android module
  * 
- * @member {array} [buildVariants] The build variants of the Android module
- * (matrix of product flavor + build type (debug|release))
+ * @member {array} [buildVariants] The detected build variants of the Android
+ * module (matrix of product flavor + build type (debug|release))
+ * 
+ * @member {array} [buildTypes] The detected build types fo the Android module
+ * 
+ * @member {boolean} [isRoot] Whether the module is at the root level of the
+ * project
  * 
  */
 function AndroidModule() {
@@ -70,6 +75,27 @@ AndroidModule.prototype.mapper = function () {
                   name: 'String'
                 }
             }
+          }
+        },
+        buildTypes: {
+          required: false,
+          serializedName: 'buildTypes',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'StringElementType',
+                type: {
+                  name: 'String'
+                }
+            }
+          }
+        },
+        isRoot: {
+          required: false,
+          serializedName: 'isRoot',
+          type: {
+            name: 'Boolean'
           }
         }
       }

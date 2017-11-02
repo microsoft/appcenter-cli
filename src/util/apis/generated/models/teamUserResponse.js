@@ -17,8 +17,7 @@
  * 
  * @member {string} name The unique name that is used to identify the user.
  * 
- * @member {string} role The role of the user has within the team. Possible
- * values include: 'maintainer', 'collaborator'
+ * @member {object} role The role of the user has within the team
  * 
  */
 function TeamUserResponse() {
@@ -63,7 +62,7 @@ TeamUserResponse.prototype.mapper = function () {
           required: true,
           serializedName: 'role',
           type: {
-            name: 'String'
+            name: 'Object'
           }
         }
       }

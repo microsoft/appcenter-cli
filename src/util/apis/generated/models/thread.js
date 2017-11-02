@@ -45,6 +45,8 @@ var util = require('util');
  * from. Possible values include: 'ios', 'android', 'xamarin',
  * 'react-native', 'other'
  * 
+ * @member {boolean} [crashed] True if this thread crashed
+ * 
  */
 function Thread() {
 }
@@ -105,6 +107,13 @@ Thread.prototype.mapper = function () {
           serializedName: 'platform',
           type: {
             name: 'String'
+          }
+        },
+        crashed: {
+          required: false,
+          serializedName: 'crashed',
+          type: {
+            name: 'Boolean'
           }
         }
       }

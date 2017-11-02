@@ -17,8 +17,6 @@ var util = require('util');
  * @member {array} [featureFlags] The feature flags that are enabled for this
  * app
  * 
- * @member {array} [memberPermissions] The permissions of the calling user
- * 
  * @member {array} [repositories] The repositories associated with this app
  * 
  */
@@ -56,11 +54,12 @@ AppResponseInternal.prototype.mapper = function () {
             name: 'String'
           }
         },
-        azureSubscriptionId: {
+        azureSubscription: {
           required: false,
-          serializedName: 'azure_subscription_id',
+          serializedName: 'azure_subscription',
           type: {
-            name: 'String'
+            name: 'Composite',
+            className: 'AzureSubscriptionResponse'
           }
         },
         description: {
@@ -120,9 +119,23 @@ AppResponseInternal.prototype.mapper = function () {
             name: 'String'
           }
         },
-        featureFlags: {
+        createdAt: {
           required: false,
-          serializedName: 'feature_flags',
+          serializedName: 'created_at',
+          type: {
+            name: 'String'
+          }
+        },
+        updatedAt: {
+          required: false,
+          serializedName: 'updated_at',
+          type: {
+            name: 'String'
+          }
+        },
+        memberPermissions: {
+          required: false,
+          serializedName: 'member_permissions',
           type: {
             name: 'Sequence',
             element: {
@@ -134,9 +147,9 @@ AppResponseInternal.prototype.mapper = function () {
             }
           }
         },
-        memberPermissions: {
+        featureFlags: {
           required: false,
-          serializedName: 'member_permissions',
+          serializedName: 'feature_flags',
           type: {
             name: 'Sequence',
             element: {

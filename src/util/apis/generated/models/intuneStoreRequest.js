@@ -20,9 +20,14 @@ var models = require('./index');
  * 
  * @member {string} [secretJson.refreshTokenExpiry] the expiry of refresh token
  * 
- * @member {string} [targetAudience] target audience in intune store
+ * @member {object} [targetAudience]
  * 
- * @member {string} [appCategory] app category in intune store
+ * @member {string} [targetAudience.name] display name for the target
+ * audience/group
+ * 
+ * @member {object} [appCategory]
+ * 
+ * @member {string} [appCategory.name] display name for the app category
  * 
  * @member {string} [tenantId] tenant id of the intune store
  * 
@@ -56,14 +61,16 @@ IntuneStoreRequest.prototype.mapper = function () {
           required: false,
           serializedName: 'target_audience',
           type: {
-            name: 'String'
+            name: 'Composite',
+            className: 'IntuneTargetAudience'
           }
         },
         appCategory: {
           required: false,
           serializedName: 'app_category',
           type: {
-            name: 'String'
+            name: 'Composite',
+            className: 'IntuneAppCategory'
           }
         },
         tenantId: {

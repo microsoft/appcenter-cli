@@ -308,7 +308,7 @@ Crashes.prototype.getAppCrashesInfo = function (ownerName, appName, options, cal
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object.
- *                      See {@link LogContainer} for more information.
+ *                      See {@link GenericLogContainer} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -381,7 +381,7 @@ Crashes.prototype.listSessionLogs = function (crashId, ownerName, appName, optio
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          var resultMapper = new client.models['ErrorModel']().mapper();
+          var resultMapper = new client.models['ErrorResponse']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -401,147 +401,7 @@ Crashes.prototype.listSessionLogs = function (crashId, ownerName, appName, optio
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['LogContainer']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
- * Gets url to download attachment
- *
- * @param {string} crashId id of a specific crash
- * 
- * @param {string} attachmentId attachment id
- * 
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {string} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-Crashes.prototype.getCrashAttachmentUrl = function (crashId, attachmentId, ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  // Validate
-  try {
-    if (crashId === null || crashId === undefined || typeof crashId.valueOf() !== 'string') {
-      throw new Error('crashId cannot be null or undefined and it must be of type string.');
-    }
-    if (attachmentId === null || attachmentId === undefined || typeof attachmentId.valueOf() !== 'string') {
-      throw new Error('attachmentId cannot be null or undefined and it must be of type string.');
-    }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crashes/{crash_id}/attachments/{attachment_id}/url';
-  requestUrl = requestUrl.replace('{crash_id}', encodeURIComponent(crashId));
-  requestUrl = requestUrl.replace('{attachment_id}', encodeURIComponent(attachmentId));
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          var resultMapper = new client.models['Failure']().mapper();
-          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'String'
-            }
-          };
+          var resultMapper = new client.models['GenericLogContainer']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -682,6 +542,142 @@ Crashes.prototype.getCrashTextAttachmentContent = function (crashId, attachmentI
               name: 'String'
             }
           };
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * Gets the URI location to download crash attachment
+ *
+ * @param {string} crashId id of a specific crash
+ * 
+ * @param {string} attachmentId attachment id
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *                      See {@link CrashAttachmentLocation} for more
+ *                      information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Crashes.prototype.getCrashAttachmentLocation = function (crashId, attachmentId, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (crashId === null || crashId === undefined || typeof crashId.valueOf() !== 'string') {
+      throw new Error('crashId cannot be null or undefined and it must be of type string.');
+    }
+    if (attachmentId === null || attachmentId === undefined || typeof attachmentId.valueOf() !== 'string') {
+      throw new Error('attachmentId cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crashes/{crash_id}/attachments/{attachment_id}/location';
+  requestUrl = requestUrl.replace('{crash_id}', encodeURIComponent(crashId));
+  requestUrl = requestUrl.replace('{attachment_id}', encodeURIComponent(attachmentId));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['Failure']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['CrashAttachmentLocation']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1240,7 +1236,7 @@ Crashes.prototype.getStacktrace = function (crashGroupId, crashId, ownerName, ap
 };
 
 /**
- * Gets the URL to download json of a specific crash
+ * Gets the URI location to download json of a specific crash
  *
  * @param {string} crashGroupId id of a specific group
  * 
@@ -1262,13 +1258,13 @@ Crashes.prototype.getStacktrace = function (crashGroupId, crashId, ownerName, ap
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object.
- *                      See {@link CrashRawUrl} for more information.
+ *                      See {@link CrashRawLocation} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Crashes.prototype.getRawCrashUrl = function (crashGroupId, crashId, ownerName, appName, options, callback) {
+Crashes.prototype.getRawCrashLocation = function (crashGroupId, crashId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1297,7 +1293,7 @@ Crashes.prototype.getRawCrashUrl = function (crashGroupId, crashId, ownerName, a
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes/{crash_id}/raw_url';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes/{crash_id}/raw/location';
   requestUrl = requestUrl.replace('{crash_group_id}', encodeURIComponent(crashGroupId));
   requestUrl = requestUrl.replace('{crash_id}', encodeURIComponent(crashId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
@@ -1359,7 +1355,149 @@ Crashes.prototype.getRawCrashUrl = function (crashGroupId, crashId, ownerName, a
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['CrashRawUrl']().mapper();
+          var resultMapper = new client.models['CrashRawLocation']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
+ * @summary Gets the native log of a specific crash as a text attachment
+ *
+ * Gets the native log of a specific crash as a text attachment
+ *
+ * @param {string} crashGroupId id of a specific group
+ * 
+ * @param {string} crashId id of a specific crash
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {string} appName The name of the application
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {string} [result]   - The deserialized result object.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Crashes.prototype.getNativeCrashDownload = function (crashGroupId, crashId, ownerName, appName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (crashGroupId === null || crashGroupId === undefined || typeof crashGroupId.valueOf() !== 'string') {
+      throw new Error('crashGroupId cannot be null or undefined and it must be of type string.');
+    }
+    if (crashId === null || crashId === undefined || typeof crashId.valueOf() !== 'string') {
+      throw new Error('crashId cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes/{crash_id}/native/download';
+  requestUrl = requestUrl.replace('{crash_group_id}', encodeURIComponent(crashGroupId));
+  requestUrl = requestUrl.replace('{crash_id}', encodeURIComponent(crashId));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          var resultMapper = new client.models['Failure']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'String'
+            }
+          };
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1535,6 +1673,15 @@ Crashes.prototype.getNativeCrash = function (crashGroupId, crashId, ownerName, a
  * @param {boolean} [options.includeLog] true if the crash should include the
  * custom log report. Default is false
  * 
+ * @param {boolean} [options.includeDetails] true if the crash should include
+ * in depth crash details
+ * 
+ * @param {boolean} [options.includeStacktrace] true if the crash should
+ * include the stacktrace information
+ * 
+ * @param {boolean} [options.groupingOnly] true if the stacktrace should be
+ * only the relevant thread / exception. Default is false
+ * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  * 
@@ -1562,6 +1709,9 @@ Crashes.prototype.get = function (crashGroupId, crashId, ownerName, appName, opt
   }
   var includeReport = (options && options.includeReport !== undefined) ? options.includeReport : false;
   var includeLog = (options && options.includeLog !== undefined) ? options.includeLog : false;
+  var includeDetails = (options && options.includeDetails !== undefined) ? options.includeDetails : false;
+  var includeStacktrace = (options && options.includeStacktrace !== undefined) ? options.includeStacktrace : false;
+  var groupingOnly = (options && options.groupingOnly !== undefined) ? options.groupingOnly : false;
   // Validate
   try {
     if (crashGroupId === null || crashGroupId === undefined || typeof crashGroupId.valueOf() !== 'string') {
@@ -1575,6 +1725,15 @@ Crashes.prototype.get = function (crashGroupId, crashId, ownerName, appName, opt
     }
     if (includeLog !== null && includeLog !== undefined && typeof includeLog !== 'boolean') {
       throw new Error('includeLog must be of type boolean.');
+    }
+    if (includeDetails !== null && includeDetails !== undefined && typeof includeDetails !== 'boolean') {
+      throw new Error('includeDetails must be of type boolean.');
+    }
+    if (includeStacktrace !== null && includeStacktrace !== undefined && typeof includeStacktrace !== 'boolean') {
+      throw new Error('includeStacktrace must be of type boolean.');
+    }
+    if (groupingOnly !== null && groupingOnly !== undefined && typeof groupingOnly !== 'boolean') {
+      throw new Error('groupingOnly must be of type boolean.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -1599,6 +1758,15 @@ Crashes.prototype.get = function (crashGroupId, crashId, ownerName, appName, opt
   }
   if (includeLog !== null && includeLog !== undefined) {
     queryParameters.push('include_log=' + encodeURIComponent(includeLog.toString()));
+  }
+  if (includeDetails !== null && includeDetails !== undefined) {
+    queryParameters.push('include_details=' + encodeURIComponent(includeDetails.toString()));
+  }
+  if (includeStacktrace !== null && includeStacktrace !== undefined) {
+    queryParameters.push('include_stacktrace=' + encodeURIComponent(includeStacktrace.toString()));
+  }
+  if (groupingOnly !== null && groupingOnly !== undefined) {
+    queryParameters.push('grouping_only=' + encodeURIComponent(groupingOnly.toString()));
   }
   if (queryParameters.length > 0) {
     requestUrl += '?' + queryParameters.join('&');

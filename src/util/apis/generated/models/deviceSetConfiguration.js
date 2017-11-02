@@ -30,6 +30,8 @@ var models = require('./index');
  * 
  * @member {string} [os]
  * 
+ * @member {string} [osName]
+ * 
  */
 function DeviceSetConfiguration() {
 }
@@ -74,6 +76,13 @@ DeviceSetConfiguration.prototype.mapper = function () {
         os: {
           required: false,
           serializedName: 'os',
+          type: {
+            name: 'String'
+          }
+        },
+        osName: {
+          required: false,
+          serializedName: 'osName',
           type: {
             name: 'String'
           }

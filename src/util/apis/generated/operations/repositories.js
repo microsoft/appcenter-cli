@@ -36,6 +36,12 @@ function Repositories(client) {
  * 
  * @param {object} [options] Optional Parameters.
  * 
+ * @param {string} [options.vstsAccountName] Filter repositories only for
+ * specified account and project, "vstsProjectId" is required
+ * 
+ * @param {string} [options.vstsProjectId] Filter repositories only for
+ * specified account and project, "vstsAccountName" is required
+ * 
  * @param {string} [options.form] The selected form of the object. Possible
  * values include: 'lite', 'full'
  * 
@@ -63,11 +69,19 @@ Repositories.prototype.list = function (sourceHost, ownerName, appName, options,
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  var vstsAccountName = (options && options.vstsAccountName !== undefined) ? options.vstsAccountName : undefined;
+  var vstsProjectId = (options && options.vstsProjectId !== undefined) ? options.vstsProjectId : undefined;
   var form = (options && options.form !== undefined) ? options.form : undefined;
   // Validate
   try {
     if (sourceHost === null || sourceHost === undefined || typeof sourceHost.valueOf() !== 'string') {
       throw new Error('sourceHost cannot be null or undefined and it must be of type string.');
+    }
+    if (vstsAccountName !== null && vstsAccountName !== undefined && typeof vstsAccountName.valueOf() !== 'string') {
+      throw new Error('vstsAccountName must be of type string.');
+    }
+    if (vstsProjectId !== null && vstsProjectId !== undefined && typeof vstsProjectId.valueOf() !== 'string') {
+      throw new Error('vstsProjectId must be of type string.');
     }
     if (form !== null && form !== undefined && typeof form.valueOf() !== 'string') {
       throw new Error('form must be of type string.');
@@ -89,6 +103,12 @@ Repositories.prototype.list = function (sourceHost, ownerName, appName, options,
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
   var queryParameters = [];
+  if (vstsAccountName !== null && vstsAccountName !== undefined) {
+    queryParameters.push('vstsAccountName=' + encodeURIComponent(vstsAccountName));
+  }
+  if (vstsProjectId !== null && vstsProjectId !== undefined) {
+    queryParameters.push('vstsProjectId=' + encodeURIComponent(vstsProjectId));
+  }
   if (form !== null && form !== undefined) {
     queryParameters.push('form=' + encodeURIComponent(form));
   }

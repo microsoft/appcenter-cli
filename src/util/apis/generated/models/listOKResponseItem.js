@@ -14,12 +14,6 @@
  * 
  * @member {string} [name] The slug name of the organization
  * 
- * @member {string} [collaboratorRole] The role the current user has within
- * the organization
- * 
- * @member {object} [collaboratorsCount] The number of users that are part of
- * this organization
- * 
  * @member {string} [origin] The creation origin of this organization.
  * Possible values include: 'mobile-center', 'hockeyapp'
  * 
@@ -53,20 +47,6 @@ ListOKResponseItem.prototype.mapper = function () {
           serializedName: 'name',
           type: {
             name: 'String'
-          }
-        },
-        collaboratorRole: {
-          required: false,
-          serializedName: 'collaborator_role',
-          type: {
-            name: 'String'
-          }
-        },
-        collaboratorsCount: {
-          required: false,
-          serializedName: 'collaborators_count',
-          type: {
-            name: 'Object'
           }
         },
         origin: {

@@ -296,10 +296,16 @@ Stores.prototype.deleteMethod = function (storeName, ownerName, appName, options
  * @param {object} body The store request
  * 
  * @param {string} [body.type] store Type. Possible values include:
- * 'googleplay', 'intune'
+ * 'googleplay', 'intune', 'windows', 'apple'
  * 
- * @param {string} [body.name] name of the store. In case of googleplay this
- * is fixed to GooglePlay-Production.
+ * @param {string} [body.name] name of the store. In case of googleplay,
+ * windows and Apple store this is fixed to Production.
+ * 
+ * @param {string} [body.track] track of the store. Can be production, alpha &
+ * beta for googleplay. Can be production, testflight-internal &
+ * testflight-external for Apple Store. Can be production for Windows Store.
+ * Possible values include: 'production', 'alpha', 'beta',
+ * 'testflight-internal', 'testflight-external'
  * 
  * @param {object} [body.intuneDetails]
  * 
@@ -313,18 +319,37 @@ Stores.prototype.deleteMethod = function (storeName, ownerName, appName, options
  * @param {string} [body.intuneDetails.secretJson.refreshTokenExpiry] the
  * expiry of refresh token
  * 
- * @param {string} [body.intuneDetails.targetAudience] target audience in
- * intune store
+ * @param {object} [body.intuneDetails.targetAudience]
  * 
- * @param {string} [body.intuneDetails.appCategory] app category in intune
- * store
+ * @param {string} [body.intuneDetails.targetAudience.name] display name for
+ * the target audience/group
+ * 
+ * @param {object} [body.intuneDetails.appCategory]
+ * 
+ * @param {string} [body.intuneDetails.appCategory.name] display name for the
+ * app category
  * 
  * @param {string} [body.intuneDetails.tenantId] tenant id of the intune store
  * 
- * @param {object} [body.googleplayDetails]
+ * @param {object} [body.windowsDetails]
  * 
- * @param {object} [body.googleplayDetails.secretJson] Provide service account
- * details JSON (this is provided by google).
+ * @param {object} [body.windowsDetails.secretJson]
+ * 
+ * @param {string} [body.windowsDetails.secretJson.idToken] the id token of
+ * user
+ * 
+ * @param {string} [body.windowsDetails.secretJson.refreshToken] the refresh
+ * token for user
+ * 
+ * @param {string} [body.windowsDetails.secretJson.refreshTokenExpiry] the
+ * expiry of refresh token
+ * 
+ * @param {string} [body.windowsDetails.tenantId] tenant id the user account
+ * belongs to
+ * 
+ * @param {string} [body.serviceConnectionId] Id for the shared service
+ * connection. In case of Apple AppStore, this connection will be used to
+ * create and connect to the Apple AppStore in Mobile Center.
  * 
  * @param {string} ownerName The name of the owner
  * 

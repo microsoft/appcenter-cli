@@ -12,10 +12,11 @@
  * @constructor
  * The information for a single iOS device
  *
- * @member {string} profileFileName The file name for the provisioning profile.
+ * @member {string} [profileFileName] The file name for the provisioning
+ * profile.
  * 
- * @member {string} profileBase64 The updated provisioning profile base64
- * encoded.
+ * @member {string} profilesZipBase64 The updated provisioning profiles zip
+ * base64 encoded.
  * 
  */
 function PublishDevicesResponse() {
@@ -36,15 +37,15 @@ PublishDevicesResponse.prototype.mapper = function () {
       className: 'PublishDevicesResponse',
       modelProperties: {
         profileFileName: {
-          required: true,
+          required: false,
           serializedName: 'profile_file_name',
           type: {
             name: 'String'
           }
         },
-        profileBase64: {
+        profilesZipBase64: {
           required: true,
-          serializedName: 'profile_base64',
+          serializedName: 'profiles_zip_base64',
           type: {
             name: 'String'
           }

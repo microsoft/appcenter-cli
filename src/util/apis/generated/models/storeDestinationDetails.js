@@ -14,7 +14,7 @@
  * distribution store.
  * 
  * @member {string} [storeType] type of store. Possible values include:
- * 'intune'
+ * 'intune', 'windows'
  * 
  * @member {string} [appId] app id of application.
  * 

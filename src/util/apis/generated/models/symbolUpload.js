@@ -6,6 +6,8 @@
 
 'use strict';
 
+var models = require('./index');
+
 var util = require('util');
 
 /**
@@ -18,14 +20,29 @@ var util = require('util');
  * 
  * @member {string} appId The application that this symbol upload belongs to
  * 
+ * @member {object} [user] User information of the one who intitiated the
+ * symbol upload
+ * 
+ * @member {string} [user.email] The email of the user
+ * 
+ * @member {string} [user.displayName] The full name of the user. Might for
+ * example be first and last name
+ * 
  * @member {string} status The current status for the symbol upload. Possible
  * values include: 'created', 'committed', 'aborted', 'processing',
  * 'indexed', 'failed'
  * 
- * @member {array} [symbols] The symbol ids
+ * @member {array} [symbolsUploaded] The symbols found in the upload
  * 
  * @member {string} [origin] The origin of the symbol upload. Possible values
  * include: 'User', 'System'
+ * 
+ * @member {string} [fileName] The file name for the symbol upload
+ * 
+ * @member {number} [fileSize] The size of the file in Mebibytes
+ * 
+ * @member {date} [timestamp] When the symbol upload was committed, or last
+ * transaction time if not committed
  * 
  */
 function SymbolUpload() {
@@ -59,6 +76,14 @@ SymbolUpload.prototype.mapper = function () {
             name: 'String'
           }
         },
+        user: {
+          required: false,
+          serializedName: 'user',
+          type: {
+            name: 'Composite',
+            className: 'SymbolUploadUserInfo'
+          }
+        },
         status: {
           required: true,
           serializedName: 'status',
@@ -75,16 +100,17 @@ SymbolUpload.prototype.mapper = function () {
             name: 'String'
           }
         },
-        symbols: {
+        symbolsUploaded: {
           required: false,
-          serializedName: 'symbols',
+          serializedName: 'symbols_uploaded',
           type: {
             name: 'Sequence',
             element: {
                 required: false,
-                serializedName: 'StringElementType',
+                serializedName: 'UploadedSymbolInfoElementType',
                 type: {
-                  name: 'String'
+                  name: 'Composite',
+                  className: 'UploadedSymbolInfo'
                 }
             }
           }
@@ -94,6 +120,27 @@ SymbolUpload.prototype.mapper = function () {
           serializedName: 'origin',
           type: {
             name: 'String'
+          }
+        },
+        fileName: {
+          required: false,
+          serializedName: 'file_name',
+          type: {
+            name: 'String'
+          }
+        },
+        fileSize: {
+          required: false,
+          serializedName: 'file_size',
+          type: {
+            name: 'Number'
+          }
+        },
+        timestamp: {
+          required: false,
+          serializedName: 'timestamp',
+          type: {
+            name: 'DateTime'
           }
         }
       }

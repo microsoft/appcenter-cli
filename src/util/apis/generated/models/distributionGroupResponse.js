@@ -17,6 +17,8 @@
  * @member {string} origin The creation origin of this distribution group.
  * Possible values include: 'mobile-center', 'hockeyapp'
  * 
+ * @member {boolean} isPublic Whether the distribution group is public
+ * 
  */
 function DistributionGroupResponse() {
 }
@@ -54,6 +56,13 @@ DistributionGroupResponse.prototype.mapper = function () {
           serializedName: 'origin',
           type: {
             name: 'String'
+          }
+        },
+        isPublic: {
+          required: true,
+          serializedName: 'is_public',
+          type: {
+            name: 'Boolean'
           }
         }
       }

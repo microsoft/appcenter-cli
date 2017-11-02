@@ -25,7 +25,7 @@ function Apps(client) {
 }
 
 /**
- * Creates a new app for the organizatiion and returns it to the caller
+ * Creates a new app for the organization and returns it to the caller
  *
  * @param {string} orgName The organization's name
  * 
@@ -39,10 +39,10 @@ function Apps(client) {
  * @param {string} [app.name] The name of the app used in URLs
  * 
  * @param {string} app.os The OS the app will be running on. Possible values
- * include: 'Android', 'iOS', 'Tizen', 'Windows'
+ * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
  * 
  * @param {string} app.platform The platform of the app. Possible values
- * include: 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'UWP',
+ * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
  * 'Xamarin'
  * 
  * @param {object} [options] Optional Parameters.
@@ -1122,6 +1122,155 @@ Apps.prototype.listTesters = function (ownerName, appName, options, callback) {
 };
 
 /**
+ * Returns the details of all teams that have access to the app.
+ *
+ * @param {string} appName The name of the application
+ * 
+ * @param {string} ownerName The name of the owner
+ * 
+ * @param {object} [options] Optional Parameters.
+ * 
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ * 
+ * @param {function} callback
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+Apps.prototype.getTeams = function (appName, ownerName, options, callback) {
+  var client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  var baseUrl = this.client.baseUri;
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/teams';
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+
+  // Create HTTP transport objects
+  var httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.headers = {};
+  httpRequest.url = requestUrl;
+  // Set Headers
+  if(options) {
+    for(var headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, function (err, response, responseBody) {
+    if (err) {
+      return callback(err);
+    }
+    var statusCode = response.statusCode;
+    if (statusCode !== 200 && statusCode !== 404) {
+      var error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      var parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
+          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
+          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+                         '- "%s" for the default response.', defaultError.message, responseBody);
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    var result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'TeamAppResponseElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'TeamAppResponse'
+                  }
+              }
+            }
+          };
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 404) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ErrorResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError1.request = msRest.stripRequest(httpRequest);
+        deserializationError1.response = msRest.stripResponse(response);
+        return callback(deserializationError1);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+};
+
+/**
  * Return a specific app with the given app name which belongs to the given
  * owner.
  *
@@ -1283,11 +1432,16 @@ Apps.prototype.get = function (ownerName, appName, options, callback) {
  * 
  * @param {object} [options] Optional Parameters.
  * 
- * @param {string} [options.description] A short text describing the app
+ * @param {object} [options.app] The partial data for the app
  * 
- * @param {string} [options.displayName] The display name of the app
+ * @param {string} [options.app.description] A short text describing the app
  * 
- * @param {string} [options.name] The name of the app used in URLs
+ * @param {string} [options.app.displayName] The display name of the app
+ * 
+ * @param {string} [options.app.name] The name of the app used in URLs
+ * 
+ * @param {string} [options.app.iconUrl] The string representation of the URL
+ * pointing to the app's icon
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1313,9 +1467,7 @@ Apps.prototype.update = function (appName, ownerName, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  var description = (options && options.description !== undefined) ? options.description : undefined;
-  var displayName = (options && options.displayName !== undefined) ? options.displayName : undefined;
-  var name = (options && options.name !== undefined) ? options.name : undefined;
+  var app = (options && options.app !== undefined) ? options.app : undefined;
   // Validate
   try {
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
@@ -1324,24 +1476,8 @@ Apps.prototype.update = function (appName, ownerName, options, callback) {
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
-    if (description !== null && description !== undefined && typeof description.valueOf() !== 'string') {
-      throw new Error('description must be of type string.');
-    }
-    if (displayName !== null && displayName !== undefined && typeof displayName.valueOf() !== 'string') {
-      throw new Error('displayName must be of type string.');
-    }
-    if (name !== null && name !== undefined && typeof name.valueOf() !== 'string') {
-      throw new Error('name must be of type string.');
-    }
   } catch (error) {
     return callback(error);
-  }
-  var app;
-  if ((description !== null && description !== undefined) || (displayName !== null && displayName !== undefined) || (name !== null && name !== undefined)) {
-      app = new client.models['AppPatchRequest']();
-      app.description = description;
-      app.displayName = displayName;
-      app.name = name;
   }
 
   // Construct URL
@@ -1648,10 +1784,10 @@ Apps.prototype.deleteMethod = function (appName, ownerName, options, callback) {
  * @param {string} [app.name] The name of the app used in URLs
  * 
  * @param {string} app.os The OS the app will be running on. Possible values
- * include: 'Android', 'iOS', 'Tizen', 'Windows'
+ * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
  * 
  * @param {string} app.platform The platform of the app. Possible values
- * include: 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'UWP',
+ * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
  * 'Xamarin'
  * 
  * @param {object} [options] Optional Parameters.
@@ -1728,7 +1864,7 @@ Apps.prototype.create = function (app, options, callback) {
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 201 && statusCode !== 400 && statusCode !== 404 && statusCode !== 409) {
+    if (statusCode !== 201 && statusCode !== 400 && statusCode !== 404 && statusCode !== 409) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -1753,7 +1889,7 @@ Apps.prototype.create = function (app, options, callback) {
     var result = null;
     if (responseBody === '') responseBody = null;
     // Deserialize Response
-    if (statusCode === 200) {
+    if (statusCode === 201) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
@@ -1770,13 +1906,13 @@ Apps.prototype.create = function (app, options, callback) {
       }
     }
     // Deserialize Response
-    if (statusCode === 201) {
+    if (statusCode === 400) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['AppResponse']().mapper();
+          var resultMapper = new client.models['ErrorResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1787,7 +1923,7 @@ Apps.prototype.create = function (app, options, callback) {
       }
     }
     // Deserialize Response
-    if (statusCode === 400) {
+    if (statusCode === 404) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
@@ -1804,7 +1940,7 @@ Apps.prototype.create = function (app, options, callback) {
       }
     }
     // Deserialize Response
-    if (statusCode === 404) {
+    if (statusCode === 409) {
       var parsedResponse = null;
       try {
         parsedResponse = JSON.parse(responseBody);
@@ -1820,23 +1956,6 @@ Apps.prototype.create = function (app, options, callback) {
         return callback(deserializationError3);
       }
     }
-    // Deserialize Response
-    if (statusCode === 409) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ErrorResponse']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError4 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError4.request = msRest.stripRequest(httpRequest);
-        deserializationError4.response = msRest.stripResponse(response);
-        return callback(deserializationError4);
-      }
-    }
 
     return callback(null, result, httpRequest, response);
   });
@@ -1846,6 +1965,11 @@ Apps.prototype.create = function (app, options, callback) {
  * Returns a list of apps
  *
  * @param {object} [options] Optional Parameters.
+ * 
+ * @param {string} [options.orderBy] The name of the attribute by which to
+ * order the response by. By default, apps are in order of creation. All
+ * results are ordered in ascending order. Possible values include:
+ * 'display_name', 'name'
  * 
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1871,10 +1995,26 @@ Apps.prototype.list = function (options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  var orderBy = (options && options.orderBy !== undefined) ? options.orderBy : undefined;
+  // Validate
+  try {
+    if (orderBy !== null && orderBy !== undefined && typeof orderBy.valueOf() !== 'string') {
+      throw new Error('orderBy must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
 
   // Construct URL
   var baseUrl = this.client.baseUri;
   var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps';
+  var queryParameters = [];
+  if (orderBy !== null && orderBy !== undefined) {
+    queryParameters.push('$orderBy=' + encodeURIComponent(orderBy));
+  }
+  if (queryParameters.length > 0) {
+    requestUrl += '?' + queryParameters.join('&');
+  }
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
