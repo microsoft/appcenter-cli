@@ -6,23 +6,23 @@
 
 'use strict';
 
+var util = require('util');
+
 /**
  * @class
  * Initializes a new instance of the AlertWebhook class.
  * @constructor
  * Alerting webhook
  *
+ * @member {string} [id] The unique id (UUID) of the webhook
+ * 
  * @member {string} name display name of the webhook
  * 
  * @member {string} url target url of the webhook
  * 
- * @member {boolean} enabled Allows eanble/disable webhook
+ * @member {boolean} [enabled] Allows eanble/disable webhook
  * 
- * @member {boolean} callOnNewCrashGroup Shows if webhook is called on new
- * crash group created event
- * 
- * @member {boolean} callOnNewAppRelease Shows if webhook is called on new app
- * release event
+ * @member {array} eventTypes Event types enabled for webhook
  * 
  */
 function AlertWebhook() {
@@ -42,9 +42,19 @@ AlertWebhook.prototype.mapper = function () {
       name: 'Composite',
       className: 'AlertWebhook',
       modelProperties: {
+        id: {
+          required: false,
+          serializedName: 'id',
+          type: {
+            name: 'String'
+          }
+        },
         name: {
           required: true,
           serializedName: 'name',
+          constraints: {
+            MaxLength: 512
+          },
           type: {
             name: 'String'
           }
@@ -57,24 +67,24 @@ AlertWebhook.prototype.mapper = function () {
           }
         },
         enabled: {
-          required: true,
+          required: false,
           serializedName: 'enabled',
           type: {
             name: 'Boolean'
           }
         },
-        callOnNewCrashGroup: {
+        eventTypes: {
           required: true,
-          serializedName: 'callOnNewCrashGroup',
+          serializedName: 'event_types',
           type: {
-            name: 'Boolean'
-          }
-        },
-        callOnNewAppRelease: {
-          required: true,
-          serializedName: 'callOnNewAppRelease',
-          type: {
-            name: 'Boolean'
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'StringElementType',
+                type: {
+                  name: 'String'
+                }
+            }
           }
         }
       }

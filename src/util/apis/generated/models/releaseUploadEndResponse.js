@@ -12,6 +12,8 @@
  * @constructor
  * A response containing information about the uploaded release.
  *
+ * @member {number} [releaseId] The ID of the release.
+ * 
  * @member {string} [releaseUrl] A URL to the new release. If upload was
  * aborted will be null.
  * 
@@ -33,6 +35,13 @@ ReleaseUploadEndResponse.prototype.mapper = function () {
       name: 'Composite',
       className: 'ReleaseUploadEndResponse',
       modelProperties: {
+        releaseId: {
+          required: false,
+          serializedName: 'release_id',
+          type: {
+            name: 'Number'
+          }
+        },
         releaseUrl: {
           required: false,
           serializedName: 'release_url',

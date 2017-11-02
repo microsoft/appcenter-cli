@@ -12,7 +12,7 @@ var util = require('util');
  * @class
  * Initializes a new instance of the AppUserPermissionResponse class.
  * @constructor
- * @member {string} appId The unique id (UUID) of the user
+ * @member {string} appId The unique id (UUID) of the app
  * 
  * @member {array} permissions The permissions the user has for the app
  * 

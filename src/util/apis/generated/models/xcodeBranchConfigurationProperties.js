@@ -22,6 +22,14 @@
  * 
  * @member {string} [certificateEncoded]
  * 
+ * @member {string} [provisioningProfileFileId]
+ * 
+ * @member {string} [certificateFileId]
+ * 
+ * @member {string} [provisioningProfileUploadId]
+ * 
+ * @member {string} [certificateUploadId]
+ * 
  * @member {string} [certificatePassword]
  * 
  * @member {string} scheme
@@ -35,6 +43,15 @@
  * @member {string} [teamId]
  * 
  * @member {boolean} [automaticSigning]
+ * 
+ * @member {string} [xcodeProjectSha] The selected pbxproject hash to the
+ * repositroy
+ * 
+ * @member {string} [archiveConfiguration] The build configuration of the
+ * target to archive
+ * 
+ * @member {string} [targetToArchive] The target id of the selected scheme to
+ * archive
  * 
  */
 function XcodeBranchConfigurationProperties() {
@@ -89,6 +106,34 @@ XcodeBranchConfigurationProperties.prototype.mapper = function () {
             name: 'String'
           }
         },
+        provisioningProfileFileId: {
+          required: false,
+          serializedName: 'provisioningProfileFileId',
+          type: {
+            name: 'String'
+          }
+        },
+        certificateFileId: {
+          required: false,
+          serializedName: 'certificateFileId',
+          type: {
+            name: 'String'
+          }
+        },
+        provisioningProfileUploadId: {
+          required: false,
+          serializedName: 'provisioningProfileUploadId',
+          type: {
+            name: 'String'
+          }
+        },
+        certificateUploadId: {
+          required: false,
+          serializedName: 'certificateUploadId',
+          type: {
+            name: 'String'
+          }
+        },
         certificatePassword: {
           required: false,
           serializedName: 'certificatePassword',
@@ -136,6 +181,27 @@ XcodeBranchConfigurationProperties.prototype.mapper = function () {
           serializedName: 'automaticSigning',
           type: {
             name: 'Boolean'
+          }
+        },
+        xcodeProjectSha: {
+          required: false,
+          serializedName: 'xcodeProjectSha',
+          type: {
+            name: 'String'
+          }
+        },
+        archiveConfiguration: {
+          required: false,
+          serializedName: 'archiveConfiguration',
+          type: {
+            name: 'String'
+          }
+        },
+        targetToArchive: {
+          required: false,
+          serializedName: 'targetToArchive',
+          type: {
+            name: 'String'
           }
         }
       }

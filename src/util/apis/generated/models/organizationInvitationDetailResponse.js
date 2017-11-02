@@ -19,9 +19,6 @@ var models = require('./index');
  * @member {string} [organization.id] The internal unique id (UUID) of the
  * organization.
  * 
- * @member {string} [organization.collaboratorRole] The role the current user
- * has within the organization
- * 
  * @member {string} [organization.displayName] The display name of the
  * organization
  * 

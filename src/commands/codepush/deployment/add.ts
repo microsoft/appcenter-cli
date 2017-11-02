@@ -24,7 +24,7 @@ export default class AddCommand extends AppCommand {
     let deployment: models.Deployment;
     try {
       const httpRequest = await out.progress("Creating a new CodePush deployment...", clientRequest<models.Deployment>(
-        (cb) => client.deployments.create(app.ownerName, app.appName, this.newDeploymentName, cb)));
+        (cb) => client.codePushDeployments.create(app.ownerName, app.appName, this.newDeploymentName, cb)));
       deployment = httpRequest.result;
       out.text(`Deployment ${deployment.name} has been created for the app ${app.appName}`);
       return success();

@@ -20,6 +20,8 @@
  * 
  * @member {number} [validUntil]
  * 
+ * @member {string} [os]
+ * 
  */
 function BuildServiceStatus() {
 }
@@ -71,6 +73,13 @@ BuildServiceStatus.prototype.mapper = function () {
           serializedName: 'valid_until',
           type: {
             name: 'Number'
+          }
+        },
+        os: {
+          required: false,
+          serializedName: 'os',
+          type: {
+            name: 'String'
           }
         }
       }

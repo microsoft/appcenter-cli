@@ -16,6 +16,9 @@
  * 
  * @member {string} [name] The name of the app used in URLs
  * 
+ * @member {string} [iconUrl] The string representation of the URL pointing to
+ * the app's icon
+ * 
  */
 function AppPatchRequest() {
 }
@@ -51,6 +54,13 @@ AppPatchRequest.prototype.mapper = function () {
         name: {
           required: false,
           serializedName: 'name',
+          type: {
+            name: 'String'
+          }
+        },
+        iconUrl: {
+          required: false,
+          serializedName: 'icon_url',
           type: {
             name: 'String'
           }

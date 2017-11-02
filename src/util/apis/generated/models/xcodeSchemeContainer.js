@@ -18,11 +18,14 @@ var util = require('util');
  * 
  * @member {array} sharedSchemes Project schemes
  * 
- * @member {string} [podfilePath] Path to CococaPods file, if present
+ * @member {string} [podfilePath] Path to CocoaPods file, if present
  * 
  * @member {object} [cartfilePath] Path to Carthage file, if present
  * 
  * @member {string} [xcodeProjectSha] repo object Id of the pbxproject
+ * 
+ * @member {string} [workspaceProjectPaths] Related projects paths for
+ * xcworkspace
  * 
  */
 function XcodeSchemeContainer() {
@@ -81,6 +84,13 @@ XcodeSchemeContainer.prototype.mapper = function () {
         xcodeProjectSha: {
           required: false,
           serializedName: 'xcodeProjectSha',
+          type: {
+            name: 'String'
+          }
+        },
+        workspaceProjectPaths: {
+          required: false,
+          serializedName: 'workspaceProjectPaths',
           type: {
             name: 'String'
           }

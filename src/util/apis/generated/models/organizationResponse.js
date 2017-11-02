@@ -12,9 +12,6 @@
  * @constructor
  * @member {string} id The internal unique id (UUID) of the organization.
  * 
- * @member {string} collaboratorRole The role the current user has within the
- * organization
- * 
  * @member {string} displayName The display name of the organization
  * 
  * @member {string} name The slug name of the organization
@@ -43,13 +40,6 @@ OrganizationResponse.prototype.mapper = function () {
         id: {
           required: true,
           serializedName: 'id',
-          type: {
-            name: 'String'
-          }
-        },
-        collaboratorRole: {
-          required: true,
-          serializedName: 'collaborator_role',
           type: {
             name: 'String'
           }

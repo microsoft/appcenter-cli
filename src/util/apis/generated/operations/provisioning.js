@@ -25,7 +25,7 @@ function Provisioning(client) {
 }
 
 /**
- * Return information about the provisioning profile
+ * Return information about the provisioning profile. Only available for iOS.
  *
  * @param {number} releaseId The release_id
  * 
@@ -45,7 +45,6 @@ function Provisioning(client) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object.
- *                      See {@link ProvisioningProfile} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -103,7 +102,7 @@ Provisioning.prototype.profile = function (releaseId, ownerName, appName, option
       return callback(err);
     }
     var statusCode = response.statusCode;
-    if (statusCode !== 200) {
+    if (statusCode !== 200 && statusCode !== 400) {
       var error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -134,7 +133,7 @@ Provisioning.prototype.profile = function (releaseId, ownerName, appName, option
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ProvisioningProfile']().mapper();
+          var resultMapper = new client.models['ProvisioningProfileResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -142,6 +141,23 @@ Provisioning.prototype.profile = function (releaseId, ownerName, appName, option
         deserializationError.request = msRest.stripRequest(httpRequest);
         deserializationError.response = msRest.stripResponse(response);
         return callback(deserializationError);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 400) {
+      var parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          var resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
+        deserializationError1.request = msRest.stripRequest(httpRequest);
+        deserializationError1.response = msRest.stripResponse(response);
+        return callback(deserializationError1);
       }
     }
 

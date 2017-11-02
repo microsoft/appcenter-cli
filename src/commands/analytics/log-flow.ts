@@ -116,7 +116,7 @@ export default class ShowLogFlowCommand extends AppCommand {
 
     // adding properties
     if (logEntry.properties != null) {
-      const logProperties: { [propertyName: string]: string } = JSON.parse(logEntry.properties);
+      const logProperties: { [propertyName: string]: string } = JSON.parse(logEntry.properties.propertyName);
       logStringArray = logStringArray.concat(_.toPairs(logProperties).map((pair) => pair.join(": ")));
       jsonObject.properties = logProperties;
     }

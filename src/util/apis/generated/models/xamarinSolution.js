@@ -16,6 +16,12 @@ var util = require('util');
  * 
  * @member {array} configurations Solution configurations
  * 
+ * @member {object} [platforms] Platforms supported
+ * 
+ * @member {string} [defaultConfiguration] Solution default configuration
+ * 
+ * @member {string} [defaultPlatform] Solution default platform
+ * 
  */
 function XamarinSolution() {
 }
@@ -53,6 +59,27 @@ XamarinSolution.prototype.mapper = function () {
                   name: 'String'
                 }
             }
+          }
+        },
+        platforms: {
+          required: false,
+          serializedName: 'platforms',
+          type: {
+            name: 'Object'
+          }
+        },
+        defaultConfiguration: {
+          required: false,
+          serializedName: 'defaultConfiguration',
+          type: {
+            name: 'String'
+          }
+        },
+        defaultPlatform: {
+          required: false,
+          serializedName: 'defaultPlatform',
+          type: {
+            name: 'String'
           }
         }
       }

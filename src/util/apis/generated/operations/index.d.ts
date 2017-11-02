@@ -5,6 +5,7 @@
 */
 
 import { ServiceClientOptions, RequestOptions, ServiceCallback } from 'ms-rest';
+import * as stream from 'stream';
 import * as models from '../models';
 
 
@@ -54,6 +55,74 @@ export interface Devices {
     registerUserForDevice(userId: string, body: models.DeviceInfoRequest, callback: ServiceCallback<any>): void;
 
     /**
+     * Returns the device details.
+     *
+     * @param {string} deviceUdid The UDID of the device
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deviceDetails(deviceUdid: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    deviceDetails(deviceUdid: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Removes an existing device from a user
+     *
+     * @param {string} deviceUdid The UDID of the device
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    removeUserDevice(deviceUdid: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    removeUserDevice(deviceUdid: string, callback: ServiceCallback<models.ErrorDetails>): void;
+
+    /**
+     * Returns all devices associated with the given user.
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    userDevicesList(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    userDevicesList(callback: ServiceCallback<any>): void;
+
+    /**
+     * Returns the resign status to the caller
+     *
+     * @param {string} distributionGroupName The name of the distribution group.
+     * 
+     * @param {string} resignId The ID of the resign opeartion
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getUpdateDevicesStatus(distributionGroupName: string, resignId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getUpdateDevicesStatus(distributionGroupName: string, resignId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
      * Returns all devices associated with the given distribution group.
      *
      * @param {string} distributionGroupName The name of the distribution group.
@@ -90,13 +159,17 @@ export interface Devices {
      * 
      * @param {object} [options] Optional Parameters.
      * 
+     * @param {number} [options.releaseId] when provided, gets the provisioning
+     * state of the devices owned by users of this distribution group when
+     * compared to the provided release.
+     * 
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      * 
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    list(distributionGroupName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    list(distributionGroupName: string, ownerName: string, appName: string, options: { releaseId? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     list(distributionGroupName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 }
 
@@ -497,11 +570,11 @@ export interface Users {
 
 /**
  * @class
- * Releases
+ * ReleasesOperations
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the MobileCenterClient.
  */
-export interface Releases {
+export interface ReleasesOperations {
 
     /**
      * Get a release with hash 'release_hash' or the 'latest' from all the
@@ -515,17 +588,21 @@ export interface Releases {
      * 
      * @param {object} [options] Optional Parameters.
      * 
+     * @param {string} [options.udid] When passing `udid` in the query string, a
+     * provisioning check for the given device ID will be done. Will be ignored
+     * for non-iOS platforms.
+     * 
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      * 
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getLatestByHash(appSecret: string, releaseHash: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getLatestByHash(appSecret: string, releaseHash: string, options: { udid? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     getLatestByHash(appSecret: string, releaseHash: string, callback: ServiceCallback<any>): void;
 
     /**
-     * Get a release with id `release_id`. if `release_id` is `latest`, return the
+     * Get a release with id `release_id`. If `release_id` is `latest`, return the
      * latest release that was distributed to the current user (from all the
      * distribution groups).
      *
@@ -560,40 +637,38 @@ export interface Releases {
      * @param {object} body The release information.
      * 
      * @param {string} [body.distributionGroupName] OBSOLETE. Will be removed in
-     * future releases. Name of a distribution group. The release will be
-     * associated with this distribution group. If the distribution group doesn't
-     * exist a 400 is returned. If both distribution group name and id are
-     * passed, the id is taking precedence.
+     * future releases - use destinations instead. Name of a distribution group.
+     * The release will be associated with this distribution group. If the
+     * distribution group doesn't exist a 400 is returned. If both distribution
+     * group name and id are passed, the id is taking precedence.
      * 
      * @param {string} [body.distributionGroupId] OBSOLETE. Will be removed in
-     * future releases. Id of a distribution group. The release will be
-     * associated with this distribution group. If the distribution group doesn't
-     * exist a 400 is returned. If both distribution group name and id are
-     * passed, the id is taking precedence.
+     * future releases - use destinations instead. Id of a distribution group.
+     * The release will be associated with this distribution group. If the
+     * distribution group doesn't exist a 400 is returned. If both distribution
+     * group name and id are passed, the id is taking precedence.
      * 
-     * @param {string} [body.destinationName] Name of a distribution group /
-     * distribution store. The release will be associated with this distribution
-     * group or store. If the distribution group / store doesn't exist a 400 is
-     * returned. If both distribution group / store name and id are passed, the
+     * @param {string} [body.destinationName] OBSOLETE. Will be removed in future
+     * releases - use destinations instead. Name of a destination. The release
+     * will be associated with this destination. If the destination doesn't exist
+     * a 400 is returned. If both distribution group name and id are passed, the
      * id is taking precedence.
      * 
-     * @param {string} [body.destinationId] Id of a distribution group / store.
-     * The release will be associated with this distribution group / store. If
-     * the distribution group / store doesn't exist a 400 is returned. If both
-     * distribution group / store name and id are passed, the id is taking
-     * precedence.
+     * @param {string} [body.destinationId] OBSOLETE. Will be removed in future
+     * releases - use destinations instead. Id of a destination. The release will
+     * be associated with this destination. If the destination doesn't exist a
+     * 400 is returned. If both destination name and id are passed, the id is
+     * taking precedence.
      * 
-     * @param {string} [body.destinationType] The destination type.<br>
-     * <b>group</b>: The release distributed to internal groups and
-     * distribution_groups details will be returned.<br>
-     * <b>store</b>: Coming Soon - The release distributed to external stores and
-     * distribution_stores details will be returned. <br>
-     * . Possible values include: 'group', 'store'
+     * @param {string} [body.destinationType] Not used anymore.
      * 
      * @param {string} [body.releaseNotes] Release notes for this release.
      * 
      * @param {boolean} [body.mandatoryUpdate] A boolean which determines whether
      * this version should be a mandatory update or not.
+     * 
+     * @param {array} [body.destinations] Distribute this release under the
+     * following list of destinations (store groups or distribution groups).
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -629,6 +704,28 @@ export interface Releases {
      */
     deleteMethod(releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
     deleteMethod(releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
+
+    /**
+     * Return detailed information about releases avaiable to a tester.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {boolean} [options.publishedOnly] when *true*, filters out releases
+     * that were uploaded but were never distributed. Releases that under deleted
+     * distribution groups will not be filtered out.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    availableToTester(ownerName: string, appName: string, options: { publishedOnly? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
+    availableToTester(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
 
     /**
      * This API can be used to create a release based on an existing release. The
@@ -670,11 +767,11 @@ export interface Releases {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    rerelease(body: models.RereleaseRequest, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseDetails>): void;
-    rerelease(body: models.RereleaseRequest, ownerName: string, appName: string, callback: ServiceCallback<models.ReleaseDetails>): void;
+    rerelease(body: models.RereleaseRequest, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseDetailsResponse>): void;
+    rerelease(body: models.RereleaseRequest, ownerName: string, appName: string, callback: ServiceCallback<models.ReleaseDetailsResponse>): void;
 
     /**
-     * Return detailed information about releases.
+     * Return basic information about releases.
      *
      * @param {string} ownerName The name of the owner
      * 
@@ -692,8 +789,8 @@ export interface Releases {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    list(ownerName: string, appName: string, options: { publishedOnly? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetails[]>): void;
-    list(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetails[]>): void;
+    list(ownerName: string, appName: string, options: { publishedOnly? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
 
     /**
      * Get the latest release from every distribution group associated with an
@@ -711,21 +808,22 @@ export interface Releases {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    listLatest(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetails[]>): void;
-    listLatest(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetails[]>): void;
+    listLatest(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
+    listLatest(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
 
     /**
      * Return detailed information about a distributed release in a given
      * distribution group.
      *
+     * @param {string} ownerName The name of the app owner
+     * 
+     * @param {string} appName The name of the app
+     * 
      * @param {string} distributionGroupName The name of the distribution group.
      * 
-     * @param {string} releaseId Must be `latest`, a specific `release_id` is not
-     * supported at this time.
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
+     * @param {string} releaseId Only supports the constant `latest`, specific IDs
+     * are not supported. `latest` will return the latest release in the
+     * distribution group.
      * 
      * @param {object} [options] Optional Parameters.
      * 
@@ -735,19 +833,19 @@ export interface Releases {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getLatestByDistributionGroup(distributionGroupName: string, releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getLatestByDistributionGroup(distributionGroupName: string, releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    getLatestByDistributionGroup(ownerName: string, appName: string, distributionGroupName: string, releaseId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getLatestByDistributionGroup(ownerName: string, appName: string, distributionGroupName: string, releaseId: string, callback: ServiceCallback<any>): void;
 
     /**
      * Deletes a release with id 'release_id' in a given distribution group.
      *
+     * @param {string} ownerName The name of the app owner
+     * 
+     * @param {string} appName The name of the app
+     * 
      * @param {string} distributionGroupName The name of the distribution group.
      * 
      * @param {string} releaseId The ID identifying the unique release.
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
      * 
      * @param {object} [options] Optional Parameters.
      * 
@@ -757,12 +855,12 @@ export interface Releases {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    deleteWithDistributionGroupId(distributionGroupName: string, releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    deleteWithDistributionGroupId(distributionGroupName: string, releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    deleteWithDistributionGroupId(ownerName: string, appName: string, distributionGroupName: string, releaseId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteWithDistributionGroupId(ownerName: string, appName: string, distributionGroupName: string, releaseId: string, callback: ServiceCallback<models.ErrorDetails>): void;
 
     /**
-     * Return detailed information about distributed releases in a given
-     * distribution group.
+     * Return basic information about distributed releases in a given distribution
+     * group.
      *
      * @param {string} distributionGroupName The name of the distribution group.
      * 
@@ -784,6 +882,350 @@ export interface Releases {
 
 /**
  * @class
+ * Teams
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the MobileCenterClient.
+ */
+export interface Teams {
+
+    /**
+     * Removes a user from a team that is owned by an organization
+     *
+     * @param {string} orgName The organization's name
+     * 
+     * @param {string} teamName The team's name
+     * 
+     * @param {string} userName The slug name of the user
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    removeUser(orgName: string, teamName: string, userName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    removeUser(orgName: string, teamName: string, userName: string, callback: ServiceCallback<models.ErrorResponse>): void;
+
+    /**
+     * Returns the users of a team which is owned by an organization
+     *
+     * @param {string} orgName The organization's name
+     * 
+     * @param {string} teamName The team's name
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getUsers(orgName: string, teamName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getUsers(orgName: string, teamName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Adds a new user to a team that is owned by an organization
+     *
+     * @param {string} orgName The organization's name
+     * 
+     * @param {string} teamName The team's name
+     * 
+     * @param {string} userEmail The user's email address'
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    addUser(orgName: string, teamName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    addUser(orgName: string, teamName: string, userEmail: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Updates the permissions the team has to the app
+     *
+     * @param {string} orgName The organization's name
+     * 
+     * @param {string} teamName The team's name
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {array} permissions The permissions all members of the team have on
+     * the app
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    updatePermissions(orgName: string, teamName: string, appName: string, permissions: string[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    updatePermissions(orgName: string, teamName: string, appName: string, permissions: string[], callback: ServiceCallback<any>): void;
+
+    /**
+     * Removes an app from a team
+     *
+     * @param {string} orgName The organization's name
+     * 
+     * @param {string} teamName The team's name
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    removeApp(orgName: string, teamName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    removeApp(orgName: string, teamName: string, appName: string, callback: ServiceCallback<models.ErrorResponse>): void;
+
+    /**
+     * Adds an app to a team
+     *
+     * @param {string} orgName The organization's name
+     * 
+     * @param {string} teamName The team's name
+     * 
+     * @param {string} name The name of the app to be added to the team
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    addApp(orgName: string, teamName: string, name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    addApp(orgName: string, teamName: string, name: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Returns the apps a team has access to
+     *
+     * @param {string} orgName The organization's name
+     * 
+     * @param {string} teamName The team's name
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    listApps(orgName: string, teamName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    listApps(orgName: string, teamName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Returns the details of a single team
+     *
+     * @param {string} orgName The organization's name
+     * 
+     * @param {string} teamName The team's name
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getTeam(orgName: string, teamName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getTeam(orgName: string, teamName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Deletes a single team
+     *
+     * @param {string} orgName The organization's name
+     * 
+     * @param {string} teamName The team's name
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deleteMethod(orgName: string, teamName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    deleteMethod(orgName: string, teamName: string, callback: ServiceCallback<models.ErrorResponse>): void;
+
+    /**
+     * Updates a single team
+     *
+     * @param {string} orgName The organization's name
+     * 
+     * @param {string} teamName The team's name
+     * 
+     * @param {string} displayName The display name of the team
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.name] The name of the team
+     * 
+     * @param {string} [options.description] The description of the team
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    update(orgName: string, teamName: string, displayName: string, options: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    update(orgName: string, teamName: string, displayName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Returns the list of all teams in this org
+     *
+     * @param {string} orgName The organization's name
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    listAll(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    listAll(orgName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Creates a team and returns it
+     *
+     * @param {string} orgName The organization's name
+     * 
+     * @param {string} displayName The display name of the team
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.name] The name of the team
+     * 
+     * @param {string} [options.description] The description of the team
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    createTeam(orgName: string, displayName: string, options: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    createTeam(orgName: string, displayName: string, callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * AzureSubscription
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the MobileCenterClient.
+ */
+export interface AzureSubscription {
+
+    /**
+     * Returns a list of azure subscriptions for the organization
+     *
+     * @param {string} orgName The organization's name
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    listForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    listForOrg(orgName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Returns a list of azure subscriptions for the user
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    listForUser(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    listForUser(callback: ServiceCallback<any>): void;
+
+    /**
+     * Delete the azure subscriptions for the app
+     *
+     * @param {string} azureSubscriptionId The unique ID (UUID) of the azure
+     * subscription
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deleteForApp(azureSubscriptionId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    deleteForApp(azureSubscriptionId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorResponse>): void;
+
+    /**
+     * Returns a list of azure subscriptions for the app
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    listForApp(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    listForApp(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Link azure subscription to an app
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {string} subscriptionId The azure subscription id
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    linkForApp(ownerName: string, appName: string, subscriptionId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    linkForApp(ownerName: string, appName: string, subscriptionId: string, callback: ServiceCallback<models.ErrorResponse>): void;
+}
+
+/**
+ * @class
  * Apps
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the MobileCenterClient.
@@ -791,7 +1233,7 @@ export interface Releases {
 export interface Apps {
 
     /**
-     * Creates a new app for the organizatiion and returns it to the caller
+     * Creates a new app for the organization and returns it to the caller
      *
      * @param {string} orgName The organization's name
      * 
@@ -805,10 +1247,10 @@ export interface Apps {
      * @param {string} [app.name] The name of the app used in URLs
      * 
      * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'Android', 'iOS', 'Tizen', 'Windows'
+     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
      * 
      * @param {string} app.platform The platform of the app. Possible values
-     * include: 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'UWP',
+     * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
      * 'Xamarin'
      * 
      * @param {object} [options] Optional Parameters.
@@ -921,6 +1363,24 @@ export interface Apps {
     listTesters(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
+     * Returns the details of all teams that have access to the app.
+     *
+     * @param {string} appName The name of the application
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getTeams(appName: string, ownerName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getTeams(appName: string, ownerName: string, callback: ServiceCallback<any>): void;
+
+    /**
      * Return a specific app with the given app name which belongs to the given
      * owner.
      *
@@ -948,11 +1408,16 @@ export interface Apps {
      * 
      * @param {object} [options] Optional Parameters.
      * 
-     * @param {string} [options.description] A short text describing the app
+     * @param {object} [options.app] The partial data for the app
      * 
-     * @param {string} [options.displayName] The display name of the app
+     * @param {string} [options.app.description] A short text describing the app
      * 
-     * @param {string} [options.name] The name of the app used in URLs
+     * @param {string} [options.app.displayName] The display name of the app
+     * 
+     * @param {string} [options.app.name] The name of the app used in URLs
+     * 
+     * @param {string} [options.app.iconUrl] The string representation of the URL
+     * pointing to the app's icon
      * 
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -960,7 +1425,7 @@ export interface Apps {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    update(appName: string, ownerName: string, options: { description? : string, displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    update(appName: string, ownerName: string, options: { app? : models.AppPatchRequest, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     update(appName: string, ownerName: string, callback: ServiceCallback<any>): void;
 
     /**
@@ -994,10 +1459,10 @@ export interface Apps {
      * @param {string} [app.name] The name of the app used in URLs
      * 
      * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'Android', 'iOS', 'Tizen', 'Windows'
+     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
      * 
      * @param {string} app.platform The platform of the app. Possible values
-     * include: 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'UWP',
+     * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
      * 'Xamarin'
      * 
      * @param {object} [options] Optional Parameters.
@@ -1016,13 +1481,18 @@ export interface Apps {
      *
      * @param {object} [options] Optional Parameters.
      * 
+     * @param {string} [options.orderBy] The name of the attribute by which to
+     * order the response by. By default, apps are in order of creation. All
+     * results are ordered in ascending order. Possible values include:
+     * 'display_name', 'name'
+     * 
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      * 
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    list(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    list(options: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     list(callback: ServiceCallback<any>): void;
 }
 
@@ -1088,29 +1558,6 @@ export interface Organizations {
     deleteMethod(orgName: string, callback: ServiceCallback<models.ErrorResponse>): void;
 
     /**
-     * Returns a list of organizations the requesting user has access to
-     *
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    list(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    list(callback: ServiceCallback<any>): void;
-}
-
-/**
- * @class
- * Organization
- * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
- */
-export interface Organization {
-
-    /**
      * Creates a new organization and returns it to the caller
      *
      * @param {object} [options] Optional Parameters.
@@ -1127,6 +1574,20 @@ export interface Organization {
      */
     createOrUpdate(options: { displayName? : string, name? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     createOrUpdate(callback: ServiceCallback<any>): void;
+
+    /**
+     * Returns a list of organizations the requesting user has access to
+     *
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    list(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    list(callback: ServiceCallback<any>): void;
 }
 
 /**
@@ -1154,6 +1615,24 @@ export interface Builds {
      */
     listXcodeVersions(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     listXcodeVersions(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Gets the Xamarin SDK bundles available to this app
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    listXamarinSDKBundles(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    listXamarinSDKBundles(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
      * Gets the Mono versions available to this app
@@ -1199,7 +1678,7 @@ export interface Builds {
      * @param {number} buildId The build ID
      * 
      * @param {string} downloadType The download type. Possible values include:
-     * 'build', 'symbols', 'logs', 'test-report-preview'
+     * 'build', 'symbols', 'logs'
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -1307,7 +1786,8 @@ export interface Builds {
      * @param {string} branch The branch name
      * 
      * @param {string} os The desired OS for the project scan; normally the same
-     * as the app OS. Possible values include: 'iOS', 'Android', 'Windows'
+     * as the app OS. Possible values include: 'iOS', 'Android', 'Windows',
+     * 'macOS'
      * 
      * @param {string} platform The desired platform for the project scan.
      * Possible values include: 'Objective-C-Swift', 'React-Native', 'Xamarin',
@@ -1456,30 +1936,8 @@ export interface Crashes {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    listSessionLogs(crashId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.LogContainer>): void;
-    listSessionLogs(crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.LogContainer>): void;
-
-    /**
-     * Gets url to download attachment
-     *
-     * @param {string} crashId id of a specific crash
-     * 
-     * @param {string} attachmentId attachment id
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getCrashAttachmentUrl(crashId: string, attachmentId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<string>): void;
-    getCrashAttachmentUrl(crashId: string, attachmentId: string, ownerName: string, appName: string, callback: ServiceCallback<string>): void;
+    listSessionLogs(crashId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GenericLogContainer>): void;
+    listSessionLogs(crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GenericLogContainer>): void;
 
     /**
      * Gets content of the text attachment
@@ -1502,6 +1960,28 @@ export interface Crashes {
      */
     getCrashTextAttachmentContent(crashId: string, attachmentId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<string>): void;
     getCrashTextAttachmentContent(crashId: string, attachmentId: string, ownerName: string, appName: string, callback: ServiceCallback<string>): void;
+
+    /**
+     * Gets the URI location to download crash attachment
+     *
+     * @param {string} crashId id of a specific crash
+     * 
+     * @param {string} attachmentId attachment id
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getCrashAttachmentLocation(crashId: string, attachmentId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashAttachmentLocation>): void;
+    getCrashAttachmentLocation(crashId: string, attachmentId: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashAttachmentLocation>): void;
 
     /**
      * Gets all attachments for a specific crash
@@ -1577,7 +2057,7 @@ export interface Crashes {
     getStacktrace(crashGroupId: string, crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.Stacktrace>): void;
 
     /**
-     * Gets the URL to download json of a specific crash
+     * Gets the URI location to download json of a specific crash
      *
      * @param {string} crashGroupId id of a specific group
      * 
@@ -1595,8 +2075,32 @@ export interface Crashes {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    getRawCrashUrl(crashGroupId: string, crashId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashRawUrl>): void;
-    getRawCrashUrl(crashGroupId: string, crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashRawUrl>): void;
+    getRawCrashLocation(crashGroupId: string, crashId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashRawLocation>): void;
+    getRawCrashLocation(crashGroupId: string, crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashRawLocation>): void;
+
+    /**
+     * @summary Gets the native log of a specific crash as a text attachment
+     *
+     * Gets the native log of a specific crash as a text attachment
+     *
+     * @param {string} crashGroupId id of a specific group
+     * 
+     * @param {string} crashId id of a specific crash
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getNativeCrashDownload(crashGroupId: string, crashId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<string>): void;
+    getNativeCrashDownload(crashGroupId: string, crashId: string, ownerName: string, appName: string, callback: ServiceCallback<string>): void;
 
     /**
      * @summary Gets the native log of a specific crash
@@ -1641,13 +2145,22 @@ export interface Crashes {
      * @param {boolean} [options.includeLog] true if the crash should include the
      * custom log report. Default is false
      * 
+     * @param {boolean} [options.includeDetails] true if the crash should include
+     * in depth crash details
+     * 
+     * @param {boolean} [options.includeStacktrace] true if the crash should
+     * include the stacktrace information
+     * 
+     * @param {boolean} [options.groupingOnly] true if the stacktrace should be
+     * only the relevant thread / exception. Default is false
+     * 
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      * 
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    get(crashGroupId: string, crashId: string, ownerName: string, appName: string, options: { includeReport? : boolean, includeLog? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Crash>): void;
+    get(crashGroupId: string, crashId: string, ownerName: string, appName: string, options: { includeReport? : boolean, includeLog? : boolean, includeDetails? : boolean, includeStacktrace? : boolean, groupingOnly? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Crash>): void;
     get(crashGroupId: string, crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.Crash>): void;
 
     /**
@@ -1697,7 +2210,7 @@ export interface Test {
     /**
      * Gets a device set belonging to the user
      *
-     * @param {string} id The ID of the device set
+     * @param {uuid} id The UUID of the device set
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -1717,15 +2230,15 @@ export interface Test {
     /**
      * Updates a device set belonging to the user
      *
-     * @param {string} id The ID of the device set
-     * 
-     * @param {array} devices List of device IDs
-     * 
-     * @param {string} name The name of the device set
+     * @param {uuid} id The UUID of the device set
      * 
      * @param {string} ownerName The name of the owner
      * 
      * @param {string} appName The name of the application
+     * 
+     * @param {array} devices List of device IDs
+     * 
+     * @param {string} name The name of the device set
      * 
      * @param {object} [options] Optional Parameters.
      * 
@@ -1735,13 +2248,13 @@ export interface Test {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    updateDeviceSetOfUser(id: string, devices: string[], name: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    updateDeviceSetOfUser(id: string, devices: string[], name: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    updateDeviceSetOfUser(id: string, ownerName: string, appName: string, devices: string[], name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    updateDeviceSetOfUser(id: string, ownerName: string, appName: string, devices: string[], name: string, callback: ServiceCallback<any>): void;
 
     /**
      * Deletes a device set belonging to the user
      *
-     * @param {string} id The ID of the device set
+     * @param {uuid} id The UUID of the device set
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -1779,13 +2292,13 @@ export interface Test {
     /**
      * Creates a device set belonging to the user
      *
-     * @param {array} devices List of device IDs
-     * 
-     * @param {string} name The name of the device set
-     * 
      * @param {string} ownerName The name of the owner
      * 
      * @param {string} appName The name of the application
+     * 
+     * @param {array} devices List of device IDs
+     * 
+     * @param {string} name The name of the device set
      * 
      * @param {object} [options] Optional Parameters.
      * 
@@ -1795,8 +2308,8 @@ export interface Test {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    createDeviceSetOfUser(devices: string[], name: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    createDeviceSetOfUser(devices: string[], name: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    createDeviceSetOfUser(ownerName: string, appName: string, devices: string[], name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    createDeviceSetOfUser(ownerName: string, appName: string, devices: string[], name: string, callback: ServiceCallback<any>): void;
 
     /**
      * Returns list of all test runs for a given test series
@@ -1843,11 +2356,11 @@ export interface Test {
      *
      * @param {string} testSeriesSlug The slug of the test series
      * 
-     * @param {string} name New name of the new test series
-     * 
      * @param {string} ownerName The name of the owner
      * 
      * @param {string} appName The name of the application
+     * 
+     * @param {string} name Name of the new test series
      * 
      * @param {object} [options] Optional Parameters.
      * 
@@ -1857,8 +2370,8 @@ export interface Test {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    patchTestSeries(testSeriesSlug: string, name: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestSeries>): void;
-    patchTestSeries(testSeriesSlug: string, name: string, ownerName: string, appName: string, callback: ServiceCallback<models.TestSeries>): void;
+    patchTestSeries(testSeriesSlug: string, ownerName: string, appName: string, name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestSeries>): void;
+    patchTestSeries(testSeriesSlug: string, ownerName: string, appName: string, name: string, callback: ServiceCallback<models.TestSeries>): void;
 
     /**
      * Returns list of all test series for an application
@@ -1881,11 +2394,11 @@ export interface Test {
     /**
      * Creates new test series for an application
      *
-     * @param {string} name Name of the new test series
-     * 
      * @param {string} ownerName The name of the owner
      * 
      * @param {string} appName The name of the application
+     * 
+     * @param {string} name Name of the new test series
      * 
      * @param {object} [options] Optional Parameters.
      * 
@@ -1895,8 +2408,8 @@ export interface Test {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    createTestSeries(name: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    createTestSeries(name: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    createTestSeries(ownerName: string, appName: string, name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    createTestSeries(ownerName: string, appName: string, name: string, callback: ServiceCallback<any>): void;
 
     /**
      * Stop a test run execution
@@ -2184,7 +2697,7 @@ export interface Test {
     /**
      * Gets a device set belonging to the owner
      *
-     * @param {string} id The ID of the device set
+     * @param {uuid} id The UUID of the device set
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -2204,15 +2717,15 @@ export interface Test {
     /**
      * Updates a device set belonging to the owner
      *
-     * @param {string} id The ID of the device set
-     * 
-     * @param {array} devices List of device IDs
-     * 
-     * @param {string} name The name of the device set
+     * @param {uuid} id The UUID of the device set
      * 
      * @param {string} ownerName The name of the owner
      * 
      * @param {string} appName The name of the application
+     * 
+     * @param {array} devices List of device IDs
+     * 
+     * @param {string} name The name of the device set
      * 
      * @param {object} [options] Optional Parameters.
      * 
@@ -2222,13 +2735,13 @@ export interface Test {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    updateDeviceSetOfOwner(id: string, devices: string[], name: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    updateDeviceSetOfOwner(id: string, devices: string[], name: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    updateDeviceSetOfOwner(id: string, ownerName: string, appName: string, devices: string[], name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    updateDeviceSetOfOwner(id: string, ownerName: string, appName: string, devices: string[], name: string, callback: ServiceCallback<any>): void;
 
     /**
      * Deletes a device set belonging to the owner
      *
-     * @param {string} id The ID of the device set
+     * @param {uuid} id The UUID of the device set
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -2266,14 +2779,14 @@ export interface Test {
     /**
      * Creates a device set belonging to the owner
      *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
      * @param {array} devices List of device IDs
      * 
      * @param {string} name The name of the device set
      * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
      * @param {object} [options] Optional Parameters.
      * 
      * @param {object} [options.customHeaders] Headers that will be added to the
@@ -2282,17 +2795,17 @@ export interface Test {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    createDeviceSetOfOwner(devices: string[], name: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    createDeviceSetOfOwner(devices: string[], name: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    createDeviceSetOfOwner(ownerName: string, appName: string, devices: string[], name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    createDeviceSetOfOwner(ownerName: string, appName: string, devices: string[], name: string, callback: ServiceCallback<any>): void;
 
     /**
      * Creates a short ID for a list of devices
      *
-     * @param {array} devices List of device IDs
-     * 
      * @param {string} ownerName The name of the owner
      * 
      * @param {string} appName The name of the application
+     * 
+     * @param {array} devices
      * 
      * @param {object} [options] Optional Parameters.
      * 
@@ -2302,8 +2815,8 @@ export interface Test {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    createDeviceSelection(devices: string[], ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    createDeviceSelection(devices: string[], ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    createDeviceSelection(ownerName: string, appName: string, devices: string[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    createDeviceSelection(ownerName: string, appName: string, devices: string[], callback: ServiceCallback<any>): void;
 
     /**
      * Returns a list of available devices
@@ -2333,6 +2846,26 @@ export interface Test {
  * instance of the MobileCenterClient.
  */
 export interface Symbols {
+
+    /**
+     * Returns a particular symbol by id (uuid) for the provided application
+     *
+     * @param {string} symbolId The ID of the symbol (uuid of the symbol)
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getStatus(symbolId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getStatus(symbolId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
      * Marks a symbol by id (uuid) as ignored
@@ -2402,6 +2935,26 @@ export interface Symbols {
 export interface SymbolUploads {
 
     /**
+     * Gets the URL to download the symbol upload
+     *
+     * @param {string} symbolUploadId The ID of the symbol upload
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getLocation(symbolUploadId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getLocation(symbolUploadId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
      * Gets a symbol upload by id for the specified application
      *
      * @param {string} symbolUploadId The ID of the symbol upload
@@ -2446,8 +2999,10 @@ export interface SymbolUploads {
     complete(symbolUploadId: string, ownerName: string, appName: string, status: string, callback: ServiceCallback<any>): void;
 
     /**
-     * Gets a list of all uploads for the specified application
+     * Deletes a symbol upload by id for the specified application
      *
+     * @param {string} symbolUploadId The ID of the symbol upload
+     * 
      * @param {string} ownerName The name of the owner
      * 
      * @param {string} appName The name of the application
@@ -2460,7 +3015,35 @@ export interface SymbolUploads {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    deleteMethod(symbolUploadId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    deleteMethod(symbolUploadId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Gets a list of all uploads for the specified application
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {number} [options.top] The maximum number of results to return.
+     * 
+     * @param {string} [options.status] Filter results by the current status of a
+     * symbol upload: * all: all states in the symbol upload process. Includes
+     * created, aborted, committed, processing, indexed and failed states *
+     * uploaded: all states after package is uploaded. Includes committed,
+     * processing, indexed and failed states * processed: symbol upload
+     * processing is completed. Includes indexed and failed states.
+     * . Possible values include: 'all', 'uploaded', 'processed'
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    list(ownerName: string, appName: string, options: { top? : number, status? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     list(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
@@ -2476,13 +3059,15 @@ export interface SymbolUploads {
      * @param {string} [options.clientCallback] The callback URL that the client
      * can optionally provide to get status updates for the current symbol upload
      * 
+     * @param {string} [options.fileName] The file name for the symbol upload
+     * 
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      * 
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    create(ownerName: string, appName: string, options: { clientCallback? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    create(ownerName: string, appName: string, options: { clientCallback? : string, fileName? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     create(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 }
 
@@ -2564,539 +3149,6 @@ export interface MissingSymbolGroups {
 
 /**
  * @class
- * Tables
- * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
- */
-export interface Tables {
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} tableName
-     * 
-     * @param {string} id
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getTableRow(subscriptionId: string, tableName: string, id: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getTableRow(subscriptionId: string, tableName: string, id: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} tableName
-     * 
-     * @param {string} id
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {boolean} [options.permanent]
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    deleteTableRow(subscriptionId: string, tableName: string, id: string, ownerName: string, appName: string, options: { permanent? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    deleteTableRow(subscriptionId: string, tableName: string, id: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} tableName
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {number} [options.skip]
-     * 
-     * @param {number} [options.take]
-     * 
-     * @param {string} [options.sort]
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getTableData(subscriptionId: string, tableName: string, ownerName: string, appName: string, options: { skip? : number, take? : number, sort? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getTableData(subscriptionId: string, tableName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} tableName
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {string} [options.csvData]
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    importTableData(subscriptionId: string, tableName: string, ownerName: string, appName: string, options: { csvData? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    importTableData(subscriptionId: string, tableName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} tableName
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    clearTableData(subscriptionId: string, tableName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    clearTableData(subscriptionId: string, tableName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} tableName
-     * 
-     * @param {string} columnName
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getColumn(subscriptionId: string, tableName: string, columnName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getColumn(subscriptionId: string, tableName: string, columnName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} tableName
-     * 
-     * @param {string} columnName
-     * 
-     * @param {object} column
-     * 
-     * @param {string} [column.name]
-     * 
-     * @param {boolean} [column.isIndexed]
-     * 
-     * @param {string} [column.type] Possible values include: 'String', 'Boolean',
-     * 'Number', 'Date', 'Version', 'Custom'
-     * 
-     * @param {boolean} [column.canDelete]
-     * 
-     * @param {boolean} [column.canUpdateIndex]
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    updateColumn(subscriptionId: string, tableName: string, columnName: string, column: models.TableColumn, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    updateColumn(subscriptionId: string, tableName: string, columnName: string, column: models.TableColumn, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} tableName
-     * 
-     * @param {string} columnName
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    deleteColumn(subscriptionId: string, tableName: string, columnName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    deleteColumn(subscriptionId: string, tableName: string, columnName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} tableName
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getColumnList(subscriptionId: string, tableName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getColumnList(subscriptionId: string, tableName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} tableName
-     * 
-     * @param {object} column
-     * 
-     * @param {string} [column.name]
-     * 
-     * @param {boolean} [column.isIndexed]
-     * 
-     * @param {string} [column.type] Possible values include: 'String', 'Boolean',
-     * 'Number', 'Date', 'Version', 'Custom'
-     * 
-     * @param {boolean} [column.canDelete]
-     * 
-     * @param {boolean} [column.canUpdateIndex]
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    updateColumnList(subscriptionId: string, tableName: string, column: models.TableColumn, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    updateColumnList(subscriptionId: string, tableName: string, column: models.TableColumn, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} tableName
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getTable(subscriptionId: string, tableName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getTable(subscriptionId: string, tableName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} tableName
-     * 
-     * @param {object} table
-     * 
-     * @param {string} [table.name]
-     * 
-     * @param {array} [table.permissions]
-     * 
-     * @param {object} [table.extendedSettings]
-     * 
-     * @param {array} [table.columns]
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    updateTable(subscriptionId: string, tableName: string, table: models.Table, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    updateTable(subscriptionId: string, tableName: string, table: models.Table, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} tableName
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    deleteTable(subscriptionId: string, tableName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    deleteTable(subscriptionId: string, tableName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getTableList(subscriptionId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getTableList(subscriptionId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {object} table
-     * 
-     * @param {string} [table.name]
-     * 
-     * @param {array} [table.permissions]
-     * 
-     * @param {object} [table.extendedSettings]
-     * 
-     * @param {array} [table.columns]
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    createTable(subscriptionId: string, table: models.Table, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    createTable(subscriptionId: string, table: models.Table, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-}
-
-/**
- * @class
- * Azure
- * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
- */
-export interface Azure {
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    deleteResourceGroup(subscriptionId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    deleteResourceGroup(subscriptionId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getResourceGroup(subscriptionId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getResourceGroup(subscriptionId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    ping(subscriptionId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    ping(subscriptionId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getDeploymentOperations(subscriptionId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getDeploymentOperations(subscriptionId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    submitDeployment(subscriptionId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    submitDeployment(subscriptionId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getDeployment(subscriptionId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getDeployment(subscriptionId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-}
-
-/**
- * @class
- * Identity
- * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
- */
-export interface Identity {
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getConfiguration(subscriptionId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    getConfiguration(subscriptionId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-
-    /**
-     * @param {string} subscriptionId
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    setConfiguration(subscriptionId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-    setConfiguration(subscriptionId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-}
-
-/**
- * @class
  * Repositories
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the MobileCenterClient.
@@ -3115,6 +3167,12 @@ export interface Repositories {
      * 
      * @param {object} [options] Optional Parameters.
      * 
+     * @param {string} [options.vstsAccountName] Filter repositories only for
+     * specified account and project, "vstsProjectId" is required
+     * 
+     * @param {string} [options.vstsProjectId] Filter repositories only for
+     * specified account and project, "vstsAccountName" is required
+     * 
      * @param {string} [options.form] The selected form of the object. Possible
      * values include: 'lite', 'full'
      * 
@@ -3124,7 +3182,7 @@ export interface Repositories {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    list(sourceHost: string, ownerName: string, appName: string, options: { form? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    list(sourceHost: string, ownerName: string, appName: string, options: { vstsAccountName? : string, vstsProjectId? : string, form? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     list(sourceHost: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 }
 
@@ -3205,7 +3263,7 @@ export interface RepositoryConfigurations {
 export interface Provisioning {
 
     /**
-     * Return information about the provisioning profile
+     * Return information about the provisioning profile. Only available for iOS.
      *
      * @param {number} releaseId The release_id
      * 
@@ -3221,8 +3279,8 @@ export interface Provisioning {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    profile(releaseId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ProvisioningProfile>): void;
-    profile(releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<models.ProvisioningProfile>): void;
+    profile(releaseId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    profile(releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 }
 
 /**
@@ -3278,11 +3336,379 @@ export interface ReleaseUploads {
 
 /**
  * @class
+ * Push
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the MobileCenterClient.
+ */
+export interface Push {
+
+    /**
+     * Returns whether push config exists.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    configExists(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    configExists(ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+    /**
+     * Get configuration.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getConfig(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.NotificationConfigResult>): void;
+    getConfig(ownerName: string, appName: string, callback: ServiceCallback<models.NotificationConfigResult>): void;
+
+    /**
+     * Set notification configuration.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    setConfig(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.NotificationConfigResult>): void;
+    setConfig(ownerName: string, appName: string, callback: ServiceCallback<models.NotificationConfigResult>): void;
+
+    /**
+     * Delete notification configuration.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deleteConfig(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    deleteConfig(ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+    /**
+     * Get notification details.
+     *
+     * @param {string} notificationId The id of the notification.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    get(notificationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.NotificationDetailsResult>): void;
+    get(notificationId: string, ownerName: string, appName: string, callback: ServiceCallback<models.NotificationDetailsResult>): void;
+
+    /**
+     * Archive push campaign(s)
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {array} values List of notification Ids.
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    notificationArchive(ownerName: string, appName: string, values: string[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    notificationArchive(ownerName: string, appName: string, values: string[], callback: ServiceCallback<void>): void;
+
+    /**
+     * Get list of notifications
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     * 
+     * @param {string} [options.skiptoken] The value identifies a starting point
+     * in the collection of entities. This parameter along with limit is used to
+     * perform pagination.
+     * 
+     * @param {string} [options.orderby] controls the sorting order and sorting
+     * based on which column
+     * 
+     * @param {string} [options.inlinecount] Controls whether or not to include a
+     * count of all the items accross all pages. Possible values include:
+     * 'allpages', 'none'
+     * 
+     * @param {boolean} [options.includeArchived] Include arhived push
+     * notifications
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    list(ownerName: string, appName: string, options: { top? : number, skiptoken? : string, orderby? : string, inlinecount? : string, includeArchived? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.NotificationsListResult>): void;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.NotificationsListResult>): void;
+
+    /**
+     * Send notification.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    send(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.NotificationSendSucceededResult>): void;
+    send(ownerName: string, appName: string, callback: ServiceCallback<models.NotificationSendSucceededResult>): void;
+}
+
+/**
+ * @class
+ * AppOperations
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the MobileCenterClient.
+ */
+export interface AppOperations {
+
+    /**
+     * Create a new asset to upload a file
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    postFileAsset(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    postFileAsset(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * ExportConfigurations
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the MobileCenterClient.
+ */
+export interface ExportConfigurations {
+
+    /**
+     * Enable export configuration.
+     *
+     * @param {string} exportConfigurationId The id of the export configuration.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    enable(exportConfigurationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    enable(exportConfigurationId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+    /**
+     * Disable export configuration.
+     *
+     * @param {string} exportConfigurationId The id of the export configuration.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    disable(exportConfigurationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    disable(exportConfigurationId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+    /**
+     * Get export configuration.
+     *
+     * @param {string} exportConfigurationId The id of the export configuration.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    get(exportConfigurationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+    get(exportConfigurationId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+
+    /**
+     * Partially update export configuration.
+     *
+     * @param {string} exportConfigurationId The id of the export configuration.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    partialUpdate(exportConfigurationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+    partialUpdate(exportConfigurationId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+
+    /**
+     * Delete export configuration.
+     *
+     * @param {string} exportConfigurationId The id of the export configuration.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deleteMethod(exportConfigurationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    deleteMethod(exportConfigurationId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+    /**
+     * List export configurations.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportConfigurationListResult>): void;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.ExportConfigurationListResult>): void;
+
+    /**
+     * Create new export configuration
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    create(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+    create(ownerName: string, appName: string, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+}
+
+/**
+ * @class
  * StoreReleases
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the MobileCenterClient.
  */
 export interface StoreReleases {
+
+    /**
+     * Return the Error Details of release which failed in publishing.
+     *
+     * @param {string} storeName The name of the store
+     * 
+     * @param {number} releaseId The id of the release
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getPublishError(storeName: string, releaseId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getPublishError(storeName: string, releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 
     /**
      * Return releases published in a store for releaseId and storeId
@@ -3423,10 +3849,16 @@ export interface Stores {
      * @param {object} body The store request
      * 
      * @param {string} [body.type] store Type. Possible values include:
-     * 'googleplay', 'intune'
+     * 'googleplay', 'intune', 'windows', 'apple'
      * 
-     * @param {string} [body.name] name of the store. In case of googleplay this
-     * is fixed to GooglePlay-Production.
+     * @param {string} [body.name] name of the store. In case of googleplay,
+     * windows and Apple store this is fixed to Production.
+     * 
+     * @param {string} [body.track] track of the store. Can be production, alpha &
+     * beta for googleplay. Can be production, testflight-internal &
+     * testflight-external for Apple Store. Can be production for Windows Store.
+     * Possible values include: 'production', 'alpha', 'beta',
+     * 'testflight-internal', 'testflight-external'
      * 
      * @param {object} [body.intuneDetails]
      * 
@@ -3440,18 +3872,37 @@ export interface Stores {
      * @param {string} [body.intuneDetails.secretJson.refreshTokenExpiry] the
      * expiry of refresh token
      * 
-     * @param {string} [body.intuneDetails.targetAudience] target audience in
-     * intune store
+     * @param {object} [body.intuneDetails.targetAudience]
      * 
-     * @param {string} [body.intuneDetails.appCategory] app category in intune
-     * store
+     * @param {string} [body.intuneDetails.targetAudience.name] display name for
+     * the target audience/group
+     * 
+     * @param {object} [body.intuneDetails.appCategory]
+     * 
+     * @param {string} [body.intuneDetails.appCategory.name] display name for the
+     * app category
      * 
      * @param {string} [body.intuneDetails.tenantId] tenant id of the intune store
      * 
-     * @param {object} [body.googleplayDetails]
+     * @param {object} [body.windowsDetails]
      * 
-     * @param {object} [body.googleplayDetails.secretJson] Provide service account
-     * details JSON (this is provided by google).
+     * @param {object} [body.windowsDetails.secretJson]
+     * 
+     * @param {string} [body.windowsDetails.secretJson.idToken] the id token of
+     * user
+     * 
+     * @param {string} [body.windowsDetails.secretJson.refreshToken] the refresh
+     * token for user
+     * 
+     * @param {string} [body.windowsDetails.secretJson.refreshTokenExpiry] the
+     * expiry of refresh token
+     * 
+     * @param {string} [body.windowsDetails.tenantId] tenant id the user account
+     * belongs to
+     * 
+     * @param {string} [body.serviceConnectionId] Id for the shared service
+     * connection. In case of Apple AppStore, this connection will be used to
+     * create and connect to the Apple AppStore in Mobile Center.
      * 
      * @param {string} ownerName The name of the owner
      * 
@@ -3495,6 +3946,29 @@ export interface Stores {
  * instance of the MobileCenterClient.
  */
 export interface DistributionGroups {
+
+    /**
+     * Resend distribution group app invite notification to previously invited
+     * testers
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {string} distributionGroupName The name of the distribution group
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {array} [options.userEmails] The list of emails of the users
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    resendInvite(ownerName: string, appName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorResponse>): void;
+    resendInvite(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.ErrorResponse>): void;
 
     /**
      * Remove the users from the distribution group
@@ -3596,13 +4070,15 @@ export interface DistributionGroups {
      * 
      * @param {string} [options.name] The name of the distribution group
      * 
+     * @param {boolean} [options.isPublic] Whether the distribution group is public
+     * 
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      * 
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    update(ownerName: string, appName: string, distributionGroupName: string, options: { name? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    update(ownerName: string, appName: string, distributionGroupName: string, options: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
     update(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<any>): void;
 
     /**
@@ -3666,6 +4142,37 @@ export interface DistributionGroups {
 
 /**
  * @class
+ * CodePushDeploymentRelease
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the MobileCenterClient.
+ */
+export interface CodePushDeploymentRelease {
+
+    /**
+     * Rollback the latest or a specific release for an app deployment
+     *
+     * @param {string} deploymentName deployment name
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.label]
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    rollback(deploymentName: string, ownerName: string, appName: string, options: { label? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushRelease>): void;
+    rollback(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushRelease>): void;
+}
+
+/**
+ * @class
  * DeploymentReleases
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the MobileCenterClient.
@@ -3704,8 +4211,37 @@ export interface DeploymentReleases {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    update(deploymentName: string, releaseLabel: string, release: models.LiveUpdateReleaseModification, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.LiveUpdateRelease>): void;
-    update(deploymentName: string, releaseLabel: string, release: models.LiveUpdateReleaseModification, ownerName: string, appName: string, callback: ServiceCallback<models.LiveUpdateRelease>): void;
+    update(deploymentName: string, releaseLabel: string, release: models.CodePushReleaseModification, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushRelease>): void;
+    update(deploymentName: string, releaseLabel: string, release: models.CodePushReleaseModification, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushRelease>): void;
+}
+
+/**
+ * @class
+ * CodePushDeploymentReleases
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the MobileCenterClient.
+ */
+export interface CodePushDeploymentReleases {
+
+    /**
+     * Clears a Deployment of releases
+     *
+     * @param {string} deploymentName deployment name
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deleteMethod(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    deleteMethod(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
      * Gets the history of releases on a Deployment
@@ -3724,20 +4260,103 @@ export interface DeploymentReleases {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    get(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.LiveUpdateRelease[]>): void;
-    get(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.LiveUpdateRelease[]>): void;
+    get(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushRelease[]>): void;
+    get(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushRelease[]>): void;
+
+    /**
+     * Create a new CodePush release for the specified deployment
+     *
+     * @param {string} deploymentName deployment name
+     * 
+     * @param {string} targetBinaryVersion the binary version of the application
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.packageParameter] The upload zip file
+     * 
+     * @param {string} [options.deploymentName1] This specifies which deployment
+     * you want to release the update to. Default is Staging.
+     * 
+     * @param {string} [options.description] This provides an optional "change
+     * log" for the deployment.
+     * 
+     * @param {boolean} [options.disabled] This specifies whether an update should
+     * be downloadable by end users or not.
+     * 
+     * @param {boolean} [options.mandatory] This specifies whether the update
+     * should be considered mandatory or not (e.g. it includes a critical
+     * security fix).
+     * 
+     * @param {boolean} [options.noDuplicateReleaseError] This specifies that if
+     * the update is identical to the latest release on the deployment, the CLI
+     * should generate a warning instead of an error.
+     * 
+     * @param {number} [options.rollout] This specifies the percentage of users
+     * (as an integer between 1 and 100) that should be eligible to receive this
+     * update.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    create(deploymentName: string, targetBinaryVersion: string, ownerName: string, appName: string, options: { packageParameter? : stream.Readable, deploymentName1? : string, description? : string, disabled? : boolean, mandatory? : boolean, noDuplicateReleaseError? : boolean, rollout? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushRelease>): void;
+    create(deploymentName: string, targetBinaryVersion: string, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushRelease>): void;
 }
 
 /**
  * @class
- * DeploymentMetrics
+ * CodePushDeployments
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the MobileCenterClient.
  */
-export interface DeploymentMetrics {
+export interface CodePushDeployments {
 
     /**
-     * Gets all releases metrics for specified Deployment
+     * Promote one release (default latest one) from one deployment to another
+     *
+     * @param {string} deploymentName deployment name
+     * 
+     * @param {string} promoteDeploymentName deployment name
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.release] Release to be promoted, only needs to
+     * provide optional fields, description, label, disabled, mandatory, rollout,
+     * targetBinaryVersion
+     * 
+     * @param {string} [options.release.label]
+     * 
+     * @param {string} [options.release.targetBinaryRange]
+     * 
+     * @param {string} [options.release.description]
+     * 
+     * @param {boolean} [options.release.isDisabled]
+     * 
+     * @param {boolean} [options.release.isMandatory]
+     * 
+     * @param {number} [options.release.rollout]
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    promote(deploymentName: string, promoteDeploymentName: string, ownerName: string, appName: string, options: { release? : models.CodePushReleasePromote, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushRelease>): void;
+    promote(deploymentName: string, promoteDeploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushRelease>): void;
+
+    /**
+     * Deletes a CodePush Deployment for the given app
      *
      * @param {string} deploymentName deployment name
      * 
@@ -3753,20 +4372,11 @@ export interface DeploymentMetrics {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    get(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.LiveUpdateReleaseMetric[]>): void;
-    get(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.LiveUpdateReleaseMetric[]>): void;
-}
-
-/**
- * @class
- * Deployments
- * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
- */
-export interface Deployments {
+    deleteMethod(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    deleteMethod(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
-     * Gets a CodePush Deployment (e.g. 'Staging') for the given app
+     * Gets a CodePush Deployment for the given app
      *
      * @param {string} deploymentName deployment name
      * 
@@ -3786,7 +4396,7 @@ export interface Deployments {
     get(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.Deployment>): void;
 
     /**
-     * Modifies a CodePush Deployment (e.g. 'Staging') for the given app
+     * Modifies a CodePush Deployment for the given app
      *
      * @param {string} deploymentName deployment name
      * 
@@ -3808,8 +4418,7 @@ export interface Deployments {
     update(deploymentName: string, ownerName: string, appName: string, name: string, callback: ServiceCallback<void>): void;
 
     /**
-     * Gets a list of CodePush deployments (e.g. 'Staging', 'Production') for the
-     * given app
+     * Gets a list of CodePush deployments for the given app
      *
      * @param {string} ownerName The name of the owner
      * 
@@ -3827,7 +4436,7 @@ export interface Deployments {
     list(ownerName: string, appName: string, callback: ServiceCallback<models.Deployment[]>): void;
 
     /**
-     * Creates a CodePush Deployment (e.g. 'Staging') for the given app
+     * Creates a CodePush Deployment for the given app
      *
      * @param {string} ownerName The name of the owner
      * 
@@ -3841,24 +4450,18 @@ export interface Deployments {
      * 
      * @param {object} [options.latestRelease]
      * 
-     * @param {string} [options.latestRelease.targetBinaryRange]
+     * @param {string} [options.latestRelease.label]
+     * 
+     * @param {string} [options.latestRelease.packageHash]
      * 
      * @param {string} [options.latestRelease.blobUrl]
      * 
-     * @param {string} [options.latestRelease.description]
-     * 
-     * @param {boolean} [options.latestRelease.isDisabled]
-     * 
-     * @param {boolean} [options.latestRelease.isMandatory]
-     * 
-     * @param {string} [options.latestRelease.label]
+     * @param {object} [options.latestRelease.diffPackageMap]
      * 
      * @param {string} [options.latestRelease.originalDeployment] Set on 'Promote'
      * 
      * @param {string} [options.latestRelease.originalLabel] Set on 'Promote' and
      * 'Rollback'
-     * 
-     * @param {string} [options.latestRelease.hash]
      * 
      * @param {string} [options.latestRelease.releasedBy]
      * 
@@ -3866,11 +4469,19 @@ export interface Deployments {
      * unknown if unspecified. Possible values include: 'Upload', 'Promote',
      * 'Rollback'
      * 
-     * @param {number} [options.latestRelease.rollout]
-     * 
      * @param {number} [options.latestRelease.size]
      * 
      * @param {number} [options.latestRelease.uploadTime]
+     * 
+     * @param {string} [options.latestRelease.targetBinaryRange]
+     * 
+     * @param {string} [options.latestRelease.description]
+     * 
+     * @param {boolean} [options.latestRelease.isDisabled]
+     * 
+     * @param {boolean} [options.latestRelease.isMandatory]
+     * 
+     * @param {number} [options.latestRelease.rollout]
      * 
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -3878,8 +4489,37 @@ export interface Deployments {
      * @param {ServiceCallback} [callback] callback function; see ServiceCallback
      * doc in ms-rest index.d.ts for details
      */
-    create(ownerName: string, appName: string, name: string, options: { key? : string, latestRelease? : models.LiveUpdateRelease, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Deployment>): void;
+    create(ownerName: string, appName: string, name: string, options: { key? : string, latestRelease? : models.CodePushRelease, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Deployment>): void;
     create(ownerName: string, appName: string, name: string, callback: ServiceCallback<models.Deployment>): void;
+}
+
+/**
+ * @class
+ * CodePushDeploymentMetrics
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the MobileCenterClient.
+ */
+export interface CodePushDeploymentMetrics {
+
+    /**
+     * Gets all releases metrics for specified Deployment
+     *
+     * @param {string} deploymentName deployment name
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    get(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushReleaseMetric[]>): void;
+    get(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushReleaseMetric[]>): void;
 }
 
 /**
@@ -3993,22 +4633,6 @@ export interface CrashGroupsOperations {
      */
     list(ownerName: string, appName: string, options: { lastOccurrenceFrom? : Date, lastOccurrenceTo? : Date, appVersion? : string, groupType? : string, groupStatus? : string, groupTextSearch? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroup[]>): void;
     list(ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroup[]>): void;
-
-    /**
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    getCounts(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroupCounts>): void;
-    getCounts(ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroupCounts>): void;
 }
 
 /**
@@ -4018,30 +4642,6 @@ export interface CrashGroupsOperations {
  * instance of the MobileCenterClient.
  */
 export interface Commits {
-
-    /**
-     * Returns commit information for a batch of shas. (Deprecated. Use
-     * /apps/{app_id}/commits/batch instead with query string hashes)
-     *
-     * @param {string} shaCollection A collection of commit SHAs comma-delimited
-     * 
-     * @param {string} ownerName The name of the owner
-     * 
-     * @param {string} appName The name of the application
-     * 
-     * @param {object} [options] Optional Parameters.
-     * 
-     * @param {string} [options.form] The selected form of the object. Possible
-     * values include: 'lite', 'full'
-     * 
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     * 
-     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
-     * doc in ms-rest index.d.ts for details
-     */
-    deprecatedListBySha(shaCollection: string, ownerName: string, appName: string, options: { form? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CommitDetails[]>): void;
-    deprecatedListBySha(shaCollection: string, ownerName: string, appName: string, callback: ServiceCallback<models.CommitDetails[]>): void;
 
     /**
      * Returns commit information for a batch of shas
@@ -4151,6 +4751,103 @@ export interface BranchConfigurations {
      */
     deleteMethod(branch: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SuccessResponse>): void;
     deleteMethod(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.SuccessResponse>): void;
+}
+
+/**
+ * @class
+ * AppleMapping
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the MobileCenterClient.
+ */
+export interface AppleMapping {
+
+    /**
+     * Fetch all apple test flight groups
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    testFlightGroups(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    testFlightGroups(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Get mapping of apple app to an existing app in apple store.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    get(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    get(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+
+    /**
+     * Delete mapping of apple app to an existing app in apple store.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deleteMethod(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteMethod(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
+
+    /**
+     * Create a mapping for an existing app in apple store for the specified
+     * application.
+     *
+     * @param {object} body The apple app mapping object
+     * 
+     * @param {string} body.serviceConnectionId Id for the shared service
+     * connection. In case of Apple AppStore, this connection will be used to
+     * create and connect to the Apple AppStore in Mobile Center.
+     * 
+     * @param {string} [body.appleId] ID of the apple application in apple store,
+     * takes precedence over bundle_identifier when both are provided
+     * 
+     * @param {string} [body.bundleIdentifier] Bundle Identifier of the apple
+     * package
+     * 
+     * @param {string} body.teamIdentifier ID of the Team associated with the app
+     * in apple store
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    create(body: models.AppleMappingRequest, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    create(body: models.AppleMappingRequest, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
 }
 
 /**
@@ -4667,6 +5364,26 @@ export interface Analytics {
     eventsDeleteLogs(eventName: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
 
     /**
+     * Count of total downloads for the provided distribution releases.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {array} releases
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    distributionReleaseCounts(ownerName: string, appName: string, releases: models.ReleaseWithDistributionGroup[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseCounts>): void;
+    distributionReleaseCounts(ownerName: string, appName: string, releases: models.ReleaseWithDistributionGroup[], callback: ServiceCallback<models.ReleaseCounts>): void;
+
+    /**
      * Percentage of crash-free device by day in the time range based on the
      * selected versions. Api will return -1 if crash devices is greater than
      * active devices
@@ -4692,6 +5409,31 @@ export interface Analytics {
      */
     crashFreeDevicePercentages(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashFreeDevicePercentages>): void;
     crashFreeDevicePercentages(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashFreeDevicePercentages>): void;
+
+    /**
+     * top places of the selected crash group with selected version
+     *
+     * @param {string} crashGroupId The id of the crash group
+     * 
+     * @param {string} version
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    crashGroupPlacesCounts(crashGroupId: string, version: string, ownerName: string, appName: string, options: { top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroupPlaces>): void;
+    crashGroupPlacesCounts(crashGroupId: string, version: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroupPlaces>): void;
 
     /**
      * Overall crashes and affected users count of the selected crash group with
@@ -4767,6 +5509,31 @@ export interface Analytics {
     crashGroupModelCounts(crashGroupId: string, version: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroupModels>): void;
 
     /**
+     * top languages of the selected crash group with selected version
+     *
+     * @param {string} crashGroupId The id of the crash group
+     * 
+     * @param {string} version
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    crashGroupLanguagesCounts(crashGroupId: string, version: string, ownerName: string, appName: string, options: { top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroupLanguages>): void;
+    crashGroupLanguagesCounts(crashGroupId: string, version: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroupLanguages>): void;
+
+    /**
      * Count of crashes by day in the time range of the selected crash group with
      * selected version
      *
@@ -4793,6 +5560,31 @@ export interface Analytics {
      */
     crashGroupCounts(crashGroupId: string, version: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashCounts>): void;
     crashGroupCounts(crashGroupId: string, version: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashCounts>): void;
+
+    /**
+     * top carriers of the selected crash group with selected version
+     *
+     * @param {string} crashGroupId The id of the crash group
+     * 
+     * @param {string} version
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    crashGroupCarrierCounts(crashGroupId: string, version: string, ownerName: string, appName: string, options: { top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashGroupCarriers>): void;
+    crashGroupCarrierCounts(crashGroupId: string, version: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashGroupCarriers>): void;
 
     /**
      * Overall crashes and affected users count of the selected crash groups with
@@ -4841,6 +5633,229 @@ export interface Analytics {
     crashCounts(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashCounts>): void;
 
     /**
+     * Returns whether audience definition exists.
+     *
+     * @param {string} audienceName The name of the audience
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    audienceNameExists(audienceName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    audienceNameExists(audienceName: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+    /**
+     * Deletes audience definition.
+     *
+     * @param {string} audienceName The name of the audience
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deleteAudience(audienceName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    deleteAudience(audienceName: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+    /**
+     * Gets audience definition.
+     *
+     * @param {string} audienceName The name of the audience
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    getAudience(audienceName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Audience>): void;
+    getAudience(audienceName: string, ownerName: string, appName: string, callback: ServiceCallback<models.Audience>): void;
+
+    /**
+     * Creates or updates audience definition.
+     *
+     * @param {string} audienceName The name of the audience
+     * 
+     * @param {object} audience Audience definition
+     * 
+     * @param {boolean} [audience.enabled]
+     * 
+     * @param {object} [audience.customProperties] Custom properties used in the
+     * definition.
+     * 
+     * @param {number} [audience.estimatedTotalCount] Estimated total audience
+     * size.
+     * 
+     * @param {date} [audience.timestamp] Date the audience was last refreshed.
+     * 
+     * @param {string} [audience.name] Audience name.
+     * 
+     * @param {string} [audience.description] Audience description.
+     * 
+     * @param {number} [audience.estimatedCount] Estimated audience size.
+     * 
+     * @param {string} [audience.definition] Audience definition in OData format.
+     * 
+     * @param {string} [audience.state] Audience state. Possible values include:
+     * 'Calculating', 'Ready', 'Disabled'
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    createOrUpdateAudience(audienceName: string, audience: models.Audience, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Audience>): void;
+    createOrUpdateAudience(audienceName: string, audience: models.Audience, ownerName: string, appName: string, callback: ServiceCallback<models.Audience>): void;
+
+    /**
+     * Get list of device property values.
+     *
+     * @param {string} propertyName Device property
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.contains] Contains string
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    listDevicePropertyValues(propertyName: string, ownerName: string, appName: string, options: { contains? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AudienceDevicePropertyValuesListResult>): void;
+    listDevicePropertyValues(propertyName: string, ownerName: string, appName: string, callback: ServiceCallback<models.AudienceDevicePropertyValuesListResult>): void;
+
+    /**
+     * Get list of device properties.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    listDeviceProperties(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AudienceDevicePropertiesListResult>): void;
+    listDeviceProperties(ownerName: string, appName: string, callback: ServiceCallback<models.AudienceDevicePropertiesListResult>): void;
+
+    /**
+     * Get list of custom properties.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    listCustomProperties(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AudienceDevicePropertiesListResult>): void;
+    listCustomProperties(ownerName: string, appName: string, callback: ServiceCallback<models.AudienceDevicePropertiesListResult>): void;
+
+    /**
+     * Tests audience definition.
+     *
+     * @param {object} audience Audience definition
+     * 
+     * @param {boolean} [audience.enabled]
+     * 
+     * @param {object} [audience.customProperties] Custom properties used in the
+     * definition.
+     * 
+     * @param {number} [audience.estimatedTotalCount] Estimated total audience
+     * size.
+     * 
+     * @param {date} [audience.timestamp] Date the audience was last refreshed.
+     * 
+     * @param {string} [audience.name] Audience name.
+     * 
+     * @param {string} [audience.description] Audience description.
+     * 
+     * @param {number} [audience.estimatedCount] Estimated audience size.
+     * 
+     * @param {string} [audience.definition] Audience definition in OData format.
+     * 
+     * @param {string} [audience.state] Audience state. Possible values include:
+     * 'Calculating', 'Ready', 'Disabled'
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    testAudience(audience: models.Audience, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AudienceTestResult>): void;
+    testAudience(audience: models.Audience, ownerName: string, appName: string, callback: ServiceCallback<models.AudienceTestResult>): void;
+
+    /**
+     * Get list of audiences.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {boolean} [options.includeDisabled] Include disabled audience
+     * definitions
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    listAudiences(ownerName: string, appName: string, options: { includeDisabled? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AudienceListResult>): void;
+    listAudiences(ownerName: string, appName: string, callback: ServiceCallback<models.AudienceListResult>): void;
+
+    /**
      * Count of active devices by interval in the time range.
      *
      * @param {date} start Start date time in data in ISO 8601 date time format
@@ -4864,6 +5879,105 @@ export interface Analytics {
      */
     deviceCounts(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ActiveDeviceCounts>): void;
     deviceCounts(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ActiveDeviceCounts>): void;
+}
+
+/**
+ * @class
+ * CodePushAcquisition
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the MobileCenterClient.
+ */
+export interface CodePushAcquisition {
+
+    /**
+     * Check for updates
+     *
+     * @param {string} deploymentKey
+     * 
+     * @param {string} appVersion
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {string} [options.packageHash]
+     * 
+     * @param {string} [options.label]
+     * 
+     * @param {string} [options.clientUniqueId]
+     * 
+     * @param {boolean} [options.isCompanion]
+     * 
+     * @param {string} [options.previousLabelOrAppVersion]
+     * 
+     * @param {string} [options.previousDeploymentKey]
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    updateCheck(deploymentKey: string, appVersion: string, options: { packageHash? : string, label? : string, clientUniqueId? : string, isCompanion? : boolean, previousLabelOrAppVersion? : string, previousDeploymentKey? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UpdateCheckResponse>): void;
+    updateCheck(deploymentKey: string, appVersion: string, callback: ServiceCallback<models.UpdateCheckResponse>): void;
+
+    /**
+     * Report download of specified release
+     *
+     * @param {object} releaseMetadata Deployment status metric properties
+     * 
+     * @param {string} releaseMetadata.deploymentKey
+     * 
+     * @param {string} [releaseMetadata.label]
+     * 
+     * @param {string} [releaseMetadata.appVersion]
+     * 
+     * @param {string} [releaseMetadata.previousDeploymentKey]
+     * 
+     * @param {string} [releaseMetadata.previousLabelOrAppVersion]
+     * 
+     * @param {string} [releaseMetadata.status]
+     * 
+     * @param {string} [releaseMetadata.clientUniqueId]
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    updateDownloadStatus(releaseMetadata: models.CodePushStatusMetricMetadata, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    updateDownloadStatus(releaseMetadata: models.CodePushStatusMetricMetadata, callback: ServiceCallback<void>): void;
+
+    /**
+     * Report Deployment status metric
+     *
+     * @param {object} releaseMetadata Deployment status metric properties
+     * 
+     * @param {string} releaseMetadata.deploymentKey
+     * 
+     * @param {string} [releaseMetadata.label]
+     * 
+     * @param {string} [releaseMetadata.appVersion]
+     * 
+     * @param {string} [releaseMetadata.previousDeploymentKey]
+     * 
+     * @param {string} [releaseMetadata.previousLabelOrAppVersion]
+     * 
+     * @param {string} [releaseMetadata.status]
+     * 
+     * @param {string} [releaseMetadata.clientUniqueId]
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    updateDeployStatus(releaseMetadata: models.CodePushStatusMetricMetadata, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    updateDeployStatus(releaseMetadata: models.CodePushStatusMetricMetadata, callback: ServiceCallback<void>): void;
 }
 
 /**

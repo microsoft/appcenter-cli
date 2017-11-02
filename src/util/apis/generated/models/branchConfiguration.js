@@ -42,6 +42,14 @@ var models = require('./index');
  * 
  * @member {string} [toolsets.xcode.certificateEncoded]
  * 
+ * @member {string} [toolsets.xcode.provisioningProfileFileId]
+ * 
+ * @member {string} [toolsets.xcode.certificateFileId]
+ * 
+ * @member {string} [toolsets.xcode.provisioningProfileUploadId]
+ * 
+ * @member {string} [toolsets.xcode.certificateUploadId]
+ * 
  * @member {string} [toolsets.xcode.certificatePassword]
  * 
  * @member {string} [toolsets.xcode.scheme]
@@ -56,6 +64,15 @@ var models = require('./index');
  * 
  * @member {boolean} [toolsets.xcode.automaticSigning]
  * 
+ * @member {string} [toolsets.xcode.xcodeProjectSha] The selected pbxproject
+ * hash to the repositroy
+ * 
+ * @member {string} [toolsets.xcode.archiveConfiguration] The build
+ * configuration of the target to archive
+ * 
+ * @member {string} [toolsets.xcode.targetToArchive] The target id of the
+ * selected scheme to archive
+ * 
  * @member {object} [toolsets.javascript]
  * 
  * @member {string} [toolsets.javascript.packageJsonPath] Path to package.json
@@ -63,6 +80,9 @@ var models = require('./index');
  * 
  * @member {boolean} [toolsets.javascript.runTests] Whether to run Jest unit
  * tests, via npm test, during the build
+ * 
+ * @member {string} [toolsets.javascript.reactNativeVersion] Version of React
+ * Native from package.json files
  * 
  * @member {object} [toolsets.xamarin]
  * 
@@ -79,6 +99,10 @@ var models = require('./index');
  * @member {string} [toolsets.xamarin.p12Pwd]
  * 
  * @member {string} [toolsets.xamarin.provProfile]
+ * 
+ * @member {string} [toolsets.xamarin.monoVersion]
+ * 
+ * @member {string} [toolsets.xamarin.sdkBundle]
  * 
  * @member {object} [toolsets.android]
  * 

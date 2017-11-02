@@ -26,6 +26,10 @@
  * 
  * @member {string} provProfile
  * 
+ * @member {string} [monoVersion]
+ * 
+ * @member {string} [sdkBundle]
+ * 
  */
 function XamarinBranchConfigurationProperties() {
 }
@@ -89,6 +93,20 @@ XamarinBranchConfigurationProperties.prototype.mapper = function () {
         provProfile: {
           required: true,
           serializedName: 'provProfile',
+          type: {
+            name: 'String'
+          }
+        },
+        monoVersion: {
+          required: false,
+          serializedName: 'monoVersion',
+          type: {
+            name: 'String'
+          }
+        },
+        sdkBundle: {
+          required: false,
+          serializedName: 'sdkBundle',
           type: {
             name: 'String'
           }

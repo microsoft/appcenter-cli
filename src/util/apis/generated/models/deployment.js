@@ -18,32 +18,24 @@ var models = require('./index');
  * 
  * @member {object} [latestRelease]
  * 
- * @member {string} [latestRelease.targetBinaryRange]
+ * @member {string} [latestRelease.label]
+ * 
+ * @member {string} [latestRelease.packageHash]
  * 
  * @member {string} [latestRelease.blobUrl]
  * 
- * @member {string} [latestRelease.description]
- * 
- * @member {boolean} [latestRelease.isDisabled]
- * 
- * @member {boolean} [latestRelease.isMandatory]
- * 
- * @member {string} [latestRelease.label]
+ * @member {object} [latestRelease.diffPackageMap]
  * 
  * @member {string} [latestRelease.originalDeployment] Set on 'Promote'
  * 
  * @member {string} [latestRelease.originalLabel] Set on 'Promote' and
  * 'Rollback'
  * 
- * @member {string} [latestRelease.hash]
- * 
  * @member {string} [latestRelease.releasedBy]
  * 
  * @member {string} [latestRelease.releaseMethod] The release method is
  * unknown if unspecified. Possible values include: 'Upload', 'Promote',
  * 'Rollback'
- * 
- * @member {number} [latestRelease.rollout]
  * 
  * @member {number} [latestRelease.size]
  * 
@@ -86,7 +78,7 @@ Deployment.prototype.mapper = function () {
           serializedName: 'latest_release',
           type: {
             name: 'Composite',
-            className: 'LiveUpdateRelease'
+            className: 'CodePushRelease'
           }
         }
       }
