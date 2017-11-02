@@ -1,5 +1,5 @@
 import * as semver from "semver";
-import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
+import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
 import { DefaultApp } from "../../../util/profile";
 
 export function isValidVersion(semverRange: string): boolean {

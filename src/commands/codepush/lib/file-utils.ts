@@ -10,7 +10,6 @@ export function isBinaryOrZip(path: string): boolean {
 
 export async function copyFileToTmpDir(filePath: string): Promise<string> {
   if (!(await pfs.stat(filePath)).isDirectory()) {
-    // If releasing a single file, copy the file to a temporary 'CodePush' directory in which to publish the release
     var outputFolderPath: string = await pfs.mkTempDir("code-push");
     await pfs.rmDir(outputFilePath)
     await pfs.mkdir(outputFolderPath);
