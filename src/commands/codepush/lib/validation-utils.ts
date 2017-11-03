@@ -7,7 +7,7 @@ export function isValidVersion(semverRange: string): boolean {
 }
 
 export function isValidRollout(rollout: number): boolean {
-  return /^(100|[1-9][0-9]|[1-9])$/.test(rollout.toString());
+  return (rollout && rollout > 0 && rollout <= 100);
 }
 
 export async function isValidDeployment(client: MobileCenterClient, app: DefaultApp, deploymentName: string): Promise<boolean> {

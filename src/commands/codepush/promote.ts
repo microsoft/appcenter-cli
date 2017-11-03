@@ -1,6 +1,9 @@
 import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, shortName, longName, hasArg, position, name } from "../../util/commandline";
 import { MobileCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
+import { inspect } from "util";
+import * as chalk from "chalk";
+import { isValidRollout, isValidVersion } from "./lib/validation-utils";
 
 const debug = require("debug")("mobile-center-cli:commands:codepush:promote");
 
@@ -62,14 +65,39 @@ export default class CodePushPromoteCommand extends AppCommand {
   async run(client: MobileCenterClient): Promise<CommandResult> {
     const app = this.app;
 
-    if (this.rollout != null) {
-      if (!/^(100|[1-9][0-9]|[1-9])$/.test(this.rollout)) {
-        return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
-      }
+    const rollout = Number(this.rollout);
+    if (this.rollout != null && (!Number.isSafeInteger(rollout) || !isValidRollout(rollout))) {
+      return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
     }
 
-    
-    
-  }
+    if (this.targetBinaryRange != null && !isValidVersion(this.targetBinaryRange)) {
+      return failure(ErrorCodes.Exception, "Invalid binary version(s) for a release.");
+    }
 
+    let promote : models.CodePushReleasePromote = {
+      targetBinaryRange: this.targetBinaryRange,
+      description: this.description,
+      label: this.label,
+      isDisabled: this.isDisabled,
+      isMandatory: this.isMandatory
+    };
+
+    if (this.rollout != null) {
+      promote.rollout = rollout;
+    }
+
+    try {
+      debug("Promote CodePush release");
+      const httpRequest = await out.progress("Promoting CodePush release...", clientRequest<models.CodePushRelease>(
+        (cb) => client.codePushDeployments.promote(this.sourceDeploymentName, this.destDeploymentName, app.ownerName,
+        app.appName, { release: promote }, cb)));
+    } catch (error){
+      debug(`Failed to promote CodePush release - ${inspect(error)}`);
+      return failure(ErrorCodes.Exception, error.response.body);
+    }
+
+    out.text("Successfully promoted " + (this.label ? "\"" + this.label + "\" of " : "") + "the \"" 
+    + this.sourceDeploymentName + "\" deployment of the \"" + app.appName + "\" app to the \"" + this.destDeploymentName + "\" deployment.");  
+    return success();
+  }
 }
