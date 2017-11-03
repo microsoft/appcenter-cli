@@ -12,7 +12,7 @@ export default class HistoryCommand extends AppCommand {
 
   @help("CodePush deployment name")
   @required
-  @name("ExistingDeploymentName")
+  @name("existing-deployment-name")
   @position(0)
   public deploymentName: string;
 

@@ -5,27 +5,27 @@ import { out } from "../../util/interaction";
 const debug = require("debug")("mobile-center-cli:commands:codepush:promote");
 
 @help("Create a new release for the destination deployment, which includes the exact code and metadata from the latest release of the source deployment")
-export default class PromoteCommand extends AppCommand {
+export default class CodePushPromoteCommand extends AppCommand {
  
-  @help("Specifies source deployment name.")
+  @help("Specifies source deployment name")
   @required
   @name("source-deployment-name")
   @position(0)
   public sourceDeploymentName: string;
 
-  @help("Specifies destination deployment name.")
+  @help("Specifies destination deployment name")
   @required
   @name("dest-deployment-name")
   @position(1)
   public destDeploymentName: string;
 
-  @help("Specifies description of the changes made to the app with this release.")
+  @help("Specifies description of the changes made to the app with this release")
   @shortName("d")
   @longName("description")
   @hasArg
   public description: string;
 
-  @help("Allows you to pick the specified label from the source deployment and promote it to the destination deployment.")
+  @help("Allows you to pick the specified label from the source deployment and promote it to the destination deployment")
   @shortName("l")
   @longName("label")
   @hasArg
@@ -62,6 +62,13 @@ export default class PromoteCommand extends AppCommand {
   async run(client: MobileCenterClient): Promise<CommandResult> {
     const app = this.app;
 
+    if (this.rollout != null) {
+      if (!/^(100|[1-9][0-9]|[1-9])$/.test(this.rollout)) {
+        return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
+      }
+    }
+
+    
     
   }
 

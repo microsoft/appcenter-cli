@@ -5,10 +5,10 @@ import { out, prompt } from "../../../util/interaction";
 const debug = require("debug")("mobile-center-cli:commands:codepush:deployment:clear");
 
 @help("Clear the release history associated with a deployment")
-export default class ClearCommand extends AppCommand {
+export default class ClearCodePushDeploymentCommand extends AppCommand {
 
-  @help("CodePush deployment name to be cleared")
-  @name("ExistingDeploymentName")
+  @help("Specifies CodePush deployment name to be cleared")
+  @name("deployment-name")
   @position(0)
   @required
   public deploymentName: string;
@@ -20,7 +20,7 @@ export default class ClearCommand extends AppCommand {
   async run(client: MobileCenterClient): Promise<CommandResult> {
     const app = this.app;
 
-    if (!await prompt.confirm(`Do you really want to clear release history?`)) {
+    if (!await prompt.confirm(`Do you really want to clear release history for deployment ${this.deploymentName}?`)) {
       out.text(`Clearing release history was cancelled`);
       return success();
     }
@@ -28,16 +28,12 @@ export default class ClearCommand extends AppCommand {
     try {
       debug("Clearing release history");
       const httpResponse = await out.progress(`Clearing release history for deployment ${this.deploymentName} ....`, 
-        clientRequest((cb) => client.codePushDeploymentReleases.deleteMethod(this.deploymentName, this.app, cb)));
-        
-        if (httpResponse.response.statusCode >= 400) {
-          throw httpResponse.response.statusCode;
-        }
+        clientRequest((cb) => client.codePushDeploymentReleases.deleteMethod(this.deploymentName, app.ownerName, app.appName, cb)));
     } catch (error) {
       debug(`Failed to clear deployment history`);
       if (error.statusCode === 404) {
-        const appNotFoundErrorMsg = `The app ${app.ownerName}/${app.appName} does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command ${chalk.bold("mobile-center apps list")} to see what apps you have access to.`;
-        return failure(ErrorCodes.NotFound, appNotFoundErrorMsg);
+        const deploymentNotFoundErrorMsg = `The deployment ${this.deploymentName} does not exist.`;
+        return failure(ErrorCodes.NotFound, deploymentNotFoundErrorMsg);
       } else {
         return failure(ErrorCodes.Exception, error.message);
       }

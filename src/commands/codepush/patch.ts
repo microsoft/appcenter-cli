@@ -10,7 +10,7 @@ const debug = require("debug")("mobile-center-cli:commands:codepush:patch");
 @help("Update the metadata for an existing CodePush release")
 export default class PatchCommand extends AppCommand {
   
-  @help("Specifies one existing deployment name.")
+  @help("Specifies one existing deployment name")
   @required
   @name("existing-deployment-name")
   @position(0)
@@ -36,7 +36,7 @@ export default class PatchCommand extends AppCommand {
   @hasArg
   public targetBinaryRange: string;
 
-  @help("Specifies description of the changes made to the app with this release.")
+  @help("Specifies description of the changes made to the app with this release")
   @shortName("d")
   @longName("description")
   @hasArg
