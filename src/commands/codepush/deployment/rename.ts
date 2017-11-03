@@ -6,9 +6,10 @@ import * as chalk from "chalk";
 const debug = require("debug")("mobile-center-cli:commands:codepush:deployment:rename");
 
 @help("Rename CodePush deployment")
-export default class RenameCodePushDeploymentCommand extends AppCommand {
+export default class CodePushRenameDeploymentCommand extends AppCommand {
+  
   @help("Specifies CodePush deployment name to be renamed")
-  @name("old-deployment-name")
+  @name("current-deployment-name")
   @position(0)
   @required
   public currentDeploymentName: string;
@@ -28,7 +29,7 @@ export default class RenameCodePushDeploymentCommand extends AppCommand {
 
     try {
       debug("Renaming CodePush deployments");
-      const httpResponse = await out.progress(`Renaming CodePush deployments ....`, 
+      const httpResponse = await out.progress(`Renaming CodePush deployments...`, 
         clientRequest((cb) => client.codePushDeployments.update(this.currentDeploymentName, app.ownerName, app.appName, this.newDeploymentName, cb)));
     } catch (error) {
       debug(`Failed to rename deployments`);

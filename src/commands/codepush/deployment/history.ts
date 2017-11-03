@@ -8,11 +8,11 @@ import * as chalk from "chalk";
 const debug = require("debug")("mobile-center-cli:commands:codepush:deployments:history");
 
 @help("Display the release history for a CodePush deployment")
-export default class HistoryCommand extends AppCommand {
+export default class CodePushDeploymentHistoryCommand extends AppCommand {
 
-  @help("CodePush deployment name")
+  @help("Specifies CodePush deployment name to view history")
   @required
-  @name("existing-deployment-name")
+  @name("deployment-name")
   @position(0)
   public deploymentName: string;
 

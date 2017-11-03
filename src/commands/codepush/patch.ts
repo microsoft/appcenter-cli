@@ -9,7 +9,7 @@ import { isValidRollout, isValidVersion } from "./lib/validation-utils";
 const debug = require("debug")("mobile-center-cli:commands:codepush:patch");
 
 @help("Update the metadata for an existing CodePush release")
-export default class PatchCommand extends AppCommand {
+export default class CodePushPatchCommand extends AppCommand {
   
   @help("Specifies one existing deployment name")
   @required
