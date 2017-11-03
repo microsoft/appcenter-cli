@@ -196,6 +196,11 @@ export class UITestPreparer {
     let minLength = Math.min(currentVersion.length, minimumVersion.length);
 
     for (let i = 0; i < minLength; i++) {
+      if (currentVersion[i] > minimumVersion[i])
+      {
+        return true;
+      }
+      
       if (currentVersion[i] < minimumVersion[i]) {
         return false;
       }
