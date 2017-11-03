@@ -5,7 +5,7 @@ import { inspect } from "util";
 import * as _ from "lodash";
 import * as Process from "process";
 import * as Request from "request";
-import * as JsZip from "jszip";
+import * as JSZip from "jszip";
 import * as JsZipHelper from "../../util/misc/jszip-helper";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
@@ -72,7 +72,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     let outputPath: string;
     if (this.type === DownloadBuildStatusCommand.buildType) {
       debug("Reading received ZIP archive");
-      const zip = await out.progress("Reading downloaded ZIP...", new JsZip().loadAsync(downloadedContent));
+      const zip = await out.progress("Reading downloaded ZIP...", new JSZip().loadAsync(downloadedContent));
       const payloadZipEntry = this.getPayload(zip);
       const extension = Path.extname(payloadZipEntry.name).substring(1);
 
@@ -105,11 +105,11 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     });    
   }
 
-  private async getApkOrIpaZipObject(downloadedZip: Buffer): Promise<JSZipObject> {
-    const zip = await new JsZip().loadAsync(downloadedZip, { checkCRC32: true });
+  private async getApkOrIpaZipObject(downloadedZip: Buffer): Promise<JSZip.JSZipObject> {
+    const zip = await new JSZip().loadAsync(downloadedZip, { checkCRC32: true });
     // looking for apk or ipa
     return  _.find(
-      <JSZipObject[]> _.values(zip.files), 
+      <JSZip.JSZipObject[]> _.values(zip.files), 
       (file) => _.includes(DownloadBuildStatusCommand.applicationPackagesExtensions, Path.extname(file.name).toLowerCase()));
   }
 
@@ -208,10 +208,10 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     return downloadFileRequestResponse.result;
   }
   
-  private getPayload(zip: JSZip): JSZipObject {
+  private getPayload(zip: JSZip): JSZip.JSZipObject {
     // looking for apk, ipa or xcarchive
     return  _.find(
-        <JSZipObject[]> _.values(zip.files), 
+        <JSZip.JSZipObject[]> _.values(zip.files), 
         (file) => _.includes(DownloadBuildStatusCommand.applicationPackagesExtensions, Path.extname(file.name).toLowerCase()));
   }
 
