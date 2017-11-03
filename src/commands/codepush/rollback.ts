@@ -27,8 +27,8 @@ export default class CodePushRollbackCommand extends AppCommand {
   async run(client: MobileCenterClient): Promise<CommandResult> {
     const app = this.app;
 
-    if (!await prompt.confirm(`Do you really want to rollback deployment ${this.deploymentName}?`)) {
-      out.text(`Rollback of deployment ${this.deploymentName} was cancelled`);
+    if (!await prompt.confirm(`Do you really want to rollback release for deployment '${this.deploymentName}'?`)) {
+      out.text(`Rollback of deployment '${this.deploymentName}' was cancelled`);
       return success();
     }
 
@@ -41,7 +41,7 @@ export default class CodePushRollbackCommand extends AppCommand {
       return failure(ErrorCodes.Exception, error.response.body);
     }
 
-    out.text(`Successfully performed a rollback on the ${this.deploymentName} deployment of the ${app.ownerName}/${app.appName} app.`);  
+    out.text(`Successfully performed a rollback on the '${this.deploymentName}' deployment of the '${app.ownerName}/${app.appName}' app.`);  
     return success();
   }
 }
