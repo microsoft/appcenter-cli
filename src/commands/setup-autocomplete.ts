@@ -27,7 +27,7 @@ export default class SetupAutoCompleteCommand extends Command {
 
   async runNoClient(): Promise<CommandResult> {
     if (_.isNil(this.shellProfilePath) && !_.isNil(this.shell)) {
-      return failure(ErrorCodes.InvalidParameter, "shell should be specified only when shell profile path is specified");
+      return failure(ErrorCodes.InvalidParameter, "Shell should be specified only when shell profile path is specified");
     }
 
     if (!_.isNil(this.shell) && SetupAutoCompleteCommand.supportedShells.indexOf(this.shell) === -1) {
@@ -35,7 +35,7 @@ export default class SetupAutoCompleteCommand extends Command {
     }
 
     if (_.isNil(this.shell) && (!process.env.SHELL || !process.env.SHELL.match(SetupAutoCompleteCommand.supportedShells.join("|")))) {
-      return failure(ErrorCodes.InvalidParameter, "current shell cannot be detected, please specify it explicitly");
+      return failure(ErrorCodes.InvalidParameter, "Current shell cannot be detected, please specify it explicitly");
     }
 
     if (!_.isNil(this.shellProfilePath)) {
