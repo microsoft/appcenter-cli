@@ -41,9 +41,9 @@ export interface PositionalOptionDescription {
 
 export type PositionalOptionsDescription = PositionalOptionDescription[];
 
-function descriptionToMinimistOpts(options: OptionsDescription): minimist.Options {
+function descriptionToMinimistOpts(options: OptionsDescription): minimist.Opts {
 
-  let parseOpts: minimist.Options = {
+  let parseOpts: minimist.Opts = {
     "boolean": <string[]>[],
     "string": <string[]>[],
     alias: {},

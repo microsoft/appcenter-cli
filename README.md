@@ -28,11 +28,10 @@ Below is the list of commands currently supported by Mobile Center CLI:
 
 | Command                               | Description                                                    |
 | ------------------------------------- | -------------------------------------------------------------- |
-| `mobile-center help` | Get command or category help |
-| `mobile-center login` | Log the CLI into Mobile Center |
-| `mobile-center logout` | Log the CLI out of Mobile Center |
-| | |
-| `mobile-center setup-autocomplete` | Setup autocompletion for the shell |
+| `mobile-center help` | Get help using mobile-center commands |
+| `mobile-center login` | Log in |
+| `mobile-center logout` | Log out |
+| `mobile-center setup-autocomplete` | Setup tab completion for your shell |
 | | |
 | `mobile-center analytics app-versions` | Shows versions of the application |
 | `mobile-center analytics audience` | Show audience statistics |
@@ -54,6 +53,11 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | `mobile-center build queue` | Queue a new build |
 | `mobile-center build branches list` | Show list of branches |
 | `mobile-center build branches show` | Show branch build status |
+| | |
+| `mobile-center codepush patch` | Update the metadata for an existing CodePush release |
+| `mobile-center codepush deployment add` | Add a new deployment to an app |
+| `mobile-center codepush deployment history` | Display the release history for a CodePush deployment |
+| `mobile-center codepush deployment list` | List the deployments associated with an app |
 | | |
 | `mobile-center crashes upload-missing-symbols` | Upload missing crash symbols for the application (only from macOS) |
 | `mobile-center crashes upload-symbols` | Upload the crash symbols for the application |
@@ -82,21 +86,22 @@ Below is the list of commands currently supported by Mobile Center CLI:
 | | |
 | `mobile-center telemetry off` | Turn off the sending of telemetry |
 | `mobile-center telemetry on` | Turn on the sending of telemetry |
+| | |
 | `mobile-center test status` | Checks the status of the started test run. |
 | `mobile-center test stop` | Stop the started test run. |
 | `mobile-center test generate appium` | Generates an Appium project |
 | `mobile-center test generate uitest` | Generates a Xamarin.UITest project |
-| `mobile-center test prepare appium` | Creates an artifacts directory with Appium tests |
-| `mobile-center test prepare calabash` | Creates an artifacts directory with Calabash tests |
-| `mobile-center test prepare espresso` | Creates an artifacts directory with Espresso tests |
-| `mobile-center test prepare uitest` | Creates an artifacts directory with Xamarin UI Tests |
-| `mobile-center test prepare xcuitest` | Creates an artifacts directory with XCUITest tests |
+| `mobile-center test prepare appium` | Creates an artifacts directory with Appium tests. |
+| `mobile-center test prepare calabash` | Creates an artifacts directory with Calabash tests. |
+| `mobile-center test prepare espresso` | Creates an artifacts directory with Espresso tests. |
+| `mobile-center test prepare uitest` | Creates an artifacts directory with Xamarin UI Tests. |
+| `mobile-center test prepare xcuitest` | Creates an artifacts directory with XCUITest tests. |
 | `mobile-center test run appium` | Starts a test run with Appium tests. |
-| `mobile-center test run calabash` | Starts a test run with Calabash tests |
+| `mobile-center test run calabash` | Starts a test run with Calabash tests. |
 | `mobile-center test run espresso` | Starts a test run with Espresso tests. |
 | `mobile-center test run manifest` | Starts a test run with previously prepared artifacts. |
-| `mobile-center test run uitest` | Starts a test run with Xamarin UI Tests |
-| `mobile-center test run xcuitest` | Starts a test run with XCUITest tests |
+| `mobile-center test run uitest` | Starts a test run with Xamarin UI Tests. |
+| `mobile-center test run xcuitest` | Starts a test run with XCUITest tests. |
 | | |
 | `mobile-center tokens create` | Create a new API token |
 | `mobile-center tokens delete` | Delete an API token |

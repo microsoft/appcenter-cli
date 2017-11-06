@@ -1,8 +1,0 @@
-{
-  "resolution": "main",
-  "tree": {
-    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/555ea54770b8576162e761e344de969d6e960869/rx-core-binding/index.d.ts",
-    "raw": "registry:dt/rx-core-binding#4.0.0+20170223151516",
-    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/555ea54770b8576162e761e344de969d6e960869/rx-core-binding/index.d.ts"
-  }
-}

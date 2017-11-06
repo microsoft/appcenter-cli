@@ -1,6 +1,6 @@
 import * as g from "glob";
 
-export function glob(pattern: string, options?: g.Options): Promise<string[]> {
+export function glob(pattern: string, options?: g.IOptions): Promise<string[]> {
   return new Promise<string[]>((resolve, reject) => {
     g(pattern, options, (err, matches) => {
       if (err) {
@@ -13,7 +13,7 @@ export function glob(pattern: string, options?: g.Options): Promise<string[]> {
   });
 }
 
-export function globSingleFile(pattern: string, options?: g.Options): Promise<string> {
+export function globSingleFile(pattern: string, options?: g.IOptions): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     g(pattern, options, (err, matches) => {
       if (err) {
