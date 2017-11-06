@@ -55,7 +55,7 @@ export default class PatchCommand extends AppCommand {
   async run(client: MobileCenterClient): Promise<CommandResult> {
 
     const app = this.app;
-    let release: models.LiveUpdateRelease;
+    let release: models.CodePushRelease;
 
     if (this.targetBinaryRange === null && this.isDisabled === null && this.isMandatory === null && this.description === null && this.rollout === null) {
       return failure(ErrorCodes.Exception, "At least one property must be specified to patch a release.");
@@ -72,7 +72,7 @@ export default class PatchCommand extends AppCommand {
       return failure(ErrorCodes.Exception, "Invalid binary version(s) for a release.");
     }
 
-    let patch : models.LiveUpdateReleaseModification = {
+    let patch : models.CodePushReleaseModification = {
       targetBinaryRange: this.targetBinaryRange,
       isMandatory: this.isMandatory,
       isDisabled: this.isDisabled,
@@ -84,7 +84,7 @@ export default class PatchCommand extends AppCommand {
     }
     
     try {
-      const httpRequest = await out.progress("Patching CodePush release...", clientRequest<models.LiveUpdateRelease>(
+      const httpRequest = await out.progress("Patching CodePush release...", clientRequest<models.CodePushRelease>(
         (cb) => client.deploymentReleases.update(this.deploymentName, this.releaseLabel, patch, app.ownerName, app.appName, cb)));
       release = httpRequest.result;
       if (httpRequest.response.statusCode === 204) {

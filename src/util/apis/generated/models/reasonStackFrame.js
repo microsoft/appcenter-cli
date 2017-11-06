@@ -28,6 +28,8 @@
  * 
  * @member {string} [codeFormatted] Formatted frame string
  * 
+ * @member {string} [codeRaw] Unformatted Frame string
+ * 
  * @member {string} [language] programming language of the frame. Possible
  * values include: 'JavaScript', 'CSharp', 'Objective-C', 'Objective-Cpp',
  * 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
@@ -108,6 +110,13 @@ ReasonStackFrame.prototype.mapper = function () {
         codeFormatted: {
           required: false,
           serializedName: 'code_formatted',
+          type: {
+            name: 'String'
+          }
+        },
+        codeRaw: {
+          required: false,
+          serializedName: 'code_raw',
           type: {
             name: 'String'
           }

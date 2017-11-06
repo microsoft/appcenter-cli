@@ -12,6 +12,8 @@
  * @constructor
  * @member {string} [name] The name of the distribution group
  * 
+ * @member {boolean} [isPublic] Whether the distribution group is public
+ * 
  */
 function DistributionGroupPatchRequest() {
 }
@@ -35,6 +37,13 @@ DistributionGroupPatchRequest.prototype.mapper = function () {
           serializedName: 'name',
           type: {
             name: 'String'
+          }
+        },
+        isPublic: {
+          required: false,
+          serializedName: 'is_public',
+          type: {
+            name: 'Boolean'
           }
         }
       }

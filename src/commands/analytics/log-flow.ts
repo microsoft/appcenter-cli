@@ -57,14 +57,14 @@ export default class ShowLogFlowCommand extends AppCommand {
         options = { start: result.lastReceivedLogTimestamp };
 
         // take no more than specified number of logs from the first request response
-        const filteredLogs = responsesProcessed ? this.filterLogs(result.logs, this.installationId) : 
+        const filteredLogs = responsesProcessed ? this.filterLogs(result.logs, this.installationId) :
           _.takeRight(this.filterLogs(result.logs, this.installationId), logsCount);
         for (const logEntry of filteredLogs) {
           this.showLogEntry(streamingOutput, logEntry);
         }
       }
     }, this.showContinuously, ShowLogFlowCommand.delayBetweenRequests, "Loading logs...");
-    
+
     streamingOutput.finish();
 
     return success();
@@ -116,7 +116,7 @@ export default class ShowLogFlowCommand extends AppCommand {
 
     // adding properties
     if (logEntry.properties != null) {
-      const logProperties: { [propertyName: string]: string } = JSON.parse(logEntry.properties);
+      const logProperties: { [propertyName: string]: string } = logEntry.properties;
       logStringArray = logStringArray.concat(_.toPairs(logProperties).map((pair) => pair.join(": ")));
       jsonObject.properties = logProperties;
     }

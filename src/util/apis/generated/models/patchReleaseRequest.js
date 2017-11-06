@@ -14,6 +14,10 @@
  * 
  * @member {string} [destPublishId] Destination Publish Id
  * 
+ * @member {string} [errorDetails] failure error details from store
+ * 
+ * @member {string} [errorContextId] contextId for failed error message
+ * 
  */
 function PatchReleaseRequest() {
 }
@@ -42,6 +46,20 @@ PatchReleaseRequest.prototype.mapper = function () {
         destPublishId: {
           required: false,
           serializedName: 'dest_publish_id',
+          type: {
+            name: 'String'
+          }
+        },
+        errorDetails: {
+          required: false,
+          serializedName: 'error_details',
+          type: {
+            name: 'String'
+          }
+        },
+        errorContextId: {
+          required: false,
+          serializedName: 'error_contextId',
           type: {
             name: 'String'
           }

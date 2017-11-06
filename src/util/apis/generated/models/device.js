@@ -13,7 +13,7 @@
  * Device characteristics.
  *
  * @member {string} sdkName Name of the SDK. Consists of the name of the SDK
- * and the platform, e.g. "avalanchesdk.ios", "hockeysdk.android".
+ * and the platform, e.g. "mobilecenter.ios", "hockeysdk.android".
  * 
  * @member {string} sdkVersion Version of the SDK in semver format, e.g.
  * "1.2.0" or "0.12.3-alpha.1".
@@ -24,12 +24,12 @@
  * into this field while sdkVersion refers to the original Android SDK.
  * 
  * @member {string} [wrapperSdkName] Name of the wrapper SDK. Consists of the
- * name of the SDK and the wrapper platform, e.g. "avalanchesdk.xamarin",
+ * name of the SDK and the wrapper platform, e.g. "mobilecenter.xamarin",
  * "hockeysdk.cordova".
  * 
- * @member {string} model Device model (example: iPad2,3).
+ * @member {string} [model] Device model (example: iPad2,3).
  * 
- * @member {string} oemName Device manufacturer (example: HTC).
+ * @member {string} [oemName] Device manufacturer (example: HTC).
  * 
  * @member {string} osName OS name (example: iOS). The following OS names are
  * standardized (non-exclusive): Android, iOS, macOS, tvOS, Windows.
@@ -46,7 +46,7 @@
  * @member {number} timeZoneOffset The offset in minutes from UTC for the
  * device time zone, including daylight savings time.
  * 
- * @member {string} screenSize Screen size of the device in pixels (example:
+ * @member {string} [screenSize] Screen size of the device in pixels (example:
  * 640x480).
  * 
  * @member {string} appVersion Application version name, e.g. 1.1.0
@@ -62,6 +62,23 @@
  * @member {string} [appNamespace] The bundle identifier, package identifier,
  * or namespace, depending on what the individual plattforms use,  .e.g
  * com.microsoft.example.
+ * 
+ * @member {string} [liveUpdateReleaseLabel] Label that is used to identify
+ * application code 'version' released via Live Update beacon running on
+ * device
+ * 
+ * @member {string} [liveUpdateDeploymentKey] Identifier of environment that
+ * current application release belongs to, deployment key then maps to
+ * environment like Production, Staging.
+ * 
+ * @member {string} [liveUpdatePackageHash] Hash of all files (ReactNative or
+ * Cordova) deployed to device via LiveUpdate beacon. Helps identify the
+ * Release version on device or need to download updates in future.
+ * 
+ * @member {string} [wrapperRuntimeVersion] Version of the wrapper technology
+ * framework (Xamarin runtime version or ReactNative or Cordova etc...). See
+ * wrapper_sdk_name to see if this version refers to Xamarin or ReactNative
+ * or other.
  * 
  */
 function Device() {
@@ -110,14 +127,14 @@ Device.prototype.mapper = function () {
           }
         },
         model: {
-          required: true,
+          required: false,
           serializedName: 'model',
           type: {
             name: 'String'
           }
         },
         oemName: {
-          required: true,
+          required: false,
           serializedName: 'oem_name',
           type: {
             name: 'String'
@@ -161,12 +178,16 @@ Device.prototype.mapper = function () {
         timeZoneOffset: {
           required: true,
           serializedName: 'time_zone_offset',
+          constraints: {
+            InclusiveMaximum: 840,
+            InclusiveMinimum: -840
+          },
           type: {
             name: 'Number'
           }
         },
         screenSize: {
-          required: true,
+          required: false,
           serializedName: 'screen_size',
           type: {
             name: 'String'
@@ -210,6 +231,34 @@ Device.prototype.mapper = function () {
         appNamespace: {
           required: false,
           serializedName: 'app_namespace',
+          type: {
+            name: 'String'
+          }
+        },
+        liveUpdateReleaseLabel: {
+          required: false,
+          serializedName: 'live_update_release_label',
+          type: {
+            name: 'String'
+          }
+        },
+        liveUpdateDeploymentKey: {
+          required: false,
+          serializedName: 'live_update_deployment_key',
+          type: {
+            name: 'String'
+          }
+        },
+        liveUpdatePackageHash: {
+          required: false,
+          serializedName: 'live_update_package_hash',
+          type: {
+            name: 'String'
+          }
+        },
+        wrapperRuntimeVersion: {
+          required: false,
+          serializedName: 'wrapper_runtime_version',
           type: {
             name: 'String'
           }

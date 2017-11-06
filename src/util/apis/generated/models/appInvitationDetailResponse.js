@@ -24,8 +24,22 @@ var util = require('util');
  * the app in communication with the ingestion endpoint for crash reporting
  * and analytics
  * 
- * @member {string} [app.azureSubscriptionId] The unique ID (UUID) of the
- * Azure subscription associate with the app
+ * @member {object} [app.azureSubscription]
+ * 
+ * @member {string} [app.azureSubscription.subscriptionId] The azure
+ * subscription id
+ * 
+ * @member {string} [app.azureSubscription.tenantId] The tenant id of the
+ * azure subscription belongs to
+ * 
+ * @member {string} [app.azureSubscription.subscriptionName] The name of the
+ * azure subscription
+ * 
+ * @member {boolean} [app.azureSubscription.isBilling] If the subscription is
+ * used for billing
+ * 
+ * @member {boolean} [app.azureSubscription.isBillable] If the subscription
+ * can be used for billing
  * 
  * @member {string} [app.description] The description of the app
  * 
@@ -37,7 +51,8 @@ var util = require('util');
  * @member {string} [app.name] The name of the app used in URLs
  * 
  * @member {string} [app.os] The OS the app will be running on. Possible
- * values include: 'Android', 'iOS', 'macOS', 'Tizen', 'Windows', 'Custom'
+ * values include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows',
+ * 'Custom'
  * 
  * @member {object} [app.owner]
  * 
@@ -56,11 +71,17 @@ var util = require('util');
  * 'user'. Possible values include: 'org', 'user'
  * 
  * @member {string} [app.platform] The platform of the app. Possible values
- * include: 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'Unity',
- * 'UWP', 'Xamarin', 'Unknown'
+ * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
+ * 'Unity', 'Xamarin', 'Unknown'
  * 
  * @member {string} [app.origin] The creation origin of this app. Possible
  * values include: 'mobile-center', 'hockeyapp', 'codepush'
+ * 
+ * @member {string} [app.createdAt] The created date of this app
+ * 
+ * @member {string} [app.updatedAt] The last updated date of this app
+ * 
+ * @member {array} [app.memberPermissions] The permissions of the calling user
  * 
  * @member {string} email The email address of the invited user
  * 

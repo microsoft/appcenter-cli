@@ -8,6 +8,8 @@
 
 var models = require('./index');
 
+var util = require('util');
+
 /**
  * @class
  * Initializes a new instance of the AppResponse class.
@@ -18,8 +20,22 @@ var models = require('./index');
  * in communication with the ingestion endpoint for crash reporting and
  * analytics
  * 
- * @member {string} [azureSubscriptionId] The unique ID (UUID) of the Azure
- * subscription associate with the app
+ * @member {object} [azureSubscription]
+ * 
+ * @member {string} [azureSubscription.subscriptionId] The azure subscription
+ * id
+ * 
+ * @member {string} [azureSubscription.tenantId] The tenant id of the azure
+ * subscription belongs to
+ * 
+ * @member {string} [azureSubscription.subscriptionName] The name of the azure
+ * subscription
+ * 
+ * @member {boolean} [azureSubscription.isBilling] If the subscription is used
+ * for billing
+ * 
+ * @member {boolean} [azureSubscription.isBillable] If the subscription can be
+ * used for billing
  * 
  * @member {string} [description] The description of the app
  * 
@@ -31,7 +47,7 @@ var models = require('./index');
  * @member {string} name The name of the app used in URLs
  * 
  * @member {string} os The OS the app will be running on. Possible values
- * include: 'Android', 'iOS', 'macOS', 'Tizen', 'Windows', 'Custom'
+ * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Custom'
  * 
  * @member {object} owner
  * 
@@ -50,11 +66,17 @@ var models = require('./index');
  * 'user'. Possible values include: 'org', 'user'
  * 
  * @member {string} platform The platform of the app. Possible values include:
- * 'Cordova', 'Java', 'Objective-C-Swift', 'React-Native', 'Unity', 'UWP',
+ * 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native', 'Unity',
  * 'Xamarin', 'Unknown'
  * 
  * @member {string} origin The creation origin of this app. Possible values
  * include: 'mobile-center', 'hockeyapp', 'codepush'
+ * 
+ * @member {string} [createdAt] The created date of this app
+ * 
+ * @member {string} [updatedAt] The last updated date of this app
+ * 
+ * @member {array} [memberPermissions] The permissions of the calling user
  * 
  */
 function AppResponse() {
@@ -88,11 +110,12 @@ AppResponse.prototype.mapper = function () {
             name: 'String'
           }
         },
-        azureSubscriptionId: {
+        azureSubscription: {
           required: false,
-          serializedName: 'azure_subscription_id',
+          serializedName: 'azure_subscription',
           type: {
-            name: 'String'
+            name: 'Composite',
+            className: 'AzureSubscriptionResponse'
           }
         },
         description: {
@@ -150,6 +173,34 @@ AppResponse.prototype.mapper = function () {
           serializedName: 'origin',
           type: {
             name: 'String'
+          }
+        },
+        createdAt: {
+          required: false,
+          serializedName: 'created_at',
+          type: {
+            name: 'String'
+          }
+        },
+        updatedAt: {
+          required: false,
+          serializedName: 'updated_at',
+          type: {
+            name: 'String'
+          }
+        },
+        memberPermissions: {
+          required: false,
+          serializedName: 'member_permissions',
+          type: {
+            name: 'Sequence',
+            element: {
+                required: false,
+                serializedName: 'StringElementType',
+                type: {
+                  name: 'String'
+                }
+            }
           }
         }
       }

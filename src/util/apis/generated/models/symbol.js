@@ -19,7 +19,7 @@ var util = require('util');
  * 
  * @member {string} appId The application that this symbol belongs to
  * 
- * @member {string} platform The platform that this symbol is for
+ * @member {string} platform The platform that this symbol is associated with
  * 
  * @member {string} url The URL at which the client may download the symbol
  * file

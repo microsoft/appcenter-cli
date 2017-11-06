@@ -16,6 +16,8 @@
  * @member {string} [clientCallback] The callback URL that the client can
  * optionally provide to get status updates for the current symbol upload
  * 
+ * @member {string} [fileName] The file name for the symbol upload
+ * 
  */
 function SymbolUploadBeginRequest() {
 }
@@ -46,6 +48,13 @@ SymbolUploadBeginRequest.prototype.mapper = function () {
         clientCallback: {
           required: false,
           serializedName: 'client_callback',
+          type: {
+            name: 'String'
+          }
+        },
+        fileName: {
+          required: false,
+          serializedName: 'file_name',
           type: {
             name: 'String'
           }

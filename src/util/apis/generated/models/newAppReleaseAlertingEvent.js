@@ -21,58 +21,45 @@ var util = require('util');
  * triggered even if the event requires calling webhooks or doing other
  * actions.
  * 
- * @member {object} [newAppReleaseWebhookProperties]
+ * @member {object} [appReleaseProperties] Properties of new application
+ * release
  * 
- * @member {string} [newAppReleaseWebhookProperties.publicIdentifier]
+ * @member {string} [appReleaseProperties.appName]
  * 
- * @member {object} [newAppReleaseWebhookProperties.appVersion]
+ * @member {string} [appReleaseProperties.appDisplayName]
  * 
- * @member {string} [newAppReleaseWebhookProperties.appVersion.version]
+ * @member {string} [appReleaseProperties.releaseId]
  * 
- * @member {string} [newAppReleaseWebhookProperties.appVersion.shortversion]
+ * @member {string} [appReleaseProperties.platform]
  * 
- * @member {string} [newAppReleaseWebhookProperties.appVersion.title]
+ * @member {string} [appReleaseProperties.uploadedAt] Date and time in ISO
+ * 8601 format
  * 
- * @member {number} [newAppReleaseWebhookProperties.appVersion.timestamp]
+ * @member {string} [appReleaseProperties.fingerprint]
  * 
- * @member {number} [newAppReleaseWebhookProperties.appVersion.appsize]
+ * @member {string} [appReleaseProperties.releaseNotes]
  * 
- * @member {string} [newAppReleaseWebhookProperties.appVersion.notes]
+ * @member {string} [appReleaseProperties.version]
  * 
- * @member {boolean} [newAppReleaseWebhookProperties.appVersion.mandatory]
+ * @member {string} [appReleaseProperties.shortVersion]
  * 
- * @member {boolean} [newAppReleaseWebhookProperties.appVersion.external]
+ * @member {string} [appReleaseProperties.minOs]
  * 
- * @member {string} [newAppReleaseWebhookProperties.appVersion.deviceFamily]
+ * @member {boolean} [appReleaseProperties.mandatoryUpdate]
  * 
- * @member {number} [newAppReleaseWebhookProperties.appVersion.id]
+ * @member {number} [appReleaseProperties.size]
  * 
- * @member {string} [newAppReleaseWebhookProperties.appVersion.appId]
+ * @member {string} [appReleaseProperties.provisioningProfileName]
  * 
- * @member {string}
- * [newAppReleaseWebhookProperties.appVersion.minimumOsVersion]
+ * @member {string} [appReleaseProperties.provisioningProfileType]
  * 
- * @member {string} [newAppReleaseWebhookProperties.appVersion.buildUrl]
+ * @member {string} [appReleaseProperties.bundleIdentifier]
  * 
- * @member {number} [newAppReleaseWebhookProperties.appVersion.status]
+ * @member {string} [appReleaseProperties.installLink]
  * 
- * @member {string} [newAppReleaseWebhookProperties.appVersion.expiredAt]
+ * @member {string} [appReleaseProperties.iconLink]
  * 
- * @member {string} [newAppReleaseWebhookProperties.appVersion.createdAt]
- * 
- * @member {string} [newAppReleaseWebhookProperties.appVersion.updatedAt]
- * 
- * @member {string} [newAppReleaseWebhookProperties.appVersion.sdkVersion]
- * 
- * @member {boolean} [newAppReleaseWebhookProperties.appVersion.blockCrashes]
- * 
- * @member {string} [newAppReleaseWebhookProperties.appVersion.appOwner]
- * 
- * @member {string} [newAppReleaseWebhookProperties.title]
- * 
- * @member {string} [newAppReleaseWebhookProperties.text]
- * 
- * @member {string} [newAppReleaseWebhookProperties.url]
+ * @member {string} [appReleaseProperties.distributionGroupId]
  * 
  */
 function NewAppReleaseAlertingEvent() {
@@ -109,24 +96,9 @@ NewAppReleaseAlertingEvent.prototype.mapper = function () {
             name: 'String'
           }
         },
-        eventVersion: {
-          required: true,
-          serializedName: 'event_version',
-          defaultValue: 1,
-          type: {
-            name: 'Number'
-          }
-        },
         properties: {
           required: false,
           serializedName: 'properties',
-          type: {
-            name: 'Object'
-          }
-        },
-        emailProperties: {
-          required: false,
-          serializedName: 'emailProperties',
           type: {
             name: 'Object'
           }
@@ -145,12 +117,12 @@ NewAppReleaseAlertingEvent.prototype.mapper = function () {
             }
           }
         },
-        newAppReleaseWebhookProperties: {
+        appReleaseProperties: {
           required: false,
-          serializedName: 'newAppReleaseWebhookProperties',
+          serializedName: 'app_release_properties',
           type: {
             name: 'Composite',
-            className: 'NewAppReleaseWebhookProperties'
+            className: 'NewAppReleaseAlertingEventAppReleaseProperties'
           }
         }
       }

@@ -32,7 +32,7 @@ var models = require('./index');
  * 
  * @member {string} [exception]
  * 
- * @member {string} errorReason
+ * @member {string} crashReason
  * 
  * @member {object} [reasonFrame]
  * 
@@ -51,6 +51,8 @@ var models = require('./index');
  * @member {string} [reasonFrame.frameworkName] Name of the framework
  * 
  * @member {string} [reasonFrame.codeFormatted] Formatted frame string
+ * 
+ * @member {string} [reasonFrame.codeRaw] Unformatted Frame string
  * 
  * @member {string} [reasonFrame.language] programming language of the frame.
  * Possible values include: 'JavaScript', 'CSharp', 'Objective-C',
@@ -155,9 +157,9 @@ CrashGroup.prototype.mapper = function () {
             name: 'String'
           }
         },
-        errorReason: {
+        crashReason: {
           required: true,
-          serializedName: 'error_reason',
+          serializedName: 'crash_reason',
           type: {
             name: 'String'
           }

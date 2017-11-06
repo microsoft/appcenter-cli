@@ -6,13 +6,24 @@
 
 'use strict';
 
+var models = require('./index');
+
 /**
  * @class
  * Initializes a new instance of the IntuneStoreResponse class.
  * @constructor
- * @member {string} [targetAudience] target audience in intune store
+ * @member {object} [targetAudience]
  * 
- * @member {string} [appCategory] target app category in intune
+ * @member {string} [targetAudience.name] display name for the target
+ * audience/group
+ * 
+ * @member {string} [targetAudience.id] ID for the target audience/group.
+ * 
+ * @member {object} [appCategory]
+ * 
+ * @member {string} [appCategory.name] display name for the app category
+ * 
+ * @member {string} [appCategory.id] ID for the category.
  * 
  */
 function IntuneStoreResponse() {
@@ -36,14 +47,16 @@ IntuneStoreResponse.prototype.mapper = function () {
           required: false,
           serializedName: 'target_audience',
           type: {
-            name: 'String'
+            name: 'Composite',
+            className: 'IntuneTargetAudienceResponse'
           }
         },
         appCategory: {
           required: false,
           serializedName: 'app_category',
           type: {
-            name: 'String'
+            name: 'Composite',
+            className: 'IntuneAppCategoryResponse'
           }
         }
       }

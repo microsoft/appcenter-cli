@@ -27,7 +27,7 @@ function Test(client) {
 /**
  * Gets a device set belonging to the user
  *
- * @param {string} id The ID of the device set
+ * @param {uuid} id The UUID of the device set
  * 
  * @param {string} ownerName The name of the owner
  * 
@@ -62,8 +62,8 @@ Test.prototype.getDeviceSetOfUser = function (id, ownerName, appName, options, c
   }
   // Validate
   try {
-    if (id === null || id === undefined || typeof id.valueOf() !== 'string') {
-      throw new Error('id cannot be null or undefined and it must be of type string.');
+    if (id === null || id === undefined || typeof id.valueOf() !== 'string' || !msRest.isValidUuid(id)) {
+      throw new Error('id cannot be null or undefined and it must be of type string and must be a valid uuid.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -78,7 +78,7 @@ Test.prototype.getDeviceSetOfUser = function (id, ownerName, appName, options, c
   // Construct URL
   var baseUrl = this.client.baseUri;
   var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/user/device_sets/{id}';
-  requestUrl = requestUrl.replace('{id}', encodeURIComponent(id));
+  requestUrl = requestUrl.replace('{id}', encodeURIComponent(id.toString()));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -152,15 +152,15 @@ Test.prototype.getDeviceSetOfUser = function (id, ownerName, appName, options, c
 /**
  * Updates a device set belonging to the user
  *
- * @param {string} id The ID of the device set
- * 
- * @param {array} devices List of device IDs
- * 
- * @param {string} name The name of the device set
+ * @param {uuid} id The UUID of the device set
  * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
+ * 
+ * @param {array} devices List of device IDs
+ * 
+ * @param {string} name The name of the device set
  * 
  * @param {object} [options] Optional Parameters.
  * 
@@ -179,7 +179,7 @@ Test.prototype.getDeviceSetOfUser = function (id, ownerName, appName, options, c
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Test.prototype.updateDeviceSetOfUser = function (id, devices, name, ownerName, appName, options, callback) {
+Test.prototype.updateDeviceSetOfUser = function (id, ownerName, appName, devices, name, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -190,8 +190,14 @@ Test.prototype.updateDeviceSetOfUser = function (id, devices, name, ownerName, a
   }
   // Validate
   try {
-    if (id === null || id === undefined || typeof id.valueOf() !== 'string') {
-      throw new Error('id cannot be null or undefined and it must be of type string.');
+    if (id === null || id === undefined || typeof id.valueOf() !== 'string' || !msRest.isValidUuid(id)) {
+      throw new Error('id cannot be null or undefined and it must be of type string and must be a valid uuid.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
     if (!util.isArray(devices)) {
       throw new Error('devices cannot be null or undefined and it must be of type array.');
@@ -204,20 +210,20 @@ Test.prototype.updateDeviceSetOfUser = function (id, devices, name, ownerName, a
     if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
       throw new Error('name cannot be null or undefined and it must be of type string.');
     }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
   } catch (error) {
     return callback(error);
+  }
+  var deviceSet;
+  if ((devices !== null && devices !== undefined) || (name !== null && name !== undefined)) {
+      deviceSet = new client.models['DeviceSetUpdate']();
+      deviceSet.devices = devices;
+      deviceSet.name = name;
   }
 
   // Construct URL
   var baseUrl = this.client.baseUri;
   var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/user/device_sets/{id}';
-  requestUrl = requestUrl.replace('{id}', encodeURIComponent(id));
+  requestUrl = requestUrl.replace('{id}', encodeURIComponent(id.toString()));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -235,15 +241,21 @@ Test.prototype.updateDeviceSetOfUser = function (id, devices, name, ownerName, a
     }
   }
   httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  // Serialize Request  
-  var formData = {};  
-  if (devices !== undefined && devices !== null) {
-    formData['devices'] = devices.toString();
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (deviceSet !== null && deviceSet !== undefined) {
+      var requestModelMapper = new client.models['DeviceSetUpdate']().mapper();
+      requestModel = client.serialize(requestModelMapper, deviceSet, 'deviceSet');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(deviceSet, {depth: null})));
+    return callback(serializationError);
   }
-  if (name !== undefined && name !== null) {
-    formData['name'] = name;
-  }
-  httpRequest.formData = formData;
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, function (err, response, responseBody) {
     if (err) {
@@ -316,7 +328,7 @@ Test.prototype.updateDeviceSetOfUser = function (id, devices, name, ownerName, a
 /**
  * Deletes a device set belonging to the user
  *
- * @param {string} id The ID of the device set
+ * @param {uuid} id The UUID of the device set
  * 
  * @param {string} ownerName The name of the owner
  * 
@@ -350,8 +362,8 @@ Test.prototype.deleteDeviceSetOfUser = function (id, ownerName, appName, options
   }
   // Validate
   try {
-    if (id === null || id === undefined || typeof id.valueOf() !== 'string') {
-      throw new Error('id cannot be null or undefined and it must be of type string.');
+    if (id === null || id === undefined || typeof id.valueOf() !== 'string' || !msRest.isValidUuid(id)) {
+      throw new Error('id cannot be null or undefined and it must be of type string and must be a valid uuid.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -366,7 +378,7 @@ Test.prototype.deleteDeviceSetOfUser = function (id, ownerName, appName, options
   // Construct URL
   var baseUrl = this.client.baseUri;
   var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/user/device_sets/{id}';
-  requestUrl = requestUrl.replace('{id}', encodeURIComponent(id));
+  requestUrl = requestUrl.replace('{id}', encodeURIComponent(id.toString()));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -555,13 +567,13 @@ Test.prototype.listDeviceSetsOfUser = function (ownerName, appName, options, cal
 /**
  * Creates a device set belonging to the user
  *
- * @param {array} devices List of device IDs
- * 
- * @param {string} name The name of the device set
- * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
+ * 
+ * @param {array} devices List of device IDs
+ * 
+ * @param {string} name The name of the device set
  * 
  * @param {object} [options] Optional Parameters.
  * 
@@ -580,7 +592,7 @@ Test.prototype.listDeviceSetsOfUser = function (ownerName, appName, options, cal
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Test.prototype.createDeviceSetOfUser = function (devices, name, ownerName, appName, options, callback) {
+Test.prototype.createDeviceSetOfUser = function (ownerName, appName, devices, name, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -591,6 +603,12 @@ Test.prototype.createDeviceSetOfUser = function (devices, name, ownerName, appNa
   }
   // Validate
   try {
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
     if (!util.isArray(devices)) {
       throw new Error('devices cannot be null or undefined and it must be of type array.');
     }
@@ -602,14 +620,14 @@ Test.prototype.createDeviceSetOfUser = function (devices, name, ownerName, appNa
     if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
       throw new Error('name cannot be null or undefined and it must be of type string.');
     }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
   } catch (error) {
     return callback(error);
+  }
+  var deviceSet;
+  if ((devices !== null && devices !== undefined) || (name !== null && name !== undefined)) {
+      deviceSet = new client.models['DeviceSetUpdate']();
+      deviceSet.devices = devices;
+      deviceSet.name = name;
   }
 
   // Construct URL
@@ -632,15 +650,21 @@ Test.prototype.createDeviceSetOfUser = function (devices, name, ownerName, appNa
     }
   }
   httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  // Serialize Request  
-  var formData = {};  
-  if (devices !== undefined && devices !== null) {
-    formData['devices'] = devices.toString();
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (deviceSet !== null && deviceSet !== undefined) {
+      var requestModelMapper = new client.models['DeviceSetUpdate']().mapper();
+      requestModel = client.serialize(requestModelMapper, deviceSet, 'deviceSet');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(deviceSet, {depth: null})));
+    return callback(serializationError);
   }
-  if (name !== undefined && name !== null) {
-    formData['name'] = name;
-  }
-  httpRequest.formData = formData;
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, function (err, response, responseBody) {
     if (err) {
@@ -960,11 +984,11 @@ Test.prototype.deleteTestSeries = function (testSeriesSlug, ownerName, appName, 
  *
  * @param {string} testSeriesSlug The slug of the test series
  * 
- * @param {string} name New name of the new test series
- * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
+ * 
+ * @param {string} name Name of the new test series
  * 
  * @param {object} [options] Optional Parameters.
  * 
@@ -984,7 +1008,7 @@ Test.prototype.deleteTestSeries = function (testSeriesSlug, ownerName, appName, 
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Test.prototype.patchTestSeries = function (testSeriesSlug, name, ownerName, appName, options, callback) {
+Test.prototype.patchTestSeries = function (testSeriesSlug, ownerName, appName, name, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -998,17 +1022,22 @@ Test.prototype.patchTestSeries = function (testSeriesSlug, name, ownerName, appN
     if (testSeriesSlug === null || testSeriesSlug === undefined || typeof testSeriesSlug.valueOf() !== 'string') {
       throw new Error('testSeriesSlug cannot be null or undefined and it must be of type string.');
     }
-    if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
-      throw new Error('name cannot be null or undefined and it must be of type string.');
-    }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
+    if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
+      throw new Error('name cannot be null or undefined and it must be of type string.');
+    }
   } catch (error) {
     return callback(error);
+  }
+  var name1;
+  if (name !== null && name !== undefined) {
+      name1 = new client.models['TestSeriesName']();
+      name1.name = name;
   }
 
   // Construct URL
@@ -1032,12 +1061,21 @@ Test.prototype.patchTestSeries = function (testSeriesSlug, name, ownerName, appN
     }
   }
   httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  // Serialize Request  
-  var formData = {};  
-  if (name !== undefined && name !== null) {
-    formData['name'] = name;
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (name1 !== null && name1 !== undefined) {
+      var requestModelMapper = new client.models['TestSeriesName']().mapper();
+      requestModel = client.serialize(requestModelMapper, name1, 'name1');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(name1, {depth: null})));
+    return callback(serializationError);
   }
-  httpRequest.formData = formData;
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, function (err, response, responseBody) {
     if (err) {
@@ -1225,11 +1263,11 @@ Test.prototype.getAllTestSeries = function (ownerName, appName, options, callbac
 /**
  * Creates new test series for an application
  *
- * @param {string} name Name of the new test series
- * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
+ * 
+ * @param {string} name Name of the new test series
  * 
  * @param {object} [options] Optional Parameters.
  * 
@@ -1248,7 +1286,7 @@ Test.prototype.getAllTestSeries = function (ownerName, appName, options, callbac
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Test.prototype.createTestSeries = function (name, ownerName, appName, options, callback) {
+Test.prototype.createTestSeries = function (ownerName, appName, name, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1259,17 +1297,22 @@ Test.prototype.createTestSeries = function (name, ownerName, appName, options, c
   }
   // Validate
   try {
-    if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
-      throw new Error('name cannot be null or undefined and it must be of type string.');
-    }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
+    if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
+      throw new Error('name cannot be null or undefined and it must be of type string.');
+    }
   } catch (error) {
     return callback(error);
+  }
+  var testSeriesName;
+  if (name !== null && name !== undefined) {
+      testSeriesName = new client.models['TestSeriesName']();
+      testSeriesName.name = name;
   }
 
   // Construct URL
@@ -1292,12 +1335,21 @@ Test.prototype.createTestSeries = function (name, ownerName, appName, options, c
     }
   }
   httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  // Serialize Request  
-  var formData = {};  
-  if (name !== undefined && name !== null) {
-    formData['name'] = name;
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (testSeriesName !== null && testSeriesName !== undefined) {
+      var requestModelMapper = new client.models['TestSeriesName']().mapper();
+      requestModel = client.serialize(requestModelMapper, testSeriesName, 'testSeriesName');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(testSeriesName, {depth: null})));
+    return callback(serializationError);
   }
-  httpRequest.formData = formData;
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, function (err, response, responseBody) {
     if (err) {
@@ -3037,7 +3089,7 @@ Test.prototype.createSubscription = function (ownerName, appName, options, callb
 /**
  * Gets a device set belonging to the owner
  *
- * @param {string} id The ID of the device set
+ * @param {uuid} id The UUID of the device set
  * 
  * @param {string} ownerName The name of the owner
  * 
@@ -3072,8 +3124,8 @@ Test.prototype.getDeviceSetOfOwner = function (id, ownerName, appName, options, 
   }
   // Validate
   try {
-    if (id === null || id === undefined || typeof id.valueOf() !== 'string') {
-      throw new Error('id cannot be null or undefined and it must be of type string.');
+    if (id === null || id === undefined || typeof id.valueOf() !== 'string' || !msRest.isValidUuid(id)) {
+      throw new Error('id cannot be null or undefined and it must be of type string and must be a valid uuid.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -3088,7 +3140,7 @@ Test.prototype.getDeviceSetOfOwner = function (id, ownerName, appName, options, 
   // Construct URL
   var baseUrl = this.client.baseUri;
   var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/owner/device_sets/{id}';
-  requestUrl = requestUrl.replace('{id}', encodeURIComponent(id));
+  requestUrl = requestUrl.replace('{id}', encodeURIComponent(id.toString()));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -3162,15 +3214,15 @@ Test.prototype.getDeviceSetOfOwner = function (id, ownerName, appName, options, 
 /**
  * Updates a device set belonging to the owner
  *
- * @param {string} id The ID of the device set
- * 
- * @param {array} devices List of device IDs
- * 
- * @param {string} name The name of the device set
+ * @param {uuid} id The UUID of the device set
  * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
+ * 
+ * @param {array} devices List of device IDs
+ * 
+ * @param {string} name The name of the device set
  * 
  * @param {object} [options] Optional Parameters.
  * 
@@ -3189,7 +3241,7 @@ Test.prototype.getDeviceSetOfOwner = function (id, ownerName, appName, options, 
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Test.prototype.updateDeviceSetOfOwner = function (id, devices, name, ownerName, appName, options, callback) {
+Test.prototype.updateDeviceSetOfOwner = function (id, ownerName, appName, devices, name, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -3200,8 +3252,14 @@ Test.prototype.updateDeviceSetOfOwner = function (id, devices, name, ownerName, 
   }
   // Validate
   try {
-    if (id === null || id === undefined || typeof id.valueOf() !== 'string') {
-      throw new Error('id cannot be null or undefined and it must be of type string.');
+    if (id === null || id === undefined || typeof id.valueOf() !== 'string' || !msRest.isValidUuid(id)) {
+      throw new Error('id cannot be null or undefined and it must be of type string and must be a valid uuid.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
     if (!util.isArray(devices)) {
       throw new Error('devices cannot be null or undefined and it must be of type array.');
@@ -3214,20 +3272,20 @@ Test.prototype.updateDeviceSetOfOwner = function (id, devices, name, ownerName, 
     if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
       throw new Error('name cannot be null or undefined and it must be of type string.');
     }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
   } catch (error) {
     return callback(error);
+  }
+  var deviceSet;
+  if ((devices !== null && devices !== undefined) || (name !== null && name !== undefined)) {
+      deviceSet = new client.models['DeviceSetUpdate']();
+      deviceSet.devices = devices;
+      deviceSet.name = name;
   }
 
   // Construct URL
   var baseUrl = this.client.baseUri;
   var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/owner/device_sets/{id}';
-  requestUrl = requestUrl.replace('{id}', encodeURIComponent(id));
+  requestUrl = requestUrl.replace('{id}', encodeURIComponent(id.toString()));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -3245,15 +3303,21 @@ Test.prototype.updateDeviceSetOfOwner = function (id, devices, name, ownerName, 
     }
   }
   httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  // Serialize Request  
-  var formData = {};  
-  if (devices !== undefined && devices !== null) {
-    formData['devices'] = devices.toString();
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (deviceSet !== null && deviceSet !== undefined) {
+      var requestModelMapper = new client.models['DeviceSetUpdate']().mapper();
+      requestModel = client.serialize(requestModelMapper, deviceSet, 'deviceSet');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(deviceSet, {depth: null})));
+    return callback(serializationError);
   }
-  if (name !== undefined && name !== null) {
-    formData['name'] = name;
-  }
-  httpRequest.formData = formData;
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, function (err, response, responseBody) {
     if (err) {
@@ -3326,7 +3390,7 @@ Test.prototype.updateDeviceSetOfOwner = function (id, devices, name, ownerName, 
 /**
  * Deletes a device set belonging to the owner
  *
- * @param {string} id The ID of the device set
+ * @param {uuid} id The UUID of the device set
  * 
  * @param {string} ownerName The name of the owner
  * 
@@ -3360,8 +3424,8 @@ Test.prototype.deleteDeviceSetOfOwner = function (id, ownerName, appName, option
   }
   // Validate
   try {
-    if (id === null || id === undefined || typeof id.valueOf() !== 'string') {
-      throw new Error('id cannot be null or undefined and it must be of type string.');
+    if (id === null || id === undefined || typeof id.valueOf() !== 'string' || !msRest.isValidUuid(id)) {
+      throw new Error('id cannot be null or undefined and it must be of type string and must be a valid uuid.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -3376,7 +3440,7 @@ Test.prototype.deleteDeviceSetOfOwner = function (id, ownerName, appName, option
   // Construct URL
   var baseUrl = this.client.baseUri;
   var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/owner/device_sets/{id}';
-  requestUrl = requestUrl.replace('{id}', encodeURIComponent(id));
+  requestUrl = requestUrl.replace('{id}', encodeURIComponent(id.toString()));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -3565,13 +3629,13 @@ Test.prototype.listDeviceSetsOfOwner = function (ownerName, appName, options, ca
 /**
  * Creates a device set belonging to the owner
  *
- * @param {array} devices List of device IDs
- * 
- * @param {string} name The name of the device set
- * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
+ * 
+ * @param {array} devices List of device IDs
+ * 
+ * @param {string} name The name of the device set
  * 
  * @param {object} [options] Optional Parameters.
  * 
@@ -3590,7 +3654,7 @@ Test.prototype.listDeviceSetsOfOwner = function (ownerName, appName, options, ca
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Test.prototype.createDeviceSetOfOwner = function (devices, name, ownerName, appName, options, callback) {
+Test.prototype.createDeviceSetOfOwner = function (ownerName, appName, devices, name, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -3601,6 +3665,12 @@ Test.prototype.createDeviceSetOfOwner = function (devices, name, ownerName, appN
   }
   // Validate
   try {
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
     if (!util.isArray(devices)) {
       throw new Error('devices cannot be null or undefined and it must be of type array.');
     }
@@ -3612,14 +3682,14 @@ Test.prototype.createDeviceSetOfOwner = function (devices, name, ownerName, appN
     if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
       throw new Error('name cannot be null or undefined and it must be of type string.');
     }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
   } catch (error) {
     return callback(error);
+  }
+  var deviceSet;
+  if ((devices !== null && devices !== undefined) || (name !== null && name !== undefined)) {
+      deviceSet = new client.models['DeviceSetUpdate']();
+      deviceSet.devices = devices;
+      deviceSet.name = name;
   }
 
   // Construct URL
@@ -3642,15 +3712,21 @@ Test.prototype.createDeviceSetOfOwner = function (devices, name, ownerName, appN
     }
   }
   httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  // Serialize Request  
-  var formData = {};  
-  if (devices !== undefined && devices !== null) {
-    formData['devices'] = devices.toString();
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (deviceSet !== null && deviceSet !== undefined) {
+      var requestModelMapper = new client.models['DeviceSetUpdate']().mapper();
+      requestModel = client.serialize(requestModelMapper, deviceSet, 'deviceSet');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(deviceSet, {depth: null})));
+    return callback(serializationError);
   }
-  if (name !== undefined && name !== null) {
-    formData['name'] = name;
-  }
-  httpRequest.formData = formData;
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, function (err, response, responseBody) {
     if (err) {
@@ -3723,11 +3799,11 @@ Test.prototype.createDeviceSetOfOwner = function (devices, name, ownerName, appN
 /**
  * Creates a short ID for a list of devices
  *
- * @param {array} devices List of device IDs
- * 
  * @param {string} ownerName The name of the owner
  * 
  * @param {string} appName The name of the application
+ * 
+ * @param {array} devices
  * 
  * @param {object} [options] Optional Parameters.
  * 
@@ -3746,7 +3822,7 @@ Test.prototype.createDeviceSetOfOwner = function (devices, name, ownerName, appN
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-Test.prototype.createDeviceSelection = function (devices, ownerName, appName, options, callback) {
+Test.prototype.createDeviceSelection = function (ownerName, appName, devices, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -3757,6 +3833,12 @@ Test.prototype.createDeviceSelection = function (devices, ownerName, appName, op
   }
   // Validate
   try {
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
     if (!util.isArray(devices)) {
       throw new Error('devices cannot be null or undefined and it must be of type array.');
     }
@@ -3765,14 +3847,13 @@ Test.prototype.createDeviceSelection = function (devices, ownerName, appName, op
         throw new Error('devices[i] must be of type string.');
       }
     }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
   } catch (error) {
     return callback(error);
+  }
+  var deviceList;
+  if (devices !== null && devices !== undefined) {
+      deviceList = new client.models['DeviceList']();
+      deviceList.devices = devices;
   }
 
   // Construct URL
@@ -3795,12 +3876,21 @@ Test.prototype.createDeviceSelection = function (devices, ownerName, appName, op
     }
   }
   httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  // Serialize Request  
-  var formData = {};  
-  if (devices !== undefined && devices !== null) {
-    formData['devices'] = devices.toString();
+  // Serialize Request
+  var requestContent = null;
+  var requestModel = null;
+  try {
+    if (deviceList !== null && deviceList !== undefined) {
+      var requestModelMapper = new client.models['DeviceList']().mapper();
+      requestModel = client.serialize(requestModelMapper, deviceList, 'deviceList');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+        'payload - "%s"', error.message, util.inspect(deviceList, {depth: null})));
+    return callback(serializationError);
   }
-  httpRequest.formData = formData;
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, function (err, response, responseBody) {
     if (err) {

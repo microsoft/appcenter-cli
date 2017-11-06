@@ -23,11 +23,11 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
       return failure(ErrorCodes.InvalidParameter, `${this.releaseId} is not a valid release id`);
     }
 
-    let releaseDetails: models.ReleaseDetails;
+    let releaseDetails: models.ReleaseDetailsResponse;
     try {
       debug("Loading release details");
-      const httpRequest = await out.progress("Loading release details...", clientRequest<models.ReleaseDetails>(
-        (cb) => client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
+      const httpRequest = await out.progress("Loading release details...", clientRequest<models.ReleaseDetailsResponse>(
+        (cb) => client.releasesOperations.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
       ));
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;

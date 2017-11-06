@@ -19,6 +19,9 @@
  * @member {boolean} [runTests] Whether to run Jest unit tests, via npm test,
  * during the build. Default value: true .
  * 
+ * @member {string} [reactNativeVersion] Version of React Native from
+ * package.json files
+ * 
  */
 function JavaScriptBranchConfigurationProperties() {
 }
@@ -50,6 +53,13 @@ JavaScriptBranchConfigurationProperties.prototype.mapper = function () {
           defaultValue: true,
           type: {
             name: 'Boolean'
+          }
+        },
+        reactNativeVersion: {
+          required: false,
+          serializedName: 'reactNativeVersion',
+          type: {
+            name: 'String'
           }
         }
       }

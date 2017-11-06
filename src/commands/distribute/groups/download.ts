@@ -86,7 +86,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     debug("Verifying that release was distributed to the specified distribution group");
     let releasesIds: number[];
     try {
-      const httpRequest = await clientRequest<models.BasicReleaseDetails[]>((cb) => client.releases.listByDistributionGroup(distributionGroup, app.ownerName, app.appName, cb));
+      const httpRequest = await clientRequest<models.BasicReleaseDetailsResponse[]>((cb) => client.releasesOperations.listByDistributionGroup(distributionGroup, app.ownerName, app.appName, cb));
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;
       } else {
@@ -109,7 +109,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
   private async getReleaseUrl(client: MobileCenterClient, app: DefaultApp, releaseId: string): Promise<string> {
     debug("Getting download URL for the specified release");
     try {
-      const httpRequest = await clientRequest<models.ReleaseDetails>((cb) => client.releases.getLatestByUser(releaseId, app.ownerName, app.appName, cb));
+      const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) => client.releasesOperations.getLatestByUser(releaseId, app.ownerName, app.appName, cb));
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;
       } else {
@@ -128,9 +128,9 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
   private async getLastReleaseUrl(client: MobileCenterClient, app: DefaultApp, distributionGroup: string): Promise<string> {
     debug("Getting download URL for the latest release of the specified distribution group");
     try {
-      const httpRequest = await clientRequest<models.ReleaseDetails>((cb) => 
-        client.releases.getLatestByDistributionGroup(distributionGroup, "latest", app.ownerName, app.appName, cb));
-      if (httpRequest.response.statusCode >= 400) {
+      const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) => 
+        client.releasesOperations.getLatestByDistributionGroup(app.ownerName, app.appName, distributionGroup, "latest", cb));       
+       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.result;
       } else {
         return httpRequest.result.downloadUrl;

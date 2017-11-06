@@ -15,8 +15,8 @@
  * @member {string} [name] A name identifying a unique distribution store.
  * 
  * @member {string} [type] type of the distribution store currently stores
- * type can be intune or googleplay. Possible values include: 'intune',
- * 'googleplay'
+ * type can be intune, googleplay or windows. Possible values include:
+ * 'intune', 'googleplay', 'windows'
  * 
  * @member {string} [publishingStatus] publishing status of the release in the
  * store.

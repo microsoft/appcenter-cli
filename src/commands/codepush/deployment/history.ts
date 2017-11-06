@@ -22,10 +22,10 @@ export default class HistoryCommand extends AppCommand {
 
   async run(client: MobileCenterClient): Promise<CommandResult> {
     const app = this.app;
-    let releases: models.LiveUpdateRelease[];
+    let releases: models.CodePushRelease[];
     try {
-      const httpRequest = await out.progress("Getting CodePush releases...", clientRequest<models.LiveUpdateRelease[]>(
-        (cb) => client.deploymentReleases.get(this.deploymentName, app.ownerName, app.appName, cb)));
+      const httpRequest = await out.progress("Getting CodePush releases...", clientRequest<models.CodePushRelease[]>(
+        (cb) => client.codePushDeploymentReleases.get(this.deploymentName, app.ownerName, app.appName, cb)));
       releases = httpRequest.result;
       out.table(out.getCommandOutputTableOptions(["Label", "Release Time", "App Version", "Mandatory", "Description"]), 
         releases.map((release) => 
