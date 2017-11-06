@@ -1,6 +1,6 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success} from "../../util/commandline";
 import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
-import { StreamingArrayOutput } from "../../util/interaction";
+import { out, StreamingArrayOutput } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
 import { DefaultApp } from "../../util/profile";
@@ -40,6 +40,7 @@ export default class ShowLogFlowCommand extends AppCommand {
     streamingOutput.start();
 
     let options: {start: Date} = null;
+    let someLogsWereOutput = false;
     await ContinuousPollingHelper.pollContinuously(async () => {
       try {
         debug ("Loading logs");
@@ -62,8 +63,14 @@ export default class ShowLogFlowCommand extends AppCommand {
         for (const logEntry of filteredLogs) {
           this.showLogEntry(streamingOutput, logEntry);
         }
+        someLogsWereOutput = someLogsWereOutput || filteredLogs.length > 0;
       }
     }, this.showContinuously, ShowLogFlowCommand.delayBetweenRequests, "Loading logs...");
+
+    if (!someLogsWereOutput) {
+      // no logs were shown, notify users that none were received
+      out.text("No log entries received");
+    }
     
     streamingOutput.finish();
 

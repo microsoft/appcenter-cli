@@ -5,14 +5,13 @@ import { Profile, DefaultApp, getUser } from "../../util/profile";
 
 @help("Get the application that's set as default for all CLI commands")
 export default class GetCurrentAppCommand extends Command {
-	constructor(args: CommandArgs) {
-		super(args);
-	}
+  constructor(args: CommandArgs) {
+    super(args);
+  }
 
-	async runNoClient(): Promise<CommandResult> {
-		const user = getUser();
-		const currentApp = user.defaultApp ? `${user.defaultApp.ownerName}/${user.defaultApp.appName}` : "";
-		out.text(s => s, currentApp);
-		return success();
-	}
+  async runNoClient(): Promise<CommandResult> {
+    const user = getUser();
+    out.text((defaultApp) => defaultApp ? `${user.defaultApp.ownerName}/${user.defaultApp.appName}` : "No app is currently set as default, use 'mobile-center apps set-current' command", user && user.defaultApp);
+    return success();
+  }
 }

@@ -32,10 +32,15 @@ export default class AppsListCommand extends Command {
       return failure(ErrorCodes.Exception, "Unknown error when loading apps");
     }
 
-    const defaultApp = getCurrentApp(null);
-    debug(`Current app = ${inspect(defaultApp)}`);
-    const sortedApps = _.sortBy(appsResponse.result, (app) => (app.owner.name + app.name).toLowerCase());
-    out.list((app) => this.formatApp(defaultApp.value, app), sortedApps);
+    const apps = appsResponse.result;
+    if (apps.length) {
+      const defaultApp = getCurrentApp(null);
+      debug(`Current app = ${inspect(defaultApp)}`);
+      const sortedApps = _.sortBy(apps, (app) => (app.owner.name + app.name).toLowerCase());
+      out.list((app) => this.formatApp(defaultApp.value, app), sortedApps);
+    } else {
+      out.text(() => "No apps available", []);
+    }
 
     return success();
   }

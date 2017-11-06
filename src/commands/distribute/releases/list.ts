@@ -24,12 +24,16 @@ export default class ShowReleasesCommand extends AppCommand {
       return failure(ErrorCodes.Exception, "failed to get list of releases for the application");
     }
 
-    out.reportNewLineSeparatedArray([
-        ["ID", "id"],
-        ["Short Version", "shortVersion"],
-        ["Version", "version"],
-        ["Uploaded At", "uploadedAt", out.report.asDate]
-      ], releases);
+    if (releases.length) {
+      out.reportNewLineSeparatedArray([
+          ["ID", "id"],
+          ["Short Version", "shortVersion"],
+          ["Version", "version"],
+          ["Uploaded At", "uploadedAt", out.report.asDate]
+        ], releases);
+    } else {
+      out.text(() => "No releases found", []);
+    }
    
     return success();
   }

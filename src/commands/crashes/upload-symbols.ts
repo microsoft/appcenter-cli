@@ -71,6 +71,8 @@ export default class UploadSymbols extends AppCommand {
     // upload symbols
     await out.progress("Uploading symbols...", new UploadSymbolsHelper(client, app, debug).uploadSymbolsZip(pathToZipToUpload));
 
+    out.text("Symbols were successfully uploaded");
+
     return success();
   }
 

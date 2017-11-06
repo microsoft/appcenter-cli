@@ -32,6 +32,9 @@ export default class SetCurrentAppCommand extends Command {
     let profile = getUser();
     profile.defaultApp = newDefault;
     profile.save();
+
+    out.text(`${this.appId} is set as current app`);
+
     return success();
   }
 }
