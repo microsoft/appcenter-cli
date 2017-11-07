@@ -107,9 +107,9 @@ export default class CodePushReleaseCommand extends AppCommand {
             packageParameter: fs.createReadStream(updateContentsZipPath),
             deploymentName1: this.deploymentName,
             description: this.description,
-            disabled: this.disabled, mandatory:
-            this.mandatory, noDuplicateReleaseError:
-            this.noDuplicateReleaseError,
+            disabled: this.disabled, 
+            mandatory: this.mandatory, 
+            noDuplicateReleaseError: this.noDuplicateReleaseError,
             rollout: rollout,
           },
           cb)));

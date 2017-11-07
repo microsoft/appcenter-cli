@@ -36,9 +36,9 @@ export default async function zip(updateContentsPath: string): Promise<string> {
     const packagePath: string = path.join(process.cwd(), generateRandomFilename(15) + ".zip");
     let zip = new JsZip();
 
-    releaseFiles.forEach(async (releaseFile: ReleaseFile) => {
+    for (let releaseFile of releaseFiles) {
       zip.file(releaseFile.targetLocation, await pfs.readFile(releaseFile.sourceLocation));
-    });
+    }
 
     zip
       .generateNodeStream({ type: 'nodebuffer', streamFiles: true })
