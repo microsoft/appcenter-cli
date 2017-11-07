@@ -10,11 +10,11 @@ export function isBinaryOrZip(path: string): boolean {
 
 export async function copyFileToTmpDir(filePath: string): Promise<string> {
   if (!(await pfs.stat(filePath)).isDirectory()) {
-    var outputFolderPath: string = await pfs.mkTempDir("code-push");
-    await pfs.rmDir(outputFilePath)
+    let outputFolderPath: string = await pfs.mkTempDir("code-push");
+    await pfs.rmDir(outputFolderPath)
     await pfs.mkdir(outputFolderPath);
 
-    var outputFilePath: string = path.join(outputFolderPath, path.basename(filePath));
+    let outputFilePath: string = path.join(outputFolderPath, path.basename(filePath));
     await pfs.writeFile(outputFilePath, await pfs.readFile(filePath));
 
     return outputFolderPath;

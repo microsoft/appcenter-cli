@@ -18,15 +18,15 @@ export async function generatePackageHashFromDirectory(directoryPath: string, ba
     throw new Error("Not a directory. Please either create a directory, or use hashFile().");
   }
 
-  let manifest: PackageManifest = await generatePackageManifestFromDirectory(directoryPath, basePath);
+  const manifest: PackageManifest = await generatePackageManifestFromDirectory(directoryPath, basePath);
   return await manifest.computePackageHash();
 }
 
 export async function generatePackageManifestFromDirectory(directoryPath: string, basePath: string): Promise<PackageManifest> {
   return new Promise<PackageManifest>(async (resolve, reject) => {
-    var fileHashesMap = new Map<string, string>();
+    let fileHashesMap = new Map<string, string>();
 
-    let files: string[] = await pfs.walk(directoryPath);
+    const files: string[] = await pfs.walk(directoryPath);
 
     if (!files || files.length === 0) {
       reject("Error: Can't sign the release because no files were found.");
@@ -34,10 +34,10 @@ export async function generatePackageManifestFromDirectory(directoryPath: string
     }
 
     // Hash the files sequentially, because streaming them in parallel is not necessarily faster
-    var generateManifestPromise: Promise<void> = files.reduce((soFar: Promise<void>, filePath: string) => {
+    let generateManifestPromise: Promise<void> = files.reduce((soFar: Promise<void>, filePath: string) => {
       return soFar
         .then(() => {
-          var relativePath: string = PackageManifest.normalizePath(path.relative(basePath, filePath));
+          let relativePath: string = PackageManifest.normalizePath(path.relative(basePath, filePath));
           if (!PackageManifest.isIgnored(relativePath)) {
             return hashFile(filePath)
               .then((hash: string) => {
@@ -55,13 +55,13 @@ export async function generatePackageManifestFromDirectory(directoryPath: string
 }
 
 export async function hashFile(filePath: string): Promise<string> {
-  var readStream: fs.ReadStream = fs.createReadStream(filePath);
+  let readStream: fs.ReadStream = fs.createReadStream(filePath);
   return hashStream(readStream);
 }
 
 export async function hashStream(readStream: stream.Readable): Promise<string> {
   return new Promise<string>((resolve, reject) => {
-    var hashStream = <stream.Transform><any>crypto.createHash(HASH_ALGORITHM);
+    let hashStream = <stream.Transform><any>crypto.createHash(HASH_ALGORITHM);
 
     readStream
       .on("error", (error: any): void => {
@@ -71,8 +71,8 @@ export async function hashStream(readStream: stream.Readable): Promise<string> {
       .on("end", (): void => {
         hashStream.end();
 
-        var buffer = <Buffer>hashStream.read();
-        var hash: string = buffer.toString("hex");
+        let buffer = <Buffer>hashStream.read();
+        let hash: string = buffer.toString("hex");
 
         resolve(hash);
       });
@@ -96,7 +96,7 @@ export class PackageManifest {
   }
 
   public async computePackageHash(): Promise<string> {
-    var entries: string[] = [];
+    let entries: string[] = [];
     this._map.forEach((hash: string, name: string): void => {
       entries.push(name + ":" + hash);
     });
@@ -113,7 +113,7 @@ export class PackageManifest {
   }
 
   public serialize(): string {
-    var obj: any = {};
+    let obj: any = {};
 
     this._map.forEach(function (value, key) {
       obj[key] = value;
@@ -124,10 +124,10 @@ export class PackageManifest {
 
   public static deserialize(serializedContents: string): PackageManifest {
     try {
-      var obj: any = JSON.parse(serializedContents);
-      var map = new Map<string, string>();
+      let obj: any = JSON.parse(serializedContents);
+      let map = new Map<string, string>();
 
-      for (var key of Object.keys(obj)) {
+      for (let key of Object.keys(obj)) {
         map.set(key, obj[key]);
       }
 

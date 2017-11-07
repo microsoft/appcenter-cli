@@ -122,6 +122,5 @@ export default class CodePushReleaseCommand extends AppCommand {
       debug(`Failed to release a CodePush update - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, error.response.body);
     }
-
   }
 }

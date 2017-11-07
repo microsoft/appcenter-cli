@@ -5,8 +5,8 @@ import * as JsZip from "jszip";
 import { generateRandomFilename } from "../file-utils";
 
 interface ReleaseFile {
-  sourceLocation: string;     // The current location of the file on disk
-  targetLocation: string;     // The desired location of the file within the zip
+  sourceLocation: string; // The current location of the file on disk
+  targetLocation: string; // The desired location of the file within the zip
 }
 
 export default async function zip(updateContentsPath: string): Promise<string> {
@@ -16,17 +16,17 @@ export default async function zip(updateContentsPath: string): Promise<string> {
     if (!(await pfs.stat(updateContentsPath)).isDirectory()) {
       releaseFiles.push({
         sourceLocation: updateContentsPath,
-        targetLocation: path.basename(updateContentsPath)  // Put the file in the root
+        targetLocation: path.basename(updateContentsPath) // Put the file in the root
       });
     }
 
     const directoryPath: string = updateContentsPath;
-    const baseDirectoryPath = path.join(directoryPath, "..");     // For legacy reasons, put the root directory in the zip
+    const baseDirectoryPath = path.join(directoryPath, ".."); // For legacy reasons, put the root directory in the zip
 
     let files: string[] = await pfs.walk(updateContentsPath);
 
     files.forEach((filePath: string) => {
-      var relativePath: string = path.relative(baseDirectoryPath, filePath);
+      let relativePath: string = path.relative(baseDirectoryPath, filePath);
       releaseFiles.push({
         sourceLocation: filePath,
         targetLocation: relativePath
@@ -34,7 +34,7 @@ export default async function zip(updateContentsPath: string): Promise<string> {
     });
 
     const packagePath: string = path.join(process.cwd(), generateRandomFilename(15) + ".zip");
-    var zip = new JsZip();
+    let zip = new JsZip();
 
     releaseFiles.forEach(async (releaseFile: ReleaseFile) => {
       zip.file(releaseFile.targetLocation, await pfs.readFile(releaseFile.sourceLocation));
