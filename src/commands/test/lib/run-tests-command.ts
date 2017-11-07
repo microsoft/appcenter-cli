@@ -77,23 +77,24 @@ export abstract class RunTestsCommand extends AppCommand {
   constructor(args: CommandArgs) {
     super(args);
 
-    if (!this.testParameters) {
-      this.testParameters = [];
-    }
-    else if (typeof this.testParameters === "string") {
-      this.testParameters = [ this.testParameters ];
-    }
-
-    if (!this.include) {
-      this.include = [];
-    }
-    else if (typeof this.include === "string") {
-      this.include = [ this.include ];
-    }
-
+    this.testParameters = this.fixArrayParameter(this.testParameters);
+    this.include = this.fixArrayParameter(this.include);
+    
     if (this.timeoutSec && typeof this.timeoutSec === "string") {
       this.timeoutSec = parseInt(this.timeoutSec);
     }
+  }
+
+  protected fixArrayParameter(input: any): string[]
+  {
+    if (!input) {
+      return [];
+    }
+    else if (typeof input === "string") {
+      return [ input ];
+    }
+
+    return input;
   }
 
   // Override this if you need to validate options
