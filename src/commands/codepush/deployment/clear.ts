@@ -33,14 +33,14 @@ export default class CodePushClearDeploymentCommand extends AppCommand {
     } catch (error) {
       debug(`Failed to clear deployment history - ${inspect(error)}`);
       if (error.statusCode === 404) {
-        const deploymentNotFoundErrorMsg = `The deployment ${this.deploymentName} does not exist for the app ${app.ownerName}/${app.appName}`;
+        const deploymentNotFoundErrorMsg = `The deployment ${this.deploymentName} does not exist for the app ${this.identifier}`;
         return failure(ErrorCodes.NotFound, deploymentNotFoundErrorMsg);
       } else {
-        return failure(ErrorCodes.Exception, error.message);
+        return failure(ErrorCodes.Exception, error.response.body);
       }
     }
 
-    out.text(`Successfully cleared the deployment ${this.deploymentName} history for the ${app.ownerName}/${app.appName} app.`);  
+    out.text(`Successfully cleared the deployment ${this.deploymentName} history for the ${this.identifier} app.`);  
     return success();
   }
 }

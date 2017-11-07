@@ -26,19 +26,19 @@ export default class CodePushAddCommand extends AppCommand {
       const httpRequest = await out.progress("Creating a new CodePush deployment...", clientRequest<models.Deployment>(
         (cb) => client.codePushDeployments.create(app.ownerName, app.appName, this.newDeploymentName, cb)));
       deployment = httpRequest.result;
-      out.text(`Deployment ${chalk.bold(deployment.name)} has been created for the ${app.ownerName}/${app.appName}`);
+      out.text(`Deployment ${chalk.bold(deployment.name)} has been created for the ${this.identifier}`);
       return success();
     } catch (error) {
       debug(`Failed to add a new CodePush deployment - ${inspect(error)}`);
       if (error.statusCode === 404) {
-        const appNotFoundErrorMsg = `The app ${app.ownerName}/${app.appName} does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command ${chalk.bold("mobile-center apps list")} to see what apps you have access to.`;
+        const appNotFoundErrorMsg = `The app ${this.identifier} does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command ${chalk.bold("mobile-center apps list")} to see what apps you have access to.`;
         return failure(ErrorCodes.NotFound, appNotFoundErrorMsg);
       }
       else if (error.statusCode === 409) {
         const deploymentExistErrorMsg = `A deployment named ${chalk.bold(this.newDeploymentName)} already exists.`;
         return failure(ErrorCodes.Exception, deploymentExistErrorMsg);
       } else {
-        return failure(ErrorCodes.Exception, error.message);
+        return failure(ErrorCodes.Exception, error.response.body);
       }
     }
   }

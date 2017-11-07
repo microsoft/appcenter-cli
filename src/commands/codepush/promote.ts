@@ -96,7 +96,7 @@ export default class CodePushPromoteCommand extends AppCommand {
       return failure(ErrorCodes.Exception, error.response.body);
     }
 
-    out.text(`Successfully promoted ${this.label ? `'${this.label}' of` : ''} the '${this.sourceDeploymentName}' deployment of the '${app.ownerName}/${app.appName}' app to the '${this.destDeploymentName}' deployment.`);
+    out.text(`Successfully promoted ${this.label ? `'${this.label}' of` : ''} the '${this.sourceDeploymentName}' deployment of the '${this.identifier}' app to the '${this.destDeploymentName}' deployment.`);
     return success();
   }
 }

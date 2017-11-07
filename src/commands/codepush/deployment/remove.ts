@@ -33,14 +33,14 @@ export default class CodePushRemoveDeploymentCommand extends AppCommand {
     } catch (error) {
       debug(`Failed to remove CodePush deployment - ${inspect(error)}`);
       if (error.statusCode === 404) {
-        const appNotFoundErrorMsg = `Deployment ${this.deploymentName} does not exist.`;
+        const appNotFoundErrorMsg = `Deployment ${this.deploymentName} for the ${this.identifier} app does not exist.`;
         return failure(ErrorCodes.NotFound, appNotFoundErrorMsg);
       } else {
-        return failure(ErrorCodes.Exception, error.message);
+        return failure(ErrorCodes.Exception, error.response.body);
       }
     }
 
-    out.text(`Successfully removed the ${this.deploymentName} deployment for the ${app.ownerName}/${app.appName} app.`);  
+    out.text(`Successfully removed the ${this.deploymentName} deployment for the ${this.identifier} app.`);  
     return success();
   }
 }

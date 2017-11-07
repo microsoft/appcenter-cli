@@ -41,7 +41,7 @@ export default class CodePushRollbackCommand extends AppCommand {
       return failure(ErrorCodes.Exception, error.response.body);
     }
 
-    out.text(`Successfully performed a rollback on the '${this.deploymentName}' deployment of the '${app.ownerName}/${app.appName}' app.`);  
+    out.text(`Successfully performed a rollback on the '${this.deploymentName}' deployment of the '${this.identifier}' app.`);  
     return success();
   }
 }

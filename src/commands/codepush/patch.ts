@@ -86,9 +86,9 @@ export default class CodePushPatchCommand extends AppCommand {
         (cb) => client.deploymentReleases.update(this.deploymentName, this.releaseLabel, patch, app.ownerName, app.appName, cb)));
       release = httpRequest.result;
       if (httpRequest.response.statusCode === 204) {
-        out.text(`No update for the ${chalk.bold(this.releaseLabel)} of ${app.ownerName}/${app.appName} app's ${chalk.bold(this.deploymentName)} deployment`);
+        out.text(`No update for the ${chalk.bold(this.releaseLabel)} of ${this.identifier} app's ${chalk.bold(this.deploymentName)} deployment`);
       } else {
-        out.text(`Successfully updated the ${chalk.bold(release.label)} of ${app.ownerName}/${app.appName} app's ${chalk.bold(this.deploymentName)} deployment`);
+        out.text(`Successfully updated the ${chalk.bold(release.label)} of ${this.identifier} app's ${chalk.bold(this.deploymentName)} deployment`);
       }
       return success();
     } catch (error) {
