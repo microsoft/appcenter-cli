@@ -64,9 +64,9 @@ export default class CodePushReleaseCommand extends AppCommand {
   @help("Percentage of users this release should be available to")
   @shortName("r")
   @longName("rollout")
-  @defaultValue(100)
+  @defaultValue("100")
   @hasArg
-  public rollout: number;
+  public rollout: string;
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
     if (isBinaryOrZip(this.updateContentsPath)) {
@@ -77,8 +77,9 @@ export default class CodePushReleaseCommand extends AppCommand {
       return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
     }
 
-    if (!isValidRollout(this.rollout)) {
-      return failure(ErrorCodes.InvalidParameter, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
+    const rollout = Number(this.rollout);
+    if (!Number.isSafeInteger(rollout) || !isValidRollout(rollout)) {
+        return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
     }
 
     if (!(await isValidDeployment(client, this.app, this.deploymentName))) {
@@ -109,7 +110,7 @@ export default class CodePushReleaseCommand extends AppCommand {
             disabled: this.disabled, mandatory:
             this.mandatory, noDuplicateReleaseError:
             this.noDuplicateReleaseError,
-            rollout: this.rollout,
+            rollout: rollout,
           },
           cb)));
 
