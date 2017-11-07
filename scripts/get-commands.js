@@ -14,6 +14,11 @@ const util = require('util');
 
 const { getClassHelpText } = require('../dist/util/commandline/option-decorators');
 
+const trimRe = /^\s*(.*?)\s*$/;
+function trim(s) {
+  return s.match(trimRe)[1];
+}
+
 function checkStats(dir, fileName, checker) {
   try {
     let s = fs.statSync(path.join(dir, fileName));
@@ -33,7 +38,12 @@ function loadCommand(dir, cmdFileName) {
 }
 
 function loadCommandHelp(dir, cmdFileName) {
-  return getClassHelpText(loadCommand(dir, cmdFileName));
+  let helpText = getClassHelpText(loadCommand(dir, cmdFileName));
+  helpText = trim(helpText.split('\n')[0]);
+  if (helpText[helpText.length -1] === '.') {
+    helpText = helpText.slice(0, -1);
+  }
+  return helpText;
 }
 
 function getHelpForDir(dir, category = []) {
@@ -55,9 +65,23 @@ function getHelpForDir(dir, category = []) {
 }
 
 function formatCommandInfo(info) {
-  const name = _.flattenDeep([ 'mobile-center', info.category, info.name]).join(' ');
-  return `| \`${name}\` | ${info.help} |`;
+  if (info.name) {
+    const name = _.flattenDeep([ 'mobile-center', info.category, info.name]).join(' ');
+    return `| \`${name}\` | ${info.help} |`;
+  }
+  return '| | |';
+}
+
+function addSpacers(total, current) {
+  if (total.length === 0) {
+    return [ current ];
+  }
+  const prevCategory = total[total.length - 1].category[0];
+  if (current.category[0] !== prevCategory) {
+    total = total.concat({ name: '', category: '', help: '' });
+  }
+  return total.concat(current);
 }
 
 const commandInfos = getHelpForDir(path.join(__dirname, '../dist/commands'));
-commandInfos.map(formatCommandInfo).forEach(s => console.log(s));
+commandInfos.reduce(addSpacers, []).map(formatCommandInfo).forEach(s => console.log(s));
