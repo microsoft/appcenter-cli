@@ -31,14 +31,3 @@ export function isReactNativeProject(): boolean {
     throw new Error("Unable to find or read \"package.json\" in the CWD. The \"release-react\" command must be executed in a React Native project folder.");
   }
 }
-
-export function isValidPlatform(platform: string): boolean {
-  switch (platform) {
-    case "android":
-    case "ios":
-    case "windows":
-      return true;
-    default:
-      return false;
-  }
-}
