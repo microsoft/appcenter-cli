@@ -52,6 +52,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
 
   protected rollout: number;
 
+  // We assume that if this field is assigned than it is already validated (help us not to validate twice).
   protected deploymentName: string;
 
   protected updateContentsPath: string;
@@ -62,39 +63,18 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     throw new Error("For dev purposes only!");
   }
 
-  protected async validate(client: MobileCenterClient): Promise<CommandResult> {
-    if (!isValidVersion(this.targetBinaryVersion)) {
-      return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
-    }
-
-    if (!Number.isSafeInteger(this.rollout) || !isValidRollout(this.rollout)) {
-        return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
-    }
-
-    if (!this.deploymentName && !(await isValidDeployment(client, this.app, this.specifiedDeploymentName))) {
-      return failure(ErrorCodes.InvalidParameter, `Deployment "${this.specifiedDeploymentName}" does not exist.`);
-    } else {
-      this.deploymentName = this.specifiedDeploymentName;
-    }
-
-    return success();
-  }
-
   protected async release(client: MobileCenterClient): Promise<CommandResult> {
-    if (isBinaryOrZip(this.updateContentsPath)) {
-      return failure(ErrorCodes.InvalidParameter, "It is unnecessary to package releases in a .zip or binary file. Please specify the direct path to the update content's directory (e.g. /platforms/ios/www) or file (e.g. main.jsbundle).");
-    }
-
     this.rollout = Number(this.specifiedRollout);
 
     const validationResult: CommandResult =  await this.validate(client);
     if (!validationResult.succeeded) return validationResult;
 
-    if (this.privateKeyPath && !(await prompt.confirm("You are going to use code signing which is experimental feature. If it is the first time you sign bundle please make sure that you have configured a public key for your client SDK and released new binary version of your app. Also, be sure that this release is targeting to new binary version. You can find more information about code signing feature here: https://github.com/Microsoft/code-push/blob/master/cli/README.md#code-signing  Do you want to continue?"))) {
-      return success();
-    }
+    this.deploymentName = this.specifiedDeploymentName;
 
     if (this.privateKeyPath) {
+      if (!(await prompt.confirm("You are going to use code signing which is experimental feature. If it is the first time you sign bundle please make sure that you have configured a public key for your client SDK and released new binary version of your app. Also, be sure that this release is targeting to new binary version. You can find more information about code signing feature here: https://github.com/Microsoft/code-push/blob/master/cli/README.md#code-signing  Do you want to continue?"))) {
+        return success();
+      }
       await sign(this.privateKeyPath, this.updateContentsPath);
     }
 
@@ -127,5 +107,25 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
       debug(`Failed to release a CodePush update - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, error.response.body);
     }
+  }
+
+  private async validate(client: MobileCenterClient): Promise<CommandResult> {
+    if (isBinaryOrZip(this.updateContentsPath)) {
+      return failure(ErrorCodes.InvalidParameter, "It is unnecessary to package releases in a .zip or binary file. Please specify the direct path to the update content's directory (e.g. /platforms/ios/www) or file (e.g. main.jsbundle).");
+    }
+
+    if (!isValidVersion(this.targetBinaryVersion)) {
+      return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
+    }
+
+    if (!Number.isSafeInteger(this.rollout) || !isValidRollout(this.rollout)) {
+      return failure(ErrorCodes.InvalidParameter, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
+    }
+
+    if (!this.deploymentName && !(await isValidDeployment(client, this.app, this.specifiedDeploymentName))) {
+      return failure(ErrorCodes.InvalidParameter, `Deployment "${this.specifiedDeploymentName}" does not exist.`);
+    } 
+
+    return success();
   }
 }

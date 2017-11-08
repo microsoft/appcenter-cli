@@ -19,7 +19,7 @@ export var execSync = childProcess.execSync;
 const debug = require("debug")("mobile-center-cli:commands:codepush:release-cordova");
 
 @help("Release a Cordova update to an app deployment")
-export default class CodePushReleaseReactCommand extends CodePushReleaseCommandSkeleton {
+export default class CodePushReleaseCordovaCommand extends CodePushReleaseCommandSkeleton {
   @help(`Invoke "cordova build" instead of "cordova prepare"`)
   @shortName("b")
   @longName("build")
@@ -40,8 +40,10 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
   private readonly projectRoot: string = process.cwd();
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
-    if (!(await isValidDeployment(client, this.app, this.deploymentName))) {
-      return failure(ErrorCodes.InvalidParameter, `Deployment "${this.deploymentName}" does not exist.`);
+    if ((await isValidDeployment(client, this.app, this.specifiedDeploymentName))) {
+      return failure(ErrorCodes.InvalidParameter, `Deployment "${this.specifiedDeploymentName}" does not exist.`);
+    } else {
+      this.deploymentName = this.specifiedDeploymentName;
     }
 
     const appInfo = (await out.progress("Getting app info...", clientRequest<models.App>(
@@ -50,6 +52,16 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
 
     if (!isValidPlatform(this.platform)) {
       return failure(ErrorCodes.InvalidParameter, `Platform must be either "ios" or "android".`);
+    }
+
+    if (this.specifiedTargetBinaryVersion) {
+      this.targetBinaryVersion = this.specifiedTargetBinaryVersion
+    } else {
+      this.targetBinaryVersion = await getCordovaProjectAppVersion();
+    }
+
+    if (!isValidVersion(this.targetBinaryVersion)) {
+      return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
     }
 
     this.updateContentsPath = this.getOutputFolder();
@@ -69,18 +81,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
       return failure(ErrorCodes.Exception, `Unable to ${cordovaCommand} project. Please ensure that the CWD represents a Cordova project and that the "${this.platform}" platform was added by running "${cordovaCLI} platform add ${this.platform}".`);
     }
 
-    if (this.specifiedTargetBinaryVersion) {
-      this.targetBinaryVersion = this.specifiedTargetBinaryVersion
-    } else {
-      this.targetBinaryVersion = await getCordovaProjectAppVersion();
-    }
-
-    if (!isValidVersion(this.targetBinaryVersion)) {
-      return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
-    }
-
     out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));
-
     return await this.release(client);
   }
 
