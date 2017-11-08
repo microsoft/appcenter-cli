@@ -181,7 +181,7 @@ export function required(proto: any, propertyKey: string): void {
 
 // DefaultValue is also special, since it has to work with both as well. Same
 // basic logic
-export function defaultValue(value: string): PropertyDecorator {
+export function defaultValue(value: string | number): PropertyDecorator {
   return function defaultValueDecorator(proto: any, propertyKey: string): void {
     saveDecoratedValue(proto, propertyKey, "defaultValue", value, unknownDefaultValueKey);
   };

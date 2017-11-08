@@ -105,11 +105,11 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     });    
   }
 
-  private async getApkOrIpaZipObject(downloadedZip: Buffer): Promise<JSZipObject> {
+  private async getApkOrIpaZipObject(downloadedZip: Buffer): Promise<JsZip.JSZipObject> {
     const zip = await new JsZip().loadAsync(downloadedZip, { checkCRC32: true });
     // looking for apk or ipa
     return  _.find(
-      <JSZipObject[]> _.values(zip.files), 
+      <JsZip.JSZipObject[]> _.values(zip.files), 
       (file) => _.includes(DownloadBuildStatusCommand.applicationPackagesExtensions, Path.extname(file.name).toLowerCase()));
   }
 
@@ -208,10 +208,10 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     return downloadFileRequestResponse.result;
   }
   
-  private getPayload(zip: JSZip): JSZipObject {
+  private getPayload(zip: JsZip): JsZip.JSZipObject {
     // looking for apk, ipa or xcarchive
     return  _.find(
-        <JSZipObject[]> _.values(zip.files), 
+        <JsZip.JSZipObject[]> _.values(zip.files), 
         (file) => _.includes(DownloadBuildStatusCommand.applicationPackagesExtensions, Path.extname(file.name).toLowerCase()));
   }
 
@@ -225,7 +225,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     return filePath;
   }
 
-  private async unpackAndWriteDirectory(directoryZip: JSZip, extension: string, sourceBranch: string, root: string): Promise<string> {
+  private async unpackAndWriteDirectory(directoryZip: JsZip, extension: string, sourceBranch: string, root: string): Promise<string> {
     debug("Preparing name for resulting directory");
     const directoryName = await this.generateNameForOutputFile(sourceBranch, extension);
     

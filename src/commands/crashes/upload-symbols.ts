@@ -193,8 +193,8 @@ export default class UploadSymbols extends AppCommand {
     const sourceMapFileBaseName = Path.basename(path);
     debug(zipToChange.file(sourceMapFileBaseName) ? "Replacing existing mappings file with the same name in the ZIP" : "Adding the specified mappings file to the ZIP");
     try {
-      const sourceMapFileStream = Fs.createReadStream(path);
-      zipToChange.file(sourceMapFileBaseName, sourceMapFileStream);
+      const sourceMapFileBuffer = await Pfs.readFile(path);
+      zipToChange.file(sourceMapFileBaseName, sourceMapFileBuffer);
       return zipToChange;
     } catch (error) {
       debug(`Unable to add file ${path} to the ZIP - ${inspect(error)}`);

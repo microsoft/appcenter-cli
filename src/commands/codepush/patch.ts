@@ -1,18 +1,18 @@
-import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, getCurrentApp, shortName, longName, required, hasArg, position, name } from "../../util/commandline";
+import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, shortName, longName, required, hasArg, position, name } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
-import { MobileCenterClient, models, clientRequest, clientCall } from "../../util/apis";
+import { MobileCenterClient, models, clientRequest } from "../../util/apis";
 import * as chalk from "chalk";
-import * as semver from "semver";
+import { isValidRollout, isValidVersion } from "./lib/validation-utils";
 
 const debug = require("debug")("mobile-center-cli:commands:codepush:patch");
 
 @help("Update the metadata for an existing CodePush release")
-export default class PatchCommand extends AppCommand {
+export default class CodePushPatchCommand extends AppCommand {
   
-  @help("Specifies one existing deployment name.")
+  @help("Specifies one existing deployment name")
   @required
-  @name("existing-deployment-name")
+  @name("deployment-name")
   @position(0)
   public deploymentName: string;
 
@@ -36,7 +36,7 @@ export default class PatchCommand extends AppCommand {
   @hasArg
   public targetBinaryRange: string;
 
-  @help("Specifies description of the changes made to the app with this release.")
+  @help("Specifies description of the changes made to the app with this release")
   @shortName("d")
   @longName("description")
   @hasArg
@@ -61,13 +61,11 @@ export default class PatchCommand extends AppCommand {
       return failure(ErrorCodes.Exception, "At least one property must be specified to patch a release.");
     }
 
-    if (this.rollout != null) {
-      if (!/^(100|[1-9][0-9]|[1-9])$/.test(this.rollout)) {
+    const rollout = Number(this.rollout);
+    if (this.rollout != null && (!Number.isSafeInteger(rollout) || !isValidRollout(rollout))) {
         return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
-      }
     }
 
-    const isValidVersion = (version: string): boolean => !!semver.valid(version) || /^\d+\.\d+$/.test(version) || /^\d+$/.test(version);
     if (this.targetBinaryRange != null && !isValidVersion(this.targetBinaryRange)) {
       return failure(ErrorCodes.Exception, "Invalid binary version(s) for a release.");
     }
@@ -80,7 +78,7 @@ export default class PatchCommand extends AppCommand {
     };
 
     if (this.rollout != null) {
-      patch.rollout = parseInt(this.rollout);
+      patch.rollout = rollout;
     }
     
     try {
@@ -88,13 +86,13 @@ export default class PatchCommand extends AppCommand {
         (cb) => client.deploymentReleases.update(this.deploymentName, this.releaseLabel, patch, app.ownerName, app.appName, cb)));
       release = httpRequest.result;
       if (httpRequest.response.statusCode === 204) {
-        out.text(`No update for the ${chalk.bold(this.releaseLabel)} of ${chalk.bold(app.appName)} app's ${chalk.bold(this.deploymentName)} deployment`);
+        out.text(`No update for the ${chalk.bold(this.releaseLabel)} of ${this.identifier} app's ${chalk.bold(this.deploymentName)} deployment`);
       } else {
-        out.text(`Successfully updated the ${chalk.bold(release.label)} of ${chalk.bold(app.appName)} app's ${chalk.bold(this.deploymentName)} deployment`);
+        out.text(`Successfully updated the ${chalk.bold(release.label)} of ${this.identifier} app's ${chalk.bold(this.deploymentName)} deployment`);
       }
       return success();
     } catch (error) {
-      debug(`Failed to get list of Codepush deployments - ${inspect(error)}`);
+      debug(`Failed to patch Codepush deployment - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, error.response.body);
     }
   }
