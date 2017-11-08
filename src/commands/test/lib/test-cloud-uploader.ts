@@ -1,11 +1,14 @@
 import { MobileCenterClient, models, clientCall, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
+import { getUser } from "../../../util/profile";
 import { progressWithResult } from "./interaction";
 import { TestManifest, TestRunFile } from "./test-manifest";
 import { TestManifestReader } from "./test-manifest-reader";
 import { AppValidator } from "./app-validator";
 import { parseRange, getByteRange } from "./byte-range-helper";
 import { getDSymFile } from "./dsym-dir-helper";
+import { getOrgsNamesList } from "../../orgs/lib/org-users-helper";
+import * as PortalHelper from "../../../util/portal/portal-helper";
 import * as _ from "lodash";
 import * as fs from "fs";
 import * as http from 'http';
@@ -18,6 +21,7 @@ const paralleRequests = 10;
 
 export interface StartedTestRun {
   testRunId: string;
+  testRunUrl: string;
   acceptedDevices: string[];
   rejectedDevices: string[];
 }
@@ -28,6 +32,7 @@ export class TestCloudUploader {
   private readonly _appName: string;
   private readonly _manifestPath: string;
   private readonly _devices: string;
+  private readonly _portalBaseUrl : string;
 
   public appPath: string;
   public dSymPath: string;
@@ -36,7 +41,7 @@ export class TestCloudUploader {
   public language: string;
   public locale: string;
 
-  constructor(client: MobileCenterClient, userName: string, appName: string, manifestPath: string, devices: string) {
+  constructor(client: MobileCenterClient, userName: string, appName: string, manifestPath: string, devices: string, portalBaseUrl: string) {
     if (!client) {
       throw new Error("Argument client is required");
     }
@@ -52,21 +57,34 @@ export class TestCloudUploader {
     if (!devices) {
       throw new Error("Argument devices is required");
     }
+    if (!portalBaseUrl) {
+      throw new Error("Argument portalBaseUrl is required");
+    }
 
     this._client = client;
     this._manifestPath = manifestPath;
     this._devices = devices;
     this._userName = userName;
     this._appName = appName;
+    this._portalBaseUrl = portalBaseUrl;
   }
 
   public async uploadAndStart(): Promise<StartedTestRun> {
+    let orgs = await getOrgsNamesList(this._client);
+    let isOrg = false;
+    for (let org of orgs) {
+      if (org.name === this._userName)
+      {
+        isOrg = true;
+      }
+    }
+    
     let manifest = await progressWithResult<TestManifest>(
       "Validating arguments",
       this.validateAndParseManifest());
 
-    let testRunId = await progressWithResult("Creating new test run", this.createTestRun());
-    debug(`Test run id: ${testRunId}`);
+    let testRun = await progressWithResult("Creating new test run", this.createTestRun(isOrg));
+    debug(`Test run id: ${testRun.testRunId}`);
 
     let appFile = await progressWithResult("Validating application file", this.validateAndCreateAppFile(manifest));
 
@@ -77,15 +95,14 @@ export class TestCloudUploader {
       allFiles.push(dSymFile);
     }
 
-    await progressWithResult("Uploading files", this.uploadFilesUsingBatch(testRunId, allFiles));
+    await progressWithResult("Uploading files", this.uploadFilesUsingBatch(testRun.testRunId, allFiles));
 
-    let startResult = await progressWithResult("Starting test run", this.startTestRun(testRunId, manifest));
+    let startResult = await progressWithResult("Starting test run", this.startTestRun(testRun.testRunId, manifest));
 
-    return {
-      acceptedDevices: startResult.acceptedDevices || [],
-      rejectedDevices: startResult.rejectedDevices || [],
-      testRunId: testRunId
-    };
+    testRun.acceptedDevices = startResult.acceptedDevices || [];
+    testRun.rejectedDevices = startResult.rejectedDevices || [];
+
+    return testRun;
   }
 
   private async validateAndParseManifest(): Promise<TestManifest> {
@@ -107,8 +124,8 @@ export class TestCloudUploader {
     return result;
   }
 
-  private createTestRun(): Promise<string> {
-     return new Promise<string>((resolve, reject) => {
+  private createTestRun(isOrg: boolean): Promise<StartedTestRun> {
+     return new Promise<StartedTestRun>((resolve, reject) => {
        this._client.test.createTestRun(
          this._userName,
          this._appName,
@@ -119,7 +136,12 @@ export class TestCloudUploader {
           else {
             let location: string = response.headers["location"];
             let testRunId = _.last(location.split("/"));
-            resolve(testRunId);
+            resolve({
+                acceptedDevices: [],
+                rejectedDevices: [],
+                testRunId: testRunId,
+                testRunUrl: PortalHelper.getPortalTestLink(this._portalBaseUrl, isOrg, this._userName, this._appName, this.testSeries, testRunId)
+              });
           }
       });
     });

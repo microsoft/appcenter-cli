@@ -8,11 +8,11 @@ import * as chalk from "chalk";
 const debug = require("debug")("mobile-center-cli:commands:codepush:deployments:history");
 
 @help("Display the release history for a CodePush deployment")
-export default class HistoryCommand extends AppCommand {
+export default class CodePushDeploymentHistoryCommand extends AppCommand {
 
-  @help("CodePush deployment name")
+  @help("Specifies CodePush deployment name to view history")
   @required
-  @name("existing-deployment-name")
+  @name("deployment-name")
   @position(0)
   public deploymentName: string;
 
@@ -34,13 +34,13 @@ export default class HistoryCommand extends AppCommand {
     } catch (error) {
       debug(`Failed to get list of CodePush deployments - ${inspect(error)}`);
       if (error.statusCode === 404) {
-        const appNotFoundErrorMsg = `The app ${app.ownerName}/${app.appName} does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command ${chalk.bold("mobile-center apps list")} to see what apps you have access to.`;
+        const appNotFoundErrorMsg = `The app ${this.identifier} does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command ${chalk.bold("mobile-center apps list")} to see what apps you have access to.`;
         return failure(ErrorCodes.NotFound, appNotFoundErrorMsg);
       } else if (error.statusCode === 400) {
         const deploymentNotExistErrorMsg = `The deployment ${chalk.bold(this.deploymentName)} does not exist.`;
         return failure(ErrorCodes.Exception, deploymentNotExistErrorMsg);
       } else {
-        return failure(ErrorCodes.Exception, error.message);
+        return failure(ErrorCodes.Exception, error.response.body);
       }
     }
   }

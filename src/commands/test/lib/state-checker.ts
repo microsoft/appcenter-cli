@@ -34,7 +34,11 @@ export class StateChecker {
     }
     while (true) {
       let state = await out.progress("Checking status...", this.getTestRunState(this.client, this.testRunId));
-      this.streamingOutput.text((state) => `Current test status: ${state.message.join(os.EOL)}`, state);
+      if (state && state.message)
+      {
+        this.streamingOutput.text((state) => `Current test status: ${state.message.join(os.EOL)}`, state);
+      }
+      
       if (typeof state.exitCode === "number") {
         exitCode = state.exitCode;
         break;
