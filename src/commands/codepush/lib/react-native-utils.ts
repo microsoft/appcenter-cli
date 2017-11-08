@@ -240,3 +240,14 @@ export async function runReactNativeBundleCommand(bundleName: string, developmen
       });
   });
 }
+
+export function isValidPlatform(platform: string): boolean {
+  switch (platform.toLowerCase()) {
+    case "android":
+    case "ios":
+    case "windows":
+      return true;
+    default:
+      return false;
+  }
+}

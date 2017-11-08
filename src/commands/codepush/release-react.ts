@@ -10,8 +10,8 @@ import * as chalk from "chalk";
 import { sign, zip } from "./lib/update-contents-tasks";
 import * as path from "path";
 import { fileDoesNotExistOrIsDirectory, createEmptyTempReleaseFolder, removeReactTmpDir } from "./lib/file-utils";
-import { isValidVersion, isValidRollout, isValidDeployment, isValidPlatform, isReactNativeProject } from "./lib/validation-utils";
-import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand } from "./lib/react-native-utils";
+import { isValidVersion, isValidRollout, isValidDeployment, isReactNativeProject } from "./lib/validation-utils";
+import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand, isValidPlatform } from "./lib/react-native-utils";
 
 const debug = require("debug")("mobile-center-cli:commands:codepush:release-react");
 
