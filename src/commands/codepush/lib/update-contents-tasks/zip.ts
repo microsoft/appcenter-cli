@@ -9,7 +9,7 @@ interface ReleaseFile {
   targetLocation: string;     // The desired location of the file within the zip
 }
 
-export default async function zip(updateContentsPath: string): Promise<string> {
+export default function zip(updateContentsPath: string): Promise<string> {
   return new Promise<string>(async (resolve, reject) => {
     let releaseFiles: ReleaseFile[] = [];
 
@@ -46,5 +46,5 @@ export default async function zip(updateContentsPath: string): Promise<string> {
       .on('finish', function () {
         resolve(packagePath);
       });
-  })
+  });
 }

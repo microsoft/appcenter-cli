@@ -8,6 +8,7 @@ import * as fs from "fs";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as stream from "stream";
+import * as _ from "lodash";
 
 // Do not throw an exception if either of these modules are missing, as they may not be needed by the
 // consumer of this file.
@@ -19,10 +20,10 @@ export async function generatePackageHashFromDirectory(directoryPath: string, ba
   }
 
   let manifest: PackageManifest = await generatePackageManifestFromDirectory(directoryPath, basePath);
-  return await manifest.computePackageHash();
+  return manifest.computePackageHash();
 }
 
-export async function generatePackageManifestFromDirectory(directoryPath: string, basePath: string): Promise<PackageManifest> {
+export function generatePackageManifestFromDirectory(directoryPath: string, basePath: string): Promise<PackageManifest> {
   return new Promise<PackageManifest>(async (resolve, reject) => {
     var fileHashesMap = new Map<string, string>();
 
@@ -50,16 +51,16 @@ export async function generatePackageManifestFromDirectory(directoryPath: string
     generateManifestPromise
       .then(() => {
         resolve(new PackageManifest(fileHashesMap));
-      }, reject)
+      }, reject);
   })
 }
 
-export async function hashFile(filePath: string): Promise<string> {
+export function hashFile(filePath: string): Promise<string> {
   var readStream: fs.ReadStream = fs.createReadStream(filePath);
   return hashStream(readStream);
 }
 
-export async function hashStream(readStream: stream.Readable): Promise<string> {
+export function hashStream(readStream: stream.Readable): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     var hashStream = <stream.Transform><any>crypto.createHash(HASH_ALGORITHM);
 
@@ -78,7 +79,7 @@ export async function hashStream(readStream: stream.Readable): Promise<string> {
       });
 
     readStream.pipe(hashStream);
-  })
+  });
 }
 
 export class PackageManifest {
@@ -95,7 +96,7 @@ export class PackageManifest {
     return this._map;
   }
 
-  public async computePackageHash(): Promise<string> {
+  public computePackageHash(): string {
     var entries: string[] = [];
     this._map.forEach((hash: string, name: string): void => {
       entries.push(name + ":" + hash);
@@ -105,11 +106,9 @@ export class PackageManifest {
     // can also compute this hash easily given the update contents.
     entries = entries.sort();
 
-    return Promise.resolve(
-      crypto.createHash(HASH_ALGORITHM)
-        .update(JSON.stringify(entries))
-        .digest("hex")
-    );
+    return crypto.createHash(HASH_ALGORITHM)
+                  .update(JSON.stringify(entries))
+                  .digest("hex")
   }
 
   public serialize(): string {
@@ -145,18 +144,10 @@ export class PackageManifest {
     const __MACOSX = "__MACOSX/";
     const DS_STORE = ".DS_Store";
     const CODEPUSH_METADATA = ".codepushrelease";
-    return startsWith(relativeFilePath, __MACOSX)
+    return _.startsWith(relativeFilePath, __MACOSX)
       || relativeFilePath === DS_STORE
-      || endsWith(relativeFilePath, "/" + DS_STORE)
+      || _.endsWith(relativeFilePath, "/" + DS_STORE)
       || relativeFilePath === CODEPUSH_METADATA
-      || endsWith(relativeFilePath, "/" + CODEPUSH_METADATA);
+      || _.endsWith(relativeFilePath, "/" + CODEPUSH_METADATA);
   }
-}
-
-function startsWith(str: string, prefix: string): boolean {
-  return str && str.substring(0, prefix.length) === prefix;
-}
-
-function endsWith(str: string, suffix: string): boolean {
-  return str && str.indexOf(suffix, str.length - suffix.length) !== -1;
 }
