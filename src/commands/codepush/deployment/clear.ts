@@ -1,11 +1,12 @@
 import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, position, name } from "../../../util/commandline";
 import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
+import { inspect } from "util";
 
 const debug = require("debug")("mobile-center-cli:commands:codepush:deployment:clear");
 
 @help("Clear the release history associated with a deployment")
-export default class ClearCodePushDeploymentCommand extends AppCommand {
+export default class CodePushClearDeploymentCommand extends AppCommand {
 
   @help("Specifies CodePush deployment name to be cleared")
   @name("deployment-name")
@@ -27,19 +28,19 @@ export default class ClearCodePushDeploymentCommand extends AppCommand {
 
     try {
       debug("Clearing release history");
-      const httpResponse = await out.progress(`Clearing release history for deployment ${this.deploymentName} ....`, 
+      const httpResponse = await out.progress(`Clearing release history for deployment ${this.deploymentName}...`, 
         clientRequest((cb) => client.codePushDeploymentReleases.deleteMethod(this.deploymentName, app.ownerName, app.appName, cb)));
     } catch (error) {
-      debug(`Failed to clear deployment history`);
+      debug(`Failed to clear deployment history - ${inspect(error)}`);
       if (error.statusCode === 404) {
-        const deploymentNotFoundErrorMsg = `The deployment ${this.deploymentName} does not exist.`;
+        const deploymentNotFoundErrorMsg = `The deployment ${this.deploymentName} does not exist for the app ${this.identifier}`;
         return failure(ErrorCodes.NotFound, deploymentNotFoundErrorMsg);
       } else {
-        return failure(ErrorCodes.Exception, error.message);
+        return failure(ErrorCodes.Exception, error.response.body);
       }
     }
 
-    out.text(`Successfully cleared the deployment ${this.deploymentName} history for the ${app.ownerName}/${app.appName} app.`);  
+    out.text(`Successfully cleared the deployment ${this.deploymentName} history for the ${this.identifier} app.`);  
     return success();
   }
 }

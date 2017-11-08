@@ -1,6 +1,7 @@
 import * as JSZip from "jszip";
 import * as Path from "path";
 import * as Pfs from "./promisfied-fs";
+import * as fs from "fs";
 
 /**
  * Unpacks ZIP file contents to the specified folder (it should already exist)
@@ -50,8 +51,8 @@ export async function addFolderToZipRecursively(path: string, zip: JSZip): Promi
     if (subEntityStats.isDirectory()) {
       await addFolderToZipRecursively(subEntityPath, folderZip);
     } else {
-      const fileBuffer = await Pfs.readFile(subEntityPath);
-      folderZip.file(subEntityName, fileBuffer);
+      const fileStream: any = await fs.createReadStream(subEntityPath);
+      folderZip.file(subEntityName, fileStream);
     }
   }
 }

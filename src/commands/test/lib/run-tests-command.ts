@@ -6,6 +6,7 @@ import { TestCloudError } from "./test-cloud-error";
 import { StateChecker } from "./state-checker";
 import { MobileCenterClient } from "../../../util/apis";
 import { StreamingArrayOutput } from "../../../util/interaction";
+import { getUser } from "../../../util/profile";
 import { parseTestParameters } from "./parameters-parser";
 import { parseIncludedFiles } from "./included-files-parser";
 import { progressWithResult } from "./interaction";
@@ -99,7 +100,7 @@ export abstract class RunTestsCommand extends AppCommand {
   protected async validateOptions(): Promise<void> {
   }
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: MobileCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     if (this.isAppPathRquired && !this.appPath) {
       throw new Error("Argument --app-path is required");
     }
@@ -110,7 +111,7 @@ export abstract class RunTestsCommand extends AppCommand {
       try {
         let manifestPath = await progressWithResult("Preparing tests", this.prepareManifest(artifactsDir));
         await this.addIncludedFilesAndTestParametersToManifest(manifestPath);
-        let testRun = await this.uploadAndStart(client, manifestPath);
+        let testRun = await this.uploadAndStart(client, manifestPath, portalBaseUrl);
 
         this.streamingOutput.text(function (testRun){
           let report: string = `Test run id: "${testRun.testRunId}"` + os.EOL;
@@ -128,11 +129,18 @@ export abstract class RunTestsCommand extends AppCommand {
 
           switch (exitCode) {
             case 1:
-              return failure(exitCode, `Tests ran to completion, but at least one test failed. Returning exit code ${exitCode}.`);
+              return failure(exitCode, `There were Test Failures.${os.EOL}Test Report: ${testRun.testRunUrl}`);
             case 2:
-              return failure(exitCode, `Cannot run tests. Returning exit code ${exitCode}.`);
+              return failure(exitCode, `Cannot run tests. Returning exit code ${exitCode}.
+                ${os.EOL}Test Report: ${testRun.testRunUrl}`);
           }
         }
+
+        this.streamingOutput.text(function (testRun){
+          let report: string = `Test Report: ${testRun.testRunUrl}` + os.EOL;
+          return report;
+        }, testRun );
+
         return success();
       }
       finally {
@@ -142,7 +150,28 @@ export abstract class RunTestsCommand extends AppCommand {
     }
     catch (err) {
       let exitCode = err.exitCode || ErrorCodes.Exception;
-      return failure(exitCode, err.message);
+      let message : string = null;
+      let profile = getUser();
+
+      let helpMessage = `Further error details: For help, please send the following information to us by going to https://mobile.azure.com/apps and starting a new conversation (using the icon in the bottom right corner of the screen)${os.EOL}
+        Environment: ${os.platform()}${os.EOL}
+        User Email: ${profile.email}${os.EOL}
+        User Name: ${profile.userName}${os.EOL}
+        User Id: ${profile.userId}${os.EOL}
+        App Upload Id: ${this.identifier}${os.EOL}
+        Timestamp: ${Date.now()}${os.EOL}
+        Operation: ${this.constructor.name}${os.EOL}`;
+
+      if (err.message.indexOf("Not Found") !== -1)
+      {
+        message = `Requested resource not found - please check --app: ${this.identifier}${os.EOL}${os.EOL}${helpMessage}`;
+      }
+      else
+      {
+        message = `${err.message}${os.EOL}${os.EOL}${helpMessage}`;
+      }
+
+      return failure(exitCode, message);
     }
   }
 
@@ -174,13 +203,14 @@ export abstract class RunTestsCommand extends AppCommand {
     return this.artifactsDir || (this.artifactsDir = await pfs.mkTempDir("mobile-center-upload"));
   }
 
-  protected async uploadAndStart(client: MobileCenterClient, manifestPath: string): Promise<StartedTestRun> {
+  protected async uploadAndStart(client: MobileCenterClient, manifestPath: string, portalBaseUrl: string): Promise<StartedTestRun> {
     let uploader = new TestCloudUploader(
       client,
       this.app.ownerName,
       this.app.appName,
       manifestPath,
-      this.devices);
+      this.devices,
+      portalBaseUrl);
 
     uploader.appPath = this.appPath;
     uploader.language = this.language;

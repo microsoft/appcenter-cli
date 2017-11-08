@@ -1,10 +1,11 @@
+import * as crypto from "crypto";
 import * as fs from "fs";
 import * as hashUtils from "../hash-utils";
 import * as jwt from "jsonwebtoken";
+import * as os from "os";
 import * as path from "path";
 import * as pfs from "../../../../util/misc/promisfied-fs";
-import { out } from "../../../../util/interaction";
-import { copyFileToTmpDir } from "../file-utils";
+import { isBinaryOrZip, copyFileToTmpDir } from "../file-utils";
 
 const CURRENT_CLAIM_VERSION: string = "1.0.0";
 const METADATA_FILE_NAME: string = ".codepushrelease"
@@ -49,7 +50,7 @@ export default async function sign(privateKeyPath: string, updateContentsPath: s
   }
 
   if (prevSignatureExists) {
-    out.text(`Deleting previous release signature at ${signatureFilePath}`);
+    console.log(`Deleting previous release signature at ${signatureFilePath}`);
     await pfs.rmDir(signatureFilePath);
   }
 
@@ -63,12 +64,11 @@ export default async function sign(privateKeyPath: string, updateContentsPath: s
     jwt.sign(claims, privateKey, { algorithm: "RS256" }, async (err: Error, signedJwt: string) => {
       if (err) {
         reject(new Error("The specified signing key file was not valid"));
-        return;
-      } 
+      }
 
       try {
-        await pfs.writeFile(signatureFilePath, signedJwt);
-        out.text(`Generated a release signature and wrote it to ${signatureFilePath}`);
+        fs.writeFileSync(signatureFilePath, signedJwt);
+        console.log(`Generated a release signature and wrote it to ${signatureFilePath}`);
         resolve(null);
       } catch (error) {
         reject(error);

@@ -73,7 +73,7 @@ export class EspressoPreparer {
        throw new Error(`An apk with name matching "*androidTest.apk" was not found inside directory inside build directory "${this.buildDir}"`);
     }
     else if (files.length >= 2) {
-       throw new Error(`Multiple apks with name matching "*androidTest.apk" was found inside directory inside build directory "${this.buildDir}". A unique match is required.`);
+       throw new Error(`Multiple apks with name matching "*androidTest.apk" were found inside build directory "${this.buildDir}". A unique match is required.`);
     }
     else {
       let apkPath = files[files.length - 1];
