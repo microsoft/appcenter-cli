@@ -1,6 +1,7 @@
 
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
+import * as os from "os";
 
 export function isBinaryOrZip(path: string): boolean {
   return path.search(/\.zip$/i) !== -1
@@ -30,4 +31,22 @@ export function generateRandomFilename(length: number): string {
   }
 
   return filename;
+}
+
+export async function fileDoesNotExistOrIsDirectory(filePath: string): Promise<boolean> {
+  try {
+      return (await pfs.stat(filePath)).isDirectory();
+  } catch (error) {
+      return Promise.resolve(true);
+  }
+}
+
+export async function createEmptyTempReleaseFolder(folderPath: string): Promise<void> {
+  await pfs.rmDir(folderPath);
+  await pfs.mkdir(folderPath);
+  return Promise.resolve();
+}
+
+export async function removeReactTmpDir(): Promise<void> {
+  await pfs.rmDir(`${os.tmpdir()}/react-*`);
 }
