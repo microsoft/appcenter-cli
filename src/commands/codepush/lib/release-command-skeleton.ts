@@ -50,7 +50,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
   @longName("rollout")
   @defaultValue("100")
   @hasArg
-  public rolloutStr: string;
+  public specifiedRollout: string;
 
   protected rollout: number;
 
@@ -69,7 +69,6 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
       return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
     }
 
-    this.rollout = Number(this.rolloutStr);
     if (!Number.isSafeInteger(this.rollout) || !isValidRollout(this.rollout)) {
         return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
     }
@@ -78,7 +77,6 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
       return failure(ErrorCodes.InvalidParameter, `Deployment "${this.deploymentName}" does not exist.`);
     }
 
-    this.hasBeenValided = true;
     return success();
   }
 
@@ -87,10 +85,10 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
       return failure(ErrorCodes.InvalidParameter, "It is unnecessary to package releases in a .zip or binary file. Please specify the direct path to the update content's directory (e.g. /platforms/ios/www) or file (e.g. main.jsbundle).");
     }
 
-    if (!this.hasBeenValided) {
-      const validationResult: CommandResult =  await this.validate(client);
-      if (!validationResult.succeeded) return validationResult;
-    }
+    this.rollout = Number(this.specifiedRollout);
+
+    const validationResult: CommandResult =  await this.validate(client);
+    if (!validationResult.succeeded) return validationResult;
 
     if (this.privateKeyPath && !(await prompt.confirm("You are going to use code signing which is experimental feature. If it is the first time you sign bundle please make sure that you have configured a public key for your client SDK and released new binary version of your app. Also, be sure that this release is targeting to new binary version. You can find more information about code signing feature here: https://github.com/Microsoft/code-push/blob/master/cli/README.md#code-signing  Do you want to continue?"))) {
       return success();

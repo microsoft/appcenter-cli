@@ -45,8 +45,7 @@
         "--nolazy"
       ],
       "args": [
-        "codepush",
-        "release-react"
+        // Add your Mobile Center CLI command
       ],
       "outFiles": [
         "${workspaceRoot}/dist/**/*.js"
