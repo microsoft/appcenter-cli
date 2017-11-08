@@ -37,7 +37,8 @@ export default function zip(updateContentsPath: string): Promise<string> {
     let zip = new JsZip();
 
     for (let releaseFile of releaseFiles) {
-      zip.file(releaseFile.targetLocation, await pfs.readFile(releaseFile.sourceLocation));
+      var fileStream: any = await fs.createReadStream(releaseFile.sourceLocation);
+      zip.file(releaseFile.targetLocation, fileStream);
     }
 
     zip

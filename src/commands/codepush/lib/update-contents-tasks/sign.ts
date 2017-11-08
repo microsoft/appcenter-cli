@@ -1,11 +1,9 @@
-import * as crypto from "crypto";
 import * as fs from "fs";
 import * as hashUtils from "../hash-utils";
 import * as jwt from "jsonwebtoken";
-import * as os from "os";
 import * as path from "path";
 import * as pfs from "../../../../util/misc/promisfied-fs";
-import { isBinaryOrZip, copyFileToTmpDir } from "../file-utils";
+import { copyFileToTmpDir } from "../file-utils";
 
 const CURRENT_CLAIM_VERSION: string = "1.0.0";
 const METADATA_FILE_NAME: string = ".codepushrelease"

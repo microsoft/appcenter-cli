@@ -1,5 +1,4 @@
 import * as fs from "fs";
-import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as chalk from "chalk";
 import * as xml2js from "xml2js";
