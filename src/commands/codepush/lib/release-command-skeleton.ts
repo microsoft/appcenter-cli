@@ -54,8 +54,6 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
 
   protected rollout: number;
 
-  protected hasBeenValided: boolean;
-
   protected updateContentsPath: string;
 
   protected targetBinaryVersion: string;
