@@ -10,7 +10,7 @@ import * as chalk from "chalk";
 import { sign, zip } from "./lib/update-contents-tasks";
 import * as path from "path";
 import { fileDoesNotExistOrIsDirectory, createEmptyTempReleaseFolder, removeReactTmpDir } from "./lib/file-utils";
-import { isValidVersion, isValidRollout, isValidDeployment, isReactNativeProject } from "./lib/validation-utils";
+import { isValidVersion, isValidRollout, isValidDeployment } from "./lib/validation-utils";
 import { isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectAppVersion } from "./lib/cordova-utils";
 
 var childProcess = require("child_process");
