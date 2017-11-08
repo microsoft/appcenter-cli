@@ -58,6 +58,12 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
   @longName("output-dir")
   public outputDir: string;
 
+  @help("Semver expression that specifies the binary app version(s) this release is targeting (e.g. 1.1.0, ~1.2.3)")
+  @shortName("t")
+  @longName("target-binary-version")
+  @hasArg
+  public specifiedTargetBinaryVersion: string;
+
   private platform: string;
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
@@ -103,6 +109,8 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
     if (this.outputDir) {
       this.sourcemapOutput = path.join(this.outputDir, this.bundleName + ".map");
     }
+
+    this.targetBinaryVersion = this.specifiedTargetBinaryVersion;
 
     if (this.targetBinaryVersion && !isValidVersion(this.targetBinaryVersion)) {
       return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
