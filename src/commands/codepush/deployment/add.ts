@@ -4,6 +4,8 @@ import { inspect } from "util";
 import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
 import * as _ from "lodash";
 import * as chalk from "chalk";
+import { scriptName } from "../../../util/misc";
+
 const debug = require("debug")("mobile-center-cli:commands:codepush:deployments:add");
 
 @help("Add a new deployment to an app")
@@ -31,7 +33,7 @@ export default class CodePushAddCommand extends AppCommand {
     } catch (error) {
       debug(`Failed to add a new CodePush deployment - ${inspect(error)}`);
       if (error.statusCode === 404) {
-        const appNotFoundErrorMsg = `The app ${this.identifier} does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command ${chalk.bold("mobile-center apps list")} to see what apps you have access to.`;
+        const appNotFoundErrorMsg = `The app ${this.identifier} does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command ${chalk.bold(`${scriptName} apps list`)} to see what apps you have access to.`;
         return failure(ErrorCodes.NotFound, appNotFoundErrorMsg);
       }
       else if (error.statusCode === 409) {

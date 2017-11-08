@@ -4,6 +4,7 @@ import { inspect } from "util";
 import { MobileCenterClient, models, clientRequest, clientCall } from "../../../util/apis";
 import * as _ from "lodash";
 import * as chalk from "chalk";
+import { scriptName } from "../../../util/misc";
 
 const debug = require("debug")("mobile-center-cli:commands:codepush:deployments:list");
 
@@ -26,7 +27,7 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
     } catch (error) {
       debug(`Failed to get list of Codepush deployments - ${inspect(error)}`);
       if (error.statusCode === 404) {
-        const appNotFoundErrorMsg = `The app ${this.identifier} does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command ${chalk.bold("mobile-center apps list")} to see what apps you have access to.`;
+        const appNotFoundErrorMsg = `The app ${this.identifier} does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command ${chalk.bold(`${scriptName} apps list`)} to see what apps you have access to.`;
         return failure(ErrorCodes.InvalidParameter, appNotFoundErrorMsg);
       } else {
         return failure(ErrorCodes.Exception, "Failed to get list of deployments for the app");
