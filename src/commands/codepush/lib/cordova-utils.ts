@@ -6,7 +6,8 @@ import * as path from "path";
 export function getCordovaProjectAppVersion(): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     try {
-      var configString: string = fs.readFileSync(path.join(this.projectRoot, "config.xml"), { encoding: "utf8" });
+      const projectRoot: string = process.cwd();
+      var configString: string = fs.readFileSync(path.join(projectRoot, "config.xml"), { encoding: "utf8" });
     } catch (error) {
       reject(new Error(`Unable to find or read "config.xml" in the CWD. The "release-cordova" command must be executed in a Cordova project folder.`));
     }
@@ -16,7 +17,7 @@ export function getCordovaProjectAppVersion(): Promise<string> {
         reject(new Error(`Unable to parse "config.xml" in the CWD. Ensure that the contents of "config.xml" is valid XML.`));
       }
 
-      var config: any = parsedConfig.widget;
+      const config: any = parsedConfig.widget;
       resolve(config["$"].version);
     });
   });

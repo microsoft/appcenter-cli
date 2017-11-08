@@ -37,8 +37,6 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
 
   private platform: string;
 
-  private readonly projectRoot: string = process.cwd();
-
   public async run(client: MobileCenterClient): Promise<CommandResult> {
     if ((await isValidDeployment(client, this.app, this.specifiedDeploymentName))) {
       return failure(ErrorCodes.InvalidParameter, `Deployment "${this.specifiedDeploymentName}" does not exist.`);
@@ -86,7 +84,8 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
   }
 
   private getOutputFolder(): string {
-    const platformFolder: string = path.join(this.projectRoot, "platforms", this.platform);
+    const projectRoot: string = process.cwd();
+    const platformFolder: string = path.join(projectRoot, "platforms", this.platform);
     let outputFolder: string;
 
     if (this.platform === "ios") {
