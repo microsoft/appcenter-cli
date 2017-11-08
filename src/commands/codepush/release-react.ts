@@ -58,8 +58,6 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
   @longName("output-dir")
   public outputDir: string;
 
-  private generalReleaseCommand: CodePushReleaseCommand;
-
   private platform: string;
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
@@ -128,9 +126,9 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
       out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));
 
       return await this.release(client);
-    } catch (ex) {
-      debug(ex);
-      return failure(ErrorCodes.Exception, "Unable to release CodePush update.")
+    } catch (error) {
+      debug(`Failed to release a CodePush update - ${inspect(error)}`);
+      return failure(ErrorCodes.Exception, "Failed to release a CodePush update.")
     } finally {
       pfs.rmDir(this.outputDir);
     }
