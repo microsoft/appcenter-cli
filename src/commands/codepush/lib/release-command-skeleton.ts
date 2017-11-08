@@ -16,10 +16,9 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
   @longName("deployment-name")
   @defaultValue("Staging")
   @hasArg
-  public deploymentName: string;
+  public specifiedDeploymentName: string;
 
   @help("Description of the changes made to the app in this release")
-  @shortName("des")
   @longName("description")
   @hasArg
   public description: string;
@@ -41,7 +40,6 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
   public privateKeyPath: string;
 
   @help("When this flag is set, releasing a package that is identical to the latest release will produce a warning instead of an error")
-  @shortName("dre")
   @longName("no-duplicate-release-error")
   public noDuplicateReleaseError: boolean;
 
@@ -53,6 +51,8 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
   public specifiedRollout: string;
 
   protected rollout: number;
+
+  protected deploymentName: string;
 
   protected updateContentsPath: string;
 
@@ -71,8 +71,10 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
         return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
     }
 
-    if (!(await isValidDeployment(client, this.app, this.deploymentName))) {
-      return failure(ErrorCodes.InvalidParameter, `Deployment "${this.deploymentName}" does not exist.`);
+    if (!this.deploymentName && !(await isValidDeployment(client, this.app, this.specifiedDeploymentName))) {
+      return failure(ErrorCodes.InvalidParameter, `Deployment "${this.specifiedDeploymentName}" does not exist.`);
+    } else {
+      this.deploymentName = this.specifiedDeploymentName;
     }
 
     return success();

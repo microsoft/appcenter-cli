@@ -37,7 +37,7 @@ export async function fileDoesNotExistOrIsDirectory(filePath: string): Promise<b
   try {
       return (await pfs.stat(filePath)).isDirectory();
   } catch (error) {
-      return Promise.resolve(true);
+      return true;
   }
 }
 

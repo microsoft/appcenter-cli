@@ -29,9 +29,6 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
     catch (e) { return false }
   };
 
-  // Allow plain integer versions (as well as '1.0' values) for now, e.g. '1' is valid here and we assume that it is equal to '1.0.0'. 
-  // (missing minor/patch values will be added on server side to pass semver.satisfies check)
-
   out.text(chalk.cyan(`Detecting ${versionSearchParams.platform} app version:\n`));
 
   if (versionSearchParams.platform === "ios") {

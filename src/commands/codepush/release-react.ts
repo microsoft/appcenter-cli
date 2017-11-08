@@ -24,7 +24,6 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
   public bundleName: string;
 
   @help("Specifies whether to generate a dev or release build")
-  @shortName("dev")
   @longName("development")
   public development: boolean;
 
@@ -33,27 +32,26 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
   @longName("entry-file")
   public entryFile: string;
 
-  @help("Path to the gradle file which specifies the binary version you want to target this release at (android only).")
+  @help("Path to the gradle file which specifies the binary version you want to target this release at (android only)")
   @shortName("g")
   @longName("gradle-file")
   public gradleFile: string;
 
-  @help("Path to the plist file which specifies the binary version you want to target this release at (iOS only).")
+  @help("Path to the plist file which specifies the binary version you want to target this release at (iOS only)")
   @shortName("p")
   @longName("plist-file")
   public plistFile: string;
 
-  @help("Prefix to append to the file name when attempting to find your app's Info.plist file (iOS only).")
-  @shortName("pre")
+  @help("Prefix to append to the file name when attempting to find your app's Info.plist file (iOS only)")
   @longName("plist-file-prefix")
   public plistFilePrefix: string;
 
-  @help("Path to where the sourcemap for the resulting bundle should be written. If omitted, a sourcemap will not be generated.")
+  @help("Path to where the sourcemap for the resulting bundle should be written. If omitted, a sourcemap will not be generated")
   @shortName("s")
   @longName("sourcemap-output")
   public sourcemapOutput: string;
 
-  @help("Path to where the bundle and sourcemap should be written. If omitted, a bundle and sourcemap will not be written.")
+  @help("Path to where the bundle and sourcemap should be written. If omitted, a bundle and sourcemap will not be written")
   @shortName("o")
   @longName("output-dir")
   public outputDir: string;
@@ -61,28 +59,30 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
   private platform: string;
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
-    if (!(await isValidDeployment(client, this.app, this.deploymentName))) {
-      return failure(ErrorCodes.InvalidParameter, `Deployment "${this.deploymentName}" does not exist.`);
+    if (!isReactNativeProject()) {
+      return failure(ErrorCodes.Exception, "The project in the CWD is not a React Native project.");
     }
 
-    const appInfo = (await out.progress("Creating CodePush release...", clientRequest<models.App>(
+    if (!(await isValidDeployment(client, this.app, this.specifiedDeploymentName))) {
+      return failure(ErrorCodes.InvalidParameter, `Deployment "${this.specifiedDeploymentName}" does not exist.`);
+    } else {
+      this.deploymentName = this.specifiedDeploymentName;
+    }
+
+    const appInfo = (await out.progress("Getting app info...", clientRequest<models.App>(
       (cb) => client.apps.get(this.app.ownerName, this.app.appName, cb)))).result;
     this.platform = appInfo.platform.toLowerCase();
 
     this.outputDir = this.outputDir || await pfs.mkTempDir("code-push");
 
     if (!isValidPlatform(this.platform)) {
-      return failure(ErrorCodes.Exception, "Platform must be \"android\", \"ios\", or \"windows\".")
+      return failure(ErrorCodes.Exception, `Platform must be "android", "ios", or "windows".`);
     }
 
     if (!this.bundleName) {
       this.bundleName = this.platform === "ios"
         ? "main.jsbundle"
         : `index.${this.platform}.bundle`;
-    }
-
-    if (!isReactNativeProject()) {
-      return failure(ErrorCodes.Exception, "The project in the CWD is not a React Native project.")
     }
 
     if (!this.entryFile) {
@@ -118,9 +118,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
 
     try {
       await createEmptyTempReleaseFolder(this.outputDir);
-
       await removeReactTmpDir();
-
       await runReactNativeBundleCommand(this.bundleName, this.development, this.entryFile, this.outputDir, this.platform, this.sourcemapOutput);
 
       out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));
