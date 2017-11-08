@@ -1,8 +1,7 @@
-import { CommandArgs, AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success, defaultValue } from "../../../util/commandline";
+import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success, defaultValue } from "../../../util/commandline";
 import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
-import * as pfs from "../../../util/misc/promisfied-fs";
 import * as fs from "fs";
 import * as chalk from "chalk";
 import { sign, zip } from "../lib/update-contents-tasks";

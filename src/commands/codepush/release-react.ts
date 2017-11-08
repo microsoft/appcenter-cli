@@ -1,16 +1,13 @@
-import { AppCommand, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success, defaultValue } from "../../util/commandline";
+import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName } from "../../util/commandline";
 import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton"
-import CodePushReleaseCommand from "./release"
-import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
-import { out, prompt } from "../../util/interaction";
+import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as pfs from "../../util/misc/promisfied-fs";
-import * as fs from "fs";
 import * as chalk from "chalk";
-import { sign, zip } from "./lib/update-contents-tasks";
 import * as path from "path";
 import { fileDoesNotExistOrIsDirectory, createEmptyTempReleaseFolder, removeReactTmpDir } from "./lib/file-utils";
-import { isValidVersion, isValidRollout, isValidDeployment, isReactNativeProject } from "./lib/validation-utils";
+import { isValidVersion, isValidDeployment, isReactNativeProject } from "./lib/validation-utils";
 import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand, isValidPlatform } from "./lib/react-native-utils";
 
 const debug = require("debug")("mobile-center-cli:commands:codepush:release-react");
@@ -114,7 +111,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
 
     if (this.targetBinaryVersion && !isValidVersion(this.targetBinaryVersion)) {
       return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
-    } else if (!this.targetBinaryVersion) {
+    } else {
       const versionSearchParams: VersionSearchParams = {
         platform: this.platform,
         plistFile: this.plistFile,
