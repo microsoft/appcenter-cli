@@ -1,4 +1,4 @@
-import { CommandArgs, CommandResult, hasArg, help, longName, required, shortName, } from "../../util/commandline";
+import { CommandResult, hasArg, help, longName, required, shortName } from "../../util/commandline";
 import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton";
 import { MobileCenterClient } from "../../util/apis";
 

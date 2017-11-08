@@ -1,16 +1,11 @@
-import { AppCommand, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success, defaultValue } from "../../util/commandline";
+import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName } from "../../util/commandline";
 import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton"
-import CodePushReleaseCommand from "./release"
-import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
-import { out, prompt } from "../../util/interaction";
+import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { out } from "../../util/interaction";
 import { inspect } from "util";
-import * as pfs from "../../util/misc/promisfied-fs";
-import * as fs from "fs";
 import * as chalk from "chalk";
-import { sign, zip } from "./lib/update-contents-tasks";
 import * as path from "path";
-import { fileDoesNotExistOrIsDirectory, createEmptyTempReleaseFolder, removeReactTmpDir } from "./lib/file-utils";
-import { isValidVersion, isValidRollout, isValidDeployment } from "./lib/validation-utils";
+import { isValidVersion, isValidDeployment } from "./lib/validation-utils";
 import { isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectAppVersion } from "./lib/cordova-utils";
 
 var childProcess = require("child_process");
