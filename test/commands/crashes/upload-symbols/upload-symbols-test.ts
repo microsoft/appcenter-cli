@@ -185,7 +185,7 @@ describe("upload-symbols command", () => {
       let uploadedZip = await getUploadedZip(uploadedZipPath);
       let mappingsFileEntry = uploadedZip.file(mappingsFileName);
       expect(mappingsFileEntry).to.not.eql(null, "Mappings file should exist in the uploaded ZIP");
-      let content = await mappingsFileEntry.async("string");
+      let content = await mappingsFileEntry.async("text");
       expect(content).eql(alternativeMappingsFileContent, "Mappings should have updated content: " + alternativeMappingsFileContent);
     });
   });

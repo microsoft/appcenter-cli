@@ -13,7 +13,7 @@ var childProcess = require("child_process");
 export var spawn = childProcess.spawn;
 
 export interface VersionSearchParams {
-  platform: string;
+  os: string;
   plistFile: string;
   plistFilePrefix: string;
   gradleFile: string;
@@ -28,9 +28,9 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
     catch (e) { return false }
   };
 
-  out.text(chalk.cyan(`Detecting ${versionSearchParams.platform} app version:\n`));
+  out.text(chalk.cyan(`Detecting ${versionSearchParams.os} app version:\n`));
 
-  if (versionSearchParams.platform === "ios") {
+  if (versionSearchParams.os === "ios") {
     let resolvedPlistFile: string = versionSearchParams.plistFile;
     if (resolvedPlistFile) {
       // If a plist file path is explicitly provided, then we don't
@@ -79,7 +79,7 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
     } else {
       throw new Error(`The "CFBundleShortVersionString" key doesn't exist within the "${resolvedPlistFile}" file.`);
     }
-  } else if (versionSearchParams.platform === "android") {
+  } else if (versionSearchParams.os === "android") {
     let buildGradlePath: string = path.join("android", "app");
     if (versionSearchParams.gradleFile) {
       buildGradlePath = versionSearchParams.gradleFile;
@@ -88,7 +88,7 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
       buildGradlePath = path.join(buildGradlePath, "build.gradle");
     }
 
-    if (fileDoesNotExistOrIsDirectory(buildGradlePath)) {
+    if (await fileDoesNotExistOrIsDirectory(buildGradlePath)) {
       throw new Error(`Unable to find gradle file "${buildGradlePath}".`);
     }
 
@@ -240,7 +240,7 @@ export async function runReactNativeBundleCommand(bundleName: string, developmen
   });
 }
 
-export function isValidPlatform(platform: string): boolean {
+export function isValidOS(platform: string): boolean {
   switch (platform.toLowerCase()) {
     case "android":
     case "ios":
