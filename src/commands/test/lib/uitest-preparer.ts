@@ -8,7 +8,7 @@ import * as process from "../../../util/misc/process-helper";
 import { out } from "../../../util/interaction";
 
 const debug = require("debug")("mobile-center-cli:commands:test:lib:uitest-preparer");
-const minimumVersion = [2, 0, 1];
+const minimumVersion = [2, 2, 0];
 
 export class UITestPreparer {
   private readonly appPath: string;
@@ -52,7 +52,7 @@ export class UITestPreparer {
     let exitCode = await process.execAndWait(command, this.outMessage, this.outMessage);
 
     if (exitCode !== 0) {
-      throw new TestCloudError(`Cannot prepare UI Test artifacts. Returning exit code ${exitCode}.`, exitCode);
+      throw new TestCloudError(`Cannot prepare UI Test artifacts using command: ${command}. Returning exit code ${exitCode}.`, exitCode);
     }
 
     return path.join(this.artifactsDir, "manifest.json");

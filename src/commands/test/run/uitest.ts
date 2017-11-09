@@ -81,6 +81,10 @@ export default class RunUITestsCommand extends RunTestsCommand {
 
   constructor(args: CommandArgs) {
     super(args);
+
+    this.fixture = this.fixArrayParameter(this.fixture);
+    this.includeCategory = this.fixArrayParameter(this.includeCategory);
+    this.excludeCategory = this.fixArrayParameter(this.excludeCategory);
   }
 
   protected async validateOptions(): Promise<void> {
