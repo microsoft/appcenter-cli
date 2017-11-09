@@ -29,7 +29,7 @@ export default function zip(updateContentsPath: string): Promise<string> {
       let relativePath: string = path.relative(baseDirectoryPath, filePath);
       releaseFiles.push({
         sourceLocation: filePath,
-        targetLocation: relativePath
+        targetLocation: changeTempFolderName(relativePath) 
       });
     });
 
@@ -48,4 +48,11 @@ export default function zip(updateContentsPath: string): Promise<string> {
         resolve(packagePath);
       });
   });
+}
+
+// we have to change tmp forlder name to make update contents file structure 
+// to be compatibale with client SDKs
+function changeTempFolderName(relativePath: string) {
+  const tempFolderName = path.dirname(relativePath).split(path.sep)[0];
+  return relativePath.replace(tempFolderName, "CodePush");
 }
