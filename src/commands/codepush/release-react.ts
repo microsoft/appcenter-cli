@@ -8,7 +8,7 @@ import * as chalk from "chalk";
 import * as path from "path";
 import { fileDoesNotExistOrIsDirectory, createEmptyTempReleaseFolder, removeReactTmpDir } from "./lib/file-utils";
 import { isValidVersion, isValidDeployment } from "./lib/validation-utils";
-import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand, isValidPlatform, isReactNativeProject } from "./lib/react-native-utils";
+import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand, isValidOS, isReactNativeProject } from "./lib/react-native-utils";
 
 const debug = require("debug")("mobile-center-cli:commands:codepush:release-react");
 
@@ -59,7 +59,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
   @hasArg
   public specifiedTargetBinaryVersion: string;
 
-  private platform: string;
+  private os: string;
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
     if (!isReactNativeProject()) {
@@ -74,28 +74,28 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
 
     const appInfo = (await out.progress("Getting app info...", clientRequest<models.App>(
       (cb) => client.apps.get(this.app.ownerName, this.app.appName, cb)))).result;
-    this.platform = appInfo.platform.toLowerCase();
+    this.os = appInfo.os.toLowerCase();
 
     this.outputDir = this.outputDir || await pfs.mkTempDir("code-push");
 
-    if (!isValidPlatform(this.platform)) {
-      return failure(ErrorCodes.Exception, `Platform must be "android", "ios", or "windows".`);
+    if (!isValidOS(this.os)) {
+      return failure(ErrorCodes.Exception, `OS must be "android", "ios", or "windows".`);
     }
 
     if (!this.bundleName) {
-      this.bundleName = this.platform === "ios"
+      this.bundleName = this.os === "ios"
         ? "main.jsbundle"
-        : `index.${this.platform}.bundle`;
+        : `index.${this.os}.bundle`;
     }
 
     if (!this.entryFile) {
-      this.entryFile = `index.${this.platform}.js`;
+      this.entryFile = `index.${this.os}.js`;
       if (await fileDoesNotExistOrIsDirectory(this.entryFile)) {
         this.entryFile = "index.js";
       }
 
       if (await fileDoesNotExistOrIsDirectory(this.entryFile)) {
-        return failure(ErrorCodes.NotFound, `Entry file "index.${this.platform}.js" or "index.js" does not exist.`);
+        return failure(ErrorCodes.NotFound, `Entry file "index.${this.os}.js" or "index.js" does not exist.`);
       }
     } else {
       if (await fileDoesNotExistOrIsDirectory(this.entryFile)) {
@@ -113,18 +113,18 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
       return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
     } else {
       const versionSearchParams: VersionSearchParams = {
-        platform: this.platform,
+        os: this.os,
         plistFile: this.plistFile,
         plistFilePrefix: this.plistFilePrefix,
         gradleFile: this.gradleFile
       } as VersionSearchParams;
       this.targetBinaryVersion = await getReactNativeProjectAppVersion(versionSearchParams);
     }
-
+    debugger;
     try {
       await createEmptyTempReleaseFolder(this.outputDir);
       await removeReactTmpDir();
-      await runReactNativeBundleCommand(this.bundleName, this.development, this.entryFile, this.outputDir, this.platform, this.sourcemapOutput);
+      await runReactNativeBundleCommand(this.bundleName, this.development, this.entryFile, this.outputDir, this.os, this.sourcemapOutput);
 
       out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));
 
