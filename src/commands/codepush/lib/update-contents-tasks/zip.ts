@@ -2,11 +2,11 @@ import * as fs from "fs";
 import * as pfs from "../../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as JsZip from "jszip";
-import { generateRandomFilename } from "../file-utils";
+import { generateRandomFilename, normalizePath } from "../file-utils";
 
 interface ReleaseFile {
-  sourceLocation: string;     // The current location of the file on disk
-  targetLocation: string;     // The desired location of the file within the zip
+  sourceLocation: string; // The current location of the file on disk
+  targetLocation: string; // The desired location of the file within the zip
 }
 
 export default function zip(updateContentsPath: string): Promise<string> {
@@ -16,29 +16,30 @@ export default function zip(updateContentsPath: string): Promise<string> {
     if (!(await pfs.stat(updateContentsPath)).isDirectory()) {
       releaseFiles.push({
         sourceLocation: updateContentsPath,
-        targetLocation: path.basename(updateContentsPath)  // Put the file in the root
+        targetLocation: normalizePath(changeTmpFolderName(path.basename(updateContentsPath))) // Put the file in the root
       });
     }
 
     const directoryPath: string = updateContentsPath;
-    const baseDirectoryPath = path.join(directoryPath, "..");     // For legacy reasons, put the root directory in the zip
+    const baseDirectoryPath = path.join(directoryPath, ".."); // For legacy reasons, put the root directory in the zip
 
     let files: string[] = await pfs.walk(updateContentsPath);
 
     files.forEach((filePath: string) => {
-      var relativePath: string = path.relative(baseDirectoryPath, filePath);
+      let relativePath: string = path.relative(baseDirectoryPath, filePath);
       releaseFiles.push({
         sourceLocation: filePath,
-        targetLocation: relativePath
+        targetLocation: normalizePath(changeTmpFolderName(relativePath))
       });
     });
 
     const packagePath: string = path.join(process.cwd(), generateRandomFilename(15) + ".zip");
-    var zip = new JsZip();
+    let zip = new JsZip();
 
-    releaseFiles.forEach(async (releaseFile: ReleaseFile) => {
-      zip.file(releaseFile.targetLocation, await pfs.readFile(releaseFile.sourceLocation));
-    });
+    for (let releaseFile of releaseFiles) {
+      var fileStream: any = await fs.createReadStream(releaseFile.sourceLocation);
+      zip.file(releaseFile.targetLocation, fileStream);
+    }
 
     zip
       .generateNodeStream({ type: 'nodebuffer', streamFiles: true })
@@ -47,4 +48,11 @@ export default function zip(updateContentsPath: string): Promise<string> {
         resolve(packagePath);
       });
   });
+}
+
+// we have to change tmp forlder name to make update contents file structure 
+// to be compatibale with client SDKs
+function changeTmpFolderName(relativePath: string) {
+  const tempFolderName = path.dirname(relativePath).split(path.sep)[0];
+  return relativePath.replace(tempFolderName, "CodePush");
 }
