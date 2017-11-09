@@ -50,3 +50,8 @@ export async function createEmptyTempReleaseFolder(folderPath: string): Promise<
 export async function removeReactTmpDir(): Promise<void> {
   await pfs.rmDir(`${os.tmpdir()}/react-*`);
 }
+
+export function normalizePath(filePath: string): string {
+  //replace all backslashes coming from cli running on windows machines by slashes
+  return filePath.replace(/\\/g, "/");
+}
