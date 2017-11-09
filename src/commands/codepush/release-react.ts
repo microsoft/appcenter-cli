@@ -76,7 +76,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
       (cb) => client.apps.get(this.app.ownerName, this.app.appName, cb)))).result;
     this.os = appInfo.os.toLowerCase();
 
-    this.outputDir = this.outputDir || await pfs.mkTempDir("code-push");
+    this.updateContentsPath = this.outputDir || await pfs.mkTempDir("code-push");
 
     if (!isValidOS(this.os)) {
       return failure(ErrorCodes.Exception, `OS must be "android", "ios", or "windows".`);
@@ -104,7 +104,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
     }
 
     if (this.outputDir) {
-      this.sourcemapOutput = path.join(this.outputDir, this.bundleName + ".map");
+      this.sourcemapOutput = path.join(this.updateContentsPath, this.bundleName + ".map");
     }
 
     this.targetBinaryVersion = this.specifiedTargetBinaryVersion;
@@ -120,11 +120,11 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
       } as VersionSearchParams;
       this.targetBinaryVersion = await getReactNativeProjectAppVersion(versionSearchParams);
     }
-    debugger;
+    
     try {
-      await createEmptyTempReleaseFolder(this.outputDir);
+      await createEmptyTempReleaseFolder(this.updateContentsPath);
       await removeReactTmpDir();
-      await runReactNativeBundleCommand(this.bundleName, this.development, this.entryFile, this.outputDir, this.os, this.sourcemapOutput);
+      await runReactNativeBundleCommand(this.bundleName, this.development, this.entryFile, this.updateContentsPath, this.os, this.sourcemapOutput);
 
       out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));
 
@@ -133,7 +133,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
       debug(`Failed to release a CodePush update - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, "Failed to release a CodePush update.")
     } finally {
-      pfs.rmDir(this.outputDir);
+      await pfs.rmDir(this.updateContentsPath);
     }
   }
 }
