@@ -196,7 +196,7 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
   }
 }
 
-export async function runReactNativeBundleCommand(bundleName: string, development: boolean, entryFile: string, outputFolder: string, platform: string, sourcemapOutput: string): Promise<void> {
+export function runReactNativeBundleCommand(bundleName: string, development: boolean, entryFile: string, outputFolder: string, platform: string, sourcemapOutput: string): Promise<void> {
   let reactNativeBundleArgs: string[] = [];
   let envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
 
