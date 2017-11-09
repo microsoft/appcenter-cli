@@ -23,7 +23,7 @@ export function getCordovaProjectAppVersion(): Promise<string> {
   });
 }
 
-export function isValidPlatform(platform: string): boolean {
+export function isValidOS(platform: string): boolean {
   switch (platform.toLowerCase()) {
     case "android":
     case "ios":

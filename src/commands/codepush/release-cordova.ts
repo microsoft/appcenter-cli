@@ -6,7 +6,7 @@ import { inspect } from "util";
 import * as chalk from "chalk";
 import * as path from "path";
 import { isValidVersion, isValidDeployment } from "./lib/validation-utils";
-import { isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectAppVersion } from "./lib/cordova-utils";
+import { isValidOS, getCordovaOrPhonegapCLI, getCordovaProjectAppVersion } from "./lib/cordova-utils";
 
 var childProcess = require("child_process");
 export var execSync = childProcess.execSync;
@@ -30,10 +30,10 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
   @hasArg
   public specifiedTargetBinaryVersion: string;
 
-  private platform: string;
+  private os: string;
 
   public async run(client: MobileCenterClient): Promise<CommandResult> {
-    if ((await isValidDeployment(client, this.app, this.specifiedDeploymentName))) {
+    if (!(await isValidDeployment(client, this.app, this.specifiedDeploymentName))) {
       return failure(ErrorCodes.InvalidParameter, `Deployment "${this.specifiedDeploymentName}" does not exist.`);
     } else {
       this.deploymentName = this.specifiedDeploymentName;
@@ -41,9 +41,9 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
 
     const appInfo = (await out.progress("Getting app info...", clientRequest<models.App>(
       (cb) => client.apps.get(this.app.ownerName, this.app.appName, cb)))).result;
-    this.platform = appInfo.platform.toLowerCase();
+    this.os = appInfo.os.toLowerCase();
 
-    if (!isValidPlatform(this.platform)) {
+    if (!isValidOS(this.os)) {
       return failure(ErrorCodes.InvalidParameter, `Platform must be either "ios" or "android".`);
     }
 
@@ -68,10 +68,10 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
 
     out.text(chalk.cyan(`Running "${cordovaCLI} ${cordovaCommand}" command:\n`));
     try {
-      execSync([cordovaCLI, cordovaCommand, this.platform, "--verbose"].join(" "), { stdio: "inherit" });
+      execSync([cordovaCLI, cordovaCommand, this.os, "--verbose"].join(" "), { stdio: "inherit" });
     } catch (error) {
       debug(`Failed to release a CodePush update - ${inspect(error)}`);
-      return failure(ErrorCodes.Exception, `Unable to ${cordovaCommand} project. Please ensure that the CWD represents a Cordova project and that the "${this.platform}" platform was added by running "${cordovaCLI} platform add ${this.platform}".`);
+      return failure(ErrorCodes.Exception, `Unable to ${cordovaCommand} project. Please ensure that the CWD represents a Cordova project and that the "${this.os}" platform was added by running "${cordovaCLI} platform add ${this.os}".`);
     }
 
     out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));
@@ -80,12 +80,12 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
 
   private getOutputFolder(): string {
     const projectRoot: string = process.cwd();
-    const platformFolder: string = path.join(projectRoot, "platforms", this.platform);
+    const platformFolder: string = path.join(projectRoot, "platforms", this.os);
     let outputFolder: string;
 
-    if (this.platform === "ios") {
+    if (this.os === "ios") {
       outputFolder = path.join(platformFolder, "www");
-    } else if (this.platform === "android") {
+    } else if (this.os === "android") {
       outputFolder = path.join(platformFolder, "assets", "www");
     }
 
