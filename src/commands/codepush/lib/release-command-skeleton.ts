@@ -3,6 +3,7 @@ import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
 import * as fs from "fs";
+import * as pfs from "../../../util/misc/promisfied-fs";
 import * as chalk from "chalk";
 import { sign, zip } from "../lib/update-contents-tasks";
 import { isBinaryOrZip } from "../lib/file-utils";
@@ -105,6 +106,8 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     } catch (error) {
       debug(`Failed to release a CodePush update - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, error.response.body);
+    } finally {
+      await pfs.rmDir(updateContentsZipPath);
     }
   }
 
