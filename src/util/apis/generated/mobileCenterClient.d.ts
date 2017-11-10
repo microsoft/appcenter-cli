@@ -37,7 +37,7 @@ declare class MobileCenterClient {
     distributionGroupInvitations: operations.DistributionGroupInvitations;
     appInvitations: operations.AppInvitations;
     users: operations.Users;
-    releasesOperations: operations.ReleasesOperations;
+    releases: operations.Releases;
     teams: operations.Teams;
     azureSubscription: operations.AzureSubscription;
     apps: operations.Apps;
@@ -54,7 +54,6 @@ declare class MobileCenterClient {
     releaseUploads: operations.ReleaseUploads;
     push: operations.Push;
     appOperations: operations.AppOperations;
-    exportConfigurations: operations.ExportConfigurations;
     storeReleases: operations.StoreReleases;
     stores: operations.Stores;
     distributionGroups: operations.DistributionGroups;

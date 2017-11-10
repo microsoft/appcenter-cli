@@ -86,7 +86,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     debug("Verifying that release was distributed to the specified distribution group");
     let releasesIds: number[];
     try {
-      const httpRequest = await clientRequest<models.BasicReleaseDetailsResponse[]>((cb) => client.releasesOperations.listByDistributionGroup(distributionGroup, app.ownerName, app.appName, cb));
+      const httpRequest = await clientRequest<models.BasicReleaseDetailsResponse[]>((cb) => client.releases.listByDistributionGroup(distributionGroup, app.ownerName, app.appName, cb));
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;
       } else {
@@ -109,7 +109,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
   private async getReleaseUrl(client: MobileCenterClient, app: DefaultApp, releaseId: string): Promise<string> {
     debug("Getting download URL for the specified release");
     try {
-      const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) => client.releasesOperations.getLatestByUser(releaseId, app.ownerName, app.appName, cb));
+      const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) => client.releases.getLatestByUser(releaseId, app.ownerName, app.appName, cb));
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;
       } else {
@@ -128,8 +128,8 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
   private async getLastReleaseUrl(client: MobileCenterClient, app: DefaultApp, distributionGroup: string): Promise<string> {
     debug("Getting download URL for the latest release of the specified distribution group");
     try {
-      const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) => 
-        client.releasesOperations.getLatestByDistributionGroup(app.ownerName, app.appName, distributionGroup, "latest", cb));       
+      const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) =>
+        client.releases.getLatestByDistributionGroup(app.ownerName, app.appName, distributionGroup, "latest", cb));
        if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.result;
       } else {
@@ -137,7 +137,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
       }
     } catch (error) {
       switch (error.code) {
-        case "no_releases_for_app":          
+        case "no_releases_for_app":
           throw failure(ErrorCodes.InvalidParameter, `there were no releases for the distribution group ${distributionGroup}`);
         case "not_found":
           throw failure(ErrorCodes.InvalidParameter, `distribution group ${distributionGroup} doesn't exist`);
@@ -148,7 +148,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     }
   }
 
-  private getDirectoryPath(directoryPath: string): Promise<string> {    
+  private getDirectoryPath(directoryPath: string): Promise<string> {
     if (!_.isNil(directoryPath)) {
       const normalizedPath = Path.normalize(directoryPath);
 
@@ -170,7 +170,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     } else {
       // using current working directory by default
       return Promise.resolve(cwd());
-    }    
+    }
   }
 
   private getFileFullPath(passedFileName: string, directoryPath: string, appName: string, downloadUrl: string): string {

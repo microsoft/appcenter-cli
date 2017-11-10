@@ -12,15 +12,15 @@ var WebResource = msRest.WebResource;
 
 /**
  * @class
- * ReleasesOperations
+ * Releases
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the MobileCenterClient.
- * Initializes a new instance of the ReleasesOperations class.
+ * Initializes a new instance of the Releases class.
  * @constructor
  *
  * @param {MobileCenterClient} client Reference to the service client.
  */
-function ReleasesOperations(client) {
+function Releases(client) {
   this.client = client;
 }
 
@@ -55,7 +55,7 @@ function ReleasesOperations(client) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-ReleasesOperations.prototype.getLatestByHash = function (appSecret, releaseHash, options, callback) {
+Releases.prototype.getLatestByHash = function (appSecret, releaseHash, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -211,7 +211,7 @@ ReleasesOperations.prototype.getLatestByHash = function (appSecret, releaseHash,
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-ReleasesOperations.prototype.getLatestByUser = function (releaseId, ownerName, appName, options, callback) {
+Releases.prototype.getLatestByUser = function (releaseId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -416,7 +416,7 @@ ReleasesOperations.prototype.getLatestByUser = function (releaseId, ownerName, a
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-ReleasesOperations.prototype.update = function (releaseId, body, ownerName, appName, options, callback) {
+Releases.prototype.update = function (releaseId, body, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -592,7 +592,7 @@ ReleasesOperations.prototype.update = function (releaseId, body, ownerName, appN
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-ReleasesOperations.prototype.deleteMethod = function (releaseId, ownerName, appName, options, callback) {
+Releases.prototype.deleteMethod = function (releaseId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -735,7 +735,7 @@ ReleasesOperations.prototype.deleteMethod = function (releaseId, ownerName, appN
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-ReleasesOperations.prototype.availableToTester = function (ownerName, appName, options, callback) {
+Releases.prototype.availableToTester = function (ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -905,7 +905,7 @@ ReleasesOperations.prototype.availableToTester = function (ownerName, appName, o
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-ReleasesOperations.prototype.rerelease = function (body, ownerName, appName, options, callback) {
+Releases.prototype.rerelease = function (body, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1044,7 +1044,7 @@ ReleasesOperations.prototype.rerelease = function (body, ownerName, appName, opt
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-ReleasesOperations.prototype.list = function (ownerName, appName, options, callback) {
+Releases.prototype.list = function (ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1188,7 +1188,7 @@ ReleasesOperations.prototype.list = function (ownerName, appName, options, callb
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-ReleasesOperations.prototype.listLatest = function (ownerName, appName, options, callback) {
+Releases.prototype.listLatest = function (ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1327,7 +1327,7 @@ ReleasesOperations.prototype.listLatest = function (ownerName, appName, options,
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-ReleasesOperations.prototype.getLatestByDistributionGroup = function (ownerName, appName, distributionGroupName, releaseId, options, callback) {
+Releases.prototype.getLatestByDistributionGroup = function (ownerName, appName, distributionGroupName, releaseId, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1492,7 +1492,7 @@ ReleasesOperations.prototype.getLatestByDistributionGroup = function (ownerName,
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-ReleasesOperations.prototype.deleteWithDistributionGroupId = function (ownerName, appName, distributionGroupName, releaseId, options, callback) {
+Releases.prototype.deleteWithDistributionGroupId = function (ownerName, appName, distributionGroupName, releaseId, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1638,7 +1638,7 @@ ReleasesOperations.prototype.deleteWithDistributionGroupId = function (ownerName
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-ReleasesOperations.prototype.listByDistributionGroup = function (distributionGroupName, ownerName, appName, options, callback) {
+Releases.prototype.listByDistributionGroup = function (distributionGroupName, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -1728,17 +1728,10 @@ ReleasesOperations.prototype.listByDistributionGroup = function (distributionGro
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ArrayElementType',
+                  serializedName: 'DistributionGroupReleasesResponseItemElementType',
                   type: {
-                    name: 'Sequence',
-                    element: {
-                        required: false,
-                        serializedName: 'DistributionGroupReleasesResponseItemElementType',
-                        type: {
-                          name: 'Composite',
-                          className: 'DistributionGroupReleasesResponseItem'
-                        }
-                    }
+                    name: 'Composite',
+                    className: 'DistributionGroupReleasesResponseItem'
                   }
               }
             }
@@ -1775,4 +1768,4 @@ ReleasesOperations.prototype.listByDistributionGroup = function (distributionGro
 };
 
 
-module.exports = ReleasesOperations;
+module.exports = Releases;

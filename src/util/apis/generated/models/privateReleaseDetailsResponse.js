@@ -82,7 +82,7 @@
  * @member {string} [destinationType] The destination type.<br>
  * <b>group</b>: The release distributed to internal groups and
  * distribution_groups details will be returned.<br>
- * <b>store</b>: Coming Soon - The release distributed to external stores and
+ * <b>store</b>: The release distributed to external stores and
  * distribution_stores details will be returned. <br>
  * . Possible values include: 'group', 'store'
  * 

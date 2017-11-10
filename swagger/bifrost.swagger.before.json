@@ -1785,6 +1785,8 @@
     },
     "/v0.1/management/analytics/trace_logs": {},
     "/v0.1/manage/releases/purge": {},
+    "/v0.1/manage/devices/purge": {},
+    "/v0.1/manage/codePush/purge": {},
     "/v0.1/azure_subscriptions": {
       "get": {
         "description": "Returns a list of azure subscriptions for the user",
@@ -5246,6 +5248,87 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/hockeyapp_crash_forwarding": {
+      "get": {
+        "description": "Gets the state of HockeyApp Crash forwarding for SxS apps",
+        "summary": "Gets the state of HockeyApp Crash forwarding for SxS apps",
+        "operationId": "crashes_getHockeyAppCrashForwardingStatus",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/HockeyAppCrashForwardingInfo"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "crash"
+        ]
+      },
+      "patch": {
+        "description": "Enable HockeyApp crash forwarding for SxS apps",
+        "summary": "Enable HockeyApp crash forwarding for SxS apps",
+        "operationId": "crashes_updateHockeyAppCrashForwarding",
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Enable Forwarding",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HockeyAppCrashForwardingChange"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/HockeyAppCrashForwardingInfo"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "crash"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/files/{file_id}/validate": {},
     "/v0.1/apps/{owner_name}/{app_name}/file_asset": {
       "post": {
@@ -5280,264 +5363,6 @@
         ],
         "tags": [
           "build"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/export_configurations/{export_configuration_id}/enable": {
-      "post": {
-        "operationId": "ExportConfigurations_Enable",
-        "description": "Enable export configuration.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ExportConfigurationIdParameter"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Export configuration was successfully enabled."
-          },
-          "default": {
-            "description": "Error code with reason",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "export"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/export_configurations/{export_configuration_id}/disable": {
-      "post": {
-        "operationId": "ExportConfigurations_Disable",
-        "description": "Disable export configuration.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ExportConfigurationIdParameter"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Export configuration was successfully disabled."
-          },
-          "default": {
-            "description": "Error code with reason",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "export"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/export_configurations/{export_configuration_id}": {
-      "get": {
-        "operationId": "ExportConfigurations_Get",
-        "description": "Get export configuration.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ExportConfigurationIdParameter"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Get export configuration.",
-            "schema": {
-              "$ref": "#/definitions/ExportConfigurationResult"
-            }
-          },
-          "default": {
-            "description": "Error code with reason",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "export"
-        ]
-      },
-      "patch": {
-        "operationId": "ExportConfigurations_PartialUpdate",
-        "description": "Partially update export configuration.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ExportConfigurationIdParameter"
-          },
-          {
-            "$ref": "#/parameters/ExportConfigurationParameter"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Export configuration updated successfully.",
-            "schema": {
-              "$ref": "#/definitions/ExportConfigurationResult"
-            }
-          },
-          "default": {
-            "description": "Error code with reason",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "export"
-        ]
-      },
-      "delete": {
-        "operationId": "ExportConfigurations_Delete",
-        "description": "Delete export configuration.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ExportConfigurationIdParameter"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Export configuration was successfully deleted."
-          },
-          "default": {
-            "description": "Error code with reason",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "export"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/export_configurations": {
-      "get": {
-        "operationId": "ExportConfigurations_List",
-        "description": "List export configurations.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List export configurations.",
-            "schema": {
-              "$ref": "#/definitions/ExportConfigurationListResult"
-            }
-          },
-          "default": {
-            "description": "Error code with reason",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "export"
-        ]
-      },
-      "post": {
-        "operationId": "ExportConfigurations_Create",
-        "description": "Create new export configuration",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ExportConfigurationParameter"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "202": {
-            "description": "Create export configuration request successfully received.",
-            "schema": {
-              "$ref": "#/definitions/ExportConfigurationResult"
-            }
-          },
-          "default": {
-            "description": "Error code with reason",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "export"
         ]
       }
     },
@@ -6208,10 +6033,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/DistributionGroupReleasesResponse"
-              }
+              "$ref": "#/definitions/DistributionGroupReleasesResponse"
             }
           },
           "404": {
@@ -9985,46 +9807,6 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/analytics/distribution/release_counts": {
-      "post": {
-        "operationId": "Analytics_DistributionReleaseCounts",
-        "description": "Count of total downloads for the provided distribution releases.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/GetReleasesParameter"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Count of total downloads for the provided distribution release(s).",
-            "schema": {
-              "$ref": "#/definitions/ReleaseCounts"
-            }
-          },
-          "default": {
-            "description": "Error code with reason",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "analytics"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/analytics/distribution": {},
     "/v0.1/apps/{owner_name}/{app_name}/analytics/crashfree_device_percentages": {
       "get": {
         "operationId": "Analytics_CrashFreeDevicePercentages",
@@ -10051,51 +9833,6 @@
             "description": "Percentage of crash-free devices by day in the time range and overall percentage of the time range.",
             "schema": {
               "$ref": "#/definitions/CrashFreeDevicePercentages"
-            }
-          },
-          "default": {
-            "description": "Error code with reason",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "analytics"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/analytics/crash_groups/{crash_group_id}/places": {
-      "get": {
-        "operationId": "Analytics_CrashGroupPlacesCounts",
-        "description": "top places of the selected crash group with selected version",
-        "parameters": [
-          {
-            "$ref": "#/parameters/CrashGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/VersionParameter"
-          },
-          {
-            "$ref": "#/parameters/TopParameter"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Top places with count in descending order",
-            "schema": {
-              "$ref": "#/definitions/CrashGroupPlaces"
             }
           },
           "default": {
@@ -10180,7 +9917,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Top OSes with count in descending order",
+            "description": "Top OSes with percentage in descending order",
             "schema": {
               "$ref": "#/definitions/CrashGroupOperatingSystems"
             }
@@ -10225,54 +9962,9 @@
         ],
         "responses": {
           "200": {
-            "description": "Top Models with count in descending order",
+            "description": "Top Models with percentage in descending order",
             "schema": {
               "$ref": "#/definitions/CrashGroupModels"
-            }
-          },
-          "default": {
-            "description": "Error code with reason",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "analytics"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/analytics/crash_groups/{crash_group_id}/languages": {
-      "get": {
-        "operationId": "Analytics_CrashGroupLanguagesCounts",
-        "description": "top languages of the selected crash group with selected version",
-        "parameters": [
-          {
-            "$ref": "#/parameters/CrashGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/VersionParameter"
-          },
-          {
-            "$ref": "#/parameters/TopParameter"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Top places with count in descending order",
-            "schema": {
-              "$ref": "#/definitions/CrashGroupLanguages"
             }
           },
           "default": {
@@ -10321,51 +10013,6 @@
             "description": "Count of crashes by day in the time range and total crashes over the time range.",
             "schema": {
               "$ref": "#/definitions/CrashCounts"
-            }
-          },
-          "default": {
-            "description": "Error code with reason",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "analytics"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/analytics/crash_groups/{crash_group_id}/carriers": {
-      "get": {
-        "operationId": "Analytics_CrashGroupCarrierCounts",
-        "description": "top carriers of the selected crash group with selected version",
-        "parameters": [
-          {
-            "$ref": "#/parameters/CrashGroupParameter"
-          },
-          {
-            "$ref": "#/parameters/VersionParameter"
-          },
-          {
-            "$ref": "#/parameters/TopParameter"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Top carriers with count in descending order",
-            "schema": {
-              "$ref": "#/definitions/CrashGroupCarriers"
             }
           },
           "default": {
@@ -12081,6 +11728,17 @@
         }
       }
     },
+    "UserSettingRequest": {
+      "properties": {
+        "value": {
+          "description": "The setting value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
     "AccountResponse": {
       "properties": {
         "id": {
@@ -13303,10 +12961,28 @@
                 "devOps",
                 "notAdmin"
               ]
+            },
+            "settings": {
+              "description": "The user's settings",
+              "properties": {
+                "marketing_opt_in": {
+                  "description": "The marketing opt-in setting",
+                  "type": "string"
+                }
+              }
             }
           }
         }
       ]
+    },
+    "UserSettingResponse": {
+      "description": "A user's setting",
+      "properties": {
+        "marketing_opt_in": {
+          "description": "The marketing opt-in setting",
+          "type": "string"
+        }
+      }
     },
     "Owner": {
       "description": "The information about the app's owner",
@@ -15074,7 +14750,7 @@
           "type": "string"
         },
         "destination_type": {
-          "description": "The destination type.<br> \n<b>group</b>: The release distributed to internal groups and distribution_groups details will be returned.<br>\n<b>store</b>: Coming Soon - The release distributed to external stores and distribution_stores details will be returned. <br>\n",
+          "description": "The destination type.<br> \n<b>group</b>: The release distributed to internal groups and distribution_groups details will be returned.<br>\n<b>store</b>: The release distributed to external stores and distribution_stores details will be returned. <br>\n",
           "type": "string",
           "enum": [
             "group",
@@ -15107,7 +14783,7 @@
           "type": "string"
         },
         "destination_type": {
-          "description": "The destination type.<br> \n<b>group</b>: The release distributed to internal groups and distribution_groups details will be returned.<br>\n<b>store</b>: Coming Soon - The release distributed to external stores and distribution_stores details will be returned. <br>\n",
+          "description": "The destination type.<br> \n<b>group</b>: The release distributed to internal groups and distribution_groups details will be returned.<br>\n<b>store</b>: The release distributed to external stores and distribution_stores details will be returned. <br>\n",
           "type": "string",
           "enum": [
             "group",
@@ -17620,6 +17296,25 @@
         }
       }
     },
+    "HockeyAppCrashForwardingInfo": {
+      "required": [
+        "forwarding_enabled"
+      ],
+      "type": "object",
+      "properties": {
+        "forwarding_enabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "HockeyAppCrashForwardingChange": {
+      "type": "object",
+      "properties": {
+        "enable_forwarding": {
+          "type": "boolean"
+        }
+      }
+    },
     "SymbolStatusEnum": {
       "description": "enumeration of symbol statuses",
       "enum": [
@@ -17980,38 +17675,6 @@
           "items": {
             "$ref": "#/definitions/DateTimeCounts"
           }
-        }
-      }
-    },
-    "ActiveCrashingAppDetails": {
-      "type": "object",
-      "properties": {
-        "nextLink": {
-          "type": "string"
-        },
-        "appsWithCrashes": {
-          "description": "details of the apps with crashes",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CrashingAppDetail"
-          }
-        }
-      }
-    },
-    "CrashingAppDetail": {
-      "type": "object",
-      "properties": {
-        "appId": {
-          "description": "application identifier",
-          "type": "string"
-        },
-        "appVersion": {
-          "description": "application version",
-          "type": "string"
-        },
-        "crashGroupId": {
-          "description": "crash group identifier",
-          "type": "string"
         }
       }
     },
@@ -18427,93 +18090,6 @@
           "type": "integer",
           "format": "int64",
           "description": "count of OS"
-        }
-      }
-    },
-    "CrashGroupPlaces": {
-      "type": "object",
-      "properties": {
-        "crash_count": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "places": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CrashGroupPlace"
-          }
-        }
-      }
-    },
-    "CrashGroupPlace": {
-      "type": "object",
-      "properties": {
-        "place_name": {
-          "type": "string",
-          "description": "Place name"
-        },
-        "crash_count": {
-          "type": "integer",
-          "format": "int64",
-          "description": "count of places"
-        }
-      }
-    },
-    "CrashGroupLanguages": {
-      "type": "object",
-      "properties": {
-        "crash_count": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "languages": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CrashGroupLanguage"
-          }
-        }
-      }
-    },
-    "CrashGroupLanguage": {
-      "type": "object",
-      "properties": {
-        "language_name": {
-          "type": "string",
-          "description": "language name"
-        },
-        "crash_count": {
-          "type": "integer",
-          "format": "int64",
-          "description": "count of languages"
-        }
-      }
-    },
-    "CrashGroupCarriers": {
-      "type": "object",
-      "properties": {
-        "crash_count": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "carriers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CrashGroupCarrier"
-          }
-        }
-      }
-    },
-    "CrashGroupCarrier": {
-      "type": "object",
-      "properties": {
-        "carrier_name": {
-          "type": "string",
-          "description": "carrier name"
-        },
-        "crash_count": {
-          "type": "integer",
-          "format": "int64",
-          "description": "crash count of carrier"
         }
       }
     },
@@ -19524,135 +19100,6 @@
         "values"
       ]
     },
-    "NotifyReleasesContainer": {
-      "type": "object",
-      "properties": {
-        "releases": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/definitions/ReleaseWithDistributionGroupAndUserId"
-          }
-        }
-      },
-      "required": [
-        "releases"
-      ]
-    },
-    "DeleteReleasesContainer": {
-      "type": "object",
-      "properties": {
-        "releases": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/definitions/Release"
-          }
-        }
-      },
-      "required": [
-        "releases"
-      ]
-    },
-    "GetReleasesContainer": {
-      "type": "object",
-      "properties": {
-        "releases": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "$ref": "#/definitions/ReleaseWithDistributionGroup"
-          }
-        }
-      },
-      "required": [
-        "releases"
-      ]
-    },
-    "Release": {
-      "type": "object",
-      "properties": {
-        "release": {
-          "description": "Release Id.\n",
-          "type": "string",
-          "format": "string"
-        }
-      },
-      "required": [
-        "release"
-      ]
-    },
-    "ReleaseWithDistributionGroup": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/Release"
-        }
-      ],
-      "properties": {
-        "distribution_group": {
-          "description": "Distribution group Id.\n",
-          "type": "string",
-          "format": "string"
-        }
-      }
-    },
-    "ReleaseWithDistributionGroupAndUserId": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/ReleaseWithDistributionGroup"
-        }
-      ],
-      "properties": {
-        "user_id": {
-          "description": "Unique user Id.  Will generate a new user Id if not provided.\n",
-          "type": "string",
-          "format": "uuid"
-        }
-      }
-    },
-    "ReleaseCounts": {
-      "type": "object",
-      "properties": {
-        "counts": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ReleaseCount"
-          }
-        }
-      },
-      "required": [
-        "counts"
-      ]
-    },
-    "ReleaseCount": {
-      "type": "object",
-      "properties": {
-        "release_id": {
-          "type": "string",
-          "format": "string"
-        },
-        "distribution_group": {
-          "description": "Distribution group queried.\n",
-          "type": "string",
-          "format": "string"
-        },
-        "unique_count": {
-          "description": "Count of unique downloads against user id.\n",
-          "type": "integer",
-          "format": "int64"
-        },
-        "total_count": {
-          "description": "Total count of downloads.\n",
-          "type": "integer",
-          "format": "int64"
-        }
-      },
-      "required": [
-        "release_id",
-        "unique_count",
-        "total_count"
-      ]
-    },
     "NotificationsListResult": {
       "description": "List of notifications",
       "type": "object",
@@ -20128,10 +19575,6 @@
       "properties": {
         "package_sid": {
           "description": "Package security identifier (SID).",
-          "type": "string"
-        },
-        "secret_key": {
-          "description": "windows push configuration secret key.",
           "type": "string"
         }
       },
@@ -21964,27 +21407,6 @@
         "user_enabled"
       ]
     },
-    "AlertingBugtrackerRuleSettings": {
-      "description": "Bugtracker Rule settings",
-      "type": "object",
-      "discriminator": "type",
-      "properties": {
-        "metric": {
-          "type": "string"
-        },
-        "value": {
-          "type": "number"
-        },
-        "type": {
-          "type": "string",
-          "description": "rule type",
-          "enum": [
-            "percentage",
-            "absolute"
-          ]
-        }
-      }
-    },
     "AlertingBugtrackerSettings": {
       "description": "Bugtracker specific settings",
       "type": "object",
@@ -22069,6 +21491,28 @@
         "github_repo_name"
       ]
     },
+    "AlertingJiraBugtrackerSettings": {
+      "type": "object",
+      "description": "Jira bugtracker specific settings",
+      "x-ms-discriminator-value": "jira",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AlertingBugtrackerSettings"
+        }
+      ],
+      "properties": {
+        "jira_project_id": {
+          "type": "integer"
+        },
+        "jira_project_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "jira_project_id",
+        "jira_project_name"
+      ]
+    },
     "AlertingBugtracker": {
       "description": "Alerting bugtracker resource",
       "properties": {
@@ -22100,8 +21544,9 @@
             "$ref": "#/definitions/AlertingEventTypes"
           }
         },
-        "rule_settings": {
-          "$ref": "#/definitions/AlertingBugtrackerRuleSettings"
+        "crash_count_threshold": {
+          "description": "Threshold for the number of crashes at which to create a bug",
+          "type": "integer"
         },
         "settings": {
           "$ref": "#/definitions/AlertingBugtrackerSettings"
@@ -22116,8 +21561,7 @@
           "type": "string",
           "enum": [
             "github",
-            "vsts",
-            "jira"
+            "vsts"
           ]
         },
         "repositories": {
@@ -23360,36 +22804,6 @@
       "format": "int64",
       "x-ms-parameter-location": "method"
     },
-    "NotifyReleasesParameter": {
-      "name": "releases",
-      "in": "body",
-      "description": "The releases to notify.",
-      "required": true,
-      "schema": {
-        "$ref": "#/definitions/NotifyReleasesContainer"
-      },
-      "x-ms-parameter-location": "method"
-    },
-    "DeleteReleasesParameter": {
-      "name": "releases",
-      "in": "body",
-      "description": "The releases to delete.",
-      "required": true,
-      "schema": {
-        "$ref": "#/definitions/DeleteReleasesContainer"
-      },
-      "x-ms-parameter-location": "method"
-    },
-    "GetReleasesParameter": {
-      "name": "releases",
-      "in": "body",
-      "description": "The releases to retrieve.",
-      "required": true,
-      "schema": {
-        "$ref": "#/definitions/GetReleasesContainer"
-      },
-      "x-ms-parameter-location": "method"
-    },
     "IncludeArchivedParameter": {
       "name": "include_archived",
       "in": "query",
@@ -23609,7 +23023,8 @@
       "description": "Type of bugtracker",
       "enum": [
         "github",
-        "vsts"
+        "vsts",
+        "jira"
       ],
       "required": true,
       "x-ms-parameter-location": "method"

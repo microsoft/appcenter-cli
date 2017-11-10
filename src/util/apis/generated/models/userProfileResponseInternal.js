@@ -20,6 +20,10 @@ var util = require('util');
  * @member {string} [adminRole] The new admin_role. Possible values include:
  * 'superAdmin', 'admin', 'devOps', 'notAdmin'
  * 
+ * @member {object} [settings] The user's settings
+ * 
+ * @member {string} [settings.marketingOptIn] The marketing opt-in setting
+ * 
  */
 function UserProfileResponseInternal() {
   UserProfileResponseInternal['super_'].call(this);
@@ -123,6 +127,14 @@ UserProfileResponseInternal.prototype.mapper = function () {
           serializedName: 'admin_role',
           type: {
             name: 'String'
+          }
+        },
+        settings: {
+          required: false,
+          serializedName: 'settings',
+          type: {
+            name: 'Composite',
+            className: 'UserProfileResponseInternalSettings'
           }
         }
       }

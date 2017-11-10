@@ -16,8 +16,7 @@ var util = require('util');
  * @constructor
  * List of bug tracker repositories
  *
- * @member {string} [repoType] Possible values include: 'github', 'vsts',
- * 'jira'
+ * @member {string} [repoType] Possible values include: 'github', 'vsts'
  * 
  * @member {array} repositories
  * 

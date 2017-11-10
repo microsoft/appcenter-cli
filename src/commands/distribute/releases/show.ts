@@ -27,7 +27,7 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
     try {
       debug("Loading release details");
       const httpRequest = await out.progress("Loading release details...", clientRequest<models.ReleaseDetailsResponse>(
-        (cb) => client.releasesOperations.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
+        (cb) => client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
       ));
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;
@@ -62,7 +62,7 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
       ["Icon URL", "appIconUrl"],
       ["Distribution Group", "distributionGroups", (distributionGroups: models.DistributionGroup[]) => _.get(distributionGroups, "[0].name", "")]
     ], releaseDetails);
-   
+
     return success();
   }
 }
