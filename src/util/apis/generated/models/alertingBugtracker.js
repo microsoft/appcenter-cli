@@ -26,13 +26,8 @@ var util = require('util');
  * 
  * @member {array} [eventTypes] Event types enabled for bugtracker
  * 
- * @member {object} [ruleSettings]
- * 
- * @member {string} [ruleSettings.metric]
- * 
- * @member {number} [ruleSettings.value]
- * 
- * @member {string} [ruleSettings.type] Polymorhpic Discriminator
+ * @member {number} [crashCountThreshold] Threshold for the number of crashes
+ * at which to create a bug
  * 
  * @member {object} [settings]
  * 
@@ -95,14 +90,11 @@ AlertingBugtracker.prototype.mapper = function () {
             }
           }
         },
-        ruleSettings: {
+        crashCountThreshold: {
           required: false,
-          serializedName: 'rule_settings',
+          serializedName: 'crash_count_threshold',
           type: {
-            name: 'Composite',
-            polymorphicDiscriminator: 'type',
-            uberParent: 'AlertingBugtrackerRuleSettings',
-            className: 'AlertingBugtrackerRuleSettings'
+            name: 'Number'
           }
         },
         settings: {

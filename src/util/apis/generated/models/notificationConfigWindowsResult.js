@@ -18,8 +18,6 @@ var util = require('util');
  *
  * @member {string} packageSid Package security identifier (SID).
  * 
- * @member {string} [secretKey] windows push configuration secret key.
- * 
  */
 function NotificationConfigWindowsResult() {
   NotificationConfigWindowsResult['super_'].call(this);
@@ -51,13 +49,6 @@ NotificationConfigWindowsResult.prototype.mapper = function () {
         packageSid: {
           required: true,
           serializedName: 'package_sid',
-          type: {
-            name: 'String'
-          }
-        },
-        secretKey: {
-          required: false,
-          serializedName: 'secret_key',
           type: {
             name: 'String'
           }

@@ -51,6 +51,7 @@ exports.UserEmailRequest = require('./userEmailRequest');
 exports.UserNameUpdateRequest = require('./userNameUpdateRequest');
 exports.UserUpdateRequest = require('./userUpdateRequest');
 exports.UserUpdateRequestInternal = require('./userUpdateRequestInternal');
+exports.UserSettingRequest = require('./userSettingRequest');
 exports.AccountResponse = require('./accountResponse');
 exports.ApiTokenDeleteResponse = require('./apiTokenDeleteResponse');
 exports.ApiTokenGetUserResponse = require('./apiTokenGetUserResponse');
@@ -93,6 +94,8 @@ exports.TeamUserResponse = require('./teamUserResponse');
 exports.UserAuthResponse = require('./userAuthResponse');
 exports.UserNameAvailabilityResponse = require('./userNameAvailabilityResponse');
 exports.UserProfileResponseInternal = require('./userProfileResponseInternal');
+exports.UserProfileResponseInternalSettings = require('./userProfileResponseInternalSettings');
+exports.UserSettingResponse = require('./userSettingResponse');
 exports.SharedConnectionRequest = require('./sharedConnectionRequest');
 exports.SharedConnectionUpdateRequest = require('./sharedConnectionUpdateRequest');
 exports.SharedConnectionResponse = require('./sharedConnectionResponse');
@@ -271,6 +274,8 @@ exports.CrashGroup = require('./crashGroup');
 exports.CrashGroupChange = require('./crashGroupChange');
 exports.Crash = require('./crash');
 exports.CrashDetails = require('./crashDetails');
+exports.HockeyAppCrashForwardingInfo = require('./hockeyAppCrashForwardingInfo');
+exports.HockeyAppCrashForwardingChange = require('./hockeyAppCrashForwardingChange');
 exports.MissingSymbol = require('./missingSymbol');
 exports.CrashLocation = require('./crashLocation');
 exports.ParkedCrash = require('./parkedCrash');
@@ -284,8 +289,6 @@ exports.SearchItem = require('./searchItem');
 exports.CrashCounts = require('./crashCounts');
 exports.DateTimeCounts = require('./dateTimeCounts');
 exports.ActiveDeviceCounts = require('./activeDeviceCounts');
-exports.ActiveCrashingAppDetails = require('./activeCrashingAppDetails');
-exports.CrashingAppDetail = require('./crashingAppDetail');
 exports.Places = require('./places');
 exports.Place = require('./place');
 exports.SessionDurationsDistribution = require('./sessionDurationsDistribution');
@@ -310,12 +313,6 @@ exports.CrashGroupModels = require('./crashGroupModels');
 exports.CrashGroupModel = require('./crashGroupModel');
 exports.CrashGroupOperatingSystems = require('./crashGroupOperatingSystems');
 exports.CrashGroupOperatingSystem = require('./crashGroupOperatingSystem');
-exports.CrashGroupPlaces = require('./crashGroupPlaces');
-exports.CrashGroupPlace = require('./crashGroupPlace');
-exports.CrashGroupLanguages = require('./crashGroupLanguages');
-exports.CrashGroupLanguage = require('./crashGroupLanguage');
-exports.CrashGroupCarriers = require('./crashGroupCarriers');
-exports.CrashGroupCarrier = require('./crashGroupCarrier');
 exports.LogTraceDefinition = require('./logTraceDefinition');
 exports.CrashGroupContainer = require('./crashGroupContainer');
 exports.CrashGroupAndVersion = require('./crashGroupAndVersion');
@@ -355,14 +352,6 @@ exports.AudienceDefinition = require('./audienceDefinition');
 exports.AudienceBlobResult = require('./audienceBlobResult');
 exports.AudienceDevicePropertiesListResult = require('./audienceDevicePropertiesListResult');
 exports.AudienceDevicePropertyValuesListResult = require('./audienceDevicePropertyValuesListResult');
-exports.NotifyReleasesContainer = require('./notifyReleasesContainer');
-exports.Release = require('./release');
-exports.ReleaseWithDistributionGroup = require('./releaseWithDistributionGroup');
-exports.ReleaseWithDistributionGroupAndUserId = require('./releaseWithDistributionGroupAndUserId');
-exports.DeleteReleasesContainer = require('./deleteReleasesContainer');
-exports.GetReleasesContainer = require('./getReleasesContainer');
-exports.ReleaseCounts = require('./releaseCounts');
-exports.ReleaseCount = require('./releaseCount');
 exports.NotificationsListResult = require('./notificationsListResult');
 exports.NotificationOverviewResult = require('./notificationOverviewResult');
 exports.NotificationTarget = require('./notificationTarget');
@@ -463,10 +452,10 @@ exports.AlertEmailSettings = require('./alertEmailSettings');
 exports.EventSetting = require('./eventSetting');
 exports.AlertUserEmailSettingsResult = require('./alertUserEmailSettingsResult');
 exports.AlertUserAppEmailSettingsResult = require('./alertUserAppEmailSettingsResult');
-exports.AlertingBugtrackerRuleSettings = require('./alertingBugtrackerRuleSettings');
 exports.AlertingBugtrackerSettings = require('./alertingBugtrackerSettings');
 exports.AlertingVstsBugtrackerSettings = require('./alertingVstsBugtrackerSettings');
 exports.AlertingGithubBugtrackerSettings = require('./alertingGithubBugtrackerSettings');
+exports.AlertingJiraBugtrackerSettings = require('./alertingJiraBugtrackerSettings');
 exports.AlertingBugtracker = require('./alertingBugtracker');
 exports.AlertBugTrackerReposResult = require('./alertBugTrackerReposResult');
 exports.AlertBugTrackerRepo = require('./alertBugTrackerRepo');
@@ -500,7 +489,6 @@ exports.App = require('./app');
 exports.ListOKResponseItem = require('./listOKResponseItem');
 exports.Properties = require('./properties');
 exports.NotificationIds = require('./notificationIds');
-exports.Releases = require('./releases');
 exports.CrashGroups = require('./crashGroups');
 exports.discriminators = {
   'SharedConnectionRequest' : exports.SharedConnectionRequest,
@@ -549,9 +537,9 @@ exports.discriminators = {
   'ExportConfiguration.application_insights_instrumentation_key' : exports.ExportConfigurationAppInsightsKey,
   'ExportConfiguration.blob_storage_linked_subscription' : exports.ExportConfigurationBlobStorageLinkedSubscription,
   'ExportConfiguration.application_insights_linked_subscription' : exports.ExportConfigurationAppInsightsLinkedSubscription,
-  'AlertingBugtrackerRuleSettings' : exports.AlertingBugtrackerRuleSettings,
   'AlertingBugtrackerSettings' : exports.AlertingBugtrackerSettings,
   'AlertingBugtrackerSettings.vsts' : exports.AlertingVstsBugtrackerSettings,
   'AlertingBugtrackerSettings.github' : exports.AlertingGithubBugtrackerSettings,
+  'AlertingBugtrackerSettings.jira' : exports.AlertingJiraBugtrackerSettings,
   'properties' : exports.Properties
 };

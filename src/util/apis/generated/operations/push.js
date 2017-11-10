@@ -28,14 +28,14 @@ function Push(client) {
  * Returns whether push config exists.
  *
  * @param {string} ownerName The name of the owner
- * 
+ *
  * @param {string} appName The name of the application
- * 
+ *
  * @param {object} [options] Optional Parameters.
- * 
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- * 
+ *
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -115,7 +115,7 @@ Push.prototype.configExists = function (ownerName, appName, options, callback) {
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -133,14 +133,14 @@ Push.prototype.configExists = function (ownerName, appName, options, callback) {
  * Get configuration.
  *
  * @param {string} ownerName The name of the owner
- * 
+ *
  * @param {string} appName The name of the application
- * 
+ *
  * @param {object} [options] Optional Parameters.
- * 
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- * 
+ *
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -222,7 +222,7 @@ Push.prototype.getConfig = function (ownerName, appName, options, callback) {
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -257,14 +257,14 @@ Push.prototype.getConfig = function (ownerName, appName, options, callback) {
  * Set notification configuration.
  *
  * @param {string} ownerName The name of the owner
- * 
+ *
  * @param {string} appName The name of the application
- * 
+ *
  * @param {object} [options] Optional Parameters.
- * 
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- * 
+ *
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -338,7 +338,7 @@ Push.prototype.setConfig = function (ownerName, appName, options, callback) {
       requestContent = JSON.stringify(requestModel);
     }
   } catch (error) {
-    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
         'payload - "%s"', error.message, util.inspect(properties, {depth: null})));
     return callback(serializationError);
   }
@@ -368,7 +368,7 @@ Push.prototype.setConfig = function (ownerName, appName, options, callback) {
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -403,14 +403,14 @@ Push.prototype.setConfig = function (ownerName, appName, options, callback) {
  * Delete notification configuration.
  *
  * @param {string} ownerName The name of the owner
- * 
+ *
  * @param {string} appName The name of the application
- * 
+ *
  * @param {object} [options] Optional Parameters.
- * 
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- * 
+ *
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -490,7 +490,7 @@ Push.prototype.deleteConfig = function (ownerName, appName, options, callback) {
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -508,16 +508,16 @@ Push.prototype.deleteConfig = function (ownerName, appName, options, callback) {
  * Get notification details.
  *
  * @param {string} notificationId The id of the notification.
- * 
+ *
  * @param {string} ownerName The name of the owner
- * 
+ *
  * @param {string} appName The name of the application
- * 
+ *
  * @param {object} [options] Optional Parameters.
- * 
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- * 
+ *
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -603,7 +603,7 @@ Push.prototype.get = function (notificationId, ownerName, appName, options, call
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -638,16 +638,16 @@ Push.prototype.get = function (notificationId, ownerName, appName, options, call
  * Archive push campaign(s)
  *
  * @param {string} ownerName The name of the owner
- * 
+ *
  * @param {string} appName The name of the application
- * 
+ *
  * @param {array} values List of notification Ids.
- * 
+ *
  * @param {object} [options] Optional Parameters.
- * 
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- * 
+ *
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -724,7 +724,7 @@ Push.prototype.notificationArchive = function (ownerName, appName, values, optio
       requestContent = JSON.stringify(requestModel);
     }
   } catch (error) {
-    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
         'payload - "%s"', error.message, util.inspect(notificationIds, {depth: null})));
     return callback(serializationError);
   }
@@ -754,7 +754,7 @@ Push.prototype.notificationArchive = function (ownerName, appName, values, optio
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -772,31 +772,31 @@ Push.prototype.notificationArchive = function (ownerName, appName, values, optio
  * Get list of notifications
  *
  * @param {string} ownerName The name of the owner
- * 
+ *
  * @param {string} appName The name of the application
- * 
+ *
  * @param {object} [options] Optional Parameters.
- * 
+ *
  * @param {number} [options.top] The maximum number of results to return. (0
  * will fetch all results)
- * 
+ *
  * @param {string} [options.skiptoken] The value identifies a starting point
  * in the collection of entities. This parameter along with limit is used to
  * perform pagination.
- * 
+ *
  * @param {string} [options.orderby] controls the sorting order and sorting
  * based on which column
- * 
+ *
  * @param {string} [options.inlinecount] Controls whether or not to include a
  * count of all the items accross all pages. Possible values include:
  * 'allpages', 'none'
- * 
+ *
  * @param {boolean} [options.includeArchived] Include arhived push
  * notifications
- * 
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- * 
+ *
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -927,7 +927,7 @@ Push.prototype.list = function (ownerName, appName, options, callback) {
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -962,14 +962,14 @@ Push.prototype.list = function (ownerName, appName, options, callback) {
  * Send notification.
  *
  * @param {string} ownerName The name of the owner
- * 
+ *
  * @param {string} appName The name of the application
- * 
+ *
  * @param {object} [options] Optional Parameters.
- * 
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- * 
+ *
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -1043,7 +1043,7 @@ Push.prototype.send = function (ownerName, appName, options, callback) {
       requestContent = JSON.stringify(requestModel);
     }
   } catch (error) {
-    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
+    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' +
         'payload - "%s"', error.message, util.inspect(properties, {depth: null})));
     return callback(serializationError);
   }
@@ -1073,7 +1073,7 @@ Push.prototype.send = function (ownerName, appName, options, callback) {
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }

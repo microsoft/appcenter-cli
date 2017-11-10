@@ -655,6 +655,17 @@ export interface UserUpdateRequestInternal {
 
 /**
  * @class
+ * Initializes a new instance of the UserSettingRequest class.
+ * @constructor
+ * @member {string} value The setting value
+ * 
+ */
+export interface UserSettingRequest {
+  value: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the AccountResponse class.
  * @constructor
  * @member {string} id The internal unique id (UUID) of the account.
@@ -1793,10 +1804,41 @@ export interface UserNameAvailabilityResponse {
  * @member {string} [adminRole] The new admin_role. Possible values include:
  * 'superAdmin', 'admin', 'devOps', 'notAdmin'
  * 
+ * @member {object} [settings] The user's settings
+ * 
+ * @member {string} [settings.marketingOptIn] The marketing opt-in setting
+ * 
  */
 export interface UserProfileResponseInternal extends UserProfileResponse {
   featureFlags?: string[];
   adminRole?: string;
+  settings?: UserProfileResponseInternalSettings;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the UserProfileResponseInternalSettings class.
+ * @constructor
+ * The user's settings
+ *
+ * @member {string} [marketingOptIn] The marketing opt-in setting
+ * 
+ */
+export interface UserProfileResponseInternalSettings {
+  marketingOptIn?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the UserSettingResponse class.
+ * @constructor
+ * A user's setting
+ *
+ * @member {string} [marketingOptIn] The marketing opt-in setting
+ * 
+ */
+export interface UserSettingResponse {
+  marketingOptIn?: string;
 }
 
 /**
@@ -3649,7 +3691,7 @@ export interface ReleaseUpdateResponseDestinationsItem {
  * @member {string} [destinationType] The destination type.<br>
  * <b>group</b>: The release distributed to internal groups and
  * distribution_groups details will be returned.<br>
- * <b>store</b>: Coming Soon - The release distributed to external stores and
+ * <b>store</b>: The release distributed to external stores and
  * distribution_stores details will be returned. <br>
  * . Possible values include: 'group', 'store'
  * 
@@ -3705,7 +3747,7 @@ export interface PrivateReleaseDetailsResponse {
  * @member {string} [destinationType] The destination type.<br>
  * <b>group</b>: The release distributed to internal groups and
  * distribution_groups details will be returned.<br>
- * <b>store</b>: Coming Soon - The release distributed to external stores and
+ * <b>store</b>: The release distributed to external stores and
  * distribution_stores details will be returned. <br>
  * . Possible values include: 'group', 'store'
  * 
@@ -6278,6 +6320,28 @@ export interface CrashDetails {
 
 /**
  * @class
+ * Initializes a new instance of the HockeyAppCrashForwardingInfo class.
+ * @constructor
+ * @member {boolean} forwardingEnabled
+ * 
+ */
+export interface HockeyAppCrashForwardingInfo {
+  forwardingEnabled: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the HockeyAppCrashForwardingChange class.
+ * @constructor
+ * @member {boolean} [enableForwarding]
+ * 
+ */
+export interface HockeyAppCrashForwardingChange {
+  enableForwarding?: boolean;
+}
+
+/**
+ * @class
  * Initializes a new instance of the MissingSymbol class.
  * @constructor
  * missing symbol
@@ -6554,37 +6618,6 @@ export interface ActiveDeviceCounts {
   daily?: DateTimeCounts[];
   weekly?: DateTimeCounts[];
   monthly?: DateTimeCounts[];
-}
-
-/**
- * @class
- * Initializes a new instance of the ActiveCrashingAppDetails class.
- * @constructor
- * @member {string} [nextLink]
- * 
- * @member {array} [appsWithCrashes] details of the apps with crashes
- * 
- */
-export interface ActiveCrashingAppDetails {
-  nextLink?: string;
-  appsWithCrashes?: CrashingAppDetail[];
-}
-
-/**
- * @class
- * Initializes a new instance of the CrashingAppDetail class.
- * @constructor
- * @member {string} [appId] application identifier
- * 
- * @member {string} [appVersion] application version
- * 
- * @member {string} [crashGroupId] crash group identifier
- * 
- */
-export interface CrashingAppDetail {
-  appId?: string;
-  appVersion?: string;
-  crashGroupId?: string;
 }
 
 /**
@@ -6964,90 +6997,6 @@ export interface CrashGroupOperatingSystems {
  */
 export interface CrashGroupOperatingSystem {
   operatingSystemName?: string;
-  crashCount?: number;
-}
-
-/**
- * @class
- * Initializes a new instance of the CrashGroupPlaces class.
- * @constructor
- * @member {number} [crashCount]
- * 
- * @member {array} [places]
- * 
- */
-export interface CrashGroupPlaces {
-  crashCount?: number;
-  places?: CrashGroupPlace[];
-}
-
-/**
- * @class
- * Initializes a new instance of the CrashGroupPlace class.
- * @constructor
- * @member {string} [placeName] Place name
- * 
- * @member {number} [crashCount] count of places
- * 
- */
-export interface CrashGroupPlace {
-  placeName?: string;
-  crashCount?: number;
-}
-
-/**
- * @class
- * Initializes a new instance of the CrashGroupLanguages class.
- * @constructor
- * @member {number} [crashCount]
- * 
- * @member {array} [languages]
- * 
- */
-export interface CrashGroupLanguages {
-  crashCount?: number;
-  languages?: CrashGroupLanguage[];
-}
-
-/**
- * @class
- * Initializes a new instance of the CrashGroupLanguage class.
- * @constructor
- * @member {string} [languageName] language name
- * 
- * @member {number} [crashCount] count of languages
- * 
- */
-export interface CrashGroupLanguage {
-  languageName?: string;
-  crashCount?: number;
-}
-
-/**
- * @class
- * Initializes a new instance of the CrashGroupCarriers class.
- * @constructor
- * @member {number} [crashCount]
- * 
- * @member {array} [carriers]
- * 
- */
-export interface CrashGroupCarriers {
-  crashCount?: number;
-  carriers?: CrashGroupCarrier[];
-}
-
-/**
- * @class
- * Initializes a new instance of the CrashGroupCarrier class.
- * @constructor
- * @member {string} [carrierName] carrier name
- * 
- * @member {number} [crashCount] crash count of carrier
- * 
- */
-export interface CrashGroupCarrier {
-  carrierName?: string;
   crashCount?: number;
 }
 
@@ -7952,104 +7901,6 @@ export interface AudienceDevicePropertyValuesListResult {
 
 /**
  * @class
- * Initializes a new instance of the NotifyReleasesContainer class.
- * @constructor
- * @member {array} releases
- * 
- */
-export interface NotifyReleasesContainer {
-  releases: ReleaseWithDistributionGroupAndUserId[];
-}
-
-/**
- * @class
- * Initializes a new instance of the Release class.
- * @constructor
- * @member {string} releaseProperty Release Id.
- * 
- */
-export interface Release {
-  releaseProperty: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ReleaseWithDistributionGroup class.
- * @constructor
- * @member {string} [distributionGroup] Distribution group Id.
- * 
- */
-export interface ReleaseWithDistributionGroup extends Release {
-  distributionGroup?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ReleaseWithDistributionGroupAndUserId class.
- * @constructor
- * @member {uuid} [userId] Unique user Id.  Will generate a new user Id if not
- * provided.
- * 
- */
-export interface ReleaseWithDistributionGroupAndUserId extends ReleaseWithDistributionGroup {
-  userId?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the DeleteReleasesContainer class.
- * @constructor
- * @member {array} releases
- * 
- */
-export interface DeleteReleasesContainer {
-  releases: Release[];
-}
-
-/**
- * @class
- * Initializes a new instance of the GetReleasesContainer class.
- * @constructor
- * @member {array} releases
- * 
- */
-export interface GetReleasesContainer {
-  releases: ReleaseWithDistributionGroup[];
-}
-
-/**
- * @class
- * Initializes a new instance of the ReleaseCounts class.
- * @constructor
- * @member {array} counts
- * 
- */
-export interface ReleaseCounts {
-  counts: ReleaseCount[];
-}
-
-/**
- * @class
- * Initializes a new instance of the ReleaseCount class.
- * @constructor
- * @member {string} releaseId
- * 
- * @member {string} [distributionGroup] Distribution group queried.
- * 
- * @member {number} uniqueCount Count of unique downloads against user id.
- * 
- * @member {number} totalCount Total count of downloads.
- * 
- */
-export interface ReleaseCount {
-  releaseId: string;
-  distributionGroup?: string;
-  uniqueCount: number;
-  totalCount: number;
-}
-
-/**
- * @class
  * Initializes a new instance of the NotificationsListResult class.
  * @constructor
  * List of notifications
@@ -8441,12 +8292,9 @@ export interface NotificationConfigGoogleResult extends NotificationConfigResult
  *
  * @member {string} packageSid Package security identifier (SID).
  * 
- * @member {string} [secretKey] windows push configuration secret key.
- * 
  */
 export interface NotificationConfigWindowsResult extends NotificationConfigResult {
   packageSid: string;
-  secretKey?: string;
 }
 
 /**
@@ -10419,25 +10267,6 @@ export interface AlertUserAppEmailSettingsResult extends AlertUserEmailSettingsR
 
 /**
  * @class
- * Initializes a new instance of the AlertingBugtrackerRuleSettings class.
- * @constructor
- * Bugtracker Rule settings
- *
- * @member {string} [metric]
- * 
- * @member {number} [value]
- * 
- * @member {string} type Polymorhpic Discriminator
- * 
- */
-export interface AlertingBugtrackerRuleSettings {
-  metric?: string;
-  value?: number;
-  type: string;
-}
-
-/**
- * @class
  * Initializes a new instance of the AlertingBugtrackerSettings class.
  * @constructor
  * Bugtracker specific settings
@@ -10504,6 +10333,22 @@ export interface AlertingGithubBugtrackerSettings extends AlertingBugtrackerSett
 
 /**
  * @class
+ * Initializes a new instance of the AlertingJiraBugtrackerSettings class.
+ * @constructor
+ * Jira bugtracker specific settings
+ *
+ * @member {number} jiraProjectId
+ * 
+ * @member {string} jiraProjectName
+ * 
+ */
+export interface AlertingJiraBugtrackerSettings extends AlertingBugtrackerSettings {
+  jiraProjectId: number;
+  jiraProjectName: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the AlertingBugtracker class.
  * @constructor
  * Alerting bugtracker resource
@@ -10518,13 +10363,8 @@ export interface AlertingGithubBugtrackerSettings extends AlertingBugtrackerSett
  * 
  * @member {array} [eventTypes] Event types enabled for bugtracker
  * 
- * @member {object} [ruleSettings]
- * 
- * @member {string} [ruleSettings.metric]
- * 
- * @member {number} [ruleSettings.value]
- * 
- * @member {string} [ruleSettings.type] Polymorhpic Discriminator
+ * @member {number} [crashCountThreshold] Threshold for the number of crashes
+ * at which to create a bug
  * 
  * @member {object} [settings]
  * 
@@ -10540,7 +10380,7 @@ export interface AlertingBugtracker {
   state?: string;
   tokenId?: string;
   eventTypes?: string[];
-  ruleSettings?: AlertingBugtrackerRuleSettings;
+  crashCountThreshold?: number;
   settings?: AlertingBugtrackerSettings;
 }
 
@@ -10550,8 +10390,7 @@ export interface AlertingBugtracker {
  * @constructor
  * List of bug tracker repositories
  *
- * @member {string} [repoType] Possible values include: 'github', 'vsts',
- * 'jira'
+ * @member {string} [repoType] Possible values include: 'github', 'vsts'
  * 
  * @member {array} repositories
  * 
@@ -11704,17 +11543,6 @@ export interface Properties {
  */
 export interface NotificationIds {
   values: string[];
-}
-
-/**
- * @class
- * Initializes a new instance of the Releases class.
- * @constructor
- * @member {array} releasesProperty
- * 
- */
-export interface Releases {
-  releasesProperty: ReleaseWithDistributionGroup[];
 }
 
 /**

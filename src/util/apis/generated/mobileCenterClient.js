@@ -55,7 +55,7 @@ function MobileCenterClient(credentials, baseUri, options) {
   this.distributionGroupInvitations = new operations.DistributionGroupInvitations(this);
   this.appInvitations = new operations.AppInvitations(this);
   this.users = new operations.Users(this);
-  this.releasesOperations = new operations.ReleasesOperations(this);
+  this.releases = new operations.Releases(this);
   this.teams = new operations.Teams(this);
   this.azureSubscription = new operations.AzureSubscription(this);
   this.apps = new operations.Apps(this);
@@ -72,7 +72,6 @@ function MobileCenterClient(credentials, baseUri, options) {
   this.releaseUploads = new operations.ReleaseUploads(this);
   this.push = new operations.Push(this);
   this.appOperations = new operations.AppOperations(this);
-  this.exportConfigurations = new operations.ExportConfigurations(this);
   this.storeReleases = new operations.StoreReleases(this);
   this.stores = new operations.Stores(this);
   this.distributionGroups = new operations.DistributionGroups(this);
