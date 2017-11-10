@@ -3,10 +3,10 @@ import * as xml2js from "xml2js";
 import * as fs from "fs";
 import * as path from "path";
 
-export function getCordovaProjectAppVersion(): Promise<string> {
+export function getCordovaProjectAppVersion(projectRoot?: string): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     try {
-      const projectRoot: string = process.cwd();
+      projectRoot = projectRoot || process.cwd();
       var configString: string = fs.readFileSync(path.join(projectRoot, "config.xml"), { encoding: "utf8" });
     } catch (error) {
       reject(new Error(`Unable to find or read "config.xml" in the CWD. The "release-cordova" command must be executed in a Cordova project folder.`));
@@ -23,14 +23,18 @@ export function getCordovaProjectAppVersion(): Promise<string> {
   });
 }
 
-export function isValidOS(platform: string): boolean {
-  switch (platform.toLowerCase()) {
+export function isValidOS(os: string): boolean {
+  switch (os.toLowerCase()) {
     case "android":
     case "ios":
       return true;
     default:
       return false;
   }
+}
+
+export function isValidPlatform(platform: string): boolean {
+  return platform.toLowerCase() == "cordova";
 }
 
 // Check whether the Cordova or PhoneGap CLIs are

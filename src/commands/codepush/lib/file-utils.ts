@@ -1,7 +1,8 @@
-
-import * as pfs from "../../../util/misc/promisfied-fs";
+import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
+import * as rimraf from "rimraf"
+import * as temp from "temp";
 
 export function isBinaryOrZip(path: string): boolean {
   return path.search(/\.zip$/i) !== -1
@@ -9,14 +10,18 @@ export function isBinaryOrZip(path: string): boolean {
       || path.search(/\.ipa$/i) !== -1;
 }
 
-export async function copyFileToTmpDir(filePath: string): Promise<string> {
-  if (!(await pfs.stat(filePath)).isDirectory()) {
-    let outputFolderPath: string = await pfs.mkTempDir("code-push");
-    await pfs.rmDir(outputFolderPath)
-    await pfs.mkdir(outputFolderPath);
+export function isDirectory(path: string): boolean {
+  return fs.statSync(path).isDirectory();
+}
+
+export function copyFileToTmpDir(filePath: string): string {
+  if (!isDirectory(filePath)) {
+    let outputFolderPath: string = temp.mkdirSync("code-push");
+    rimraf.sync(outputFolderPath)
+    fs.mkdirSync(outputFolderPath);
 
     let outputFilePath: string = path.join(outputFolderPath, path.basename(filePath));
-    await pfs.writeFile(outputFilePath, await pfs.readFile(filePath));
+    fs.writeFileSync(outputFilePath, fs.readFileSync(filePath));
 
     return outputFolderPath;
   }
@@ -33,22 +38,21 @@ export function generateRandomFilename(length: number): string {
   return filename;
 }
 
-export async function fileDoesNotExistOrIsDirectory(filePath: string): Promise<boolean> {
+export function fileDoesNotExistOrIsDirectory(path: string): boolean {
   try {
-      return (await pfs.stat(filePath)).isDirectory();
+      return isDirectory(path);
   } catch (error) {
       return true;
   }
 }
 
-export async function createEmptyTempReleaseFolder(folderPath: string): Promise<void> {
-  await pfs.rmDir(folderPath);
-  await pfs.mkdir(folderPath);
-  return Promise.resolve();
+export function createEmptyTmpReleaseFolder(folderPath: string): void {
+  rimraf.sync(folderPath);
+  fs.mkdirSync(folderPath);
 }
 
-export async function removeReactTmpDir(): Promise<void> {
-  await pfs.rmDir(`${os.tmpdir()}/react-*`);
+export function removeReactTmpDir(): void {
+  rimraf.sync(`${os.tmpdir()}/react-*`);
 }
 
 export function normalizePath(filePath: string): string {

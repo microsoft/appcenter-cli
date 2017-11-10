@@ -6,7 +6,7 @@ import { inspect } from "util";
 import * as chalk from "chalk";
 import * as path from "path";
 import { isValidVersion, isValidDeployment } from "./lib/validation-utils";
-import { isValidOS, getCordovaOrPhonegapCLI, getCordovaProjectAppVersion } from "./lib/cordova-utils";
+import { isValidOS, isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectAppVersion } from "./lib/cordova-utils";
 
 var childProcess = require("child_process");
 export var execSync = childProcess.execSync;
@@ -32,6 +32,8 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
 
   private os: string;
 
+  private platform: string;
+
   public async run(client: MobileCenterClient): Promise<CommandResult> {
     if (!(await isValidDeployment(client, this.app, this.specifiedDeploymentName))) {
       return failure(ErrorCodes.InvalidParameter, `Deployment "${this.specifiedDeploymentName}" does not exist.`);
@@ -42,9 +44,14 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
     const appInfo = (await out.progress("Getting app info...", clientRequest<models.App>(
       (cb) => client.apps.get(this.app.ownerName, this.app.appName, cb)))).result;
     this.os = appInfo.os.toLowerCase();
+    this.platform = appInfo.platform.toLowerCase();
 
     if (!isValidOS(this.os)) {
       return failure(ErrorCodes.InvalidParameter, `Platform must be either "ios" or "android".`);
+    }
+
+    if (!isValidPlatform(this.platform)) {
+      return failure(ErrorCodes.Exception, `Platform must be "Cordova".`);
     }
 
     if (this.specifiedTargetBinaryVersion) {

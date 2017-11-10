@@ -13,14 +13,15 @@ var childProcess = require("child_process");
 export var spawn = childProcess.spawn;
 
 export interface VersionSearchParams {
-  os: string;
+  os: string; // ios or android
   plistFile: string;
   plistFilePrefix: string;
   gradleFile: string;
 }
 
-export async function getReactNativeProjectAppVersion(versionSearchParams: VersionSearchParams): Promise<string> {
-  var projectPackageJson: any = require(path.join(process.cwd(), "package.json"));
+export function getReactNativeProjectAppVersion(versionSearchParams: VersionSearchParams, projectRoot?: string): Promise<string> {
+  projectRoot = projectRoot || process.cwd();
+  var projectPackageJson: any = require(path.join(projectRoot, "package.json"));
   var projectName: string = projectPackageJson.name;
 
   const fileExists = (file: string): boolean => {
@@ -88,7 +89,7 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
       buildGradlePath = path.join(buildGradlePath, "build.gradle");
     }
 
-    if (await fileDoesNotExistOrIsDirectory(buildGradlePath)) {
+    if (fileDoesNotExistOrIsDirectory(buildGradlePath)) {
       throw new Error(`Unable to find gradle file "${buildGradlePath}".`);
     }
 
@@ -240,8 +241,8 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
   });
 }
 
-export function isValidOS(platform: string): boolean {
-  switch (platform.toLowerCase()) {
+export function isValidOS(os: string): boolean {
+  switch (os.toLowerCase()) {
     case "android":
     case "ios":
     case "windows":
@@ -249,6 +250,10 @@ export function isValidOS(platform: string): boolean {
     default:
       return false;
   }
+}
+
+export function isValidPlatform(platform: string): boolean {
+  return platform.toLowerCase() == "react-native";
 }
 
 export function isReactNativeProject(): boolean {
