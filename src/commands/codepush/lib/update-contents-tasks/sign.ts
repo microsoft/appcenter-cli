@@ -3,7 +3,7 @@ import * as hashUtils from "../hash-utils";
 import * as jwt from "jsonwebtoken";
 import * as path from "path";
 import * as pfs from "../../../../util/misc/promisfied-fs";
-import { copyFileToTmpDir } from "../file-utils";
+import { copyFileToTmpDir, isDirectory } from "../file-utils";
 
 const CURRENT_CLAIM_VERSION: string = "1.0.0";
 const METADATA_FILE_NAME: string = ".codepushrelease"
@@ -28,8 +28,8 @@ export default async function sign(privateKeyPath: string, updateContentsPath: s
   }
 
   // If releasing a single file, copy the file to a temporary 'CodePush' directory in which to publish the release
-  if (!(await pfs.stat(updateContentsPath)).isDirectory()) {
-    updateContentsPath = await copyFileToTmpDir(updateContentsPath);
+  if (!isDirectory(updateContentsPath)) {
+    updateContentsPath = copyFileToTmpDir(updateContentsPath);
   }
 
   signatureFilePath = path.join(updateContentsPath, METADATA_FILE_NAME);

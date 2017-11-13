@@ -9,13 +9,14 @@ import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as stream from "stream";
 import * as _ from "lodash";
+import { isDirectory } from "./file-utils"
 
 // Do not throw an exception if either of these modules are missing, as they may not be needed by the
 // consumer of this file.
 const HASH_ALGORITHM = "sha256";
 
 export async function generatePackageHashFromDirectory(directoryPath: string, basePath: string): Promise<string> {
-  if (!(await pfs.stat(directoryPath)).isDirectory()) {
+  if (!isDirectory(directoryPath)) {
     throw new Error("Not a directory. Please either create a directory, or use hashFile().");
   }
 

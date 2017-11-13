@@ -6,9 +6,9 @@ import { inspect } from "util";
 import * as pfs from "../../util/misc/promisfied-fs";
 import * as chalk from "chalk";
 import * as path from "path";
-import { fileDoesNotExistOrIsDirectory, createEmptyTempReleaseFolder, removeReactTmpDir } from "./lib/file-utils";
+import { fileDoesNotExistOrIsDirectory, createEmptyTmpReleaseFolder, removeReactTmpDir } from "./lib/file-utils";
 import { isValidVersion, isValidDeployment } from "./lib/validation-utils";
-import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand, isValidOS, isReactNativeProject } from "./lib/react-native-utils";
+import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand, isValidOS, isValidPlatform, isReactNativeProject } from "./lib/react-native-utils";
 
 const debug = require("debug")("mobile-center-cli:commands:codepush:release-react");
 
@@ -27,20 +27,24 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
   @help("Path to the app's entry Javascript file. If omitted, \"index.<platform>.js\" and then \"index.js\" will be used (if they exist)")
   @shortName("e")
   @longName("entry-file")
+  @hasArg
   public entryFile: string;
 
   @help("Path to the gradle file which specifies the binary version you want to target this release at (android only)")
   @shortName("g")
   @longName("gradle-file")
+  @hasArg
   public gradleFile: string;
 
   @help("Path to the plist file which specifies the binary version you want to target this release at (iOS only)")
   @shortName("p")
+  @hasArg
   @longName("plist-file")
   public plistFile: string;
 
   @help("Prefix to append to the file name when attempting to find your app's Info.plist file (iOS only)")
   @longName("plist-file-prefix")
+  @hasArg
   public plistFilePrefix: string;
 
   @help("Path to where the sourcemap for the resulting bundle should be written. If omitted, a sourcemap will not be generated")
@@ -51,6 +55,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
   @help("Path to where the bundle and sourcemap should be written. If omitted, a bundle and sourcemap will not be written")
   @shortName("o")
   @longName("output-dir")
+  @hasArg
   public outputDir: string;
 
   @help("Semver expression that specifies the binary app version(s) this release is targeting (e.g. 1.1.0, ~1.2.3)")
@@ -61,9 +66,11 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
 
   private os: string;
 
+  private platform: string;
+
   public async run(client: MobileCenterClient): Promise<CommandResult> {
     if (!isReactNativeProject()) {
-      return failure(ErrorCodes.Exception, "The project in the CWD is not a React Native project.");
+      return failure(ErrorCodes.InvalidParameter, "The project in the CWD is not a React Native project.");
     }
 
     if (!(await isValidDeployment(client, this.app, this.specifiedDeploymentName))) {
@@ -75,11 +82,16 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
     const appInfo = (await out.progress("Getting app info...", clientRequest<models.App>(
       (cb) => client.apps.get(this.app.ownerName, this.app.appName, cb)))).result;
     this.os = appInfo.os.toLowerCase();
+    this.platform = appInfo.platform.toLowerCase();
 
     this.updateContentsPath = this.outputDir || await pfs.mkTempDir("code-push");
 
     if (!isValidOS(this.os)) {
-      return failure(ErrorCodes.Exception, `OS must be "android", "ios", or "windows".`);
+      return failure(ErrorCodes.InvalidParameter, `OS must be "android", "ios", or "windows".`);
+    }
+
+    if (!isValidPlatform(this.platform)) {
+      return failure(ErrorCodes.Exception, `Platform must be "React Native".`);
     }
 
     if (!this.bundleName) {
@@ -90,15 +102,15 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
 
     if (!this.entryFile) {
       this.entryFile = `index.${this.os}.js`;
-      if (await fileDoesNotExistOrIsDirectory(this.entryFile)) {
+      if (fileDoesNotExistOrIsDirectory(this.entryFile)) {
         this.entryFile = "index.js";
       }
 
-      if (await fileDoesNotExistOrIsDirectory(this.entryFile)) {
+      if (fileDoesNotExistOrIsDirectory(this.entryFile)) {
         return failure(ErrorCodes.NotFound, `Entry file "index.${this.os}.js" or "index.js" does not exist.`);
       }
     } else {
-      if (await fileDoesNotExistOrIsDirectory(this.entryFile)) {
+      if (fileDoesNotExistOrIsDirectory(this.entryFile)) {
         return failure(ErrorCodes.NotFound, `Entry file "${this.entryFile}" does not exist.`);
       }
     }
@@ -122,9 +134,9 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
     }
     
     try {
-      await createEmptyTempReleaseFolder(this.updateContentsPath);
-      await removeReactTmpDir();
-      runReactNativeBundleCommand(this.bundleName, this.development, this.entryFile, this.updateContentsPath, this.os, this.sourcemapOutput);
+      createEmptyTmpReleaseFolder(this.updateContentsPath);
+      removeReactTmpDir();
+      await runReactNativeBundleCommand(this.bundleName, this.development, this.entryFile, this.updateContentsPath, this.os, this.sourcemapOutput);
 
       out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));
 

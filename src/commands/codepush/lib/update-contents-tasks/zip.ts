@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as pfs from "../../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as JsZip from "jszip";
-import { generateRandomFilename, normalizePath } from "../file-utils";
+import { generateRandomFilename, normalizePath, isDirectory } from "../file-utils";
 
 interface ReleaseFile {
   sourceLocation: string; // The current location of the file on disk
@@ -13,7 +13,7 @@ export default function zip(updateContentsPath: string): Promise<string> {
   return new Promise<string>(async (resolve, reject) => {
     let releaseFiles: ReleaseFile[] = [];
 
-    if (!(await pfs.stat(updateContentsPath)).isDirectory()) {
+    if (!isDirectory(updateContentsPath)) {
       releaseFiles.push({
         sourceLocation: updateContentsPath,
         targetLocation: normalizePath(changeTmpFolderName(path.basename(updateContentsPath))) // Put the file in the root
