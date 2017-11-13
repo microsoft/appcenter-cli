@@ -4,8 +4,6 @@ Visual Studio App Center command line interface (cli) is a unified tool for runn
 Our aim is to offer a concise and powerful tool for our developers to use AppCenter services and easily script a sequence of
 commands that they'd like to execute. You can currently login and view/configure all the apps that you have access to in AppCenter.
 
-Note that the AppCenter CLI is currently in public preview.
-
 # Prerequisites
 
 AppCenter CLI requires Node.js version 6.3 or better. Do not use Node.js 7.1.0, there is a known issue that breaks the CLI code (and many other projects) on Windows 10. This bug has been fixed in later releases of Node.js 7.
@@ -57,9 +55,17 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 | `appcenter build branches show` | Show branch build status |
 | | |
 | `appcenter codepush patch` | Update the metadata for an existing CodePush release |
+| `appcenter codepush promote` | Create a new release for the destination deployment, which includes the exact code and metadata from the latest release of the source deployment |
+| `appcenter codepush release-cordova` | Release a Cordova update to an app deployment |
+| `appcenter codepush release-react` | Release a React Native update to an app deployment |
+| `appcenter codepush release` | Release an update to an app deployment |
+| `appcenter codepush rollback` | Rollback a deployemnt to a previous release |
 | `appcenter codepush deployment add` | Add a new deployment to an app |
+| `appcenter codepush deployment clear` | Clear the release history associated with a deployment |
 | `appcenter codepush deployment history` | Display the release history for a CodePush deployment |
 | `appcenter codepush deployment list` | List the deployments associated with an app |
+| `appcenter codepush deployment remove` | Remove CodePush deployment |
+| `appcenter codepush deployment rename` | Rename CodePush deployment |
 | | |
 | `appcenter crashes upload-missing-symbols` | Upload missing crash symbols for the application (only from macOS) |
 | `appcenter crashes upload-symbols` | Upload the crash symbols for the application |

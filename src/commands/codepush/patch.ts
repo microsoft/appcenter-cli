@@ -104,7 +104,7 @@ export default class PatchCommand extends AppCommand {
     }
   }
 
-  private async getLatestReleaseLabel(client: MobileCenterClient, app: DefaultApp): Promise<string> {
+  private async getLatestReleaseLabel(client: AppCenterClient, app: DefaultApp): Promise<string> {
     let releases: models.CodePushRelease[];
     try {
       const httpRequest = await out.progress("Fetching latest release label...", clientRequest<models.CodePushRelease[]>(
@@ -128,5 +128,5 @@ export default class PatchCommand extends AppCommand {
     } else {
       throw failure(ErrorCodes.NotFound, `Failed to find any release to patch for ${this.identifier} app's ${chalk.bold(this.deploymentName)} deployment`);
     }
-  } 
+  }
 }
