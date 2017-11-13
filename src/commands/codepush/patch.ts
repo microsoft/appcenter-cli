@@ -4,6 +4,8 @@ import { inspect } from "util";
 import { MobileCenterClient, models, clientRequest } from "../../util/apis";
 import * as chalk from "chalk";
 import { isValidRollout, isValidVersion } from "./lib/validation-utils";
+import { DefaultApp } from "../../util/profile";
+import { scriptName } from "../../util/misc";
 
 const debug = require("debug")("mobile-center-cli:commands:codepush:patch");
 
@@ -17,9 +19,9 @@ export default class CodePushPatchCommand extends AppCommand {
   public deploymentName: string;
 
   @help("Specifies label of one existing release to update. (Defaults to the latest release within the specified deployment)")
-  @required
-  @name("existing-release-label")
-  @position(1)
+  @longName("existing-release-label")
+  @shortName("l")
+  @hasArg
   public releaseLabel: string;
 
   @help("Specifies whether this release should be considered mandatory. (Putting -m flag means mandatory)")
@@ -80,6 +82,11 @@ export default class CodePushPatchCommand extends AppCommand {
     if (this.rollout != null) {
       patch.rollout = rollout;
     }
+
+    if (this.releaseLabel == null || this.releaseLabel == "") {
+      debug("Release label is not set, get latest...");
+      this.releaseLabel = await this.getLatestReleaseLabel(client, app);
+    }
     
     try {
       const httpRequest = await out.progress("Patching CodePush release...", clientRequest<models.CodePushRelease>(
@@ -96,4 +103,30 @@ export default class CodePushPatchCommand extends AppCommand {
       return failure(ErrorCodes.Exception, error.response.body);
     }
   }
+
+  private async getLatestReleaseLabel(client: MobileCenterClient, app: DefaultApp): Promise<string> {
+    let releases: models.CodePushRelease[];
+    try {
+      const httpRequest = await out.progress("Fetching latest release label...", clientRequest<models.CodePushRelease[]>(
+        (cb) => client.codePushDeploymentReleases.get(this.deploymentName, app.ownerName, app.appName, cb)));
+        releases = httpRequest.result;
+    } catch (error) {
+      debug(`Failed to get list of CodePush deployments - ${inspect(error)}`);
+      if (error.statusCode === 404) {
+        const appNotFoundErrorMsg = `The app ${this.identifier} does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command ${chalk.bold(`${scriptName} apps list`)} to see what apps you have access to.`;
+        throw failure(ErrorCodes.NotFound, appNotFoundErrorMsg);
+      } else if (error.statusCode === 400) {
+        const deploymentNotExistErrorMsg = `The deployment ${chalk.bold(this.deploymentName)} does not exist.`;
+        throw failure(ErrorCodes.Exception, deploymentNotExistErrorMsg);
+      } else {
+        throw failure(ErrorCodes.Exception, error.response.body);
+      }
+    }
+
+    if (releases && releases.length > 0) {
+      return releases[releases.length - 1].label;
+    } else {
+      throw failure(ErrorCodes.NotFound, `Failed to find any release to patch for ${this.identifier} app's ${chalk.bold(this.deploymentName)} deployment`);
+    }
+  } 
 }

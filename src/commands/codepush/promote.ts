@@ -10,17 +10,19 @@ const debug = require("debug")("mobile-center-cli:commands:codepush:promote");
 @help("Create a new release for the destination deployment, which includes the exact code and metadata from the latest release of the source deployment")
 export default class CodePushPromoteCommand extends AppCommand {
  
-  @help("Specifies source deployment name")
-  @required
-  @name("source-deployment-name")
-  @position(0)
-  public sourceDeploymentName: string;
-
   @help("Specifies destination deployment name")
   @required
-  @name("dest-deployment-name")
-  @position(1)
+  @longName("dest-deployment-name")
+  @shortName("d")
+  @hasArg
   public destDeploymentName: string;
+
+  @help("Specifies source deployment name")
+  @required
+  @shortName("s")
+  @longName("source-deployment-name")
+  @hasArg
+  public sourceDeploymentName: string;
 
   @help("Specifies description of the changes made to the app with this release")
   @shortName("d")
