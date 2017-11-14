@@ -1,4 +1,5 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success, defaultValue } from "../../../util/commandline";
+import { CommandArgs } from "../../../util/commandline/command";
 import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
@@ -8,7 +9,22 @@ import * as chalk from "chalk";
 import { sign, zip } from "../lib/update-contents-tasks";
 import { isBinaryOrZip } from "../lib/file-utils";
 import { isValidVersion, isValidRollout, isValidDeployment } from "../lib/validation-utils";
-import * as debug from "debug";
+import { getUser, DefaultApp } from "../../../util/profile/index";
+import AppCenterCodePushRelease  from "../lib/release-strategy/appcenter-release";
+import LegacyCodePushRelease from "./release-strategy/legacy-service-release";
+import { environments } from "../lib/environment";
+
+const debug = require("debug")("mobile-center-cli:commands:codepush:release-skeleton");
+
+export interface ReleaseStrategy {
+    release(client: MobileCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata:{
+      appVersion?: string;
+      description?: string;
+      isDisabled?: boolean;
+      isMandatory?: boolean;
+      rollout?: number;
+    }, debug: Function, token?: string, serverUrl?: string): void
+}
 
 export default class CodePushReleaseCommandSkeleton extends AppCommand {
   @help("Deployment to release the update to")
@@ -59,6 +75,15 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
 
   protected targetBinaryVersion: string;
 
+  private readonly releaseStrategy: ReleaseStrategy;
+
+  constructor(args: CommandArgs) {
+    super(args);
+
+    // Сurrently use old service due to we have limitation of 1MB payload limit through bifrost service
+    this.releaseStrategy = new LegacyCodePushRelease(); 
+  }
+  
   public async run(client: MobileCenterClient): Promise<CommandResult> {
     throw new Error("For dev purposes only!");
   }
@@ -81,23 +106,17 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     const updateContentsZipPath = await zip(this.updateContentsPath);
 
     try {
-      const httpRequest = await out.progress("Creating CodePush release...", clientRequest<models.CodePushRelease>(
-        (cb) => client.codePushDeploymentReleases.create(
-          this.deploymentName,
-          this.targetBinaryVersion,
-          this.app.ownerName,
-          this.app.appName,
-          {
-            packageParameter: fs.createReadStream(updateContentsZipPath),
-            deploymentName1: this.deploymentName,
-            description: this.description,
-            disabled: this.disabled, 
-            mandatory: this.mandatory, 
-            noDuplicateReleaseError: this.noDuplicateReleaseError,
-            rollout: this.rollout,
-          },
-          cb)));
-
+      var user = await getUser();
+      const serverUrl = environments(this.environmentName || user.environment).managementEndpoint;
+      
+      await this.releaseStrategy.release(client, this.app, this.deploymentName, updateContentsZipPath, {
+        appVersion: this.targetBinaryVersion,
+        description: this.description,
+        isDisabled: this.disabled,
+        isMandatory: this.mandatory,
+        rollout: this.rollout
+      }, debug, await user.accessToken, serverUrl);
+    
       out.text(`Successfully released an update containing the "${this.updateContentsPath}" `
         + `${fs.lstatSync(this.updateContentsPath).isDirectory() ? "directory" : "file"}`
         + ` to the "${this.deploymentName}" deployment of the "${this.app.appName}" app.`);
@@ -105,7 +124,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
       return success();
     } catch (error) {
       debug(`Failed to release a CodePush update - ${inspect(error)}`);
-      return failure(ErrorCodes.Exception, error.response.body);
+      return failure(ErrorCodes.Exception, error.response ? error.response.body : error);
     } finally {
       await pfs.rmDir(updateContentsZipPath);
     }
