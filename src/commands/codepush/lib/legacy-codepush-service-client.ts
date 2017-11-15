@@ -64,7 +64,6 @@ export default class LegacyCodePushServiceClient {
           if (httpResponse.statusCode === 201) {
             resolve(<void>null);
           } else {
-            debugger;
             reject(this.getErrorMessage(null, httpResponse));
             return;
           }
