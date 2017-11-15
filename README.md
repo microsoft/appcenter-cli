@@ -1,12 +1,12 @@
 # Introduction
 
-Visual Studio App Center command line interface (cli) is a unified tool for running AppCenter services from the command line.
-Our aim is to offer a concise and powerful tool for our developers to use AppCenter services and easily script a sequence of
-commands that they'd like to execute. You can currently login and view/configure all the apps that you have access to in AppCenter.
+Visual Studio App Center command line interface (cli) is a unified tool for running App Center services from the command line.
+Our aim is to offer a concise and powerful tool for our developers to use App Center services and easily script a sequence of
+commands that they'd like to execute. You can currently login and view/configure all the apps that you have access to in App Center.
 
 # Prerequisites
 
-AppCenter CLI requires Node.js version 6.3 or better. Do not use Node.js 7.1.0, there is a known issue that breaks the CLI code (and many other projects) on Windows 10. This bug has been fixed in later releases of Node.js 7.
+App Center CLI requires Node.js version 6.3 or better. Do not use Node.js 7.1.0, there is a known issue that breaks the CLI code (and many other projects) on Windows 10. This bug has been fixed in later releases of Node.js 7.
 
 # Installation
 
