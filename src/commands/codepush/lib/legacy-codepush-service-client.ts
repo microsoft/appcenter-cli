@@ -1,4 +1,4 @@
-import * as Request from "request";
+import * as request from "request";
 import { DefaultApp } from "../../../util/profile/index";
 import * as fs from "fs";
 
@@ -56,7 +56,7 @@ export default class LegacyCodePushServiceClient {
           }
         };
 
-        Request.post(options, (err, httpResponse) => {
+        request.post(options, (err, httpResponse) => {
           if (err) {
             reject(this.getErrorMessage(err, httpResponse));
             return;
@@ -99,7 +99,7 @@ export default class LegacyCodePushServiceClient {
     return appName.replace("/", "~~");
   }
 
-  private getErrorMessage(error: Error, response: Request.RequestResponse): string {
+  private getErrorMessage(error: Error, response: request.RequestResponse): string {
     return response && response.body ? response.body : error.message;
   }
 } 
