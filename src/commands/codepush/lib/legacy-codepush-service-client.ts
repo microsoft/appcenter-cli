@@ -61,16 +61,12 @@ export default class LegacyCodePushServiceClient {
             reject(this.getErrorMessage(err, httpResponse));
             return;
           }
-          try {
-            var body = JSON.parse(httpResponse.body);
-          } catch (err) {
-            reject(`Could not parse response: ${httpResponse.body}`)
-            return;
-          }
           if (httpResponse.statusCode === 201) {
             resolve(<void>null);
           } else {
-            reject(body.message);
+            debugger;
+            reject(this.getErrorMessage(null, httpResponse));
+            return;
           }
         });
     });
