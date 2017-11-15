@@ -1,4 +1,4 @@
-export interface EnvironmentInfo {
+export interface CodePushEnvironmentInfo {
   acquisitionEndpoint: string;
   managementEndpoint: string;
   description?: string;
@@ -8,7 +8,7 @@ export interface EnvironmentInfo {
 interface EnvironmentsFile {
   defaultEnvironment: string;
   environments: {
-    [environmentName: string]: EnvironmentInfo
+    [environmentName: string]: CodePushEnvironmentInfo
   };
 }
 
@@ -39,6 +39,6 @@ const codePushEnvironmentsData: EnvironmentsFile = {
   }
 };
 
-export function environments(environmentName: string = codePushEnvironmentsData.defaultEnvironment): EnvironmentInfo {
+export function environments(environmentName: string = codePushEnvironmentsData.defaultEnvironment): CodePushEnvironmentInfo {
   return codePushEnvironmentsData.environments[environmentName];
 }

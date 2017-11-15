@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as pfs from "../../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as JsZip from "jszip";
-var yazl = require("yazl");
+import * as yazl from "yazl";
 import { generateRandomFilename, normalizePath, isDirectory } from "../file-utils";
 
 interface ReleaseFile {
@@ -24,19 +24,19 @@ export default function zip(updateContentsPath: string): Promise<string> {
     const directoryPath: string = updateContentsPath;
     const baseDirectoryPath = path.join(directoryPath, ".."); // For legacy reasons, put the root directory in the zip
 
-    let files: string[] = await pfs.walk(updateContentsPath);
+    const files: string[] = await pfs.walk(updateContentsPath);
 
     files.forEach((filePath: string) => {
-      let relativePath: string = path.relative(baseDirectoryPath, filePath);
+      const relativePath: string = path.relative(baseDirectoryPath, filePath);
       releaseFiles.push({
         sourceLocation: filePath,
         targetLocation: normalizePath(changeTmpFolderName(relativePath))
       });
     });
 
-    var packagePath: string = path.join(process.cwd(), generateRandomFilename(15) + ".zip");
-    var zipFile = new yazl.ZipFile();
-    var writeStream: fs.WriteStream = fs.createWriteStream(packagePath);
+    const packagePath: string = path.join(process.cwd(), generateRandomFilename(15) + ".zip");
+    const zipFile = new yazl.ZipFile();
+    const writeStream: fs.WriteStream = fs.createWriteStream(packagePath);
 
     zipFile.outputStream.pipe(writeStream)
         .on("error", (error: Error): void => {
