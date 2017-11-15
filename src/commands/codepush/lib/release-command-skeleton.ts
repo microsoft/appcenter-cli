@@ -2,17 +2,16 @@ import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName,
 import { CommandArgs } from "../../../util/commandline/command";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
+import { getUser, DefaultApp } from "../../../util/profile/index";
 import { inspect } from "util";
 import * as fs from "fs";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as chalk from "chalk";
 import { sign, zip } from "../lib/update-contents-tasks";
 import { isBinaryOrZip } from "../lib/file-utils";
-import { isValidVersion, isValidRollout, isValidDeployment } from "../lib/validation-utils";
-import { getUser, DefaultApp } from "../../../util/profile/index";
-import AppCenterCodePushRelease  from "../lib/release-strategy/appcenter-release";
-import LegacyCodePushRelease from "./release-strategy/legacy-service-release";
 import { environments } from "../lib/environment";
+import { isValidVersion, isValidRollout, isValidDeployment } from "../lib/validation-utils";
+import { AppCenterCodePushRelease, LegacyCodePushRelease }  from "../lib/release-strategy/index";
 
 const debug = require("debug")("mobile-center-cli:commands:codepush:release-skeleton");
 
@@ -106,11 +105,11 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     const updateContentsZipPath = await zip(this.updateContentsPath);
 
     try {
-      var user = await getUser();
-      const serverUrl = environments(this.environmentName || user.environment).managementEndpoint;
-      const token = this.token || await user.accessToken;
+      const app = this.app;
+      const serverUrl = environments(this.environmentName || getUser().environment).managementEndpoint;
+      const token = this.token || await getUser().accessToken;
       
-      await out.progress("Creating CodePush release...",  this.releaseStrategy.release(client, this.app, this.deploymentName, updateContentsZipPath, {
+      await out.progress("Creating CodePush release...",  this.releaseStrategy.release(client, app, this.deploymentName, updateContentsZipPath, {
         appVersion: this.targetBinaryVersion,
         description: this.description,
         isDisabled: this.disabled,

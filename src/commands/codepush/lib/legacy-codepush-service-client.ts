@@ -56,7 +56,7 @@ export default class LegacyCodePushServiceClient {
           }
         };
 
-        Request.post(options, function optionalCallback(err, httpResponse, body) {
+        Request.post(options, (err, httpResponse) => {
           if (err) {
             reject(this.getErrorMessage(err, httpResponse));
             return;
@@ -64,7 +64,7 @@ export default class LegacyCodePushServiceClient {
           try {
             var body = JSON.parse(httpResponse.body);
           } catch (err) {
-            reject(`Could not parse response: ${body}`)
+            reject(`Could not parse response: ${httpResponse.body}`)
             return;
           }
           if (httpResponse.statusCode === 201) {

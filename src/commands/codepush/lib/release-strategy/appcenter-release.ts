@@ -1,5 +1,4 @@
 import { ReleaseStrategy } from "../release-command-skeleton";
-import { out } from "../../../../util/interaction";
 import { AppCenterClient, models, clientRequest } from "../../../../util/apis";
 import { DefaultApp } from "../../../../util/profile/index";
 import * as fs from "fs";
@@ -28,7 +27,5 @@ export default class AppCenterCodePushRelease implements ReleaseStrategy {
             rollout: updateMetadata.rollout,
           },
           cb));
-
-      return null;
   } 
 }
