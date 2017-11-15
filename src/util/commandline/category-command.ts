@@ -9,7 +9,7 @@ import { getClassHelpText } from "./option-decorators";
 import * as chalk from "chalk";
 
 const Table = require("cli-table2");
-const debug = require("debug")("mobile-center-cli:util:commandline:category-command");
+const debug = require("debug")("appcenter-cli:util:commandline:category-command");
 
 // "filler" command used to display category help
 export class CategoryCommand extends Command {

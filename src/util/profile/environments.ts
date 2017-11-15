@@ -38,9 +38,9 @@ const environmentsData: EnvironmentsFile = {
       description: "Staging"
     },
     prod: {
-      endpoint: "https://api.mobile.azure.com",
-      loginEndpoint: "https://mobile.azure.com/cli-login",
-      portalEndpoint: "https://mobile.azure.com",
+      endpoint: "https://api.appcenter.ms",
+      loginEndpoint: "https://appcenter.ms/cli-login",
+      portalEndpoint: "https://appcenter.ms",
       description: "Production"
     },
     testCloudLocalDev: {

@@ -3,9 +3,9 @@
 import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportToken } from "./lib/format-token";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
-const debug = require("debug")("mobile-center-cli:commands:apps:create");
+const debug = require("debug")("appcenter-cli:commands:apps:create");
 import { inspect } from "util";
 
 @help("Create a new API token")
@@ -20,7 +20,7 @@ export default class TokenCreateCommand extends Command {
   @hasArg
   description: string;
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     const tokenAttributes: models.ApiTokensCreateRequest = {
       description: this.description,
     };

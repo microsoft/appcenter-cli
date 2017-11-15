@@ -1,5 +1,5 @@
 import { AppCommand, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success, defaultValue } from "../../../util/commandline";
-import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
 import { out, supportsCsv } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -8,7 +8,7 @@ import { parseDate } from "../lib/date-parsing-helper";
 import { calculatePercentChange } from "../lib/percent-change-helper";
 import { startDateHelpMessage, endDateHelpMessage } from "../lib/analytics-constants";
 
-const debug = require("debug")("mobile-center-cli:commands:analytics:events:show");
+const debug = require("debug")("appcenter-cli:commands:analytics:events:show");
 const pLimit = require("p-limit");
 
 @help("Show statistics for events")
@@ -61,13 +61,13 @@ export default class ShowCommand extends AppCommand {
   @hasArg
   public format: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
     const appVersion = this.toArrayWithSingleElement(this.appVersion);
     const eventName = this.toArrayWithSingleElement(this.eventName);
-    const startDate = parseDate(this.startDate, 
-      new Date(new Date().setHours(0, 0, 0, 0)), 
+    const startDate = parseDate(this.startDate,
+      new Date(new Date().setHours(0, 0, 0, 0)),
       `start date value ${this.startDate} is not a valid date string`);
     const endDate = parseDate(this.endDate,
       new Date(),
@@ -77,7 +77,7 @@ export default class ShowCommand extends AppCommand {
     const events: IEventStatistics[] = await out.progress(`Loading statistics...`, this.getEvents(client, app, startDate, endDate, eventCount, this.properties, appVersion, eventName));
 
     this.outputStatistics(events);
-    
+
     return success();
   }
 
@@ -94,7 +94,7 @@ export default class ShowCommand extends AppCommand {
     }
   }
 
-  private async getEvents(client: MobileCenterClient, app: DefaultApp, startDate: Date, endDate: Date, eventCount: number, loadProperties: boolean, appVersions: string[] | undefined, eventNames: string[] | undefined): Promise<IEventStatistics[]> {
+  private async getEvents(client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, eventCount: number, loadProperties: boolean, appVersions: string[] | undefined, eventNames: string[] | undefined): Promise<IEventStatistics[]> {
     let eventsStatistics: IEventStatistics[];
     try {
       const httpContent = await clientRequest<models.Events>((cb) => client.analytics.events(startDate, app.ownerName, app.appName, {
@@ -131,7 +131,7 @@ export default class ShowCommand extends AppCommand {
     return eventsStatistics;
   }
 
-  private async getProperties(client: MobileCenterClient, app: DefaultApp, eventName: string, startDate: Date, endDate: Date, appVersions: string[] | undefined, limit: any): Promise<IPropertyStatistics[]> {
+  private async getProperties(client: AppCenterClient, app: DefaultApp, eventName: string, startDate: Date, endDate: Date, appVersions: string[] | undefined, limit: any): Promise<IPropertyStatistics[]> {
     let propertiesNames: string[];
     try {
       const httpContent = await <Promise<ClientResponse<models.EventProperties>>> limit(() => clientRequest<models.EventProperties>((cb) => client.analytics.eventProperties(eventName, app.ownerName, app.appName, cb)));
@@ -150,7 +150,7 @@ export default class ShowCommand extends AppCommand {
     }));
   }
 
-  private async getPropertyValueStatistics(client: MobileCenterClient, app: DefaultApp, eventName: string, eventPropertyName: string, startDate: Date, endDate: Date, appVersions: string[] | undefined, limit: any): Promise<IPropertyValueStatistics[]> {
+  private async getPropertyValueStatistics(client: AppCenterClient, app: DefaultApp, eventName: string, eventPropertyName: string, startDate: Date, endDate: Date, appVersions: string[] | undefined, limit: any): Promise<IPropertyValueStatistics[]> {
     try {
       const httpContent = await <Promise<ClientResponse<models.EventPropertyValues>>> limit(() => clientRequest<models.EventPropertyValues>((cb) => client.analytics.eventPropertyCounts(eventName, eventPropertyName, startDate, app.ownerName, app.appName, {
         end: endDate,
@@ -179,7 +179,7 @@ export default class ShowCommand extends AppCommand {
       table.push(eventsTable);
 
       for (const event of events) {
-        eventsTable.content.push([event.name, numberFormatter(event.count), percentageFormatter(event.countChange), 
+        eventsTable.content.push([event.name, numberFormatter(event.count), percentageFormatter(event.countChange),
           numberFormatter(event.users), percentageFormatter(event.userChange), numberFormatter(event.perUser), numberFormatter(event.perSession)]);
 
         if (event.properties) {

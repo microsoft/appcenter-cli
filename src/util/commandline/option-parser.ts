@@ -1,7 +1,7 @@
 import * as minimist from "minimist";
 import * as util from "util";
 
-const debug = require("debug")("mobile-center-cli:util:commandline:option-parser");
+const debug = require("debug")("appcenter-cli:util:commandline:option-parser");
 
 // Flag arguments
 

@@ -12,33 +12,41 @@ import * as parser from "./win-credstore-parser";
 
 import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../token-store";
 
-const debug = require("debug")("mobile-center-cli:util:token-store:win32:win-token-store");
+const debug = require("debug")("appcenter-cli:util:token-store:win32:win-token-store");
 import { inspect } from "util";
 
 type ReadableStream = NodeJS.ReadableStream;
 type WritableStream = NodeJS.WritableStream;
 type Duplex = stream.Duplex;
 
-const credExePath = path.join(__dirname, '../../../../bin/windows/creds.exe');
+const credExePath = path.join(__dirname, "../../../../bin/windows/creds.exe");
 
-const targetNamePrefix = 'MobileCenterCli:target=';
+const targetNamePrefix = "AppCenterCli:target=";
+const oldTargetNamePrefix = "MobileCenterCli:target=";
 
-function ensurePrefix(targetName: string): string {
-  if (targetName.slice(targetNamePrefix.length) !== targetNamePrefix) {
-    targetName = targetNamePrefix + targetName;
+class Prefixer {
+  private prefix: string;
+  constructor(useOldName: boolean) {
+    this.prefix = useOldName ? oldTargetNamePrefix : targetNamePrefix;
   }
-  return targetName;
-}
 
-function removePrefix(targetName: string): string {
-  return targetName.slice(targetNamePrefix.length);
-}
-
-function removePrefixFromCred(cred: any): any {
-  if (cred.targetName) {
-    cred.targetName = removePrefix(cred.targetName);
+  ensurePrefix(targetName: string): string {
+    if (targetName.slice(this.prefix.length) !== this.prefix) {
+      targetName = this.prefix + targetName;
+    }
+    return targetName;
   }
-  return cred;
+
+  removePrefix(targetName: string): string {
+    return targetName.slice(this.prefix.length);
+  }
+
+  removePrefixFromCred(cred: any): any {
+    if (cred.targetName) {
+      cred.targetName = this.removePrefix(cred.targetName);
+    }
+    return cred;
+  }
 }
 
 function encodeTokenValueAsHex(token: TokenValueType): string {
@@ -71,13 +79,14 @@ export class WinTokenStore implements TokenStore {
  * @return {Observable<TokenEntry>} stream of credentials.
  */
   list(): Observable<TokenEntry> {
+    const prefixer = new Prefixer(false);
     return Observable.create<TokenEntry>((observer: Observer<TokenEntry>) => {
       let credsProcess = childProcess.spawn(credExePath, ['-s', '-g', '-t', `${targetNamePrefix}*`]);
 
       debug("Creds process started for list, monitoring output");
       let credStream = credsProcess.stdout
         .pipe(parser.createParsingStream())
-        .pipe(es.mapSync(removePrefixFromCred) as any as Duplex);
+        .pipe(es.mapSync(prefixer.removePrefixFromCred.bind(prefixer)) as any as Duplex);
 
         credStream.on("data", (cred: any) => {
           debug(`Got data from creds: ${cred}`);
@@ -98,8 +107,9 @@ export class WinTokenStore implements TokenStore {
  * @param {tokenKeyType} key target name for credential
  * @return {Promise<TokenEntry>} Returned credential or null if not found.
  */
-  get(key: TokenKeyType): Promise<TokenEntry> {
-    let args = [ "-s", "-t", ensurePrefix(key) ];
+  get(key: TokenKeyType, useOldName: boolean = false): Promise<TokenEntry> {
+    const prefixer = new Prefixer(useOldName);
+    let args = [ "-s", "-t", prefixer.ensurePrefix(key) ];
 
     let credsProcess = childProcess.spawn(credExePath, args);
     let result: any = null;
@@ -108,10 +118,10 @@ export class WinTokenStore implements TokenStore {
     debug(`Getting key with args ${inspect(args)}`);
     return new Promise<TokenEntry>((resolve, reject) => {
       credsProcess.stdout.pipe(parser.createParsingStream())
-        .pipe(es.mapSync(removePrefixFromCred) as any as Duplex)
+        .pipe(es.mapSync(prefixer.removePrefixFromCred.bind(prefixer)) as any as Duplex)
         .on("data", (credential: any) => {
           result = credential;
-          result.targetName = removePrefix(result.targetName)
+          result.targetName = prefixer.removePrefix(result.targetName)
         });
 
       credsProcess.stderr.pipe(es.split() as any as Duplex)
@@ -140,7 +150,8 @@ export class WinTokenStore implements TokenStore {
    * @param {Function(err)} callback completion callback
    */
   set(key: TokenKeyType, credential: TokenValueType): Promise<void> {
-    let args = [ "-a", "-t", ensurePrefix(key), "-p", encodeTokenValueAsHex(credential) ];
+    const prefixer = new Prefixer(false);
+    let args = [ "-a", "-t", prefixer.ensurePrefix(key), "-p", encodeTokenValueAsHex(credential) ];
 
     debug(`Saving token with args ${inspect(args)}`);
     return new Promise<void>((resolve, reject) => {
@@ -166,7 +177,8 @@ export class WinTokenStore implements TokenStore {
   * @param {Function(err)} callback completion callback
   */
   remove(key: TokenKeyType): Promise<void> {
-    let args = [ "-d", "-t", ensurePrefix(key) ];
+    const prefixer = new Prefixer(false);
+    let args = [ "-d", "-t", prefixer.ensurePrefix(key) ];
 
     if (key.slice(-1) === '*') {
       args.push('-g');

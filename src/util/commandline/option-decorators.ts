@@ -2,7 +2,7 @@ import { OptionsDescription, OptionDescription, PositionalOptionsDescription, Po
 import { inspect } from "util";
 import { assign } from "lodash";
 
-const debug = require("debug")("mobile-center-cli:util:commandline:option-decorators");
+const debug = require("debug")("appcenter-cli:util:commandline:option-decorators");
 
 const optionDescriptionKey = Symbol("OptionParameters");
 const positionalDescriptionKey = Symbol("PositionalParameters");

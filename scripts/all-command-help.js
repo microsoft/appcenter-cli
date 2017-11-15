@@ -147,7 +147,7 @@ function commandInfo(categoryInfo, dir, commandFile) {
 
 function usage(commandInfo) {
   let lines = []
-  let currentLine = `    mobile-center ${commandInfo.category.name} ${commandInfo.commandName}`
+  let currentLine = `    appcenter ${commandInfo.category.name} ${commandInfo.commandName}`
 
   let maxWidth = 120
   let rightMargin = 4

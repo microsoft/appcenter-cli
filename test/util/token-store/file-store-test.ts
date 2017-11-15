@@ -14,13 +14,13 @@ import { createFileTokenStore, FileTokenStore } from "../../../src/util/token-st
 
 describe("File token store", function () {
   it("should be creatable", function () {
-    const storePath = temp.path("mobile-center-file-cache-test");
+    const storePath = temp.path("appcenter-file-cache-test");
     const store = createFileTokenStore(storePath) as FileTokenStore;
     expect(store.getStoreFilePath()).to.equal(storePath);
   });
 
   describe("when storing values", function () {
-    const storePath = temp.path("mobile-center-file-cache-test");
+    const storePath = temp.path("appcenter-file-cache-test");
     let store: FileTokenStore;
 
     before(function () {

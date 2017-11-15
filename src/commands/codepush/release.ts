@@ -1,8 +1,8 @@
 import { CommandResult, hasArg, help, longName, required, shortName } from "../../util/commandline";
 import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton";
-import { MobileCenterClient } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 
-const debug = require("debug")("mobile-center-cli:commands:codepush:release");
+const debug = require("debug")("appcenter-cli:commands:codepush:release");
 
 @help("Release an update to an app deployment")
 export default class CodePushReleaseCommand extends CodePushReleaseCommandSkeleton {
@@ -20,7 +20,7 @@ export default class CodePushReleaseCommand extends CodePushReleaseCommandSkelet
   @hasArg
   public specifiedTargetBinaryVersion: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     this.updateContentsPath = this.specifiedUpdateContentsPath;
     this.targetBinaryVersion = this.specifiedTargetBinaryVersion;
     return await this.release(client);

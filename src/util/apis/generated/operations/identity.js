@@ -12,33 +12,30 @@ var WebResource = msRest.WebResource;
 
 /**
  * @class
- * RepositoryConfigurations
+ * Identity
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
- * Initializes a new instance of the RepositoryConfigurations class.
+ * Initializes a new instance of the Identity class.
  * @constructor
  *
  * @param {AppCenterClient} client Reference to the service client.
  */
-function RepositoryConfigurations(client) {
+function Identity(client) {
   this.client = client;
 }
 
 /**
- * Returns the repository build configuration status of the app
+ * @param {string} subscriptionId
  *
  * @param {string} ownerName The name of the owner
- * 
+ *
  * @param {string} appName The name of the application
- * 
+ *
  * @param {object} [options] Optional Parameters.
- * 
- * @param {boolean} [options.includeInactive] Include inactive configurations
- * if none are active
- * 
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- * 
+ *
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -51,7 +48,7 @@ function RepositoryConfigurations(client) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-RepositoryConfigurations.prototype.list = function (ownerName, appName, options, callback) {
+Identity.prototype.getConfiguration = function (subscriptionId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -60,11 +57,10 @@ RepositoryConfigurations.prototype.list = function (ownerName, appName, options,
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  var includeInactive = (options && options.includeInactive !== undefined) ? options.includeInactive : undefined;
   // Validate
   try {
-    if (includeInactive !== null && includeInactive !== undefined && typeof includeInactive !== 'boolean') {
-      throw new Error('includeInactive must be of type boolean.');
+    if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string') {
+      throw new Error('subscriptionId cannot be null or undefined and it must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -78,16 +74,10 @@ RepositoryConfigurations.prototype.list = function (ownerName, appName, options,
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/repo_config';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/identity';
+  requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  var queryParameters = [];
-  if (includeInactive !== null && includeInactive !== undefined) {
-    queryParameters.push('includeInactive=' + encodeURIComponent(includeInactive.toString()));
-  }
-  if (queryParameters.length > 0) {
-    requestUrl += '?' + queryParameters.join('&');
-  }
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
@@ -125,7 +115,7 @@ RepositoryConfigurations.prototype.list = function (ownerName, appName, options,
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -145,15 +135,7 @@ RepositoryConfigurations.prototype.list = function (ownerName, appName, options,
             required: false,
             serializedName: 'parsedResponse',
             type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'RepoConfigElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'RepoConfig'
-                  }
-              }
+              name: 'Object'
             }
           };
           result = client.deserialize(resultMapper, parsedResponse, 'result');
@@ -172,7 +154,13 @@ RepositoryConfigurations.prototype.list = function (ownerName, appName, options,
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ValidationErrorResponse']().mapper();
+          var resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'Object'
+            }
+          };
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -188,19 +176,17 @@ RepositoryConfigurations.prototype.list = function (ownerName, appName, options,
 };
 
 /**
- * Configures the repository for build
+ * @param {string} subscriptionId
  *
  * @param {string} ownerName The name of the owner
- * 
+ *
  * @param {string} appName The name of the application
- * 
- * @param {string} repoUrl The repository url
- * 
+ *
  * @param {object} [options] Optional Parameters.
- * 
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
- * 
+ *
  * @param {function} callback
  *
  * @returns {function} callback(err, result, request, response)
@@ -213,7 +199,7 @@ RepositoryConfigurations.prototype.list = function (ownerName, appName, options,
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-RepositoryConfigurations.prototype.update = function (ownerName, appName, repoUrl, options, callback) {
+Identity.prototype.setConfiguration = function (subscriptionId, ownerName, appName, options, callback) {
   var client = this.client;
   if(!callback && typeof options === 'function') {
     callback = options;
@@ -224,182 +210,29 @@ RepositoryConfigurations.prototype.update = function (ownerName, appName, repoUr
   }
   // Validate
   try {
+    if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string') {
+      throw new Error('subscriptionId cannot be null or undefined and it must be of type string.');
+    }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
-    if (repoUrl === null || repoUrl === undefined || typeof repoUrl.valueOf() !== 'string') {
-      throw new Error('repoUrl cannot be null or undefined and it must be of type string.');
-    }
   } catch (error) {
     return callback(error);
-  }
-  var repo;
-  if (repoUrl !== null && repoUrl !== undefined) {
-      repo = new client.models['RepoInfo']();
-      repo.repoUrl = repoUrl;
   }
 
   // Construct URL
   var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/repo_config';
+  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/subscriptions/{subscription_id}/identity';
+  requestUrl = requestUrl.replace('{subscription_id}', encodeURIComponent(subscriptionId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
   // Create HTTP transport objects
   var httpRequest = new WebResource();
   httpRequest.method = 'POST';
-  httpRequest.headers = {};
-  httpRequest.url = requestUrl;
-  // Set Headers
-  if(options) {
-    for(var headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  // Serialize Request
-  var requestContent = null;
-  var requestModel = null;
-  try {
-    if (repo !== null && repo !== undefined) {
-      var requestModelMapper = new client.models['RepoInfo']().mapper();
-      requestModel = client.serialize(requestModelMapper, repo, 'repo');
-      requestContent = JSON.stringify(requestModel);
-    }
-  } catch (error) {
-    var serializationError = new Error(util.format('Error "%s" occurred in serializing the ' + 
-        'payload - "%s"', error.message, util.inspect(repo, {depth: null})));
-    return callback(serializationError);
-  }
-  httpRequest.body = requestContent;
-  // Send Request
-  return client.pipeline(httpRequest, function (err, response, responseBody) {
-    if (err) {
-      return callback(err);
-    }
-    var statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400) {
-      var error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      var parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          if (parsedErrorResponse.error) parsedErrorResponse = parsedErrorResponse.error;
-          if (parsedErrorResponse.code) error.code = parsedErrorResponse.code;
-          if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
-                         '- "%s" for the default response.', defaultError.message, responseBody);
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    var result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['SuccessResponse']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 400) {
-      var parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ValidationErrorResponse']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        var deserializationError1 = new Error(util.format('Error "%s" occurred in deserializing the responseBody - "%s"', error, responseBody));
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-};
-
-/**
- * Removes the configuration for the respository
- *
- * @param {string} ownerName The name of the owner
- * 
- * @param {string} appName The name of the application
- * 
- * @param {object} [options] Optional Parameters.
- * 
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- * 
- * @param {function} callback
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {object} [result]   - The deserialized result object.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-RepositoryConfigurations.prototype.remove = function (ownerName, appName, options, callback) {
-  var client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  // Validate
-  try {
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  var baseUrl = this.client.baseUri;
-  var requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/repo_config';
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  var httpRequest = new WebResource();
-  httpRequest.method = 'DELETE';
   httpRequest.headers = {};
   httpRequest.url = requestUrl;
   // Set Headers
@@ -433,7 +266,7 @@ RepositoryConfigurations.prototype.remove = function (ownerName, appName, option
           if (parsedErrorResponse.message) error.message = parsedErrorResponse.message;
         }
       } catch (defaultError) {
-        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' + 
+        error.message = util.format('Error "%s" occurred in deserializing the responseBody ' +
                          '- "%s" for the default response.', defaultError.message, responseBody);
         return callback(error);
       }
@@ -449,7 +282,13 @@ RepositoryConfigurations.prototype.remove = function (ownerName, appName, option
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['SuccessResponse']().mapper();
+          var resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'Object'
+            }
+          };
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -466,7 +305,13 @@ RepositoryConfigurations.prototype.remove = function (ownerName, appName, option
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          var resultMapper = new client.models['ValidationErrorResponse']().mapper();
+          var resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'Object'
+            }
+          };
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -482,4 +327,4 @@ RepositoryConfigurations.prototype.remove = function (ownerName, appName, option
 };
 
 
-module.exports = RepositoryConfigurations;
+module.exports = Identity;

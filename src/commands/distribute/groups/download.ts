@@ -1,5 +1,5 @@
 import { AppCommand, CommandResult, help, success, failure, shortName, longName, required, hasArg, ErrorCodes } from "../../../util/commandline";
-import { MobileCenterClient, clientRequest, models } from "../../../util/apis";
+import { AppCenterClient, clientRequest, models } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { DefaultApp } from "../../../util/profile";
 import { cwd } from "process";
@@ -11,7 +11,7 @@ import * as Url from "url";
 import * as Request from "request";
 import * as Fs from "fs";
 
-const debug = require("debug")("mobile-center-cli:commands:distribute:groups:download");
+const debug = require("debug")("appcenter-cli:commands:distribute:groups:download");
 
 @help("Download release package for the distribution group")
 export default class DownloadBinaryFromDistributionGroupCommand extends AppCommand {
@@ -40,7 +40,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
   @hasArg
   public directory: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     // test that optional release id is a positive integer and optional file name is valid
@@ -82,7 +82,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     }
   }
 
-  private async verifyReleaseBelongsToDistributionGroup(client: MobileCenterClient, app: DefaultApp, releaseId: number, distributionGroup: string) {
+  private async verifyReleaseBelongsToDistributionGroup(client: AppCenterClient, app: DefaultApp, releaseId: number, distributionGroup: string) {
     debug("Verifying that release was distributed to the specified distribution group");
     let releasesIds: number[];
     try {
@@ -106,7 +106,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     }
   }
 
-  private async getReleaseUrl(client: MobileCenterClient, app: DefaultApp, releaseId: string): Promise<string> {
+  private async getReleaseUrl(client: AppCenterClient, app: DefaultApp, releaseId: string): Promise<string> {
     debug("Getting download URL for the specified release");
     try {
       const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) => client.releases.getLatestByUser(releaseId, app.ownerName, app.appName, cb));
@@ -125,12 +125,12 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     }
   }
 
-  private async getLastReleaseUrl(client: MobileCenterClient, app: DefaultApp, distributionGroup: string): Promise<string> {
+  private async getLastReleaseUrl(client: AppCenterClient, app: DefaultApp, distributionGroup: string): Promise<string> {
     debug("Getting download URL for the latest release of the specified distribution group");
     try {
       const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) =>
         client.releases.getLatestByDistributionGroup(app.ownerName, app.appName, distributionGroup, "latest", cb));
-       if (httpRequest.response.statusCode >= 400) {
+      if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.result;
       } else {
         return httpRequest.result.downloadUrl;

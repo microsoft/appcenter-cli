@@ -1,12 +1,12 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success} from "../../util/commandline";
-import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
+import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { StreamingArrayOutput } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
 import { DefaultApp } from "../../util/profile";
 import * as ContinuousPollingHelper from "../../util/continuous-polling/continuous-polling-helper";
 
-const debug = require("debug")("mobile-center-cli:commands:analytics:log-flow");
+const debug = require("debug")("appcenter-cli:commands:analytics:log-flow");
 
 @help("Command to see the incoming logs in real time")
 export default class ShowLogFlowCommand extends AppCommand {
@@ -29,7 +29,7 @@ export default class ShowLogFlowCommand extends AppCommand {
   @longName("continue")
   public showContinuously: boolean;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
     this.validateParameters();

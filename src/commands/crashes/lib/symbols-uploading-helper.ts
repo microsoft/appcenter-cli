@@ -1,11 +1,11 @@
-import { clientRequest, MobileCenterClient, models } from "../../../util/apis";
+import { clientRequest, AppCenterClient, models } from "../../../util/apis";
 import { ErrorCodes, failure } from "../../../util/commandline";
 import { DefaultApp } from "../../../util/profile";
 import { inspect } from "util";
 import AzureBlobUploadHelper from "./azure-blob-upload-helper";
 
 export default class SymbolsUploadingHelper {
-  constructor(private client: MobileCenterClient, private app: DefaultApp, private debug: Function) {}
+  constructor(private client: AppCenterClient, private app: DefaultApp, private debug: Function) {}
 
   public async uploadSymbolsZip(zip: string): Promise<void> {
     // executing API request to get an upload URL
@@ -17,7 +17,7 @@ export default class SymbolsUploadingHelper {
     try {
       // putting ZIP to the specified URL
       const uploadUrl: string = uploadingBeginRequestResult.uploadUrl;
-      await new AzureBlobUploadHelper(this.debug).upload(uploadUrl, zip);      
+      await new AzureBlobUploadHelper(this.debug).upload(uploadUrl, zip);
 
       // sending 'committed' API request to finish uploading
       const uploadingEndRequestResult: models.SymbolUpload = await this.executeSymbolsUploadingEndRequest(this.client, this.app, symbolUploadId, "committed");
@@ -28,7 +28,7 @@ export default class SymbolsUploadingHelper {
     }
   }
 
-  private async executeSymbolsUploadingBeginRequest(client: MobileCenterClient, app: DefaultApp): Promise<models.SymbolUploadBeginResponse> {
+  private async executeSymbolsUploadingBeginRequest(client: AppCenterClient, app: DefaultApp): Promise<models.SymbolUploadBeginResponse> {
     this.debug("Executing API request to get uploading URL");
     const uploadingBeginResponse = await clientRequest<models.SymbolUploadBeginResponse>((cb) => client.symbolUploads.create(
       app.ownerName,
@@ -49,7 +49,7 @@ export default class SymbolsUploadingHelper {
     return uploadingBeginResponse.result;
   }
 
-  private async executeSymbolsUploadingEndRequest(client: MobileCenterClient, app: DefaultApp, symbolUploadId: string, desiredStatus: SymbolsUploadEndRequestStatus): Promise<models.SymbolUpload> {
+  private async executeSymbolsUploadingEndRequest(client: AppCenterClient, app: DefaultApp, symbolUploadId: string, desiredStatus: SymbolsUploadEndRequestStatus): Promise<models.SymbolUpload> {
     this.debug(`Finishing symbols uploading with desired status: ${desiredStatus}`);
     const uploadingEndResponse = await clientRequest<models.SymbolUpload>((cb) => client.symbolUploads.complete(
       symbolUploadId,
@@ -73,7 +73,7 @@ export default class SymbolsUploadingHelper {
     return uploadingEndResponse.result;
   }
 
-  private async abortUploadingRequest(client: MobileCenterClient, app: DefaultApp, symbolUploadId: string): Promise<models.SymbolUpload> {
+  private async abortUploadingRequest(client: AppCenterClient, app: DefaultApp, symbolUploadId: string): Promise<models.SymbolUpload> {
     this.debug("Uploading failed, aborting upload request");
     try {
       return await this.executeSymbolsUploadingEndRequest(client, app, symbolUploadId, "aborted");

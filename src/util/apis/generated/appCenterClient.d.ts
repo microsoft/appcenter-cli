@@ -7,10 +7,10 @@
 import { ServiceClientOptions, RequestOptions, ServiceCallback, ServiceClientCredentials } from 'ms-rest';
 import * as operations from "./operations";
 
-declare class MobileCenterClient {
+declare class AppCenterClient {
     /**
      * @class
-     * Initializes a new instance of the MobileCenterClient class.
+     * Initializes a new instance of the AppCenterClient class.
      * @constructor
      *
      * @param {credentials} credentials - Subscription credentials which uniquely identify client subscription.
@@ -71,4 +71,4 @@ declare class MobileCenterClient {
     apiTokens: operations.ApiTokens;
     }
 
-export = MobileCenterClient;
+export = AppCenterClient;

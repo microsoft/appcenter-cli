@@ -1,15 +1,15 @@
 import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, shortName, longName, hasArg, position, name } from "../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as chalk from "chalk";
 import { isValidRollout, isValidVersion } from "./lib/validation-utils";
 
-const debug = require("debug")("mobile-center-cli:commands:codepush:promote");
+const debug = require("debug")("appcenter-cli:commands:codepush:promote");
 
 @help("Create a new release for the destination deployment, which includes the exact code and metadata from the latest release of the source deployment")
 export default class CodePushPromoteCommand extends AppCommand {
- 
+
   @help("Specifies destination deployment name")
   @required
   @longName("dest-deployment-name")
@@ -64,7 +64,7 @@ export default class CodePushPromoteCommand extends AppCommand {
     super(args);
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     const rollout = Number(this.rollout);

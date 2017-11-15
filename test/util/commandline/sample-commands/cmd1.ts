@@ -1,5 +1,5 @@
 import { Command, CommandArgs, CommandResult, success } from "../../../../src/util/commandline";
-import { MobileCenterClient } from "../../../../src/util/apis";
+import { AppCenterClient } from "../../../../src/util/apis";
 
 
 export default class Command1 extends Command {
@@ -11,7 +11,7 @@ export default class Command1 extends Command {
     return success();
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     return success();
   }
 };

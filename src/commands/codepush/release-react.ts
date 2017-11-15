@@ -1,6 +1,6 @@
 import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName } from "../../util/commandline";
 import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton"
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as pfs from "../../util/misc/promisfied-fs";
@@ -10,7 +10,7 @@ import { fileDoesNotExistOrIsDirectory, createEmptyTmpReleaseFolder, removeReact
 import { isValidVersion, isValidDeployment } from "./lib/validation-utils";
 import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand, isValidOS, isValidPlatform, isReactNativeProject } from "./lib/react-native-utils";
 
-const debug = require("debug")("mobile-center-cli:commands:codepush:release-react");
+const debug = require("debug")("appcenter-cli:commands:codepush:release-react");
 
 @help("Release a React Native update to an app deployment")
 export default class CodePushReleaseReactCommand extends CodePushReleaseCommandSkeleton {
@@ -68,7 +68,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
 
   private platform: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     if (!isReactNativeProject()) {
       return failure(ErrorCodes.InvalidParameter, "The project in the CWD is not a React Native project.");
     }
@@ -132,7 +132,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
       } as VersionSearchParams;
       this.targetBinaryVersion = await getReactNativeProjectAppVersion(versionSearchParams);
     }
-    
+
     try {
       createEmptyTmpReleaseFolder(this.updateContentsPath);
       removeReactTmpDir();

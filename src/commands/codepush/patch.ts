@@ -1,18 +1,18 @@
 import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, shortName, longName, required, hasArg, position, name } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import * as chalk from "chalk";
 import { isValidRollout, isValidVersion } from "./lib/validation-utils";
 import { DefaultApp } from "../../util/profile";
 import { scriptName } from "../../util/misc";
 
-const debug = require("debug")("mobile-center-cli:commands:codepush:patch");
+const debug = require("debug")("appcenter-cli:commands:codepush:patch");
 
 @help("Update the metadata for an existing CodePush release")
-export default class CodePushPatchCommand extends AppCommand {
-  
-  @help("Specifies one existing deployment name")
+export default class PatchCommand extends AppCommand {
+
+  @help("Specifies one existing deployment name.")
   @required
   @name("deployment-name")
   @position(0)
@@ -54,7 +54,7 @@ export default class CodePushPatchCommand extends AppCommand {
     super(args);
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
 
     const app = this.app;
     let release: models.CodePushRelease;
@@ -87,7 +87,7 @@ export default class CodePushPatchCommand extends AppCommand {
       debug("Release label is not set, get latest...");
       this.releaseLabel = await this.getLatestReleaseLabel(client, app);
     }
-    
+
     try {
       const httpRequest = await out.progress("Patching CodePush release...", clientRequest<models.CodePushRelease>(
         (cb) => client.deploymentReleases.update(this.deploymentName, this.releaseLabel, patch, app.ownerName, app.appName, cb)));
@@ -104,7 +104,7 @@ export default class CodePushPatchCommand extends AppCommand {
     }
   }
 
-  private async getLatestReleaseLabel(client: MobileCenterClient, app: DefaultApp): Promise<string> {
+  private async getLatestReleaseLabel(client: AppCenterClient, app: DefaultApp): Promise<string> {
     let releases: models.CodePushRelease[];
     try {
       const httpRequest = await out.progress("Fetching latest release label...", clientRequest<models.CodePushRelease[]>(
@@ -128,5 +128,5 @@ export default class CodePushPatchCommand extends AppCommand {
     } else {
       throw failure(ErrorCodes.NotFound, `Failed to find any release to patch for ${this.identifier} app's ${chalk.bold(this.deploymentName)} deployment`);
     }
-  } 
+  }
 }

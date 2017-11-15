@@ -1,5 +1,5 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -7,7 +7,7 @@ import * as Pfs from "../../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../../util/profile";
 import { getUsersList } from "../../../util/misc/list-of-users-helper";
 
-const debug = require("debug")("mobile-center-cli:commands:distribute:groups:create");
+const debug = require("debug")("appcenter-cli:commands:distribute:groups:create");
 
 @help("Create new distribution group")
 export default class CreateDistributionGroupCommand extends AppCommand {
@@ -30,7 +30,7 @@ export default class CreateDistributionGroupCommand extends AppCommand {
   @hasArg
   public testersListFile: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     // validate that 'testers' and 'testers-file' are not specified simultaneously
@@ -49,13 +49,13 @@ export default class CreateDistributionGroupCommand extends AppCommand {
       const addTestersResult = await this.addTestersToDistributionGroup(client, app, testersEmails);
       // filtering users which were actually added
       const addedUsers = addTestersResult.filter((userResult) => userResult.status < 400);
-      out.text((obj) => `Successfully created the ${obj.distributionGroupName} distribution group with ${obj.testersAdded.length} testers`, 
+      out.text((obj) => `Successfully created the ${obj.distributionGroupName} distribution group with ${obj.testersAdded.length} testers`,
         {distributionGroupName: this.distributionGroup, testersAdded: addedUsers});
     } else {
-      out.text((obj) => `Successfully created the ${obj.distributionGroupName} distribution group`, 
+      out.text((obj) => `Successfully created the ${obj.distributionGroupName} distribution group`,
         {distributionGroupName: this.distributionGroup, testersAdded: []});
-    } 
-    
+    }
+
     return success();
   }
 
@@ -65,9 +65,9 @@ export default class CreateDistributionGroupCommand extends AppCommand {
     }
   }
 
-  private async createDistributionGroup(client: MobileCenterClient, app: DefaultApp) {
+  private async createDistributionGroup(client: AppCenterClient, app: DefaultApp) {
     try {
-      const createDistributionGroupRequestResponse = await out.progress("Creating distribution group...", 
+      const createDistributionGroupRequestResponse = await out.progress("Creating distribution group...",
         clientRequest((cb) => client.distributionGroups.create(app.ownerName, app.appName, this.distributionGroup, cb)));
       if (createDistributionGroupRequestResponse.response.statusCode >= 400) {
         throw createDistributionGroupRequestResponse.response.statusCode;
@@ -82,7 +82,7 @@ export default class CreateDistributionGroupCommand extends AppCommand {
     }
   }
 
-  private async addTestersToDistributionGroup(client: MobileCenterClient, app: DefaultApp, users: string[]): Promise<models.DistributionGroupUserPostResponse[]> {
+  private async addTestersToDistributionGroup(client: AppCenterClient, app: DefaultApp, users: string[]): Promise<models.DistributionGroupUserPostResponse[]> {
     try {
       const addUsersToDistributionGroupRequestResponse = await out.progress("Adding testers to the distribution group...",
         clientRequest<models.DistributionGroupUserPostResponse[]>((cb) => client.distributionGroups.addUser(app.ownerName, app.appName, this.distributionGroup, {

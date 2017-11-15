@@ -178,7 +178,7 @@ describe('storing data in keychain', function () {
   let keychain = tokenStore.createOsxTokenStore();
 
   let parseResults: any[] = [];
-  let testUser = "mobile-center-user";
+  let testUser = "appcenter-user";
   let testPassword = "Sekret!";
   let testTokenId = "1234abcd";
 

@@ -1,5 +1,5 @@
 import { AppCommand, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success } from "../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out, supportsCsv } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -7,7 +7,7 @@ import { DefaultApp } from "../../util/profile";
 import { parseDate } from "./lib/date-parsing-helper";
 import { startDateHelpMessage, endDateHelpMessage } from "./lib/analytics-constants";
 
-const debug = require("debug")("mobile-center-cli:commands:analytics:audience");
+const debug = require("debug")("appcenter-cli:commands:analytics:audience");
 
 @help("Show audience statistics")
 export default class AudienceCommand extends AppCommand {
@@ -56,16 +56,16 @@ export default class AudienceCommand extends AppCommand {
   @hasArg
   public format: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
     const appVersion = this.getAppVersion();
-    const startDate = parseDate(this.startDate, 
-      new Date(new Date().setHours(0, 0, 0, 0)), 
+    const startDate = parseDate(this.startDate,
+      new Date(new Date().setHours(0, 0, 0, 0)),
       `start date value ${this.startDate} is not a valid date string`);
     const endDate = parseDate(this.endDate,
       new Date(),
-      `end date value ${this.endDate} is not a valid date string`);   
+      `end date value ${this.endDate} is not a valid date string`);
 
     if (!this.devices && !this.countries && !this.languages && !this.activeUsers) {
       // when no switches are specified, all the data should be shown
@@ -94,7 +94,7 @@ export default class AudienceCommand extends AppCommand {
     await out.progress("Loading statistics...", Promise.all(promises));
 
     this.outputStatistics(statistics);
-    
+
     return success();
   }
 
@@ -102,7 +102,7 @@ export default class AudienceCommand extends AppCommand {
     return !_.isNil(this.appVersion) ? [this.appVersion] : undefined;
   }
 
-  private async loadDevicesStatistics(statisticsObject: IStatisticsObject, client: MobileCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
+  private async loadDevicesStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
     try {
       const httpRequest = await clientRequest<models.AnalyticsModels>((cb) => client.analytics.modelCounts(startDate, app.ownerName, app.appName, {
         end: endDate,
@@ -110,7 +110,7 @@ export default class AudienceCommand extends AppCommand {
       }, cb));
 
       const result = httpRequest.result;
-      statisticsObject.devices = result.models.map((model) => ({        
+      statisticsObject.devices = result.models.map((model) => ({
         count: model.count,
         value: model.modelName,
         percentage: calculatePercentage(model.count, result.total)
@@ -121,7 +121,7 @@ export default class AudienceCommand extends AppCommand {
     }
   }
 
-  private async loadCountriesStatistics(statisticsObject: IStatisticsObject, client: MobileCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
+  private async loadCountriesStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
     try {
       const httpRequest = await clientRequest<models.Places>((cb) => client.analytics.placeCounts(startDate, app.ownerName, app.appName, {
         end: endDate,
@@ -140,7 +140,7 @@ export default class AudienceCommand extends AppCommand {
     }
   }
 
-  private async loadLanguagesStatistics(statisticsObject: IStatisticsObject, client: MobileCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
+  private async loadLanguagesStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
     try {
       const httpRequest = await clientRequest<models.Languages>((cb) => client.analytics.languageCounts(startDate, app.ownerName, app.appName, {
         end: endDate,
@@ -159,7 +159,7 @@ export default class AudienceCommand extends AppCommand {
     }
   }
 
-  private async loadActiveUsersStatistics(statisticsObject: IStatisticsObject, client: MobileCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
+  private async loadActiveUsersStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
     try {
       const httpRequest = await clientRequest<models.ActiveDeviceCounts>((cb) => client.analytics.deviceCounts(startDate, app.ownerName, app.appName, {
         end: endDate,
@@ -167,7 +167,7 @@ export default class AudienceCommand extends AppCommand {
       }, cb));
 
       const result = httpRequest.result;
-      
+
       statisticsObject.activeUsers = result.daily.map((dailyData, index) => ({
         date: new Date(dailyData.datetime),
         daily: dailyData.count,
@@ -186,14 +186,14 @@ export default class AudienceCommand extends AppCommand {
 
       if (stats.devices) {
         tableArray.push({
-          name: "Devices", 
+          name: "Devices",
           content: [["", "Count", "Change"]].concat(stats.devices.map((device) => toArray(device, numberFormatter, percentageFormatter)))
         });
       }
 
       if (stats.countries) {
         tableArray.push({
-          name: "Countries", 
+          name: "Countries",
           content: [["", "Count", "Change"]].concat(stats.countries.map((country) => toArray(country, numberFormatter, percentageFormatter)))
         });
       }

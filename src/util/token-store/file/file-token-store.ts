@@ -14,7 +14,7 @@ import { toPairs } from "lodash";
 
 import { profileDirName } from "../../misc/constants";
 
-const debug = require("debug")("mobile-center-cli:util:token-store:file:file-token-store");
+const debug = require("debug")("appcenter-cli:util:token-store:file:file-token-store");
 
 import { TokenEntry, TokenStore, TokenKeyType, TokenValueType } from "../token-store";
 
