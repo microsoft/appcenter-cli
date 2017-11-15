@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as pfs from "../../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as JsZip from "jszip";
-var yazl = require("yazl");
+import * as yazl from "yazl";
 import { generateRandomFilename, normalizePath, isDirectory } from "../file-utils";
 
 interface ReleaseFile {
