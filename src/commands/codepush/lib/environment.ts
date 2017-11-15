@@ -28,7 +28,7 @@ const codePushEnvironmentsData: EnvironmentsFile = {
     },
     staging: {
       acquisitionEndpoint: "https://codepush-staging.azurewebsites.net/",
-      managementEndpoint: "http://codepush-management-staging.azurewebsites.net/",
+      managementEndpoint: "https://codepush-management-staging.azurewebsites.net/",
       description: "Staging"
     },
     prod: {
