@@ -42,7 +42,15 @@ export default function zip(updateContentsPath: string): Promise<string> {
     }
 
     zip
-      .generateNodeStream({ type: 'nodebuffer', streamFiles: true })
+      .generateNodeStream({ 
+        type: "nodebuffer", 
+        mimeType: "application/zip",
+        compression: "DEFLATE",
+        compressionOptions: {
+            level: 9 // level between 1 (best speed) and 9 (best compression)
+        },
+        streamFiles: true
+      })
       .pipe(fs.createWriteStream(packagePath))
       .on('finish', function () {
         resolve(packagePath);
