@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as pfs from "../../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as JsZip from "jszip";
+import * as yazl from "yazl";
 import { generateRandomFilename, normalizePath, isDirectory } from "../file-utils";
 
 interface ReleaseFile {
@@ -23,10 +24,10 @@ export default function zip(updateContentsPath: string): Promise<string> {
     const directoryPath: string = updateContentsPath;
     const baseDirectoryPath = path.join(directoryPath, ".."); // For legacy reasons, put the root directory in the zip
 
-    let files: string[] = await pfs.walk(updateContentsPath);
+    const files: string[] = await pfs.walk(updateContentsPath);
 
     files.forEach((filePath: string) => {
-      let relativePath: string = path.relative(baseDirectoryPath, filePath);
+      const relativePath: string = path.relative(baseDirectoryPath, filePath);
       releaseFiles.push({
         sourceLocation: filePath,
         targetLocation: normalizePath(changeTmpFolderName(relativePath))
@@ -34,19 +35,23 @@ export default function zip(updateContentsPath: string): Promise<string> {
     });
 
     const packagePath: string = path.join(process.cwd(), generateRandomFilename(15) + ".zip");
-    let zip = new JsZip();
+    const zipFile = new yazl.ZipFile();
+    const writeStream: fs.WriteStream = fs.createWriteStream(packagePath);
 
-    for (let releaseFile of releaseFiles) {
-      var fileStream: any = await fs.createReadStream(releaseFile.sourceLocation);
-      zip.file(releaseFile.targetLocation, fileStream);
-    }
+    zipFile.outputStream.pipe(writeStream)
+        .on("error", (error: Error): void => {
+            reject(error);
+        })
+        .on("close", (): void => {
 
-    zip
-      .generateNodeStream({ type: 'nodebuffer', streamFiles: true })
-      .pipe(fs.createWriteStream(packagePath))
-      .on('finish', function () {
-        resolve(packagePath);
-      });
+            resolve(packagePath);
+        });
+
+    releaseFiles.forEach((releaseFile: ReleaseFile) => {
+        zipFile.addFile(releaseFile.sourceLocation, releaseFile.targetLocation);
+    });
+
+    zipFile.end();
   });
 }
 
