@@ -1,9 +1,9 @@
 import { Command, CommandArgs, CommandResult, help, failure, ErrorCodes, success, getCurrentApp } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { DefaultApp } from "../../util/profile";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
-const debug = require("debug")("mobile-center-cli:commands:apps:list");
+const debug = require("debug")("appcenter-cli:commands:apps:list");
 import { inspect } from "util";
 
 import * as _ from "lodash";
@@ -24,7 +24,7 @@ export default class AppsListCommand extends Command {
     return `${prefix}${app.owner.name}/${app.name}${suffix}`;
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     const appsResponse = await out.progress("Getting app list ...",
       clientRequest<models.AppResponse[]>((cb) => client.apps.list(cb)));
 

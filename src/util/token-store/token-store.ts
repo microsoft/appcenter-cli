@@ -31,7 +31,7 @@ export interface TokenStore {
   list(): Observable<TokenEntry>;
 
   // Get a specific token
-  get(key: TokenKeyType): Promise<TokenEntry>;
+  get(key: TokenKeyType, useOldName?: boolean): Promise<TokenEntry>;
 
   // Add or update a token
   set(key: TokenKeyType, token: TokenValueType): Promise<void>;

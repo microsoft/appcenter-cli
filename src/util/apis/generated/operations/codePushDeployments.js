@@ -14,11 +14,11 @@ var WebResource = msRest.WebResource;
  * @class
  * CodePushDeployments
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  * Initializes a new instance of the CodePushDeployments class.
  * @constructor
  *
- * @param {MobileCenterClient} client Reference to the service client.
+ * @param {AppCenterClient} client Reference to the service client.
  */
 function CodePushDeployments(client) {
   this.client = client;

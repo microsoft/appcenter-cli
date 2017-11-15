@@ -1,19 +1,17 @@
-// Implementation of Mobile Center login command
-
+// Implementation of AppCenter login command
 import * as os from "os";
 const opener = require("opener");
 import * as qs from "qs";
-
 import { Command, CommandArgs, CommandResult, success, failure, succeeded, ErrorCodes, help, shortName, longName, hasArg } from "../util/commandline";
-import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser, getTokenFromEnvironmentVar, mobileCenterAccessTokenEnvVar } from "../util/profile";
+import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser, getTokenFromEnvironmentVar, appCenterAccessTokenEnvVar } from "../util/profile";
 import { prompt, out } from "../util/interaction";
-import { models, createMobileCenterClient, clientRequest, ClientResponse } from "../util/apis";
+import { models, createAppCenterClient, clientRequest, ClientResponse } from "../util/apis";
 import { TokenValueType } from "../util/token-store";
 import { logout } from "./lib/logout";
 
 import { inspect } from "util";
 
-const debug = require("debug")("mobile-center-cli:commands:login");
+const debug = require("debug")("appcenter-cli:commands:login");
 
 @help("Log in")
 export default class LoginCommand extends Command {
@@ -78,7 +76,7 @@ export default class LoginCommand extends Command {
       return failure(ErrorCodes.InvalidParameter, "you must specify either a token or a user/password, not both");
     }
     if (getTokenFromEnvironmentVar()) {
-      return failure(ErrorCodes.IllegalCommand, `can't login when token is set in environment variable ${mobileCenterAccessTokenEnvVar}`);
+      return failure(ErrorCodes.IllegalCommand, `can't login when token is set in environment variable ${appCenterAccessTokenEnvVar}`);
     }
     return success();
   }
@@ -94,7 +92,7 @@ export default class LoginCommand extends Command {
     const client = this.clientFactory.fromUserNameAndPassword(this.userName, this.password, endpoint);
 
     let createTokenResponse = await out.progress("Logging in...",
-      clientRequest<models.ApiTokensCreateResponse>(cb => client.apiTokens.newMethod({ description: "Mobile Center CLI"}, cb)));
+      clientRequest<models.ApiTokensCreateResponse>(cb => client.apiTokens.newMethod({ description: "AppCenter CLI"}, cb)));
 
     if (createTokenResponse.response.statusCode >= 400) {
       throw new Error("login was not successful");

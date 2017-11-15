@@ -96,7 +96,7 @@ gulp.task('download-swagger', function() {
 });
 
 gulp.task('generate-client', function () {
-  return autorest.generateCode('./swagger/bifrost.swagger.json', generatedSource, 'MobileCenterClient');
+  return autorest.generateCode('./swagger/bifrost.swagger.json', generatedSource, 'AppCenterClient');
 });
 
 gulp.task('autorest', ['clean-autorest'], function (done) {

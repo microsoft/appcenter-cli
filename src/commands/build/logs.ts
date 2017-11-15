@@ -1,11 +1,11 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
-import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
+import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { StreamingArrayOutput } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
 import * as ContinuousPollingHelper from "../../util/continuous-polling/continuous-polling-helper";
 
-const debug = require("debug")("mobile-center-cli:commands:build:logs");
+const debug = require("debug")("appcenter-cli:commands:build:logs");
 
 @help("Displays log for build")
 export default class DisplayLogsStatusCommand extends AppCommand {
@@ -29,8 +29,8 @@ export default class DisplayLogsStatusCommand extends AppCommand {
   @longName("continue")
   public showContinuously: boolean;
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {  
-    // validate build id  
+  async run(client: AppCenterClient): Promise<CommandResult> {
+    // validate build id
     const buildIdNumber = Number(this.buildId);
 
     if (!Number.isSafeInteger(buildIdNumber) || buildIdNumber < 1) {

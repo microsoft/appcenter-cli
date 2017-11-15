@@ -1,1 +1,1 @@
-Commands that generate UI tests which can be run in Mobile Center.
+Commands that generate UI tests which can be run in App Center.

@@ -6,7 +6,7 @@ import { isatty } from "tty";
 import { inspect } from "util";
 import * as chalk from "chalk";
 
-const debug = require("debug")("mobile-center-cli:util:commandline:help");
+const debug = require("debug")("appcenter-cli:util:commandline:help");
 
 import { values, identity } from "lodash";
 const Table = require("cli-table2");
@@ -184,7 +184,7 @@ function getAllOptionExamples(commandPrototype: any): string[] {
 function getSwitchOptionExamples(commandPrototype: any): string[] {
   const switchOptions = getOptionsDescription(commandPrototype);
 
-  return sortOptionDescriptions(_.values(switchOptions))    
+  return sortOptionDescriptions(_.values(switchOptions))
     .map((description: OptionDescription): string => {
       let result: string[] = [];
       result.push(description.shortName ? `-${description.shortName}` : "");

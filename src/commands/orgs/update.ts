@@ -1,8 +1,8 @@
 import { Command, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
 import { out } from "../../util/interaction";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
-const debug = require("debug")("mobile-center-cli:commands:orgs:update");
+const debug = require("debug")("appcenter-cli:commands:orgs:update");
 import { inspect } from "util";
 
 @help("Update organization information")
@@ -26,7 +26,7 @@ export default class OrgUpdateCommand extends Command {
   @hasArg
   newName: string;
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     if (this.newDisplayName == null && this.newName == null) {
       return failure(ErrorCodes.InvalidParameter, "nothing to update");
     }
@@ -48,7 +48,7 @@ export default class OrgUpdateCommand extends Command {
       }
     } catch (error) {
       switch (error.statusCode) {
-        case 404: 
+        case 404:
           return failure(ErrorCodes.InvalidParameter, `organization ${this.name} doesn't exist`);
         case 409:
           return failure(ErrorCodes.InvalidParameter, `organization ${this.newName} already exists`);

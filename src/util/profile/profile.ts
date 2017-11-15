@@ -11,7 +11,7 @@ import { environments } from "./environments";
 import { profileFile, getProfileDir, fileExistsSync } from "../misc";
 import { TokenValueType, tokenStore } from "../token-store";
 
-const debug = require("debug")("mobile-center-cli:util:profile:profile");
+const debug = require("debug")("appcenter-cli:util:profile:profile");
 
 export interface UpdatableProfile {
   userId: string;
@@ -56,7 +56,10 @@ class ProfileImpl implements Profile {
   }
 
   get accessToken(): Promise<string> {
-    return tokenStore.get(this.userName)
+    const getter = tokenStore.get(this.userName)
+      .catch((err: Error) => tokenStore.get(this.userName, true));
+
+    return getter
       .then(entry => entry.accessToken.token)
       .catch((err: Error) => {
         debug(`Failed to get token from profile, error: ${err.message}`);

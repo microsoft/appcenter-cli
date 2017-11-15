@@ -1,12 +1,12 @@
 import LegacyCodePushServiceClient from "../../lib/legacy-codepush-service-client";
 import { ReleaseStrategy } from "../release-command-skeleton";
 import { out } from "../../../../util/interaction";
-import { MobileCenterClient, models, clientRequest } from "../../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../../util/apis";
 import { DefaultApp } from "../../../../util/profile/index";
 import { PackageInfo } from "../../lib/legacy-codepush-service-client";
 
 export default class LegacyCodePushRelease implements ReleaseStrategy {
-  public release(client: MobileCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata: 
+  public release(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata: 
     { appVersion?: string; 
       description?: string; 
       isDisabled?: boolean; 

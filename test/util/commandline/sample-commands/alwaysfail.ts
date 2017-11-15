@@ -1,5 +1,5 @@
 import { Command, CommandArgs, CommandResult } from "../../../../src/util/commandline";
-import { MobileCenterClient } from "../../../../src/util/apis";
+import { AppCenterClient } from "../../../../src/util/apis";
 
 export default class AlwaysFailCommand extends Command {
   constructor(args: CommandArgs) {
@@ -10,7 +10,7 @@ export default class AlwaysFailCommand extends Command {
     throw new Error("Failed on purpose");
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     throw new Error("Failed on purpose");
   }
 }

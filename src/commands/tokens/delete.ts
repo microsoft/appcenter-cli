@@ -2,9 +2,9 @@
 
 import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes, position, required, name } from "../../util/commandline";
 import { out, prompt } from "../../util/interaction";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
-const debug = require("debug")("mobile-center-cli:commands:apps:create");
+const debug = require("debug")("appcenter-cli:commands:apps:create");
 import { inspect } from "util";
 
 @help("Delete an API token")
@@ -19,7 +19,7 @@ export default class AppDeleteCommand extends Command {
   @position(0)
   id: string;
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     const confirmation = await prompt.confirm(`Do you really want to delete the token with ID "${this.id}"`);
 
     if (confirmation) {

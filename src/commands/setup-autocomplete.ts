@@ -7,7 +7,7 @@ import * as Process from "process";
 import { setupAutoCompleteForShell } from "../util/commandline/autocomplete";
 import { out } from "../util/interaction";
 
-const debug = require("debug")("mobile-center-cli:commands:setup-autocomplete");
+const debug = require("debug")("appcenter-cli:commands:setup-autocomplete");
 import { inspect } from "util";
 
 @help("Setup tab completion for your shell")

@@ -1,11 +1,11 @@
 //
-// Custom credentials object for talking to Mobile center
+// Custom credentials object for talking to AppCenter
 //
 
 import { WebResource } from "ms-rest";
-const debug = require("debug")("mobile-center-cli:util:apis:mobile-center-client-credentials");
+const debug = require("debug")("appcenter-cli:util:apis:appcenter-client-credentials");
 
-export class MobileCenterClientCredentials {
+export class AppCenterClientCredentials {
   private getToken: {(): Promise<string>};
 
   constructor(getToken: {(): Promise<string>}) {

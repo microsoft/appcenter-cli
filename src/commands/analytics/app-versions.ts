@@ -1,5 +1,5 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
-import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
+import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -11,7 +11,7 @@ import * as Os from "os";
 import { parseDate } from "./lib/date-parsing-helper";
 import { startDateHelpMessage, endDateHelpMessage } from "./lib/analytics-constants";
 
-const debug = require("debug")("mobile-center-cli:commands:analytics:app-versions");
+const debug = require("debug")("appcenter-cli:commands:analytics:app-versions");
 
 @help("Shows versions of the application")
 export default class ShowAppVersionsCommand extends AppCommand {
@@ -31,11 +31,11 @@ export default class ShowAppVersionsCommand extends AppCommand {
   @longName("devices")
   public devices: boolean;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
-    const startDate = parseDate(this.startDate, 
-      new Date(new Date().setHours(0, 0, 0, 0)), 
+    const startDate = parseDate(this.startDate,
+      new Date(new Date().setHours(0, 0, 0, 0)),
       `start date value ${this.startDate} is not a valid date string`);
 
     const endDate = parseDate(this.endDate,
@@ -59,8 +59,8 @@ export default class ShowAppVersionsCommand extends AppCommand {
       out.table(out.getCommandOutputTableOptions(["Version", "Number Of Devices"]), outputArray);
     } else {
       out.text((versions) => versions.join(Os.EOL), listOfVersions.map((version) => version.versionProperty));
-    }    
-    
+    }
+
     return success();
   }
 }

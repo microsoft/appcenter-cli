@@ -2,7 +2,7 @@ import { CommandFinder } from "./command-finder";
 import { Command } from "./command";
 import { CategoryCommand } from "./category-command";
 
-const debug = require("debug")("mobile-center-cli:util:commandline:command-loader");
+const debug = require("debug")("appcenter-cli:util:commandline:command-loader");
 
 export interface LoaderResult {
   commandFactory: typeof Command;

@@ -1,4 +1,4 @@
-import { MobileCenterClient } from "../../util/apis";
+import { AppCenterClient } from "../../util/apis";
 import { AppCommand, CommandResult } from "../../util/commandline";
 import { ErrorCodes, failure, success } from "../../util/commandline";
 import { hasArg, help, longName, shortName } from "../../util/commandline";
@@ -17,7 +17,7 @@ import * as JsZip from "jszip";
 import * as JsZipHelper from "../../util/misc/jszip-helper";
 import * as _ from "lodash";
 
-const debug = require("debug")("mobile-center-cli:commands:apps:crashes:upload-symbols");
+const debug = require("debug")("appcenter-cli:commands:apps:crashes:upload-symbols");
 
 @help("Upload the crash symbols for the application")
 export default class UploadSymbols extends AppCommand {
@@ -39,7 +39,7 @@ export default class UploadSymbols extends AppCommand {
   @hasArg
   public sourceMapPath: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
     this.validateParameters();
@@ -187,7 +187,7 @@ export default class UploadSymbols extends AppCommand {
     } else {
       // ZIP is already loaded, working with it
       zipToChange = zip;
-    }    
+    }
 
     // adding (or replacing) source map file
     const sourceMapFileBaseName = Path.basename(path);

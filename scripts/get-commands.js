@@ -66,7 +66,7 @@ function getHelpForDir(dir, category = []) {
 
 function formatCommandInfo(info) {
   if (info.name) {
-    const name = _.flattenDeep([ 'mobile-center', info.category, info.name]).join(' ');
+    const name = _.flattenDeep([ 'appcenter', info.category, info.name]).join(' ');
     return `| \`${name}\` | ${info.help} |`;
   }
   return '| | |';

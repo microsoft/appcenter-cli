@@ -1,5 +1,5 @@
 Commands that creates artifacts directories for supported test frameworks.
 
-Depending on the test framework, you may need to install additional tools. For example, Xamarin UI Tests require either .NET Framework or Mono, and Calabash tests require Ruby and the Xamarin Test Cloud gem. To get more information about dependencies of selected test framework, please type "mobile-center help test prepare [framework name]".
+Depending on the test framework, you may need to install additional tools. For example, Xamarin UI Tests require either .NET Framework or Mono, and Calabash tests require Ruby and the Xamarin Test Cloud gem. To get more information about dependencies of selected test framework, please type "appcenter help test prepare [framework name]".
 
 Artifacts directory contains manifest and all files required to start a test run. It can be later submitted to Test Cloud, without any external, framework-specific tools.

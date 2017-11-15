@@ -1,17 +1,17 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, help, success} from "../../../util/commandline";
-import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
 
 const pLimit = require("p-limit");
 
-const debug = require("debug")("mobile-center-cli:commands:distribute:groups:list");
+const debug = require("debug")("appcenter-cli:commands:distribute:groups:list");
 
 @help("Lists all distribution groups of the app")
 export default class ListDistributionGroupsCommand extends AppCommand {
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     debug("Getting list of the distribution groups");
@@ -42,7 +42,7 @@ export default class ListDistributionGroupsCommand extends AppCommand {
     }
 
     // Showing progress spinner while requests are being sent
-    const requestsCompletedPromise = out.progress("Getting number of users for distribution groups", 
+    const requestsCompletedPromise = out.progress("Getting number of users for distribution groups",
       Promise.all(distributionGroupUsersPromises.map((dg) => dg.catch((res) => Promise.resolve()))));
 
     const userCounts: string[] = [];
@@ -51,15 +51,15 @@ export default class ListDistributionGroupsCommand extends AppCommand {
       let userCount: string;
 
       try {
-        debug(`Waiting for ${distributionGroupsNames[i]} distribution group users request response`); 
+        debug(`Waiting for ${distributionGroupsNames[i]} distribution group users request response`);
         const distributionGroupUsersRequestResponse = await distributionGroupUsers;
         if (distributionGroupUsersRequestResponse.response.statusCode >= 400) {
           throw distributionGroupUsersRequestResponse.response.statusCode;
         }
-        debug(`Request for the list of ${distributionGroupsNames[i]} distribution group users has succeeded`); 
+        debug(`Request for the list of ${distributionGroupsNames[i]} distribution group users has succeeded`);
         userCount = distributionGroupUsersRequestResponse.result.length.toString();
       } catch (error) {
-        debug(`Request for the list of ${distributionGroupsNames[i]} distribution group users has failed - ${inspect(error)}`); 
+        debug(`Request for the list of ${distributionGroupsNames[i]} distribution group users has failed - ${inspect(error)}`);
         userCount = "failed to get number of users";
       }
 

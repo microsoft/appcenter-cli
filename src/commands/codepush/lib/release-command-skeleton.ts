@@ -1,6 +1,6 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success, defaultValue } from "../../../util/commandline";
 import { CommandArgs } from "../../../util/commandline/command";
-import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
 import * as fs from "fs";
@@ -17,7 +17,7 @@ import { environments } from "../lib/environment";
 const debug = require("debug")("mobile-center-cli:commands:codepush:release-skeleton");
 
 export interface ReleaseStrategy {
-    release(client: MobileCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata:{
+    release(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata:{
       appVersion?: string;
       description?: string;
       isDisabled?: boolean;
@@ -84,11 +84,11 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     this.releaseStrategy = new LegacyCodePushRelease(); 
   }
   
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     throw new Error("For dev purposes only!");
   }
 
-  protected async release(client: MobileCenterClient): Promise<CommandResult> {
+  protected async release(client: AppCenterClient): Promise<CommandResult> {
     this.rollout = Number(this.specifiedRollout);
 
     const validationResult: CommandResult =  await this.validate(client);
@@ -131,7 +131,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     }
   }
 
-  private async validate(client: MobileCenterClient): Promise<CommandResult> {
+  private async validate(client: AppCenterClient): Promise<CommandResult> {
     if (isBinaryOrZip(this.updateContentsPath)) {
       return failure(ErrorCodes.InvalidParameter, "It is unnecessary to package releases in a .zip or binary file. Please specify the direct path to the update content's directory (e.g. /platforms/ios/www) or file (e.g. main.jsbundle).");
     }

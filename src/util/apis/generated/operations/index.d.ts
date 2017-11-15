@@ -13,7 +13,7 @@ import * as models from '../models';
  * @class
  * Devices
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Devices {
 
@@ -177,7 +177,7 @@ export interface Devices {
  * @class
  * OrgInvitations
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface OrgInvitations {
 
@@ -290,7 +290,7 @@ export interface OrgInvitations {
  * @class
  * DistributionGroupInvitations
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface DistributionGroupInvitations {
 
@@ -314,7 +314,7 @@ export interface DistributionGroupInvitations {
  * @class
  * AppInvitations
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface AppInvitations {
 
@@ -458,7 +458,7 @@ export interface AppInvitations {
  * @class
  * Users
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Users {
 
@@ -572,7 +572,7 @@ export interface Users {
  * @class
  * Releases
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Releases {
 
@@ -884,7 +884,7 @@ export interface Releases {
  * @class
  * Teams
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Teams {
 
@@ -1130,7 +1130,7 @@ export interface Teams {
  * @class
  * AzureSubscription
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface AzureSubscription {
 
@@ -1228,7 +1228,7 @@ export interface AzureSubscription {
  * @class
  * Apps
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Apps {
 
@@ -1500,7 +1500,7 @@ export interface Apps {
  * @class
  * Organizations
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Organizations {
 
@@ -1594,7 +1594,7 @@ export interface Organizations {
  * @class
  * Builds
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Builds {
 
@@ -1875,7 +1875,7 @@ export interface Builds {
  * @class
  * Crashes
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Crashes {
 
@@ -2245,7 +2245,7 @@ export interface Crashes {
  * @class
  * Test
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Test {
 
@@ -2885,7 +2885,7 @@ export interface Test {
  * @class
  * Symbols
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Symbols {
 
@@ -2972,7 +2972,7 @@ export interface Symbols {
  * @class
  * SymbolUploads
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface SymbolUploads {
 
@@ -3117,7 +3117,7 @@ export interface SymbolUploads {
  * @class
  * MissingSymbolGroups
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface MissingSymbolGroups {
 
@@ -3193,7 +3193,7 @@ export interface MissingSymbolGroups {
  * @class
  * Repositories
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Repositories {
 
@@ -3232,7 +3232,7 @@ export interface Repositories {
  * @class
  * RepositoryConfigurations
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface RepositoryConfigurations {
 
@@ -3300,7 +3300,7 @@ export interface RepositoryConfigurations {
  * @class
  * Provisioning
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Provisioning {
 
@@ -3329,7 +3329,7 @@ export interface Provisioning {
  * @class
  * ReleaseUploads
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface ReleaseUploads {
 
@@ -3380,7 +3380,7 @@ export interface ReleaseUploads {
  * @class
  * Push
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Push {
 
@@ -3554,7 +3554,7 @@ export interface Push {
  * @class
  * AppOperations
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface AppOperations {
 
@@ -3579,9 +3579,154 @@ export interface AppOperations {
 
 /**
  * @class
- * StoreReleases
+ * ExportConfigurations
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the MobileCenterClient.
+ */
+export interface ExportConfigurations {
+
+    /**
+     * Enable export configuration.
+     *
+     * @param {string} exportConfigurationId The id of the export configuration.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    enable(exportConfigurationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    enable(exportConfigurationId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+    /**
+     * Disable export configuration.
+     *
+     * @param {string} exportConfigurationId The id of the export configuration.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    disable(exportConfigurationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    disable(exportConfigurationId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+    /**
+     * Get export configuration.
+     *
+     * @param {string} exportConfigurationId The id of the export configuration.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    get(exportConfigurationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+    get(exportConfigurationId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+
+    /**
+     * Partially update export configuration.
+     *
+     * @param {string} exportConfigurationId The id of the export configuration.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    partialUpdate(exportConfigurationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+    partialUpdate(exportConfigurationId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+
+    /**
+     * Delete export configuration.
+     *
+     * @param {string} exportConfigurationId The id of the export configuration.
+     * 
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    deleteMethod(exportConfigurationId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    deleteMethod(exportConfigurationId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+
+    /**
+     * List export configurations.
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportConfigurationListResult>): void;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.ExportConfigurationListResult>): void;
+
+    /**
+     * Create new export configuration
+     *
+     * @param {string} ownerName The name of the owner
+     * 
+     * @param {string} appName The name of the application
+     * 
+     * @param {object} [options] Optional Parameters.
+     * 
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     * 
+     * @param {ServiceCallback} [callback] callback function; see ServiceCallback
+     * doc in ms-rest index.d.ts for details
+     */
+    create(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+    create(ownerName: string, appName: string, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+}
+
+/**
+ * @class
+ * StoreReleases
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
  */
 export interface StoreReleases {
 
@@ -3696,7 +3841,7 @@ export interface StoreReleases {
  * @class
  * Stores
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Stores {
 
@@ -3840,7 +3985,7 @@ export interface Stores {
  * @class
  * DistributionGroups
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface DistributionGroups {
 
@@ -4041,7 +4186,7 @@ export interface DistributionGroups {
  * @class
  * CodePushDeploymentRelease
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface CodePushDeploymentRelease {
 
@@ -4072,7 +4217,7 @@ export interface CodePushDeploymentRelease {
  * @class
  * DeploymentReleases
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface DeploymentReleases {
 
@@ -4116,7 +4261,7 @@ export interface DeploymentReleases {
  * @class
  * CodePushDeploymentReleases
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface CodePushDeploymentReleases {
 
@@ -4210,7 +4355,7 @@ export interface CodePushDeploymentReleases {
  * @class
  * CodePushDeployments
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface CodePushDeployments {
 
@@ -4394,7 +4539,7 @@ export interface CodePushDeployments {
  * @class
  * CodePushDeploymentMetrics
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface CodePushDeploymentMetrics {
 
@@ -4423,7 +4568,7 @@ export interface CodePushDeploymentMetrics {
  * @class
  * CrashGroupsOperations
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface CrashGroupsOperations {
 
@@ -4536,7 +4681,7 @@ export interface CrashGroupsOperations {
  * @class
  * Commits
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Commits {
 
@@ -4565,7 +4710,7 @@ export interface Commits {
  * @class
  * BranchConfigurations
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface BranchConfigurations {
 
@@ -4654,7 +4799,7 @@ export interface BranchConfigurations {
  * @class
  * AppleMapping
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface AppleMapping {
 
@@ -4751,7 +4896,7 @@ export interface AppleMapping {
  * @class
  * Analytics
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface Analytics {
 
@@ -5687,7 +5832,7 @@ export interface Analytics {
  * @class
  * CodePushAcquisition
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface CodePushAcquisition {
 
@@ -5786,7 +5931,7 @@ export interface CodePushAcquisition {
  * @class
  * ApiTokens
  * __NOTE__: An instance of this class is automatically created for an
- * instance of the MobileCenterClient.
+ * instance of the AppCenterClient.
  */
 export interface ApiTokens {
 

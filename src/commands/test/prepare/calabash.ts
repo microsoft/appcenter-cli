@@ -7,7 +7,7 @@ import * as outExtensions from "../lib/interaction";
 import * as process from "../../../util/misc/process-helper";
 import { Messages } from "../lib/help-messages";
 
-const debug = require("debug")("mobile-center-cli:commands:test:prepare:calabash");
+const debug = require("debug")("appcenter-cli:commands:test:prepare:calabash");
 
 @help(Messages.TestCloud.Commands.PrepareCalabash)
 export default class PrepareCalabashCommand extends PrepareTestsCommand {

@@ -1,4 +1,4 @@
-import { clientRequest, MobileCenterClient, models } from "../../util/apis";
+import { clientRequest, AppCenterClient, models } from "../../util/apis";
 import { AppCommand, CommandResult } from "../../util/commandline";
 import { ErrorCodes, failure, success } from "../../util/commandline";
 import { help, name, position } from "../../util/commandline";
@@ -18,7 +18,7 @@ import * as _ from "lodash";
 import * as Os from "os";
 import * as ChildProcess from "child_process";
 
-const debug = require("debug")("mobile-center-cli:commands:apps:crashes:upload-missing-symbols");
+const debug = require("debug")("appcenter-cli:commands:apps:crashes:upload-missing-symbols");
 const mdfind = require("mdfind");
 const bplist = require("bplist");
 
@@ -29,7 +29,7 @@ export default class UploadMissingSymbols extends AppCommand {
   @name("search-path")
   public symbolsPath: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     if (Os.platform() !== "darwin") {
       return failure(ErrorCodes.IllegalCommand, "This command must be run under macOS");
     }
@@ -67,7 +67,7 @@ export default class UploadMissingSymbols extends AppCommand {
     }
   }
 
-  private async getMissingSymbolsIds(client: MobileCenterClient, app: DefaultApp): Promise<string[]> {
+  private async getMissingSymbolsIds(client: AppCenterClient, app: DefaultApp): Promise<string[]> {
     let missingSymbolsIds: string[];
     try {
       const httpResponse = await clientRequest<models.MissingSymbolCrashGroupsResponse>((cb) => client.missingSymbolGroups.list(Number.MAX_SAFE_INTEGER, app.ownerName, app.appName, cb));
@@ -75,11 +75,11 @@ export default class UploadMissingSymbols extends AppCommand {
         .map((crashGroup) => crashGroup.missingSymbols.filter((s) => s.status === "missing").map((s) => s.symbolId)));
     } catch (error) {
       debug(`Failed to get list of missing symbols - ${inspect(error)}`);
-      throw failure(ErrorCodes.Exception, "failed to get list of missing symbols"); 
+      throw failure(ErrorCodes.Exception, "failed to get list of missing symbols");
     }
   }
 
-  private async searchForMissingSymbols(missingSymbolsIds: string[], client: MobileCenterClient, app: DefaultApp): Promise<Map<string, string>> {
+  private async searchForMissingSymbols(missingSymbolsIds: string[], client: AppCenterClient, app: DefaultApp): Promise<Map<string, string>> {
     console.assert(missingSymbolsIds.every((id) => /^[0-9a-f]{32}$/g.test(id)), "the API has returned abnormal missing symbols IDs");
     const missingSymbolsUuids: string[] = missingSymbolsIds.map((id) => id.toUpperCase().match(/(.{8})(.{4})(.{4})(.{4})(.{12})/).slice(1).join("-"));
 
@@ -106,7 +106,7 @@ export default class UploadMissingSymbols extends AppCommand {
     return uuidToPath;
   }
 
-  private async uploadFoundSymbols(uuidToPath: Map<string, string>, client: MobileCenterClient, app: DefaultApp): Promise<number> {
+  private async uploadFoundSymbols(uuidToPath: Map<string, string>, client: AppCenterClient, app: DefaultApp): Promise<number> {
     // packing and uploading each found dSYM package
     const helper = new UploadSymbolsHelper(client, app, debug);
     const paths = Array.from(uuidToPath.values()).filter((path) => !_.isNull(path)).map((path) => Path.resolve(path));
@@ -192,7 +192,7 @@ export default class UploadMissingSymbols extends AppCommand {
       try {
         childrenEntities = await Pfs.readdir(path);
       } catch (error) {
-        if (error.code === "ENOENT" || error.code === "ENOTDIR") { 
+        if (error.code === "ENOENT" || error.code === "ENOTDIR") {
           return new Map();
         } else {
           throw error;

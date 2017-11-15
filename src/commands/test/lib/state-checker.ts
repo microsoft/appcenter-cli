@@ -1,18 +1,18 @@
-import { MobileCenterClient, models, clientCall } from "../../../util/apis";
+import { AppCenterClient, models, clientCall } from "../../../util/apis";
 import { out, StreamingArrayOutput } from "../../../util/interaction";
 import * as os from "os";
 import * as process from "process";
 import { ExitCodes } from "./exit-codes";
 
 export class StateChecker {
-  private readonly client: MobileCenterClient;
+  private readonly client: AppCenterClient;
   private readonly testRunId: string;
   private readonly ownerName: string;
   private readonly appName: string;
   private readonly streamingOutput: StreamingArrayOutput;
   private readonly isInternalStreamingOutput: boolean;
 
-  constructor(client: MobileCenterClient, testRunId: string, ownerName: string, appName: string, streamingOutput?: StreamingArrayOutput) {
+  constructor(client: AppCenterClient, testRunId: string, ownerName: string, appName: string, streamingOutput?: StreamingArrayOutput) {
     this.client = client;
     this.testRunId = testRunId;
     this.ownerName = ownerName;
@@ -77,7 +77,7 @@ export class StateChecker {
     return state.exitCode;
   }
 
-  private getTestRunState(client: MobileCenterClient, testRunId: string): Promise<models.TestRunState> {
+  private getTestRunState(client: AppCenterClient, testRunId: string): Promise<models.TestRunState> {
     return clientCall(cb => {
       client.test.getTestRunState(
         testRunId,

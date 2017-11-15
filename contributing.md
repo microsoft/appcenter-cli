@@ -1,13 +1,13 @@
-# Mobile Center CLI - command line for Mobile Center
+# App Center CLI - command line for App Center
 (Kind of obvious from the name, really)
 
-Mobile Center CLI is a command line interface to interact with the Mobile Center services. It's intended
-for use by mobile developers and people building scripts that need to interact with Mobile Center (for example,
+App Center CLI is a command line interface to interact with the App Center services. It's intended
+for use by mobile developers and people building scripts that need to interact with App Center (for example,
 local CI configurations).
 
 ## Technologies Used
 
-Mobile center cli is written using Node.js version 6 and [Typescript](http://typescriptlang.org). Wrappers over the Bifrost HTTP API are
+App Center cli is written using Node.js version 6 and [Typescript](http://typescriptlang.org). Wrappers over the Bifrost HTTP API are
 generated using the [AutoRest](https://github.com/Azure/autorest) code generator. And the usual
 plethora of npm modules.
 
@@ -22,7 +22,7 @@ will be used to record and playback mock http traffic. [Note: this isn't set up 
 Install the latese version of Node 6 from [here](https://nodejs.org). If you are on a Mac, we recommend
 a 64-bit version.
 
-Also have a working git installation. The code is available from this [repo](https://github.com/Microsoft/mobile-center-cli).
+Also have a working git installation. The code is available from this [repo](https://github.com/Microsoft/appcenter-cli).
 
 
 ### Optional Tools
@@ -152,9 +152,9 @@ For example:
 
 | Command | Source File |
 | ------- | ----------- |
-| `mobile-center login` | src/commands/login.ts |
-| `mobile-center profile configure` | src/commands/profile/configure.ts |
-| `mobile-center apps list` | src/commands/apps/list.ts |
+| `appcenter login` | src/commands/login.ts |
+| `appcenter profile configure` | src/commands/profile/configure.ts |
+| `appcenter apps list` | src/commands/apps/list.ts |
 
 The command line parser and dispatcher uses the directory structure and file names to determine which code to run, so the naming conventions are important.
 

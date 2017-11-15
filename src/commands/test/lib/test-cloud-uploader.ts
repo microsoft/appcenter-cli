@@ -1,4 +1,4 @@
-import { MobileCenterClient, models, clientCall, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models, clientCall, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { getUser } from "../../../util/profile";
 import { progressWithResult } from "./interaction";
@@ -15,7 +15,7 @@ import * as http from 'http';
 import * as path from "path";
 import * as request from "request";
 
-const debug = require("debug")("mobile-center-cli:commands:test:lib:test-cloud-uploader");
+const debug = require("debug")("appcenter-cli:commands:test:lib:test-cloud-uploader");
 const pLimit = require("p-limit");
 const paralleRequests = 10;
 
@@ -27,7 +27,7 @@ export interface StartedTestRun {
 }
 
 export class TestCloudUploader {
-  private readonly _client: MobileCenterClient;
+  private readonly _client: AppCenterClient;
   private readonly _userName: string;
   private readonly _appName: string;
   private readonly _manifestPath: string;
@@ -41,7 +41,7 @@ export class TestCloudUploader {
   public language: string;
   public locale: string;
 
-  constructor(client: MobileCenterClient, userName: string, appName: string, manifestPath: string, devices: string, portalBaseUrl: string) {
+  constructor(client: AppCenterClient, userName: string, appName: string, manifestPath: string, devices: string, portalBaseUrl: string) {
     if (!client) {
       throw new Error("Argument client is required");
     }
@@ -158,7 +158,7 @@ export class TestCloudUploader {
     await Promise.all(uploadNewFilesTasks);
   }
 
-  private async uploadHashesBatch(testRunId: string, files: { file: TestRunFile, byteRange?: string }[]): Promise<{ file: TestRunFile, response: models.TestCloudFileHashResponse }[]> { 
+  private async uploadHashesBatch(testRunId: string, files: { file: TestRunFile, byteRange?: string }[]): Promise<{ file: TestRunFile, response: models.TestCloudFileHashResponse }[]> {
     let mappedFiles = files.map(f => this.testRunFileToFileHash(f.file, f.byteRange));
 
     let clientResponse = await clientRequest<models.TestCloudFileHashResponse[]>(cb => {
@@ -169,7 +169,7 @@ export class TestCloudUploader {
         this._appName,
         cb);
     });
-    
+
     return _.zip<any>(files, clientResponse.result).map((fr: any) => { return { file: fr[0].file, response: fr[1] }; });
   }
 
@@ -186,7 +186,7 @@ export class TestCloudUploader {
     await this.makeDirectUpload(directUrl, file);
   }
 
-  private getDirectUploadUrl(client: MobileCenterClient, testRunId: string, file: TestRunFile): Promise<string> {
+  private getDirectUploadUrl(client: AppCenterClient, testRunId: string, file: TestRunFile): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       client.test.startUploadingFile(
         testRunId,

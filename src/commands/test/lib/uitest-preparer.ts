@@ -7,7 +7,7 @@ import * as path from "path";
 import * as process from "../../../util/misc/process-helper";
 import { out } from "../../../util/interaction";
 
-const debug = require("debug")("mobile-center-cli:commands:test:lib:uitest-preparer");
+const debug = require("debug")("appcenter-cli:commands:test:lib:uitest-preparer");
 const minimumVersion = [2, 2, 0];
 
 export class UITestPreparer {

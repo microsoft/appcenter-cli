@@ -22,7 +22,7 @@ function ensureNodeVersion() {
     return true;
   }
 
-  console.log(`mobile-center command requires at least node version ${minMajorVersion}.${minMinorVersion}.0.`);
+  console.log(`appcenter command requires at least node version ${minMajorVersion}.${minMinorVersion}.0.`);
   console.log(`You are currently running version ${process.version}.`);
   console.log(`Please upgrade your version of node.js to at least ${minMajorVersion}.${minMinorVersion}.0`);
   return false;

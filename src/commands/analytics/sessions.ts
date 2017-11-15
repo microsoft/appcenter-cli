@@ -1,5 +1,5 @@
 import { AppCommand, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success } from "../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out, supportsCsv } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -8,7 +8,7 @@ import { parseDate } from "./lib/date-parsing-helper";
 import { calculatePercentChange } from "./lib/percent-change-helper";
 import { startDateHelpMessage, endDateHelpMessage } from "./lib/analytics-constants";
 
-const debug = require("debug")("mobile-center-cli:commands:analytics:sessions");
+const debug = require("debug")("appcenter-cli:commands:analytics:sessions");
 const IsoDuration = require("iso8601-duration");
 
 @help("Show statistics for sessions")
@@ -50,12 +50,12 @@ export default class SessionCommand extends AppCommand {
   @hasArg
   public format: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
     const appVersion = this.getAppVersion();
-    const startDate = parseDate(this.startDate, 
-      new Date(new Date().setHours(0, 0, 0, 0)), 
+    const startDate = parseDate(this.startDate,
+      new Date(new Date().setHours(0, 0, 0, 0)),
       `start date value ${this.startDate} is not a valid date string`);
     const endDate = parseDate(this.endDate,
       new Date(),
@@ -89,7 +89,7 @@ export default class SessionCommand extends AppCommand {
     const outputObject: IJsonOutput = this.toJsonOutput(requestResult);
 
     this.outputStatistics(outputObject);
-    
+
     return success();
   }
 
@@ -97,7 +97,7 @@ export default class SessionCommand extends AppCommand {
     return !_.isNil(this.appVersion) ? [this.appVersion] : undefined;
   }
 
-  private async loadSessionDurationsStatistics(client: MobileCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<models.SessionDurationsDistribution> {
+  private async loadSessionDurationsStatistics(client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<models.SessionDurationsDistribution> {
     try {
       return (await clientRequest<models.SessionDurationsDistribution>((cb) => client.analytics.sessionDurationsDistribution(startDate, app.ownerName, app.appName, {
         end: endDate,
@@ -109,7 +109,7 @@ export default class SessionCommand extends AppCommand {
     }
   }
 
-  private async loadSessionCountsStatistics(client: MobileCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<models.DateTimeCounts[]> {
+  private async loadSessionCountsStatistics(client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<models.DateTimeCounts[]> {
     try {
       const httpResponse = await clientRequest<models.DateTimeCounts[]>((cb) => client.analytics.sessionCounts(startDate, "P1D", app.ownerName, app.appName, {
         end: endDate,
@@ -165,7 +165,7 @@ export default class SessionCommand extends AppCommand {
 
       if (stats.sessions) {
         tableArray.push({
-          name: "Session Durations", 
+          name: "Session Durations",
           content: [["", "Count"]].concat(stats.sessions.map((group) => [group.bucket, numberFormatter(group.count)]))
       });
       }
@@ -188,7 +188,7 @@ export default class SessionCommand extends AppCommand {
 }
 
 interface IRequestsResult {
-  sessionDurationsDistribution?: models.SessionDurationsDistribution;  
+  sessionDurationsDistribution?: models.SessionDurationsDistribution;
   sessionCounts?: models.DateTimeCounts[];
   previousSessionCounts?: models.DateTimeCounts[];
 }

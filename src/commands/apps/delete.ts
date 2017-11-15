@@ -2,7 +2,7 @@
 
 import { AppCommand, CommandArgs, CommandResult, help, success, failure, ErrorCodes } from "../../util/commandline";
 import { out, prompt } from "../../util/interaction";
-import { MobileCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
 @help("Delete an app")
 export default class AppDeleteCommand extends AppCommand {
@@ -10,7 +10,7 @@ export default class AppDeleteCommand extends AppCommand {
     super(args);
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
     const confirmation = await prompt.confirm(`Do you really want to delete the app "${app.identifier}"`);
 

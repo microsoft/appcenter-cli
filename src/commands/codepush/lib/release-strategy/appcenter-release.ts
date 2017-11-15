@@ -1,11 +1,11 @@
 import { ReleaseStrategy } from "../release-command-skeleton";
 import { out } from "../../../../util/interaction";
-import { MobileCenterClient, models, clientRequest } from "../../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../../util/apis";
 import { DefaultApp } from "../../../../util/profile/index";
 import * as fs from "fs";
 
 export default class AppCenterCodePushRelease implements ReleaseStrategy {
-  public async release(client: MobileCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata: 
+  public async release(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata: 
     { appVersion?: string; 
       description?: string; 
       isDisabled?: boolean; 

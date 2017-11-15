@@ -1,12 +1,11 @@
 import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, position, name } from "../../../util/commandline";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
-import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
+import { scriptName } from "../../../util/misc";
 import * as _ from "lodash";
 import * as chalk from "chalk";
-import { scriptName } from "../../../util/misc";
-
-const debug = require("debug")("mobile-center-cli:commands:codepush:deployments:add");
+const debug = require("debug")("appcenter-cli:commands:codepush:deployments:add");
 
 @help("Add a new deployment to an app")
 export default class CodePushAddCommand extends AppCommand {
@@ -21,14 +20,14 @@ export default class CodePushAddCommand extends AppCommand {
     super(args);
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
     let deployment: models.Deployment;
     try {
       const httpRequest = await out.progress("Creating a new CodePush deployment...", clientRequest<models.Deployment>(
         (cb) => client.codePushDeployments.create(app.ownerName, app.appName, this.newDeploymentName, cb)));
       deployment = httpRequest.result;
-      out.text(`Deployment ${chalk.bold(deployment.name)} has been created for the ${this.identifier}`);
+      out.text(`Deployment ${chalk.bold(deployment.name)} has been created for ${this.identifier}`);
       return success();
     } catch (error) {
       debug(`Failed to add a new CodePush deployment - ${inspect(error)}`);

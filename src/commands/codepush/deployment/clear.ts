@@ -1,9 +1,9 @@
 import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, position, name } from "../../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
 
-const debug = require("debug")("mobile-center-cli:commands:codepush:deployment:clear");
+const debug = require("debug")("appcenter-cli:commands:codepush:deployment:clear");
 
 @help("Clear the release history associated with a deployment")
 export default class CodePushClearDeploymentCommand extends AppCommand {
@@ -18,7 +18,7 @@ export default class CodePushClearDeploymentCommand extends AppCommand {
     super(args);
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     if (!await prompt.confirm(`Do you really want to clear release history for deployment ${this.deploymentName}?`)) {
@@ -28,7 +28,7 @@ export default class CodePushClearDeploymentCommand extends AppCommand {
 
     try {
       debug("Clearing release history");
-      const httpResponse = await out.progress(`Clearing release history for deployment ${this.deploymentName}...`, 
+      const httpResponse = await out.progress(`Clearing release history for deployment ${this.deploymentName}...`,
         clientRequest((cb) => client.codePushDeploymentReleases.deleteMethod(this.deploymentName, app.ownerName, app.appName, cb)));
     } catch (error) {
       debug(`Failed to clear deployment history - ${inspect(error)}`);
@@ -40,7 +40,7 @@ export default class CodePushClearDeploymentCommand extends AppCommand {
       }
     }
 
-    out.text(`Successfully cleared the deployment ${this.deploymentName} history for the ${this.identifier} app.`);  
+    out.text(`Successfully cleared the deployment ${this.deploymentName} history for the ${this.identifier} app.`);
     return success();
   }
 }

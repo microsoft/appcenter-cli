@@ -1,9 +1,9 @@
 import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, position, name } from "../../../util/commandline";
-import { MobileCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
 
-const debug = require("debug")("mobile-center-cli:commands:codepush:deployment:remove");
+const debug = require("debug")("appcenter-cli:commands:codepush:deployment:remove");
 
 @help("Remove CodePush deployment")
 export default class CodePushRemoveDeploymentCommand extends AppCommand {
@@ -18,7 +18,7 @@ export default class CodePushRemoveDeploymentCommand extends AppCommand {
     super(args);
   }
 
-  async run(client: MobileCenterClient): Promise<CommandResult> {
+  async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     if (!await prompt.confirm(`Do you really want to remove deployment ${this.deploymentName}?`)) {
@@ -28,7 +28,7 @@ export default class CodePushRemoveDeploymentCommand extends AppCommand {
 
     try {
       debug("Removing CodePush deployment");
-      const httpResponse = await out.progress(`Removing CodePush deployment...`, 
+      const httpResponse = await out.progress(`Removing CodePush deployment...`,
         clientRequest((cb) => client.codePushDeployments.deleteMethod(this.deploymentName, app.ownerName, app.appName, cb)));
     } catch (error) {
       debug(`Failed to remove CodePush deployment - ${inspect(error)}`);
@@ -40,7 +40,7 @@ export default class CodePushRemoveDeploymentCommand extends AppCommand {
       }
     }
 
-    out.text(`Successfully removed the ${this.deploymentName} deployment for the ${this.identifier} app.`);  
+    out.text(`Successfully removed the ${this.deploymentName} deployment for the ${this.identifier} app.`);
     return success();
   }
 }

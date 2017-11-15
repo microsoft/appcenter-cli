@@ -19,7 +19,7 @@ var operations = require('./operations');
 
 /**
  * @class
- * Initializes a new instance of the MobileCenterClient class.
+ * Initializes a new instance of the AppCenterClient class.
  * @constructor
  *
  * @param {credentials} credentials - Subscription credentials which uniquely identify client subscription.
@@ -36,14 +36,14 @@ var operations = require('./operations');
  * @param {boolean} [options.noRetryPolicy] - If set to true, turn off default retry policy
  *
  */
-function MobileCenterClient(credentials, baseUri, options) {
+function AppCenterClient(credentials, baseUri, options) {
   if (credentials === null || credentials === undefined) {
     throw new Error('\'credentials\' cannot be null.');
   }
 
   if (!options) options = {};
 
-  MobileCenterClient['super_'].call(this, credentials, options);
+  AppCenterClient['super_'].call(this, credentials, options);
   this.baseUri = baseUri;
   if (!this.baseUri) {
     this.baseUri = 'https://api.mobile.azure.com/';
@@ -91,6 +91,6 @@ function MobileCenterClient(credentials, baseUri, options) {
   msRest.addSerializationMixin(this);
 }
 
-util.inherits(MobileCenterClient, ServiceClient);
+util.inherits(AppCenterClient, ServiceClient);
 
-module.exports = MobileCenterClient;
+module.exports = AppCenterClient;

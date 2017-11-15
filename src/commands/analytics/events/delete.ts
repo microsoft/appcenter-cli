@@ -1,10 +1,10 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, required, success } from "../../../util/commandline";
-import { MobileCenterClient, clientRequest } from "../../../util/apis";
+import { AppCenterClient, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import { DefaultApp } from "../../../util/profile";
 
-const debug = require("debug")("mobile-center-cli:commands:analytics:events:delete");
+const debug = require("debug")("appcenter-cli:commands:analytics:events:delete");
 
 @help("Delete event")
 export default class DeleteCommand extends AppCommand {
@@ -15,7 +15,7 @@ export default class DeleteCommand extends AppCommand {
   @required
   public eventName: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
     try {
@@ -26,7 +26,7 @@ export default class DeleteCommand extends AppCommand {
     }
 
     out.text(`Successfully deleted ${this.eventName} for this app`);
-    
+
     return success();
   }
 

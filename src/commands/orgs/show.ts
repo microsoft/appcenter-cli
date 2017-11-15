@@ -1,8 +1,8 @@
 import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
 import { out } from "../../util/interaction";
-import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
+import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 
-const debug = require("debug")("mobile-center-cli:commands:orgs:show");
+const debug = require("debug")("appcenter-cli:commands:orgs:show");
 import { inspect } from "util";
 import { getPortalOrgLink } from "../../util/portal/portal-helper";
 import { getOrgUsers, pickAdmins } from "./lib/org-users-helper";
@@ -16,7 +16,7 @@ export default class OrgShowCommand extends Command {
   @hasArg
   name: string;
 
-  async run(client: MobileCenterClient, portalBaseUrl: string): Promise<CommandResult> {    
+  async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     const [users, apps, organizationDetails] = await out.progress("Loading organization information...", Promise.all([getOrgUsers(client, this.name, debug), this.getOrgApps(client, this.name), this.getOrgDetails(client, this.name)]));
 
     const admins = pickAdmins(users);
@@ -27,13 +27,12 @@ export default class OrgShowCommand extends Command {
       ["Admins", "admins", (adminsArray: models.OrganizationUserResponse[]) => adminsArray.map((admin) => admin.name).join(", ")],
       ["Apps", "appsCount"],
       ["Collaborators", "collaboratorsCount"],
-      ["Origin", "origin"]
     ], { displayName: organizationDetails.displayName, url: getPortalOrgLink(portalBaseUrl, this.name), admins, appsCount: apps.length, collaboratorsCount: users.length, origin: organizationDetails.origin });
 
     return success();
   }
 
-  private async getOrgApps(client: MobileCenterClient, organization: string): Promise<models.AppResponse[]> {
+  private async getOrgApps(client: AppCenterClient, organization: string): Promise<models.AppResponse[]> {
     try {
       const httpResponse = await clientRequest<models.AppResponse[]> ((cb) => client.apps.listForOrg(organization, cb));
       if (httpResponse.response.statusCode < 400) {
@@ -51,7 +50,7 @@ export default class OrgShowCommand extends Command {
     }
   }
 
-  private async getOrgDetails(client: MobileCenterClient, organization: string): Promise<models.OrganizationResponse> {
+  private async getOrgDetails(client: AppCenterClient, organization: string): Promise<models.OrganizationResponse> {
     try {
       const httpResponse = await clientRequest<models.OrganizationResponse>((cb) => client.organizations.get(organization, cb));
       if (httpResponse.response.statusCode < 400) {

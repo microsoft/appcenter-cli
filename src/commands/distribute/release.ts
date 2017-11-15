@@ -1,5 +1,5 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
-import { MobileCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
+import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
@@ -8,7 +8,7 @@ import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../util/profile";
 
-const debug = require("debug")("mobile-center-cli:commands:distribute:release");
+const debug = require("debug")("appcenter-cli:commands:distribute:release");
 
 @help("Upload release binary and trigger distribution")
 export default class ReleaseBinaryCommand extends AppCommand {
@@ -38,7 +38,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @hasArg
   public releaseNotesFile: string;
 
-  public async run(client: MobileCenterClient): Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
     debug("Check that user hasn't selected both --release-notes and --release-notes-file");
@@ -92,7 +92,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private getPrerequisites(client: MobileCenterClient): Promise<[number | null, Buffer, string]> {
+  private getPrerequisites(client: AppCenterClient): Promise<[number | null, Buffer, string]> {
     // load release binary file
     const fileBuffer = this.getReleaseFileBuffer();
 
@@ -134,7 +134,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private async getDistributionGroupUsersNumber(client: MobileCenterClient): Promise<number | null> {
+  private async getDistributionGroupUsersNumber(client: AppCenterClient): Promise<number | null> {
     let distributionGroupUsersRequestResponse: ClientResponse<models.DistributionGroupUserGetResponse[]>;
     try {
       distributionGroupUsersRequestResponse = await clientRequest<models.DistributionGroupUserGetResponse[]>(
@@ -155,7 +155,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return distributionGroupUsersRequestResponse.result.length;
   }
 
-  private async createReleaseUpload(client: MobileCenterClient, app: DefaultApp): Promise<models.ReleaseUploadBeginResponse> {
+  private async createReleaseUpload(client: AppCenterClient, app: DefaultApp): Promise<models.ReleaseUploadBeginResponse> {
     let createReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadBeginResponse>;
     try {
       createReleaseUploadRequestResponse = await out.progress("Creating release upload...",
@@ -195,7 +195,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     });
   }
 
-  private async finishReleaseUpload(client: MobileCenterClient, app: DefaultApp, uploadId: string): Promise<string> {
+  private async finishReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<string> {
     let finishReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadEndResponse>;
     try {
       finishReleaseUploadRequestResponse = await out.progress("Finishing release upload...",
@@ -207,7 +207,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return finishReleaseUploadRequestResponse.result.releaseUrl;
   }
 
-  private async abortReleaseUpload(client: MobileCenterClient, app: DefaultApp, uploadId: string): Promise<void> {
+  private async abortReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<void> {
     let abortReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadEndResponse>;
     try {
       abortReleaseUploadRequestResponse = await out.progress("Aborting release upload...",
@@ -223,7 +223,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return releaseId;
   }
 
-  private async distributeRelease(client: MobileCenterClient, app: DefaultApp, releaseId: number, releaseNotesString: string): Promise<models.ReleaseDetailsResponse> {
+  private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number, releaseNotesString: string): Promise<models.ReleaseDetailsResponse> {
     let updateReleaseRequestResponse: ClientResponse<models.ReleaseDetailsResponse>;
     try {
       updateReleaseRequestResponse = await out.progress(`Distributing the release...`,
