@@ -6,7 +6,7 @@ import { DefaultApp } from "../../../../util/profile/index";
 import { PackageInfo } from "../../lib/legacy-codepush-service-client";
 
 export default class LegacyCodePushRelease implements ReleaseStrategy {
-  public async release(client: MobileCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata: 
+  public release(client: MobileCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata: 
     { appVersion?: string; 
       description?: string; 
       isDisabled?: boolean; 
@@ -20,9 +20,8 @@ export default class LegacyCodePushRelease implements ReleaseStrategy {
         appVersion: updateMetadata.appVersion
       };
 
-      await out.progress("Creating CodePush release...", 
-        new LegacyCodePushServiceClient(token, serverUrl, app, debug, null)
-          .release(deploymentName, updateContentsZipPath, releaseData));
+      return new LegacyCodePushServiceClient(token, serverUrl, app, debug, null)
+        .release(deploymentName, updateContentsZipPath, releaseData);   
   } 
 }
 

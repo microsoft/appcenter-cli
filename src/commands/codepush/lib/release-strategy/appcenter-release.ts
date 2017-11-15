@@ -11,8 +11,8 @@ export default class AppCenterCodePushRelease implements ReleaseStrategy {
       isDisabled?: boolean; 
       isMandatory?: boolean; 
       rollout?: number; }, debug: Function, token?: string, serverUrl?: string): Promise<void> {
-
-      await out.progress("Creating CodePush release...", clientRequest<models.CodePushRelease>(
+      
+      await clientRequest<models.CodePushRelease>(
         (cb) => client.codePushDeploymentReleases.create(
           deploymentName,
           updateMetadata.appVersion,
@@ -27,6 +27,8 @@ export default class AppCenterCodePushRelease implements ReleaseStrategy {
             noDuplicateReleaseError: false, //TODO: remove it, not needed to send to server
             rollout: updateMetadata.rollout,
           },
-          cb)));
+          cb));
+
+      return null;
   } 
 }

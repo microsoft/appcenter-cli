@@ -23,7 +23,7 @@ export interface ReleaseStrategy {
       isDisabled?: boolean;
       isMandatory?: boolean;
       rollout?: number;
-    }, debug: Function, token?: string, serverUrl?: string): void
+    }, debug: Function, token?: string, serverUrl?: string): Promise<void>
 }
 
 export default class CodePushReleaseCommandSkeleton extends AppCommand {
@@ -108,15 +108,16 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     try {
       var user = await getUser();
       const serverUrl = environments(this.environmentName || user.environment).managementEndpoint;
+      const token = this.token || await user.accessToken;
       
-      await this.releaseStrategy.release(client, this.app, this.deploymentName, updateContentsZipPath, {
+      await out.progress("Creating CodePush release...",  this.releaseStrategy.release(client, this.app, this.deploymentName, updateContentsZipPath, {
         appVersion: this.targetBinaryVersion,
         description: this.description,
         isDisabled: this.disabled,
         isMandatory: this.mandatory,
         rollout: this.rollout
-      }, debug, await user.accessToken, serverUrl);
-    
+      }, debug, token, serverUrl));
+     
       out.text(`Successfully released an update containing the "${this.updateContentsPath}" `
         + `${fs.lstatSync(this.updateContentsPath).isDirectory() ? "directory" : "file"}`
         + ` to the "${this.deploymentName}" deployment of the "${this.app.appName}" app.`);

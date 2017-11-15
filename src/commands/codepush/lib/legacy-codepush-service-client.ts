@@ -1,4 +1,4 @@
-import superagent = require("superagent");
+import * as Request from "request";
 import { DefaultApp } from "../../../util/profile/index";
 import * as fs from "fs";
 
@@ -44,29 +44,34 @@ export default class LegacyCodePushServiceClient {
     this._debug(`Releasing update via old service to ${this.appNameParam(appName)} app ${deploymentName} deployment`);
 
     return new Promise<void>((resolve, reject) => {
-        const requestUrl = this._serverUrl + this.urlEncode(`/apps/${this.appNameParam(appName)}/deployments/${deploymentName}/release`);
-        var request = superagent.post(requestUrl);
+        var options = {
+          url: this._serverUrl + this.urlEncode(`/apps/${this.appNameParam(appName)}/deployments/${deploymentName}/release`),
+          headers: {
+            "Accept": `application/vnd.code-push.v${LegacyCodePushServiceClient.API_VERSION}+json`,
+            "Authorization": `Bearer ${this.accessKey}`
+          },
+          formData: {
+            "packageInfo": JSON.stringify(updateMetadata),
+            "package": fs.createReadStream(filePath)
+          }
+        };
 
-        this.attachCredentials(request);
-        var file: any = fs.createReadStream(filePath);
-        request.attach("package", file)
-          .field("packageInfo", JSON.stringify(updateMetadata))      
-          .end((err: any, res: superagent.Response) => {
-            if (err) {
-              reject(this.getErrorMessage(err, res));
-              return;
-            }
-            try {
-              var body = JSON.parse(res.text);
-            } catch (err) {
-              reject(`Could not parse response: ${res.text}`)
-              return;
-            }
-            if (res.ok) {
-              resolve(<void>null);
-            } else {
-              reject(body.message);
-            }
+        Request.post(options, function optionalCallback(err, httpResponse, body) {
+          if (err) {
+            reject(this.getErrorMessage(err, httpResponse));
+            return;
+          }
+          try {
+            var body = JSON.parse(httpResponse.body);
+          } catch (err) {
+            reject(`Could not parse response: ${body}`)
+            return;
+          }
+          if (httpResponse.statusCode === 201) {
+            resolve(<void>null);
+          } else {
+            reject(body.message);
+          }
         });
     });
   }
@@ -99,18 +104,8 @@ export default class LegacyCodePushServiceClient {
     return appName.replace("/", "~~");
   }
 
-  private attachCredentials(request: superagent.Request): void {
-    if (this._customHeaders) {
-      for (var headerName in this._customHeaders) {
-          request.set(headerName, this._customHeaders[headerName]);
-      }
-    }
-    request.set("Accept", `application/vnd.code-push.v${LegacyCodePushServiceClient.API_VERSION}+json`);
-    request.set("Authorization", `Bearer ${this.accessKey}`);
-  }
-
-  private getErrorMessage(error: Error, response: superagent.Response): string {
-    return response && response.text ? response.text : error.message;
+  private getErrorMessage(error: Error, response: Request.RequestResponse): string {
+    return response && response.body ? response.body : error.message;
   }
 } 
 
