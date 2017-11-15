@@ -1,13 +1,13 @@
-# AppCenter CLI - command line for AppCenter
+# App Center CLI - command line for AppCenter
 (Kind of obvious from the name, really)
 
-AppCenter CLI is a command line interface to interact with the AppCenter services. It's intended
+App Center CLI is a command line interface to interact with the AppCenter services. It's intended
 for use by mobile developers and people building scripts that need to interact with AppCenter (for example,
 local CI configurations).
 
 ## Technologies Used
 
-AppCenter cli is written using Node.js version 6 and [Typescript](http://typescriptlang.org). Wrappers over the Bifrost HTTP API are
+App Center cli is written using Node.js version 6 and [Typescript](http://typescriptlang.org). Wrappers over the Bifrost HTTP API are
 generated using the [AutoRest](https://github.com/Azure/autorest) code generator. And the usual
 plethora of npm modules.
 
