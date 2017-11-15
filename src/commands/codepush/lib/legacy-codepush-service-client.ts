@@ -7,8 +7,8 @@ export interface PackageInfo {
   description?: string;
   isDisabled?: boolean;
   isMandatory?: boolean;
-  /*generated*/ label?: string;
-  /*generated*/ packageHash?: string;
+  label?: string;
+  packageHash?: string;
   rollout?: number;
 }
 
