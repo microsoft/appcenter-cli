@@ -13,7 +13,7 @@ import { environments } from "../lib/environment";
 import { isValidVersion, isValidRollout, isValidDeployment } from "../lib/validation-utils";
 import { AppCenterCodePushRelease, LegacyCodePushRelease }  from "../lib/release-strategy/index";
 
-const debug = require("debug")("mobile-center-cli:commands:codepush:release-skeleton");
+const debug = require("debug")("appcenter-cli:commands:...");
 
 export interface ReleaseStrategy {
     release(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata:{
