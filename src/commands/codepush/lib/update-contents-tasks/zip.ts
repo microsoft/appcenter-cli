@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as pfs from "../../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as JsZip from "jszip";
+var yazl = require("yazl");
 import { generateRandomFilename, normalizePath, isDirectory } from "../file-utils";
 
 interface ReleaseFile {
@@ -33,28 +34,24 @@ export default function zip(updateContentsPath: string): Promise<string> {
       });
     });
 
-    const packagePath: string = path.join(process.cwd(), generateRandomFilename(15) + ".zip");
-    let zip = new JsZip();
+    var packagePath: string = path.join(process.cwd(), generateRandomFilename(15) + ".zip");
+    var zipFile = new yazl.ZipFile();
+    var writeStream: fs.WriteStream = fs.createWriteStream(packagePath);
 
-    for (let releaseFile of releaseFiles) {
-      var fileStream: any = await fs.createReadStream(releaseFile.sourceLocation);
-      zip.file(releaseFile.targetLocation, fileStream);
-    }
+    zipFile.outputStream.pipe(writeStream)
+        .on("error", (error: Error): void => {
+            reject(error);
+        })
+        .on("close", (): void => {
 
-    zip
-      .generateNodeStream({ 
-        type: "nodebuffer", 
-        mimeType: "application/zip",
-        compression: "DEFLATE",
-        compressionOptions: {
-            level: 9 // level between 1 (best speed) and 9 (best compression)
-        },
-        streamFiles: true
-      })
-      .pipe(fs.createWriteStream(packagePath))
-      .on('finish', function () {
-        resolve(packagePath);
-      });
+            resolve(packagePath);
+        });
+
+    releaseFiles.forEach((releaseFile: ReleaseFile) => {
+        zipFile.addFile(releaseFile.sourceLocation, releaseFile.targetLocation);
+    });
+
+    zipFile.end();
   });
 }
 
