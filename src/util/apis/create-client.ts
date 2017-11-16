@@ -3,7 +3,7 @@ const debug = require("debug")("appcenter-cli:util:apis:create-client");
 import { inspect } from "util";
 import { IncomingMessage } from "http";
 
-import AppCenterClient = require("./generated/AppCenterClient");
+import AppCenterClient = require("./generated/appCenterClient");
 import { AppCenterClientCredentials } from "./appcenter-client-credentials";
 import { userAgentFilter } from "./user-agent-filter";
 import { telemetryFilter } from "./telemetry-filter";
