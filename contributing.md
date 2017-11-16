@@ -19,11 +19,10 @@ will be used to record and playback mock http traffic. [Note: this isn't set up 
 
 ## Prerequisites
 
-Install the latese version of Node 6 from [here](https://nodejs.org). If you are on a Mac, we recommend
+Install the latest version of Node 6 or Node 8 from [here](https://nodejs.org). If you are on a Mac, we recommend
 a 64-bit version.
 
 Also have a working git installation. The code is available from this [repo](https://github.com/Microsoft/appcenter-cli).
-
 
 ### Optional Tools
 
@@ -36,17 +35,10 @@ If you need multiple versions of node on your machine at the same time, consider
 For Mac or Linux, try [nvm](https://github.com/creationix/nvm). For Windows machines, [nodist](https://github.com/marcelklehr/nodist)
 works well.
 
-#### Typescript compiler and Typings
+#### Typescript compiler
 
 The typescript compilation can be run via the `npm run build` command, but if you want the Typescript compiler available directly,
 install it on your machine by doing `npm install -g typescript`.
-
-The Typings tool is useful if you're bringing in a new exteral Javascript library and want to get access to type definitions
-for that library. The typings files are checked into the repo, but if you want to download and add new ones, you'll need to
-install typings: `npm install -g typings`.
-
-Do _not_ run `typings install` - the typings files are already included in the repos, and this would overwrite necessary changes to the
-type declaration files.
 
 #### gulp
 

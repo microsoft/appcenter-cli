@@ -1,4 +1,4 @@
-import AppCenterClient = require("./generated/AppCenterClient");
+import AppCenterClient = require("./generated/appCenterClient");
 import * as models from "./generated/models";
 
 export { AppCenterClient, models };
