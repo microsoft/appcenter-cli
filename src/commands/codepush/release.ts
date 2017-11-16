@@ -7,7 +7,7 @@ const debug = require("debug")("appcenter-cli:commands:codepush:release");
 @help("Release an update to an app deployment")
 export default class CodePushReleaseCommand extends CodePushReleaseCommandSkeleton {
   @help("Path to update contents folder")
-  @shortName("с")
+  @shortName("c")
   @longName("update-contents-path")
   @required
   @hasArg
