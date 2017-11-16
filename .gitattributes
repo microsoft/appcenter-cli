@@ -1,4 +1,4 @@
 #
 # Main entry file needs lf only line endings so that bash shell doesn't barf.
 #
-bin/mobile-center.js text eol=lf
+bin/appcenter.js text eol=lf
