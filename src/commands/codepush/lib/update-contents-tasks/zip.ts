@@ -17,7 +17,7 @@ export default function zip(updateContentsPath: string): Promise<string> {
     if (!isDirectory(updateContentsPath)) {
       releaseFiles.push({
         sourceLocation: updateContentsPath,
-        targetLocation: normalizePath(changeTmpFolderName(path.basename(updateContentsPath))) // Put the file in the root
+        targetLocation: normalizePath(path.basename(updateContentsPath)) // Put the file in the root
       });
     }
 
