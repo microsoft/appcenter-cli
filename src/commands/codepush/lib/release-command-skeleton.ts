@@ -96,9 +96,6 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     this.deploymentName = this.specifiedDeploymentName;
 
     if (this.privateKeyPath) {
-      if (!(await prompt.confirm("You are going to use code signing which is experimental feature. If it is the first time you sign bundle please make sure that you have configured a public key for your client SDK and released new binary version of your app. Also, be sure that this release is targeting to new binary version. You can find more information about code signing feature here: https://github.com/Microsoft/code-push/blob/master/cli/README.md#code-signing  Do you want to continue?"))) {
-        return success();
-      }
       await sign(this.privateKeyPath, this.updateContentsPath);
     }
 
