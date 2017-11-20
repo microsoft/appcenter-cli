@@ -123,7 +123,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
 
     if (this.targetBinaryVersion && !isValidVersion(this.targetBinaryVersion)) {
       return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
-    } else {
+    } else if (!this.targetBinaryVersion) {
       const versionSearchParams: VersionSearchParams = {
         os: this.os,
         plistFile: this.plistFile,
