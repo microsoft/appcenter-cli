@@ -40,7 +40,7 @@ export default class LegacyCodePushServiceClient {
   }   
 
   public release(deploymentName: string, filePath: string, updateMetadata: PackageInfo): Promise<void> {   
-    const appName = this._app.appName;
+    const appName = this._app.ownerName + '/' + this._app.appName;
     this._debug(`Releasing update via old service to ${this.appNameParam(appName)} app ${deploymentName} deployment`);
 
     return new Promise<void>((resolve, reject) => {
