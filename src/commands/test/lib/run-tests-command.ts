@@ -164,7 +164,7 @@ export abstract class RunTestsCommand extends AppCommand {
         helpMessage += `
         User Email: ${profile.email}${os.EOL}
         User Name: ${profile.userName}${os.EOL}
-        User Id: ${profile && profile.userId}${os.EOL}
+        User Id: ${profile.userId}${os.EOL}
         `;
       }
 
