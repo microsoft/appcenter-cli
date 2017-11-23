@@ -26,6 +26,8 @@ export class CategoryCommand extends Command {
     out.help();
     out.help(this.categoryHelp());
     out.help();
+    out.help("For version info, use 'appcenter --version'");
+    out.help();
     const command = "<command>";
     const commandTemplate = [scriptName].concat(this.command, [command]).join(" ");
     out.help(`Usage: ${chalk.bold(commandTemplate)}`);
