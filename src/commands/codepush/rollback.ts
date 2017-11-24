@@ -6,7 +6,7 @@ import { inspect } from "util";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:rollback");
 
-@help("Rollback a deployemnt to a previous release")
+@help("Rollback a deployment to a previous release")
 export default class CodePushRollbackCommand extends AppCommand {
 
   @help("Specifies deployment name to be rolled back")
