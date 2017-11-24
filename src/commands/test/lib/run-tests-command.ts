@@ -79,7 +79,7 @@ export abstract class RunTestsCommand extends AppCommand {
 
     this.testParameters = this.fixArrayParameter(this.testParameters);
     this.include = this.fixArrayParameter(this.include);
-    
+
     if (this.timeoutSec && typeof this.timeoutSec === "string") {
       this.timeoutSec = parseInt(this.timeoutSec);
     }
@@ -154,7 +154,7 @@ export abstract class RunTestsCommand extends AppCommand {
       let message : string = null;
       let profile = getUser();
 
-      let helpMessage = `Further error details: For help, please send both the reported error above and the following environment information to us by going to https://mobile.azure.com/apps and starting a new conversation (using the icon in the bottom right corner of the screen)${os.EOL}
+      let helpMessage = `Further error details: For help, please send both the reported error above and the following environment information to us by going to https://appcenter.ms/apps and starting a new conversation (using the icon in the bottom right corner of the screen)${os.EOL}
         Environment: ${os.platform()}${os.EOL}
         App Upload Id: ${this.identifier}${os.EOL}
         Timestamp: ${Date.now()}${os.EOL}
