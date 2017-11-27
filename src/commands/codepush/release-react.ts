@@ -3,6 +3,7 @@ import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton"
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
+import * as fs from "fs";
 import * as pfs from "../../util/misc/promisfied-fs";
 import * as chalk from "chalk";
 import * as path from "path";
@@ -85,6 +86,10 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
     this.platform = appInfo.platform.toLowerCase();
 
     this.updateContentsPath = this.outputDir || await pfs.mkTempDir("code-push");
+    
+    // we have to add "CodePush" root forlder to make update contents file structure 
+    // to be compatible with React Native client SDK
+    fs.mkdirSync(path.join(this.updateContentsPath, "CodePush"));
 
     if (!isValidOS(this.os)) {
       return failure(ErrorCodes.InvalidParameter, `OS must be "android", "ios", or "windows".`);
@@ -123,7 +128,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
 
     if (this.targetBinaryVersion && !isValidVersion(this.targetBinaryVersion)) {
       return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
-    } else {
+    } else if (!this.targetBinaryVersion) {
       const versionSearchParams: VersionSearchParams = {
         os: this.os,
         plistFile: this.plistFile,

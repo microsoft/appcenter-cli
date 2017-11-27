@@ -24,7 +24,6 @@ export default class LegacyCodePushServiceClient {
 
   public release(deploymentName: string, filePath: string, updateMetadata: PackageInfo): Promise<void> {
     const appName = this.app.identifier;
-
     return new Promise<void>((resolve, reject) => {
         var options = {
           url: this.serverUrl + this.urlEncode(`/apps/${this.appNameParam(appName)}/deployments/${deploymentName}/release`),
