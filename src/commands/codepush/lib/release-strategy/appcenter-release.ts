@@ -9,7 +9,7 @@ export default class AppCenterCodePushRelease implements ReleaseStrategy {
       description?: string; 
       isDisabled?: boolean; 
       isMandatory?: boolean; 
-      rollout?: number; }, debug: Function, token?: string, serverUrl?: string): Promise<void> {
+      rollout?: number; }, token?: string, serverUrl?: string): Promise<void> {
       
       await clientRequest<models.CodePushRelease>(
         (cb) => client.codePushDeploymentReleases.create(
