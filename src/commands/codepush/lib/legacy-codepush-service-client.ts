@@ -17,35 +17,17 @@ export type Headers = { [headerName: string]: string };
 export default class LegacyCodePushServiceClient {
   private static API_VERSION: number = 2;
   
-  private _accessKey: string;
-  private _serverUrl: string;
-  private _customHeaders: Headers;
-  private _app: DefaultApp;
-  private _debug: Function;
-
-  constructor(accessKey: string, serverUrl: string, app: DefaultApp, debug: Function, customHeaders?: Headers) {
+  constructor(private accessKey: string, private serverUrl: string, private app: DefaultApp, private customHeaders?: Headers) {
     if (!accessKey) throw new Error("A token must be specified to execute server calls.");
     if (!serverUrl) throw new Error("A server url must be specified to execute server calls.");
-
-    this._accessKey = accessKey;
-    this._app = app;
-    this._debug = debug;
-    this._customHeaders = customHeaders;
-    this._serverUrl = serverUrl; 
-    this._debug(`Access token: ${accessKey}, app name ${app.appName}, server url ${serverUrl}`);
   }
 
-  private get accessKey(): string {
-    return this._accessKey;
-  }   
-
-  public release(deploymentName: string, filePath: string, updateMetadata: PackageInfo): Promise<void> {   
-    const appName = this._app.appName;
-    this._debug(`Releasing update via old service to ${this.appNameParam(appName)} app ${deploymentName} deployment`);
+  public release(deploymentName: string, filePath: string, updateMetadata: PackageInfo): Promise<void> {
+    const appName = this.app.identifier;
 
     return new Promise<void>((resolve, reject) => {
         var options = {
-          url: this._serverUrl + this.urlEncode(`/apps/${this.appNameParam(appName)}/deployments/${deploymentName}/release`),
+          url: this.serverUrl + this.urlEncode(`/apps/${this.appNameParam(appName)}/deployments/${deploymentName}/release`),
           headers: {
             "Accept": `application/vnd.code-push.v${LegacyCodePushServiceClient.API_VERSION}+json`,
             "Authorization": `Bearer ${this.accessKey}`

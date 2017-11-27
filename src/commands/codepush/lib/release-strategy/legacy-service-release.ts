@@ -10,7 +10,7 @@ export default class LegacyCodePushRelease implements ReleaseStrategy {
       description?: string; 
       isDisabled?: boolean; 
       isMandatory?: boolean; 
-      rollout?: number; }, debug: Function, token?: string, serverUrl?: string): Promise<void> {
+      rollout?: number; }, token?: string, serverUrl?: string): Promise<void> {
 
       var releaseData: PackageInfo = {
         description: updateMetadata.description,
@@ -20,7 +20,7 @@ export default class LegacyCodePushRelease implements ReleaseStrategy {
         appVersion: updateMetadata.appVersion
       };
 
-      await new LegacyCodePushServiceClient(token, serverUrl, app, debug, null)
+      await new LegacyCodePushServiceClient(token, serverUrl, app, null)
         .release(deploymentName, updateContentsZipPath, releaseData);   
   } 
 }

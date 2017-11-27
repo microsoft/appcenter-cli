@@ -22,7 +22,7 @@ export interface ReleaseStrategy {
       isDisabled?: boolean;
       isMandatory?: boolean;
       rollout?: number;
-    }, debug: Function, token?: string, serverUrl?: string): Promise<void>
+    }, token?: string, serverUrl?: string): Promise<void>
 }
 
 export default class CodePushReleaseCommandSkeleton extends AppCommand {
@@ -112,7 +112,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
         isDisabled: this.disabled,
         isMandatory: this.mandatory,
         rollout: this.rollout
-      }, debug, token, serverUrl));
+      }, token, serverUrl));
      
       out.text(`Successfully released an update containing the "${this.updateContentsPath}" `
         + `${fs.lstatSync(this.updateContentsPath).isDirectory() ? "directory" : "file"}`
