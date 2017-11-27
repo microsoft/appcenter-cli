@@ -58,7 +58,7 @@ export function getReactNativeProjectAppVersion(versionSearchParams: VersionSear
       resolvedPlistFile = (<any>knownLocations).find(fileExists);
 
       if (!resolvedPlistFile) {
-        throw new Error(`Unable to find either of the following plist files in order to infer your app's binary version: "${knownLocations.join("\", \"")}". If your plist has a different name, or is located in a different directory, consider using either the "--plistFile" or "--plistFilePrefix" parameters to help inform the CLI how to find it.`);
+        throw new Error(`Unable to find either of the following plist files in order to infer your app's binary version: "${knownLocations.join("\", \"")}". If your plist has a different name, or is located in a different directory, consider using either the "--plist-file" or "--plist-file-prefix" parameters to help inform the CLI how to find it.`);
       }
     }
 
@@ -119,7 +119,7 @@ export function getReactNativeProjectAppVersion(versionSearchParams: VersionSear
         }
 
         if (typeof versionName !== "string") {
-          throw new Error(`The "android.defaultConfig.versionName" property value in "${buildGradlePath}" is not a valid string. If this is expected, consider using the --targetBinaryVersion option to specify the value manually.`);
+          throw new Error(`The "android.defaultConfig.versionName" property value in "${buildGradlePath}" is not a valid string. If this is expected, consider using the --target-binary-version option to specify the value manually.`);
         }
 
         let appVersion: string = versionName.replace(/"/g, "").trim();
