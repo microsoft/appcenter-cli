@@ -129,11 +129,6 @@ export function getReactNativeProjectAppVersion(versionSearchParams: VersionSear
           // so we can safely use that and move on.
           out.text(`Using the target binary version value "${appVersion}" from "${buildGradlePath}".\n`);
           return appVersion;
-        } else if (/^\d.*/.test(appVersion)) {
-          // The versionName property isn't a valid semver string,
-          // but it starts with a number, and therefore, it can't
-          // be a valid Gradle property reference.
-          throw new Error(`The "android.defaultConfig.versionName" property in the "${buildGradlePath}" file needs to specify a valid semver string, containing both a major and minor version (e.g. 1.3.2, 1.1).`);
         }
 
         // The version property isn't a valid semver string
