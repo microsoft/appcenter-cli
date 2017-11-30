@@ -5,7 +5,7 @@ import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as chalk from "chalk";
 import * as path from "path";
-import { isValidVersion, isValidDeployment } from "./lib/validation-utils";
+import { isValidRange, isValidDeployment } from "./lib/validation-utils";
 import { isValidOS, isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectAppVersion } from "./lib/cordova-utils";
 
 var childProcess = require("child_process");
@@ -60,7 +60,7 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
       this.targetBinaryVersion = await getCordovaProjectAppVersion();
     }
 
-    if (!isValidVersion(this.targetBinaryVersion)) {
+    if (!isValidRange(this.targetBinaryVersion)) {
       return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
     }
 
