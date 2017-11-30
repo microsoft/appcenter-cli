@@ -14,6 +14,6 @@ export default class GenerateUITestCommand extends GenerateCommand {
     super(args);
   }
 
-  protected zipPathAndroid = "UITest/Android-1.0.zip";
-  protected zipPathiOS = "UITest/iOS-1.0.zip";
+  protected zipPathAndroid = "UITest/Android-1.1.zip";
+  protected zipPathiOS = "UITest/iOS-1.1.zip";
 }
