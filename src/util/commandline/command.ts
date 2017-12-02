@@ -160,7 +160,7 @@ export class Command {
   protected showVersion(): Result.CommandResult {
     const packageJsonPath = path.join(__dirname, "../../../package.json");
     const packageJson: any = require(packageJsonPath);
-    out.text(s => s,`${scriptName} version ${packageJson.version}`);
+    out.text(s => s,`${scriptName} ${packageJson.version}`);
     return Result.success();
   }
 
