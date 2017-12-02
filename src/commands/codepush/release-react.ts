@@ -150,7 +150,9 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
       debug(`Failed to release a CodePush update - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, "Failed to release a CodePush update.")
     } finally {
-      await pfs.rmDir(this.updateContentsPath);
+      if (!this.outputDir) {
+        await pfs.rmDir(this.updateContentsPath);
+      }
     }
   }
 }
