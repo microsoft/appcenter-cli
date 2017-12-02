@@ -10,7 +10,7 @@ import * as chalk from "chalk";
 import { sign, zip } from "../lib/update-contents-tasks";
 import { isBinaryOrZip } from "../lib/file-utils";
 import { environments } from "../lib/environment";
-import { isValidVersion, isValidRollout, isValidDeployment } from "../lib/validation-utils";
+import { isValidRange, isValidRollout, isValidDeployment } from "../lib/validation-utils";
 import { AppCenterCodePushRelease, LegacyCodePushRelease }  from "../lib/release-strategy/index";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-skeleton");
@@ -132,7 +132,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
       return failure(ErrorCodes.InvalidParameter, "It is unnecessary to package releases in a .zip or binary file. Please specify the direct path to the update content's directory (e.g. /platforms/ios/www) or file (e.g. main.jsbundle).");
     }
 
-    if (!isValidVersion(this.targetBinaryVersion)) {
+    if (!isValidRange(this.targetBinaryVersion)) {
       return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
     }
 

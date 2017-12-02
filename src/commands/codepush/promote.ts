@@ -3,7 +3,7 @@ import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as chalk from "chalk";
-import { isValidRollout, isValidVersion } from "./lib/validation-utils";
+import { isValidRollout, isValidRange } from "./lib/validation-utils";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:promote");
 
@@ -72,7 +72,7 @@ export default class CodePushPromoteCommand extends AppCommand {
       return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
     }
 
-    if (this.targetBinaryRange != null && !isValidVersion(this.targetBinaryRange)) {
+    if (this.targetBinaryRange != null && !isValidRange(this.targetBinaryRange)) {
       return failure(ErrorCodes.Exception, "Invalid binary version(s) for a release.");
     }
 
