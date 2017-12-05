@@ -46,7 +46,7 @@ const environmentsData: EnvironmentsFile = {
     testCloudLocalDev: {
       endpoint: "http://localhost:1700",
       loginEndpoint: null,
-      portalEndpoint: null,
+      portalEndpoint: "http://localhost:8080",
       description: "Test Cloud local dev box development"
     }
   }
