@@ -103,7 +103,7 @@ export default class LoginCommand extends Command {
   private async doInteractiveLogin(): Promise<TokenValueType> {
     const loginUrl = environments(this.environmentName).loginEndpoint + "?" + qs.stringify({ hostname: os.hostname()});
 
-    out.text(`Opening your browser... \n? Visit ${loginUrl} and enter the code:`);
+    out.text(`Opening your browser... ${os.EOL}? Visit ${loginUrl} and enter the code:`);
     opener(loginUrl);
     const token = await prompt("Access code from browser: ");
     return { id: null, token: token };
