@@ -169,7 +169,7 @@ export abstract class RunTestsCommand extends AppCommand {
       }
 
 
-      if (err.message.indexOf("Not Found") !== -1)
+      if (err.message && err.message.indexOf("Not Found") !== -1)
       {
         message = `Requested resource not found - please check --app: ${this.identifier}${os.EOL}${os.EOL}${helpMessage}`;
       }

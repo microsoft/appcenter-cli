@@ -89,7 +89,7 @@ export default class LoginCommand extends Command {
     }
 
     const endpoint = environments(this.environmentName).endpoint;
-    const client = this.clientFactory.fromUserNameAndPassword(this.userName, this.password, endpoint);
+    const client = await this.clientFactory.fromUserNameAndPassword(this.userName, this.password, endpoint);
 
     let createTokenResponse = await out.progress("Logging in...",
       clientRequest<models.ApiTokensCreateResponse>(cb => client.apiTokens.newMethod({ description: "AppCenter CLI"}, cb)));
@@ -134,9 +134,9 @@ export default class LoginCommand extends Command {
     return [];
   }
 
-  private getUserInfo(token: string): Promise<ClientResponse<models.UserProfileResponse>> {
+  private async getUserInfo(token: string): Promise<ClientResponse<models.UserProfileResponse>> {
     const endpoint = environments(this.environmentName).endpoint;
-    const client = this.clientFactory.fromToken(token, endpoint);
+    const client = await this.clientFactory.fromToken(token, endpoint);
     return clientRequest<models.UserProfileResponse>(cb => client.users.get(cb));
   }
 
@@ -146,7 +146,7 @@ export default class LoginCommand extends Command {
       debug(`Currently logged in as ${currentUser.userName}, removing token`);
 
       debug(`Creating client factory`);
-      const client = this.clientFactory.fromProfile(currentUser);
+      const client = await this.clientFactory.fromProfile(currentUser);
       debug(`Removing existing token`);
       await logout(client, currentUser);
     }
