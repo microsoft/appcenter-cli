@@ -16,7 +16,6 @@ const createLogger = require('ms-rest').LogFilter.create;
 
 import { isDebug } from "../interaction";
 import { Profile } from "../profile";
-import { valid } from "semver";
 
 export interface AppCenterClientFactory {
   fromUserNameAndPassword(userName: string, password: string, endpoint: string): Promise<AppCenterClient>;
