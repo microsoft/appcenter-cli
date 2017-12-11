@@ -7,7 +7,7 @@ import AppCenterClient = require("./generated/appCenterClient");
 import { AppCenterClientCredentials } from "./appcenter-client-credentials";
 import { userAgentFilter } from "./user-agent-filter";
 import { telemetryFilter } from "./telemetry-filter";
-import { checkToken } from "../../commands/tokens/lib/token-helper";
+import { TokenValidator } from "../../commands/tokens/lib/token-helper";
 
 const BasicAuthenticationCredentials = require("ms-rest").BasicAuthenticationCredentials;
 import { ServiceCallback, ServiceError, WebResource } from "ms-rest";
@@ -23,7 +23,7 @@ export interface AppCenterClientFactory {
   fromProfile(user: Profile): Promise<AppCenterClient>;
 }
 
-export function createAppCenterClient(command: string[], telemetryEnabled: boolean): AppCenterClientFactory {
+export function createAppCenterClient(command: string[], telemetryEnabled: boolean, tokenValidator: TokenValidator): AppCenterClientFactory {
   function createClientOptions(): any {
     debug(`Creating client options, isDebug = ${isDebug()}`);
     const filters = [userAgentFilter, telemetryFilter(command.join(" "), telemetryEnabled)];
@@ -54,7 +54,7 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
       }
       debug(`Passing token ${tokenFunc} of type ${typeof tokenFunc}`);
       let client = new AppCenterClient(new AppCenterClientCredentials(tokenFunc), endpoint, createClientOptions());
-      let validToken = await checkToken(client);
+      let validToken = true; //await tokenValidator.tokenIsValid(client);
 
       if (validToken)
       {

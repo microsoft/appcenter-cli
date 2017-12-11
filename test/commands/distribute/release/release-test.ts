@@ -10,6 +10,7 @@ use(ChaiAsPromised);
 
 import ReleaseBinaryCommand from "../../../../src/commands/distribute/release";
 import { CommandArgs, CommandResult } from "../../../../src/util/commandline";
+import { TokenValidator, tokenValidator } from "../../../../src/commands/tokens/lib/token-helper";
 
 Temp.track();
 
@@ -41,6 +42,7 @@ describe("release command", () => {
   let patchSymbolSpy: Sinon.SinonSpy;
   let abortSymbolSpy: Sinon.SinonSpy;
   let distributeSpy: Sinon.SinonSpy;
+  let validator: TokenValidator;
 
   let expectedRequestsScope: Nock.Scope;
   let skippedRequestsScope: Nock.Scope;
@@ -56,6 +58,9 @@ describe("release command", () => {
     patchSymbolSpy = Sinon.spy();
     abortSymbolSpy = Sinon.spy();
     distributeSpy = Sinon.spy();
+
+    validator = new tokenValidator();
+    let stub = Sinon.stub(validator, "tokenIsValid").returns(Promise.resolve(true));
   });
 
   describe("when all network requests are successful", () => {
@@ -75,7 +80,7 @@ describe("release command", () => {
 
       // Act 
       const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-r", releaseNotes, "-g", fakeDistributionGroupName]));
-      const result = await command.execute();
+      const result = await command.execute(validator);
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
@@ -89,7 +94,7 @@ describe("release command", () => {
 
       // Act 
       const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath, "-g", fakeDistributionGroupName]));
-      const result = await command.execute();
+      const result = await command.execute(validator);
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
@@ -116,7 +121,7 @@ describe("release command", () => {
 
       // Act 
       const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath, "-g", fakeDistributionGroupName]));
-      const result = await expect(command.execute()).to.eventually.be.rejected;
+      const result = await expect(command.execute(validator)).to.eventually.be.rejected;
 
       // Assert
       testUploadFailure(result, expectedRequestsScope, skippedRequestsScope);
@@ -139,7 +144,7 @@ describe("release command", () => {
 
   async function executeUploadCommand(args: string[]): Promise<CommandResult> {
     let releaseCommand = new ReleaseBinaryCommand(getCommandArgs(args));
-    return await releaseCommand.execute();
+    return await releaseCommand.execute(validator);
   }
 
   function testCommandSuccess(result: CommandResult, executionScope: Nock.Scope, abortScope: Nock.Scope) {

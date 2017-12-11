@@ -4,7 +4,17 @@ import { inspect } from "util";
 
 const debug = require("debug")("appcenter-cli:commands:tokens:lib:token-helper");
 
-export async function checkToken(client: AppCenterClient): Promise<boolean> {
+export interface TokenValidator {
+  tokenIsValid(client: AppCenterClient) : Promise<boolean>
+}
+
+export class tokenValidator implements TokenValidator {
+  async tokenIsValid(client: AppCenterClient) : Promise<boolean> {
+    return await checkToken(client);
+  }
+}
+
+async function checkToken(client: AppCenterClient): Promise<boolean> {
   try {
     //TODO: Change this to call a purpose built api endpoint for this purpose:
     const httpResponse = await clientRequest<models.ApiTokensGetResponse[]>((cb) => client.apiTokens.list(cb));

@@ -7,6 +7,7 @@ import { runHelp } from "./help";
 import { scriptName } from "../misc";
 import { getUser, environments, telemetryIsEnabled, getPortalUrlForEndpoint, getEnvFromEnvironmentVar, getTokenFromEnvironmentVar, appCenterAccessTokenEnvVar } from "../profile";
 import { AppCenterClient, createAppCenterClient, AppCenterClientFactory } from "../apis";
+import { tokenValidator } from "../../commands/tokens/lib/token-helper";
 import * as path from "path";
 import * as PortalHelper from "../portal/portal-helper";
 
@@ -84,7 +85,7 @@ export class Command {
   public disableTelemetry: boolean;
 
   // Entry point for runner. DO NOT override in command definition!
-  async execute(): Promise<Result.CommandResult> {
+  async execute(validator : tokenValidator = new tokenValidator()): Promise<Result.CommandResult> {
     debug(`Initial execution of command`);
     if (this.help) {
       debug(`help switch detected, displaying help for command`);
@@ -112,7 +113,7 @@ export class Command {
         return Promise.resolve(Result.failure(Result.ErrorCodes.InvalidParameter, `Unknown output format ${this.format}`));
       }
     }
-    this.clientFactory = createAppCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry));
+    this.clientFactory = createAppCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry), validator);
     return this.runNoClient();
   }
 

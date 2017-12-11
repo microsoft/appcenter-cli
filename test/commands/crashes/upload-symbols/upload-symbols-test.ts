@@ -3,6 +3,7 @@ import { expect, use } from "chai";
 import * as Fs from "fs";
 import * as Pfs from "../../../../src/util/misc/promisfied-fs";
 import { IncomingMessage } from "http";
+import { TokenValidator, tokenValidator } from "../../../../src/commands/tokens/lib/token-helper";
 import * as _ from "lodash";
 import * as Nock from "nock";
 import * as Path from "path";
@@ -226,7 +227,10 @@ describe("upload-symbols command", () => {
 
   async function executeUploadCommand(args: string[]): Promise<CommandResult> {
     let uploadSymbolsCommand = new UploadSymbolsCommand(getCommandArgs(args));
-    return await uploadSymbolsCommand.execute();
+    let validator = new tokenValidator;
+    let stub = Sinon.stub(validator, "tokenIsValid").returns(Promise.resolve(true));
+    let output = await uploadSymbolsCommand.execute(validator);
+    return output;
   }
 
   function testCommandSuccess(result: CommandResult, executionScope: Nock.Scope, abortScope: Nock.Scope) {
