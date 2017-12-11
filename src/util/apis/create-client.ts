@@ -54,7 +54,7 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
       }
       debug(`Passing token ${tokenFunc} of type ${typeof tokenFunc}`);
       let client = new AppCenterClient(new AppCenterClientCredentials(tokenFunc), endpoint, createClientOptions());
-      let validToken = true; //await tokenValidator.tokenIsValid(client);
+      let validToken = await tokenValidator.tokenIsValid(client);
 
       if (validToken)
       {
