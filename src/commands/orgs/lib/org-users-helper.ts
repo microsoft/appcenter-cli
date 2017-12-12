@@ -15,6 +15,9 @@ export async function getOrgUsers(client: AppCenterClient, organization: string,
   } catch (error) {
     if (error.statusCode === 404) {
       throw failure(ErrorCodes.InvalidParameter, `organization ${organization} doesn't exist`);
+    }
+    if (error.statusCode === 401) {
+      throw failure(ErrorCodes.NotLoggedIn, `Failed to load list of organization users - unauthorized error`);
     } else {
       debug(`Failed to load list of organization users - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, "failed to load list of organization users");
@@ -35,8 +38,12 @@ export async function getOrgsNamesList(client: AppCenterClient): Promise<IEntity
       throw httpResponse.response;
     }
   } catch (error) {
-    debug(`Failed to load list of organization for current user - ${inspect(error)}`);
-    throw failure(ErrorCodes.Exception, "failed to load list of organization for the user");
+    if (error.statusCode === 401) {
+      throw failure(ErrorCodes.NotLoggedIn, `Failed to load list of organization users - unauthorized error`);
+    } else {
+      debug(`Failed to load list of organization for current user - ${inspect(error)}`);
+      throw failure(ErrorCodes.Exception, "failed to load list of organization for the user");
+    }
   }
 }
 
