@@ -3,10 +3,10 @@ import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton"
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
-import * as fs from "fs";
 import * as pfs from "../../util/misc/promisfied-fs";
 import * as chalk from "chalk";
 import * as path from "path";
+import * as mkdirp from "mkdirp";
 import { fileDoesNotExistOrIsDirectory, createEmptyTmpReleaseFolder, removeReactTmpDir } from "./lib/file-utils";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";
 import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand, isValidOS, isValidPlatform, isReactNativeProject } from "./lib/react-native-utils";
@@ -89,7 +89,8 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
     
     // we have to add "CodePush" root forlder to make update contents file structure 
     // to be compatible with React Native client SDK
-    fs.mkdirSync(path.join(this.updateContentsPath, "CodePush"));
+    this.updateContentsPath = path.join(this.updateContentsPath, "CodePush");
+    mkdirp.sync(this.updateContentsPath);
 
     if (!isValidOS(this.os)) {
       return failure(ErrorCodes.InvalidParameter, `OS must be "android", "ios", or "windows".`);
