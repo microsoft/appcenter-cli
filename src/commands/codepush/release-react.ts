@@ -87,7 +87,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
 
     this.updateContentsPath = this.outputDir || await pfs.mkTempDir("code-push");
     
-    // we have to add "CodePush" root forlder to make update contents file structure 
+    // we have to add "CodePush" root folder to make update contents file structure 
     // to be compatible with React Native client SDK
     this.updateContentsPath = path.join(this.updateContentsPath, "CodePush");
     mkdirp.sync(this.updateContentsPath);
