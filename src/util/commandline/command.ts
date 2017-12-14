@@ -158,9 +158,7 @@ export class Command {
   }
 
   protected showVersion(): Result.CommandResult {
-    const packageJsonPath = path.join(__dirname, "../../../package.json");
-    const packageJson: any = require(packageJsonPath);
-    out.text(s => s,`${scriptName} version ${packageJson.version}`);
+    out.text(s => s,`${scriptName} version ${this.getVersion()}`);
     return Result.success();
   }
 
@@ -170,5 +168,11 @@ export class Command {
       throw Result.failure(Result.ErrorCodes.InvalidParameter, `${environmentString} is not valid environment name`);
     }
     return [this.clientFactory.fromToken(token, environment.endpoint), environment.endpoint];
+  }
+
+  protected getVersion(): string {
+    const packageJsonPath = path.join(__dirname, "../../../package.json");
+    const packageJson: any = require(packageJsonPath);
+    return packageJson.version;
   }
 }

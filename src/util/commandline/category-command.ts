@@ -25,6 +25,7 @@ export class CategoryCommand extends Command {
 
     out.help();
     out.help(this.categoryHelp());
+    out.help(`Version ${this.getVersion()}`);
     out.help();
     const command = "<command>";
     const commandTemplate = [scriptName].concat(this.command, [command]).join(" ");
