@@ -3,7 +3,8 @@ import { expect } from "chai";
 import { OptionsDescription, OptionDescription, PositionalOptionsDescription, PositionalOptionDescription } from "../../../src/util/commandline/option-parser";
 import {
   getOptionsDescription, getPositionalOptionsDescription, getClassHelpText,
-  shortName, longName, name, defaultValue, required, hasArg, help, position
+  shortName, longName, name, defaultValue, required, hasArg, help, position, 
+  common
 } from "../../../src/util/commandline/option-decorators";
 
 describe("Command line option parsing", function () {
@@ -43,6 +44,7 @@ describe("Command line option parsing", function () {
         @longName("another")
         @hasArg
         @required
+        @common
         public anotherArg: string;
       };
 
@@ -64,6 +66,7 @@ describe("Command line option parsing", function () {
       expect(anotherOpt).to.have.property("longName", "another");
       expect(anotherOpt.required).to.be.true;
       expect(anotherOpt.hasArg).to.be.true;
+      expect(anotherOpt.common).to.be.true;
     });
 
     it("should return all args for base classes", function () {
