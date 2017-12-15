@@ -29,6 +29,7 @@ export function runHelp(commandPrototype: any, commandObj: any): void {
   const commandExample: string = getCommandExample(commandPrototype, commandObj);
   const commandHelp: string = getCommandHelp(commandObj);
   const optionsHelpTable: any = getOptionsHelpTable(commandPrototype);
+  const commonSwitchOptionsHelpTable: any = getCommonSwitchOptionsHelpTable(commandPrototype);
 
   out.help();
   out.help(commandHelp);
@@ -39,6 +40,12 @@ export function runHelp(commandPrototype: any, commandObj: any): void {
     out.help();
     out.help("Options:");
     out.help(optionsHelpTable.toString());
+  }
+
+  if (commonSwitchOptionsHelpTable.length > 0) {
+    out.help();
+    out.help("Common Options (works on all commands):");
+    out.help(commonSwitchOptionsHelpTable.toString());
   }
 }
 
@@ -69,9 +76,17 @@ function toSwitchOptionHelp(option: OptionDescription): SwitchOptionHelp {
 
 function getOptionsHelpTable(commandPrototype: any): any {
   const nonCommonSwitchOpts = getSwitchOptionsHelp(commandPrototype, false);
-  const commonSwitchOpts = getSwitchOptionsHelp(commandPrototype, true);
   const posOpts = getPositionalOptionsHelp(commandPrototype);
-  const opts = styleOptsTable(nonCommonSwitchOpts.concat(posOpts).concat(commonSwitchOpts));
+  return getStyledOptionsHelpTable(nonCommonSwitchOpts.concat(posOpts));
+}
+
+function getCommonSwitchOptionsHelpTable(commandPrototype: any): any {
+  const commonSwitchOpts = getSwitchOptionsHelp(commandPrototype, true);
+  return getStyledOptionsHelpTable(commonSwitchOpts);
+}
+
+function getStyledOptionsHelpTable(options: string[][]): any {
+  const opts = styleOptsTable(options);
 
   // Calculate max length of the strings from the first column (switches/positional parameters) - it will be a width for the first column;
   const firstColumnWidth = opts.reduce((contenderMaxWidth, optRow) => Math.max(optRow[0].length, contenderMaxWidth), 0);
