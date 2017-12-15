@@ -12,6 +12,7 @@ export interface OptionDescription {
   defaultValue?: string; // Default value for this option if it's not present
   hasArg?: boolean;      // Does this option take an argument?
   helpText?: string;     // Help text for this parameter
+  common?: boolean;      // Is this option an common option?
 }
 
 export interface OptionsDescription {

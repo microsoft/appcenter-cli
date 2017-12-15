@@ -29,6 +29,7 @@ export function runHelp(commandPrototype: any, commandObj: any): void {
   const commandExample: string = getCommandExample(commandPrototype, commandObj);
   const commandHelp: string = getCommandHelp(commandObj);
   const optionsHelpTable: any = getOptionsHelpTable(commandPrototype);
+  const commonSwitchOptionsHelpTable: any = getCommonSwitchOptionsHelpTable(commandPrototype);
 
   out.help();
   out.help(commandHelp);
@@ -39,6 +40,12 @@ export function runHelp(commandPrototype: any, commandObj: any): void {
     out.help();
     out.help("Options:");
     out.help(optionsHelpTable.toString());
+  }
+
+  if (commonSwitchOptionsHelpTable.length > 0) {
+    out.help();
+    out.help("Common Options (works on all commands):");
+    out.help(commonSwitchOptionsHelpTable.toString());
   }
 }
 
@@ -68,9 +75,18 @@ function toSwitchOptionHelp(option: OptionDescription): SwitchOptionHelp {
 }
 
 function getOptionsHelpTable(commandPrototype: any): any {
-  const switchOpts = getSwitchOptionsHelp(commandPrototype);
+  const nonCommonSwitchOpts = getSwitchOptionsHelp(commandPrototype, false);
   const posOpts = getPositionalOptionsHelp(commandPrototype);
-  const opts = styleOptsTable(switchOpts.concat(posOpts));
+  return getStyledOptionsHelpTable(nonCommonSwitchOpts.concat(posOpts));
+}
+
+function getCommonSwitchOptionsHelpTable(commandPrototype: any): any {
+  const commonSwitchOpts = getSwitchOptionsHelp(commandPrototype, true);
+  return getStyledOptionsHelpTable(commonSwitchOpts);
+}
+
+function getStyledOptionsHelpTable(options: string[][]): any {
+  const opts = styleOptsTable(options);
 
   // Calculate max length of the strings from the first column (switches/positional parameters) - it will be a width for the first column;
   const firstColumnWidth = opts.reduce((contenderMaxWidth, optRow) => Math.max(optRow[0].length, contenderMaxWidth), 0);
@@ -82,8 +98,10 @@ function getOptionsHelpTable(commandPrototype: any): any {
   return helpTableObject;
 }
 
-function getSwitchOptionsHelp(commandPrototype: any): string[][] {
-  const options = sortOptionDescriptions(_.values(getOptionsDescription(commandPrototype))).map(toSwitchOptionHelp);
+function getSwitchOptionsHelp(commandPrototype: any, isCommon: boolean): string[][] {
+  const switchOptions = getOptionsDescription(commandPrototype);
+  const filteredSwitchOptions = filterOptionDescriptions(_.values(switchOptions), isCommon);
+  const options = sortOptionDescriptions(filteredSwitchOptions).map(toSwitchOptionHelp);
   debug(`Command has ${options.length} switch options:`);
   debug(options.map(o => `${o.shortName}|${o.longName}`).join("/"));
   return options.map((optionHelp) => [`    ${switchText(optionHelp)}    `, optionHelp.helpText]);
@@ -177,14 +195,15 @@ function getCommandName(commandObj: any): string {
 }
 
 function getAllOptionExamples(commandPrototype: any): string[] {
-  return getSwitchOptionExamples(commandPrototype)
+  return getSwitchOptionExamples(commandPrototype, false)
     .concat(getPositionalOptionExamples(commandPrototype));
 }
 
-function getSwitchOptionExamples(commandPrototype: any): string[] {
+function getSwitchOptionExamples(commandPrototype: any, includeCommon: boolean = true): string[] {
   const switchOptions = getOptionsDescription(commandPrototype);
+  const switchOptionDescriptions = includeCommon ? _.values(switchOptions) : filterOptionDescriptions(_.values(switchOptions), false);
 
-  return sortOptionDescriptions(_.values(switchOptions))
+  return sortOptionDescriptions(switchOptionDescriptions)
     .map((description: OptionDescription): string => {
       let result: string[] = [];
       result.push(description.shortName ? `-${description.shortName}` : "");
@@ -225,4 +244,8 @@ function sortOptionDescriptions(options: OptionDescription[]): OptionDescription
 
 function highlightString(stringToStyle: string): string {
   return chalk.bold(stringToStyle);
+}
+
+function filterOptionDescriptions(options: OptionDescription[], isCommon: boolean): OptionDescription[] {
+  return isCommon ? options.filter(option => { return option.common }) :  options.filter(option => { return !option.common });
 }

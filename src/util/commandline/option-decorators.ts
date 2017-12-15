@@ -130,6 +130,7 @@ export const shortName = makeStringDecorator("shortName");
 export const longName = makeStringDecorator("longName");
 
 export const hasArg = makeBoolDecorator("hasArg");
+export const common = makeBoolDecorator('common');
 
 function makePositionalDecorator<T>(descriptionFieldName: string): PropertyDecoratorBuilder<T> {
   return function positionalDecoratorBuilder(value: T): PropertyDecorator {

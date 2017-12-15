@@ -1,6 +1,6 @@
 // Base class for all command handlers
 import * as Result from "./command-result";
-import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription } from "./option-decorators";
+import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription, common } from "./option-decorators";
 import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "./option-parser";
 import { setDebug, isDebug, setQuiet, OutputFormatSupport, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
@@ -47,40 +47,48 @@ export class Command {
 
   @longName("debug")
   @help("Display extra output for debugging")
+  @common
   public debug: boolean;
 
   @longName("output")
   @hasArg
   @help("Output format: json")
+  @common
   public format: string;
 
   @longName("token")
   @hasArg
   @help("API token")
+  @common
   public token: string;
 
   @longName("env")
   @hasArg
   @help("Environment when using API token")
+  @common
   public environmentName: string;
 
   @shortName("h")
   @longName("help")
   @help("Display help for current command")
+  @common
   public help: boolean;
 
   @longName("quiet")
   @help("Auto-confirm any prompts without waiting for input")
+  @common
   public quiet: boolean;
 
   @shortName("v")
   @longName("version")
   @help(`Display ${scriptName} version`)
+  @common
   public version: boolean;
 
 
   @longName("disable-telemetry")
   @help("Disable telemetry for this command")
+  @common
   public disableTelemetry: boolean;
 
   // Entry point for runner. DO NOT override in command definition!
