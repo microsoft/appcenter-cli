@@ -5,6 +5,7 @@ import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as chalk from "chalk";
 import * as path from "path";
+import * as fs from "fs";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";
 import { isValidOS, isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectAppVersion } from "./lib/cordova-utils";
 
@@ -93,7 +94,13 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
     if (this.os === "ios") {
       outputFolder = path.join(platformFolder, "www");
     } else if (this.os === "android") {
-      outputFolder = path.join(platformFolder, "assets", "www");
+      // Since cordova-android 7 assets directory moved to android/app/src/main/assets instead of android/assets                
+      let outputFolderVer7 = path.join(platformFolder, "app", "src", "main", "assets", "www");
+      if (fs.existsSync(outputFolderVer7)) {
+        outputFolder = outputFolderVer7;
+      } else {
+        outputFolder = path.join(platformFolder, "assets", "www");
+      }
     }
 
     return outputFolder;
