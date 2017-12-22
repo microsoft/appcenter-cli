@@ -95,7 +95,7 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
       outputFolder = path.join(platformFolder, "www");
     } else if (this.os === "android") {
       // Since cordova-android 7 assets directory moved to android/app/src/main/assets instead of android/assets                
-      let outputFolderVer7 = path.join(platformFolder, "app", "src", "main", "assets", "www");
+      const outputFolderVer7 = path.join(platformFolder, "app", "src", "main", "assets", "www");
       if (fs.existsSync(outputFolderVer7)) {
         outputFolder = outputFolderVer7;
       } else {
