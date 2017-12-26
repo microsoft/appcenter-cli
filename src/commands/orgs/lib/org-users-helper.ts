@@ -6,7 +6,7 @@ const debug = require("debug")("appcenter-cli:commands:orgs:lib:org-users-helper
 
 export async function getOrgUsers(client: AppCenterClient, organization: string, debug: Function): Promise<models.OrganizationUserResponse[]> {
   try {
-    const httpResponse = await clientRequest<models.OrganizationUserResponse[]>((cb) => client.users.listForOrg(organization, cb));
+    const httpResponse = await clientRequest<models.OrganizationUserResponse[]>((cb) => client.account.users.listForOrg(organization, cb));
     if (httpResponse.response.statusCode < 400) {
       return httpResponse.result;
     } else {
@@ -24,7 +24,7 @@ export async function getOrgUsers(client: AppCenterClient, organization: string,
 
 export async function getOrgsNamesList(client: AppCenterClient): Promise<IEntity[]> {
   try {
-    const httpResponse = await clientRequest<models.OrganizationResponse[]>((cb) => client.organizations.list(cb));
+    const httpResponse = await clientRequest<models.OrganizationResponse[]>((cb) => client.account.organizations.list(cb));
     if (httpResponse.response.statusCode < 400) {
       return httpResponse.result.map((org) => ({
         name: org.name,

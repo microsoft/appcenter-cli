@@ -18,7 +18,7 @@ export default class ListDistributionGroupsCommand extends AppCommand {
     let distributionGroupsListRequestResponse: ClientResponse<models.DistributionGroupResponse[]>;
     try {
       distributionGroupsListRequestResponse = await out.progress("Getting list of the distribution groups...",
-        clientRequest<models.DistributionGroupResponse[]>((cb) => client.distributionGroups.list(app.ownerName, app.appName, cb)));
+        clientRequest<models.DistributionGroupResponse[]>((cb) => client.account.distributionGroups.list(app.appName, app.ownerName, cb)));
     } catch (error) {
       debug(`Failed to get list of the distribution groups - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, "failed to fetch list of all distribution groups");
@@ -38,7 +38,7 @@ export default class ListDistributionGroupsCommand extends AppCommand {
     const distributionGroupUsersPromises: Array<Promise<ClientResponse<models.DistributionGroupUserGetResponse[]>>> = [];
     for (const distributionGroupName of distributionGroupsNames){
       distributionGroupUsersPromises.push(limit(() => clientRequest<models.DistributionGroupUserGetResponse[]>(
-          (cb) => client.distributionGroups.listUsers(this.app.ownerName, this.app.appName, distributionGroupName, cb))));
+          (cb) => client.account.distributionGroups.listUsers(this.app.appName, distributionGroupName, this.app.ownerName, cb))));
     }
 
     // Showing progress spinner while requests are being sent

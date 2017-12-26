@@ -24,7 +24,7 @@ export default class ShowBranchBuildStatusCommand extends AppCommand {
     let branchBuildsRequestResponse: ClientResponse<models.Build[]>;
     try {
       branchBuildsRequestResponse = await out.progress(`Getting builds for branch ${this.branchName}...`,
-        clientRequest<models.Build[]>((cb) => client.builds.listByBranch(this.branchName, app.ownerName, app.appName, cb)));
+        clientRequest<models.Build[]>((cb) => client.build. builds.listByBranch(this.branchName, app.ownerName, app.appName, cb)));
     } catch (error) {
       if (error.statusCode === 400) {
         return failure(ErrorCodes.IllegalCommand, `app ${app.appName} is not configured for building`);
@@ -48,7 +48,7 @@ export default class ShowBranchBuildStatusCommand extends AppCommand {
     let commitInfoRequestResponse: ClientResponse<models.CommitDetails[]>;
     try {
       commitInfoRequestResponse = await out.progress(`Getting commit info for ${lastBuild.sourceVersion}...`,
-        clientRequest<models.CommitDetails[]>((cb) => client.commits.listByShaList([lastBuild.sourceVersion], app.ownerName, app.appName, cb)));
+        clientRequest<models.CommitDetails[]>((cb) => client.build.commits.listByShaList(app.appName, [lastBuild.sourceVersion], app.ownerName, cb)));
     } catch (error) {
       debug(`Request failed - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, "the Branch Builds request was rejected for an unknown reason");

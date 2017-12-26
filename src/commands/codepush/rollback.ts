@@ -35,7 +35,7 @@ export default class CodePushRollbackCommand extends AppCommand {
     try {
       debug("Rollback CodePush release");
       const httpRequest = await out.progress("Rollback CodePush release...", clientRequest<models.CodePushRelease>(
-        (cb) => client.codePushDeploymentRelease.rollback(this.deploymentName, app.ownerName, app.appName, { label: this.targetRelease}, cb)));
+        (cb) => client.codepush.codePushDeploymentRelease.rollback(app.appName, this.deploymentName, app.ownerName, { releaseLabel: { label: this.targetRelease } }, cb)));
     } catch (error){
       debug(`Failed to rollback CodePush release - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, error.response.body);

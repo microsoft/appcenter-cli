@@ -151,7 +151,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     let buildStatusRequestResponse: ClientResponse<models.Build>;
     try {
       buildStatusRequestResponse = await out.progress(`Getting status of build ${this.buildId}...`,
-        clientRequest<models.Build>((cb) => client.builds.get(buildIdNumber, app.ownerName, app.appName, cb)));
+        clientRequest<models.Build>((cb) => client.build.builds.get(app.appName, buildIdNumber, app.ownerName, cb)));
     } catch (error) {
       if (error.statusCode === 404) {
         throw failure(ErrorCodes.InvalidParameter, `build ${buildIdNumber} was not found`);
@@ -177,7 +177,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     let downloadDataResponse: ClientResponse<models.DownloadContainer>;
     try {
       downloadDataResponse = await out.progress(`Getting ${this.type} download URL for build ${this.buildId}...`,
-        clientRequest<models.DownloadContainer>((cb) => client.builds.getDownloadUri(buildIdNumber, this.type, app.ownerName, app.appName, cb)));
+        clientRequest<models.DownloadContainer>((cb) => client.build.builds.getDownloadUri(app.appName, buildIdNumber, this.type, app.ownerName, cb)));
     } catch (error) {
       debug(`Request failed - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, `failed to get ${this.type} downloading URL for build ${this.buildId}`);

@@ -18,7 +18,7 @@ export default class OrgAppsListCommand extends Command {
 
   async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     try {
-      const httpResponse = await out.progress("Loading list of organization apps...", clientRequest<models.AppResponse[]>((cb) => client.apps.listForOrg(this.name, cb)));
+      const httpResponse = await out.progress("Loading list of organization apps...", clientRequest<models.AppResponse[]>((cb) => client.account.apps.listForOrg(this.name, cb)));
       if (httpResponse.response.statusCode < 400) {
         const table = httpResponse.result.map((app) => [app.displayName, app.name, app.os, app.platform]);
         out.table(out.getCommandOutputTableOptions(["Display Name", "Name", "OS", "Platform"]), table);

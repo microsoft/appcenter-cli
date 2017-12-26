@@ -79,10 +79,10 @@ export class StateChecker {
 
   private getTestRunState(client: AppCenterClient, testRunId: string): Promise<models.TestRunState> {
     return clientCall(cb => {
-      client.test.getTestRunState(
-        testRunId,
-        this.ownerName,
+      client.test.test.getTestRunState(
         this.appName,
+        this.ownerName,
+        testRunId,
         cb
       );
     });

@@ -92,7 +92,7 @@ export default class LoginCommand extends Command {
     const client = this.clientFactory.fromUserNameAndPassword(this.userName, this.password, endpoint);
 
     let createTokenResponse = await out.progress("Logging in...",
-      clientRequest<models.ApiTokensCreateResponse>(cb => client.apiTokens.newMethod({ description: "AppCenter CLI"}, cb)));
+      clientRequest<any>(cb => client.account.apiTokens.newMethod({ description: { description: "AppCenter CLI" }}, cb)));
 
     if (createTokenResponse.response.statusCode >= 400) {
       throw new Error("login was not successful");
@@ -137,7 +137,7 @@ export default class LoginCommand extends Command {
   private getUserInfo(token: string): Promise<ClientResponse<models.UserProfileResponse>> {
     const endpoint = environments(this.environmentName).endpoint;
     const client = this.clientFactory.fromToken(token, endpoint);
-    return clientRequest<models.UserProfileResponse>(cb => client.users.get(cb));
+    return clientRequest<models.UserProfileResponse>(cb => client.account.users.get(cb));
   }
 
   private async removeLoggedInUser(): Promise<void> {

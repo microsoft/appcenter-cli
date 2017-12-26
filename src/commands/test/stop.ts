@@ -24,10 +24,11 @@ export default class StopCommand extends AppCommand {
 
   private stopTestRun(client: AppCenterClient, testRunId: string): Promise<VoidFunction> {
     return clientCall(cb => {
-      client.test.stopTestRun(
-        testRunId,
-        this.app.ownerName,
+      client.test.test.stopTestRun(
         this.app.appName,
+        this.app.ownerName,
+        testRunId,
+        {},
         cb
       );
     });

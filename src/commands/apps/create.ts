@@ -57,7 +57,7 @@ export default class AppCreateCommand extends Command {
 
     debug(`Creating app with attributes: ${inspect(appAttributes)}`);
     const createAppResponse = await out.progress("Creating app ...",
-      clientRequest<models.AppResponse>(cb => client.apps.create(appAttributes, cb))
+      clientRequest<models.AppResponse>(cb => client.account.apps.create(appAttributes, cb))
     );
     const statusCode = createAppResponse.response.statusCode;
     if (statusCode >= 400) {

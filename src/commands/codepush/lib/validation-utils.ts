@@ -20,7 +20,7 @@ export function isValidRollout(rollout: number): boolean {
 
 export async function isValidDeployment(client: AppCenterClient, app: DefaultApp, deploymentName: string): Promise<boolean> {
   const httpRequest = await clientRequest<models.CodePushRelease>(
-    (cb) => client.codePushDeployments.get(deploymentName, app.ownerName, app.appName, cb));
+    (cb) => client.codepush.codePushDeployments.get(app.appName, deploymentName, app.ownerName, cb));
 
   return httpRequest.response.statusCode === 200 ? Promise.resolve(true) : Promise.resolve(false);
 }

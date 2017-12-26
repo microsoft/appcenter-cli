@@ -126,7 +126,7 @@ export class TestCloudUploader {
 
   private createTestRun(isOrg: boolean): Promise<StartedTestRun> {
      return new Promise<StartedTestRun>((resolve, reject) => {
-       this._client.test.createTestRun(
+       this._client.test.test.createTestRun(
          this._userName,
          this._appName,
          (err: Error, _result: any, _request: any, response: http.IncomingMessage) => {
@@ -162,11 +162,11 @@ export class TestCloudUploader {
     let mappedFiles = files.map(f => this.testRunFileToFileHash(f.file, f.byteRange));
 
     let clientResponse = await clientRequest<models.TestCloudFileHashResponse[]>(cb => {
-      this._client.test.uploadHashesBatch(
-        testRunId,
+      this._client.test.test.uploadHashesBatch(
+        this._appName,
         mappedFiles,
         this._userName,
-        this._appName,
+        testRunId,
         cb);
     });
 
@@ -188,10 +188,10 @@ export class TestCloudUploader {
 
   private getDirectUploadUrl(client: AppCenterClient, testRunId: string, file: TestRunFile): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      client.test.startUploadingFile(
-        testRunId,
-        this._userName,
+      client.test.test.startUploadingFile(
         this._appName,
+        this._userName,
+        testRunId,
         (err, _result, _request, response) => {
           if (err) {
             reject(err);
@@ -250,11 +250,11 @@ export class TestCloudUploader {
     };
 
     return clientCall(cb => {
-      this._client.test.startTestRun(
-        testRunId,
-        startOptions,
-        this._userName,
+      this._client.test.test.startTestRun(
         this._appName,
+        this._userName,
+        startOptions,
+        testRunId,
         cb);
     });
   }

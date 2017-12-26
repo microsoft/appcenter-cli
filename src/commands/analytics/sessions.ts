@@ -99,7 +99,7 @@ export default class SessionCommand extends AppCommand {
 
   private async loadSessionDurationsStatistics(client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<models.SessionDurationsDistribution> {
     try {
-      return (await clientRequest<models.SessionDurationsDistribution>((cb) => client.analytics.sessionDurationsDistribution(startDate, app.ownerName, app.appName, {
+      return (await clientRequest<models.SessionDurationsDistribution>((cb) => client.analytics.analytics.sessionDurationsDistributionMethod(app.ownerName, app.appName, startDate, {
         end: endDate,
         versions: appVersion
       }, cb))).result;
@@ -111,7 +111,7 @@ export default class SessionCommand extends AppCommand {
 
   private async loadSessionCountsStatistics(client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<models.DateTimeCounts[]> {
     try {
-      const httpResponse = await clientRequest<models.DateTimeCounts[]>((cb) => client.analytics.sessionCounts(startDate, "P1D", app.ownerName, app.appName, {
+      const httpResponse = await clientRequest<models.DateTimeCounts[]>((cb) => client.analytics.analytics.sessionCounts("P1D", app.ownerName, app.appName, startDate, {
         end: endDate,
         versions: appVersion
       }, cb));

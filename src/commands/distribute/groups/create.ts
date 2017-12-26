@@ -68,7 +68,7 @@ export default class CreateDistributionGroupCommand extends AppCommand {
   private async createDistributionGroup(client: AppCenterClient, app: DefaultApp) {
     try {
       const createDistributionGroupRequestResponse = await out.progress("Creating distribution group...",
-        clientRequest((cb) => client.distributionGroups.create(app.ownerName, app.appName, this.distributionGroup, cb)));
+        clientRequest((cb) => client.account.distributionGroups.create(app.appName, { name: this.distributionGroup }, app.ownerName, cb)));
       if (createDistributionGroupRequestResponse.response.statusCode >= 400) {
         throw createDistributionGroupRequestResponse.response.statusCode;
       }
@@ -85,9 +85,9 @@ export default class CreateDistributionGroupCommand extends AppCommand {
   private async addTestersToDistributionGroup(client: AppCenterClient, app: DefaultApp, users: string[]): Promise<models.DistributionGroupUserPostResponse[]> {
     try {
       const addUsersToDistributionGroupRequestResponse = await out.progress("Adding testers to the distribution group...",
-        clientRequest<models.DistributionGroupUserPostResponse[]>((cb) => client.distributionGroups.addUser(app.ownerName, app.appName, this.distributionGroup, {
+        clientRequest<models.DistributionGroupUserPostResponse[]>((cb) => client.account.distributionGroups.addUser(app.appName, this.distributionGroup, {
           userEmails: users
-        }, cb)));
+        }, app.ownerName, cb)));
       if (addUsersToDistributionGroupRequestResponse.response.statusCode >= 400) {
         throw addUsersToDistributionGroupRequestResponse.response.statusCode;
       }

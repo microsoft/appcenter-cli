@@ -24,7 +24,7 @@ async function performLogout(client: AppCenterClient, user: Profile): Promise<vo
                 tokenId = "current";
               }
               debug(`Attempting to delete token id ${tokenId} off server`);
-              client.apiTokens.deleteMethod(tokenId, cb);
+              client.account.apiTokens.deleteMethod(tokenId, cb);
             } catch(err) {
               debug('Could not retrieve current token from token store');
               cb(err, null, null, null);

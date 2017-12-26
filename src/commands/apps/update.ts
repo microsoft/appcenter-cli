@@ -48,7 +48,7 @@ export default class AppUpdateCommand extends AppCommand {
 
     const app = this.app;
     const updateAppResponse = await out.progress("Updating app ...",
-      clientRequest<models.AppResponse>(cb => client.apps.update(app.appName, app.ownerName, { app: appAttributes }, cb))
+      clientRequest<models.AppResponse>(cb => client.account.apps.update(app.appName, app.ownerName, { app: appAttributes }, cb))
     );
 
     const statusCode = updateAppResponse.response.statusCode;

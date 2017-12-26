@@ -70,7 +70,7 @@ export default class UploadMissingSymbols extends AppCommand {
   private async getMissingSymbolsIds(client: AppCenterClient, app: DefaultApp): Promise<string[]> {
     let missingSymbolsIds: string[];
     try {
-      const httpResponse = await clientRequest<models.MissingSymbolCrashGroupsResponse>((cb) => client.missingSymbolGroups.list(Number.MAX_SAFE_INTEGER, app.ownerName, app.appName, cb));
+      const httpResponse = await clientRequest<models.MissingSymbolCrashGroupsResponse>((cb) => client.crash.missingSymbolGroups.list(app.appName, app.ownerName, Number.MAX_SAFE_INTEGER, cb));
       return _.flatten(httpResponse.result.groups
         .map((crashGroup) => crashGroup.missingSymbols.filter((s) => s.status === "missing").map((s) => s.symbolId)));
     } catch (error) {

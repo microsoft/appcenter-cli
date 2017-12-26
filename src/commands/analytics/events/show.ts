@@ -97,7 +97,7 @@ export default class ShowCommand extends AppCommand {
   private async getEvents(client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, eventCount: number, loadProperties: boolean, appVersions: string[] | undefined, eventNames: string[] | undefined): Promise<IEventStatistics[]> {
     let eventsStatistics: IEventStatistics[];
     try {
-      const httpContent = await clientRequest<models.Events>((cb) => client.analytics.events(startDate, app.ownerName, app.appName, {
+      const httpContent = await clientRequest<models.Events>((cb) => client.analytics.analytics.eventsMethod(app.ownerName, app.appName, startDate, {
         end: endDate,
         versions: appVersions,
         orderby: "count desc",
@@ -107,7 +107,7 @@ export default class ShowCommand extends AppCommand {
         inlinecount: "allpages"
       }, cb));
 
-      eventsStatistics = httpContent.result.eventsProperty.map((event) => ({
+      eventsStatistics = httpContent.result.events.map((event) => ({
         name: event.name,
         count: event.count,
         countChange: calculatePercentChange(event.count, event.previousCount),
@@ -134,9 +134,9 @@ export default class ShowCommand extends AppCommand {
   private async getProperties(client: AppCenterClient, app: DefaultApp, eventName: string, startDate: Date, endDate: Date, appVersions: string[] | undefined, limit: any): Promise<IPropertyStatistics[]> {
     let propertiesNames: string[];
     try {
-      const httpContent = await <Promise<ClientResponse<models.EventProperties>>> limit(() => clientRequest<models.EventProperties>((cb) => client.analytics.eventProperties(eventName, app.ownerName, app.appName, cb)));
+      const httpContent = await <Promise<ClientResponse<models.EventProperties>>> limit(() => clientRequest<models.EventProperties>((cb) => client.analytics.analytics.eventPropertiesMethod(eventName, app.ownerName, app.appName, cb)));
 
-      propertiesNames = httpContent.result.eventPropertiesProperty;
+      propertiesNames = httpContent.result.eventProperties;
     } catch (error) {
       debug(`Failed to get event properties of event ${eventName} - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, `failed to get event properties of event ${eventName}`);
@@ -152,7 +152,7 @@ export default class ShowCommand extends AppCommand {
 
   private async getPropertyValueStatistics(client: AppCenterClient, app: DefaultApp, eventName: string, eventPropertyName: string, startDate: Date, endDate: Date, appVersions: string[] | undefined, limit: any): Promise<IPropertyValueStatistics[]> {
     try {
-      const httpContent = await <Promise<ClientResponse<models.EventPropertyValues>>> limit(() => clientRequest<models.EventPropertyValues>((cb) => client.analytics.eventPropertyCounts(eventName, eventPropertyName, startDate, app.ownerName, app.appName, {
+      const httpContent = await <Promise<ClientResponse<models.EventPropertyValues>>> limit(() => clientRequest<models.EventPropertyValues>((cb) => client.analytics.analytics.eventPropertyCounts(eventName, eventPropertyName, app.ownerName, app.appName, startDate, {
         end: endDate,
         versions: appVersions
       }, cb)));

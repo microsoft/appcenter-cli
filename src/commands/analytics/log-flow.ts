@@ -44,7 +44,7 @@ export default class ShowLogFlowCommand extends AppCommand {
       try {
         debug ("Loading logs");
         // start time is not specified for the first request
-        return await clientRequest((cb) => client.analytics.genericLogFlow(app.ownerName, app.appName, options, cb));
+        return await clientRequest<models.GenericLogContainer>((cb) => client.analytics.analytics.genericLogFlow(app.ownerName, app.appName, options, cb));
       } catch (error) {
         debug(`Failed to load the logs - ${inspect(error)}`);
         throw failure(ErrorCodes.Exception, "failed to load the logs");

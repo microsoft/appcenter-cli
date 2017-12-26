@@ -104,13 +104,13 @@ export default class AudienceCommand extends AppCommand {
 
   private async loadDevicesStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.AnalyticsModels>((cb) => client.analytics.modelCounts(startDate, app.ownerName, app.appName, {
+      const httpRequest = await clientRequest<models.AnalyticsModels>((cb) => client.analytics.analytics.modelCounts(app.ownerName, app.appName, startDate, {
         end: endDate,
         versions: appVersion
       }, cb));
 
       const result = httpRequest.result;
-      statisticsObject.devices = result.models.map((model) => ({
+      statisticsObject.devices = result.modelsProperty.map((model) => ({
         count: model.count,
         value: model.modelName,
         percentage: calculatePercentage(model.count, result.total)
@@ -123,13 +123,13 @@ export default class AudienceCommand extends AppCommand {
 
   private async loadCountriesStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.Places>((cb) => client.analytics.placeCounts(startDate, app.ownerName, app.appName, {
+      const httpRequest = await clientRequest<models.Places>((cb) => client.analytics.analytics.placeCounts(app.ownerName, app.appName, startDate, {
         end: endDate,
         versions: appVersion
       }, cb));
 
       const result = httpRequest.result;
-      statisticsObject.countries = result.placesProperty.map((place) => ({
+      statisticsObject.countries = result.places.map((place) => ({
         count: place.count,
         value: place.code,
         percentage: calculatePercentage(place.count, result.total)
@@ -142,13 +142,13 @@ export default class AudienceCommand extends AppCommand {
 
   private async loadLanguagesStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.Languages>((cb) => client.analytics.languageCounts(startDate, app.ownerName, app.appName, {
+      const httpRequest = await clientRequest<models.Languages>((cb) => client.analytics.analytics.languageCounts(app.ownerName, app.appName, startDate, {
         end: endDate,
         versions: appVersion
       }, cb));
 
       const result = httpRequest.result;
-      statisticsObject.languages = result.languagesProperty.map((language) => ({
+      statisticsObject.languages = result.languages.map((language) => ({
         count: language.count,
         value: language.languageName,
         percentage: calculatePercentage(language.count, result.total)
@@ -161,7 +161,7 @@ export default class AudienceCommand extends AppCommand {
 
   private async loadActiveUsersStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.ActiveDeviceCounts>((cb) => client.analytics.deviceCounts(startDate, app.ownerName, app.appName, {
+      const httpRequest = await clientRequest<models.ActiveDeviceCounts>((cb) => client.analytics.analytics.deviceCounts(app.ownerName, app.appName, startDate, {
         end: endDate,
         versions: appVersion
       }, cb));

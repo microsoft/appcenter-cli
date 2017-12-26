@@ -29,7 +29,7 @@ export default class CodePushClearDeploymentCommand extends AppCommand {
     try {
       debug("Clearing release history");
       const httpResponse = await out.progress(`Clearing release history for deployment ${this.deploymentName}...`,
-        clientRequest((cb) => client.codePushDeploymentReleases.deleteMethod(this.deploymentName, app.ownerName, app.appName, cb)));
+        clientRequest((cb) => client.codepush.codePushDeploymentReleases.deleteMethod(this.deploymentName, app.ownerName, app.appName, cb)));
     } catch (error) {
       debug(`Failed to clear deployment history - ${inspect(error)}`);
       if (error.statusCode === 404) {

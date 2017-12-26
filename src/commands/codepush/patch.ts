@@ -90,7 +90,7 @@ export default class PatchCommand extends AppCommand {
 
     try {
       const httpRequest = await out.progress("Patching CodePush release...", clientRequest<models.CodePushRelease>(
-        (cb) => client.deploymentReleases.update(this.deploymentName, this.releaseLabel, patch, app.ownerName, app.appName, cb)));
+        (cb) => client.codepush.deploymentReleases.update(app.appName, this.deploymentName, this.releaseLabel, patch, app.ownerName, cb)));
       release = httpRequest.result;
       if (httpRequest.response.statusCode === 204) {
         out.text(`No update for the ${chalk.bold(this.releaseLabel)} of ${this.identifier} app's ${chalk.bold(this.deploymentName)} deployment`);
@@ -108,7 +108,7 @@ export default class PatchCommand extends AppCommand {
     let releases: models.CodePushRelease[];
     try {
       const httpRequest = await out.progress("Fetching latest release label...", clientRequest<models.CodePushRelease[]>(
-        (cb) => client.codePushDeploymentReleases.get(this.deploymentName, app.ownerName, app.appName, cb)));
+        (cb) => client.codepush.codePushDeploymentReleases.get(app.appName, this.deploymentName, app.ownerName, cb)));
         releases = httpRequest.result;
     } catch (error) {
       debug(`Failed to get list of CodePush deployments - ${inspect(error)}`);
