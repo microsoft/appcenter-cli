@@ -179,16 +179,24 @@ export function getReactNativeProjectAppVersion(versionSearchParams: VersionSear
       throw new Error(`Unable to find or read "${appxManifestFileName}" in the "${path.join("windows", projectName)}" folder.`);
     }
 
+    var verStr
     xml2js.parseString(appxManifestContents, (err: Error, parsedAppxManifest: any) => {
       if (err) {
         throw new Error(`Unable to parse the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file, it could be malformed.`);
       }
       try {
-        return parsedAppxManifest.Package.Identity[0]["$"].Version.match(/^\d+\.\d+\.\d+/)[0];
+        verStr = parsedAppxManifest.Package.Identity[0]["$"].Version.match(/^\d+\.\d+\.\d+/)[0];
       } catch (e) {
         throw new Error(`Unable to parse the package version from the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file.`);
       }
     });
+
+    // Wait for xml2js.parseString finish.
+    while(true) {
+        if(verStr !== null)
+            break
+    }
+    return Promise.resolve(verStr)
   }
 }
 
