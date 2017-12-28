@@ -19,7 +19,7 @@ export interface VersionSearchParams {
   gradleFile: string;
 }
 
-export function getReactNativeProjectAppVersion(versionSearchParams: VersionSearchParams, projectRoot?: string): Promise<string> {
+export async function getReactNativeProjectAppVersion(versionSearchParams: VersionSearchParams, projectRoot?: string): Promise<string> {
   projectRoot = projectRoot || process.cwd();
   var projectPackageJson: any = require(path.join(projectRoot, "package.json"));
   var projectName: string = projectPackageJson.name;
@@ -179,24 +179,18 @@ export function getReactNativeProjectAppVersion(versionSearchParams: VersionSear
       throw new Error(`Unable to find or read "${appxManifestFileName}" in the "${path.join("windows", projectName)}" folder.`);
     }
 
-    var verStr
-    xml2js.parseString(appxManifestContents, (err: Error, parsedAppxManifest: any) => {
-      if (err) {
-        throw new Error(`Unable to parse the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file, it could be malformed.`);
-      }
-      try {
-        verStr = parsedAppxManifest.Package.Identity[0]["$"].Version.match(/^\d+\.\d+\.\d+/)[0];
-      } catch (e) {
-        throw new Error(`Unable to parse the package version from the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file.`);
-      }
+    return new Promise<string>((resolve, reject) => {
+      xml2js.parseString(appxManifestContents, (err: Error, parsedAppxManifest: any) => {
+        if (err) {
+          throw new Error(`Unable to parse the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file, it could be malformed.`);
+        }
+        try {
+          resolve(parsedAppxManifest.Package.Identity[0]["$"].Version.match(/^\d+\.\d+\.\d+/)[0]);
+        } catch (e) {
+          throw new Error(`Unable to parse the package version from the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file.`);
+        }
+      });
     });
-
-    // Wait for xml2js.parseString finish.
-    while(true) {
-        if(verStr !== null)
-            break
-    }
-    return Promise.resolve(verStr)
   }
 }
 
@@ -205,20 +199,20 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
   let envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
 
   if (typeof envNodeArgs !== "undefined") {
-      Array.prototype.push.apply(reactNativeBundleArgs, envNodeArgs.trim().split(/\s+/));
+    Array.prototype.push.apply(reactNativeBundleArgs, envNodeArgs.trim().split(/\s+/));
   }
 
   Array.prototype.push.apply(reactNativeBundleArgs, [
-      path.join("node_modules", "react-native", "local-cli", "cli.js"), "bundle",
-      "--assets-dest", outputFolder,
-      "--bundle-output", path.join(outputFolder, bundleName),
-      "--dev", development,
-      "--entry-file", entryFile,
-      "--platform", platform,
+    path.join("node_modules", "react-native", "local-cli", "cli.js"), "bundle",
+    "--assets-dest", outputFolder,
+    "--bundle-output", path.join(outputFolder, bundleName),
+    "--dev", development,
+    "--entry-file", entryFile,
+    "--platform", platform,
   ]);
 
   if (sourcemapOutput) {
-      reactNativeBundleArgs.push("--sourcemap-output", sourcemapOutput);
+    reactNativeBundleArgs.push("--sourcemap-output", sourcemapOutput);
   }
 
   out.text(chalk.cyan("Running \"react-native bundle\" command:\n"));
@@ -226,21 +220,21 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
   out.text(`node ${reactNativeBundleArgs.join(" ")}`);
 
   return new Promise<void>((resolve, reject) => {
-      reactNativeBundleProcess.stdout.on("data", (data: Buffer) => {
-        out.text(data.toString().trim());
-      });
+    reactNativeBundleProcess.stdout.on("data", (data: Buffer) => {
+      out.text(data.toString().trim());
+    });
 
-      reactNativeBundleProcess.stderr.on("data", (data: Buffer) => {
-          console.error(data.toString().trim());
-      });
+    reactNativeBundleProcess.stderr.on("data", (data: Buffer) => {
+      console.error(data.toString().trim());
+    });
 
-      reactNativeBundleProcess.on("close", (exitCode: number) => {
-          if (exitCode) {
-              reject(new Error(`"react-native bundle" command exited with code ${exitCode}.`));
-          }
+    reactNativeBundleProcess.on("close", (exitCode: number) => {
+      if (exitCode) {
+        reject(new Error(`"react-native bundle" command exited with code ${exitCode}.`));
+      }
 
-          resolve(<void>null);
-      });
+      resolve(<void>null);
+    });
   });
 }
 
