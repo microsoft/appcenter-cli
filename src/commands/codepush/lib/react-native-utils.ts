@@ -174,7 +174,7 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
     var appxManifestFileName: string = "Package.appxmanifest";
     try {
       var appxManifestContainingFolder: string = path.join("windows", projectName);
-      var appxManifestContents: string = fs.readFileSync(path.join(appxManifestContainingFolder, "Package.appxmanifest")).toString();
+      var appxManifestContents: string = fs.readFileSync(path.join(appxManifestContainingFolder, appxManifestFileName)).toString();
     } catch (err) {
       throw new Error(`Unable to find or read "${appxManifestFileName}" in the "${path.join("windows", projectName)}" folder.`);
     }
@@ -186,6 +186,7 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         }
         try {
           let appVersion: string = parsedAppxManifest.Package.Identity[0]["$"].Version.match(/^\d+\.\d+\.\d+/)[0];
+          out.text(`Using the target binary version value "${appVersion}" from the "Identity" key in the "${appxManifestFileName}" file.\n`);
           return resolve(appVersion);
         } catch (e) {
           throw new Error(`Unable to parse the package version from the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file.`);
