@@ -185,7 +185,8 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
           throw new Error(`Unable to parse the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file, it could be malformed.`);
         }
         try {
-          resolve(parsedAppxManifest.Package.Identity[0]["$"].Version.match(/^\d+\.\d+\.\d+/)[0]);
+          let appVersion: string = parsedAppxManifest.Package.Identity[0]["$"].Version.match(/^\d+\.\d+\.\d+/)[0];
+          return resolve(appVersion);
         } catch (e) {
           throw new Error(`Unable to parse the package version from the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file.`);
         }
@@ -199,20 +200,20 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
   let envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
 
   if (typeof envNodeArgs !== "undefined") {
-    Array.prototype.push.apply(reactNativeBundleArgs, envNodeArgs.trim().split(/\s+/));
+      Array.prototype.push.apply(reactNativeBundleArgs, envNodeArgs.trim().split(/\s+/));
   }
 
   Array.prototype.push.apply(reactNativeBundleArgs, [
-    path.join("node_modules", "react-native", "local-cli", "cli.js"), "bundle",
-    "--assets-dest", outputFolder,
-    "--bundle-output", path.join(outputFolder, bundleName),
-    "--dev", development,
-    "--entry-file", entryFile,
-    "--platform", platform,
+      path.join("node_modules", "react-native", "local-cli", "cli.js"), "bundle",
+      "--assets-dest", outputFolder,
+      "--bundle-output", path.join(outputFolder, bundleName),
+      "--dev", development,
+      "--entry-file", entryFile,
+      "--platform", platform,
   ]);
 
   if (sourcemapOutput) {
-    reactNativeBundleArgs.push("--sourcemap-output", sourcemapOutput);
+      reactNativeBundleArgs.push("--sourcemap-output", sourcemapOutput);
   }
 
   out.text(chalk.cyan("Running \"react-native bundle\" command:\n"));
@@ -220,21 +221,21 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
   out.text(`node ${reactNativeBundleArgs.join(" ")}`);
 
   return new Promise<void>((resolve, reject) => {
-    reactNativeBundleProcess.stdout.on("data", (data: Buffer) => {
-      out.text(data.toString().trim());
-    });
+      reactNativeBundleProcess.stdout.on("data", (data: Buffer) => {
+        out.text(data.toString().trim());
+      });
 
-    reactNativeBundleProcess.stderr.on("data", (data: Buffer) => {
-      console.error(data.toString().trim());
-    });
+      reactNativeBundleProcess.stderr.on("data", (data: Buffer) => {
+          console.error(data.toString().trim());
+      });
 
-    reactNativeBundleProcess.on("close", (exitCode: number) => {
-      if (exitCode) {
-        reject(new Error(`"react-native bundle" command exited with code ${exitCode}.`));
-      }
+      reactNativeBundleProcess.on("close", (exitCode: number) => {
+          if (exitCode) {
+              reject(new Error(`"react-native bundle" command exited with code ${exitCode}.`));
+          }
 
-      resolve(<void>null);
-    });
+          resolve(<void>null);
+      });
   });
 }
 
