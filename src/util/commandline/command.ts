@@ -183,4 +183,16 @@ export class Command {
     const packageJson: any = require(packageJsonPath);
     return packageJson.version;
   }
+
+  protected fixArrayParameter(input: any): string[]
+  {
+    if (!input) {
+      return [];
+    }
+    else if (typeof input === "string") {
+      return [ input ];
+    }
+
+    return input;
+  }
 }
