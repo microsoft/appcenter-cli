@@ -95,6 +95,11 @@ export function notLoggedIn(command: string): CommandResult {
     `Command '${command}' requires a logged in user. Use the '${scriptName} login' command to log in.`);
 }
 
+export function incorrectToken(command: string): CommandResult {
+  return failure(ErrorCodes.NotLoggedIn,
+    `Command '${command}' requires a valid token. Please check the --token and regenerate if it's correct and you still see this message.`);
+}
+
 export function exception(command: string, ex: Error): CommandResult {
   return {
     succeeded: false,

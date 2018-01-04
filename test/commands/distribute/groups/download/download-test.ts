@@ -4,9 +4,11 @@ import * as Nock from "nock";
 import * as Path from "path";
 import * as Temp from "temp";
 import * as _ from "lodash";
+import * as Sinon from "sinon";
 
 import DownloadBinaryFromDistributionGroupCommand from "../../../../../src/commands/distribute/groups/download";
 import { CommandArgs, CommandResult } from "../../../../../src/util/commandline";
+import { TokenValidator, tokenValidator } from "../../../../../src/commands/tokens/lib/token-helper";
 
 Temp.track();
 
@@ -25,6 +27,7 @@ describe("distribute groups download command", () => {
   const releaseFileContent2 = "Hello again!";
 
   let tmpFolderPath: string;
+  let validator: TokenValidator;
 
   before(() => {
     Nock.disableNetConnect();
@@ -32,6 +35,9 @@ describe("distribute groups download command", () => {
 
   beforeEach(() => {
     tmpFolderPath = Temp.mkdirSync("groupsDownloadTest");
+
+    validator = new tokenValidator();
+    let stub = Sinon.stub(validator, "tokenIsValid").returns(Promise.resolve(true));
   });
 
   it("gets the latest release when no release is specified", async () => {
@@ -43,7 +49,7 @@ describe("distribute groups download command", () => {
     // Act 
     const command = new DownloadBinaryFromDistributionGroupCommand(
       getCommandArgs(["-g", fakeDistributionGroupName, "-f", Path.basename(releaseFilePath), "-d", Path.dirname(releaseFilePath)]));
-    const result = await command.execute();
+    const result = await command.execute(validator);
 
     // Assert
     testCommandSuccess(result, executionScope, skippedScope);
@@ -60,7 +66,7 @@ describe("distribute groups download command", () => {
     // Act 
     const command = new DownloadBinaryFromDistributionGroupCommand(
       getCommandArgs(["-g", fakeDistributionGroupName, "-f", Path.basename(releaseFilePath), "-d", Path.dirname(releaseFilePath), "-i", fakeReleaseId]));
-    const result = await command.execute();
+    const result = await command.execute(validator);
 
     // Assert
     testCommandSuccess(result, executionScope, skippedScope);

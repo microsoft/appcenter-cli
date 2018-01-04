@@ -7,6 +7,7 @@ import { runHelp } from "./help";
 import { scriptName } from "../misc";
 import { getUser, environments, telemetryIsEnabled, getPortalUrlForEndpoint, getEnvFromEnvironmentVar, getTokenFromEnvironmentVar, appCenterAccessTokenEnvVar } from "../profile";
 import { AppCenterClient, createAppCenterClient, AppCenterClientFactory } from "../apis";
+import { tokenValidator } from "../../commands/tokens/lib/token-helper";
 import * as path from "path";
 import * as PortalHelper from "../portal/portal-helper";
 
@@ -92,7 +93,7 @@ export class Command {
   public disableTelemetry: boolean;
 
   // Entry point for runner. DO NOT override in command definition!
-  async execute(): Promise<Result.CommandResult> {
+  async execute(validator : tokenValidator = new tokenValidator()): Promise<Result.CommandResult> {
     debug(`Initial execution of command`);
     if (this.help) {
       debug(`help switch detected, displaying help for command`);
@@ -120,14 +121,14 @@ export class Command {
         return Promise.resolve(Result.failure(Result.ErrorCodes.InvalidParameter, `Unknown output format ${this.format}`));
       }
     }
-    this.clientFactory = createAppCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry));
+    this.clientFactory = createAppCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry), validator);
     return this.runNoClient();
   }
 
   // Entry point to load appcenter client.
   // Override this if your command needs to do something special with login - typically just
   // the login command
-  protected runNoClient(): Promise<Result.CommandResult> {
+  protected async runNoClient(): Promise<Result.CommandResult> {
     if (this.environmentName && !this.token) {
       return Promise.resolve(Result.failure(Result.ErrorCodes.IllegalCommand, "Cannot specify environment without giving token"));
     }
@@ -136,7 +137,7 @@ export class Command {
     let endpoint: string;
     if (this.token) {
       debug(`Creating appcenter client for command from token for environment ${this.environmentName}`);
-      [client, endpoint] = this.getClientAndEndpointForToken(this.environmentName, this.token);
+      [client, endpoint] = await this.getClientAndEndpointForToken(this.environmentName, this.token);
     } else {
       // creating client for either logged in user or environment variable token
       const user = getUser();
@@ -147,16 +148,22 @@ export class Command {
         return Promise.resolve(Result.failure(Result.ErrorCodes.IllegalCommand, `logged in user and token in environment variable ${appCenterAccessTokenEnvVar} cannot be used together`));
       } else if (user) {
         debug(`Creating appcenter client for command for current logged in user`);
-        client = this.clientFactory.fromProfile(user);
+        client = await this.clientFactory.fromProfile(user);
         endpoint = user.endpoint;
       } else if (tokenFromEnvVar) {
         debug(`Creating appcenter client from token specified in environment variable for environment ${this.environmentName}`);
-        [client, endpoint] = this.getClientAndEndpointForToken(envFromEnvVar, tokenFromEnvVar);
+        [client, endpoint] = await this.getClientAndEndpointForToken(envFromEnvVar, tokenFromEnvVar);
       }
     }
     if (client && endpoint) {
       return this.run(client, getPortalUrlForEndpoint(endpoint));
     }
+
+    if (!client && this.token)
+    {
+      return Promise.resolve(Result.incorrectToken(`${scriptName} ${this.command.join(" ")}`));
+    }
+
     return Promise.resolve(Result.notLoggedIn(`${scriptName} ${this.command.join(" ")}`));
   }
 
@@ -170,12 +177,12 @@ export class Command {
     return Result.success();
   }
 
-  protected getClientAndEndpointForToken(environmentString: string, token: string): [AppCenterClient, string] {
+  protected async getClientAndEndpointForToken(environmentString: string, token: string): Promise<[AppCenterClient, string]> {
     const environment = environments(environmentString);
     if (!environment) {
       throw Result.failure(Result.ErrorCodes.InvalidParameter, `${environmentString} is not valid environment name`);
     }
-    return [this.clientFactory.fromToken(token, environment.endpoint), environment.endpoint];
+    return [await this.clientFactory.fromToken(token, environment.endpoint), environment.endpoint];
   }
 
   protected getVersion(): string {
