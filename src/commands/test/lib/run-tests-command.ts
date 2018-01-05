@@ -85,18 +85,6 @@ export abstract class RunTestsCommand extends AppCommand {
     }
   }
 
-  protected fixArrayParameter(input: any): string[]
-  {
-    if (!input) {
-      return [];
-    }
-    else if (typeof input === "string") {
-      return [ input ];
-    }
-
-    return input;
-  }
-
   // Override this if you need to validate options
   protected async validateOptions(): Promise<void> {
   }
