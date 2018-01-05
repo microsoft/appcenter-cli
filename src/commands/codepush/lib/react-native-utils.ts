@@ -19,7 +19,7 @@ export interface VersionSearchParams {
   gradleFile: string;
 }
 
-export function getReactNativeProjectAppVersion(versionSearchParams: VersionSearchParams, projectRoot?: string): Promise<string> {
+export async function getReactNativeProjectAppVersion(versionSearchParams: VersionSearchParams, projectRoot?: string): Promise<string> {
   projectRoot = projectRoot || process.cwd();
   var projectPackageJson: any = require(path.join(projectRoot, "package.json"));
   var projectName: string = projectPackageJson.name;
@@ -174,20 +174,25 @@ export function getReactNativeProjectAppVersion(versionSearchParams: VersionSear
     var appxManifestFileName: string = "Package.appxmanifest";
     try {
       var appxManifestContainingFolder: string = path.join("windows", projectName);
-      var appxManifestContents: string = fs.readFileSync(path.join(appxManifestContainingFolder, "Package.appxmanifest")).toString();
+      var appxManifestContents: string = fs.readFileSync(path.join(appxManifestContainingFolder, appxManifestFileName)).toString();
     } catch (err) {
       throw new Error(`Unable to find or read "${appxManifestFileName}" in the "${path.join("windows", projectName)}" folder.`);
     }
-
-    xml2js.parseString(appxManifestContents, (err: Error, parsedAppxManifest: any) => {
-      if (err) {
-        throw new Error(`Unable to parse the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file, it could be malformed.`);
-      }
-      try {
-        return parsedAppxManifest.Package.Identity[0]["$"].Version.match(/^\d+\.\d+\.\d+/)[0];
-      } catch (e) {
-        throw new Error(`Unable to parse the package version from the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file.`);
-      }
+    return new Promise<string>((resolve, reject) => {
+      xml2js.parseString(appxManifestContents, (err: Error, parsedAppxManifest: any) => {
+        if (err) {
+          reject(new Error(`Unable to parse the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file, it could be malformed.`));
+          return;
+        }
+        try {
+          let appVersion: string = parsedAppxManifest.Package.Identity[0]["$"].Version.match(/^\d+\.\d+\.\d+/)[0];
+          out.text(`Using the target binary version value "${appVersion}" from the "Identity" key in the "${appxManifestFileName}" file.\n`);
+          return resolve(appVersion);
+        } catch (e) {
+          reject(new Error(`Unable to parse the package version from the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file.`));
+          return;
+        }
+      });
     });
   }
 }
