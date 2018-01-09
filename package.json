@@ -62,7 +62,7 @@
     "@types/temp": "^0.8.29",
     "@types/which": "^1.0.28",
     "@types/xml2js": "^0.4.0",
-    "app-center-node-client": "../../app-center-node-client",
+    "app-center-node-client": "file:lib/app-center-node-client",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "gulp": "^3.9.1",
