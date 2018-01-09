@@ -159,7 +159,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     let createReleaseUploadRequestResponse: ClientResponse<any>;
     try {
       createReleaseUploadRequestResponse = await out.progress("Creating release upload...",
-        clientRequest<any>((cb) => client.distribute.releaseUploads.create(app.appName, app.ownerName, cb)));
+        clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.distribute.releaseUploads.create(app.appName, app.ownerName, cb)));
     } catch (error) {
       throw failure(ErrorCodes.Exception, `failed to create release upload for ${this.filePath}`);
     }

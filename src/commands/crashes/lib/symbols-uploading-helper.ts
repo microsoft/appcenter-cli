@@ -32,7 +32,7 @@ export default class SymbolsUploadingHelper {
     this.debug("Executing API request to get uploading URL");
     const uploadingBeginResponse = await clientRequest<models.SymbolUploadBeginResponse>((cb) => client.crash.symbolUploads.create(
       app.appName,
-      {},
+      null,
       app.ownerName,
       cb)).catch((error: any) => {
         this.debug(`Failed to start the symbol uploading - ${inspect(error)}`);
