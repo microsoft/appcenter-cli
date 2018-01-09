@@ -15,7 +15,6 @@ const createLogger = require('ms-rest').LogFilter.create;
 
 import { isDebug } from "../interaction";
 import { Profile } from "../profile";
-import { Exception } from "./generated/models/index";
 import { failure, success, ErrorCodes } from "../../util/commandline/command-result";
 
 export interface AppCenterClientFactory {
