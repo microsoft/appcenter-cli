@@ -1,6 +1,7 @@
 import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
 import { failure, ErrorCodes } from "../../../util/commandline";
 import { inspect } from "util";
+import { handleHttpError } from "../../../util/apis/create-client";
 
 const debug = require("debug")("appcenter-cli:commands:orgs:lib:org-users-helper");
 
@@ -13,12 +14,8 @@ export async function getOrgUsers(client: AppCenterClient, organization: string,
       throw httpResponse.response;
     }
   } catch (error) {
-    if (error.statusCode === 404) {
-      throw failure(ErrorCodes.InvalidParameter, `organization ${organization} doesn't exist`);
-    } else {
-      debug(`Failed to load list of organization users - ${inspect(error)}`);
-      throw failure(ErrorCodes.Exception, "failed to load list of organization users");
-    }
+    await handleHttpError(error, true, "failed to load list of organization users",
+    `organization ${organization} doesn't exist`);
   }
 }
 
@@ -35,8 +32,7 @@ export async function getOrgsNamesList(client: AppCenterClient): Promise<IEntity
       throw httpResponse.response;
     }
   } catch (error) {
-    debug(`Failed to load list of organization for current user - ${inspect(error)}`);
-    throw failure(ErrorCodes.Exception, "failed to load list of organization for the user");
+    await handleHttpError(error, false, "failed to load list of organization users");
   }
 }
 

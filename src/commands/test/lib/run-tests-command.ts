@@ -138,28 +138,36 @@ export abstract class RunTestsCommand extends AppCommand {
       }
     }
     catch (err) {
-      let exitCode = err.exitCode || ErrorCodes.Exception;
+      let exitCode = err.exitCode || err.errorCode || ErrorCodes.Exception;
       let message : string = null;
       let profile = getUser();
 
       let helpMessage = `Further error details: For help, please send both the reported error above and the following environment information to us by going to https://appcenter.ms/apps and starting a new conversation (using the icon in the bottom right corner of the screen)${os.EOL}
-        Environment: ${os.platform()}${os.EOL}
-        App Upload Id: ${this.identifier}${os.EOL}
-        Timestamp: ${Date.now()}${os.EOL}
-        Operation: ${this.constructor.name}${os.EOL}`;
+        Environment: ${os.platform()}
+        App Upload Id: ${this.identifier}
+        Timestamp: ${Date.now()}
+        Operation: ${this.constructor.name}
+        Exit Code: ${exitCode}`;
 
       if (profile) {
         helpMessage += `
-        User Email: ${profile.email}${os.EOL}
-        User Name: ${profile.userName}${os.EOL}
-        User Id: ${profile.userId}${os.EOL}
+        User Email: ${profile.email}
+        User Name: ${profile.userName}
+        User Id: ${profile.userId}
         `;
       }
 
-
-      if (err.message.indexOf("Not Found") !== -1)
+      if (err.message && err.message.indexOf("Not Found") !== -1)
       {
         message = `Requested resource not found - please check --app: ${this.identifier}${os.EOL}${os.EOL}${helpMessage}`;
+      }
+      if (err.errorCode === 5)
+      {
+        message = `Unauthorized error - please check --token or log in to the appcenter CLI.${os.EOL}${os.EOL}${helpMessage}`;
+      }
+      else if (err.errorMessage)
+      {
+        message = `${err.errorMessage}${os.EOL}${os.EOL}${helpMessage}`;
       }
       else
       {

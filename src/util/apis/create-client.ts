@@ -15,6 +15,7 @@ const createLogger = require('ms-rest').LogFilter.create;
 
 import { isDebug } from "../interaction";
 import { Profile } from "../profile";
+import { failure, success, ErrorCodes } from "../../util/commandline/command-result";
 
 export interface AppCenterClientFactory {
   fromUserNameAndPassword(userName: string, password: string, endpoint: string): AppCenterClient;
@@ -82,6 +83,22 @@ export function clientCall<T>(action: {(cb: ServiceCallback<any>): void}): Promi
 export interface ClientResponse<T> {
   result: T;
   response: IncomingMessage;
+}
+
+export async function handleHttpError(error: any, check404: boolean, 
+    messageDefault: string, message404: string = `404 Error received from api`, message401: string = `401 Error received from api`): Promise<void> {
+  if (check404 && error.statusCode === 404) {
+    throw failure(ErrorCodes.InvalidParameter, message404);
+  }
+  
+  if (error.statusCode === 401) {
+    throw failure(ErrorCodes.NotLoggedIn, message401);
+  }
+  
+  else {
+    debug(`${messageDefault}- ${inspect(error)}`);
+    throw failure(ErrorCodes.Exception, messageDefault);
+  }
 }
 
 // Helper function to wrap client calls into pormises and returning both HTTP response and parsed result
