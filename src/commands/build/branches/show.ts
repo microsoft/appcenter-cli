@@ -42,7 +42,7 @@ export default class ShowBranchBuildStatusCommand extends AppCommand {
     }
 
     // Taking last build
-    const lastBuild = _.maxBy(builds, (build) => Number(build.buildNumber));
+    const lastBuild = _.maxBy(builds, (build) => Number(build.id));
 
     debug(`Getting commit info for commit ${lastBuild.sourceVersion}`);
     let commitInfoRequestResponse: ClientResponse<models.CommitDetails[]>;
