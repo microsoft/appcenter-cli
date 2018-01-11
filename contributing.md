@@ -227,8 +227,6 @@ To get consistent user experience among commands for all beacons, the command li
 
 We follow the standard GitHub flow. Each person working on the cli should create their own fork of the repo. Work in your own repo (preferably on a feature branch). When ready, send a pull request to the master Microsoft/MobileCenter-cli repo against the master branch. After review, the pull request will be merged.
 
-Issue tracking will be done on [VSO](https://mseng.visualstudio.com/Mobile%20Center/Command%20Line%20Interface/).
-
 # Building Installers
 
 TBD. We'll need builds for a Mac installer, Windows MSI, and at least one format of Linux package, plus be able to push to NPM.
