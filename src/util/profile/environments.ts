@@ -1,5 +1,9 @@
 // Management for the current environment.
 
+export const appCenterEndpointEnvVar = "APPCENTER_ENDPOINT";
+export const appCenterLoginEndpointEnvVar = "APPCENTER_LOGIN_ENDPOINT";
+export const appCenterPortalEndpointEnvVar = "APPCENTER_PORTAL_ENDPOINT";
+
 export interface EnvironmentInfo {
   endpoint: string;
   loginEndpoint: string;
@@ -43,11 +47,11 @@ const environmentsData: EnvironmentsFile = {
       portalEndpoint: "https://appcenter.ms",
       description: "Production"
     },
-    testCloudLocalDev: {
-      endpoint: "http://localhost:1700",
-      loginEndpoint: null,
-      portalEndpoint: "http://localhost:8080",
-      description: "Test Cloud local dev box development"
+    local: {
+      endpoint: process.env[appCenterEndpointEnvVar] || "http://localhost:1700",
+      loginEndpoint: process.env[appCenterLoginEndpointEnvVar] || null,
+      portalEndpoint: process.env[appCenterPortalEndpointEnvVar] || "http://localhost:8080",
+      description: "Local Development"
     }
   }
 };
