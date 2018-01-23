@@ -42,7 +42,7 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
       this.deploymentName = this.specifiedDeploymentName;
     }
 
-    const appInfo = (await out.progress("Getting app info...", clientRequest<models.App>(
+    const appInfo = (await out.progress("Getting app info...", clientRequest<models.AppResponse>(
       (cb) => client.apps.get(this.app.ownerName, this.app.appName, cb)))).result;
     this.os = appInfo.os.toLowerCase();
     this.platform = appInfo.platform.toLowerCase();

@@ -110,7 +110,7 @@ export default class AudienceCommand extends AppCommand {
       }, cb));
 
       const result = httpRequest.result;
-      statisticsObject.devices = result.models.map((model) => ({
+      statisticsObject.devices = result.modelsProperty.map((model) => ({
         count: model.count,
         value: model.modelName,
         percentage: calculatePercentage(model.count, result.total)
@@ -129,7 +129,7 @@ export default class AudienceCommand extends AppCommand {
       }, cb));
 
       const result = httpRequest.result;
-      statisticsObject.countries = result.placesProperty.map((place) => ({
+      statisticsObject.countries = result.places.map((place) => ({
         count: place.count,
         value: place.code,
         percentage: calculatePercentage(place.count, result.total)
@@ -148,7 +148,7 @@ export default class AudienceCommand extends AppCommand {
       }, cb));
 
       const result = httpRequest.result;
-      statisticsObject.languages = result.languagesProperty.map((language) => ({
+      statisticsObject.languages = result.languages.map((language) => ({
         count: language.count,
         value: language.languageName,
         percentage: calculatePercentage(language.count, result.total)

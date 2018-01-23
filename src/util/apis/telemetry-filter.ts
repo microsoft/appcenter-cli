@@ -20,9 +20,9 @@ export function telemetryFilter(commandName: string, telemetryIsEnabled: boolean
     return requestPipeline.interimStream((input: Readable, output: Writable) => {
       input.pause();
       if (telemetryIsEnabled) {
-        resource.withHeader("internal-request-source", "cli");
-        resource.withHeader(sessionHeaderName, sessionId);
-        resource.withHeader(commandNameHeaderName, commandName);
+        resource.headers["internal-request-source"] = "cli";
+        resource.headers[sessionHeaderName] = sessionId;
+        resource.headers[commandNameHeaderName] = commandName;
       }
       let nextStream = next(resource, callback);
       (resource.pipeInput(input, nextStream) as any as Readable).pipe(output);

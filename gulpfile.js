@@ -8,7 +8,6 @@ const rimraf = require('rimraf');
 const sourcemaps = require('gulp-sourcemaps');
 const ts = require('gulp-typescript');
 const util = require('util');
-const autorest = require('./scripts/autorest');
 const autocompleteTree = require('./scripts/autocomplete-tree');
 
 let tsProject = ts.createProject('tsconfig.json');
@@ -64,43 +63,6 @@ gulp.task('build-sourcemaps', function(done) {
 gulp.task('clean-sourcemaps', function (cb) {
   return gulp.src('dist/**/*.js.map')
     .pipe(clean())
-});
-
-//
-// Client code generation. Requires mono to be installed on the machine
-// on a mac or linux machine
-//
-const generatedSource = './src/util/apis/generated';
-
-gulp.task('clean-autorest', function (done) {
-  rimraf(generatedSource, done);
-});
-
-gulp.task('fixup-swagger', function () {
-  autorest.fixupRawSwagger('./swagger/bifrost.swagger.before.json', './swagger/bifrost.swagger.json');
-});
-
-const parseOpts = {
-  string: 'env',
-  alias: { env: 'e' },
-  default: { env: 'prod' }
-};
-
-gulp.task('download-autorest-tools', function () {
-  return autorest.downloadTools();
-});
-
-gulp.task('download-swagger', function() {
-  const args = minimist(process.argv.slice(2), parseOpts);
-  return autorest.downloadSwagger(args.env);
-});
-
-gulp.task('generate-client', function () {
-  return autorest.generateCode('./swagger/bifrost.swagger.json', generatedSource, 'AppCenterClient');
-});
-
-gulp.task('autorest', ['clean-autorest'], function (done) {
-  runSeq(['download-autorest-tools', 'download-swagger'], 'fixup-swagger', 'generate-client', done);
 });
 
 //

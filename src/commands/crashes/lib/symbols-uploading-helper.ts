@@ -31,6 +31,7 @@ export default class SymbolsUploadingHelper {
   private async executeSymbolsUploadingBeginRequest(client: AppCenterClient, app: DefaultApp): Promise<models.SymbolUploadBeginResponse> {
     this.debug("Executing API request to get uploading URL");
     const uploadingBeginResponse = await clientRequest<models.SymbolUploadBeginResponse>((cb) => client.symbolUploads.create(
+      { symbolType: "Apple" }, // Temporary hard coding until type is threaded through the commands
       app.ownerName,
       app.appName,
       cb)).catch((error: any) => {

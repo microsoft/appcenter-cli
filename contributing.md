@@ -102,13 +102,11 @@ The gulpfile.js file contains the following targets that can be called manually 
 | Target | npm script | What it does |
 |--------|------------|--------------|
 | `default` | | Runs the `build` task |
-| `autorest` | `autorest` | Regenerate client code from swagger/bifrost.swagger.json file |
 | `build` | `build` | Runs the build (build-ts, copy-assets, copy-generated-clients) |
 | `build-sourcemaps` | | Create sourcemap files for the compiled typescript to aid in debugging |
 | `build-ts-sourcemaps` | | Run Typescript compiler to output sourcemap files |
 | `build-ts` | | Runs typesscript compiler, using settings in tsconfig.json |
 | `clean`  | `clean` | Deletes the dist folder |
-| `clean-autorest` | | Deleted all generated code from src directory |
 | `clean-sourcemaps` | | Delete generated source map files from dist directory |
 | `copy-assets` | | Copies .txt files from src to dist (category descriptions) |
 | `copy-generated-client` | | Copies the generated HTTP client code to dist |
