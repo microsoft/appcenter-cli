@@ -99,7 +99,7 @@ export default class SessionCommand extends AppCommand {
 
   private async loadSessionDurationsStatistics(client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<models.SessionDurationsDistribution> {
     try {
-      return (await clientRequest<models.SessionDurationsDistribution>((cb) => client.analytics.sessionDurationsDistribution(startDate, app.ownerName, app.appName, {
+      return (await clientRequest<models.SessionDurationsDistribution>((cb) => client.analytics.sessionDurationsDistributionMethod(startDate, app.ownerName, app.appName, {
         end: endDate,
         versions: appVersion
       }, cb))).result;

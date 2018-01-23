@@ -50,7 +50,7 @@ export default class DeleteReleaseCommand extends AppCommand {
     try {
       debug("Removing release");
       const httpResponse = await out.progress(`Removing the release...`,
-        clientRequest((cb) => client.releases.deleteMethod(this.releaseId, app.ownerName, app.appName, cb)));
+        clientRequest((cb) => client.releases.deleteMethod(releaseId, app.ownerName, app.appName, cb)));
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.result;
       }

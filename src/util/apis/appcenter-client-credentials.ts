@@ -18,7 +18,7 @@ export class AppCenterClientCredentials {
     this.getToken()
       .then(token => {
         debug(`got token ${token} of type ${typeof token}`);
-        request.withHeader("x-api-token", token);
+        request.headers["x-api-token"] = token;
         callback(null);
       })
       .catch((err: Error) => {

@@ -28,7 +28,7 @@ export default class QueueBuildCommand extends AppCommand {
     let queueBuildRequestResponse: ClientResponse<models.Build>;
     try {
       queueBuildRequestResponse = await out.progress(`Queueing build for branch ${this.branchName}...`,
-        clientRequest<models.Build>((cb) => client.builds.queue(this.branchName, app.ownerName, app.appName, {
+        clientRequest<models.Build>((cb) => client.builds.create(this.branchName, app.ownerName, app.appName, {
           debug: this.debugLogs
         }, cb)));
     } catch (error) {
