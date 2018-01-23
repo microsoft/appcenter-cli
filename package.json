@@ -26,7 +26,7 @@
     "autorest:generate": "autorest swagger/readme.md",
     "autorest": "npm run autorest:clean && npm run autorest:download-swagger && npm run autorest:fixup-swagger && npm run autorest:generate",
     "clean": "gulp clean",
-    "prepublish": "gulp prepublish",
+    "prepublishOnly": "gulp prepublish",
     "download-swagger": "gulp download-swagger"
   },
   "repository": {
