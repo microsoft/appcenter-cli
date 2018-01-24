@@ -1,4 +1,4 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success, defaultValue } from "../../../util/commandline";
+import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success, defaultValue, succeeded } from "../../../util/commandline";
 import { CommandArgs } from "../../../util/commandline/command";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
@@ -55,8 +55,8 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
   public privateKeyPath: string;
 
   @help("When this flag is set, releasing a package that is identical to the latest release will produce a warning instead of an error")
-  @longName("no-duplicate-release-error")
-  public noDuplicateReleaseError: boolean;
+  @longName("disable-duplicate-release-error")
+  public disableDuplicateReleaseError: boolean;
 
   @help("Percentage of users this release should be available to")
   @shortName("r")
@@ -120,8 +120,15 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
 
       return success();
     } catch (error) {
-      debug(`Failed to release a CodePush update - ${inspect(error)}`);
-      return failure(ErrorCodes.Exception, error.response ? error.response.body : error);
+      if (error.response.statusCode === 409 && this.disableDuplicateReleaseError) {
+        // 409 (Conflict) status code means that uploaded package is identical 
+        // to the contents of the specified deployment's current release
+        console.warn(chalk.yellow("[Warning] " + error.response.body));
+        return success();
+      } else {
+        debug(`Failed to release a CodePush update - ${inspect(error)}`);
+        return failure(ErrorCodes.Exception, error.response ? error.response.body : error);
+      }
     } finally {
       await pfs.rmDir(updateContentsZipPath);
     }

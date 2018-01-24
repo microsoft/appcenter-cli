@@ -12,10 +12,10 @@ export default class CodePushPromoteCommand extends AppCommand {
 
   @help("Specifies destination deployment name")
   @required
-  @longName("dest-deployment-name")
+  @longName("destination-deployment-name")
   @shortName("d")
   @hasArg
-  public destDeploymentName: string;
+  public destinationDeploymentName: string;
 
   @help("Specifies source deployment name")
   @required
@@ -25,7 +25,6 @@ export default class CodePushPromoteCommand extends AppCommand {
   public sourceDeploymentName: string;
 
   @help("Specifies description of the changes made to the app with this release")
-  @shortName("d")
   @longName("description")
   @hasArg
   public description: string;
@@ -45,8 +44,8 @@ export default class CodePushPromoteCommand extends AppCommand {
   public isDisabled: boolean;
 
   @help("Specifies that if the update is identical to the latest release on the deployment, the CLI should generate a warning instead of an error")
-  @longName("no-duplicate-release-error")
-  public noDuplicateReleaseError: boolean;
+  @longName("disable-duplicate-release-error")
+  public disableDuplicateReleaseError: boolean;
 
   @help("Specifies percentage of users this release should be immediately available to. (The specified number must be an integer between 1 and 100)")
   @shortName("r")
@@ -91,14 +90,21 @@ export default class CodePushPromoteCommand extends AppCommand {
     try {
       debug("Promote CodePush release");
       const httpRequest = await out.progress("Promoting CodePush release...", clientRequest<models.CodePushRelease>(
-        (cb) => client.codePushDeployments.promote(this.sourceDeploymentName, this.destDeploymentName, app.ownerName,
+        (cb) => client.codePushDeployments.promote(this.sourceDeploymentName, this.destinationDeploymentName, app.ownerName,
         app.appName, { release: promote }, cb)));
     } catch (error) {
-      debug(`Failed to promote CodePush release - ${inspect(error)}`);
-      return failure(ErrorCodes.Exception, error.response.body);
+      if (error.response.statusCode === 409 && this.disableDuplicateReleaseError) {
+        // 409 (Conflict) status code means that uploaded package is identical 
+        // to the contents of the specified deployment's current release
+        console.warn(chalk.yellow("[Warning] " + error.response.body));
+        return success();
+      } else {
+        debug(`Failed to promote CodePush release - ${inspect(error)}`);
+        return failure(ErrorCodes.Exception, error.response.body);
+      }
     }
 
-    out.text(`Successfully promoted ${this.label ? `'${this.label}' of` : ''} the '${this.sourceDeploymentName}' deployment of the '${this.identifier}' app to the '${this.destDeploymentName}' deployment.`);
+    out.text(`Successfully promoted ${this.label ? `'${this.label}' of` : ''} the '${this.sourceDeploymentName}' deployment of the '${this.identifier}' app to the '${this.destinationDeploymentName}' deployment.`);
     return success();
   }
 }
