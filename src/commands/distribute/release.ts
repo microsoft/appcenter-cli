@@ -1,4 +1,4 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
+import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success, failed } from "../../util/commandline";
 import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
@@ -7,6 +7,12 @@ import * as Request from "request";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../util/profile";
+import FileUploadClient, { IFileUploadClientSettings, IProgress, IUploadResults, MessageLevel } from "appcenter-file-upload-client";
+import { UploadProgress } from "../../util/apis/generated/models/index";
+import { fail } from "assert";
+import { setTimeout } from "timers";
+
+var ProgressBar = require('progress');
 
 const debug = require("debug")("appcenter-cli:commands:distribute:release");
 
@@ -39,82 +45,50 @@ export default class ReleaseBinaryCommand extends AppCommand {
   public releaseNotesFile: string;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
+    out.init_progressBar('Uploading a new release [:bar] :percent');
     const app: DefaultApp = this.app;
 
-    debug("Check that user hasn't selected both --release-notes and --release-notes-file");
     this.validateParameters();
 
-    debug("Loading prerequisites");
-    const [distributionGroupUsersCount, releaseBinaryFileBuffer, releaseNotesString] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
+    // load release notes file or use provided release notes if none was specified
+    const releaseNotesString = await this.getReleaseNotesString();
 
-    debug("Creating release upload");
+    // get number of distribution group users (and check distribution group existence)
+    // return null if request has failed because of any reason except non-existing group name.
+    const distributionGroupUsersCount = await this.getDistributionGroupUsersCount(client);
+
     const createdReleaseUpload = await this.createReleaseUpload(client, app);
-    const uploadUri = createdReleaseUpload.uploadUrl;
-    const uploadId = createdReleaseUpload.uploadId;
 
-    let releaseUrl: string;
-    try {
-      debug("Uploading release binary");
-      await out.progress("Uploading release binary...", this.uploadFileToUri(uploadUri, releaseBinaryFileBuffer, Path.basename(this.filePath)));
-
-      debug("Finishing release upload");
-      releaseUrl = await this.finishReleaseUpload(client, app, uploadId);
-    } catch (error) {
-      try {
-        out.text("Release upload failed");
-        await this.abortReleaseUpload(client, app, uploadId);
-        out.text("Release upload was aborted");
-      } catch (abortError) {
-        debug("Failed to abort release upload");
+    const fileUploadClient = new FileUploadClient();
+    const uploadSetting: IFileUploadClientSettings =  {
+      assetId: createdReleaseUpload.assetId,
+      assetDomain: createdReleaseUpload.assetDomain,
+      assetToken: createdReleaseUpload.assetToken,
+      file: this.filePath,
+      onProgressChanged: (progressData: IProgress) => {
+        let convertedValue = progressData.percentCompleted * 0.7 * 0.01
+        out.progressBar(convertedValue);
       }
-
-      throw error;
+    };
+    const uploadResult = await fileUploadClient.upload(uploadSetting);
+    let uploadProgress: models.UploadProgress;
+    while (!uploadProgress || uploadProgress.progress !== 100) {
+      uploadProgress = await this.processUploadedFile(client, app, uploadResult.assetId);
+      let convertedProgressValue = 0.7 + uploadProgress.progress * 0.01 * 0.3; 
+      out.progressBar(convertedProgressValue);
     }
-
-    debug("Extracting release ID from the release URL");
-    const releaseId = this.extractReleaseId(releaseUrl);
-
-    debug("Distributing the release");
-    const releaseDetails = await this.distributeRelease(client, app, releaseId, releaseNotesString);
-
+    const releaseDetails = await this.distributeRelease(client, app, uploadProgress.releaseId, releaseNotesString);
     if (_.isNull(distributionGroupUsersCount)) {
       out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${this.distributionGroup}`, releaseDetails);
     } else {
       out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${distributionGroupUsersCount} testers in ${this.distributionGroup}`, releaseDetails);
     }
-
     return success();
   }
 
   private validateParameters(): void {
     if (!_.isNil(this.releaseNotes) && !_.isNil(this.releaseNotesFile)) {
       throw failure(ErrorCodes.InvalidParameter, "'--release-notes' and '--release-notes-file' switches are mutually exclusive");
-    }
-  }
-
-  private getPrerequisites(client: AppCenterClient): Promise<[number | null, Buffer, string]> {
-    // load release binary file
-    const fileBuffer = this.getReleaseFileBuffer();
-
-    // load release notes file or use provided release notes if none was specified
-    const releaseNotesString = this.getReleaseNotesString();
-
-    // get number of distribution group users (and check distribution group existence)
-    // return null if request has failed because of any reason except non-existing group name.
-    const distributionGroupUsersNumber = this.getDistributionGroupUsersNumber(client);
-
-    return Promise.all([distributionGroupUsersNumber, fileBuffer, releaseNotesString]);
-  }
-
-  private async getReleaseFileBuffer(): Promise<Buffer> {
-    try {
-      return await Pfs.readFile(this.filePath);
-    } catch (error) {
-      if (error.code === "ENOENT") {
-        throw failure(ErrorCodes.InvalidParameter, `binary file '${this.filePath}' doesn't exist`);
-      } else {
-        throw error;
-      }
     }
   }
 
@@ -134,7 +108,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private async getDistributionGroupUsersNumber(client: AppCenterClient): Promise<number | null> {
+  private async getDistributionGroupUsersCount(client: AppCenterClient): Promise<number> {
     let distributionGroupUsersRequestResponse: ClientResponse<models.DistributionGroupUserGetResponse[]>;
     try {
       distributionGroupUsersRequestResponse = await clientRequest<models.DistributionGroupUserGetResponse[]>(
@@ -146,20 +120,18 @@ export default class ReleaseBinaryCommand extends AppCommand {
     } catch (error) {
       if (error === 404) {
         throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} was not found`);
-      } else {
-        debug(`Failed to get users of distribution group ${this.distributionGroup}, returning null - ${inspect(error)}`);
-        return null;
+      } else {		
+        throw failure(ErrorCodes.Exception, `internal server error`);
       }
     }
-
     return distributionGroupUsersRequestResponse.result.length;
   }
 
   private async createReleaseUpload(client: AppCenterClient, app: DefaultApp): Promise<models.ReleaseUploadBeginResponse> {
     let createReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadBeginResponse>;
     try {
-      createReleaseUploadRequestResponse = await out.progress("Creating release upload...",
-        clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.releaseUploads.create(app.ownerName, app.appName, cb)));
+      createReleaseUploadRequestResponse = await clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.releaseUploads.create(
+        app.ownerName, app.appName, cb));
     } catch (error) {
       throw failure(ErrorCodes.Exception, `failed to create release upload for ${this.filePath}`);
     }
@@ -167,60 +139,21 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return createReleaseUploadRequestResponse.result;
   }
 
-  private uploadFileToUri(uploadUrl: string, fileBuffer: Buffer, filename: string): Promise<void> {
-    debug("Uploading the release binary");
-    return new Promise<void>((resolve, reject) => {
-      Request.post({
-        formData: {
-          ipa: {
-            options: {
-              filename,
-              contentType: "application/octet-stream"
-            },
-            value: fileBuffer
-          }
-        },
-        url: uploadUrl
-      })
-      .on("error", (error) => {
-        reject(failure(ErrorCodes.Exception, `release binary uploading failed: ${error.message}`));
-      })
-      .on("response", (response) => {
-        if (response.statusCode < 400) {
-          resolve();
-        } else {
-          reject(failure(ErrorCodes.Exception, `release binary file uploading failed: HTTP ${response.statusCode} ${response.statusMessage}`));
-        }
-      });
-    });
-  }
-
-  private async finishReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<string> {
-    let finishReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadEndResponse>;
+  private async processUploadedFile(client: AppCenterClient, app: DefaultApp, assetId: string): Promise<models.UploadProgress> {
+    let uploadProgressResponse: ClientResponse<models.UploadProgress>;
     try {
-      finishReleaseUploadRequestResponse = await out.progress("Finishing release upload...",
-        clientRequest<models.ReleaseUploadEndResponse>((cb) => client.releaseUploads.complete(uploadId, app.ownerName, app.appName, "committed", cb)));
+      uploadProgressResponse = await clientRequest<models.UploadProgress>((cb) => client.releaseUploads.get(assetId, 
+        app.ownerName, 
+        app.appName, 
+        cb));
     } catch (error) {
-      throw failure(ErrorCodes.Exception, `failed to finish release upload for ${this.filePath}`);
+      if (error === 400) {
+        throw failure(ErrorCodes.Exception, `failed to process the package`);
+      } else {
+        throw failure(ErrorCodes.Exception, `internal server error`);
+      }
     }
-
-    return finishReleaseUploadRequestResponse.result.releaseUrl;
-  }
-
-  private async abortReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<void> {
-    let abortReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadEndResponse>;
-    try {
-      abortReleaseUploadRequestResponse = await out.progress("Aborting release upload...",
-        clientRequest<models.ReleaseUploadEndResponse>((cb) => client.releaseUploads.complete(uploadId, app.ownerName, app.appName, "aborted", cb)));
-    } catch (error) {
-      throw new Error(`HTTP ${abortReleaseUploadRequestResponse.response.statusCode} - ${abortReleaseUploadRequestResponse.response.statusMessage}`);
-    }
-  }
-
-  private extractReleaseId(releaseUrl: string): number {
-    const releaseId = Number(_(releaseUrl).split("/").last());
-    console.assert(Number.isSafeInteger(releaseId) && releaseId > 0, `API returned unexpected release URL: ${releaseUrl}`);
-    return releaseId;
+    return uploadProgressResponse.result;
   }
 
   private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number, releaseNotesString: string): Promise<models.ReleaseDetailsResponse> {
@@ -243,7 +176,6 @@ export default class ReleaseBinaryCommand extends AppCommand {
         throw failure(ErrorCodes.Exception, `failed to set distribution group and release notes for release ${releaseId}`);
       }
     }
-
     return updateReleaseRequestResponse.result;
   }
 }

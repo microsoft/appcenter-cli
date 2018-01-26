@@ -14,6 +14,7 @@ const Spinner = require("cli-spinner").Spinner;
 import { terminal } from "./terminal";
 
 import * as _ from "lodash";
+var ProgressBar = require('progress');
 
 //
 // Display a progress spinner while waiting for the provided promise
@@ -34,6 +35,23 @@ export function progress<T>(title: string, action: Promise<T>): Promise<T> {
     });
   }  else {
     return action;
+  }
+}
+
+let progress_bar;
+
+export function init_progressBar(title: string): void {
+  this.progress_bar = new ProgressBar(title, {
+    complete: '='
+  , incomplete: ' '
+  , total: 100
+  });
+}
+
+export function progressBar(value: any, terminate = false): void {
+  const stdoutIsTerminal = tty.isatty(1);
+  if (!formatIsParsingCompatible() && !isQuiet() && stdoutIsTerminal) {
+    this.progress_bar.update(value);
   }
 }
 
