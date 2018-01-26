@@ -63,9 +63,8 @@ function downloadSwagger(environment, version) {
   });
 }
 
-downloadSwagger(args.env, args.version)
-  .then(() => console.log('Download complete'))
-  .catch((err) => {
-    console.error(`Download failed: ${err.message}`);
-    process.exit(-1);
-  });
+module.exports = {
+  downloadSwagger,
+  defaultVersion,
+  parseOpts
+};

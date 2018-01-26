@@ -123,6 +123,8 @@ function setOperationToFile(operation) {
   }
 }
 
-fixupRawSwagger(
-  path.join(__dirname, '../swagger/bifrost.swagger.before.json'),
-  path.join(__dirname, '../swagger/bifrost.swagger.json'));
+module.exports = {
+  fixupRawSwagger,
+  rawSwaggerPath: path.join(__dirname, '..', 'swagger', 'bifrost.swagger.before.json'),
+  fixedSwaggerPath: path.join(__dirname, '..', 'swagger', 'bifrost.swagger.json')
+};
