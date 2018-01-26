@@ -21,10 +21,7 @@
     "test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s",
     "watch-test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s --watch",
     "autorest:clean": "rimraf src/util/apis/generated",
-    "autorest:download-swagger": "node scripts/download-swagger.js",
-    "autorest:fixup-swagger": "node scripts/fixup-swagger.js",
-    "autorest:generate": "autorest swagger/readme.md",
-    "autorest": "npm run autorest:clean && npm run autorest:download-swagger && npm run autorest:fixup-swagger && npm run autorest:generate",
+    "autorest": "npm run autorest:clean && node scripts/autorest.js",
     "clean": "gulp clean",
     "prepublishOnly": "gulp prepublish",
     "download-swagger": "gulp download-swagger"
