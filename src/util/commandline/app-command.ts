@@ -14,7 +14,7 @@ export class AppCommand extends Command {
   @shortName("a")
   @longName("app")
   @hasArg
-  @help("Specify app")
+  @help("Specify app in the <ownerName>/<appName> format")
   private appOption: string;
 
   // Figure out which application to work on

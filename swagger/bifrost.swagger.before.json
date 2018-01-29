@@ -2,10 +2,10 @@
   "swagger": "2.0",
   "info": {
     "version": "preview",
-    "title": "Mobile Center Client",
-    "description": "Microsoft Visual Studio Mobile Center API"
+    "title": "App Center Client",
+    "description": "Microsoft Visual Studio App Center API"
   },
-  "host": "api.mobile.azure.com",
+  "host": "api.appcenter.ms",
   "basePath": "/",
   "schemes": [
     "https"
@@ -75,14 +75,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -111,14 +105,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -143,14 +131,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -179,14 +161,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -215,14 +191,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -381,14 +351,8 @@
               "$ref": "#/definitions/UserProfileResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -424,20 +388,8 @@
               "$ref": "#/definitions/UserProfileResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -451,6 +403,65 @@
         ],
         "tags": [
           "account"
+        ]
+      }
+    },
+    "/v0.1/tester/apps/{owner_name}/{app_name}/releases": {
+      "get": {
+        "operationId": "apps_testerAppReleases",
+        "description": "Return a list of releases for a app a tester has access to.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TesterAppRelease"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      }
+    },
+    "/v0.1/tester/apps": {
+      "get": {
+        "operationId": "apps_latestReleases",
+        "description": "Return a list of applications that the user has tester permission to with the latest release for each.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TesterAppWithReleaseResponse"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
         ]
       }
     },
@@ -550,6 +561,252 @@
         ]
       }
     },
+    "/v0.1/public/hotfix/update_check": {
+      "get": {
+        "description": "Check for updates",
+        "operationId": "codePushAcquisition_updateCheck",
+        "parameters": [
+          {
+            "name": "deployment_key",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "app_version",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "package_hash",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "label",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "client_unique_id",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "is_companion",
+            "in": "query",
+            "type": "boolean"
+          },
+          {
+            "name": "previous_label_or_app_version",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "previous_deployment_key",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UpdateCheckResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/public/hotfix/status": {
+      "get": {
+        "description": "Returns the acquisition service status to the caller",
+        "operationId": "codePushAcquisition_getAcquisitionStatus",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AcquisitionStatusSuccessResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/public/hotfix/report_status/download": {
+      "post": {
+        "description": "Report download of specified release",
+        "operationId": "codePushAcquisition_updateDownloadStatus",
+        "parameters": [
+          {
+            "name": "release_metadata",
+            "description": "Deployment status metric properties",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CodePushStatusMetricMetadata"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/public/hotfix/report_status/deploy": {
+      "post": {
+        "description": "Report Deployment status metric",
+        "operationId": "codePushAcquisition_updateDeployStatus",
+        "parameters": [
+          {
+            "name": "release_metadata",
+            "description": "Deployment status metric properties",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CodePushStatusMetricMetadata"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "tags": [
+          "codepush"
+        ]
+      }
+    },
+    "/v0.1/public/apps/{owner_name}/{app_name}/install_analytics": {
+      "post": {
+        "description": "Notify download(s) for the provided distribution release(s).",
+        "operationId": "analytics_post",
+        "parameters": [
+          {
+            "name": "owner_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the app owner",
+            "required": true
+          },
+          {
+            "name": "app_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the app",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The install analytics request payload",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AnalyticsReleasesResponse"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Install Analytics Notification Sent Successfully."
+          }
+        },
+        "tags": [
+          "distribute"
+        ]
+      }
+    },
+    "/v0.1/public/apps/{app_id}/releases/{release_id}/ios_manifest": {
+      "get": {
+        "operationId": "releases_getIosManifest",
+        "description": "Returns the manifest.plist in XML format for installing the release on a device. Only available for iOS.",
+        "parameters": [
+          {
+            "name": "app_id",
+            "type": "string",
+            "in": "path",
+            "description": "The ID of the application",
+            "required": true
+          },
+          {
+            "name": "release_id",
+            "type": "integer",
+            "in": "path",
+            "description": "The release_id",
+            "required": true
+          },
+          {
+            "name": "token",
+            "type": "string",
+            "in": "query",
+            "description": "A hash that authorizes the download if it matches the release info.",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "The app's OS is not iOS.",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          },
+          "403": {
+            "description": "Forbidden - The token provided doesn't match the release's token.",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          },
+          "404": {
+            "description": "The app or release can't be found.",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          }
+        },
+        "tags": [
+          "distribute"
+        ]
+      }
+    },
     "/v0.1/orgs/{org_name}/users/{user_name}": {
       "patch": {
         "description": "Updates the given organization user",
@@ -576,20 +833,8 @@
               "$ref": "#/definitions/OrganizationUserResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -619,14 +864,8 @@
           "204": {
             "description": "Success"
           },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -661,14 +900,8 @@
               }
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -703,14 +936,8 @@
           "204": {
             "description": "Success"
           },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -745,14 +972,8 @@
               "$ref": "#/definitions/TeamUserResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -793,20 +1014,8 @@
               "$ref": "#/definitions/TeamUserResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -851,20 +1060,8 @@
               "$ref": "#/definitions/AppWithTeamPermissionsResponse"
             }
           },
-          "400": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -897,14 +1094,8 @@
           "204": {
             "description": "Success"
           },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -948,14 +1139,8 @@
               "$ref": "#/definitions/AppWithTeamPermissionsResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -991,14 +1176,8 @@
               }
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1033,8 +1212,8 @@
               "$ref": "#/definitions/TeamResponse"
             }
           },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1064,14 +1243,8 @@
           "204": {
             "description": "Success"
           },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1112,20 +1285,8 @@
               "$ref": "#/definitions/TeamResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1160,8 +1321,8 @@
               }
             }
           },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1201,14 +1362,8 @@
               }
             }
           },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1245,26 +1400,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1301,26 +1438,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1355,20 +1474,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1401,14 +1508,8 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1443,14 +1544,8 @@
               }
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1491,20 +1586,8 @@
               "$ref": "#/definitions/AppResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1537,14 +1620,8 @@
               }
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1576,8 +1653,8 @@
               "$ref": "#/definitions/OrganizationResponse"
             }
           },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1616,26 +1693,8 @@
               "$ref": "#/definitions/OrganizationResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1662,14 +1721,8 @@
           "204": {
             "description": "Success"
           },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1707,14 +1760,8 @@
               "$ref": "#/definitions/OrganizationResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1752,7 +1799,7 @@
                     "description": "The creation origin of this organization",
                     "type": "string",
                     "enum": [
-                      "mobile-center",
+                      "appcenter",
                       "hockeyapp"
                     ]
                   }
@@ -1765,8 +1812,8 @@
               }
             }
           },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1801,14 +1848,8 @@
               }
             }
           },
-          "400": {
+          "default": {
             "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -1843,7 +1884,7 @@
               "$ref": "#/definitions/XcodeVersions"
             }
           },
-          "400": {
+          "default": {
             "description": "Bad Request",
             "schema": {
               "$ref": "#/definitions/ValidationErrorResponse"
@@ -1879,7 +1920,7 @@
               "$ref": "#/definitions/XamarinSDKBundles"
             }
           },
-          "400": {
+          "default": {
             "description": "Bad Request",
             "schema": {
               "$ref": "#/definitions/ValidationErrorResponse"
@@ -1959,20 +2000,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
+          "default": {
             "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -2017,20 +2046,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
+          "default": {
             "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -2068,20 +2085,8 @@
               }
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -2328,26 +2333,8 @@
               "$ref": "#/definitions/AppResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -2385,20 +2372,8 @@
               }
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -3098,8 +3073,8 @@
               }
             }
           },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -3865,7 +3840,7 @@
               "$ref": "#/definitions/SourceRepositories"
             }
           },
-          "400": {
+          "default": {
             "description": "Bad Request",
             "schema": {
               "$ref": "#/definitions/ValidationErrorResponse"
@@ -3908,7 +3883,7 @@
               "$ref": "#/definitions/RepoConfigs"
             }
           },
-          "400": {
+          "default": {
             "description": "Bad Request",
             "schema": {
               "$ref": "#/definitions/ValidationErrorResponse"
@@ -3951,14 +3926,14 @@
               "$ref": "#/definitions/SuccessResponse"
             }
           },
-          "400": {
+          "default": {
             "description": "Bad Request",
             "schema": {
               "$ref": "#/definitions/ValidationErrorResponse"
             }
           }
         },
-        "operationId": "repositoryConfigurations_update",
+        "operationId": "repositoryConfigurations_createOrUpdate",
         "security": [
           {
             "APIToken": []
@@ -3985,14 +3960,14 @@
               "$ref": "#/definitions/SuccessResponse"
             }
           },
-          "400": {
+          "default": {
             "description": "Bad Request",
             "schema": {
               "$ref": "#/definitions/ValidationErrorResponse"
             }
           }
         },
-        "operationId": "repositoryConfigurations_remove",
+        "operationId": "repositoryConfigurations_delete",
         "security": [
           {
             "APIToken": []
@@ -4000,6 +3975,62 @@
         ],
         "tags": [
           "build"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/update_devices/{resign_id}": {
+      "get": {
+        "description": "Returns the resign status to the caller",
+        "operationId": "devices_getReleaseUpdateDevicesStatus",
+        "parameters": [
+          {
+            "name": "release_id",
+            "type": "string",
+            "in": "path",
+            "description": "The ID of the release.",
+            "required": true
+          },
+          {
+            "name": "resign_id",
+            "type": "string",
+            "description": "The ID of the resign operation.",
+            "in": "path",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ResignStatus"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          },
+          "404": {
+            "description": "<b>not_found</b>: A distribution group can't be found.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
         ]
       }
     },
@@ -4158,11 +4189,12 @@
         ]
       },
       "delete": {
+        "operationId": "releases_delete",
         "description": "Deletes a release.",
         "parameters": [
           {
             "name": "release_id",
-            "type": "string",
+            "type": "integer",
             "in": "path",
             "description": "The ID of the release",
             "required": true
@@ -4184,9 +4216,6 @@
               "$ref": "#/definitions/ErrorDetails"
             }
           },
-          "409": {
-            "description": "A concurrency issue occurred while deleting multiple releases in parallel. Please try again."
-          },
           "500": {
             "description": "An internal error. if delete has partially failed **partially_deleted** error_code will be returned.  \n- `partially_deleted`: Release was removed from all distribution groups, but couldn't be deleted from Mobile Center.\n",
             "schema": {
@@ -4194,7 +4223,6 @@
             }
           }
         },
-        "operationId": "releases_delete",
         "security": [
           {
             "APIToken": []
@@ -4207,6 +4235,7 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/releases/filter_by_tester": {
       "get": {
+        "deprecated": true,
         "operationId": "releases_availableToTester",
         "description": "Return detailed information about releases avaiable to a tester.",
         "parameters": [
@@ -4246,43 +4275,6 @@
       }
     },
     "/v0.1/apps/{owner_name}/{app_name}/releases": {
-      "post": {
-        "description": "This API can be used to create a release based on an existing release. The release will reuse most of the properties of the base release such as the binary but might differ e.g. in its distribution group, release notes, and mandatory updates flag based on the info given. To create a new release that doesn't base on an existing one, you should use the `release_uploads` APIs.",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "description": "The release information.",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/RereleaseRequest"
-            }
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/ReleaseDetailsResponse"
-            }
-          }
-        },
-        "operationId": "releases_rerelease",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
-        ]
-      },
       "get": {
         "operationId": "releases_list",
         "description": "Return basic information about releases.",
@@ -4964,7 +4956,7 @@
               "$ref": "#/definitions/MonoVersions"
             }
           },
-          "400": {
+          "default": {
             "description": "Bad Request",
             "schema": {
               "$ref": "#/definitions/ValidationErrorResponse"
@@ -5005,26 +4997,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -5069,20 +5043,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -5119,20 +5081,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -5172,26 +5122,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -5224,14 +5156,8 @@
               "$ref": "#/definitions/AppInvitationDetailResponse"
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -5348,14 +5274,14 @@
               "$ref": "#/definitions/FileAsset"
             }
           },
-          "400": {
+          "default": {
             "description": "Bad Request",
             "schema": {
               "$ref": "#/definitions/ValidationErrorResponse"
             }
           }
         },
-        "operationId": "app_postFileAsset",
+        "operationId": "fileAssets_create",
         "security": [
           {
             "APIToken": []
@@ -5363,6 +5289,264 @@
         ],
         "tags": [
           "build"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/export_configurations/{export_configuration_id}/enable": {
+      "post": {
+        "operationId": "ExportConfigurations_Enable",
+        "description": "Enable export configuration.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ExportConfigurationIdParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Export configuration was successfully enabled."
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "export"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/export_configurations/{export_configuration_id}/disable": {
+      "post": {
+        "operationId": "ExportConfigurations_Disable",
+        "description": "Disable export configuration.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ExportConfigurationIdParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Export configuration was successfully disabled."
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "export"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/export_configurations/{export_configuration_id}": {
+      "get": {
+        "operationId": "ExportConfigurations_Get",
+        "description": "Get export configuration.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ExportConfigurationIdParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get export configuration.",
+            "schema": {
+              "$ref": "#/definitions/ExportConfigurationResult"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "export"
+        ]
+      },
+      "patch": {
+        "operationId": "ExportConfigurations_PartialUpdate",
+        "description": "Partially update export configuration.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ExportConfigurationIdParameter"
+          },
+          {
+            "$ref": "#/parameters/ExportConfigurationParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Export configuration updated successfully.",
+            "schema": {
+              "$ref": "#/definitions/ExportConfigurationResult"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "export"
+        ]
+      },
+      "delete": {
+        "operationId": "ExportConfigurations_Delete",
+        "description": "Delete export configuration.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ExportConfigurationIdParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Export configuration was successfully deleted."
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "export"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/export_configurations": {
+      "get": {
+        "operationId": "ExportConfigurations_List",
+        "description": "List export configurations.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List export configurations.",
+            "schema": {
+              "$ref": "#/definitions/ExportConfigurationListResult"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "export"
+        ]
+      },
+      "post": {
+        "operationId": "ExportConfigurations_Create",
+        "description": "Create new export configuration",
+        "parameters": [
+          {
+            "$ref": "#/parameters/ExportConfigurationParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Create export configuration request successfully received.",
+            "schema": {
+              "$ref": "#/definitions/ExportConfigurationResult"
+            }
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "export"
         ]
       }
     },
@@ -5782,7 +5966,7 @@
           {
             "name": "resign_id",
             "type": "string",
-            "description": "The ID of the resign opeartion",
+            "description": "The ID of the resign operation",
             "in": "path",
             "required": true
           },
@@ -5854,20 +6038,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -5974,7 +6146,7 @@
           },
           {
             "name": "release_id",
-            "type": "string",
+            "type": "integer",
             "in": "path",
             "description": "The ID identifying the unique release.",
             "required": true
@@ -5992,12 +6164,6 @@
           },
           "404": {
             "description": "Error codes:\n- `distribution_group_not_found` - Distribution group or the app doesn't exist.\n- `not_found` - release isn't found.\n"
-          },
-          "409": {
-            "description": "A concurrency issue occurred while deleting multiple releases in parallel. Please try again.",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
           }
         },
         "security": [
@@ -6090,20 +6256,8 @@
             },
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -6155,14 +6309,8 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -6214,20 +6362,8 @@
             },
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -6399,20 +6535,8 @@
               "$ref": "#/definitions/DistributionGroupResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -6461,20 +6585,8 @@
               "$ref": "#/definitions/DistributionGroupResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -6511,20 +6623,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -6562,14 +6662,8 @@
               }
             }
           },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -6611,26 +6705,8 @@
               "$ref": "#/definitions/DistributionGroupResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -7338,7 +7414,7 @@
         "description": "Get session logs by crash ID",
         "parameters": [
           {
-            "$ref": "#/parameters/CrashIdParameter"
+            "$ref": "#/parameters/AnalyticsCrashIdParameter"
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -8014,8 +8090,8 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/crash_groups": {
       "get": {
-        "description": "Gets a list of crashes",
-        "summary": "Gets a list of crashes",
+        "description": "Gets a list of crash groups and whether the list contains all available groups.",
+        "summary": "Gets a list of crash groups and whether the list contains all available groups.",
         "operationId": "crashGroups_list",
         "parameters": [
           {
@@ -8037,6 +8113,12 @@
             "$ref": "#/parameters/group_text_search"
           },
           {
+            "$ref": "#/parameters/group_orderby"
+          },
+          {
+            "$ref": "#/parameters/continuation_token"
+          },
+          {
             "$ref": "#/parameters/owner_name"
           },
           {
@@ -8047,10 +8129,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/CrashGroup"
-              }
+              "$ref": "#/definitions/CrashGroupsContainer"
             }
           },
           "default": {
@@ -8321,7 +8400,7 @@
               "$ref": "#/definitions/BuildServiceStatus"
             }
           },
-          "400": {
+          "default": {
             "description": "Bad Request"
           }
         },
@@ -8417,7 +8496,7 @@
               "$ref": "#/definitions/BranchConfiguration"
             }
           },
-          "400": {
+          "default": {
             "description": "Bad Request",
             "schema": {
               "$ref": "#/definitions/ValidationErrorResponse"
@@ -8590,7 +8669,7 @@
             }
           }
         },
-        "operationId": "builds_queue",
+        "operationId": "builds_create",
         "security": [
           {
             "APIToken": []
@@ -8619,7 +8698,7 @@
               "$ref": "#/definitions/BranchStatusCollection"
             }
           },
-          "400": {
+          "default": {
             "description": "Bad Request",
             "schema": {
               "$ref": "#/definitions/ValidationErrorResponse"
@@ -8655,20 +8734,8 @@
           "204": {
             "description": "Success"
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -8706,14 +8773,8 @@
               }
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -8752,14 +8813,8 @@
           "204": {
             "description": "Success"
           },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -8943,7 +8998,7 @@
             "$ref": "#/parameters/EndParameter"
           },
           {
-            "$ref": "#/parameters/CountParameter"
+            "$ref": "#/parameters/TopParameter"
           },
           {
             "$ref": "#/parameters/VersionsParameter"
@@ -8965,7 +9020,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9013,7 +9068,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9058,7 +9113,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9132,7 +9187,7 @@
             "$ref": "#/parameters/EndParameter"
           },
           {
-            "$ref": "#/parameters/CountParameter"
+            "$ref": "#/parameters/TopParameter"
           },
           {
             "$ref": "#/parameters/VersionsParameter"
@@ -9154,7 +9209,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9180,7 +9235,7 @@
             "$ref": "#/parameters/EndParameter"
           },
           {
-            "$ref": "#/parameters/CountParameter"
+            "$ref": "#/parameters/TopParameter"
           },
           {
             "$ref": "#/parameters/VersionsParameter"
@@ -9202,7 +9257,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9228,7 +9283,7 @@
             "$ref": "#/parameters/EndParameter"
           },
           {
-            "$ref": "#/parameters/CountParameter"
+            "$ref": "#/parameters/TopParameter"
           },
           {
             "$ref": "#/parameters/VersionsParameter"
@@ -9250,7 +9305,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9283,7 +9338,7 @@
           "200": {
             "description": "List of logs for the requested time range.",
             "schema": {
-              "$ref": "#/definitions/LogContainer"
+              "$ref": "#/definitions/LogFlowLogContainer"
             }
           },
           "default": {
@@ -9315,7 +9370,7 @@
             "$ref": "#/parameters/EndParameter"
           },
           {
-            "$ref": "#/parameters/CountParameter"
+            "$ref": "#/parameters/TopParameter"
           },
           {
             "$ref": "#/parameters/VersionsParameter"
@@ -9337,7 +9392,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9370,7 +9425,7 @@
           "200": {
             "description": "List of logs for the requested time range.",
             "schema": {
-              "$ref": "#/definitions/GenericLogContainer"
+              "$ref": "#/definitions/LogFlowGenericLogContainer"
             }
           },
           "default": {
@@ -9430,7 +9485,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9469,7 +9524,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9517,7 +9572,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9565,7 +9620,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9613,7 +9668,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9661,7 +9716,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9697,7 +9752,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9757,7 +9812,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9789,6 +9844,45 @@
         "responses": {
           "200": {
             "description": "Event successfully deleted"
+          },
+          "default": {
+            "description": "Error code with reason",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "analytics"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/analytics/distribution/release_counts": {
+      "post": {
+        "operationId": "Analytics_DistributionReleaseCounts",
+        "description": "Count of total downloads for the provided distribution releases.",
+        "parameters": [
+          {
+            "$ref": "#/parameters/GetReleasesParameter"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Count of total downloads for the provided distribution release(s).",
+            "schema": {
+              "$ref": "#/definitions/ReleaseCounts"
+            }
           },
           "default": {
             "description": "Error code with reason",
@@ -9838,7 +9932,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9880,7 +9974,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9925,7 +10019,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -9970,7 +10064,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -10018,7 +10112,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -10057,7 +10151,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -10102,7 +10196,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -10492,7 +10586,7 @@
           "default": {
             "description": "Error code with reason",
             "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/Error"
             }
           }
         },
@@ -10524,14 +10618,8 @@
               "$ref": "#/definitions/AppResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -10572,26 +10660,8 @@
               "$ref": "#/definitions/AppResponse"
             }
           },
-          "400": {
+          "default": {
             "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -10621,14 +10691,8 @@
           "204": {
             "description": "Success"
           },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -10642,150 +10706,6 @@
         ],
         "tags": [
           "account"
-        ]
-      }
-    },
-    "/v0.1/apps/deployments/releases/updateCheck": {
-      "get": {
-        "description": "Check for updates",
-        "operationId": "codePushAcquisition_updateCheck",
-        "parameters": [
-          {
-            "name": "deployment_key",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "app_version",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "package_hash",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "label",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "client_unique_id",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "is_companion",
-            "in": "query",
-            "type": "boolean"
-          },
-          {
-            "name": "previous_label_or_app_version",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "previous_deployment_key",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/UpdateCheckResponse"
-            }
-          },
-          "default": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "codepush"
-        ]
-      }
-    },
-    "/v0.1/apps/deployments/releases/report_status/download": {
-      "post": {
-        "description": "Report download of specified release",
-        "operationId": "codePushAcquisition_updateDownloadStatus",
-        "parameters": [
-          {
-            "name": "release_metadata",
-            "description": "Deployment status metric properties",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CodePushStatusMetricMetadata"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "default": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "codepush"
-        ]
-      }
-    },
-    "/v0.1/apps/deployments/releases/report_status/deploy": {
-      "post": {
-        "description": "Report Deployment status metric",
-        "operationId": "codePushAcquisition_updateDeployStatus",
-        "parameters": [
-          {
-            "name": "release_metadata",
-            "description": "Deployment status metric properties",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CodePushStatusMetricMetadata"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "default": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "codepush"
         ]
       }
     },
@@ -10804,20 +10724,8 @@
               "$ref": "#/definitions/AppResponse"
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "409": {
-            "description": "Conflict",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -10857,14 +10765,8 @@
               }
             }
           },
-          "400": {
-            "description": "BadRequest",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "NotFound",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -11504,6 +11406,7 @@
             "superAdmin",
             "admin",
             "devOps",
+            "customerSupport",
             "notAdmin"
           ]
         }
@@ -11757,7 +11660,7 @@
           "description": "The creation origin of this account",
           "type": "string",
           "enum": [
-            "mobile-center",
+            "appcenter",
             "hockeyapp"
           ]
         },
@@ -11824,7 +11727,7 @@
           "description": "The creation origin of the user who created this api token",
           "type": "string",
           "enum": [
-            "mobile-center",
+            "appcenter",
             "hockeyapp",
             "codepush"
           ]
@@ -12013,18 +11916,11 @@
         "repo_url"
       ]
     },
-    "AppResponse": {
+    "BasicAppResponse": {
       "properties": {
         "id": {
           "description": "The unique ID (UUID) of the app",
           "type": "string"
-        },
-        "app_secret": {
-          "description": "A unique and secret key used to identify the app in communication with the ingestion endpoint for crash reporting and analytics",
-          "type": "string"
-        },
-        "azure_subscription": {
-          "$ref": "#/definitions/AzureSubscriptionResponse"
         },
         "description": {
           "description": "The description of the app",
@@ -12057,61 +11953,102 @@
         },
         "owner": {
           "$ref": "#/definitions/Owner"
-        },
-        "platform": {
-          "description": "The platform of the app",
-          "type": "string",
-          "enum": [
-            "Java",
-            "Objective-C-Swift",
-            "UWP",
-            "Cordova",
-            "React-Native",
-            "Unity",
-            "Xamarin",
-            "Unknown"
-          ]
-        },
-        "origin": {
-          "description": "The creation origin of this app",
-          "type": "string",
-          "enum": [
-            "mobile-center",
-            "hockeyapp",
-            "codepush"
-          ]
-        },
-        "created_at": {
-          "description": "The created date of this app",
-          "type": "string"
-        },
-        "updated_at": {
-          "description": "The last updated date of this app",
-          "type": "string"
-        },
-        "member_permissions": {
-          "description": "The permissions of the calling user",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "manager",
-              "developer",
-              "viewer",
-              "tester"
-            ]
-          }
         }
       },
       "required": [
         "id",
-        "app_secret",
         "display_name",
         "name",
         "os",
-        "owner",
+        "owner"
+      ]
+    },
+    "AppResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BasicAppResponse"
+        },
+        {
+          "properties": {
+            "app_secret": {
+              "description": "A unique and secret key used to identify the app in communication with the ingestion endpoint for crash reporting and analytics",
+              "type": "string"
+            },
+            "azure_subscription": {
+              "$ref": "#/definitions/AzureSubscriptionResponse"
+            },
+            "platform": {
+              "description": "The platform of the app",
+              "type": "string",
+              "enum": [
+                "Java",
+                "Objective-C-Swift",
+                "UWP",
+                "Cordova",
+                "React-Native",
+                "Unity",
+                "Xamarin",
+                "Unknown"
+              ]
+            },
+            "origin": {
+              "description": "The creation origin of this app",
+              "type": "string",
+              "enum": [
+                "appcenter",
+                "hockeyapp",
+                "codepush"
+              ]
+            },
+            "created_at": {
+              "description": "The created date of this app",
+              "type": "string"
+            },
+            "updated_at": {
+              "description": "The last updated date of this app",
+              "type": "string"
+            },
+            "member_permissions": {
+              "description": "The permissions of the calling user",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "manager",
+                  "developer",
+                  "viewer",
+                  "tester"
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "required": [
+        "app_secret",
         "platform",
         "origin"
+      ]
+    },
+    "TesterAppResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/BasicAppResponse"
+        },
+        {
+          "properties": {
+            "distribution_groups": {
+              "description": "The IDs of the distribution groups the current user is member of.",
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DistributionGroupResponse"
+              }
+            }
+          }
+        }
+      ],
+      "required": [
+        "distribution_groups"
       ]
     },
     "AppResponseInternal": {
@@ -12178,7 +12115,7 @@
           "description": "The creation origin of this app",
           "type": "string",
           "enum": [
-            "mobile-center",
+            "appcenter",
             "hockeyapp",
             "codepush"
           ]
@@ -12283,7 +12220,7 @@
           "description": "The creation origin of this distribution group",
           "type": "string",
           "enum": [
-            "mobile-center",
+            "appcenter",
             "hockeyapp"
           ]
         },
@@ -12602,7 +12539,7 @@
           "description": "The creation origin of this organization",
           "type": "string",
           "enum": [
-            "mobile-center",
+            "appcenter",
             "hockeyapp"
           ]
         }
@@ -12627,6 +12564,29 @@
               "items": {
                 "type": "string"
               }
+            }
+          }
+        }
+      ]
+    },
+    "OrganizationResponseManagement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/OrganizationResponseInternal"
+        },
+        {
+          "properties": {
+            "email": {
+              "description": "The organization email, if the app was synced from HockeyApp",
+              "type": "string"
+            },
+            "created_at": {
+              "description": "The date when the organization was created",
+              "type": "string"
+            },
+            "updated_at": {
+              "description": "The date when the organization was updated",
+              "type": "string"
             }
           }
         }
@@ -12851,7 +12811,7 @@
           "description": "The creation origin of this user",
           "type": "string",
           "enum": [
-            "mobile-center",
+            "appcenter",
             "hockeyapp",
             "codepush"
           ]
@@ -12924,7 +12884,7 @@
           "description": "The creation origin of this user",
           "type": "string",
           "enum": [
-            "mobile-center",
+            "appcenter",
             "hockeyapp",
             "codepush"
           ]
@@ -12959,6 +12919,7 @@
                 "superAdmin",
                 "admin",
                 "devOps",
+                "customerSupport",
                 "notAdmin"
               ]
             },
@@ -12970,6 +12931,25 @@
                   "type": "string"
                 }
               }
+            }
+          }
+        }
+      ]
+    },
+    "UserProfileResponseManagement": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/UserProfileResponseInternal"
+        },
+        {
+          "properties": {
+            "updated_at": {
+              "description": "The date when the app was last updated",
+              "type": "string"
+            },
+            "verified": {
+              "description": "A boolean flag that indicates if the user is already verified",
+              "type": "boolean"
             }
           }
         }
@@ -13065,7 +13045,6 @@
     "SharedConnectionResponse": {
       "description": "SharedConnectionResponse",
       "type": "object",
-      "discriminator": "serviceType",
       "properties": {
         "id": {
           "description": "id of the shared connection",
@@ -13093,7 +13072,6 @@
     "PrivateSharedConnectionResponse": {
       "description": "PrivateSharedConnectionResponse",
       "type": "object",
-      "discriminator": "serviceType",
       "properties": {
         "id": {
           "description": "id of the shared connection",
@@ -13142,6 +13120,7 @@
           "$ref": "#/definitions/SharedConnectionResponse"
         }
       ],
+      "discriminator": "serviceType",
       "properties": {
         "data": {
           "description": "apple secret details",
@@ -13159,6 +13138,7 @@
           "$ref": "#/definitions/PrivateSharedConnectionResponse"
         }
       ],
+      "discriminator": "serviceType",
       "properties": {
         "data": {
           "description": "apple secret details",
@@ -13224,6 +13204,7 @@
           "$ref": "#/definitions/SharedConnectionResponse"
         }
       ],
+      "discriminator": "serviceType",
       "properties": {
         "data": {
           "description": "jira secret details",
@@ -13241,6 +13222,7 @@
           "$ref": "#/definitions/PrivateSharedConnectionResponse"
         }
       ],
+      "discriminator": "serviceType",
       "properties": {
         "data": {
           "description": "jira secret details",
@@ -13316,6 +13298,7 @@
           "$ref": "#/definitions/SharedConnectionResponse"
         }
       ],
+      "discriminator": "serviceType",
       "properties": {
         "data": {
           "description": "google play secret details",
@@ -13333,6 +13316,7 @@
           "$ref": "#/definitions/PrivateSharedConnectionResponse"
         }
       ],
+      "discriminator": "serviceType",
       "properties": {
         "data": {
           "description": "google secret details",
@@ -13458,13 +13442,14 @@
           "type": "string"
         },
         "user": {
-          "description": "VSTS Profile",
           "$ref": "#/definitions/VSTSProfile"
         },
         "projects": {
           "description": "Account projects",
           "type": "array",
-          "$ref": "#/definitions/VSTSProject"
+          "items": {
+            "$ref": "#/definitions/VSTSProject"
+          }
         }
       }
     },
@@ -13507,6 +13492,10 @@
         },
         "projectName": {
           "description": "The project to archive container name",
+          "type": "string"
+        },
+        "projectPath": {
+          "description": "Full path of the target project",
           "type": "string"
         }
       },
@@ -13613,15 +13602,8 @@
             "type": "string"
           }
         },
-        "platforms": {
-          "description": "Platforms supported"
-        },
         "defaultConfiguration": {
           "description": "Solution default configuration",
-          "type": "string"
-        },
-        "defaultPlatform": {
-          "description": "Solution default platform",
           "type": "string"
         }
       },
@@ -14559,14 +14541,25 @@
         }
       }
     },
-    "TesterAppWithRelease": {
+    "TesterAppWithReleaseResponse": {
       "properties": {
+        "id": {
+          "description": "The unique ID (UUID) of the app",
+          "type": "string"
+        },
+        "release": {
+          "$ref": "#/definitions/TesterAppRelease"
+        },
         "name": {
           "description": "The app's name.",
           "type": "string"
         },
         "display_name": {
           "description": "The app's display name.",
+          "type": "string"
+        },
+        "description": {
+          "description": "The description of the app",
           "type": "string"
         },
         "icon_url": {
@@ -14577,10 +14570,68 @@
           "description": "The app's os.",
           "type": "string"
         },
-        "release": {
-          "$ref": "#/definitions/DistributionGroupReleasesResponse"
+        "owner": {
+          "description": "The information about the app's owner",
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "The unique id (UUID) of the owner",
+              "type": "string"
+            },
+            "avatar_url": {
+              "description": "The avatar URL of the owner",
+              "type": "string"
+            },
+            "display_name": {
+              "description": "The owner's display name",
+              "type": "string"
+            },
+            "email": {
+              "description": "The owner's email address",
+              "type": "string"
+            },
+            "name": {
+              "description": "The unique name that used to identify the owner",
+              "type": "string"
+            },
+            "type": {
+              "description": "The owner type. Can either be 'org' or 'user'",
+              "type": "string",
+              "enum": [
+                "org",
+                "user"
+              ]
+            }
+          }
         }
       }
+    },
+    "TesterAppRelease": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/DistributionGroupRelease"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "size": {
+              "description": "The release's size in bytes.",
+              "type": "integer"
+            },
+            "install_url": {
+              "description": "The href required to install a release on a mobile device. On iOS devices will be prefixed with `itms-services://?action=download-manifest&url=`",
+              "type": "string"
+            },
+            "release_notes": {
+              "description": "The release's release notes.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "size"
+          ]
+        }
+      ]
     },
     "SendNotificationRequest": {
       "properties": {
@@ -14800,24 +14851,28 @@
       "description": "Response for getting a list of releases in a distribution group",
       "type": "array",
       "items": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "description": "ID identifying this unique release.",
-            "type": "integer"
-          },
-          "version": {
-            "description": "The release's version.<br>\nFor iOS: CFBundleVersion from info.plist.<br>\nFor Android: android:versionCode from AppManifest.xml.\n",
-            "type": "string"
-          },
-          "short_version": {
-            "description": "The release's short version.<br>\nFor iOS: CFBundleShortVersionString from info.plist.<br>\nFor Android: android:versionName from AppManifest.xml.  \n",
-            "type": "string"
-          },
-          "uploaded_at": {
-            "description": "UTC time in ISO 8601 format of the uploaded time.",
-            "type": "string"
-          }
+        "$ref": "#/definitions/DistributionGroupRelease"
+      }
+    },
+    "DistributionGroupRelease": {
+      "description": "Response for getting a list of releases in a distribution group",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "ID identifying this unique release.",
+          "type": "integer"
+        },
+        "version": {
+          "description": "The release's version.<br>\nFor iOS: CFBundleVersion from info.plist.<br>\nFor Android: android:versionCode from AppManifest.xml.\n",
+          "type": "string"
+        },
+        "short_version": {
+          "description": "The release's short version.<br>\nFor iOS: CFBundleShortVersionString from info.plist.<br>\nFor Android: android:versionName from AppManifest.xml.  \n",
+          "type": "string"
+        },
+        "uploaded_at": {
+          "description": "UTC time in ISO 8601 format of the uploaded time.",
+          "type": "string"
         }
       }
     },
@@ -15000,6 +15055,18 @@
         "upload_url": {
           "description": "The URL where the client needs to upload the release to",
           "type": "string"
+        },
+        "asset_id": {
+          "description": "In preview, the ID for the current upload",
+          "type": "string"
+        },
+        "asset_domain": {
+          "description": "In preview, the URL for the current upload",
+          "type": "string"
+        },
+        "asset_token": {
+          "description": "In preview, the token for the current upload",
+          "type": "string"
         }
       },
       "required": [
@@ -15121,39 +15188,11 @@
           "type": "string",
           "enum": [
             "failed",
-            "submitted",
-            "published"
+            "processing",
+            "submitted"
           ]
         }
       }
-    },
-    "RereleaseRequest": {
-      "description": "A request containing information for re-releasing an existing release to a new distribution group.",
-      "properties": {
-        "distribution_group_name": {
-          "description": "Name of a distribution group. The release will be associated with this distribution group. If the distribution group doesn't exist a 400 is returned. If both distribution group name and id are passed, the id is taking precedence.",
-          "type": "string"
-        },
-        "distribution_group_id": {
-          "description": "Id of a distribution group. The release will be associated with this distribution group. If the distribution group doesn't exist a 400 is returned. If both distribution group name and id are passed, the id is taking precedence.",
-          "type": "string"
-        },
-        "release_notes": {
-          "description": "Release notes for this release.",
-          "type": "string"
-        },
-        "mandatory_update": {
-          "description": "A boolean which determines whether this version should be a mandatory update or not.",
-          "type": "boolean"
-        },
-        "base_release_id": {
-          "description": "The ID of the release that should be re-released",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "base_release_id"
-      ]
     },
     "DistributionGroup": {
       "allOf": [
@@ -15320,6 +15359,39 @@
         }
       }
     },
+    "AnalyticsReleasesResponse": {
+      "properties": {
+        "releases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnalyticsReleasesParameter"
+          }
+        }
+      }
+    },
+    "AnalyticsReleasesParameter": {
+      "type": "object",
+      "properties": {
+        "release_id": {
+          "description": "release id",
+          "type": "integer"
+        },
+        "distribution_group_id": {
+          "description": "distribution group id",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "user id",
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "release_id",
+        "distribution_group_id",
+        "user_id"
+      ]
+    },
     "DeviceConfigurationResponse": {
       "description": "A response containing the fully encoded binary blob for a mobileconfig",
       "properties": {
@@ -15419,6 +15491,10 @@
         "status": {
           "type": "string",
           "description": "The provisioning status of the device."
+        },
+        "registered_at": {
+          "type": "string",
+          "description": "Timestamp of when the device was registered in ISO format."
         }
       }
     },
@@ -15560,6 +15636,10 @@
         "name": {
           "type": "string",
           "description": "App Name"
+        },
+        "iconUrl": {
+          "type": "string",
+          "description": "url for the app icon from app store"
         }
       }
     },
@@ -15690,7 +15770,7 @@
       "properties": {
         "release_id": {
           "type": "number",
-          "description": "When provided, will update the provided release with the new set of devices.  By default the latest release of the distribution group is used when this property is omitted."
+          "description": "When provided, will update the provided release with the new set of devices. By default the latest release of the distribution group is used when this property is omitted."
         },
         "username": {
           "type": "string",
@@ -15717,6 +15797,18 @@
           "description": "Array of device UDID's to be published to the Apple Developer account.",
           "items": {
             "type": "string"
+          }
+        },
+        "destinations": {
+          "type": "array",
+          "description": "Array of distribution groups that the devices should be provisioned from.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
           }
         }
       }
@@ -16454,7 +16546,9 @@
           "type": "string",
           "enum": [
             "Apple",
-            "JavaScript"
+            "JavaScript",
+            "Breakpad",
+            "AndroidProguard"
           ]
         },
         "app_id": {
@@ -16491,6 +16585,14 @@
             "available",
             "ignored"
           ]
+        },
+        "version": {
+          "description": "The version number. Optional for Apple. Required for Android.",
+          "type": "string"
+        },
+        "build": {
+          "description": "The build number. Optional for Apple. Required for Android.",
+          "type": "string"
         }
       },
       "required": [
@@ -16569,7 +16671,9 @@
           "description": "The type of the symbol for the current symbol upload",
           "type": "string",
           "enum": [
-            "Apple"
+            "Apple",
+            "Breakpad",
+            "AndroidProguard"
           ]
         },
         "symbols_uploaded": {
@@ -16634,7 +16738,9 @@
           "description": "The type of the symbol for the current symbol upload",
           "type": "string",
           "enum": [
-            "Apple"
+            "Apple",
+            "Breakpad",
+            "AndroidProguard"
           ]
         },
         "client_callback": {
@@ -16643,6 +16749,14 @@
         },
         "file_name": {
           "description": "The file name for the symbol upload",
+          "type": "string"
+        },
+        "build": {
+          "description": "The build number. Optional for Apple. Required for Android.",
+          "type": "string"
+        },
+        "version": {
+          "description": "The version number. Optional for Apple. Required for Android.",
           "type": "string"
         }
       },
@@ -16830,6 +16944,8 @@
             "android",
             "xamarin",
             "react-native",
+            "ndk",
+            "unity",
             "other"
           ]
         }
@@ -16888,6 +17004,8 @@
             "android",
             "xamarin",
             "react-native",
+            "ndk",
+            "unity",
             "other"
           ]
         },
@@ -17109,6 +17227,28 @@
       "properties": {
         "uri": {
           "type": "string"
+        }
+      }
+    },
+    "CrashGroupsContainer": {
+      "required": [
+        "limited_result_set",
+        "crash_groups"
+      ],
+      "type": "object",
+      "properties": {
+        "limited_result_set": {
+          "type": "boolean"
+        },
+        "continuation_token": {
+          "type": "string",
+          "description": "Cassandra request continuation token. The token is used for pagination."
+        },
+        "crash_groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CrashGroup"
+          }
         }
       }
     },
@@ -17636,6 +17776,826 @@
         }
       }
     },
+    "ActiveCrashingAppDetails": {
+      "type": "object",
+      "properties": {
+        "nextLink": {
+          "type": "string"
+        },
+        "appsWithCrashes": {
+          "description": "details of the apps with crashes",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CrashingAppDetail"
+          }
+        }
+      }
+    },
+    "LogTraceDefinition": {
+      "type": "object",
+      "required": [
+        "app_secret"
+      ],
+      "properties": {
+        "app_secret": {
+          "type": "string"
+        },
+        "install_id": {
+          "type": "string"
+        },
+        "expiration": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "CrashingAppDetail": {
+      "type": "object",
+      "properties": {
+        "appId": {
+          "description": "application identifier",
+          "type": "string"
+        },
+        "appVersion": {
+          "description": "application version",
+          "type": "string"
+        },
+        "crashGroupId": {
+          "description": "crash group identifier",
+          "type": "string"
+        }
+      }
+    },
+    "LogContainer": {
+      "type": "object",
+      "properties": {
+        "exceeded_max_limit": {
+          "description": "indicates if the number of available logs are more than the max allowed return limit(100).",
+          "type": "boolean"
+        },
+        "last_received_log_timestamp": {
+          "description": "the timestamp of the last log received. This value can be used as the start time parameter in the consecutive API call.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "logs": {
+          "minItems": 0,
+          "description": "the list of logs",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Log"
+          }
+        }
+      },
+      "required": [
+        "logs"
+      ]
+    },
+    "GenericLogContainer": {
+      "type": "object",
+      "properties": {
+        "exceeded_max_limit": {
+          "description": "indicates if the number of available logs are more than the max allowed return limit(100).",
+          "type": "boolean"
+        },
+        "last_received_log_timestamp": {
+          "description": "the timestamp of the last log received. This value can be used as the start time parameter in the consecutive API call.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "logs": {
+          "minItems": 0,
+          "description": "the list of logs",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GenericLog"
+          }
+        }
+      },
+      "required": [
+        "logs"
+      ]
+    },
+    "GenericLog": {
+      "type": "object",
+      "description": "Generic log.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "event",
+            "page",
+            "start_session",
+            "error",
+            "push_installation",
+            "start_service",
+            "custom_properties"
+          ],
+          "description": "Log type.\n"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Log creation timestamp.\n"
+        },
+        "install_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Install ID.\n"
+        },
+        "session_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Session ID.\n"
+        },
+        "event_id": {
+          "type": "string",
+          "description": "Event ID.\n"
+        },
+        "event_name": {
+          "type": "string",
+          "description": "Event name.\n"
+        },
+        "message_id": {
+          "type": "string",
+          "description": "Message ID.\n"
+        },
+        "properties": {
+          "type": "object",
+          "description": "event specific properties.\n",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "device": {
+          "$ref": "#/definitions/Device"
+        }
+      },
+      "required": [
+        "type",
+        "timestamp",
+        "install_id",
+        "device"
+      ]
+    },
+    "Log": {
+      "type": "object",
+      "discriminator": "type",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "event",
+            "page",
+            "start_session",
+            "error",
+            "push_installation",
+            "start_service",
+            "custom_properties"
+          ],
+          "description": "Log type.\n"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Log creation timestamp.\n"
+        },
+        "install_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Install ID.\n"
+        },
+        "device": {
+          "$ref": "#/definitions/Device"
+        }
+      },
+      "required": [
+        "type",
+        "timestamp",
+        "install_id",
+        "device"
+      ]
+    },
+    "LogWithProperties": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Log"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "type": "object",
+          "description": "Additional key/value pair parameters.\n",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Device": {
+      "type": "object",
+      "description": "Device characteristics.",
+      "properties": {
+        "sdk_name": {
+          "type": "string",
+          "description": "Name of the SDK. Consists of the name of the SDK and the platform, e.g. \"appcenter.ios\", \"hockeysdk.android\".\n"
+        },
+        "sdk_version": {
+          "type": "string",
+          "description": "Version of the SDK in semver format, e.g. \"1.2.0\" or \"0.12.3-alpha.1\".\n"
+        },
+        "wrapper_sdk_version": {
+          "type": "string",
+          "description": "Version of the wrapper SDK in semver format. When the SDK is embedding another base SDK (for example Xamarin.Android wraps Android), the Xamarin specific version is populated into this field while sdkVersion refers to the original Android SDK.\n"
+        },
+        "wrapper_sdk_name": {
+          "type": "string",
+          "description": "Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g. \"appcenter.xamarin\", \"hockeysdk.cordova\".\n"
+        },
+        "model": {
+          "type": "string",
+          "description": "Device model (example: iPad2,3).\n"
+        },
+        "oem_name": {
+          "type": "string",
+          "description": "Device manufacturer (example: HTC).\n"
+        },
+        "os_name": {
+          "type": "string",
+          "description": "OS name (example: iOS). The following OS names are standardized (non-exclusive): Android, iOS, macOS, tvOS, Windows.\n"
+        },
+        "os_version": {
+          "type": "string",
+          "description": "OS version (example: 9.3.0).\n"
+        },
+        "os_build": {
+          "type": "string",
+          "description": "OS build code (example: LMY47X).\n"
+        },
+        "os_api_level": {
+          "type": "integer",
+          "description": "API level when applicable like in Android (example: 15).\n"
+        },
+        "locale": {
+          "type": "string",
+          "description": "Language code (example: en_US).\n"
+        },
+        "time_zone_offset": {
+          "type": "integer",
+          "minimum": -840,
+          "maximum": 840,
+          "description": "The offset in minutes from UTC for the device time zone, including daylight savings time.\n"
+        },
+        "screen_size": {
+          "type": "string",
+          "description": "Screen size of the device in pixels (example: 640x480).\n"
+        },
+        "app_version": {
+          "type": "string",
+          "description": "Application version name, e.g. 1.1.0\n"
+        },
+        "carrier_name": {
+          "type": "string",
+          "description": "Carrier name (for mobile devices).\n"
+        },
+        "carrier_code": {
+          "type": "string",
+          "description": "Carrier country code (for mobile devices).\n"
+        },
+        "carrier_country": {
+          "type": "string",
+          "description": "Carrier country.\n"
+        },
+        "app_build": {
+          "type": "string",
+          "description": "The app's build number, e.g. 42.\n"
+        },
+        "app_namespace": {
+          "type": "string",
+          "description": "The bundle identifier, package identifier, or namespace, depending on what the individual plattforms use,  .e.g com.microsoft.example.\n"
+        },
+        "live_update_release_label": {
+          "type": "string",
+          "description": "Label that is used to identify application code 'version' released via Live Update beacon running on device\n"
+        },
+        "live_update_deployment_key": {
+          "type": "string",
+          "description": "Identifier of environment that current application release belongs to, deployment key then maps to environment like Production, Staging.\n"
+        },
+        "live_update_package_hash": {
+          "type": "string",
+          "description": "Hash of all files (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps identify the Release version on device or need to download updates in future.\n"
+        },
+        "wrapper_runtime_version": {
+          "type": "string",
+          "description": "Version of the wrapper technology framework (Xamarin runtime version or ReactNative or Cordova etc...). See wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or other.\n"
+        }
+      },
+      "required": [
+        "sdk_name",
+        "sdk_version",
+        "os_name",
+        "os_version",
+        "locale",
+        "time_zone_offset",
+        "app_version",
+        "app_build"
+      ]
+    },
+    "StartSessionLog": {
+      "type": "object",
+      "description": "Required explicit begin session log (a marker event for analytics service).",
+      "x-ms-discriminator-value": "start_session",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Log"
+        }
+      ],
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Session ID.\n"
+        }
+      },
+      "required": [
+        "session_id"
+      ]
+    },
+    "StartServiceLog": {
+      "type": "object",
+      "description": "Describe a AppCenter.Start API call from the SDK.",
+      "x-ms-discriminator-value": "start_service",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Log"
+        }
+      ],
+      "properties": {
+        "services": {
+          "type": "array",
+          "description": "The list of services of the AppCenter Start API call.",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "CustomPropertyLog": {
+      "type": "object",
+      "description": "Set or remove custom properties.",
+      "x-ms-discriminator-value": "custom_properties",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Log"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "type": "array",
+          "description": "Custom property changes.",
+          "minItems": 1,
+          "maxItems": 60,
+          "items": {
+            "$ref": "#/definitions/CustomProperty"
+          }
+        }
+      }
+    },
+    "CustomProperty": {
+      "type": "object",
+      "discriminator": "type",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z][a-zA-Z0-9\\-_]*$"
+        }
+      },
+      "required": [
+        "type",
+        "name"
+      ]
+    },
+    "StringProperty": {
+      "type": "object",
+      "description": "String property.",
+      "x-ms-discriminator-value": "string",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CustomProperty"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "String property value."
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "NumberProperty": {
+      "type": "object",
+      "description": "Number property.",
+      "x-ms-discriminator-value": "number",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CustomProperty"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "number",
+          "description": "Number property value."
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "BooleanProperty": {
+      "type": "object",
+      "description": "Boolean property.",
+      "x-ms-discriminator-value": "boolean",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CustomProperty"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "boolean",
+          "description": "Boolean property value."
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "DateTimeProperty": {
+      "type": "object",
+      "description": "Date and time property.",
+      "x-ms-discriminator-value": "date_time",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CustomProperty"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date time property value."
+        }
+      },
+      "required": [
+        "value"
+      ]
+    },
+    "ClearProperty": {
+      "type": "object",
+      "description": "Clear an existing property.",
+      "x-ms-discriminator-value": "clear",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CustomProperty"
+        }
+      ]
+    },
+    "PageLog": {
+      "type": "object",
+      "description": "Page view log (as in screens or activities).",
+      "x-ms-discriminator-value": "page",
+      "allOf": [
+        {
+          "$ref": "#/definitions/LogWithProperties"
+        }
+      ],
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Session ID.\n"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the page.\n"
+        }
+      },
+      "required": [
+        "name",
+        "session_id"
+      ]
+    },
+    "EventLog": {
+      "type": "object",
+      "description": "Event log.",
+      "x-ms-discriminator-value": "event",
+      "allOf": [
+        {
+          "$ref": "#/definitions/LogWithProperties"
+        }
+      ],
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Session ID.\n"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for this event.\n"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the event.\n"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "session_id"
+      ]
+    },
+    "PushInstallationLog": {
+      "type": "object",
+      "description": "Push installation Information.",
+      "x-ms-discriminator-value": "push_installation",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Log"
+        }
+      ],
+      "properties": {
+        "push_token": {
+          "type": "string",
+          "description": "The PNS handle for this installation.\n"
+        }
+      },
+      "required": [
+        "push_token"
+      ]
+    },
+    "ErrorLog": {
+      "type": "object",
+      "description": "Error log.",
+      "x-ms-discriminator-value": "error",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Log"
+        }
+      ],
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Session ID.\n"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Error identifier."
+        },
+        "app_launch_toffset": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Corresponds to the number of milliseconds elapsed between the time the error occurred and the app was launched.\n"
+        }
+      },
+      "required": [
+        "session_id",
+        "id"
+      ]
+    },
+    "AudienceListResult": {
+      "description": "List of audiences.",
+      "properties": {
+        "values": {
+          "description": "List of audiences.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AudienceSummary"
+          }
+        },
+        "nextLink": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "values"
+      ]
+    },
+    "AudienceSummary": {
+      "description": "Audience definition.",
+      "properties": {
+        "name": {
+          "description": "Audience name.",
+          "type": "string"
+        },
+        "description": {
+          "description": "Audience description.",
+          "type": "string"
+        },
+        "estimated_count": {
+          "description": "Estimated audience size.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "definition": {
+          "description": "Audience definition in OData format.",
+          "type": "string"
+        },
+        "state": {
+          "x-ms-enum": {
+            "name": "AudienceProcessingState"
+          },
+          "description": "Audience state.",
+          "type": "string",
+          "enum": [
+            "Calculating",
+            "Ready",
+            "Disabled"
+          ]
+        }
+      }
+    },
+    "Audience": {
+      "description": "Audience with details.",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AudienceSummary"
+        }
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "custom_properties": {
+          "type": "object",
+          "description": "Custom properties used in the definition.",
+          "additionalProperties": {
+            "type": "string",
+            "enum": [
+              "string",
+              "number",
+              "boolean",
+              "date_time"
+            ],
+            "x-ms-enum": {
+              "name": "device_property_type",
+              "modelAsString": false
+            }
+          }
+        },
+        "estimated_total_count": {
+          "description": "Estimated total audience size.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "timestamp": {
+          "description": "Date the audience was last refreshed.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "AudienceTestResult": {
+      "description": "Audience test result.",
+      "properties": {
+        "definition": {
+          "description": "Audience definition in OData format.",
+          "type": "string"
+        },
+        "custom_properties": {
+          "type": "object",
+          "description": "Custom properties used in the definition.",
+          "additionalProperties": {
+            "type": "string",
+            "enum": [
+              "string",
+              "number",
+              "boolean",
+              "date_time"
+            ],
+            "x-ms-enum": {
+              "name": "device_property_type",
+              "modelAsString": false
+            }
+          }
+        },
+        "estimated_count": {
+          "description": "Estimated audience size.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "estimated_total_count": {
+          "description": "Estimated total audience size.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "AudienceDefinition": {
+      "description": "Audience definition.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Audience description.",
+          "type": "string",
+          "maxLength": 128
+        },
+        "definition": {
+          "description": "Audience definition in OData format.",
+          "type": "string",
+          "maxLength": 2000
+        },
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "custom_properties": {
+          "type": "object",
+          "description": "Custom properties used in the definition.",
+          "additionalProperties": {
+            "type": "string",
+            "enum": [
+              "string",
+              "number",
+              "boolean",
+              "date_time"
+            ],
+            "x-ms-enum": {
+              "name": "device_property_type",
+              "modelAsString": false
+            }
+          }
+        }
+      },
+      "required": [
+        "definition"
+      ]
+    },
+    "AudienceBlobResult": {
+      "description": "Audience definition.",
+      "type": "object",
+      "properties": {
+        "url": {
+          "description": "Location of the audience blob.",
+          "type": "string"
+        }
+      }
+    },
+    "AudienceDevicePropertiesListResult": {
+      "description": "List of device properties.",
+      "properties": {
+        "values": {
+          "description": "List of device properties.",
+          "type": "object",
+          "additionalProperties": {
+            "description": "Type of the property.",
+            "type": "string",
+            "enum": [
+              "string",
+              "number",
+              "boolean",
+              "date_time"
+            ],
+            "x-ms-enum": {
+              "name": "device_property_type",
+              "modelAsString": false
+            }
+          }
+        }
+      },
+      "required": [
+        "values"
+      ]
+    },
+    "AudienceDevicePropertyValuesListResult": {
+      "description": "List of device property values.",
+      "properties": {
+        "values": {
+          "description": "List of device property values.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "values"
+      ]
+    },
     "CrashCounts": {
       "type": "object",
       "properties": {
@@ -17646,6 +18606,23 @@
         },
         "crashes": {
           "description": "the total crash count for day",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DateTimeCounts"
+          }
+        }
+      }
+    },
+    "ErrorCounts": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "total error count",
+          "type": "integer",
+          "format": "int64"
+        },
+        "errors": {
+          "description": "the total error count for day",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DateTimeCounts"
@@ -17710,6 +18687,30 @@
           "description": "the count of previous time range of the place",
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "Error": {
+      "description": "Error",
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "description": "The status code return by the API. It can be 400 or 403 or 500.",
+              "type": "integer",
+              "enum": [
+                400,
+                403,
+                500
+              ]
+            },
+            "message": {
+              "description": "The reason for the request failed",
+              "type": "string"
+            }
+          }
         }
       }
     },
@@ -17989,6 +18990,22 @@
         }
       }
     },
+    "Module": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "Modules": {
+      "type": "object",
+      "properties": {
+        "modules": {
+          "additionalProperties": {
+            "$ref": "#/definitions/Module"
+          }
+        }
+      }
+    },
     "DateTimePercentages": {
       "properties": {
         "datetime": {
@@ -18064,6 +19081,302 @@
         }
       }
     },
+    "ErrorGroups": {
+      "type": "object",
+      "properties": {
+        "error_groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ErrorGroup"
+          }
+        }
+      }
+    },
+    "ErrorGroup": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ErrorGroupState"
+        }
+      ],
+      "properties": {
+        "error_group_id": {
+          "type": "string"
+        },
+        "app_version": {
+          "type": "string"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "device_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "first_occurrence": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "last_occurrence": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "reason_frame": {
+          "$ref": "#/definitions/ErrorStackFrame"
+        }
+      },
+      "required": [
+        "error_group_id",
+        "app_version",
+        "name",
+        "state",
+        "count",
+        "device_count",
+        "first_occurrence",
+        "last_occurrence"
+      ]
+    },
+    "ErrorGroupState": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "open",
+            "closed",
+            "ignored"
+          ]
+        }
+      },
+      "required": [
+        "state"
+      ]
+    },
+    "ErrorDownloadLink": {
+      "type": "object",
+      "properties": {
+        "link": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "link"
+      ]
+    },
+    "ErrorStackFrame": {
+      "description": "frame belonging to the reason of the crash",
+      "properties": {
+        "class_name": {
+          "description": "name of the class",
+          "type": "string"
+        },
+        "method": {
+          "description": "name of the method",
+          "type": "string"
+        },
+        "class_method": {
+          "description": "is a class method",
+          "type": "boolean"
+        },
+        "file": {
+          "description": "name of the file",
+          "type": "string"
+        },
+        "line": {
+          "description": "line number",
+          "type": "integer"
+        },
+        "app_code": {
+          "description": "this line isn't from any framework",
+          "type": "boolean"
+        },
+        "framework_name": {
+          "description": "Name of the framework",
+          "type": "string"
+        },
+        "code_formatted": {
+          "description": "Formatted frame string",
+          "type": "string"
+        },
+        "code_raw": {
+          "description": "Unformatted Frame string",
+          "type": "string"
+        },
+        "language": {
+          "description": "programming language of the frame",
+          "type": "string",
+          "enum": [
+            "JavaScript",
+            "CSharp",
+            "Objective-C",
+            "Objective-Cpp",
+            "Cpp",
+            "C",
+            "Swift",
+            "Java",
+            "Unknown"
+          ]
+        },
+        "method_params": {
+          "description": "parameters of the frames method",
+          "type": "string"
+        },
+        "exception_type": {
+          "type": "string",
+          "description": "Exception type."
+        },
+        "os_exception_type": {
+          "type": "string",
+          "description": "OS exception type. (aka. SIGNAL)"
+        }
+      }
+    },
+    "ErrorFreeDevicePercentages": {
+      "type": "object",
+      "properties": {
+        "average_percentage": {
+          "description": "Average percentage",
+          "type": "number",
+          "format": "double"
+        },
+        "daily_percentages": {
+          "description": "The error-free percentage per day.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DateTimePercentages"
+          }
+        }
+      }
+    },
+    "HandledErrors": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "description": "Errors list.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HandledError"
+          }
+        }
+      }
+    },
+    "HandledError": {
+      "type": "object",
+      "properties": {
+        "error_id": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "device_name": {
+          "type": "string"
+        },
+        "os_version": {
+          "type": "string"
+        },
+        "os_type": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        }
+      }
+    },
+    "HandledErrorDetails": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/HandledError"
+        }
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "reason_frame": {
+          "$ref": "#/definitions/ErrorStackFrame"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ErrorGroupModels": {
+      "type": "object",
+      "properties": {
+        "error_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "models": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ErrorGroupModel"
+          }
+        }
+      }
+    },
+    "ErrorGroupModel": {
+      "type": "object",
+      "properties": {
+        "model_name": {
+          "type": "string",
+          "description": "model's name"
+        },
+        "error_count": {
+          "description": "count of model",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "ErrorGroupOperatingSystems": {
+      "type": "object",
+      "properties": {
+        "error_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "operating_systems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ErrorGroupOperatingSystem"
+          }
+        }
+      }
+    },
+    "ErrorGroupOperatingSystem": {
+      "type": "object",
+      "properties": {
+        "operating_system_name": {
+          "type": "string",
+          "description": "OS name"
+        },
+        "error_count": {
+          "type": "integer",
+          "format": "int64",
+          "description": "count of OS"
+        }
+      }
+    },
     "CrashGroupOperatingSystems": {
       "type": "object",
       "properties": {
@@ -18093,21 +19406,90 @@
         }
       }
     },
-    "LogTraceDefinition": {
+    "CrashGroupPlaces": {
       "type": "object",
-      "required": [
-        "app_secret"
-      ],
       "properties": {
-        "app_secret": {
-          "type": "string"
+        "crash_count": {
+          "format": "int64",
+          "type": "integer"
         },
-        "install_id": {
-          "type": "string"
-        },
-        "expiration": {
+        "places": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CrashGroupPlace"
+          }
+        }
+      }
+    },
+    "CrashGroupPlace": {
+      "type": "object",
+      "properties": {
+        "place_name": {
           "type": "string",
-          "format": "date-time"
+          "description": "Place name"
+        },
+        "crash_count": {
+          "type": "integer",
+          "format": "int64",
+          "description": "count of places"
+        }
+      }
+    },
+    "CrashGroupLanguages": {
+      "type": "object",
+      "properties": {
+        "crash_count": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CrashGroupLanguage"
+          }
+        }
+      }
+    },
+    "CrashGroupLanguage": {
+      "type": "object",
+      "properties": {
+        "language_name": {
+          "type": "string",
+          "description": "language name"
+        },
+        "crash_count": {
+          "type": "integer",
+          "format": "int64",
+          "description": "count of languages"
+        }
+      }
+    },
+    "CrashGroupCarriers": {
+      "type": "object",
+      "properties": {
+        "crash_count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "carriers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CrashGroupCarrier"
+          }
+        }
+      }
+    },
+    "CrashGroupCarrier": {
+      "type": "object",
+      "properties": {
+        "carrier_name": {
+          "type": "string",
+          "description": "carrier name"
+        },
+        "crash_count": {
+          "type": "integer",
+          "format": "int64",
+          "description": "crash count of carrier"
         }
       }
     },
@@ -18278,7 +19660,192 @@
         }
       }
     },
-    "LogContainer": {
+    "EventProperties": {
+      "description": "Event properties during the time range",
+      "type": "object",
+      "properties": {
+        "event_properties": {
+          "type": "array",
+          "items": {
+            "description": "The event property",
+            "type": "string",
+            "format": "string"
+          }
+        }
+      }
+    },
+    "EventPropertyValues": {
+      "description": "Event property value counts during the time range in descending order",
+      "type": "object",
+      "properties": {
+        "total": {
+          "description": "The total property value counts",
+          "type": "integer",
+          "format": "int64"
+        },
+        "values": {
+          "description": "The event property values",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EventPropertyValue"
+          }
+        }
+      }
+    },
+    "EventPropertyValue": {
+      "description": "An event property value with counts",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The event property value name",
+          "type": "string"
+        },
+        "count": {
+          "description": "The count of the the event property value",
+          "type": "integer",
+          "format": "int64"
+        },
+        "previous_count": {
+          "description": "The count of previous time range of the event property value",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "NotifyReleasesContainer": {
+      "type": "object",
+      "properties": {
+        "releases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/ReleaseWithDistributionGroupAndUserId"
+          }
+        }
+      },
+      "required": [
+        "releases"
+      ]
+    },
+    "DeleteReleasesContainer": {
+      "type": "object",
+      "properties": {
+        "releases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/Release"
+          }
+        }
+      },
+      "required": [
+        "releases"
+      ]
+    },
+    "GetReleasesContainer": {
+      "type": "object",
+      "properties": {
+        "releases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/ReleaseWithDistributionGroup"
+          }
+        }
+      },
+      "required": [
+        "releases"
+      ]
+    },
+    "Release": {
+      "type": "object",
+      "properties": {
+        "release": {
+          "description": "Release Id.\n",
+          "type": "string",
+          "format": "string"
+        }
+      },
+      "required": [
+        "release"
+      ]
+    },
+    "ReleaseWithDistributionGroup": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/Release"
+        }
+      ],
+      "properties": {
+        "distribution_group": {
+          "description": "Distribution group Id.\n",
+          "type": "string",
+          "format": "string"
+        }
+      }
+    },
+    "ReleaseWithDistributionGroupAndUserId": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ReleaseWithDistributionGroup"
+        }
+      ],
+      "properties": {
+        "user_id": {
+          "description": "Unique user Id.  Will generate a new user Id if not provided.\n",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "ReleaseCounts": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "counts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReleaseCount"
+          }
+        }
+      },
+      "required": [
+        "counts"
+      ]
+    },
+    "ReleaseCount": {
+      "type": "object",
+      "properties": {
+        "release_id": {
+          "type": "string",
+          "format": "string"
+        },
+        "distribution_group": {
+          "description": "Distribution group queried.\n",
+          "type": "string",
+          "format": "string"
+        },
+        "unique_count": {
+          "description": "Count of unique downloads against user id.\n",
+          "type": "integer",
+          "format": "int64"
+        },
+        "total_count": {
+          "description": "Total count of downloads.\n",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "release_id",
+        "unique_count",
+        "total_count"
+      ]
+    },
+    "LogFlowLogContainer": {
       "type": "object",
       "properties": {
         "exceeded_max_limit": {
@@ -18295,7 +19862,7 @@
           "description": "the list of logs",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Log"
+            "$ref": "#/definitions/LogFlowLog"
           }
         }
       },
@@ -18303,7 +19870,7 @@
         "logs"
       ]
     },
-    "GenericLogContainer": {
+    "LogFlowGenericLogContainer": {
       "type": "object",
       "properties": {
         "exceeded_max_limit": {
@@ -18320,7 +19887,7 @@
           "description": "the list of logs",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/GenericLog"
+            "$ref": "#/definitions/LogFlowGenericLog"
           }
         }
       },
@@ -18328,7 +19895,7 @@
         "logs"
       ]
     },
-    "GenericLog": {
+    "LogFlowGenericLog": {
       "type": "object",
       "description": "Generic log.",
       "properties": {
@@ -18380,7 +19947,7 @@
           }
         },
         "device": {
-          "$ref": "#/definitions/Device"
+          "$ref": "#/definitions/LogFlowDevice"
         }
       },
       "required": [
@@ -18390,7 +19957,7 @@
         "device"
       ]
     },
-    "Log": {
+    "LogFlowLog": {
       "type": "object",
       "discriminator": "type",
       "properties": {
@@ -18418,7 +19985,7 @@
           "description": "Install ID.\n"
         },
         "device": {
-          "$ref": "#/definitions/Device"
+          "$ref": "#/definitions/LogFlowDevice"
         }
       },
       "required": [
@@ -18428,11 +19995,11 @@
         "device"
       ]
     },
-    "LogWithProperties": {
+    "LogFlowLogWithProperties": {
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/Log"
+          "$ref": "#/definitions/LogFlowLog"
         }
       ],
       "properties": {
@@ -18445,13 +20012,13 @@
         }
       }
     },
-    "Device": {
+    "LogFlowDevice": {
       "type": "object",
       "description": "Device characteristics.",
       "properties": {
         "sdk_name": {
           "type": "string",
-          "description": "Name of the SDK. Consists of the name of the SDK and the platform, e.g. \"mobilecenter.ios\", \"hockeysdk.android\".\n"
+          "description": "Name of the SDK. Consists of the name of the SDK and the platform, e.g. \"appcenter.ios\", \"hockeysdk.android\".\n"
         },
         "sdk_version": {
           "type": "string",
@@ -18463,7 +20030,7 @@
         },
         "wrapper_sdk_name": {
           "type": "string",
-          "description": "Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g. \"mobilecenter.xamarin\", \"hockeysdk.cordova\".\n"
+          "description": "Name of the wrapper SDK. Consists of the name of the SDK and the wrapper platform, e.g. \"appcenter.xamarin\", \"hockeysdk.cordova\".\n"
         },
         "model": {
           "type": "string",
@@ -18555,13 +20122,13 @@
         "app_build"
       ]
     },
-    "StartSessionLog": {
+    "LogFlowStartSessionLog": {
       "type": "object",
       "description": "Required explicit begin session log (a marker event for analytics service).",
       "x-ms-discriminator-value": "start_session",
       "allOf": [
         {
-          "$ref": "#/definitions/Log"
+          "$ref": "#/definitions/LogFlowLog"
         }
       ],
       "properties": {
@@ -18575,19 +20142,19 @@
         "session_id"
       ]
     },
-    "StartServiceLog": {
+    "LogFlowStartServiceLog": {
       "type": "object",
-      "description": "Describe a MobileCenter.Start API call from the SDK.",
+      "description": "Describe a AppCenter.Start API call from the SDK.",
       "x-ms-discriminator-value": "start_service",
       "allOf": [
         {
-          "$ref": "#/definitions/Log"
+          "$ref": "#/definitions/LogFlowLog"
         }
       ],
       "properties": {
         "services": {
           "type": "array",
-          "description": "The list of services of the MobileCenter Start API call.",
+          "description": "The list of services of the AppCenter Start API call.",
           "minItems": 1,
           "items": {
             "type": "string"
@@ -18595,13 +20162,13 @@
         }
       }
     },
-    "CustomPropertyLog": {
+    "LogFlowCustomPropertyLog": {
       "type": "object",
       "description": "Set or remove custom properties.",
       "x-ms-discriminator-value": "custom_properties",
       "allOf": [
         {
-          "$ref": "#/definitions/Log"
+          "$ref": "#/definitions/LogFlowLog"
         }
       ],
       "properties": {
@@ -18611,12 +20178,12 @@
           "minItems": 1,
           "maxItems": 60,
           "items": {
-            "$ref": "#/definitions/CustomProperty"
+            "$ref": "#/definitions/LogFlowCustomProperty"
           }
         }
       }
     },
-    "CustomProperty": {
+    "LogFlowCustomProperty": {
       "type": "object",
       "discriminator": "type",
       "properties": {
@@ -18634,13 +20201,13 @@
         "name"
       ]
     },
-    "StringProperty": {
+    "LogFlowStringProperty": {
       "type": "object",
       "description": "String property.",
       "x-ms-discriminator-value": "string",
       "allOf": [
         {
-          "$ref": "#/definitions/CustomProperty"
+          "$ref": "#/definitions/LogFlowCustomProperty"
         }
       ],
       "properties": {
@@ -18654,13 +20221,13 @@
         "value"
       ]
     },
-    "NumberProperty": {
+    "LogFlowNumberProperty": {
       "type": "object",
       "description": "Number property.",
       "x-ms-discriminator-value": "number",
       "allOf": [
         {
-          "$ref": "#/definitions/CustomProperty"
+          "$ref": "#/definitions/LogFlowCustomProperty"
         }
       ],
       "properties": {
@@ -18673,13 +20240,13 @@
         "value"
       ]
     },
-    "BooleanProperty": {
+    "LogFlowBooleanProperty": {
       "type": "object",
       "description": "Boolean property.",
       "x-ms-discriminator-value": "boolean",
       "allOf": [
         {
-          "$ref": "#/definitions/CustomProperty"
+          "$ref": "#/definitions/LogFlowCustomProperty"
         }
       ],
       "properties": {
@@ -18692,13 +20259,13 @@
         "value"
       ]
     },
-    "DateTimeProperty": {
+    "LogFlowDateTimeProperty": {
       "type": "object",
       "description": "Date and time property.",
       "x-ms-discriminator-value": "date_time",
       "allOf": [
         {
-          "$ref": "#/definitions/CustomProperty"
+          "$ref": "#/definitions/LogFlowCustomProperty"
         }
       ],
       "properties": {
@@ -18712,23 +20279,23 @@
         "value"
       ]
     },
-    "ClearProperty": {
+    "LogFlowClearProperty": {
       "type": "object",
       "description": "Clear an existing property.",
       "x-ms-discriminator-value": "clear",
       "allOf": [
         {
-          "$ref": "#/definitions/CustomProperty"
+          "$ref": "#/definitions/LogFlowCustomProperty"
         }
       ]
     },
-    "PageLog": {
+    "LogFlowPageLog": {
       "type": "object",
       "description": "Page view log (as in screens or activities).",
       "x-ms-discriminator-value": "page",
       "allOf": [
         {
-          "$ref": "#/definitions/LogWithProperties"
+          "$ref": "#/definitions/LogFlowLogWithProperties"
         }
       ],
       "properties": {
@@ -18747,13 +20314,13 @@
         "session_id"
       ]
     },
-    "EventLog": {
+    "LogFlowEventLog": {
       "type": "object",
       "description": "Event log.",
       "x-ms-discriminator-value": "event",
       "allOf": [
         {
-          "$ref": "#/definitions/LogWithProperties"
+          "$ref": "#/definitions/LogFlowLogWithProperties"
         }
       ],
       "properties": {
@@ -18778,13 +20345,13 @@
         "session_id"
       ]
     },
-    "PushInstallationLog": {
+    "LogFlowPushInstallationLog": {
       "type": "object",
       "description": "Push installation Information.",
       "x-ms-discriminator-value": "push_installation",
       "allOf": [
         {
-          "$ref": "#/definitions/Log"
+          "$ref": "#/definitions/LogFlowLog"
         }
       ],
       "properties": {
@@ -18797,13 +20364,13 @@
         "push_token"
       ]
     },
-    "ErrorLog": {
+    "LogFlowErrorLog": {
       "type": "object",
       "description": "Error log.",
       "x-ms-discriminator-value": "error",
       "allOf": [
         {
-          "$ref": "#/definitions/Log"
+          "$ref": "#/definitions/LogFlowLog"
         }
       ],
       "properties": {
@@ -18828,272 +20395,189 @@
         "id"
       ]
     },
-    "EventProperties": {
-      "description": "Event properties during the time range",
+    "ExportConfiguration": {
+      "description": "Export configuration",
       "type": "object",
+      "discriminator": "type",
       "properties": {
-        "event_properties": {
-          "type": "array",
-          "items": {
-            "description": "The event property",
-            "type": "string",
-            "format": "string"
-          }
-        }
-      }
-    },
-    "EventPropertyValues": {
-      "description": "Event property value counts during the time range in descending order",
-      "type": "object",
-      "properties": {
-        "total": {
-          "description": "The total property value counts",
-          "type": "integer",
-          "format": "int64"
+        "type": {
+          "description": "Type of export configuration",
+          "type": "string",
+          "enum": [
+            "blob_storage_connection_string",
+            "application_insights_instrumentation_key",
+            "blob_storage_linked_subscription",
+            "application_insights_linked_subscription"
+          ]
         },
-        "values": {
-          "description": "The event property values",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/EventPropertyValue"
-          }
-        }
-      }
-    },
-    "EventPropertyValue": {
-      "description": "An event property value with counts",
-      "type": "object",
-      "properties": {
-        "name": {
-          "description": "The event property value name",
-          "type": "string"
+        "resource_name": {
+          "type": "string",
+          "description": "The resource name on azure"
         },
-        "count": {
-          "description": "The count of the the event property value",
-          "type": "integer",
-          "format": "int64"
-        },
-        "previous_count": {
-          "description": "The count of previous time range of the event property value",
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "AudienceListResult": {
-      "description": "List of audiences.",
-      "properties": {
-        "values": {
-          "description": "List of audiences.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AudienceSummary"
-          }
-        },
-        "nextLink": {
-          "type": "string"
+        "resource_group": {
+          "type": "string",
+          "description": "The resource group name on azure"
         }
       },
       "required": [
-        "values"
+        "type"
       ]
     },
-    "AudienceSummary": {
-      "description": "Audience definition.",
-      "properties": {
-        "name": {
-          "description": "Audience name.",
-          "type": "string"
-        },
-        "description": {
-          "description": "Audience description.",
-          "type": "string"
-        },
-        "estimated_count": {
-          "description": "Estimated audience size.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "definition": {
-          "description": "Audience definition in OData format.",
-          "type": "string"
-        },
-        "state": {
-          "x-ms-enum": {
-            "name": "AudienceProcessingState"
-          },
-          "description": "Audience state.",
-          "type": "string",
-          "enum": [
-            "Calculating",
-            "Ready",
-            "Disabled"
-          ]
-        }
-      }
-    },
-    "Audience": {
-      "description": "Audience with details.",
+    "ExportConfigurationBlobStorageConnectionString": {
+      "description": "Configuration for export to Blob Storage with customer provided connection string",
+      "x-ms-discriminator-value": "blob_storage_connection_string",
       "allOf": [
         {
-          "$ref": "#/definitions/AudienceSummary"
+          "$ref": "#/definitions/ExportConfiguration"
         }
       ],
       "properties": {
-        "enabled": {
-          "type": "boolean",
-          "default": true
-        },
-        "custom_properties": {
-          "type": "object",
-          "description": "Custom properties used in the definition.",
-          "additionalProperties": {
-            "type": "string",
-            "enum": [
-              "string",
-              "number",
-              "boolean",
-              "date_time"
-            ],
-            "x-ms-enum": {
-              "name": "device_property_type",
-              "modelAsString": false
-            }
-          }
-        },
-        "estimated_total_count": {
-          "description": "Estimated total audience size.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "timestamp": {
-          "description": "Date the audience was last refreshed.",
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "AudienceTestResult": {
-      "description": "Audience test result.",
-      "properties": {
-        "definition": {
-          "description": "Audience definition in OData format.",
+        "connection_string": {
+          "description": "Connection string for blob storage account",
           "type": "string"
-        },
-        "custom_properties": {
-          "type": "object",
-          "description": "Custom properties used in the definition.",
-          "additionalProperties": {
-            "type": "string",
-            "enum": [
-              "string",
-              "number",
-              "boolean",
-              "date_time"
-            ],
-            "x-ms-enum": {
-              "name": "device_property_type",
-              "modelAsString": false
-            }
-          }
-        },
-        "estimated_count": {
-          "description": "Estimated audience size.",
-          "type": "integer",
-          "format": "int64"
-        },
-        "estimated_total_count": {
-          "description": "Estimated total audience size.",
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "AudienceDefinition": {
-      "description": "Audience definition.",
-      "type": "object",
-      "properties": {
-        "description": {
-          "description": "Audience description.",
-          "type": "string",
-          "maxLength": 128
-        },
-        "definition": {
-          "description": "Audience definition in OData format.",
-          "type": "string",
-          "maxLength": 2000
-        },
-        "enabled": {
-          "type": "boolean",
-          "default": true
-        },
-        "custom_properties": {
-          "type": "object",
-          "description": "Custom properties used in the definition.",
-          "additionalProperties": {
-            "type": "string",
-            "enum": [
-              "string",
-              "number",
-              "boolean",
-              "date_time"
-            ],
-            "x-ms-enum": {
-              "name": "device_property_type",
-              "modelAsString": false
-            }
-          }
         }
       },
       "required": [
-        "definition"
+        "connection_string"
       ]
     },
-    "AudienceBlobResult": {
-      "description": "Audience definition.",
-      "type": "object",
-      "properties": {
-        "url": {
-          "description": "Location of the audience blob.",
-          "type": "string"
+    "ExportConfigurationAppInsightsKey": {
+      "description": "Configuration for export to Application Insights resource with customer provided intrumentation key",
+      "x-ms-discriminator-value": "application_insights_instrumentation_key",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExportConfiguration"
         }
-      }
-    },
-    "AudienceDevicePropertiesListResult": {
-      "description": "List of device properties.",
+      ],
       "properties": {
-        "values": {
-          "description": "List of device properties.",
-          "type": "object",
-          "additionalProperties": {
-            "description": "Type of the property.",
-            "type": "string",
-            "enum": [
-              "string",
-              "number",
-              "boolean",
-              "date_time"
-            ],
-            "x-ms-enum": {
-              "name": "device_property_type",
-              "modelAsString": false
-            }
-          }
+        "instrumentation_key": {
+          "description": "Instrumentation key for Application Insights resource",
+          "type": "string"
         }
       },
       "required": [
-        "values"
+        "instrumentation_key"
       ]
     },
-    "AudienceDevicePropertyValuesListResult": {
-      "description": "List of device property values.",
+    "ExportConfigurationBlobStorageLinkedSubscription": {
+      "description": "Configuration for export to Blob Storage with customer linked subscription.",
+      "x-ms-discriminator-value": "blob_storage_linked_subscription",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExportConfiguration"
+        }
+      ],
+      "properties": {
+        "subscription_id": {
+          "description": "Id of customer subscription linked in App Center",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subscription_id"
+      ]
+    },
+    "ExportConfigurationAppInsightsLinkedSubscription": {
+      "description": "Configuration for export to Application Insights resource with customer linked subscription.",
+      "x-ms-discriminator-value": "application_insights_linked_subscription",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExportConfiguration"
+        }
+      ],
+      "properties": {
+        "subscription_id": {
+          "description": "Id of customer subscription linked in App Center",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subscription_id"
+      ]
+    },
+    "ExportConfigurationResult": {
+      "description": "Export configuration result",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Export configuration id",
+          "type": "string"
+        },
+        "export_type": {
+          "description": "Target resource type of export configuration",
+          "type": "string",
+          "enum": [
+            "BlobStorage",
+            "AppInsights"
+          ],
+          "x-ms-enum": {
+            "name": "ExportType",
+            "modelAsString": false
+          }
+        },
+        "creation_time": {
+          "description": "Creation time in ISO 8601 format",
+          "type": "string"
+        },
+        "last_run_time": {
+          "description": "Latest time in ISO 8601 format when export completed successfully",
+          "type": "string"
+        },
+        "state": {
+          "description": "State of the export job",
+          "type": "string",
+          "enum": [
+            "Enabled",
+            "Disabled",
+            "Pending",
+            "Deleted",
+            "Invalid"
+          ],
+          "x-ms-enum": {
+            "name": "ExportState",
+            "modelAsString": false
+          }
+        },
+        "state_info": {
+          "description": "Additional information about export configuration state",
+          "type": "string"
+        },
+        "resource_group": {
+          "description": "resource group for the storage account/App Insights resource",
+          "type": "string"
+        },
+        "resource_name": {
+          "description": "Storage accout or Appinsights resource name",
+          "type": "string"
+        },
+        "export_configuration": {
+          "$ref": "#/definitions/ExportConfiguration"
+        }
+      },
+      "required": [
+        "id",
+        "export_type",
+        "creation_time",
+        "state"
+      ]
+    },
+    "ExportConfigurationListResult": {
+      "description": "List of export configurations",
+      "type": "object",
       "properties": {
         "values": {
-          "description": "List of device property values.",
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/ExportConfigurationResult"
           }
+        },
+        "total": {
+          "description": "the total count of exports",
+          "type": "integer",
+          "format": "int64"
+        },
+        "nextLink": {
+          "type": "string"
         }
       },
       "required": [
@@ -19309,28 +20793,6 @@
         "audiences"
       ]
     },
-    "NotificationTargetUsers": {
-      "description": "Notification target users.",
-      "x-ms-discriminator-value": "users_target",
-      "allOf": [
-        {
-          "$ref": "#/definitions/NotificationTarget"
-        }
-      ],
-      "properties": {
-        "users": {
-          "description": "List of target users.",
-          "type": "array",
-          "items": {
-            "description": "User Id.",
-            "type": "string"
-          }
-        }
-      },
-      "required": [
-        "users"
-      ]
-    },
     "NotificationTargetDevices": {
       "description": "Notification target devices. If null, all devices will be targeted(broadcast).",
       "x-ms-discriminator-value": "devices_target",
@@ -19349,7 +20811,10 @@
             "format": "uuid"
           }
         }
-      }
+      },
+      "required": [
+        "devices"
+      ]
     },
     "NotificationConfig": {
       "description": "Generic notification configuration.",
@@ -19576,6 +21041,10 @@
         "package_sid": {
           "description": "Package security identifier (SID).",
           "type": "string"
+        },
+        "secret_key": {
+          "description": "windows push configuration secret key.",
+          "type": "string"
         }
       },
       "required": [
@@ -19621,179 +21090,6 @@
           "format": "int64"
         }
       }
-    },
-    "ExportConfiguration": {
-      "description": "Export configuration",
-      "type": "object",
-      "discriminator": "type",
-      "properties": {
-        "type": {
-          "description": "Type of export configuration",
-          "type": "string",
-          "enum": [
-            "blob_storage_connection_string",
-            "application_insights_instrumentation_key",
-            "blob_storage_linked_subscription",
-            "application_insights_linked_subscription"
-          ]
-        }
-      },
-      "required": [
-        "type"
-      ]
-    },
-    "ExportConfigurationBlobStorageConnectionString": {
-      "description": "Configuration for export to Blob Storage with customer provided connection string",
-      "x-ms-discriminator-value": "blob_storage_connection_string",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ExportConfiguration"
-        }
-      ],
-      "properties": {
-        "connection_string": {
-          "description": "Connection string for blob storage account",
-          "type": "string"
-        }
-      },
-      "required": [
-        "connection_string"
-      ]
-    },
-    "ExportConfigurationAppInsightsKey": {
-      "description": "Configuration for export to Application Insights resource with customer provided intrumentation key",
-      "x-ms-discriminator-value": "application_insights_instrumentation_key",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ExportConfiguration"
-        }
-      ],
-      "properties": {
-        "instrumentation_key": {
-          "description": "Instrumentation key for Application Insights resource",
-          "type": "string"
-        }
-      },
-      "required": [
-        "instrumentation_key"
-      ]
-    },
-    "ExportConfigurationBlobStorageLinkedSubscription": {
-      "description": "Configuration for export to Blob Storage with customer linked subscription.",
-      "x-ms-discriminator-value": "blob_storage_linked_subscription",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ExportConfiguration"
-        }
-      ],
-      "properties": {
-        "subscription_id": {
-          "description": "Id of customer subscription linked in Mobile Center",
-          "type": "string"
-        }
-      },
-      "required": [
-        "subscription_id"
-      ]
-    },
-    "ExportConfigurationAppInsightsLinkedSubscription": {
-      "description": "Configuration for export to Application Insights resource with customer linked subscription.",
-      "x-ms-discriminator-value": "application_insights_linked_subscription",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ExportConfiguration"
-        }
-      ],
-      "properties": {
-        "subscription_id": {
-          "description": "Id of customer subscription linked in Mobile Center",
-          "type": "string"
-        }
-      },
-      "required": [
-        "subscription_id"
-      ]
-    },
-    "ExportConfigurationResult": {
-      "description": "Export configuration result",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Export configuration id",
-          "type": "string"
-        },
-        "export_type": {
-          "description": "Target resource type of export configuration",
-          "type": "string",
-          "enum": [
-            "BlobStorage",
-            "AppInsights"
-          ],
-          "x-ms-enum": {
-            "name": "ExportType",
-            "modelAsString": false
-          }
-        },
-        "creation_time": {
-          "description": "Creation time in ISO 8601 format",
-          "type": "string"
-        },
-        "last_run_time": {
-          "description": "Latest time in ISO 8601 format when export completed successfully",
-          "type": "string"
-        },
-        "state": {
-          "description": "State of the export job",
-          "type": "string",
-          "enum": [
-            "Enabled",
-            "Disabled",
-            "Pending",
-            "Deleted",
-            "Invalid"
-          ],
-          "x-ms-enum": {
-            "name": "ExportState",
-            "modelAsString": false
-          }
-        },
-        "state_info": {
-          "description": "Additional information about export configuration state",
-          "type": "string"
-        },
-        "export_configuration": {
-          "$ref": "#/definitions/ExportConfiguration"
-        }
-      },
-      "required": [
-        "id",
-        "export_type",
-        "creation_time",
-        "state"
-      ]
-    },
-    "ExportConfigurationListResult": {
-      "description": "List of export configurations",
-      "type": "object",
-      "properties": {
-        "values": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ExportConfigurationResult"
-          }
-        },
-        "total": {
-          "description": "the total count of exports",
-          "type": "integer",
-          "format": "int64"
-        },
-        "nextLink": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "values"
-      ]
     },
     "DeviceConfiguration": {
       "properties": {
@@ -21230,6 +22526,22 @@
         }
       ]
     },
+    "AcquisitionStatusSuccessResponse": {
+      "properties": {
+        "code": {
+          "description": "The code indicating the status",
+          "type": "string"
+        },
+        "message": {
+          "description": "The message indicating the status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
+    },
     "AlertOperationResult": {
       "description": "Generic result for any alerting API operation",
       "type": "object",
@@ -21652,12 +22964,16 @@
         "external_user_email": {
           "description": "The email of external user that used to authenticate aginst the external oauth provider",
           "type": "string"
+        },
+        "external_account_name": {
+          "description": "The account name of external user that used to authenticate against the external oauth provider or basic auth"
         }
       },
       "required": [
         "access_token_id",
         "external_provider_name",
-        "external_user_email"
+        "external_user_email",
+        "external_account_name"
       ]
     },
     "EventSetting": {
@@ -21930,7 +23246,7 @@
         }
       ]
     },
-    "AggregatedBillingInformation_0_0_1": {
+    "AggregatedBillingInformation": {
       "description": "Aggregated Billing Information for a user or an organization",
       "type": "object",
       "properties": {
@@ -21948,10 +23264,10 @@
           "type": "string"
         },
         "billingPlans": {
-          "$ref": "#/definitions/BillingInformationPlans_0_0_1"
+          "$ref": "#/definitions/BillingInformationPlans"
         },
         "usage": {
-          "$ref": "#/definitions/BillingResourceUsage_0_0_1"
+          "$ref": "#/definitions/BillingResourceUsage"
         }
       }
     },
@@ -21986,22 +23302,22 @@
         }
       }
     },
-    "BillingInformationPlans_0_0_1": {
+    "BillingInformationPlans": {
       "description": "Billing Plans section in the Billing Information",
       "type": "object",
       "properties": {
         "buildService": {
-          "$ref": "#/definitions/ServiceBillingPlans_0_0_1"
+          "$ref": "#/definitions/ServiceBillingPlans"
         },
         "pushService": {
-          "$ref": "#/definitions/ServiceBillingPlans_0_0_1"
+          "$ref": "#/definitions/ServiceBillingPlans"
         },
         "testService": {
-          "$ref": "#/definitions/ServiceBillingPlans_0_0_1"
+          "$ref": "#/definitions/ServiceBillingPlans"
         }
       }
     },
-    "BillingPeriod_0_0_1": {
+    "BillingPeriod": {
       "description": "Billing plans for a given period",
       "properties": {
         "startTime": {
@@ -22015,11 +23331,11 @@
           "format": "dateTime"
         },
         "byAccount": {
-          "$ref": "#/definitions/BillingPlanSelection_0_0_1"
+          "$ref": "#/definitions/BillingPlanSelection"
         }
       }
     },
-    "BillingPlan_0_0_1": {
+    "BillingPlan": {
       "description": "Billing Plan",
       "type": "object",
       "properties": {
@@ -22052,7 +23368,7 @@
         }
       }
     },
-    "BillingPlanSelection_0_0_1": {
+    "BillingPlanSelection": {
       "description": "Selection of a billing plan",
       "properties": {
         "count": {
@@ -22060,22 +23376,22 @@
           "type": "integer"
         },
         "plan": {
-          "$ref": "#/definitions/BillingPlan_0_0_1"
+          "$ref": "#/definitions/BillingPlan"
         }
       }
     },
-    "BillingResourceUsage_0_0_1": {
+    "BillingResourceUsage": {
       "description": "Usage section in the Billing Information",
       "type": "object",
       "properties": {
         "buildService": {
-          "$ref": "#/definitions/ServiceResourceUsage_0_0_1"
+          "$ref": "#/definitions/ServiceResourceUsage"
         },
         "pushService": {
-          "$ref": "#/definitions/ServiceResourceUsage_0_0_1"
+          "$ref": "#/definitions/ServiceResourceUsage"
         },
         "testService": {
-          "$ref": "#/definitions/ServiceResourceUsage_0_0_1"
+          "$ref": "#/definitions/ServiceResourceUsage"
         }
       }
     },
@@ -22093,7 +23409,7 @@
         "$ref": "#/definitions/MetricsValues"
       }
     },
-    "ServiceBillingPlans_0_0_1": {
+    "ServiceBillingPlans": {
       "description": "Billing Plans for a single service",
       "type": "object",
       "properties": {
@@ -22107,20 +23423,20 @@
           "format": "dateTime"
         },
         "currentBillingPeriod": {
-          "$ref": "#/definitions/BillingPeriod_0_0_1"
+          "$ref": "#/definitions/BillingPeriod"
         }
       }
     },
-    "ServiceResourceUsage_0_0_1": {
+    "ServiceResourceUsage": {
       "description": "Resource usage for a single Mobile Center service",
       "type": "object",
       "properties": {
         "currentUsagePeriod": {
-          "$ref": "#/definitions/UsagePeriod_0_0_1"
+          "$ref": "#/definitions/UsagePeriod"
         }
       }
     },
-    "UsagePeriod_0_0_1": {
+    "UsagePeriod": {
       "description": "Usage for a single period",
       "type": "object",
       "properties": {
@@ -22175,12 +23491,12 @@
         }
       }
     },
-    "VersionedBillingPlan_0_0_1": {
+    "VersionedBillingPlan": {
       "description": "Billing Plan with a version",
       "type": "object",
       "properties": {
         "document": {
-          "$ref": "#/definitions/BillingPlan_0_0_1"
+          "$ref": "#/definitions/BillingPlan"
         },
         "etag": {
           "description": "The version of the object",
@@ -22188,7 +23504,7 @@
         }
       }
     },
-    "MessageEnvelope_0_0_1": {
+    "MessageEnvelope": {
       "description": "Envelope for messages sent to actors",
       "type": "object",
       "properties": {
@@ -22538,6 +23854,26 @@
       ],
       "x-ms-parameter-location": "method"
     },
+    "group_orderby": {
+      "name": "$orderby",
+      "in": "query",
+      "type": "string",
+      "required": false,
+      "description": "the OData-like $orderby argument",
+      "allowEmptyValue": true,
+      "default": "last_occurrence desc",
+      "enum": [
+        "last_occurrence asc",
+        "last_occurrence desc",
+        "count asc",
+        "count desc",
+        "display_id asc",
+        "display_id desc",
+        "impacted_users asc",
+        "impacted_users desc"
+      ],
+      "x-ms-parameter-location": "method"
+    },
     "include_report": {
       "name": "include_report",
       "in": "query",
@@ -22573,6 +23909,14 @@
       "description": "true if the stacktrace should be only the relevant thread / exception. Default is false",
       "x-ms-parameter-location": "method"
     },
+    "continuation_token": {
+      "name": "continuation_token",
+      "in": "query",
+      "type": "string",
+      "required": false,
+      "description": "Cassandra request continuation token. The token is used for pagination.",
+      "x-ms-parameter-location": "method"
+    },
     "path_symbol_group_id": {
       "name": "symbol_group_id",
       "in": "path",
@@ -22597,7 +23941,7 @@
       "type": "string",
       "x-ms-parameter-location": "method"
     },
-    "StartParameter": {
+    "AnalyticsStartParameter": {
       "name": "start",
       "in": "query",
       "description": "Start date time in data in ISO 8601 date time format",
@@ -22606,16 +23950,7 @@
       "format": "date-time",
       "x-ms-parameter-location": "method"
     },
-    "LogFlowStartTimeParameter": {
-      "name": "start",
-      "in": "query",
-      "description": "Start date time in data in ISO 8601 date time format. It must be within the current day in the UTC timezone. The default value is the start time of the current day in UTC timezone.",
-      "required": false,
-      "type": "string",
-      "format": "date-time",
-      "x-ms-parameter-location": "method"
-    },
-    "EndParameter": {
+    "AnalyticsEndParameter": {
       "name": "end",
       "in": "query",
       "description": "Last date time in data in ISO 8601 date time format",
@@ -22633,10 +23968,198 @@
       },
       "x-ms-parameter-location": "method"
     },
+    "AudienceNameParameter": {
+      "name": "audience_name",
+      "in": "path",
+      "description": "The name of the audience",
+      "required": true,
+      "type": "string",
+      "maxLength": 64,
+      "format": "string",
+      "pattern": "[^/]+",
+      "x-ms-parameter-location": "method"
+    },
+    "DevicePropertyNameParameter": {
+      "name": "property_name",
+      "in": "path",
+      "description": "Device property",
+      "required": true,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "AnalyticsCrashIdParameter": {
+      "name": "crash_id",
+      "in": "path",
+      "description": "The id of the a crash",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "ContainsParameter": {
+      "name": "contains",
+      "in": "query",
+      "description": "Contains string",
+      "required": false,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "AudienceBodyParameter": {
+      "name": "audience",
+      "in": "body",
+      "description": "Audience definition",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/AudienceDefinition"
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "IncludeDisabledAudiencesParameter": {
+      "name": "include_disabled",
+      "in": "query",
+      "description": "Include disabled audience definitions",
+      "required": false,
+      "type": "boolean",
+      "x-ms-parameter-location": "method"
+    },
+    "StorageAccountNameParameter": {
+      "name": "storageAccount",
+      "in": "query",
+      "description": "Storage account name",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "StorageAccountNameOptionalParameter": {
+      "name": "storageAccount",
+      "in": "query",
+      "description": "Storage account name",
+      "required": false,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "QueueNameParameter": {
+      "name": "queueName",
+      "in": "query",
+      "description": "Name of the queue",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "CounterIdParameter": {
+      "name": "counterId",
+      "in": "path",
+      "description": "Counter Id",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "MigrationParameter": {
+      "name": "migration",
+      "in": "body",
+      "description": "Migration parameters",
+      "required": true,
+      "x-ms-parameter-location": "method",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "AppId": {
+            "type": "string"
+          },
+          "FromDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ToDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "WhatIf": {
+            "type": "boolean"
+          },
+          "WaitForCompletion": {
+            "type": "boolean"
+          },
+          "PauseService": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "AppId"
+        ]
+      }
+    },
+    "MigrationNameParameter": {
+      "name": "name",
+      "in": "path",
+      "description": "Name",
+      "required": true,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "AppKeyForAdminParameter": {
+      "name": "appId",
+      "in": "query",
+      "description": "The id of the application",
+      "required": false,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "StartParameter": {
+      "name": "start",
+      "in": "query",
+      "description": "Start date time in data in ISO 8601 date time format",
+      "required": true,
+      "type": "string",
+      "format": "date-time",
+      "x-ms-parameter-location": "method"
+    },
+    "EndParameter": {
+      "name": "end",
+      "in": "query",
+      "description": "Last date time in data in ISO 8601 date time format",
+      "required": false,
+      "type": "string",
+      "format": "date-time",
+      "x-ms-parameter-location": "method"
+    },
     "CrashGroupParameter": {
       "name": "crash_group_id",
       "in": "path",
       "description": "The id of the crash group",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "ErrorGroupParameter": {
+      "name": "error_group_id",
+      "in": "path",
+      "description": "The id of the error group",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "ErrorGroupStateParameter": {
+      "name": "error_group_state",
+      "in": "body",
+      "description": "The state of the error group",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/ErrorGroupState"
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "ErrorParameter": {
+      "name": "error_id",
+      "in": "path",
+      "description": "The id of the error",
       "required": true,
       "type": "string",
       "format": "string",
@@ -22649,15 +24172,6 @@
       "schema": {
         "$ref": "#/definitions/CrashGroupContainer"
       },
-      "x-ms-parameter-location": "method"
-    },
-    "CrashIdParameter": {
-      "name": "crash_id",
-      "in": "path",
-      "description": "The id of the a crash",
-      "required": true,
-      "type": "string",
-      "format": "string",
       "x-ms-parameter-location": "method"
     },
     "EventParameter": {
@@ -22706,6 +24220,38 @@
       "format": "string",
       "x-ms-parameter-location": "method"
     },
+    "VersionParameterOptional": {
+      "name": "version",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "GroupStatusParameter": {
+      "name": "group_status",
+      "in": "query",
+      "required": false,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "OsParameter": {
+      "name": "os",
+      "in": "query",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "ModelParameter": {
+      "name": "model",
+      "in": "query",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
     "EventNameParameter": {
       "name": "event_name",
       "in": "query",
@@ -22716,60 +24262,6 @@
         "type": "string"
       },
       "collectionFormat": "pipes",
-      "x-ms-parameter-location": "method"
-    },
-    "AudienceNameParameter": {
-      "name": "audience_name",
-      "in": "path",
-      "description": "The name of the audience",
-      "required": true,
-      "type": "string",
-      "maxLength": 64,
-      "format": "string",
-      "pattern": "[^/]+",
-      "x-ms-parameter-location": "method"
-    },
-    "DevicePropertyNameParameter": {
-      "name": "property_name",
-      "in": "path",
-      "description": "Device property",
-      "required": true,
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "ContainsParameter": {
-      "name": "contains",
-      "in": "query",
-      "description": "Contains string",
-      "required": false,
-      "type": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "AudienceBodyParameter": {
-      "name": "audience",
-      "in": "body",
-      "description": "Audience definition",
-      "required": true,
-      "schema": {
-        "$ref": "#/definitions/AudienceDefinition"
-      },
-      "x-ms-parameter-location": "method"
-    },
-    "IncludeDisabledAudiencesParameter": {
-      "name": "include_disabled",
-      "in": "query",
-      "description": "Include disabled audience definitions",
-      "required": false,
-      "type": "boolean",
-      "x-ms-parameter-location": "method"
-    },
-    "CountParameter": {
-      "name": "count",
-      "in": "query",
-      "description": "The number of results to return",
-      "required": false,
-      "type": "integer",
-      "format": "int64",
       "x-ms-parameter-location": "method"
     },
     "SkipParameter": {
@@ -22802,6 +24294,64 @@
       "maximum": 10,
       "type": "integer",
       "format": "int64",
+      "x-ms-parameter-location": "method"
+    },
+    "NotifyReleasesParameter": {
+      "name": "releases",
+      "in": "body",
+      "description": "The releases to notify.",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/NotifyReleasesContainer"
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "DeleteReleasesParameter": {
+      "name": "releases",
+      "in": "body",
+      "description": "The releases to delete.",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/DeleteReleasesContainer"
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "GetReleasesParameter": {
+      "name": "releases",
+      "in": "body",
+      "description": "The releases to retrieve.",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/GetReleasesContainer"
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "LogFlowStartTimeParameter": {
+      "name": "start",
+      "in": "query",
+      "description": "Start date time in data in ISO 8601 date time format. It must be within the current day in the UTC timezone. The default value is the start time of the current day in UTC timezone.",
+      "required": false,
+      "type": "string",
+      "format": "date-time",
+      "x-ms-parameter-location": "method"
+    },
+    "ExportConfigurationIdParameter": {
+      "name": "export_configuration_id",
+      "in": "path",
+      "description": "The id of the export configuration.",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "ExportConfigurationParameter": {
+      "name": "properties",
+      "in": "body",
+      "description": "Export configurations.",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/ExportConfiguration"
+      },
       "x-ms-parameter-location": "method"
     },
     "IncludeArchivedParameter": {
@@ -22849,25 +24399,6 @@
       "required": true,
       "type": "string",
       "format": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "ExportConfigurationIdParameter": {
-      "name": "export_configuration_id",
-      "in": "path",
-      "description": "The id of the export configuration.",
-      "required": true,
-      "type": "string",
-      "format": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "ExportConfigurationParameter": {
-      "name": "properties",
-      "in": "body",
-      "description": "Export configurations.",
-      "required": true,
-      "schema": {
-        "$ref": "#/definitions/ExportConfiguration"
-      },
       "x-ms-parameter-location": "method"
     },
     "path_deployment_name": {
@@ -23030,7 +24561,7 @@
       "x-ms-parameter-location": "method"
     },
     "BillingOrgNameParameter": {
-      "name": "org_name",
+      "name": "orgName",
       "in": "path",
       "description": "The name of the Organization",
       "required": true,
@@ -23039,7 +24570,7 @@
       "x-ms-parameter-location": "method"
     },
     "BillingPlanIdParameter": {
-      "name": "billing_plan_id",
+      "name": "billingPlanId",
       "in": "path",
       "description": "The ID of the Billing Plan",
       "required": true,
@@ -23048,36 +24579,27 @@
       "x-ms-parameter-location": "method"
     },
     "BillingPlanParameter": {
-      "name": "billing_plan",
+      "name": "billingPlan",
       "in": "body",
       "description": "The Billing Plan to create/update",
       "required": true,
       "schema": {
-        "$ref": "#/definitions/BillingPlan_0_0_1"
+        "$ref": "#/definitions/BillingPlan"
       },
       "x-ms-parameter-location": "method"
     },
     "BillingPlanSelectionParameter": {
-      "name": "billing_plan_selection",
+      "name": "billingPlanSelection",
       "in": "body",
       "description": "The Billing Plan selection to associate with an account or app",
       "required": true,
       "schema": {
-        "$ref": "#/definitions/BillingPlanSelection_0_0_1"
+        "$ref": "#/definitions/BillingPlanSelection"
       },
       "x-ms-parameter-location": "method"
     },
-    "BillingUserNameParameter": {
-      "name": "user_name",
-      "in": "path",
-      "description": "The name of the User",
-      "required": true,
-      "type": "string",
-      "format": "string",
-      "x-ms-parameter-location": "method"
-    },
     "BillingAccountIdParameter": {
-      "name": "account_id",
+      "name": "accountId",
       "in": "path",
       "description": "The account id",
       "required": true,
@@ -23091,7 +24613,7 @@
       "description": "Message to send to actor",
       "required": true,
       "schema": {
-        "$ref": "#/definitions/MessageEnvelope_0_0_1"
+        "$ref": "#/definitions/MessageEnvelope"
       },
       "x-ms-parameter-location": "method"
     },
@@ -23175,10 +24697,10 @@
       "name": "analytics"
     },
     {
-      "name": "push"
+      "name": "export"
     },
     {
-      "name": "export"
+      "name": "push"
     },
     {
       "name": "test"

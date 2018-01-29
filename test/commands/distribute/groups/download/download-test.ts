@@ -83,7 +83,7 @@ describe("distribute groups download command", () => {
   }
 
   function getCommandArgs(additionalArgs: string[]): CommandArgs {
-    let args: string[] = ["-a", fakeAppIdentifier, "--token", fakeToken, "--env", "testCloudLocalDev"].concat(additionalArgs);
+    let args: string[] = ["-a", fakeAppIdentifier, "--token", fakeToken, "--env", "local"].concat(additionalArgs);
     return {
       args,
       command: ["distribute", "groups", "download"],
