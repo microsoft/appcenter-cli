@@ -51,6 +51,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
   @help("Path to where the sourcemap for the resulting bundle should be written. If omitted, a sourcemap will not be generated")
   @shortName("s")
   @longName("sourcemap-output")
+  @hasArg
   public sourcemapOutput: string;
 
   @help("Path to where the bundle and sourcemap should be written. If omitted, a bundle and sourcemap will not be written")
