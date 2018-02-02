@@ -32,7 +32,7 @@ export async function getOrgsNamesList(client: AppCenterClient): Promise<IEntity
       throw httpResponse.response;
     }
   } catch (error) {
-    await handleHttpError(error, false, "failed to load list of organization users");
+    await handleHttpError(error, false, "failed to load list of organizations");
   }
 }
 
