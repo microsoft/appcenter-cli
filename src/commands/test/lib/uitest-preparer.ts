@@ -64,7 +64,7 @@ export class UITestPreparer {
 
     switch (exitCode) {
       case 1:
-        return `There was an unknown error preparing test artifacts,${tryAgain}`;
+        return `There was an unknown error preparing test artifacts${tryAgain}`;
       case 2:
         return `Invalid options were used to prepare the test artifacts${tryAgain}`;
       case 3:
