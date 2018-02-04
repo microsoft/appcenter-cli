@@ -88,7 +88,9 @@ export abstract class RunTestsCommand extends AppCommand {
   // Override this if you need to validate options
   protected async validateOptions(): Promise<void> {
   }
-
+  // TODO: There is technical debt here.
+  // There is a lot of confusion and even duplicated code with respect to test params,
+  // included files and responsibility of prepare vs run.
   public async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     if (this.isAppPathRquired && !this.appPath) {
       throw new Error("Argument --app-path is required");
