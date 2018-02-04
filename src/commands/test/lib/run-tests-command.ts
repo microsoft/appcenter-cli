@@ -99,7 +99,7 @@ export abstract class RunTestsCommand extends AppCommand {
       this.streamingOutput.start();
       try {
         let manifestPath = await progressWithResult("Preparing tests", this.prepareManifest(artifactsDir));
-        await this.addIncludedFilesAndTestParametersToManifest(manifestPath);
+        await this.addIncludedFilesToManifestAndCopyToArtifactsDir(manifestPath);
         let testRun = await this.uploadAndStart(client, manifestPath, portalBaseUrl);
 
         this.streamingOutput.text(function (testRun){
@@ -178,14 +178,23 @@ export abstract class RunTestsCommand extends AppCommand {
     }
   }
 
-  private async addIncludedFilesAndTestParametersToManifest(manifestPath: string): Promise<void> {
+  private async addIncludedFilesToManifestAndCopyToArtifactsDir(manifestPath: string): Promise<void> {
+    if (this.include) {
+      return;
+    }
     let manifestJson = await pfs.readFile(manifestPath, "utf8");
     let manifest = JSON.parse(manifestJson) as ITestCloudManifestJson;
+    let includedFiles = parseIncludedFiles(this.include, this.getSourceRootDir());
 
-    await this.addIncludedFiles(path.dirname(manifestPath), manifest);
+    for (let i = 0; i < includedFiles.length; i++) {
+      let includedFile = includedFiles[i];
+      let copyTarget = path.join(this.artifactsDir, includedFile.targetPath);
+      await pfs.cp(includedFile.sourcePath, copyTarget);
+      manifest.files.push(includedFile.targetPath);
+    }
 
-    let modifiedJson = JSON.stringify(manifest, null, 1);
-    await pfs.writeFile(manifestPath, modifiedJson);
+    let modifiedManifest = JSON.stringify(manifest, null, 1);
+    await pfs.writeFile(manifestPath, modifiedManifest);
   }
 
   protected prepareManifest(artifactsDir: string): Promise<string> {
@@ -231,20 +240,5 @@ export abstract class RunTestsCommand extends AppCommand {
   private waitForCompletion(client: AppCenterClient, testRunId: string): Promise<number> {
     let checker = new StateChecker(client, testRunId, this.app.ownerName, this.app.appName, this.streamingOutput);
     return checker.checkUntilCompleted(this.timeoutSec);
-  }
-
-  protected async addIncludedFiles(artifactsDir: string, manifest: ITestCloudManifestJson): Promise<void> {
-    if (!this.include) {
-      return;
-    }
-
-    let includedFiles = parseIncludedFiles(this.include, this.getSourceRootDir());
-    for (let i = 0; i < includedFiles.length; i++) {
-      let includedFile = includedFiles[i];
-      let copyTarget = path.join(artifactsDir, includedFile.targetPath);
-      await pfs.cp(includedFile.sourcePath, copyTarget);
-
-      manifest.files.push(includedFile.targetPath);
-    }
   }
 }
