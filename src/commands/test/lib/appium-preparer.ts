@@ -82,8 +82,8 @@ export class AppiumPreparer {
       if (stats.isFile() && entry.endsWith(".class")) {
         return true;
       }
-      
-      if (this.hasClassFile(fullEntryPath)) {
+
+      if (stats.isDirectory() && this.hasClassFile(fullEntryPath)) {
         return true;
       }
     }
