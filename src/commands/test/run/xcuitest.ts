@@ -20,7 +20,7 @@ export default class RunXCUITestCommand extends RunTestsCommand {
   @hasArg
   testIpaPath: string;
 
-  protected isAppPathRquired = false;
+  protected isAppPathRequired = false;
 
   constructor(args: CommandArgs) {
     super(args);

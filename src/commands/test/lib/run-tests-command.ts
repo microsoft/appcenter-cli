@@ -71,7 +71,7 @@ export abstract class RunTestsCommand extends AppCommand {
   @hasArg
   timeoutSec: number;
 
-  protected isAppPathRquired = true;
+  protected isAppPathRequired = true;
   private readonly streamingOutput = new StreamingArrayOutput();
 
   constructor(args: CommandArgs) {
@@ -90,7 +90,7 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   public async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
-    if (this.isAppPathRquired && !this.appPath) {
+    if (this.isAppPathRequired && !this.appPath) {
       throw new Error("Argument --app-path is required");
     }
     await this.validateOptions();
