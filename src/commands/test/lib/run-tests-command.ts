@@ -190,7 +190,7 @@ export abstract class RunTestsCommand extends AppCommand {
 
     for (let i = 0; i < includedFiles.length; i++) {
       let includedFile = includedFiles[i];
-      let copyTarget = path.join(this.artifactsDir, includedFile.targetPath);
+      let copyTarget = path.join(path.dirname(manifestPath), includedFile.targetPath);
       await pfs.cp(includedFile.sourcePath, copyTarget);
       manifest.files.push(includedFile.targetPath);
     }
