@@ -64,7 +64,7 @@ export class CalabashPreparer {
     }
 
     if (this.testParameters && this.testParameters.length > 0) {
-      command += ` --test-params ${this.generateTestParameterArgs()}`;
+      command += ` --test-parameters ${this.generateTestParameterArgs()}`;
     }
 
     return command;
@@ -72,21 +72,7 @@ export class CalabashPreparer {
 
   private generateTestParameterArgs(): string {
     let result: string = "";
-
-    if (this.testParameters) {
-      this.testParameters.forEach(p => {
-        let parsedParameter = parseTestParameter(p);
-        if (result != "") {
-          result += ",";
-        }
-        result += `${parsedParameter.key}:`;
-        if (parsedParameter.value != null) {
-          result += `${parsedParameter.value}`;
-        }
-      });
-    }
-
-    return result;
+    return this.testParameters.map(parseTestParameter).map(p => `"${p.key}:${p.value}"`).join(" ");
   }
 
   /*

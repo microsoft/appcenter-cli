@@ -46,6 +46,9 @@ export class PrepareTestsCommand extends Command {
   protected async validateOptions(): Promise<void> {
   }
 
+  // TODO: There is technical debt here.
+  // There is a lot of confusion and even duplicated code with respect to test params,
+  // included files and responsibility of prepare vs run.
   public async runNoClient(): Promise<CommandResult> {
     try {
       await this.validateOptions();
