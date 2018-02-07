@@ -181,7 +181,7 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   private async addIncludedFilesToManifestAndCopyToArtifactsDir(manifestPath: string): Promise<void> {
-    if (this.include) {
+    if (!this.include) {
       return;
     }
     let manifestJson = await pfs.readFile(manifestPath, "utf8");
