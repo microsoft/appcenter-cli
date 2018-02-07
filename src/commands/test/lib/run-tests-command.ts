@@ -181,7 +181,7 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   private async addIncludedFilesToManifestAndCopyToArtifactsDir(manifestPath: string): Promise<void> {
-    if (this.include) {
+    if (!this.include) {
       return;
     }
     let manifestJson = await pfs.readFile(manifestPath, "utf8");
@@ -190,7 +190,7 @@ export abstract class RunTestsCommand extends AppCommand {
 
     for (let i = 0; i < includedFiles.length; i++) {
       let includedFile = includedFiles[i];
-      let copyTarget = path.join(this.artifactsDir, includedFile.targetPath);
+      let copyTarget = path.join(path.dirname(manifestPath), includedFile.targetPath);
       await pfs.cp(includedFile.sourcePath, copyTarget);
       manifest.files.push(includedFile.targetPath);
     }
