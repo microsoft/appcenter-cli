@@ -13,7 +13,7 @@ function createValidBuildDirSpec(): fsLayout.IDirSpec {
     "pom.xml": '<?xml version="1.0" encoding="utf-8"><foo></foo>',
     "dependency-jars": { },
     "test-classes": {
-      "test.classs": "Fake *.class file"
+      "test.class": "Fake *.class file"
     }
   };
 };
