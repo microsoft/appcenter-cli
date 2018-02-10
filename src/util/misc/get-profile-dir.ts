@@ -7,6 +7,10 @@ import { profileDirName, oldProfileDirName, profileFile } from "./constants";
 const debug = require("debug")("appcenter-cli:util:misc:get-profile-dir");
 
 export function getProfileDir(): string {
+  if (typeof process.env.APPCENTER_PROFILE_DIR === 'string') {
+    return process.env.APPCENTER_PROFILE_DIR;
+  }
+
   const profileDir = path.join(getProfileDirParent(), profileDirName);
   const oldProfileDir = path.join(getProfileDirParent(), oldProfileDirName);
   if (!existsSync(profileDir) && existsSync(oldProfileDir)) {
