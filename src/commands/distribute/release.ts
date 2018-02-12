@@ -80,12 +80,15 @@ export default class ReleaseBinaryCommand extends AppCommand {
     debug("Retrieving the release");
     const releaseDetails = await this.getDistributeRelease(client, app, releaseId);
 
-    if (_.isNull(distributionGroupUsersCount)) {
-      out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${this.distributionGroup}`, releaseDetails);
+    if (releaseDetails) {
+      if (_.isNull(distributionGroupUsersCount)) {
+        out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${this.distributionGroup}`, releaseDetails);
+      } else {
+        out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${distributionGroupUsersCount} testers in ${this.distributionGroup}`, releaseDetails);
+      }
     } else {
-      out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${distributionGroupUsersCount} testers in ${this.distributionGroup}`, releaseDetails);
+      out.text(`Release was successfully released.`);
     }
-
     return success();
   }
 
@@ -238,7 +241,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       } else if (error === 404) {
         throw failure(ErrorCodes.Exception, `The release ${releaseId} can't be found`);        
       } else {
-        throw failure(ErrorCodes.Exception, `failed to retrieve the release ${releaseId}`);
+        return null;
       }
     }
 
