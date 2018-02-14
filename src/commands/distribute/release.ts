@@ -75,14 +75,20 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const releaseId = this.extractReleaseId(releaseUrl);
 
     debug("Distributing the release");
-    const releaseDetails = await this.distributeRelease(client, app, releaseId, releaseNotesString);
+    await this.distributeRelease(client, app, releaseId, releaseNotesString);
 
-    if (_.isNull(distributionGroupUsersCount)) {
-      out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${this.distributionGroup}`, releaseDetails);
+    debug("Retrieving the release");
+    const releaseDetails = await this.getDistributeRelease(client, app, releaseId);
+
+    if (releaseDetails) {
+      if (_.isNull(distributionGroupUsersCount)) {
+        out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${this.distributionGroup}`, releaseDetails);
+      } else {
+        out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${distributionGroupUsersCount} testers in ${this.distributionGroup}`, releaseDetails);
+      }
     } else {
-      out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${distributionGroupUsersCount} testers in ${this.distributionGroup}`, releaseDetails);
+      out.text(`Release was successfully released.`);
     }
-
     return success();
   }
 
@@ -221,6 +227,25 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const releaseId = Number(_(releaseUrl).split("/").last());
     console.assert(Number.isSafeInteger(releaseId) && releaseId > 0, `API returned unexpected release URL: ${releaseUrl}`);
     return releaseId;
+  }
+
+  private async getDistributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number): Promise<models.ReleaseDetailsResponse> {
+    let releaseRequestResponse: ClientResponse<models.ReleaseDetailsResponse>;
+    try {
+      releaseRequestResponse = await out.progress(`Retrieving the release...`, 
+        clientRequest<models.ReleaseDetailsResponse>(async (cb) => client.releases.getLatestByUser(releaseId.toString(), 
+          app.ownerName, app.appName, cb)));
+    } catch (error) {
+      if (error === 400) {
+        throw failure(ErrorCodes.Exception, "release_id is not an integer or the string latest");
+      } else if (error === 404) {
+        throw failure(ErrorCodes.Exception, `The release ${releaseId} can't be found`);        
+      } else {
+        return null;
+      }
+    }
+
+    return releaseRequestResponse.result;
   }
 
   private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number, releaseNotesString: string): Promise<models.ReleaseDetailsResponse> {
