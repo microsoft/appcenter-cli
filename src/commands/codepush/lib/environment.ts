@@ -39,6 +39,6 @@ const codePushEnvironmentsData: EnvironmentsFile = {
   }
 };
 
-export function environments(environmentName: string = codePushEnvironmentsData.defaultEnvironment): CodePushEnvironmentInfo {
+export function environments(environmentName: string = codePushEnvironmentsData.defaultEnvironment): CodePushEnvironmentInfo | undefined {
   return codePushEnvironmentsData.environments[environmentName];
 }

@@ -130,14 +130,14 @@ export function toDefaultApp(app: string): DefaultApp {
   return null;
 }
 
-let currentProfile: Profile = null;
+let currentProfile: Profile | null = null;
 
 function getProfileFilename(): string {
   const profileDir = getProfileDir();
   return path.join(profileDir, profileFile);
 }
 
-function loadProfile(): Profile {
+function loadProfile(): Profile | null {
   const profilePath = getProfileFilename();
   debug(`Loading profile from ${profilePath}`);
   if (!fileExistsSync(profilePath)) {
@@ -151,7 +151,7 @@ function loadProfile(): Profile {
   return new ProfileImpl(profile);
 }
 
-export function getUser(): Profile {
+export function getUser(): Profile | null {
   debug("Getting current user from profile");
   if (!currentProfile) {
     debug("No current user, loading from file");
