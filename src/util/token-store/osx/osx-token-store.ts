@@ -112,9 +112,10 @@ export class OsxTokenStore implements TokenStore {
       "-D", "appcenter cli password",
       "-s", serviceName,
       "-w", value.token,
-      "-G", value.id,
       "-U"
     ];
+    
+    if (value.id) { args.push("-G", value.id) }
 
     return new Promise<void>((resolve, reject) => {
       childProcess.execFile(securityPath, args, function (err, stdout, stderr) {
