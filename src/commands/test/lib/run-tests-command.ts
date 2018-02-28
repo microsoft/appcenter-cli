@@ -5,6 +5,7 @@ import { TestCloudUploader, StartedTestRun } from "./test-cloud-uploader";
 import { TestCloudError } from "./test-cloud-error";
 import { StateChecker } from "./state-checker";
 import { AppCenterClient } from "../../../util/apis";
+import { TestReport } from "../../../util/apis/generated/models";
 import { StreamingArrayOutput } from "../../../util/interaction";
 import { getUser } from "../../../util/profile";
 import { parseTestParameters } from "./parameters-parser";
@@ -145,6 +146,11 @@ export abstract class RunTestsCommand extends AppCommand {
           let report: string = `Test Report: ${testRun.testRunUrl}` + os.EOL;
           return report;
         }, testRun );
+
+        // Download json test result
+        var report : TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
+        if(report.stats.artifacts) {
+        }
 
         return success();
       }
