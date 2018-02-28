@@ -170,10 +170,6 @@ export class UITestPreparer {
       });
     }
 
-    if (this.nunitXml) {
-      command += ` --nunit-xml "${this.nunitXml}"`;
-    }
-
     if (this.testChunk) {
       command += ` --test-chunk "${this.testChunk}"`;
     }
@@ -267,7 +263,7 @@ export class UITestPreparer {
       {
         return true;
       }
-      
+
       if (currentVersion[i] < minimumVersion[i]) {
         return false;
       }

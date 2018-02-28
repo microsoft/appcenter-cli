@@ -76,6 +76,11 @@ export abstract class RunTestsCommand extends AppCommand {
   @hasArg
   vstsIdVariable: string;
 
+  @help(Messages.TestCloud.Arguments.TestArtifactsDir)
+  @longName("test-artifacts-dir")
+  @hasArg
+  testArtifactsDir: string;
+
   protected isAppPathRequired = true;
   private readonly streamingOutput = new StreamingArrayOutput();
 

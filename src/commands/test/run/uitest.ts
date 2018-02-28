@@ -64,10 +64,9 @@ export default class RunUITestsCommand extends RunTestsCommand {
   @hasArg
   excludeCategory: string[];
 
-  @help(Messages.TestCloud.Arguments.NUnitXml)
-  @longName("nunit-xml")
-  @hasArg
-  nunitXml: string;
+  @help(Messages.TestCloud.Arguments.MergeNUnitXaml)
+  @longName("merge-nunit-xml")
+  mergeNUnitXml: boolean;
 
   @help(Messages.TestCloud.Arguments.TestChunk)
   @longName("test-chunk")
@@ -109,7 +108,6 @@ export default class RunUITestsCommand extends RunTestsCommand {
     preparer.fixture = this.fixture;
     preparer.includeCategory = this.includeCategory;
     preparer.excludeCategory = this.excludeCategory;
-    preparer.nunitXml = this.nunitXml;
     preparer.testChunk = this.testChunk;
     preparer.fixtureChunk = this.fixtureChunk;
 
