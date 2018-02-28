@@ -8416,6 +8416,7 @@ export interface Subscription {
  * @member {number} devicesFailed
  * @member {number} devicesSkipped
  * @member {number} stepCount
+ * @member {object} [artifacts]
  */
 export interface TestReportStats {
   os: number;
@@ -8431,6 +8432,17 @@ export interface TestReportStats {
   devicesFailed: number;
   devicesSkipped: number;
   stepCount: number;
+  artifacts?: TestArtifacts;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestArtifacts class.
+ * @constructor
+ * @member {string} nunit_xml_zip
+ */
+export interface TestArtifacts {
+  nunit_xml_zip: string;
 }
 
 /**
