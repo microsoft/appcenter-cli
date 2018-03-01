@@ -22,7 +22,7 @@ export default function zip(updateContentsPath: string): Promise<string> {
         });
       }
     } catch (error) {
-      error.message = error.message + " Make sure you have run `cordova platform add <platform name>`.";
+      error.message = error.message + " Make sure you have added the platform you are making a release to.`.";
       reject(error);
     }
 
