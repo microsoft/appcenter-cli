@@ -21,7 +21,7 @@ export async function generatePackageHashFromDirectory(directoryPath: string, ba
       throw new Error('Not a directory. Please either create a directory, or use hashFile().');
     }
   } catch (error) {
-    throw new Error('Not a directory. Please either create a directory, or use hashFile().');
+    throw new Error('Directory does not exist. Please either create a directory, or use hashFile().');
   }
 
   let manifest: PackageManifest = await generatePackageManifestFromDirectory(directoryPath, basePath);
