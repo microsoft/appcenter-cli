@@ -14,11 +14,16 @@ export default function zip(updateContentsPath: string): Promise<string> {
   return new Promise<string>(async (resolve, reject) => {
     let releaseFiles: ReleaseFile[] = [];
 
-    if (!isDirectory(updateContentsPath)) {
-      releaseFiles.push({
-        sourceLocation: updateContentsPath,
-        targetLocation: normalizePath(path.basename(updateContentsPath)) // Put the file in the root
-      });
+    try {
+      if (!isDirectory(updateContentsPath)) {
+        releaseFiles.push({
+          sourceLocation: updateContentsPath,
+          targetLocation: normalizePath(path.basename(updateContentsPath)), // Put the file in the root
+        });
+      }
+    } catch (error) {
+      error.message = error.message + " Make sure you have run `cordova platform add <platform name>`.";
+      reject(error);
     }
 
     const directoryPath: string = updateContentsPath;
