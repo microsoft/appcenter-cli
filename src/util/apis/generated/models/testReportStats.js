@@ -25,6 +25,8 @@ class TestReportStats {
    * @member {number} devicesFailed
    * @member {number} devicesSkipped
    * @member {number} stepCount
+   * @member {object} artifacts
+   * @member {string} [artifacts.nunit_xml_zip]
    */
   constructor() {
   }
@@ -132,6 +134,14 @@ class TestReportStats {
             serializedName: 'step_count',
             type: {
               name: 'Number'
+            }
+          },
+          artifacts: {
+            required: false,
+            serializedName: 'artifacts',
+            type: {
+              name: 'Composite',
+              className: 'TestArtifacts'
             }
           }
         }

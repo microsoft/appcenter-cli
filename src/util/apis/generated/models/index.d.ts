@@ -8442,6 +8442,7 @@ export interface TestReportStats {
  * @member {string} nunit_xml_zip
  */
 export interface TestArtifacts {
+  [key:string]: string;
   nunit_xml_zip: string;
 }
 

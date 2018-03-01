@@ -467,6 +467,7 @@ exports.DeviceSet = require('./deviceSet');
 exports.Tier = require('./tier');
 exports.Subscription = require('./subscription');
 exports.TestReportStats = require('./testReportStats');
+exports.TestArtifacts = require('./testArtifacts');
 exports.TestReportFeaturesItemTestsItemRunsItemStepsItemStepExecutionsItem = require('./testReportFeaturesItemTestsItemRunsItemStepsItemStepExecutionsItem');
 exports.TestReportFeaturesItemTestsItemRunsItemStepsItem = require('./testReportFeaturesItemTestsItemRunsItemStepsItem');
 exports.TestReportFeaturesItemTestsItemRunsItem = require('./testReportFeaturesItemTestsItemRunsItem');
