@@ -5,7 +5,7 @@ import { TestCloudUploader, StartedTestRun } from "./test-cloud-uploader";
 import { TestCloudError } from "./test-cloud-error";
 import { StateChecker } from "./state-checker";
 import { AppCenterClient } from "../../../util/apis";
-import { TestReport } from "../../../util/apis/generated/models";
+import { TestArtifacts, TestReport } from "../../../util/apis/generated/models";
 import { StreamingArrayOutput } from "../../../util/interaction";
 import { getUser } from "../../../util/profile";
 import { parseTestParameters } from "./parameters-parser";
@@ -18,6 +18,8 @@ import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as temp from "temp";
 import * as os from "os";
+import * as process from "process";
+import * as downloadUtil from "../../../util/misc/download";
 
 export abstract class RunTestsCommand extends AppCommand {
 
@@ -138,11 +140,14 @@ export abstract class RunTestsCommand extends AppCommand {
           return report;
         }, testRun );
 
-        // Download json test result
-        var report : TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
-        if(report.stats.artifacts) {
-        }
+        if (this.testArtifactsDir) {
 
+          // Download json test result
+          var report: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
+          if (report.stats.artifacts) {
+            await this.downloadArtifacts(report.stats.artifacts);
+          }
+        }
         return success();
       }
       finally {
@@ -253,5 +258,18 @@ export abstract class RunTestsCommand extends AppCommand {
   private waitForCompletion(client: AppCenterClient, testRunId: string): Promise<number> {
     let checker = new StateChecker(client, testRunId, this.app.ownerName, this.app.appName, this.streamingOutput);
     return checker.checkUntilCompleted(this.timeoutSec);
+  }
+
+  private async downloadArtifacts(artifacts: TestArtifacts): Promise<void> {
+    for (var key in artifacts) {
+
+      // Generate path to report
+      var reportPath: string = this.testArtifactsDir;
+      if (!path.isAbsolute(this.testArtifactsDir)) {
+        reportPath = path.join(process.cwd(),this.testArtifactsDir);
+      }
+      pfs.createLongPath(reportPath);
+      await downloadUtil.downloadFileAndSave(artifacts[key], path.join(reportPath, `${key.toString()}.zip`));
+    }
   }
 }
