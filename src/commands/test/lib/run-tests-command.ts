@@ -135,6 +135,16 @@ export abstract class RunTestsCommand extends AppCommand {
         if (!this.async) {
           let exitCode = await this.waitForCompletion(client, testRun.testRunId);
 
+          if (this.testArtifactsDir) {
+
+              // Download json test result
+              var testReport: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
+              if (testReport.stats.artifacts) {
+                await this.downloadArtifacts(testRun.testRunId, testReport.stats.artifacts);
+                await this.mergeTestArtifacts();
+              }
+          }
+
           switch (exitCode) {
             case 1:
               return failure(exitCode, `There were Test Failures.${os.EOL}Test Report: ${testRun.testRunUrl}`);
@@ -149,14 +159,6 @@ export abstract class RunTestsCommand extends AppCommand {
           return report;
         }, testRun );
 
-        if (this.testArtifactsDir) {
-
-          // Download json test result
-          var report: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
-          if (report.stats.artifacts) {
-            await this.downloadArtifacts(report.stats.artifacts);
-          }
-        }
         return success();
       }
       finally {
@@ -264,21 +266,32 @@ export abstract class RunTestsCommand extends AppCommand {
     return await uploader.uploadAndStart();
   }
 
+  protected generateReportPath(): string {
+    if (path.isAbsolute(this.testArtifactsDir)) {
+      return this.testArtifactsDir;
+    }
+    return path.join(process.cwd(), this.testArtifactsDir);
+  }
+
+  protected async mergeTestArtifacts(): Promise<void> {
+    // Each command should override it if needed
+  }
+
   private waitForCompletion(client: AppCenterClient, testRunId: string): Promise<number> {
     let checker = new StateChecker(client, testRunId, this.app.ownerName, this.app.appName, this.streamingOutput);
     return checker.checkUntilCompleted(this.timeoutSec);
   }
 
-  private async downloadArtifacts(artifacts: TestArtifacts): Promise<void> {
+  private async downloadArtifacts(testRunId: string, artifacts: TestArtifacts): Promise<void> {
     for (var key in artifacts) {
 
-      // Generate path to report
-      var reportPath: string = this.testArtifactsDir;
-      if (!path.isAbsolute(this.testArtifactsDir)) {
-        reportPath = path.join(process.cwd(),this.testArtifactsDir);
-      }
+      var reportPath = this.generateReportPath();
       pfs.createLongPath(reportPath);
       await downloadUtil.downloadFileAndSave(artifacts[key], path.join(reportPath, `${key.toString()}.zip`));
+
+      this.streamingOutput.text((command: RunTestsCommand): string => {
+        return `##vso[task.setvariable variable=${key}]"${testRunId}"${os.EOL}`;
+      }, this);
     }
   }
 }
