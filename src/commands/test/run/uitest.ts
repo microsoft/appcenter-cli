@@ -1,3 +1,10 @@
+import * as pfs from "../../../util/misc/promisfied-fs";
+import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
+import * as unzip from "unzip";
+import * as xmlParser from "xml-parser";
+import * as xmlUtil from "../../../util//misc/xml";
 import { CommandArgs, help, name, longName, hasArg, ErrorCodes, required } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { UITestPreparer } from "../lib/uitest-preparer";
@@ -66,7 +73,8 @@ export default class RunUITestsCommand extends RunTestsCommand {
 
   @help(Messages.TestCloud.Arguments.MergeNUnitXaml)
   @longName("merge-nunit-xml")
-  mergeNUnitXml: boolean;
+  @hasArg
+  mergeNUnitXml: string;
 
   @help(Messages.TestCloud.Arguments.TestChunk)
   @longName("test-chunk")
@@ -116,5 +124,50 @@ export default class RunUITestsCommand extends RunTestsCommand {
 
   protected getSourceRootDir() {
     return this.buildDir;
+  }
+
+  protected async mergeTestArtifacts(): Promise<void> {
+    if (!this.mergeNUnitXml) {
+      return;
+    }
+
+    let tempPath: string = await pfs.mkTempDir("appcenter-uitestreports")
+    let reportPath: string = path.join(this.generateReportPath(), "nunit_xml_zip.zip");
+    let pathToSingleReport: string = path.join(this.generateReportPath(), this.mergeNUnitXml);
+    out.text(`Temp path: ${tempPath}`);
+
+    return new Promise<void>((resolve,reject) => {
+      let mainXml: xmlParser.Document = null;
+      fs.createReadStream(reportPath)
+        .pipe(unzip.Parse())
+        .on('entry', function (entry: unzip.Entry) {
+          let fullPath = path.join(tempPath, entry.path);
+          entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
+
+            let xml = xmlParser(fs.readFileSync(fullPath, "utf-8"));
+
+            var name: string = "unknown";
+            var matches = entry.path.match("^(.*)[_-]nunit[_-]report");
+            if (matches && matches.length > 1) {
+              name = matches[1].replace(/\./gi, "_");
+            }
+
+            xmlUtil.appendToTestNameTransformation(xml, `_${name}`);
+            xmlUtil.removeIgnoredTransformation(xml);
+            xmlUtil.removeEmptySuitesTransformation(xml);
+
+            if (mainXml) {
+              mainXml = xmlUtil.combine(mainXml, xml);
+            } else {
+              mainXml = xml;
+            }
+          }));
+        })
+        .on("close", () => {
+          // TODO doesn't work, main xml is object, need convert to string
+          fs.writeFile(pathToSingleReport, mainXml);
+          resolve();
+        });
+    });
   }
 }
