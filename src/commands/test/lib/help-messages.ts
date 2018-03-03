@@ -84,6 +84,8 @@ export module Messages {
 
       export const XCUITestIpaPath = "Path to the *.ipa file with the XCUITest tests";
       export const XCUITestBuildDir = "Path to the build output directory (usually <project>/Build/Products/Debug-iphoneos)";
+
+      export const VSTSIdVariable = "Outputs the Test Run Id to the named VSTS variable";
     }
   }
 }
