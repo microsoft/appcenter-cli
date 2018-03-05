@@ -109,10 +109,11 @@ export abstract class RunTestsCommand extends AppCommand {
         await this.addIncludedFilesToManifestAndCopyToArtifactsDir(manifestPath);
         let testRun = await this.uploadAndStart(client, manifestPath, portalBaseUrl);
 
+        let vstsIdVariable = this.vstsIdVariable;
         this.streamingOutput.text(function (testRun){
           let report: string = `Test run id: "${testRun.testRunId}"` + os.EOL;
-          if(this.vstsIdVariable) {
-            report = `##vso[task.setvariable variable=${this.vstsIdVariable}]"${testRun.testRunId}"` + os.EOL;
+          if(vstsIdVariable) {
+            report = `##vso[task.setvariable variable=${vstsIdVariable}]"${testRun.testRunId}"` + os.EOL;
           }
           report += "Accepted devices: " + os.EOL;
           testRun.acceptedDevices.map(item => `  - ${item}`).forEach(text => report+=text + os.EOL);
