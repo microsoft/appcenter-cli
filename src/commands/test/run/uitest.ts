@@ -71,7 +71,7 @@ export default class RunUITestsCommand extends RunTestsCommand {
   @hasArg
   excludeCategory: string[];
 
-  @help(Messages.TestCloud.Arguments.MergeNUnitXaml)
+  @help(Messages.TestCloud.Arguments.MergeNUnitXml)
   @longName("merge-nunit-xml")
   @hasArg
   mergeNUnitXml: string;
