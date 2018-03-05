@@ -74,10 +74,10 @@ export abstract class RunTestsCommand extends AppCommand {
   @hasArg
   timeoutSec: number;
 
-  @help(Messages.TestCloud.Arguments.TestArtifactsDir)
-  @longName("test-artifacts-dir")
+  @help(Messages.TestCloud.Arguments.TestOutputDir)
+  @longName("test-output-dir")
   @hasArg
-  testArtifactsDir: string;
+  testOutputDir: string;
 
   protected isAppPathRequired = true;
   private readonly streamingOutput = new StreamingArrayOutput();
@@ -126,7 +126,7 @@ export abstract class RunTestsCommand extends AppCommand {
         if (!this.async) {
           let exitCode = await this.waitForCompletion(client, testRun.testRunId);
 
-          if (this.testArtifactsDir) {
+          if (this.testOutputDir) {
 
               // Download json test result
               var testReport: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
@@ -258,10 +258,10 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   protected generateReportPath(): string {
-    if (path.isAbsolute(this.testArtifactsDir)) {
-      return this.testArtifactsDir;
+    if (path.isAbsolute(this.testOutputDir)) {
+      return this.testOutputDir;
     }
-    return path.join(process.cwd(), this.testArtifactsDir);
+    return path.join(process.cwd(), this.testOutputDir);
   }
 
   protected async mergeTestArtifacts(): Promise<void> {
