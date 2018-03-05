@@ -3,7 +3,6 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import * as unzip from "unzip";
-import * as xmlParser from "xml-parser";
 import * as xmlUtil from "../../../util//misc/xml";
 import { CommandArgs, help, name, longName, hasArg, ErrorCodes, required } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
@@ -12,6 +11,7 @@ import { parseTestParameters } from "../lib/parameters-parser";
 import { parseIncludedFiles } from "../lib/included-files-parser";
 import { Messages } from "../lib/help-messages";
 import { out } from "../../../util/interaction";
+import { DOMParser } from "xmldom";
 
 @help(Messages.TestCloud.Commands.RunUITests)
 export default class RunUITestsCommand extends RunTestsCommand {
@@ -137,14 +137,14 @@ export default class RunUITestsCommand extends RunTestsCommand {
     out.text(`Temp path: ${tempPath}`);
 
     return new Promise<void>((resolve,reject) => {
-      let mainXml: xmlParser.Document = null;
+      let mainXml: Document = null;
       fs.createReadStream(reportPath)
         .pipe(unzip.Parse())
         .on('entry', function (entry: unzip.Entry) {
           let fullPath = path.join(tempPath, entry.path);
           entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
 
-            let xml = xmlParser(fs.readFileSync(fullPath, "utf-8"));
+            let xml = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"));
 
             var name: string = "unknown";
             var matches = entry.path.match("^(.*)[_-]nunit[_-]report");
@@ -164,7 +164,6 @@ export default class RunUITestsCommand extends RunTestsCommand {
           }));
         })
         .on("close", () => {
-          // TODO doesn't work, main xml is object, need convert to string
           fs.writeFile(pathToSingleReport, mainXml);
           resolve();
         });
