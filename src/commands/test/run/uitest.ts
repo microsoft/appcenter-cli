@@ -134,7 +134,6 @@ export default class RunUITestsCommand extends RunTestsCommand {
     let tempPath: string = await pfs.mkTempDir("appcenter-uitestreports")
     let reportPath: string = path.join(this.generateReportPath(), "nunit_xml_zip.zip");
     let pathToSingleReport: string = path.join(this.generateReportPath(), this.mergeNUnitXml);
-    out.text(`Temp path: ${tempPath}`);
 
     return new Promise<void>((resolve,reject) => {
       let mainXml: Document = null;
