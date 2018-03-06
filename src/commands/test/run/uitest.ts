@@ -172,8 +172,10 @@ export default class RunUITestsCommand extends RunTestsCommand {
           }));
         })
         .on("close", () => {
-          fs.writeFile(pathToSingleReport, mainXml);
-          resolve();
+          pfs.writeFile(pathToSingleReport, mainXml)
+          .then(() => {
+            resolve();
+          });
         });
     });
   }
