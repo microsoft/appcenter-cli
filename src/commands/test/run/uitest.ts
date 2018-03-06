@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import * as unzip from "unzip";
-import * as xmlUtil from "../../../util//misc/xml";
+import * as xmlUtil from "../../../util/misc/xml";
 import { CommandArgs, help, name, longName, hasArg, ErrorCodes, required } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { UITestPreparer } from "../lib/uitest-preparer";
@@ -131,13 +131,18 @@ export default class RunUITestsCommand extends RunTestsCommand {
       return;
     }
 
+    let reportPath: string = this.generateReportPath();
+    if (!reportPath) {
+      return;
+    }
+
     let tempPath: string = await pfs.mkTempDir("appcenter-uitestreports")
-    let reportPath: string = path.join(this.generateReportPath(), "nunit_xml_zip.zip");
-    let pathToSingleReport: string = path.join(this.generateReportPath(), this.mergeNUnitXml);
+    let pathToArchive: string = path.join(reportPath, "nunit_xml_zip.zip");
+    let pathToSingleReport: string = path.join(reportPath, this.mergeNUnitXml);
 
     return new Promise<void>((resolve,reject) => {
       let mainXml: Document = null;
-      fs.createReadStream(reportPath)
+      fs.createReadStream(pathToArchive)
         .pipe(unzip.Parse())
         .on('entry', function (entry: unzip.Entry) {
           let fullPath = path.join(tempPath, entry.path);
