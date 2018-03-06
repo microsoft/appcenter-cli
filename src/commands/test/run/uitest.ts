@@ -103,6 +103,10 @@ export default class RunUITestsCommand extends RunTestsCommand {
     if (!this.buildDir) {
       throw new Error("Argument --build-dir is required");
     }
+
+    if (!this.testOutputDir && this.mergeNUnitXml) {
+      throw new Error("Argument --test-output-dir is required for argument --merge-nunit-xml");
+    }
   }
 
   protected prepareManifest(artifactsDir: string): Promise<string> {
