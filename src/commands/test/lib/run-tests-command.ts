@@ -14,6 +14,7 @@ import { progressWithResult } from "./interaction";
 import { ITestCloudManifestJson, ITestFrameworkJson, IFileDescriptionJson } from "./test-manifest-reader";
 import { Messages } from "./help-messages";
 import * as _ from "lodash";
+import * as fsHelper from "../../../util/misc/fs-helper";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as temp from "temp";
@@ -286,7 +287,7 @@ export abstract class RunTestsCommand extends AppCommand {
     for (var key in artifacts) {
 
       var reportPath = this.generateReportPath();
-      pfs.createLongPath(reportPath);
+      fsHelper.createLongPath(reportPath);
       await downloadUtil.downloadFileAndSave(artifacts[key], path.join(reportPath, `${key.toString()}.zip`));
 
       this.streamingOutput.text((command: RunTestsCommand): string => {

@@ -173,21 +173,6 @@ export async function walk(dir: string): Promise<string[]> {
   }
 }
 
-export function createLongPath(target: string) {
-  let targetFolder: string = target;
-  let notExistsFolder: string[] = [];
-
-  while(!fs.existsSync(targetFolder)) {
-    notExistsFolder.push(path.basename(targetFolder));
-    targetFolder = path.resolve(targetFolder, "..");
-  }
-
-  notExistsFolder.reverse().forEach(element => {
-    targetFolder = path.resolve(targetFolder,element);
-    fs.mkdirSync(targetFolder);
-  });
-}
-
 async function pathExists(path: string, isFile: boolean): Promise<boolean> {
   let stats: fs.Stats = null;
 
