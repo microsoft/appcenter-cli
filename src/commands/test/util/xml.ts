@@ -64,8 +64,11 @@ export function combine(xml1: Document, xml2: Document): Document {
   return xml1;
 }
 
-function collectAllElements(node: Node, name: string): Node[] {
+export function collectAllElements(node: Node, name: string): Node[] {
   let result: Node[] = [];
+  if (!node || !name) {
+    return result;
+  }
   if(node.nodeName === name) {
     result.push(node);
   }
@@ -75,7 +78,10 @@ function collectAllElements(node: Node, name: string): Node[] {
   return result;
 }
 
-function collectChildren(node: Node, name: string): Node[] {
+export function collectChildren(node: Node, name: string): Node[] {
+  if (!node || !name) {
+    return [];
+  }
   if (node.nodeName === name) {
     return [node];
   }
@@ -86,8 +92,8 @@ function collectChildren(node: Node, name: string): Node[] {
   return result;
 }
 
-function countChildren(node: Node): number {
-  if (!node.childNodes) {
+export function countChildren(node: Node): number {
+  if (!node || !node.childNodes) {
     return 0;
   }
   let result = node.childNodes.length;;
@@ -103,6 +109,9 @@ function combineTestResultsAttribute(xml1: Document, xml2: Document, attributeNa
 
 function getTestResultsAttribute(xml: Document, attributeName: string): number {
   let testResults: Node[] = collectAllElements(xml, "test-results");
+  if (testResults.length === 0) {
+    return 0;
+  }
 
   let attr: Attr = testResults[0].attributes.getNamedItem(attributeName);
   if(attr.value) {
