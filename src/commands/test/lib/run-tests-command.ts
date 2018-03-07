@@ -122,7 +122,7 @@ export abstract class RunTestsCommand extends AppCommand {
         this.streamingOutput.text(function (testRun){
           let report: string = `Test run id: "${testRun.testRunId}"` + os.EOL;
           if(vstsIdVariable) {
-            report = `##vso[task.setvariable variable=${vstsIdVariable}]"${testRun.testRunId}"` + os.EOL;
+            report = `##vso[task.setvariable variable=${vstsIdVariable}]${testRun.testRunId}` + os.EOL;
           }
           report += "Accepted devices: " + os.EOL;
           testRun.acceptedDevices.map(item => `  - ${item}`).forEach(text => report+=text + os.EOL);
@@ -291,7 +291,7 @@ export abstract class RunTestsCommand extends AppCommand {
       await downloadUtil.downloadFileAndSave(artifacts[key], path.join(reportPath, `${key.toString()}.zip`));
 
       this.streamingOutput.text((command: RunTestsCommand): string => {
-        return `##vso[task.setvariable variable=${key}]"${testRunId}"${os.EOL}`;
+        return `##vso[task.setvariable variable=${key}]${testRunId}${os.EOL}`;
       }, this);
     }
   }
