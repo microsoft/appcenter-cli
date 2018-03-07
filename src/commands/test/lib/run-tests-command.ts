@@ -284,14 +284,15 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   private async downloadArtifacts(testRunId: string, artifacts: TestArtifacts): Promise<void> {
-    for (var key in artifacts) {
+    for (let key in artifacts) {
 
-      var reportPath = this.generateReportPath();
+      let reportPath: string = this.generateReportPath();
+      let pathToArchive: string = path.join(reportPath, `${key.toString()}.zip`);
       fsHelper.createLongPath(reportPath);
-      await downloadUtil.downloadFileAndSave(artifacts[key], path.join(reportPath, `${key.toString()}.zip`));
+      await downloadUtil.downloadFileAndSave(artifacts[key], pathToArchive);
 
       this.streamingOutput.text((command: RunTestsCommand): string => {
-        return `##vso[task.setvariable variable=${key}]${testRunId}${os.EOL}`;
+        return `##vso[task.setvariable variable=${key}]${pathToArchive}${os.EOL}`;
       }, this);
     }
   }
