@@ -217,7 +217,9 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   protected async cleanupArtifactsDir(artifactsDir: string): Promise<void> {
-    await pfs.rmDir(artifactsDir, true);
+    await pfs.rmDir(artifactsDir, true).catch(function(err){
+      console.warn(`Error ${err} while cleaning up artifacts directory ${artifactsDir}. Continuing without cleanup.`);
+    });
   }
 
   private artifactsDir: string;
