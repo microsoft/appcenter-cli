@@ -16,8 +16,12 @@ import { isDirectory } from "./file-utils"
 const HASH_ALGORITHM = "sha256";
 
 export async function generatePackageHashFromDirectory(directoryPath: string, basePath: string): Promise<string> {
-  if (!isDirectory(directoryPath)) {
-    throw new Error("Not a directory. Please either create a directory, or use hashFile().");
+  try {
+    if (!isDirectory(directoryPath)) {
+      throw new Error('Not a directory. Please either create a directory, or use hashFile().');
+    }
+  } catch (error) {
+    throw new Error('Directory does not exist. Please either create a directory, or use hashFile().');
   }
 
   let manifest: PackageManifest = await generatePackageManifestFromDirectory(directoryPath, basePath);

@@ -25,8 +25,7 @@ class TestReportStats {
    * @member {number} devicesFailed
    * @member {number} devicesSkipped
    * @member {number} stepCount
-   * @member {object} artifacts
-   * @member {string} [artifacts.nunit_xml_zip]
+   * @member {object} [artifacts]
    */
   constructor() {
   }
@@ -140,8 +139,14 @@ class TestReportStats {
             required: false,
             serializedName: 'artifacts',
             type: {
-              name: 'Composite',
-              className: 'TestArtifacts'
+              name: 'Dictionary',
+              value: {
+                  required: false,
+                  serializedName: 'StringElementType',
+                  type: {
+                    name: 'String'
+                  }
+              }
             }
           }
         }

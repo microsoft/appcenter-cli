@@ -21,26 +21,11 @@ class ErrorGroup extends models['ErrorGroupState'] {
    * @member {number} deviceCount
    * @member {date} firstOccurrence
    * @member {date} lastOccurrence
-   * @member {string} name
-   * @member {string} [summary]
-   * @member {object} [reasonFrame]
-   * @member {string} [reasonFrame.className] name of the class
-   * @member {string} [reasonFrame.method] name of the method
-   * @member {boolean} [reasonFrame.classMethod] is a class method
-   * @member {string} [reasonFrame.file] name of the file
-   * @member {number} [reasonFrame.line] line number
-   * @member {boolean} [reasonFrame.appCode] this line isn't from any framework
-   * @member {string} [reasonFrame.frameworkName] Name of the framework
-   * @member {string} [reasonFrame.codeFormatted] Formatted frame string
-   * @member {string} [reasonFrame.codeRaw] Unformatted Frame string
-   * @member {string} [reasonFrame.language] programming language of the frame.
-   * Possible values include: 'JavaScript', 'CSharp', 'Objective-C',
-   * 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
-   * @member {string} [reasonFrame.methodParams] parameters of the frames
-   * method
-   * @member {string} [reasonFrame.exceptionType] Exception type.
-   * @member {string} [reasonFrame.osExceptionType] OS exception type. (aka.
-   * SIGNAL)
+   * @member {string} [exceptionType]
+   * @member {string} [exceptionMessage]
+   * @member {string} [exceptionFile]
+   * @member {string} [exceptionLine]
+   * @member {array} [reasonFrames]
    */
   constructor() {
     super();
@@ -69,14 +54,14 @@ class ErrorGroup extends models['ErrorGroupState'] {
           },
           errorGroupId: {
             required: true,
-            serializedName: 'error_group_id',
+            serializedName: 'errorGroupId',
             type: {
               name: 'String'
             }
           },
           appVersion: {
             required: true,
-            serializedName: 'app_version',
+            serializedName: 'appVersion',
             type: {
               name: 'String'
             }
@@ -90,45 +75,66 @@ class ErrorGroup extends models['ErrorGroupState'] {
           },
           deviceCount: {
             required: true,
-            serializedName: 'device_count',
+            serializedName: 'deviceCount',
             type: {
               name: 'Number'
             }
           },
           firstOccurrence: {
             required: true,
-            serializedName: 'first_occurrence',
+            serializedName: 'firstOccurrence',
             type: {
               name: 'DateTime'
             }
           },
           lastOccurrence: {
             required: true,
-            serializedName: 'last_occurrence',
+            serializedName: 'lastOccurrence',
             type: {
               name: 'DateTime'
             }
           },
-          name: {
-            required: true,
-            serializedName: 'name',
+          exceptionType: {
+            required: false,
+            serializedName: 'exceptionType',
             type: {
               name: 'String'
             }
           },
-          summary: {
+          exceptionMessage: {
             required: false,
-            serializedName: 'summary',
+            serializedName: 'exceptionMessage',
             type: {
               name: 'String'
             }
           },
-          reasonFrame: {
+          exceptionFile: {
             required: false,
-            serializedName: 'reason_frame',
+            serializedName: 'exceptionFile',
             type: {
-              name: 'Composite',
-              className: 'ErrorStackFrame'
+              name: 'String'
+            }
+          },
+          exceptionLine: {
+            required: false,
+            serializedName: 'exceptionLine',
+            type: {
+              name: 'String'
+            }
+          },
+          reasonFrames: {
+            required: false,
+            serializedName: 'reasonFrames',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'HandledErrorReasonFrameElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'HandledErrorReasonFrame'
+                  }
+              }
             }
           }
         }

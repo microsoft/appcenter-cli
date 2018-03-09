@@ -13,10 +13,12 @@
 class PublishDevicesRequest {
   /**
    * Create a PublishDevicesRequest.
-   * @member {string} username The username for the Apple Developer account to
-   * publish the devices to.
-   * @member {string} password The password for the Apple Developer account to
-   * publish the devices to.
+   * @member {string} [username] The username for the Apple Developer account
+   * to publish the devices to.
+   * @member {string} [password] The password for the Apple Developer account
+   * to publish the devices to.
+   * @member {string} [accountServiceConnectionId] The service_connection_id of
+   * the stored Apple credentials instead of username, password.
    * @member {boolean} [publishAllDevices] When set to true, all unprovisioned
    * devices will be published to the Apple Developer account.  When false,
    * only the provided devices will be published to the Apple Developer
@@ -42,15 +44,22 @@ class PublishDevicesRequest {
         className: 'PublishDevicesRequest',
         modelProperties: {
           username: {
-            required: true,
+            required: false,
             serializedName: 'username',
             type: {
               name: 'String'
             }
           },
           password: {
-            required: true,
+            required: false,
             serializedName: 'password',
+            type: {
+              name: 'String'
+            }
+          },
+          accountServiceConnectionId: {
+            required: false,
+            serializedName: 'account_service_connection_id',
             type: {
               name: 'String'
             }

@@ -7,35 +7,36 @@
 'use strict';
 
 /**
- * Class representing a TestArtifacts.
+ * Location for downloading symbol
+ *
  */
-class TestArtifacts {
+class SymbolLocation {
   /**
-   * Create a TestArtifacts.
-   * @member {string} nunit_xml_zip
+   * Create a SymbolLocation.
+   * @member {string} uri
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of TestArtifacts
+   * Defines the metadata of SymbolLocation
    *
-   * @returns {object} metadata of TestArtifacts
+   * @returns {object} metadata of SymbolLocation
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'TestArtifacts',
+      serializedName: 'SymbolLocation',
       type: {
         name: 'Composite',
-        className: 'TestArtifacts',
+        className: 'SymbolLocation',
         modelProperties: {
-          nunit_xml_zip: {
+          uri: {
             required: true,
-            serializedName: 'nunit_xml_zip',
+            serializedName: 'uri',
             type: {
-              name: 'string'
+              name: 'String'
             }
           }
         }
@@ -44,4 +45,4 @@ class TestArtifacts {
   }
 }
 
-module.exports = TestArtifacts;
+module.exports = SymbolLocation;

@@ -39,7 +39,7 @@ class HandledError {
         modelProperties: {
           errorId: {
             required: false,
-            serializedName: 'error_id',
+            serializedName: 'errorId',
             type: {
               name: 'String'
             }
@@ -53,21 +53,21 @@ class HandledError {
           },
           deviceName: {
             required: false,
-            serializedName: 'device_name',
+            serializedName: 'deviceName',
             type: {
               name: 'String'
             }
           },
           osVersion: {
             required: false,
-            serializedName: 'os_version',
+            serializedName: 'osVersion',
             type: {
               name: 'String'
             }
           },
           osType: {
             required: false,
-            serializedName: 'os_type',
+            serializedName: 'osType',
             type: {
               name: 'String'
             }

@@ -12,8 +12,9 @@
 class ErrorGroupModel {
   /**
    * Create a ErrorGroupModel.
-   * @member {string} [modelName] model's name
-   * @member {number} [errorCount] count of model
+   * @member {string} [modelName] model name
+   * @member {string} [modelCode] model code
+   * @member {number} [errorCount] count of errors in a model
    */
   constructor() {
   }
@@ -34,14 +35,21 @@ class ErrorGroupModel {
         modelProperties: {
           modelName: {
             required: false,
-            serializedName: 'model_name',
+            serializedName: 'modelName',
+            type: {
+              name: 'String'
+            }
+          },
+          modelCode: {
+            required: false,
+            serializedName: 'modelCode',
             type: {
               name: 'String'
             }
           },
           errorCount: {
             required: false,
-            serializedName: 'error_count',
+            serializedName: 'errorCount',
             type: {
               name: 'Number'
             }

@@ -36,14 +36,14 @@ class ErrorFreeDevicePercentages {
         modelProperties: {
           averagePercentage: {
             required: false,
-            serializedName: 'average_percentage',
+            serializedName: 'averagePercentage',
             type: {
               name: 'Number'
             }
           },
           dailyPercentages: {
             required: false,
-            serializedName: 'daily_percentages',
+            serializedName: 'dailyPercentages',
             type: {
               name: 'Sequence',
               element: {

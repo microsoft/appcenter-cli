@@ -169,7 +169,7 @@ describe('security tool output parsing', function () {
   });
 });
 
-describe('storing data in keychain', function () {
+describe('storing complete data in keychain', function () {
   if (os.platform() !== 'darwin') {
     console.log('These tests only run on Mac OSX');
     return;
@@ -199,6 +199,39 @@ describe('storing data in keychain', function () {
     expect(entry).to.be.not.null;
     expect(entry.key).to.equal(testUser);
     expect(entry.accessToken.id).to.equal(testTokenId);
+    expect(entry.accessToken.token).to.equal(testPassword);
+  });
+});
+
+describe('storing data without a tokenId in keychain', function () {
+  if (os.platform() !== 'darwin') {
+    console.log('These tests only run on Mac OSX');
+    return;
+  }
+
+  const keychain = tokenStore.createOsxTokenStore();
+
+  const parseResults: any[] = [];
+  const testUser = "appcenter-user";
+  const testPassword = "Sekret!";
+
+  before(() => {
+    return keychain.set(testUser, { id: null, token: testPassword });
+  });
+
+  after(() => keychain.remove(testUser));
+
+  it('should have at least one item', async function (): Promise<void> {
+    const c = await (keychain.list() as any).count().toPromise();
+    expect(c).to.be.above(0);
+  });
+
+  it('should have expected entry', async function (): Promise<void> {
+    const entry: TokenEntry = await keychain.get(testUser);
+    console.log(`Entry is ${inspect(entry)}`);
+    expect(entry).to.be.not.null;
+    expect(entry.key).to.equal(testUser);
+    expect(entry.accessToken.id).to.equal(undefined);
     expect(entry.accessToken.token).to.equal(testPassword);
   });
 });

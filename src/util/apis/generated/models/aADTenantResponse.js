@@ -7,42 +7,41 @@
 'use strict';
 
 /**
- * Apple secret details
- *
+ * Class representing a AADTenantResponse.
  */
-class AppleSecretDetails {
+class AADTenantResponse {
   /**
-   * Create a AppleSecretDetails.
-   * @member {string} username username to connect to apple store
-   * @member {string} password password to connect to apple store
+   * Create a AADTenantResponse.
+   * @member {string} aadTenantId The AAD tenant id
+   * @member {string} displayName The name of the AAD Tenant
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of AppleSecretDetails
+   * Defines the metadata of AADTenantResponse
    *
-   * @returns {object} metadata of AppleSecretDetails
+   * @returns {object} metadata of AADTenantResponse
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'AppleSecretDetails',
+      serializedName: 'AADTenantResponse',
       type: {
         name: 'Composite',
-        className: 'AppleSecretDetails',
+        className: 'AADTenantResponse',
         modelProperties: {
-          username: {
+          aadTenantId: {
             required: true,
-            serializedName: 'username',
+            serializedName: 'aad_tenant_id',
             type: {
               name: 'String'
             }
           },
-          password: {
+          displayName: {
             required: true,
-            serializedName: 'password',
+            serializedName: 'display_name',
             type: {
               name: 'String'
             }
@@ -53,4 +52,4 @@ class AppleSecretDetails {
   }
 }
 
-module.exports = AppleSecretDetails;
+module.exports = AADTenantResponse;

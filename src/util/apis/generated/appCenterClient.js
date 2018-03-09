@@ -51,10 +51,10 @@ class AppCenterClient extends ServiceClient {
     this.distributionGroupInvitations = new operations.DistributionGroupInvitations(this);
     this.appInvitations = new operations.AppInvitations(this);
     this.users = new operations.Users(this);
-    this.apps = new operations.Apps(this);
     this.releases = new operations.Releases(this);
     this.teams = new operations.Teams(this);
     this.azureSubscription = new operations.AzureSubscription(this);
+    this.apps = new operations.Apps(this);
     this.organizations = new operations.Organizations(this);
     this.builds = new operations.Builds(this);
     this.crashes = new operations.Crashes(this);

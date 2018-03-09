@@ -408,7 +408,7 @@
     },
     "/v0.1/tester/apps/{owner_name}/{app_name}/releases": {
       "get": {
-        "operationId": "apps_testerAppReleases",
+        "operationId": "releases_listTester",
         "description": "Return a list of releases for a app a tester has access to.",
         "parameters": [
           {
@@ -441,7 +441,7 @@
     },
     "/v0.1/tester/apps": {
       "get": {
-        "operationId": "apps_latestReleases",
+        "operationId": "releases_listLatest",
         "description": "Return a list of applications that the user has tester permission to with the latest release for each.",
         "parameters": [],
         "responses": {
@@ -1079,6 +1079,52 @@
           }
         },
         "operationId": "teams_createTeam",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      }
+    },
+    "/v0.1/orgs/{org_name}/invitations/{user_email}": {
+      "patch": {
+        "description": "Allows the role of an invited user to be changed",
+        "parameters": [
+          {
+            "$ref": "#/parameters/organization_name"
+          },
+          {
+            "name": "user_email",
+            "type": "string",
+            "in": "path",
+            "description": "The user email of the user to update",
+            "required": true
+          },
+          {
+            "name": "user_role",
+            "in": "body",
+            "description": "The new role of the user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OrganizationUserPatchRequest"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "operationId": "orgInvitations_update",
         "security": [
           {
             "APIToken": []
@@ -2816,6 +2862,57 @@
             "description": "Success",
             "schema": {
               "$ref": "#/definitions/SymbolStatusResponse"
+            }
+          },
+          "403": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "crash"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/symbols/{symbol_id}/location": {
+      "get": {
+        "description": "Gets the URL to download the symbol",
+        "operationId": "symbols_getLocation",
+        "parameters": [
+          {
+            "$ref": "#/parameters/path_symbol_id"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/SymbolLocation"
             }
           },
           "403": {
@@ -5254,6 +5351,56 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/distribution_stores/{store_name}/releases/{release_id}/realtimestatus": {
+      "get": {
+        "operationId": "storeReleases_getRealTimeStatusByReleaseId",
+        "description": "Return the Real time Status publishing of release from store.",
+        "parameters": [
+          {
+            "name": "store_name",
+            "type": "string",
+            "in": "path",
+            "description": "The name of the store",
+            "required": true
+          },
+          {
+            "name": "release_id",
+            "type": "number",
+            "in": "path",
+            "description": "The id of the release",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ReleaseRealTimeStatusResponse"
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/distribution_stores/{store_name}/releases/{release_id}/publish_error_details": {
       "get": {
         "operationId": "storeReleases_getPublishError",
@@ -5287,8 +5434,8 @@
               "$ref": "#/definitions/ReleasePublishErrorResponse"
             }
           },
-          "404": {
-            "description": "not_found: A store can't be found.\n",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -5339,8 +5486,8 @@
               }
             }
           },
-          "404": {
-            "description": "not_found: A store can't be found.\n",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -5384,8 +5531,8 @@
           "204": {
             "description": "Success"
           },
-          "404": {
-            "description": "not_found: A store / release not be found.\n",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -5430,8 +5577,8 @@
               }
             }
           },
-          "404": {
-            "description": "not_found: A store can't be found.\n",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -5475,8 +5622,8 @@
               }
             }
           },
-          "404": {
-            "description": "not_found: A store can't be found.\n",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -5501,7 +5648,7 @@
             "name": "store_name",
             "type": "string",
             "in": "path",
-            "description": "The id of the store",
+            "description": "The name of the store",
             "required": true
           },
           {
@@ -5518,8 +5665,8 @@
               "$ref": "#/definitions/ExternalStoreResponse"
             }
           },
-          "404": {
-            "description": "not_found: A store can't be found.\n",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -5556,8 +5703,8 @@
           "204": {
             "description": "Success"
           },
-          "404": {
-            "description": "not_found: A store can't be found.\n",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -5600,14 +5747,8 @@
               "$ref": "#/definitions/ExternalStoreResponse"
             }
           },
-          "400": {
-            "description": "bad_request: proper details are not provided for store in body.\n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          },
-          "409": {
-            "description": "state_conflict: `an entry with this appId and storename already exist`.\n",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -7319,94 +7460,6 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes_search": {
-      "post": {
-        "description": "query azure search",
-        "parameters": [
-          {
-            "name": "crash_group_id",
-            "in": "path",
-            "pattern": "^[a-zA-Z0-9-]+$",
-            "required": true,
-            "description": "id of a specific group",
-            "type": "string"
-          },
-          {
-            "name": "date_from",
-            "in": "query",
-            "type": "string",
-            "format": "date-time",
-            "description": "",
-            "required": false
-          },
-          {
-            "name": "date_to",
-            "in": "query",
-            "type": "string",
-            "format": "date-time",
-            "description": "",
-            "required": false
-          },
-          {
-            "name": "app_version",
-            "in": "query",
-            "type": "string",
-            "description": "version",
-            "required": false
-          },
-          {
-            "name": "body",
-            "description": "the query request object",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/SearchItemsRequest"
-            }
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/SearchItemsResponse"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "crashes_searchCrashes",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "crash"
-        ]
-      }
-    },
     "/v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes/{crash_id}/stacktrace": {
       "get": {
         "description": "Gets a stacktrace for a specific crash",
@@ -8557,8 +8610,8 @@
               }
             }
           },
-          "400": {
-            "description": "bad_request: proper details are not provided in body.\n",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -8592,8 +8645,8 @@
               "$ref": "#/definitions/AppleMappingResponse"
             }
           },
-          "400": {
-            "description": "bad_request: could not find apple mapping detail for given app id\n",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -8623,8 +8676,8 @@
           "200": {
             "description": "Success"
           },
-          "400": {
-            "description": "bad_request: could not delete apple mapping detail for given app id\n",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -8666,14 +8719,8 @@
               "$ref": "#/definitions/AppleMappingResponse"
             }
           },
-          "400": {
-            "description": "bad_request: proper details are not provided in body to map apple application.\n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          },
-          "409": {
-            "description": "state_conflict: `This apple mapping already exists`.\n",
+          "default": {
+            "description": "Error",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -10775,6 +10822,43 @@
         }
       }
     },
+    "AADTenantAddRequest": {
+      "properties": {
+        "user_id": {
+          "description": "The user wanting to add this tenant to the organization, must be an admin of the organization",
+          "type": "string"
+        },
+        "aad_tenant_id": {
+          "description": "The AAD tenant id",
+          "type": "string"
+        },
+        "display_name": {
+          "description": "The name of the AAD Tenant",
+          "type": "string"
+        }
+      },
+      "required": [
+        "user_id",
+        "aad_tenant_id",
+        "display_name"
+      ]
+    },
+    "AADTenantResponse": {
+      "properties": {
+        "aad_tenant_id": {
+          "description": "The AAD tenant id",
+          "type": "string"
+        },
+        "display_name": {
+          "description": "The name of the AAD Tenant",
+          "type": "string"
+        }
+      },
+      "required": [
+        "aad_tenant_id",
+        "display_name"
+      ]
+    },
     "ApiTokensPostRequest": {
       "properties": {
         "description": {
@@ -12199,6 +12283,10 @@
         "is_existing_user": {
           "description": "Indicates whether the invited user already exists",
           "type": "boolean"
+        },
+        "role": {
+          "description": "The role assigned to the invited user",
+          "type": "string"
         }
       },
       "required": [
@@ -12218,11 +12306,15 @@
         "email": {
           "description": "The email address of the invited user",
           "type": "string"
+        },
+        "role": {
+          "description": "The role assigned to the invited user"
         }
       },
       "required": [
         "id",
-        "email"
+        "email",
+        "role"
       ]
     },
     "OrganizationResponse": {
@@ -12246,13 +12338,23 @@
             "appcenter",
             "hockeyapp"
           ]
+        },
+        "created_at": {
+          "description": "The creation date of this organization",
+          "type": "string"
+        },
+        "updated_at": {
+          "description": "The date the organization was last updated at",
+          "type": "string"
         }
       },
       "required": [
         "id",
         "display_name",
         "name",
-        "origin"
+        "origin",
+        "created_at",
+        "updated_at"
       ]
     },
     "OrganizationResponseInternal": {
@@ -12705,330 +12807,6 @@
         "display_name",
         "name",
         "type"
-      ]
-    },
-    "SharedConnectionRequest": {
-      "description": "SharedConnectionRequest",
-      "type": "object",
-      "discriminator": "serviceType",
-      "properties": {
-        "displayName": {
-          "description": "display name of shared connection",
-          "type": "string"
-        },
-        "serviceType": {
-          "description": "service type of shared connection can be apple|googleplay|jira",
-          "type": "string",
-          "enum": [
-            "apple",
-            "jira",
-            "googleplay"
-          ]
-        }
-      },
-      "required": [
-        "serviceType"
-      ]
-    },
-    "SharedConnectionUpdateRequest": {
-      "description": "SharedConnectionRequest",
-      "properties": {
-        "displayName": {
-          "description": "display name of shared connection",
-          "type": "string"
-        },
-        "data": {
-          "description": "represents the data for connecting to service",
-          "type": "object"
-        }
-      },
-      "required": [
-        "data"
-      ]
-    },
-    "SharedConnectionResponse": {
-      "description": "SharedConnectionResponse",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "id of the shared connection",
-          "type": "string"
-        },
-        "displayName": {
-          "description": "display name of shared connection",
-          "type": "string"
-        },
-        "serviceType": {
-          "description": "service type of shared connection can be apple|googleplay|jira",
-          "type": "string",
-          "enum": [
-            "apple",
-            "jira",
-            "googleplay"
-          ]
-        }
-      },
-      "required": [
-        "id",
-        "serviceType"
-      ]
-    },
-    "PrivateSharedConnectionResponse": {
-      "description": "PrivateSharedConnectionResponse",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "id of the shared connection",
-          "type": "string"
-        },
-        "displayName": {
-          "description": "display name of shared connection",
-          "type": "string"
-        },
-        "serviceType": {
-          "description": "service type of shared connection can be apple|googleplay|jira",
-          "type": "string",
-          "enum": [
-            "apple",
-            "jira",
-            "googleplay"
-          ]
-        }
-      },
-      "required": [
-        "id",
-        "serviceType"
-      ]
-    },
-    "AppleConnectionSecretRequest": {
-      "description": "Apple connection secrets",
-      "allOf": [
-        {
-          "$ref": "#/definitions/SharedConnectionRequest"
-        }
-      ],
-      "properties": {
-        "data": {
-          "description": "apple secret details",
-          "$ref": "#/definitions/AppleSecretDetails"
-        }
-      },
-      "required": [
-        "data"
-      ]
-    },
-    "AppleConnectionSecretResponse": {
-      "description": "Apple connection secrets",
-      "allOf": [
-        {
-          "$ref": "#/definitions/SharedConnectionResponse"
-        }
-      ],
-      "discriminator": "serviceType",
-      "properties": {
-        "data": {
-          "description": "apple secret details",
-          "$ref": "#/definitions/AppleSecretDetailsResponse"
-        }
-      },
-      "required": [
-        "data"
-      ]
-    },
-    "PrivateAppleConnectionSecretResponse": {
-      "description": "private Apple connection secrets response",
-      "allOf": [
-        {
-          "$ref": "#/definitions/PrivateSharedConnectionResponse"
-        }
-      ],
-      "discriminator": "serviceType",
-      "properties": {
-        "data": {
-          "description": "apple secret details",
-          "$ref": "#/definitions/AppleSecretDetails"
-        }
-      },
-      "required": [
-        "data"
-      ]
-    },
-    "AppleSecretDetails": {
-      "description": "Apple secret details",
-      "type": "object",
-      "properties": {
-        "username": {
-          "description": "username to connect to apple store",
-          "type": "string"
-        },
-        "password": {
-          "description": "password to connect to apple store",
-          "type": "string"
-        }
-      },
-      "required": [
-        "username",
-        "password"
-      ]
-    },
-    "AppleSecretDetailsResponse": {
-      "description": "Apple secret details",
-      "type": "object",
-      "properties": {
-        "username": {
-          "description": "username to connect to apple store",
-          "type": "string"
-        }
-      },
-      "required": [
-        "username"
-      ]
-    },
-    "JiraConnectionSecretRequest": {
-      "description": "Jira connection secrets",
-      "allOf": [
-        {
-          "$ref": "#/definitions/SharedConnectionRequest"
-        }
-      ],
-      "properties": {
-        "data": {
-          "description": "jira secret details",
-          "$ref": "#/definitions/JiraSecretDetails"
-        }
-      },
-      "required": [
-        "data"
-      ]
-    },
-    "JiraConnectionSecretResponse": {
-      "description": "Jira connection secrets",
-      "allOf": [
-        {
-          "$ref": "#/definitions/SharedConnectionResponse"
-        }
-      ],
-      "discriminator": "serviceType",
-      "properties": {
-        "data": {
-          "description": "jira secret details",
-          "$ref": "#/definitions/JiraSecretDetailsResponse"
-        }
-      },
-      "required": [
-        "data"
-      ]
-    },
-    "PrivateJiraConnectionSecretResponse": {
-      "description": "private Jira connection secrets response",
-      "allOf": [
-        {
-          "$ref": "#/definitions/PrivateSharedConnectionResponse"
-        }
-      ],
-      "discriminator": "serviceType",
-      "properties": {
-        "data": {
-          "description": "jira secret details",
-          "$ref": "#/definitions/JiraSecretDetails"
-        }
-      },
-      "required": [
-        "data"
-      ]
-    },
-    "JiraSecretDetails": {
-      "description": "Jira secret details",
-      "type": "object",
-      "properties": {
-        "baseUrl": {
-          "description": "baseUrl to connect to jira instance",
-          "type": "string"
-        },
-        "username": {
-          "description": "username to connect to jira instance",
-          "type": "string"
-        },
-        "password": {
-          "description": "password to connect to jira instance",
-          "type": "string"
-        }
-      },
-      "required": [
-        "baseUrl",
-        "username",
-        "password"
-      ]
-    },
-    "JiraSecretDetailsResponse": {
-      "description": "Jira secret details",
-      "type": "object",
-      "properties": {
-        "baseUrl": {
-          "description": "baseUrl to connect to jira instance",
-          "type": "string"
-        },
-        "username": {
-          "description": "username to connect to jira instance",
-          "type": "string"
-        }
-      },
-      "required": [
-        "baseUrl",
-        "username"
-      ]
-    },
-    "GooglePlayConnectionSecretRequest": {
-      "description": "Google Play connection secrets this should be the JSON file data which is provided by google play",
-      "allOf": [
-        {
-          "$ref": "#/definitions/SharedConnectionRequest"
-        }
-      ],
-      "properties": {
-        "data": {
-          "description": "google secret details",
-          "type": "object"
-        }
-      },
-      "required": [
-        "data"
-      ]
-    },
-    "GooglePlayConnectionSecretResponse": {
-      "description": "Google Play connection secrets",
-      "allOf": [
-        {
-          "$ref": "#/definitions/SharedConnectionResponse"
-        }
-      ],
-      "discriminator": "serviceType",
-      "properties": {
-        "data": {
-          "description": "google play secret details",
-          "type": "object"
-        }
-      },
-      "required": [
-        "data"
-      ]
-    },
-    "PrivateGooglePlayConnectionSecretResponse": {
-      "description": "private google connection secrets response",
-      "allOf": [
-        {
-          "$ref": "#/definitions/PrivateSharedConnectionResponse"
-        }
-      ],
-      "discriminator": "serviceType",
-      "properties": {
-        "data": {
-          "description": "google secret details",
-          "type": "object"
-        }
-      },
-      "required": [
-        "data"
       ]
     },
     "FileAsset": {
@@ -13997,7 +13775,8 @@
       "properties": {
         "sourceVersion": {
           "type": "string",
-          "description": "Version to build"
+          "description": "Version to build which represents the full Git commit reference",
+          "example": "1d71331f19e6830dbf99aa2c53cb264e4a490bab"
         },
         "debug": {
           "type": "boolean",
@@ -14089,7 +13868,7 @@
       "properties": {
         "distributionGroupId": {
           "type": "string",
-          "description": "The distribution group ID"
+          "description": "A distribution group ID or a store group ID"
         },
         "releaseNotes": {
           "type": "string",
@@ -14378,6 +14157,19 @@
         "userIds",
         "emailContents"
       ]
+    },
+    "UserInteractionMetricsResponse": {
+      "description": "Response for retrieving user interaction metrics.",
+      "properties": {
+        "less_than_100_apps": {
+          "description": "check if the user has less than 100 apps.",
+          "type": "boolean"
+        },
+        "has_more_than_1_release": {
+          "description": "check if the user's whole apps has more than 1 releases.",
+          "type": "boolean"
+        }
+      }
     },
     "ReleaseUpdateResponse": {
       "description": "Response for updating a release",
@@ -14807,6 +14599,101 @@
         }
       }
     },
+    "ReleaseCreateRequest": {
+      "description": "A request containing information for creating a release.",
+      "properties": {
+        "uploaded_by": {
+          "type": "string",
+          "description": "The user that uploaded the build."
+        },
+        "name": {
+          "type": "string",
+          "description": "The display name of the app, extracted from the build."
+        },
+        "version": {
+          "description": "The release's version.<br>\nFor iOS: CFBundleVersion from info.plist.<br>\nFor Android: android:versionCode from AppManifest.xml.\n",
+          "type": "string"
+        },
+        "build_version": {
+          "description": "The release's short version.<br>\nFor iOS: CFBundleShortVersionString from info.plist.<br>\nFor Android: android:versionName from AppManifest.xml.  \n",
+          "type": "string"
+        },
+        "unique_identifier": {
+          "type": "string",
+          "description": "The identifier of the app's bundle."
+        },
+        "minimum_os_version": {
+          "type": "string",
+          "description": "The release's minimum required operating system."
+        },
+        "device_family": {
+          "type": "string",
+          "description": "The release's device family."
+        },
+        "languages": {
+          "type": "array",
+          "description": "The languages supported by the release.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fingerprint": {
+          "type": "string",
+          "description": "MD5 checksum of the release binary."
+        },
+        "size": {
+          "type": "integer",
+          "description": "The release's size in bytes."
+        },
+        "package_url": {
+          "type": "string",
+          "description": "The URL to the release's binary."
+        },
+        "icon_url": {
+          "type": "string",
+          "description": "The URL to the release's icon."
+        },
+        "ipa_uuids": {
+          "type": "array",
+          "description": "A list of UUIDs for architectures for an iOS app.",
+          "items": {
+            "$ref": "#/definitions/ArchIdentifier"
+          }
+        },
+        "provision": {
+          "$ref": "#/definitions/ProvisioningProfile"
+        },
+        "appex_provisioning_profiles": {
+          "type": "array",
+          "description": "iOS app extension provisioning profiles included in the release.",
+          "items": {
+            "$ref": "#/definitions/ProvisioningProfile"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "build_version",
+        "unique_identifier",
+        "minimum_os_version",
+        "fingerprint",
+        "size",
+        "package_url"
+      ]
+    },
+    "ReleaseCreateResponse": {
+      "description": "The response from the release creation API that just contains the created release's distinct id.",
+      "properties": {
+        "release_distinct_id": {
+          "description": "The distinct ID of the release.",
+          "type": "number"
+        }
+      },
+      "required": [
+        "release_distinct_id"
+      ]
+    },
     "ReleaseUpdateRequest": {
       "description": "A request containing information for updating a release.",
       "properties": {
@@ -14980,6 +14867,70 @@
         }
       }
     },
+    "ArchIdentifier": {
+      "description": "An object containing a UUID for an architecture for an iOS app.",
+      "type": "object",
+      "properties": {
+        "architecture": {
+          "description": "The architecture that the UUID belongs to, i.e. armv7 or arm64.",
+          "type": "string"
+        },
+        "uuid": {
+          "description": "The unique identifier.",
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "architecture",
+        "uuid"
+      ]
+    },
+    "ProvisioningProfile": {
+      "description": "An object containing information about an iOS provisioning profile.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The name of the provisioning profile.",
+          "type": "string"
+        },
+        "application_identifier": {
+          "description": "The application identifier.",
+          "type": "string"
+        },
+        "team_identifier": {
+          "description": "The team identifier.",
+          "type": "string"
+        },
+        "profile_type": {
+          "type": "string",
+          "enum": [
+            "adhoc",
+            "enterprise",
+            "other"
+          ]
+        },
+        "expired_at": {
+          "description": "The profile's expiration date in RFC 3339 format, i.e. 2017-07-21T17:32:28Z",
+          "type": "string",
+          "format": "date-time"
+        },
+        "udids": {
+          "type": "array",
+          "items": {
+            "description": "A UDID of a provisioned device.",
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "application_identifier",
+        "team_identifier",
+        "profile_type",
+        "expired_at"
+      ]
+    },
     "ProvisioningProfileResponse": {
       "description": "A response containing information about an iOS provisioning profile.",
       "properties": {
@@ -15060,6 +15011,57 @@
         },
         "name": {
           "type": "string"
+        }
+      }
+    },
+    "AutoProvisioningConfigRequest": {
+      "description": "A request containing information for creating a Auto Provisioning Config.",
+      "properties": {
+        "apple_developer_account_key": {
+          "type": "string",
+          "description": "A key to a secret in customer-credential-store. apple_developer_account refers to the user's developer account that is used to log into https://developer.apple.com. Normally the user's email."
+        },
+        "apple_distribution_certificate_key": {
+          "type": "string",
+          "description": "A key to a secret in customer-credential-store. distribution_certificate refers to the cusomer's certificate (that holds the private key) that will be used to sign the app."
+        },
+        "allow_auto_provisioning": {
+          "type": "boolean",
+          "description": "When *true* enables auto provisioning"
+        }
+      },
+      "required": [
+        "apple_developer_account_key",
+        "apple_distribution_certificate_key",
+        "allow_auto_provisioning"
+      ]
+    },
+    "AutoProvisioningConfigResponse": {
+      "description": "A response from API containing information for a Auto Provisioning Config.",
+      "properties": {
+        "id": {
+          "type": "number",
+          "description": "The identifier of the config."
+        },
+        "app_id": {
+          "type": "string",
+          "description": "The identifier of the App."
+        },
+        "destination_id": {
+          "type": "string",
+          "description": "The identifier of the destination."
+        },
+        "apple_developer_account_key": {
+          "type": "string",
+          "description": "A key to a secret in customer-credential-store. apple_developer_account refers to the user's developer account that is used to log into https://developer.apple.com. Normally the user's email."
+        },
+        "apple_distribution_certificate_key": {
+          "type": "string",
+          "description": "A key to a secret in customer-credential-store. distribution_certificate refers to the cusomer's certificate (that holds the private key) that will be used to sign the app."
+        },
+        "allow_auto_provisioning": {
+          "type": "boolean",
+          "description": "When *true* enables auto provisioning"
         }
       }
     },
@@ -15224,10 +15226,6 @@
     },
     "PublishDevicesRequest": {
       "description": "The publising information.",
-      "required": [
-        "username",
-        "password"
-      ],
       "properties": {
         "username": {
           "type": "string",
@@ -15236,6 +15234,10 @@
         "password": {
           "type": "string",
           "description": "The password for the Apple Developer account to publish the devices to."
+        },
+        "account_service_connection_id": {
+          "type": "string",
+          "description": "The service_connection_id of the stored Apple credentials instead of username, password."
         },
         "publish_all_devices": {
           "type": "boolean",
@@ -15296,11 +15298,13 @@
         }
       }
     },
-    "ItunesTeamsRequest": {
-      "description": "Apple credentials needed to log into the Apple Itunes Portal",
+    "ApplicationStatusRequest": {
+      "description": "The information needed to fetch the status of an application",
       "required": [
         "username",
-        "password"
+        "password",
+        "bundle_identifier",
+        "track_identifier"
       ],
       "properties": {
         "username": {
@@ -15310,6 +15314,80 @@
         "password": {
           "type": "string",
           "description": "The password for the Apple Developer account."
+        },
+        "bundle_identifier": {
+          "type": "string",
+          "description": "Bundle Identifier of application in Apple Itunes portal."
+        },
+        "track_identifier": {
+          "type": "string",
+          "description": "Track Identifier for which the status is to be fetched."
+        },
+        "build_version": {
+          "type": "string",
+          "description": "The version of build for which real time status is to be fetched."
+        },
+        "team_identifier": {
+          "type": "string",
+          "description": "Identifier of the team to use when logged in."
+        },
+        "train_version": {
+          "type": "string",
+          "description": "The Train version for which the status is to be fetched."
+        }
+      }
+    },
+    "ApplicationStatusResponse": {
+      "description": "The status information from Itunes portal",
+      "properties": {
+        "version_type": {
+          "type": "string",
+          "description": "The type of version being returned (production/edit/test flight)."
+        },
+        "version": {
+          "type": "string",
+          "description": "The version of the application"
+        }
+      },
+      "required": [
+        "version_type"
+      ]
+    },
+    "ItunesAppsRequest": {
+      "description": "Apple credentials with username, password or service_connection_id of the stored credentials is needed along with team_identifier.",
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "The username for the Apple Developer account."
+        },
+        "password": {
+          "type": "string",
+          "description": "The password for the Apple Developer account."
+        },
+        "service_connection_id": {
+          "type": "string",
+          "description": "The service_connection_id of the stored Apple credentials instead of username, password."
+        },
+        "team_identifier": {
+          "type": "string",
+          "description": "Identifier of the team to use when logged in."
+        }
+      }
+    },
+    "ItunesTeamsRequest": {
+      "description": "Apple credentials with username, password or service_connection_id of the stored credentials is needed.",
+      "properties": {
+        "username": {
+          "type": "string",
+          "description": "The username for the Apple Developer account."
+        },
+        "password": {
+          "type": "string",
+          "description": "The password for the Apple Developer account."
+        },
+        "service_connection_id": {
+          "type": "string",
+          "description": "The service_connection_id of the stored Apple credentials instead of username, password."
         }
       }
     },
@@ -15407,10 +15485,6 @@
     },
     "AvailabilityOfDevicesRequest": {
       "description": "Apple credentials needed to log into the Apple Developer Portal and access provisioning profiles",
-      "required": [
-        "username",
-        "password"
-      ],
       "properties": {
         "username": {
           "type": "string",
@@ -15419,6 +15493,10 @@
         "password": {
           "type": "string",
           "description": "The password for the Apple Developer account."
+        },
+        "service_connection_id": {
+          "type": "string",
+          "description": "The service_connection_id of the stored Apple credentials instad of username, password."
         }
       }
     },
@@ -15466,11 +15544,6 @@
     },
     "UpdateDevicesRequest": {
       "description": "Information required to publish devices to the Apple Developer account and resign the application.",
-      "required": [
-        "username",
-        "password",
-        "p12_base64"
-      ],
       "properties": {
         "release_id": {
           "type": "number",
@@ -15484,9 +15557,17 @@
           "type": "string",
           "description": "The password for the Apple Developer account to publish the devices to."
         },
+        "account_service_connection_id": {
+          "type": "string",
+          "description": "The service_connection_id of the stored Apple credentials instead of username, password."
+        },
         "p12_base64": {
           "type": "string",
           "description": "The certificate to use for resigning the application with the updated provisioning profiles."
+        },
+        "p12_service_connection_id": {
+          "type": "string",
+          "description": "The service_connection_id of the stored Apple certificate instead of p12_base64 value."
         },
         "p12_password": {
           "type": "string",
@@ -15842,6 +15923,38 @@
         }
       }
     },
+    "UserInfo": {
+      "properties": {
+        "odata.context": {
+          "description": "context",
+          "type": "string"
+        },
+        "id": {
+          "description": "the display name for the category",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "the display name for the category",
+          "type": "string"
+        },
+        "givenName": {
+          "description": "the display name for the category",
+          "type": "string"
+        },
+        "jobTitle": {
+          "description": "the display name for the category",
+          "type": "string"
+        },
+        "mail": {
+          "description": "the display name for the category",
+          "type": "string"
+        },
+        "userPrincipalName": {
+          "description": "modified date for category",
+          "type": "string"
+        }
+      }
+    },
     "IntuneCategoryValue": {
       "properties": {
         "id": {
@@ -15925,6 +16038,43 @@
       "properties": {
         "message": {
           "description": "error Details",
+          "type": "string"
+        }
+      }
+    },
+    "ReleaseRealTimeStatusResponse": {
+      "description": "status of the app from store",
+      "properties": {
+        "release_id": {
+          "description": "release id",
+          "type": "string"
+        },
+        "app_id": {
+          "description": "app id",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/StatusData"
+        }
+      }
+    },
+    "StatusData": {
+      "description": "Status Data from store",
+      "properties": {
+        "status": {
+          "description": "status from store",
+          "type": "string"
+        },
+        "storetype": {
+          "description": "store type",
+          "type": "string"
+        },
+        "track": {
+          "description": "track information from store",
+          "type": "string"
+        },
+        "version": {
+          "description": "version of the app from store",
           "type": "string"
         }
       }
@@ -16252,7 +16402,8 @@
             "Apple",
             "JavaScript",
             "Breakpad",
-            "AndroidProguard"
+            "AndroidProguard",
+            "UWP"
           ]
         },
         "app_id": {
@@ -16377,7 +16528,8 @@
           "enum": [
             "Apple",
             "Breakpad",
-            "AndroidProguard"
+            "AndroidProguard",
+            "UWP"
           ]
         },
         "symbols_uploaded": {
@@ -16423,8 +16575,20 @@
         "$ref": "#/definitions/SymbolUpload"
       }
     },
-    "SymbolUploadLocation": {
+    "SymbolLocation": {
       "description": "Location for downloading symbol",
+      "type": "object",
+      "properties": {
+        "uri": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "uri"
+      ]
+    },
+    "SymbolUploadLocation": {
+      "description": "Location for downloading symbol upload",
       "type": "object",
       "properties": {
         "uri": {
@@ -16444,7 +16608,8 @@
           "enum": [
             "Apple",
             "Breakpad",
-            "AndroidProguard"
+            "AndroidProguard",
+            "UWP"
           ]
         },
         "client_callback": {
@@ -17159,6 +17324,48 @@
         }
       }
     },
+    "AlertingCrashGroup": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "app_display_name": {
+          "type": "string"
+        },
+        "app_platform": {
+          "description": "SDK/Platform this thread is beeing generated from",
+          "type": "string",
+          "enum": [
+            "ios",
+            "android",
+            "xamarin",
+            "react-native",
+            "ndk",
+            "unity",
+            "other"
+          ]
+        },
+        "app_version": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "stack_trace": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "SymbolStatusEnum": {
       "description": "enumeration of symbol statuses",
       "enum": [
@@ -17408,75 +17615,6 @@
         },
         "message": {
           "type": "string"
-        }
-      }
-    },
-    "SearchItemsRequest": {
-      "required": [
-        "search"
-      ],
-      "properties": {
-        "search": {
-          "type": "string"
-        }
-      }
-    },
-    "SearchItemsResponse": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/SearchItem"
-      }
-    },
-    "SearchItem": {
-      "type": "object",
-      "required": [
-        "crash_id",
-        "timestamp",
-        "version",
-        "build",
-        "device",
-        "os_version",
-        "user_name"
-      ],
-      "properties": {
-        "crash_id": {
-          "type": "string",
-          "description": ""
-        },
-        "display_id": {
-          "type": "string"
-        },
-        "timestamp": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "version": {
-          "type": "string",
-          "description": ""
-        },
-        "build": {
-          "type": "string",
-          "description": ""
-        },
-        "device": {
-          "type": "string",
-          "description": ""
-        },
-        "os_version": {
-          "type": "string",
-          "description": ""
-        },
-        "os_type": {
-          "type": "string",
-          "description": ""
-        },
-        "user_name": {
-          "type": "string",
-          "description": ""
-        },
-        "user_email": {
-          "type": "string",
-          "description": ""
         }
       }
     },
@@ -17825,6 +17963,26 @@
       },
       "required": [
         "session_id"
+      ]
+    },
+    "HanledErrorLog": {
+      "type": "object",
+      "description": "Required explicit begin session log (a marker event for analytics service).",
+      "x-ms-discriminator-value": "handled_error",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Log"
+        }
+      ],
+      "properties": {
+        "error_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Error ID.\n"
+        }
+      },
+      "required": [
+        "error_id"
       ]
     },
     "StartServiceLog": {
@@ -18671,7 +18829,7 @@
           }
         },
         "total_count": {
-          "description": "The full number of versions accross all pages.",
+          "description": "The full number of versions across all pages.",
           "type": "integer",
           "format": "int64"
         }
@@ -18788,13 +18946,58 @@
     "ErrorGroups": {
       "type": "object",
       "properties": {
-        "error_groups": {
+        "nextLink": {
+          "type": "string"
+        },
+        "errorGroups": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ErrorGroup"
+            "$ref": "#/definitions/ErrorGroupListItem"
           }
         }
       }
+    },
+    "ErrorGroupListItem": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ErrorGroupState"
+        }
+      ],
+      "properties": {
+        "errorGroupId": {
+          "type": "string"
+        },
+        "appVersion": {
+          "type": "string"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "deviceCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastOccurrence": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "exceptionType": {
+          "type": "string"
+        },
+        "exceptionMessage": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "errorGroupId",
+        "appVersion",
+        "state",
+        "count",
+        "deviceCount",
+        "lastOccurrence"
+      ]
     },
     "ErrorGroup": {
       "type": "object",
@@ -18804,47 +19007,55 @@
         }
       ],
       "properties": {
-        "error_group_id": {
+        "errorGroupId": {
           "type": "string"
         },
-        "app_version": {
+        "appVersion": {
           "type": "string"
         },
         "count": {
           "type": "integer",
           "format": "int64"
         },
-        "device_count": {
+        "deviceCount": {
           "type": "integer",
           "format": "int64"
         },
-        "first_occurrence": {
+        "firstOccurrence": {
           "type": "string",
           "format": "date-time"
         },
-        "last_occurrence": {
+        "lastOccurrence": {
           "type": "string",
           "format": "date-time"
         },
-        "name": {
+        "exceptionType": {
           "type": "string"
         },
-        "summary": {
+        "exceptionMessage": {
           "type": "string"
         },
-        "reason_frame": {
-          "$ref": "#/definitions/ErrorStackFrame"
+        "exceptionFile": {
+          "type": "string"
+        },
+        "exceptionLine": {
+          "type": "string"
+        },
+        "reasonFrames": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HandledErrorReasonFrame"
+          }
         }
       },
       "required": [
-        "error_group_id",
-        "app_version",
-        "name",
+        "errorGroupId",
+        "appVersion",
         "state",
         "count",
-        "device_count",
-        "first_occurrence",
-        "last_occurrence"
+        "deviceCount",
+        "firstOccurrence",
+        "lastOccurrence"
       ]
     },
     "ErrorGroupState": {
@@ -18863,6 +19074,10 @@
         "state"
       ]
     },
+    "ErrorDownload": {
+      "type": "object",
+      "format": "file"
+    },
     "ErrorDownloadLink": {
       "type": "object",
       "properties": {
@@ -18874,10 +19089,9 @@
         "link"
       ]
     },
-    "ErrorStackFrame": {
-      "description": "frame belonging to the reason of the crash",
+    "HandledErrorReasonFrame": {
       "properties": {
-        "class_name": {
+        "className": {
           "description": "name of the class",
           "type": "string"
         },
@@ -18885,7 +19099,7 @@
           "description": "name of the method",
           "type": "string"
         },
-        "class_method": {
+        "classMethod": {
           "description": "is a class method",
           "type": "boolean"
         },
@@ -18897,19 +19111,19 @@
           "description": "line number",
           "type": "integer"
         },
-        "app_code": {
+        "appCode": {
           "description": "this line isn't from any framework",
           "type": "boolean"
         },
-        "framework_name": {
+        "frameworkName": {
           "description": "Name of the framework",
           "type": "string"
         },
-        "code_formatted": {
+        "codeFormatted": {
           "description": "Formatted frame string",
           "type": "string"
         },
-        "code_raw": {
+        "codeRaw": {
           "description": "Unformatted Frame string",
           "type": "string"
         },
@@ -18928,15 +19142,15 @@
             "Unknown"
           ]
         },
-        "method_params": {
+        "methodParams": {
           "description": "parameters of the frames method",
           "type": "string"
         },
-        "exception_type": {
+        "exceptionType": {
           "type": "string",
           "description": "Exception type."
         },
-        "os_exception_type": {
+        "osExceptionType": {
           "type": "string",
           "description": "OS exception type. (aka. SIGNAL)"
         }
@@ -18945,12 +19159,12 @@
     "ErrorFreeDevicePercentages": {
       "type": "object",
       "properties": {
-        "average_percentage": {
+        "averagePercentage": {
           "description": "Average percentage",
           "type": "number",
           "format": "double"
         },
-        "daily_percentages": {
+        "dailyPercentages": {
           "description": "The error-free percentage per day.",
           "type": "array",
           "items": {
@@ -18962,6 +19176,9 @@
     "HandledErrors": {
       "type": "object",
       "properties": {
+        "nextLink": {
+          "type": "string"
+        },
         "errors": {
           "description": "Errors list.",
           "type": "array",
@@ -18974,20 +19191,20 @@
     "HandledError": {
       "type": "object",
       "properties": {
-        "error_id": {
+        "errorId": {
           "type": "string"
         },
         "timestamp": {
           "type": "string",
           "format": "date-time"
         },
-        "device_name": {
+        "deviceName": {
           "type": "string"
         },
-        "os_version": {
+        "osVersion": {
           "type": "string"
         },
-        "os_type": {
+        "osType": {
           "type": "string"
         },
         "country": {
@@ -19009,11 +19226,11 @@
         "name": {
           "type": "string"
         },
-        "summary": {
-          "type": "string"
-        },
-        "reason_frame": {
-          "$ref": "#/definitions/ErrorStackFrame"
+        "reasonFrames": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HandledErrorReasonFrame"
+          }
         },
         "properties": {
           "type": "object",
@@ -19026,7 +19243,7 @@
     "ErrorGroupModels": {
       "type": "object",
       "properties": {
-        "error_count": {
+        "errorCount": {
           "type": "integer",
           "format": "int64"
         },
@@ -19041,12 +19258,16 @@
     "ErrorGroupModel": {
       "type": "object",
       "properties": {
-        "model_name": {
+        "modelName": {
           "type": "string",
-          "description": "model's name"
+          "description": "model name"
         },
-        "error_count": {
-          "description": "count of model",
+        "modelCode": {
+          "type": "string",
+          "description": "model code"
+        },
+        "errorCount": {
+          "description": "count of errors in a model",
           "type": "integer",
           "format": "int64"
         }
@@ -19055,11 +19276,11 @@
     "ErrorGroupOperatingSystems": {
       "type": "object",
       "properties": {
-        "error_count": {
+        "errorCount": {
           "type": "integer",
           "format": "int64"
         },
-        "operating_systems": {
+        "operatingSystems": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/ErrorGroupOperatingSystem"
@@ -19070,11 +19291,11 @@
     "ErrorGroupOperatingSystem": {
       "type": "object",
       "properties": {
-        "operating_system_name": {
+        "operatingSystemName": {
           "type": "string",
           "description": "OS name"
         },
-        "error_count": {
+        "errorCount": {
           "type": "integer",
           "format": "int64",
           "description": "count of OS"
@@ -19461,6 +19682,44 @@
         "releases"
       ]
     },
+    "FilterReleasesContainer": {
+      "type": "object",
+      "properties": {
+        "releases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Release"
+          }
+        }
+      }
+    },
+    "FilterVersionsContainer": {
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version": {
+                "description": "App version\n",
+                "type": "string",
+                "format": "string"
+              },
+              "build": {
+                "description": "App build number\n",
+                "type": "string",
+                "format": "string"
+              }
+            },
+            "required": [
+              "version",
+              "build"
+            ]
+          }
+        }
+      }
+    },
     "Release": {
       "type": "object",
       "properties": {
@@ -19519,6 +19778,76 @@
       "required": [
         "counts"
       ]
+    },
+    "ReleaseDailySessions": {
+      "type": "object",
+      "properties": {
+        "totalSessionCounts": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "avgSessionsPerDay": {
+          "type": "number",
+          "format": "double"
+        },
+        "sessions": {
+          "description": "Sessions per day",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DailySession"
+          }
+        }
+      }
+    },
+    "DailySession": {
+      "type": "object",
+      "properties": {
+        "datetime": {
+          "type": "string",
+          "description": "the ISO 8601 datetime"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "DateTimeDownloadReleaseCounts": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "unique": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "counts": {
+          "description": "Release Counts per day",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DateTimeDownloadReleaseCount"
+          }
+        }
+      }
+    },
+    "DateTimeDownloadReleaseCount": {
+      "type": "object",
+      "properties": {
+        "datetime": {
+          "description": "the ISO 8601 datetime",
+          "type": "string"
+        },
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "unique": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
     },
     "ReleaseCount": {
       "type": "object",
@@ -20099,195 +20428,6 @@
         "id"
       ]
     },
-    "ExportConfiguration": {
-      "description": "Export configuration",
-      "type": "object",
-      "discriminator": "type",
-      "properties": {
-        "type": {
-          "description": "Type of export configuration",
-          "type": "string",
-          "enum": [
-            "blob_storage_connection_string",
-            "application_insights_instrumentation_key",
-            "blob_storage_linked_subscription",
-            "application_insights_linked_subscription"
-          ]
-        },
-        "resource_name": {
-          "type": "string",
-          "description": "The resource name on azure"
-        },
-        "resource_group": {
-          "type": "string",
-          "description": "The resource group name on azure"
-        }
-      },
-      "required": [
-        "type"
-      ]
-    },
-    "ExportConfigurationBlobStorageConnectionString": {
-      "description": "Configuration for export to Blob Storage with customer provided connection string",
-      "x-ms-discriminator-value": "blob_storage_connection_string",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ExportConfiguration"
-        }
-      ],
-      "properties": {
-        "connection_string": {
-          "description": "Connection string for blob storage account",
-          "type": "string"
-        }
-      },
-      "required": [
-        "connection_string"
-      ]
-    },
-    "ExportConfigurationAppInsightsKey": {
-      "description": "Configuration for export to Application Insights resource with customer provided intrumentation key",
-      "x-ms-discriminator-value": "application_insights_instrumentation_key",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ExportConfiguration"
-        }
-      ],
-      "properties": {
-        "instrumentation_key": {
-          "description": "Instrumentation key for Application Insights resource",
-          "type": "string"
-        }
-      },
-      "required": [
-        "instrumentation_key"
-      ]
-    },
-    "ExportConfigurationBlobStorageLinkedSubscription": {
-      "description": "Configuration for export to Blob Storage with customer linked subscription.",
-      "x-ms-discriminator-value": "blob_storage_linked_subscription",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ExportConfiguration"
-        }
-      ],
-      "properties": {
-        "subscription_id": {
-          "description": "Id of customer subscription linked in App Center",
-          "type": "string"
-        }
-      },
-      "required": [
-        "subscription_id"
-      ]
-    },
-    "ExportConfigurationAppInsightsLinkedSubscription": {
-      "description": "Configuration for export to Application Insights resource with customer linked subscription.",
-      "x-ms-discriminator-value": "application_insights_linked_subscription",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ExportConfiguration"
-        }
-      ],
-      "properties": {
-        "subscription_id": {
-          "description": "Id of customer subscription linked in App Center",
-          "type": "string"
-        }
-      },
-      "required": [
-        "subscription_id"
-      ]
-    },
-    "ExportConfigurationResult": {
-      "description": "Export configuration result",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Export configuration id",
-          "type": "string"
-        },
-        "export_type": {
-          "description": "Target resource type of export configuration",
-          "type": "string",
-          "enum": [
-            "BlobStorage",
-            "AppInsights"
-          ],
-          "x-ms-enum": {
-            "name": "ExportType",
-            "modelAsString": false
-          }
-        },
-        "creation_time": {
-          "description": "Creation time in ISO 8601 format",
-          "type": "string"
-        },
-        "last_run_time": {
-          "description": "Latest time in ISO 8601 format when export completed successfully",
-          "type": "string"
-        },
-        "state": {
-          "description": "State of the export job",
-          "type": "string",
-          "enum": [
-            "Enabled",
-            "Disabled",
-            "Pending",
-            "Deleted",
-            "Invalid"
-          ],
-          "x-ms-enum": {
-            "name": "ExportState",
-            "modelAsString": false
-          }
-        },
-        "state_info": {
-          "description": "Additional information about export configuration state",
-          "type": "string"
-        },
-        "resource_group": {
-          "description": "resource group for the storage account/App Insights resource",
-          "type": "string"
-        },
-        "resource_name": {
-          "description": "Storage accout or Appinsights resource name",
-          "type": "string"
-        },
-        "export_configuration": {
-          "$ref": "#/definitions/ExportConfiguration"
-        }
-      },
-      "required": [
-        "id",
-        "export_type",
-        "creation_time",
-        "state"
-      ]
-    },
-    "ExportConfigurationListResult": {
-      "description": "List of export configurations",
-      "type": "object",
-      "properties": {
-        "values": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ExportConfigurationResult"
-          }
-        },
-        "total": {
-          "description": "the total count of exports",
-          "type": "integer",
-          "format": "int64"
-        },
-        "nextLink": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "values"
-      ]
-    },
     "NotificationsListResult": {
       "description": "List of notifications",
       "type": "object",
@@ -20425,6 +20565,7 @@
         "name": {
           "description": "Notification name",
           "type": "string",
+          "minLength": 3,
           "maxLength": 64
         },
         "title": {
@@ -20435,6 +20576,7 @@
         "body": {
           "description": "Notification body",
           "type": "string",
+          "minLength": 1,
           "maxLength": 4000
         },
         "custom_data": {
@@ -20794,6 +20936,195 @@
           "format": "int64"
         }
       }
+    },
+    "ExportConfiguration": {
+      "description": "Export configuration",
+      "type": "object",
+      "discriminator": "type",
+      "properties": {
+        "type": {
+          "description": "Type of export configuration",
+          "type": "string",
+          "enum": [
+            "blob_storage_connection_string",
+            "application_insights_instrumentation_key",
+            "blob_storage_linked_subscription",
+            "application_insights_linked_subscription"
+          ]
+        },
+        "resource_name": {
+          "type": "string",
+          "description": "The resource name on azure"
+        },
+        "resource_group": {
+          "type": "string",
+          "description": "The resource group name on azure"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "ExportConfigurationBlobStorageConnectionString": {
+      "description": "Configuration for export to Blob Storage with customer provided connection string",
+      "x-ms-discriminator-value": "blob_storage_connection_string",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExportConfiguration"
+        }
+      ],
+      "properties": {
+        "connection_string": {
+          "description": "Connection string for blob storage account",
+          "type": "string"
+        }
+      },
+      "required": [
+        "connection_string"
+      ]
+    },
+    "ExportConfigurationAppInsightsKey": {
+      "description": "Configuration for export to Application Insights resource with customer provided intrumentation key",
+      "x-ms-discriminator-value": "application_insights_instrumentation_key",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExportConfiguration"
+        }
+      ],
+      "properties": {
+        "instrumentation_key": {
+          "description": "Instrumentation key for Application Insights resource",
+          "type": "string"
+        }
+      },
+      "required": [
+        "instrumentation_key"
+      ]
+    },
+    "ExportConfigurationBlobStorageLinkedSubscription": {
+      "description": "Configuration for export to Blob Storage with customer linked subscription.",
+      "x-ms-discriminator-value": "blob_storage_linked_subscription",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExportConfiguration"
+        }
+      ],
+      "properties": {
+        "subscription_id": {
+          "description": "Id of customer subscription linked in App Center",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subscription_id"
+      ]
+    },
+    "ExportConfigurationAppInsightsLinkedSubscription": {
+      "description": "Configuration for export to Application Insights resource with customer linked subscription.",
+      "x-ms-discriminator-value": "application_insights_linked_subscription",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExportConfiguration"
+        }
+      ],
+      "properties": {
+        "subscription_id": {
+          "description": "Id of customer subscription linked in App Center",
+          "type": "string"
+        }
+      },
+      "required": [
+        "subscription_id"
+      ]
+    },
+    "ExportConfigurationResult": {
+      "description": "Export configuration result",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Export configuration id",
+          "type": "string"
+        },
+        "export_type": {
+          "description": "Target resource type of export configuration",
+          "type": "string",
+          "enum": [
+            "BlobStorage",
+            "AppInsights"
+          ],
+          "x-ms-enum": {
+            "name": "ExportType",
+            "modelAsString": false
+          }
+        },
+        "creation_time": {
+          "description": "Creation time in ISO 8601 format",
+          "type": "string"
+        },
+        "last_run_time": {
+          "description": "Latest time in ISO 8601 format when export completed successfully",
+          "type": "string"
+        },
+        "state": {
+          "description": "State of the export job",
+          "type": "string",
+          "enum": [
+            "Enabled",
+            "Disabled",
+            "Pending",
+            "Deleted",
+            "Invalid"
+          ],
+          "x-ms-enum": {
+            "name": "ExportState",
+            "modelAsString": false
+          }
+        },
+        "state_info": {
+          "description": "Additional information about export configuration state",
+          "type": "string"
+        },
+        "resource_group": {
+          "description": "resource group for the storage account/App Insights resource",
+          "type": "string"
+        },
+        "resource_name": {
+          "description": "Storage accout or Appinsights resource name",
+          "type": "string"
+        },
+        "export_configuration": {
+          "$ref": "#/definitions/ExportConfiguration"
+        }
+      },
+      "required": [
+        "id",
+        "export_type",
+        "creation_time",
+        "state"
+      ]
+    },
+    "ExportConfigurationListResult": {
+      "description": "List of export configurations",
+      "type": "object",
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExportConfigurationResult"
+          }
+        },
+        "total": {
+          "description": "the total count of exports",
+          "type": "integer",
+          "format": "int64"
+        },
+        "nextLink": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "values"
+      ]
     },
     "DeviceConfiguration": {
       "properties": {
@@ -21429,6 +21760,12 @@
             },
             "step_count": {
               "type": "number"
+            },
+            "artifacts": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
             }
           },
           "type": "object"
@@ -22439,7 +22776,8 @@
           "description": "type of bugtracker",
           "enum": [
             "github",
-            "vsts"
+            "vsts",
+            "jira"
           ]
         }
       },
@@ -22537,7 +22875,8 @@
           "description": "type of bugtracker",
           "enum": [
             "github",
-            "vsts"
+            "vsts",
+            "jira"
           ]
         },
         "state": {
@@ -22577,7 +22916,8 @@
           "type": "string",
           "enum": [
             "github",
-            "vsts"
+            "vsts",
+            "jira"
           ]
         },
         "repositories": {
@@ -22662,7 +23002,8 @@
           "type": "string",
           "enum": [
             "github",
-            "vsts"
+            "vsts",
+            "jira"
           ]
         },
         "external_user_email": {
@@ -22910,6 +23251,23 @@
         },
         "title": {
           "type": "string"
+        },
+        "bug_tracker_type": {
+          "type": "string",
+          "enum": [
+            "github",
+            "vsts",
+            "jira"
+          ]
+        },
+        "repo_name": {
+          "type": "string"
+        },
+        "mobile_center_id": {
+          "type": "string"
+        },
+        "event_type": {
+          "type": "string"
         }
       }
     },
@@ -23072,6 +23430,19 @@
         }
       }
     },
+    "BillingPlansChangeTypeResponse": {
+      "description": "Responses for requests that detect billing plans change type",
+      "properties": {
+        "result": {
+          "type": "string",
+          "enum": [
+            "NoChange",
+            "Downgrade",
+            "Upgrade"
+          ]
+        }
+      }
+    },
     "BillingPlanSelection": {
       "description": "Selection of a billing plan",
       "properties": {
@@ -23081,6 +23452,20 @@
         },
         "plan": {
           "$ref": "#/definitions/BillingPlan"
+        }
+      }
+    },
+    "BillingPlansSelection": {
+      "description": "Selection of a billing plan for one or more services",
+      "properties": {
+        "buildService": {
+          "$ref": "#/definitions/BillingPlanSelection"
+        },
+        "pushService": {
+          "$ref": "#/definitions/BillingPlanSelection"
+        },
+        "testService": {
+          "$ref": "#/definitions/BillingPlanSelection"
         }
       }
     },
@@ -23225,6 +23610,56 @@
           "type": "object"
         }
       }
+    },
+    "DataSubjectRightResponse": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "description": "Unique request identifier",
+          "type": "string"
+        },
+        "createdAt": {
+          "description": "ISO 8601 format timestamp of when request was created.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "token",
+        "createdAt"
+      ]
+    },
+    "DataSubjectRightStatusResponse": {
+      "type": "object",
+      "properties": {
+        "sasUrl": {
+          "description": "Azure Storage shared access signature (SAS) URL for exported user data.",
+          "type": "string"
+        },
+        "sasUrlExpired": {
+          "description": "Whether Azure Storage shared access signature (SAS) URL has expired or not.",
+          "type": "boolean"
+        },
+        "status": {
+          "description": "Status of data subject right request",
+          "type": "string",
+          "enum": [
+            "None",
+            "Created",
+            "Queued",
+            "InProgress",
+            "Completed",
+            "Failed"
+          ]
+        },
+        "message": {
+          "description": "explanation message of the status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "message"
+      ]
     }
   },
   "parameters": {
@@ -23268,7 +23703,7 @@
     "InlineCountParameter": {
       "name": "$inlinecount",
       "in": "query",
-      "description": "Controls whether or not to include a count of all the items accross all pages.",
+      "description": "Controls whether or not to include a count of all the items across all pages.",
       "required": false,
       "default": "none",
       "type": "string",
@@ -23753,6 +24188,21 @@
       "format": "string",
       "x-ms-parameter-location": "method"
     },
+    "QueueTypeParameter": {
+      "name": "queueType",
+      "in": "query",
+      "description": "Type of the queue",
+      "required": true,
+      "enum": [
+        "analytics",
+        "handledErrorParser",
+        "handledErrorAggregation"
+      ],
+      "default": "analytics",
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
     "CounterIdParameter": {
       "name": "counterId",
       "in": "path",
@@ -23814,6 +24264,15 @@
       "format": "string",
       "x-ms-parameter-location": "method"
     },
+    "DistributionKeyParameter": {
+      "name": "distribution_id",
+      "in": "path",
+      "description": "the id of the distribution group",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
     "StartParameter": {
       "name": "start",
       "in": "query",
@@ -23842,7 +24301,7 @@
       "x-ms-parameter-location": "method"
     },
     "ErrorGroupParameter": {
-      "name": "error_group_id",
+      "name": "errorGroupId",
       "in": "path",
       "description": "The id of the error group",
       "required": true,
@@ -23851,7 +24310,7 @@
       "x-ms-parameter-location": "method"
     },
     "ErrorGroupStateParameter": {
-      "name": "error_group_state",
+      "name": "errorGroupState",
       "in": "body",
       "description": "The state of the error group",
       "required": true,
@@ -23861,7 +24320,7 @@
       "x-ms-parameter-location": "method"
     },
     "ErrorParameter": {
-      "name": "error_id",
+      "name": "errorId",
       "in": "path",
       "description": "The id of the error",
       "required": true,
@@ -23932,8 +24391,8 @@
       "format": "string",
       "x-ms-parameter-location": "method"
     },
-    "GroupStatusParameter": {
-      "name": "group_status",
+    "GroupStateParameter": {
+      "name": "groupState",
       "in": "query",
       "required": false,
       "type": "string",
@@ -24030,6 +24489,26 @@
       },
       "x-ms-parameter-location": "method"
     },
+    "FilterReleasesParameter": {
+      "name": "releases",
+      "in": "body",
+      "description": "The releases to filter the data by.",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/FilterReleasesContainer"
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "FilterVersionsParameter": {
+      "name": "versions",
+      "in": "body",
+      "description": "The versions to filter the data by.",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/FilterVersionsContainer"
+      },
+      "x-ms-parameter-location": "method"
+    },
     "LogFlowStartTimeParameter": {
       "name": "start",
       "in": "query",
@@ -24037,25 +24516,6 @@
       "required": false,
       "type": "string",
       "format": "date-time",
-      "x-ms-parameter-location": "method"
-    },
-    "ExportConfigurationIdParameter": {
-      "name": "export_configuration_id",
-      "in": "path",
-      "description": "The id of the export configuration.",
-      "required": true,
-      "type": "string",
-      "format": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "ExportConfigurationParameter": {
-      "name": "properties",
-      "in": "body",
-      "description": "Export configurations.",
-      "required": true,
-      "schema": {
-        "$ref": "#/definitions/ExportConfiguration"
-      },
       "x-ms-parameter-location": "method"
     },
     "IncludeArchivedParameter": {
@@ -24105,6 +24565,25 @@
       "format": "string",
       "x-ms-parameter-location": "method"
     },
+    "ExportConfigurationIdParameter": {
+      "name": "export_configuration_id",
+      "in": "path",
+      "description": "The id of the export configuration.",
+      "required": true,
+      "type": "string",
+      "format": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "ExportConfigurationParameter": {
+      "name": "properties",
+      "in": "body",
+      "description": "Export configurations.",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/ExportConfiguration"
+      },
+      "x-ms-parameter-location": "method"
+    },
     "path_deployment_name": {
       "name": "deployment_name",
       "in": "path",
@@ -24137,19 +24616,10 @@
       "x-ms-parameter-location": "method"
     },
     "IdOrTitleParameter": {
-      "name": "startswith",
+      "name": "id_or_title",
       "in": "query",
       "description": "The title prefix for getting issues with title starting with",
       "type": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "RepoIdParameter": {
-      "name": "repo_id",
-      "in": "query",
-      "description": "The id of the repo",
-      "required": true,
-      "type": "string",
-      "format": "string",
       "x-ms-parameter-location": "method"
     },
     "AppIdParameter": {
@@ -24282,16 +24752,6 @@
       "format": "string",
       "x-ms-parameter-location": "method"
     },
-    "BillingPlanParameter": {
-      "name": "billingPlan",
-      "in": "body",
-      "description": "The Billing Plan to create/update",
-      "required": true,
-      "schema": {
-        "$ref": "#/definitions/BillingPlan"
-      },
-      "x-ms-parameter-location": "method"
-    },
     "BillingPlanSelectionParameter": {
       "name": "billingPlanSelection",
       "in": "body",
@@ -24299,6 +24759,16 @@
       "required": true,
       "schema": {
         "$ref": "#/definitions/BillingPlanSelection"
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "BillingPlansSelectionParameter": {
+      "name": "billingPlansSelection",
+      "in": "body",
+      "description": "The Billing Plans selection for one or more services to associate with an account or app",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/BillingPlansSelection"
       },
       "x-ms-parameter-location": "method"
     },
@@ -24371,6 +24841,22 @@
       "required": false,
       "type": "boolean",
       "x-ms-parameter-location": "method"
+    },
+    "DataSubjectRightRequestToken": {
+      "name": "token",
+      "in": "path",
+      "description": "Unique request ID (GUID)",
+      "required": true,
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "DataSubjectRightEmail": {
+      "name": "email",
+      "in": "query",
+      "description": "Email used for delete with x-authz-bypass headers",
+      "required": true,
+      "type": "string",
+      "x-ms-parameter-location": "method"
     }
   },
   "securityDefinitions": {
@@ -24401,10 +24887,10 @@
       "name": "analytics"
     },
     {
-      "name": "export"
+      "name": "push"
     },
     {
-      "name": "push"
+      "name": "export"
     },
     {
       "name": "test"
@@ -24417,6 +24903,9 @@
     },
     {
       "name": "billing"
+    },
+    {
+      "name": "gdpr"
     }
   ]
 }

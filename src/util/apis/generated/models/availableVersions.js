@@ -13,7 +13,7 @@ class AvailableVersions {
   /**
    * Create a AvailableVersions.
    * @member {array} [versions] List of available versions.
-   * @member {number} [totalCount] The full number of versions accross all
+   * @member {number} [totalCount] The full number of versions across all
    * pages.
    */
   constructor() {

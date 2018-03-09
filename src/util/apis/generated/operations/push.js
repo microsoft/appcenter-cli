@@ -784,7 +784,7 @@ function _notificationArchive(ownerName, appName, values, options, callback) {
  * based on which column
  *
  * @param {string} [options.inlinecount] Controls whether or not to include a
- * count of all the items accross all pages. Possible values include:
+ * count of all the items across all pages. Possible values include:
  * 'allpages', 'none'
  *
  * @param {boolean} [options.includeArchived] Include arhived push
@@ -1691,7 +1691,7 @@ class Push {
    * based on which column
    *
    * @param {string} [options.inlinecount] Controls whether or not to include a
-   * count of all the items accross all pages. Possible values include:
+   * count of all the items across all pages. Possible values include:
    * 'allpages', 'none'
    *
    * @param {boolean} [options.includeArchived] Include arhived push
@@ -1740,7 +1740,7 @@ class Push {
    * based on which column
    *
    * @param {string} [options.inlinecount] Controls whether or not to include a
-   * count of all the items accross all pages. Possible values include:
+   * count of all the items across all pages. Possible values include:
    * 'allpages', 'none'
    *
    * @param {boolean} [options.includeArchived] Include arhived push

@@ -19,12 +19,16 @@ class UpdateDevicesRequest {
    * @member {number} [releaseId] When provided, will update the provided
    * release with the new set of devices. By default the latest release of the
    * distribution group is used when this property is omitted.
-   * @member {string} username The username for the Apple Developer account to
-   * publish the devices to.
-   * @member {string} password The password for the Apple Developer account to
-   * publish the devices to.
-   * @member {string} p12Base64 The certificate to use for resigning the
+   * @member {string} [username] The username for the Apple Developer account
+   * to publish the devices to.
+   * @member {string} [password] The password for the Apple Developer account
+   * to publish the devices to.
+   * @member {string} [accountServiceConnectionId] The service_connection_id of
+   * the stored Apple credentials instead of username, password.
+   * @member {string} [p12Base64] The certificate to use for resigning the
    * application with the updated provisioning profiles.
+   * @member {string} [p12ServiceConnectionId] The service_connection_id of the
+   * stored Apple certificate instead of p12_base64 value.
    * @member {string} [p12Password] The password certificate if one is needed.
    * @member {boolean} [publishAllDevices] When set to true, all unprovisioned
    * devices will be published to the Apple Developer account.  When false,
@@ -60,22 +64,36 @@ class UpdateDevicesRequest {
             }
           },
           username: {
-            required: true,
+            required: false,
             serializedName: 'username',
             type: {
               name: 'String'
             }
           },
           password: {
-            required: true,
+            required: false,
             serializedName: 'password',
             type: {
               name: 'String'
             }
           },
+          accountServiceConnectionId: {
+            required: false,
+            serializedName: 'account_service_connection_id',
+            type: {
+              name: 'String'
+            }
+          },
           p12Base64: {
-            required: true,
+            required: false,
             serializedName: 'p12_base64',
+            type: {
+              name: 'String'
+            }
+          },
+          p12ServiceConnectionId: {
+            required: false,
+            serializedName: 'p12_service_connection_id',
             type: {
               name: 'String'
             }

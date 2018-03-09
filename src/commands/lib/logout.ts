@@ -20,7 +20,7 @@ async function performLogout(client: AppCenterClient, user: Profile): Promise<vo
           clientRequest(async cb => {
             try {
               tokenId = await user.accessTokenId;
-              if (!tokenId) {
+              if (!tokenId || tokenId === "null") {
                 tokenId = "current";
               }
               debug(`Attempting to delete token id ${tokenId} off server`);

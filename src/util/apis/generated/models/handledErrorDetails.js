@@ -16,25 +16,7 @@ class HandledErrorDetails extends models['HandledError'] {
   /**
    * Create a HandledErrorDetails.
    * @member {string} [name]
-   * @member {string} [summary]
-   * @member {object} [reasonFrame]
-   * @member {string} [reasonFrame.className] name of the class
-   * @member {string} [reasonFrame.method] name of the method
-   * @member {boolean} [reasonFrame.classMethod] is a class method
-   * @member {string} [reasonFrame.file] name of the file
-   * @member {number} [reasonFrame.line] line number
-   * @member {boolean} [reasonFrame.appCode] this line isn't from any framework
-   * @member {string} [reasonFrame.frameworkName] Name of the framework
-   * @member {string} [reasonFrame.codeFormatted] Formatted frame string
-   * @member {string} [reasonFrame.codeRaw] Unformatted Frame string
-   * @member {string} [reasonFrame.language] programming language of the frame.
-   * Possible values include: 'JavaScript', 'CSharp', 'Objective-C',
-   * 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
-   * @member {string} [reasonFrame.methodParams] parameters of the frames
-   * method
-   * @member {string} [reasonFrame.exceptionType] Exception type.
-   * @member {string} [reasonFrame.osExceptionType] OS exception type. (aka.
-   * SIGNAL)
+   * @member {array} [reasonFrames]
    * @member {object} [properties]
    */
   constructor() {
@@ -57,7 +39,7 @@ class HandledErrorDetails extends models['HandledError'] {
         modelProperties: {
           errorId: {
             required: false,
-            serializedName: 'error_id',
+            serializedName: 'errorId',
             type: {
               name: 'String'
             }
@@ -71,21 +53,21 @@ class HandledErrorDetails extends models['HandledError'] {
           },
           deviceName: {
             required: false,
-            serializedName: 'device_name',
+            serializedName: 'deviceName',
             type: {
               name: 'String'
             }
           },
           osVersion: {
             required: false,
-            serializedName: 'os_version',
+            serializedName: 'osVersion',
             type: {
               name: 'String'
             }
           },
           osType: {
             required: false,
-            serializedName: 'os_type',
+            serializedName: 'osType',
             type: {
               name: 'String'
             }
@@ -111,19 +93,19 @@ class HandledErrorDetails extends models['HandledError'] {
               name: 'String'
             }
           },
-          summary: {
+          reasonFrames: {
             required: false,
-            serializedName: 'summary',
+            serializedName: 'reasonFrames',
             type: {
-              name: 'String'
-            }
-          },
-          reasonFrame: {
-            required: false,
-            serializedName: 'reason_frame',
-            type: {
-              name: 'Composite',
-              className: 'ErrorStackFrame'
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'HandledErrorReasonFrameElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'HandledErrorReasonFrame'
+                  }
+              }
             }
           },
           properties: {

@@ -5,7 +5,6 @@ import { TestCloudUploader, StartedTestRun } from "./test-cloud-uploader";
 import { TestCloudError } from "./test-cloud-error";
 import { StateChecker } from "./state-checker";
 import { AppCenterClient } from "../../../util/apis";
-import { TestArtifacts, TestReport } from "../../../util/apis/generated/models";
 import { StreamingArrayOutput } from "../../../util/interaction";
 import { getUser } from "../../../util/profile";
 import { parseTestParameters } from "./parameters-parser";
@@ -14,12 +13,14 @@ import { progressWithResult } from "./interaction";
 import { ITestCloudManifestJson, ITestFrameworkJson, IFileDescriptionJson } from "./test-manifest-reader";
 import { Messages } from "./help-messages";
 import * as _ from "lodash";
+import * as fsHelper from "../../../util/misc/fs-helper";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as temp from "temp";
 import * as os from "os";
 import * as process from "process";
 import * as downloadUtil from "../../../util/misc/download";
+import { TestReport } from "../../../util/apis/generated/models";
 
 export abstract class RunTestsCommand extends AppCommand {
 
@@ -74,6 +75,11 @@ export abstract class RunTestsCommand extends AppCommand {
   @hasArg
   timeoutSec: number;
 
+  @help(Messages.TestCloud.Arguments.VSTSIdVariable)
+  @longName("vsts-id-variable")
+  @hasArg
+  vstsIdVariable: string;
+
   @help(Messages.TestCloud.Arguments.TestOutputDir)
   @longName("test-output-dir")
   @hasArg
@@ -112,8 +118,12 @@ export abstract class RunTestsCommand extends AppCommand {
         await this.addIncludedFilesToManifestAndCopyToArtifactsDir(manifestPath);
         let testRun = await this.uploadAndStart(client, manifestPath, portalBaseUrl);
 
+        let vstsIdVariable = this.vstsIdVariable;
         this.streamingOutput.text(function (testRun){
           let report: string = `Test run id: "${testRun.testRunId}"` + os.EOL;
+          if(vstsIdVariable) {
+            report = `##vso[task.setvariable variable=${vstsIdVariable}]${testRun.testRunId}` + os.EOL;
+          }
           report += "Accepted devices: " + os.EOL;
           testRun.acceptedDevices.map(item => `  - ${item}`).forEach(text => report+=text + os.EOL);
           if (testRun.rejectedDevices && testRun.rejectedDevices.length > 0) {
@@ -273,15 +283,16 @@ export abstract class RunTestsCommand extends AppCommand {
     return checker.checkUntilCompleted(this.timeoutSec);
   }
 
-  private async downloadArtifacts(testRunId: string, artifacts: TestArtifacts): Promise<void> {
-    for (var key in artifacts) {
+  private async downloadArtifacts(testRunId: string, artifacts: { [propertyName: string]: string }): Promise<void> {
+    for (let key in artifacts) {
 
-      var reportPath = this.generateReportPath();
-      pfs.createLongPath(reportPath);
-      await downloadUtil.downloadFileAndSave(artifacts[key], path.join(reportPath, `${key.toString()}.zip`));
+      let reportPath: string = this.generateReportPath();
+      let pathToArchive: string = path.join(reportPath, `${key.toString()}.zip`);
+      fsHelper.createLongPath(reportPath);
+      await downloadUtil.downloadFileAndSave(artifacts[key], pathToArchive);
 
       this.streamingOutput.text((command: RunTestsCommand): string => {
-        return `##vso[task.setvariable variable=${key}]"${testRunId}"${os.EOL}`;
+        return `##vso[task.setvariable variable=${key}]${pathToArchive}${os.EOL}`;
       }, this);
     }
   }
