@@ -110,7 +110,7 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
   private async isDistributionGroupNameFree(client: AppCenterClient, app: DefaultApp, name: string) {
     if (!_.isNil(name)) {
       try {
-        const httpRequest = await clientRequest<models.DistributionGroupResponse>((cb) => client.distributionGroups.get(app.ownerName, app.appName, name, cb));
+        const httpRequest = await clientRequest<models.DistributionGroupResponse>((cb) => client.account.distributionGroups.get(app.appName, name, app.ownerName, cb));
         if (httpRequest.response.statusCode !== 404) {
           throw httpRequest.response.statusCode;
         }
@@ -128,9 +128,9 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
   private async deleteTestersFromDistributionGroup(client: AppCenterClient, app: DefaultApp, userEmails: string[]): Promise<string[]> {
     try {
       const httpResponse = await out.progress("Deleting testers from the distribution group...",
-        clientRequest<models.DistributionGroupUserDeleteResponse[]>((cb) => client.distributionGroups.removeUser(app.ownerName, app.appName, this.distributionGroup, {
+        clientRequest<models.DistributionGroupUserDeleteResponse[]>((cb) => client.account.distributionGroups.removeUser(app.appName, this.distributionGroup, {
           userEmails
-        }, cb)));
+        }, app.ownerName, cb)));
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.response.statusCode;
       } else {
@@ -149,9 +149,9 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
   private async addTestersToDistributionGroup(client: AppCenterClient, app: DefaultApp, userEmails: string[]): Promise<string[]> {
     try {
       const httpResponse = await out.progress("Adding testers to the distribution group...",
-        clientRequest<models.DistributionGroupUserPostResponse[]>((cb) => client.distributionGroups.addUser(app.ownerName, app.appName, this.distributionGroup, {
+        clientRequest<models.DistributionGroupUserPostResponse[]>((cb) => client.account.distributionGroups.addUser(app.appName, this.distributionGroup, {
           userEmails
-        }, cb)));
+        }, app.ownerName, cb)));
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.response.statusCode;
       } else {
@@ -170,9 +170,9 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
   private async renameDistributionGroup(client: AppCenterClient, app: DefaultApp, newName: string): Promise<string> {
     try {
       const httpResponse = await out.progress("Renaming the distribution group...",
-        clientRequest<models.DistributionGroupResponse>((cb) => client.distributionGroups.update(app.ownerName, app.appName, this.distributionGroup, {
+        clientRequest<models.DistributionGroupResponse>((cb) => client.account.distributionGroups.update(app.appName, {
           name: newName,
-        }, cb)));
+        }, this.distributionGroup, app.ownerName, cb)));
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.response.statusCode;
       } else {

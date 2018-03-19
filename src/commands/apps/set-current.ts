@@ -22,7 +22,7 @@ export default class SetCurrentAppCommand extends Command {
     }
 
     let apps = await out.progress("Reading available apps...",
-      clientCall<models.AppResponse[]>(cb => client.apps.list(cb)));
+      clientCall<models.AppResponse[]>(cb => client.account.apps.list(cb)));
 
     let found = apps.find(app => app.name === newDefault.appName && app.owner.name === newDefault.ownerName);
     if (!found) {

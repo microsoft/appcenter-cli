@@ -57,7 +57,7 @@ export default class DisplayLogsStatusCommand extends AppCommand {
     await ContinuousPollingHelper.pollContinuously(async () => {
       try {
         debug(`Downloading logs for build ${this.buildId}`);
-        return await clientRequest<models.BuildLog>((cb) => client.builds.getLog(buildIdNumber, app.ownerName, app.appName, cb));
+        return await clientRequest<models.BuildLog>((cb) => client.build.builds.getLog(app.appName, buildIdNumber, app.ownerName, cb));
       } catch (error) {
         debug(`Request failed - ${inspect(error)}`);
         switch (error.statusCode) {

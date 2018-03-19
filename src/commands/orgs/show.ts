@@ -34,7 +34,7 @@ export default class OrgShowCommand extends Command {
 
   private async getOrgApps(client: AppCenterClient, organization: string): Promise<models.AppResponse[]> {
     try {
-      const httpResponse = await clientRequest<models.AppResponse[]> ((cb) => client.apps.listForOrg(organization, cb));
+      const httpResponse = await clientRequest<models.AppResponse[]> ((cb) => client.account.apps.listForOrg(organization, cb));
       if (httpResponse.response.statusCode < 400) {
         return httpResponse.result;
       } else {
@@ -52,7 +52,7 @@ export default class OrgShowCommand extends Command {
 
   private async getOrgDetails(client: AppCenterClient, organization: string): Promise<models.OrganizationResponse> {
     try {
-      const httpResponse = await clientRequest<models.OrganizationResponse>((cb) => client.organizations.get(organization, cb));
+      const httpResponse = await clientRequest<models.OrganizationResponse>((cb) => client.account.organizations.get(organization, cb));
       if (httpResponse.response.statusCode < 400) {
         return httpResponse.result;
       } else {

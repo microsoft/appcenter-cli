@@ -5,7 +5,6 @@ import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as chalk from "chalk";
 import * as path from "path";
-import * as fs from "fs";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";
 import { isValidOS, isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectAppVersion } from "./lib/cordova-utils";
 
@@ -43,7 +42,7 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
     }
 
     const appInfo = (await out.progress("Getting app info...", clientRequest<models.AppResponse>(
-      (cb) => client.apps.get(this.app.ownerName, this.app.appName, cb)))).result;
+      (cb) => client.account.apps.get(this.app.appName, this.app.ownerName, cb)))).result;
     this.os = appInfo.os.toLowerCase();
     this.platform = appInfo.platform.toLowerCase();
 
@@ -94,13 +93,7 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
     if (this.os === "ios") {
       outputFolder = path.join(platformFolder, "www");
     } else if (this.os === "android") {
-      // Since cordova-android 7 assets directory moved to android/app/src/main/assets instead of android/assets                
-      const outputFolderVer7 = path.join(platformFolder, "app", "src", "main", "assets", "www");
-      if (fs.existsSync(outputFolderVer7)) {
-        outputFolder = outputFolderVer7;
-      } else {
-        outputFolder = path.join(platformFolder, "assets", "www");
-      }
+      outputFolder = path.join(platformFolder, "assets", "www");
     }
 
     return outputFolder;

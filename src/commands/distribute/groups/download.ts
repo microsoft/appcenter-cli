@@ -86,7 +86,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     debug("Verifying that release was distributed to the specified distribution group");
     let releasesIds: number[];
     try {
-      const httpRequest = await clientRequest<models.BasicReleaseDetailsResponse[]>((cb) => client.releases.listByDistributionGroup(distributionGroup, app.ownerName, app.appName, cb));
+      const httpRequest = await clientRequest<models.BasicReleaseDetailsResponse[]>((cb) => client.distribute.releases.listByDistributionGroup(app.appName, distributionGroup, app.ownerName, cb));
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;
       } else {
@@ -109,7 +109,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
   private async getReleaseUrl(client: AppCenterClient, app: DefaultApp, releaseId: string): Promise<string> {
     debug("Getting download URL for the specified release");
     try {
-      const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) => client.releases.getLatestByUser(releaseId, app.ownerName, app.appName, cb));
+      const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) => client.distribute.releases.getLatestByUser(app.appName, app.ownerName, releaseId, cb));
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;
       } else {
@@ -129,7 +129,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     debug("Getting download URL for the latest release of the specified distribution group");
     try {
       const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) =>
-        client.releases.getLatestByDistributionGroup(app.ownerName, app.appName, distributionGroup, "latest", cb));
+        client.distribute.releases.getLatestByDistributionGroup(app.appName, app.ownerName, distributionGroup, "latest", cb));
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.result;
       } else {

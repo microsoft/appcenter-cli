@@ -29,7 +29,7 @@ export default class CodePushRemoveDeploymentCommand extends AppCommand {
     try {
       debug("Removing CodePush deployment");
       const httpResponse = await out.progress(`Removing CodePush deployment...`,
-        clientRequest((cb) => client.codePushDeployments.deleteMethod(this.deploymentName, app.ownerName, app.appName, cb)));
+        clientRequest((cb) => client.codepush.codePushDeployments.deleteMethod(app.appName, this.deploymentName, app.ownerName, cb)));
     } catch (error) {
       debug(`Failed to remove CodePush deployment - ${inspect(error)}`);
       if (error.statusCode === 404) {

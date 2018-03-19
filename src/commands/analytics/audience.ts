@@ -104,7 +104,7 @@ export default class AudienceCommand extends AppCommand {
 
   private async loadDevicesStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.AnalyticsModels>((cb) => client.analytics.modelCounts(startDate, app.ownerName, app.appName, {
+      const httpRequest = await clientRequest<models.AnalyticsModels>((cb) => client.analytics.analytics.modelCounts(app.ownerName, app.appName, startDate, {
         end: endDate,
         versions: appVersion
       }, cb));
@@ -123,7 +123,7 @@ export default class AudienceCommand extends AppCommand {
 
   private async loadCountriesStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.Places>((cb) => client.analytics.placeCounts(startDate, app.ownerName, app.appName, {
+      const httpRequest = await clientRequest<models.Places>((cb) => client.analytics.analytics.placeCounts(app.ownerName, app.appName, startDate, {
         end: endDate,
         versions: appVersion
       }, cb));
@@ -142,7 +142,7 @@ export default class AudienceCommand extends AppCommand {
 
   private async loadLanguagesStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.Languages>((cb) => client.analytics.languageCounts(startDate, app.ownerName, app.appName, {
+      const httpRequest = await clientRequest<models.Languages>((cb) => client.analytics.analytics.languageCounts(app.ownerName, app.appName, startDate, {
         end: endDate,
         versions: appVersion
       }, cb));
@@ -161,7 +161,7 @@ export default class AudienceCommand extends AppCommand {
 
   private async loadActiveUsersStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.ActiveDeviceCounts>((cb) => client.analytics.deviceCounts(startDate, app.ownerName, app.appName, {
+      const httpRequest = await clientRequest<models.ActiveDeviceCounts>((cb) => client.analytics.analytics.deviceCounts(app.ownerName, app.appName, startDate, {
         end: endDate,
         versions: appVersion
       }, cb));

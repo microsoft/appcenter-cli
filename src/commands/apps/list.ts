@@ -26,7 +26,7 @@ export default class AppsListCommand extends Command {
 
   async run(client: AppCenterClient): Promise<CommandResult> {
     const appsResponse = await out.progress("Getting app list ...",
-      clientRequest<models.AppResponse[]>((cb) => client.apps.list(cb)));
+      clientRequest<models.AppResponse[]>((cb) => client.account.apps.list(cb)));
 
     if (appsResponse.response.statusCode >= 400) {
       return failure(ErrorCodes.Exception, "Unknown error when loading apps");

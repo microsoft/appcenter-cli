@@ -30,10 +30,10 @@ export default class SymbolsUploadingHelper {
 
   private async executeSymbolsUploadingBeginRequest(client: AppCenterClient, app: DefaultApp): Promise<models.SymbolUploadBeginResponse> {
     this.debug("Executing API request to get uploading URL");
-    const uploadingBeginResponse = await clientRequest<models.SymbolUploadBeginResponse>((cb) => client.symbolUploads.create(
-      { symbolType: "Apple" }, // Temporary hard coding until type is threaded through the commands
-      app.ownerName,
+    const uploadingBeginResponse = await clientRequest<models.SymbolUploadBeginResponse>((cb) => client.crash.symbolUploads.create(
       app.appName,
+      null,
+      app.ownerName,
       cb)).catch((error: any) => {
         this.debug(`Failed to start the symbol uploading - ${inspect(error)}`);
         throw failure(ErrorCodes.Exception, "failed to start the symbol uploading");
@@ -52,12 +52,12 @@ export default class SymbolsUploadingHelper {
 
   private async executeSymbolsUploadingEndRequest(client: AppCenterClient, app: DefaultApp, symbolUploadId: string, desiredStatus: SymbolsUploadEndRequestStatus): Promise<models.SymbolUpload> {
     this.debug(`Finishing symbols uploading with desired status: ${desiredStatus}`);
-    const uploadingEndResponse = await clientRequest<models.SymbolUpload>((cb) => client.symbolUploads.complete(
+    const uploadingEndResponse = await clientRequest<models.SymbolUpload>((cb) => client.crash.symbolUploads.complete(
+      app.appName,
+      { status: desiredStatus },
       symbolUploadId,
       app.ownerName,
-      app.appName,
-      desiredStatus,
-      cb,
+      cb
     )).catch((error: any) => {
       this.debug(`Failed to finalize the symbol upload - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, `failed to finalize the symbol upload with status`);

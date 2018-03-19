@@ -17,7 +17,7 @@ export default class ShowBranchesListBuildStatusCommand extends AppCommand {
     let branchesStatusesRequestResponse: ClientResponse<models.BranchStatus[]>;
     try {
       branchesStatusesRequestResponse = await out.progress(`Getting statuses for branches of app ${app.appName}...`,
-        clientRequest<models.BranchStatus[]>((cb) => client.builds.listBranches(app.ownerName, app.appName, cb)));
+        clientRequest<models.BranchStatus[]>((cb) => client.build.builds.listBranches(app.ownerName, app.appName, cb)));
     } catch (error) {
       debug(`Request failed - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, "failed to fetch branches list");
@@ -51,7 +51,7 @@ export default class ShowBranchesListBuildStatusCommand extends AppCommand {
     let commitInfoRequestResponse: ClientResponse<models.CommitDetails[]>;
     try {
       commitInfoRequestResponse = await out.progress("Getting commit info for the last builds of branches...",
-        clientRequest<models.CommitDetails[]>((cb) => client.commits.listByShaList(buildShas, app.ownerName, app.appName, cb)));
+        clientRequest<models.CommitDetails[]>((cb) => client.build.commits.listByShaList(app.appName, buildShas, app.ownerName, cb)));
     } catch (error) {
       debug(`Request failed - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, "failed to get commit details");

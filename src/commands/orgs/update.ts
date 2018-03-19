@@ -32,10 +32,10 @@ export default class OrgUpdateCommand extends Command {
     }
 
     try {
-      const httpContent = await out.progress("Updating organization...", clientRequest<models.OrganizationResponse>((cb) => client.organizations.update(this.name, {
+      const httpContent = await out.progress("Updating organization...", clientRequest<models.OrganizationResponse>((cb) => client.account.organizations.update({
         displayName: this.newDisplayName,
         name: this.newName
-      }, cb)));
+      }, this.name, cb)));
       if (httpContent.response.statusCode < 400) {
         if (this.newDisplayName) {
           out.text(`Successfully changed display name of ${this.name} to ${this.newDisplayName}`);

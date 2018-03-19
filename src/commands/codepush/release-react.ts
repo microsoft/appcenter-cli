@@ -3,10 +3,10 @@ import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton"
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
+import * as fs from "fs";
 import * as pfs from "../../util/misc/promisfied-fs";
 import * as chalk from "chalk";
 import * as path from "path";
-import * as mkdirp from "mkdirp";
 import { fileDoesNotExistOrIsDirectory, createEmptyTmpReleaseFolder, removeReactTmpDir } from "./lib/file-utils";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";
 import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand, isValidOS, isValidPlatform, isReactNativeProject } from "./lib/react-native-utils";
@@ -82,16 +82,15 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
     }
 
     const appInfo = (await out.progress("Getting app info...", clientRequest<models.AppResponse>(
-      (cb) => client.apps.get(this.app.ownerName, this.app.appName, cb)))).result;
+      (cb) => client.account.apps.get(this.app.appName, this.app.ownerName, cb)))).result;
     this.os = appInfo.os.toLowerCase();
     this.platform = appInfo.platform.toLowerCase();
 
     this.updateContentsPath = this.outputDir || await pfs.mkTempDir("code-push");
     
-    // we have to add "CodePush" root folder to make update contents file structure 
+    // we have to add "CodePush" root forlder to make update contents file structure 
     // to be compatible with React Native client SDK
-    this.updateContentsPath = path.join(this.updateContentsPath, "CodePush");
-    mkdirp.sync(this.updateContentsPath);
+    fs.mkdirSync(path.join(this.updateContentsPath, "CodePush"));
 
     if (!isValidOS(this.os)) {
       return failure(ErrorCodes.InvalidParameter, `OS must be "android", "ios", or "windows".`);

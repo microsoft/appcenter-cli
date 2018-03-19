@@ -12,14 +12,14 @@ export default class AppCenterCodePushRelease implements ReleaseStrategy {
       rollout?: number; }, token?: string, serverUrl?: string): Promise<void> {
       
       await clientRequest<models.CodePushRelease>(
-        (cb) => client.codePushDeploymentReleases.create(
-          deploymentName,
-          updateMetadata.appVersion,
-          app.ownerName,
+        (cb) => client.codepush.codePushDeploymentReleases.create(
           app.appName,
+          deploymentName,
+          app.ownerName,
+          updateMetadata.appVersion,
           {
             packageProperty: fs.createReadStream(updateContentsZipPath),
-            deploymentName1: deploymentName,
+            deploymentName: deploymentName,
             description: updateMetadata.description,
             disabled: updateMetadata.isDisabled, 
             mandatory: updateMetadata.isMandatory, 

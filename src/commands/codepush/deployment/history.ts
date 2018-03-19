@@ -26,7 +26,7 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
     let releases: models.CodePushRelease[];
     try {
       const httpRequest = await out.progress("Getting CodePush releases...", clientRequest<models.CodePushRelease[]>(
-        (cb) => client.codePushDeploymentReleases.get(this.deploymentName, app.ownerName, app.appName, cb)));
+        (cb) => client.codepush.codePushDeploymentReleases.get(this.deploymentName, app.ownerName, app.appName, cb)));
       releases = httpRequest.result;
       out.table(out.getCommandOutputTableOptions(["Label", "Release Time", "App Version", "Mandatory", "Description"]),
         releases.map((release) =>

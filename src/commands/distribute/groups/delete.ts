@@ -24,7 +24,7 @@ export default class DeleteDistributionGroupCommand extends AppCommand {
 
     try {
       const httpResponse = await out.progress(`Removing the distribution group...`,
-        clientRequest((cb) => client.distributionGroups.deleteMethod(app.appName, app.ownerName, this.distributionGroup, cb)));
+        clientRequest((cb) => client.account.distributionGroups.deleteMethod(app.appName, app.ownerName, this.distributionGroup, cb)));
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.response.statusCode;
       }

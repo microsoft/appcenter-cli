@@ -26,7 +26,7 @@ export default class OrgCreateCommand extends Command {
 
     let organizationInfo: models.OrganizationResponse;
     try {
-      const httpResponse = await out.progress("Creating new organization...", clientRequest<models.OrganizationResponse>((cb) => client.organizations.createOrUpdate({
+      const httpResponse = await out.progress("Creating new organization...", clientRequest<models.OrganizationResponse>((cb) => client.account.organizations.createOrUpdate({
         displayName: this.displayName,
         name: this.name
       }, cb)));

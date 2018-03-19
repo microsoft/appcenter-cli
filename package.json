@@ -79,6 +79,7 @@
     "typescript": "^2.5.2"
   },
   "dependencies": {
+    "app-center-node-client": "file:lib/app-center-node-client",
     "azure-storage": "^2.1.0",
     "bplist": "0.0.4",
     "chalk": "^1.1.3",

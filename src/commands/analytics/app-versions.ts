@@ -45,7 +45,7 @@ export default class ShowAppVersionsCommand extends AppCommand {
     let listOfVersions: models.Version[];
     try {
       const httpRequest = await out.progress("Getting list of application versions...",
-        clientRequest<models.Versions>((cb) => client.analytics.versionsMethod(startDate, app.ownerName, app.appName, {
+        clientRequest<models.Versions>((cb) => client.analytics.analytics.versionsMethod(app.ownerName, app.appName, startDate, {
           end: endDate
         }, cb)));
       listOfVersions = httpRequest.result.versions;
