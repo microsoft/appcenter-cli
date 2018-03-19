@@ -71,12 +71,10 @@ export default class RunUITestsCommand extends RunTestsCommand {
 
   @help(Messages.TestCloud.Arguments.TestChunk)
   @longName("test-chunk")
-  @hasArg
   testChunk: boolean;
 
   @help(Messages.TestCloud.Arguments.FixtureChunk)
   @longName("fixture-chunk")
-  @hasArg
   fixtureChunk: boolean;
 
   constructor(args: CommandArgs) {
@@ -94,7 +92,11 @@ export default class RunUITestsCommand extends RunTestsCommand {
     }
 
     if (!this.buildDir) {
-      throw new Error("Argument --build-dir is required");
+      throw new Error("Argument --build-dir is required.");
+    }
+
+    if (this.testChunk && this.fixtureChunk) {
+      throw new Error("Arguments --fixture-chunk and test-chunk cannot be combined.")
     }
   }
 
@@ -114,6 +116,15 @@ export default class RunUITestsCommand extends RunTestsCommand {
     preparer.fixtureChunk = this.fixtureChunk;
 
     return preparer.prepare();
+  }
+
+  protected getParametersFromOptions() : {} {
+    if (this.fixtureChunk) {
+        return {"chunker" : "fixture"}
+    } else if (this.testChunk) {
+      return {"chunker" : "method"}
+    }
+    return {}
   }
 
   protected getSourceRootDir() {

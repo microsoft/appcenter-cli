@@ -242,13 +242,24 @@ export abstract class RunTestsCommand extends AppCommand {
     uploader.locale = this.locale;
     uploader.testSeries = this.testSeries;
     uploader.dSymPath = this.dSymDir;
-
-    if (this.testParameters) {
-      uploader.testParameters = parseTestParameters(this.testParameters);
-    }
+    uploader.testParameters = this.combinedParameters();
 
     return await uploader.uploadAndStart();
   }
+
+  private combinedParameters() : {} {
+      let parameters = this.getParametersFromOptions();
+
+      if (this.testParameters) {
+          return _.merge(parameters, parseTestParameters(this.testParameters))
+      } else {
+        return parameters
+      }
+}
+
+    protected getParametersFromOptions() : {} {
+        return {};
+    }
 
   private waitForCompletion(client: AppCenterClient, testRunId: string): Promise<number> {
     let checker = new StateChecker(client, testRunId, this.app.ownerName, this.app.appName, this.streamingOutput);

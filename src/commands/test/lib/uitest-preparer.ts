@@ -175,11 +175,11 @@ export class UITestPreparer {
     }
 
     if (this.testChunk) {
-      command += ` --test-chunk "${this.testChunk}"`;
+      command += ` --test-chunk`;
     }
 
     if (this.fixtureChunk) {
-      command += ` --fixture-chunk "${this.fixtureChunk}"`;
+      command += ` --fixture-chunk`;
     }
 
     return command;
