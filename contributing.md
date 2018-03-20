@@ -225,6 +225,17 @@ To get consistent user experience among commands for all beacons, the command li
 
 We follow the standard GitHub flow. Each person working on the cli should create their own fork of the repo. Work in your own repo (preferably on a feature branch). When ready, send a pull request to the master Microsoft/MobileCenter-cli repo against the master branch. After review, the pull request will be merged.
 
+# Submitting a PR 
+
+PR submitters should include a description of the change they would like to include in the [changelog](https://docs.microsoft.com/en-us/appcenter/general/changelog). Each time a PR is merged and the next version of the CLI is released, the first paragraph in the PR description will be copied into the changelog.
+
+A good description should include:
+
+- Friendly description of the fixes/changes made
+- Details of the change
+
+An example of a good description is: "Distribute your app via the CLI: Users can now create & manage your distribution groups, upload your release and distribute it using the new CLI version 0.8.0."
+
 # Building Installers
 
 TBD. We'll need builds for a Mac installer, Windows MSI, and at least one format of Linux package, plus be able to push to NPM.
