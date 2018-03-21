@@ -1,10 +1,13 @@
-import { child } from "event-stream";
+import { DOMParser } from "xmldom";
 
 export abstract class XmlUtil {
   abstract appendToTestNameTransformation(xml: Document, text: string): void;
   abstract removeIgnoredTransformation(xml: Document): void;
-  abstract removeEmptySuitesTransformation(xml: Document): void;
   abstract combine(xml1: Document, xml2: Document): Document;
+
+  public getEmptyXmlDocument(): Document {
+    return new DOMParser().parseFromString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+  }
 
   public collectAllElements(node: Node, name: string): Node[] {
     let result: Node[] = [];
