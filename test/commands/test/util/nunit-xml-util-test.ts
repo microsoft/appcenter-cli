@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import { DOMParser } from "xmldom";
-import * as xmlUtil from "../../../../src/commands/test/util/xml";
+import { NUnitXmlUtil } from "../../../../src/commands/test/util/nunit-xml-util";
 
-describe("xml util", function() {
+describe("nunit xml util", function() {
   let strXml =
 '<?xml version="1.0" encoding="utf-8"?>\
 <test-results ignored="1" not-run="1">\
@@ -33,6 +33,8 @@ describe("xml util", function() {
 </test-suite>\
 </test-results>';
 
+  let xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
+
   it("should collect all elements", () => {
     let xml: Document = new DOMParser().parseFromString(strXml);
     let testCases: Node[] = xmlUtil.collectAllElements(xml,"test-case");
@@ -47,9 +49,9 @@ describe("xml util", function() {
     expect(testSuites.length).to.eql(3);
   });
 
-  it("it should not throw an exception for a non-existent node", () => {
+  it("should not throw an exception for a non-existent node", () => {
     let xml: Document = new DOMParser().parseFromString(strXml);
-    let testCases: Node[] = xmlUtil.collectAllElements(xml,"non-existent-test-case");
+    let testCases: Node[] = xmlUtil.collectAllElements(xml, "non-existent-test-case");
 
     expect(testCases.length).to.eql(0);
   });
@@ -57,7 +59,7 @@ describe("xml util", function() {
   it("should append postfix", () => {
     let xml: Document = new DOMParser().parseFromString(strXml);
     xmlUtil.appendToTestNameTransformation(xml, "_new_test_case_postfix");
-    let testCases: Node[] = xmlUtil.collectAllElements(xml,"test-case");
+    let testCases: Node[] = xmlUtil.collectAllElements(xml, "test-case");
 
     expect(testCases[0].attributes.getNamedItem("name").value)
       .to.eql("CreditCardValidator.Droid.UITests.Tests.Test0_new_test_case_postfix");
@@ -68,7 +70,7 @@ describe("xml util", function() {
   it("should not throw an exception while appending postfix to a non-existent node", () => {
     let xml: Document = new DOMParser().parseFromString(strXml1);
     xmlUtil.appendToTestNameTransformation(xml, "_new_test_case_postfix");
-    let testCases: Node[] = xmlUtil.collectAllElements(xml,"test-case");
+    let testCases: Node[] = xmlUtil.collectAllElements(xml, "test-case");
 
     expect(testCases.length).to.eql(0);
   });
@@ -76,7 +78,7 @@ describe("xml util", function() {
   it("should remove ignored transformation", () => {
     let xml: Document = new DOMParser().parseFromString(strXml);
     xmlUtil.removeIgnoredTransformation(xml);
-    let testCases: Node[] = xmlUtil.collectAllElements(xml,"test-case");
+    let testCases: Node[] = xmlUtil.collectAllElements(xml, "test-case");
     let testResults: Node = xmlUtil.collectAllElements(xml, "test-results")[0];
     let ignoredAttr: Attr = testResults.attributes.getNamedItem("ignored");
     let notRunAttr: Attr = testResults.attributes.getNamedItem("not-run");
