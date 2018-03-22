@@ -32,7 +32,7 @@ describe("junit xml util", function() {
 
   let strXml4 =
 '<?xml version="1.0" encoding="utf-8"?>\
-<testsuite tests="2" failures="0" name="com.microsoft.altframeworktraining.AdditionalAppTest" time="72.079" errors="0" skipped="0">\
+<testsuite tests="2" failures="0" name="com.microsoft.altframeworktraining.AdditionalAppTest" time="72.079" errors="0" skipped="2">\
   <testcase classname="com.microsoft.altframeworktraining.AdditionalAppTest" name="canStartAppInTest" time="47.273"/>\
   <testcase classname="com.microsoft.altframeworktraining.AdditionalAppTest" name="canStartAppInTest2" time="24.806"/>\
 </testsuite>';
@@ -157,6 +157,7 @@ describe("junit xml util", function() {
     // Then
     var finalStrXml = new XMLSerializer().serializeToString(xml);
     let testSuites: Node[] = xmlUtil.collectAllElements(xml, "testsuite");
+    let testSuitesNode: Node = xmlUtil.collectAllElements(xml, "testsuites")[0];
 
     expect(testSuites.length).to.eql(2);
 
@@ -176,6 +177,35 @@ describe("junit xml util", function() {
     expect(errorsAttr.value).to.equal("15");
     expect(skippedAttr.value).to.equal("5");
 
+    testsAttr = testSuitesNode.attributes.getNamedItem("tests");
+    failuresAttr = testSuitesNode.attributes.getNamedItem("failures");
+    timeAttr = testSuitesNode.attributes.getNamedItem("time");
+    errorsAttr = testSuitesNode.attributes.getNamedItem("errors");
+    skippedAttr = testSuitesNode.attributes.getNamedItem("skipped");
+
+    expect(testsAttr.value).to.eql("6");
+    expect(failuresAttr.value).to.eql("1");
+    expect(timeAttr.value).to.equal("200.345");
+    expect(errorsAttr.value).to.equal("15");
+    expect(skippedAttr.value).to.equal("7");
+
     expect(fastXmlParser.validate(finalStrXml)).to.eql(true);
+  });
+
+  it("should create correct empty xml", () => {
+    let xml: Document = xmlUtil.getEmptyXmlDocument();
+    let testSuitesNode: Node = xmlUtil.collectAllElements(xml, "testsuites")[0];
+
+    let testsAttr: Attr = testSuitesNode.attributes.getNamedItem("tests");
+    let failuresAttr: Attr = testSuitesNode.attributes.getNamedItem("failures");
+    let timeAttr: Attr = testSuitesNode.attributes.getNamedItem("time");
+    let errorsAttr: Attr = testSuitesNode.attributes.getNamedItem("errors");
+    let skippedAttr: Attr = testSuitesNode.attributes.getNamedItem("skipped");
+
+    expect(testsAttr.value).to.eql("0");
+    expect(failuresAttr.value).to.eql("0");
+    expect(timeAttr.value).to.equal("0");
+    expect(errorsAttr.value).to.equal("0");
+    expect(skippedAttr.value).to.equal("0");
   });
 });

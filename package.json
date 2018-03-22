@@ -66,6 +66,7 @@
     "autorest": "^2.0.4238",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
+    "fast-xml-parser": "^3.3.5",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-sourcemaps": "^2.2.0",

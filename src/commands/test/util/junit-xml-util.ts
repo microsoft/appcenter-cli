@@ -1,6 +1,12 @@
 import { XmlUtil } from "./xml-util";
+import { DOMParser } from "xmldom";
 
 export class JUnitXmlUtil extends XmlUtil {
+
+  getEmptyXmlDocument(): Document {
+    return new DOMParser().parseFromString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
+<testsuites tests=\"0\" failures=\"0\" time=\"0\" errors=\"0\" skipped=\"0\"></testsuites>");
+  }
 
   appendToTestNameTransformation(xml: Document, text: string): void {
     let testCases: Node[] = this.collectAllElements(xml, "testcase");
@@ -53,6 +59,7 @@ export class JUnitXmlUtil extends XmlUtil {
   }
 
   combine(xml1: Document, xml2: Document): Document {
+    let testSuitesNode: Node = this.collectAllElements(xml1, "testsuites")[0];
     var xml1testSuites: Node[] = this.collectChildren(xml1, "testsuite");
     var xml2TestSuites: Node[] = this.collectChildren(xml2, "testsuite");
 
@@ -76,11 +83,7 @@ export class JUnitXmlUtil extends XmlUtil {
         }
 
         // Combine test suite attributes
-        this.combineAttributes(xml1TestSuite, xml2TestSuite, "tests");
-        this.combineAttributes(xml1TestSuite, xml2TestSuite, "failures");
-        this.combineAttributes(xml1TestSuite, xml2TestSuite, "time");
-        this.combineAttributes(xml1TestSuite, xml2TestSuite, "errors");
-        this.combineAttributes(xml1TestSuite, xml2TestSuite, "skipped");
+        this.combineAllAttributes(xml1TestSuite, xml2TestSuite);
 
         let testCases: Node[] = this.collectChildren(xml2TestSuite, "testcase");
         testCases.forEach((testCase: Node) => {
@@ -94,11 +97,22 @@ export class JUnitXmlUtil extends XmlUtil {
       });
 
       if (needToAddNewTestSuite) {
-        xml1.appendChild(xml2TestSuite);
+        testSuitesNode.appendChild(xml2TestSuite);
       }
+
+      // Add test suite info to summary
+      this.combineAllAttributes(testSuitesNode, xml2TestSuite);
     });
 
     return xml1;
+  }
+
+  combineAllAttributes(node1: Node, node2: Node) {
+    this.combineAttributes(node1, node2, "tests");
+    this.combineAttributes(node1, node2, "failures");
+    this.combineAttributes(node1, node2, "time");
+    this.combineAttributes(node1, node2, "errors");
+    this.combineAttributes(node1, node2, "skipped");
   }
 
   combineAttributes(node1: Node, node2: Node, attributeName: string) {
@@ -116,6 +130,6 @@ export class JUnitXmlUtil extends XmlUtil {
     let attr1Value: number = Number(attr1.value);
     let attr2Value: number = Number(attr2.value);
 
-    attr1.value = String(attr1Value + attr2Value);
+    attr1.value = String(Math.round((attr1Value + attr2Value) * 1000) / 1000);
   }
 }
