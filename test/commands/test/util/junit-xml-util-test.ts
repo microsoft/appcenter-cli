@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { DOMParser, XMLSerializer } from "xmldom";
+import * as xmlLib from "libxmljs";
 import { JUnitXmlUtil } from "../../../../src/commands/test/util/junit-xml-util";
-var fastXmlParser = require('fast-xml-parser');
 
 describe("junit xml util", function() {
   let strXml =
@@ -189,7 +189,8 @@ describe("junit xml util", function() {
     expect(errorsAttr.value).to.equal("15");
     expect(skippedAttr.value).to.equal("7");
 
-    expect(fastXmlParser.validate(finalStrXml)).to.eql(true);
+    // Doesn't throw exception
+    xmlLib.parseXml(finalStrXml);
   });
 
   it("should create correct empty xml", () => {

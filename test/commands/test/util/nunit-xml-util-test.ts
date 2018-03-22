@@ -1,5 +1,6 @@
 import { expect } from "chai";
-import { DOMParser } from "xmldom";
+import { DOMParser, XMLSerializer } from "xmldom";
+import * as xmlLib from "libxmljs";
 import { NUnitXmlUtil } from "../../../../src/commands/test/util/nunit-xml-util";
 
 describe("nunit xml util", function() {
@@ -31,6 +32,70 @@ describe("nunit xml util", function() {
 </test-suite>\
 <test-suite>\
 </test-suite>\
+</test-results>';
+
+let fullStrXml1: string = '<?xml version="1.0" encoding="UTF-8"?>\
+<test-results name="Xamarin Testcloud UITest" date="2018-03-22" time="15:27:53" total="2" errors="0" failures="0" not-run="15" inconclusive="0" ignored="15" skipped="0" invalid="0">\
+   <test-suite type="Assembly" name="CreditCardValidator.Droid.UITests.dll" executed="True" result="Success" success="True" time="281.797" asserts="0">\
+      <results>\
+         <test-suite type="Namespace" name="CreditCardValidator" executed="True" result="Success" success="True" time="281.792" asserts="0">\
+            <results>\
+               <test-suite type="Namespace" name="Droid" executed="True" result="Success" success="True" time="281.792" asserts="0">\
+                  <results>\
+                     <test-suite type="Namespace" name="UITests" executed="True" result="Success" success="True" time="281.792" asserts="0">\
+                        <results>\
+                           <test-suite type="TestFixture" name="Tests2" executed="True" result="Success" success="True" time="26.572" asserts="0">\
+                              <categories>\
+                                 <category name="Test2" />\
+                              </categories>\
+                              <results>\
+                                 <test-case name="CreditCardValidator.Droid.UITests.Tests2.Test2" executed="True" result="Success" success="True" time="14.128" asserts="0">\
+                                    <reason>\
+                                       <message><![CDATA[Test2]]></message>\
+                                    </reason>\
+                                 </test-case>\
+                              </results>\
+                           </test-suite>\
+                        </results>\
+                     </test-suite>\
+                  </results>\
+               </test-suite>\
+            </results>\
+         </test-suite>\
+      </results>\
+   </test-suite>\
+</test-results>';
+
+let fullStrXml2: string = '<?xml version="1.0" encoding="UTF-8"?>\
+<test-results name="Xamarin Testcloud UITest" date="2018-03-22" time="15:26:14" total="2" errors="0" failures="0" not-run="15" inconclusive="0" ignored="15" skipped="0" invalid="0">\
+   <test-suite type="Assembly" name="CreditCardValidator.Droid.UITests.dll" executed="True" result="Success" success="True" time="185.220" asserts="0">\
+      <results>\
+         <test-suite type="Namespace" name="CreditCardValidator" executed="True" result="Success" success="True" time="185.213" asserts="0">\
+            <results>\
+               <test-suite type="Namespace" name="Droid" executed="True" result="Success" success="True" time="185.213" asserts="0">\
+                  <results>\
+                     <test-suite type="Namespace" name="UITests" executed="True" result="Success" success="True" time="185.212" asserts="0">\
+                        <results>\
+                           <test-suite type="TestFixture" name="Tests2" executed="True" result="Success" success="True" time="21.561" asserts="0">\
+                              <categories>\
+                                 <category name="Test2" />\
+                              </categories>\
+                              <results>\
+                                 <test-case name="CreditCardValidator.Droid.UITests.Tests2.Test2" executed="True" result="Success" success="True" time="15.481" asserts="0">\
+                                    <reason>\
+                                       <message><![CDATA[Test2]]></message>\
+                                    </reason>\
+                                 </test-case>\
+                              </results>\
+                           </test-suite>\
+                        </results>\
+                     </test-suite>\
+                  </results>\
+               </test-suite>\
+            </results>\
+         </test-suite>\
+      </results>\
+   </test-suite>\
 </test-results>';
 
   let xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
@@ -128,5 +193,21 @@ describe("nunit xml util", function() {
     expect(result.length).to.eql(0);
 
     expect(xmlUtil.countChildren(null)).to.eql(0);
+  });
+
+  it("should combine xmls correctly", () => {
+
+    // If
+    let xml1: Document = new DOMParser().parseFromString(fullStrXml1);
+    let xml2: Document = new DOMParser().parseFromString(fullStrXml2);
+
+    // When
+    xml1 = xmlUtil.combine(xml1, xml2);
+
+    // Then
+    var finalStrXml = new XMLSerializer().serializeToString(xml1);
+
+    // Doesn't throw exception
+    xmlLib.parseXml(finalStrXml);
   });
 });
