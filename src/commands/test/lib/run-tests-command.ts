@@ -236,7 +236,9 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   protected async cleanupArtifactsDir(artifactsDir: string): Promise<void> {
-    await pfs.rmDir(artifactsDir, true);
+    await pfs.rmDir(artifactsDir, true).catch(function(err){
+      console.warn(`${err} while cleaning up artifacts directory ${artifactsDir}. This is often due to files being locked or in use. Please check your virus scan settings and any local security policies you might have in place for this directory. Continuing without cleanup.`);
+    });
   }
 
   private artifactsDir: string;
@@ -259,10 +261,7 @@ export abstract class RunTestsCommand extends AppCommand {
     uploader.locale = this.locale;
     uploader.testSeries = this.testSeries;
     uploader.dSymPath = this.dSymDir;
-
-    if (this.testParameters) {
-      uploader.testParameters = parseTestParameters(this.testParameters);
-    }
+    uploader.testParameters = this.combinedParameters();
 
     return await uploader.uploadAndStart();
   }
@@ -276,6 +275,20 @@ export abstract class RunTestsCommand extends AppCommand {
 
   protected async mergeTestArtifacts(): Promise<void> {
     // Each command should override it if needed
+  }
+
+  private combinedParameters() : {} {
+    let parameters = this.getParametersFromOptions();
+
+    if (this.testParameters) {
+      return _.merge(parameters, parseTestParameters(this.testParameters))
+    } else {
+      return parameters
+    }
+  }
+
+  protected getParametersFromOptions() : {} {
+    return {};
   }
 
   private waitForCompletion(client: AppCenterClient, testRunId: string): Promise<number> {

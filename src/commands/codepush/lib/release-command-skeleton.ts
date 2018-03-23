@@ -103,7 +103,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
 
     try {
       const app = this.app;
-      const serverUrl = environments(this.environmentName || getUser().environment).managementEndpoint;
+      const serverUrl = this.getServerUrl();
       const token = this.token || await getUser().accessToken;
       
       await out.progress("Creating CodePush release...",  this.releaseStrategy.release(client, app, this.deploymentName, updateContentsZipPath, {
@@ -131,6 +131,22 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
       }
     } finally {
       await pfs.rmDir(updateContentsZipPath);
+    }
+  }
+
+  private getServerUrl(): string | undefined {
+    const environment = environments(this.getEnvironmentName());
+    return environment && environment.managementEndpoint;
+  }
+
+  private getEnvironmentName(): string | undefined {
+    if (this.environmentName) {
+      return this.environmentName;
+    }
+
+    const user = getUser();
+    if (user) {
+      return user.environment;
     }
   }
 

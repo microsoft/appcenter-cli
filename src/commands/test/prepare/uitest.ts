@@ -75,12 +75,10 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
 
   @help(Messages.TestCloud.Arguments.TestChunk)
   @longName("test-chunk")
-  @hasArg
   testChunk: boolean;
 
   @help(Messages.TestCloud.Arguments.FixtureChunk)
   @longName("fixture-chunk")
-  @hasArg
   fixtureChunk: boolean;
 
   constructor(args: CommandArgs) {
@@ -98,7 +96,11 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
     }
 
     if (!this.buildDir) {
-      throw new Error("Argument --build-dir is required");
+      throw new Error("Argument --build-dir is required.");
+    }
+
+    if (this.testChunk && this.fixtureChunk) {
+        throw new Error("Arguments --fixture-chunk and test-chunk cannot be combined.")
     }
   }
 
