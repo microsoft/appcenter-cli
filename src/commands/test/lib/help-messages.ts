@@ -33,6 +33,8 @@ export module Messages {
 
       export const Status = "Checks the status of the started test run.";
       export const Stop = "Stop the started test run.";
+
+      export const Download = "Start download the report artifacts, unpack and merge them.";
     }
 
     export module Arguments {
@@ -88,6 +90,11 @@ export module Messages {
       export const TestOutputDir = "Path to the directory for test results. This parameter won't work when you run using --async because we have to wait for test results. The results will be saved in the working directory if the relative path is specified";
       export const MergeNUnitXml = "Merge the xml files in to the <output.xml> file. This parameter won't work when you run using --async because we have to wait for test results";
       export const MergeJUnitXml = "Merge the xml files in to the <output.xml> file. This parameter won't work when you run using --async because we have to wait for test results";
+
+      export const DownloadTestRunId = "ID of the started test run";
+      export const DownloadTestOutputDir = "Directory to download the .zip file(s) into for merging";
+      export const MergedFileName = "Name of the merged XML file";
+      export const Continuous = "Continuously checks the test run status until it completes";
     }
   }
 }

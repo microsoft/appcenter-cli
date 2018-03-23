@@ -144,7 +144,7 @@ export abstract class RunTestsCommand extends AppCommand {
               // Download json test result
               const testReport: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
               if (testReport.stats.artifacts) {
-                await this.downloadArtifacts(testRun.testRunId, testReport.stats.artifacts);
+                await downloadUtil.downloadArtifacts(this, this.streamingOutput, this.testOutputDir, testRun.testRunId, testReport.stats.artifacts);
                 await this.mergeTestArtifacts();
               }
           }
@@ -265,13 +265,6 @@ export abstract class RunTestsCommand extends AppCommand {
     return await uploader.uploadAndStart();
   }
 
-  protected generateReportPath(): string {
-    if (path.isAbsolute(this.testOutputDir)) {
-      return this.testOutputDir;
-    }
-    return path.join(process.cwd(), this.testOutputDir);
-  }
-
   protected async mergeTestArtifacts(): Promise<void> {
     // Each command should override it if needed
   }
@@ -293,19 +286,5 @@ export abstract class RunTestsCommand extends AppCommand {
   private waitForCompletion(client: AppCenterClient, testRunId: string): Promise<number> {
     const checker = new StateChecker(client, testRunId, this.app.ownerName, this.app.appName, this.streamingOutput);
     return checker.checkUntilCompleted(this.timeoutSec);
-  }
-
-  private async downloadArtifacts(testRunId: string, artifacts: { [propertyName: string]: string }): Promise<void> {
-    for (const key in artifacts) {
-
-      const reportPath: string = this.generateReportPath();
-      const pathToArchive: string = path.join(reportPath, `${key.toString()}.zip`);
-      fsHelper.createLongPath(reportPath);
-      await downloadUtil.downloadFileAndSave(artifacts[key], pathToArchive);
-
-      this.streamingOutput.text((command: RunTestsCommand): string => {
-        return `##vso[task.setvariable variable=${key}]${pathToArchive}${os.EOL}`;
-      }, this);
-    }
   }
 }

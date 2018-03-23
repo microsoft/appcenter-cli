@@ -1,4 +1,6 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
+import { generateAbsolutePath } from "../../../util/misc/fs-helper";
+import * as os from "os";
 import * as path from "path";
 import { NUnitXmlUtil } from "../lib/nunit-xml-util";
 import { CommandArgs, help, longName, hasArg } from "../../../util/commandline";
@@ -140,7 +142,7 @@ export default class RunUITestsCommand extends RunTestsCommand {
       return;
     }
 
-    const reportPath: string = this.generateReportPath();
+    let reportPath: string = generateAbsolutePath(this.testOutputDir);
     if (!reportPath) {
       return;
     }
