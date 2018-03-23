@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { DOMParser, XMLSerializer } from "xmldom";
 import * as xmlLib from "libxmljs";
+import * as path from "path";
 import { JUnitXmlUtil } from "../../../../src/commands/test/util/junit-xml-util";
 
 describe("junit xml util", function() {
@@ -139,43 +140,38 @@ describe("junit xml util", function() {
     expect(xmlUtil.countChildren(null)).to.eql(0);
   });
 
-  it("should combine xmls correctly", () => {
+  it("should combine xmls correctly", async () => {
 
     // If
-    let xml: Document = xmlUtil.getEmptyXmlDocument();
-    let xml1: Document = new DOMParser().parseFromString(strXml);
-    let xml2: Document = new DOMParser().parseFromString(strXml1);
-    let xml3: Document = new DOMParser().parseFromString(strXml4);
-    let xml4: Document = new DOMParser().parseFromString(strXml6);
+    let pathToArchive: string = path.join(__dirname, "../resources/junit_xml_zip.zip");
 
     // When
-    xml = xmlUtil.combine(xml, xml1);
-    xml = xmlUtil.combine(xml, xml2);
-    xml = xmlUtil.combine(xml, xml3);
-    xml = xmlUtil.combine(xml, xml4);
+    let xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 
     // Then
     var finalStrXml = new XMLSerializer().serializeToString(xml);
     let testSuites: Node[] = xmlUtil.collectAllElements(xml, "testsuite");
+    let testCases: Node[] = xmlUtil.collectAllElements(xml, "testcase");
     let testSuitesNode: Node = xmlUtil.collectAllElements(xml, "testsuites")[0];
 
     expect(testSuites.length).to.eql(2);
 
-    let startAppTestSuite: Node = testSuites[0];
+    let firstTestSuite: Node = testSuites[0];
 
-    expect(xmlUtil.collectAllElements(startAppTestSuite, "testcase").length).to.eql(4);
+    expect(testSuites.length).to.eql(2);
+    expect(testCases.length).to.eql(10);
 
-    let testsAttr: Attr = startAppTestSuite.attributes.getNamedItem("tests");
-    let failuresAttr: Attr = startAppTestSuite.attributes.getNamedItem("failures");
-    let timeAttr: Attr = startAppTestSuite.attributes.getNamedItem("time");
-    let errorsAttr: Attr = startAppTestSuite.attributes.getNamedItem("errors");
-    let skippedAttr: Attr = startAppTestSuite.attributes.getNamedItem("skipped");
+    let testsAttr: Attr = firstTestSuite.attributes.getNamedItem("tests");
+    let failuresAttr: Attr = firstTestSuite.attributes.getNamedItem("failures");
+    let timeAttr: Attr = firstTestSuite.attributes.getNamedItem("time");
+    let errorsAttr: Attr = firstTestSuite.attributes.getNamedItem("errors");
+    let skippedAttr: Attr = firstTestSuite.attributes.getNamedItem("skipped");
 
-    expect(testsAttr.value).to.eql("4");
-    expect(failuresAttr.value).to.eql("1");
-    expect(timeAttr.value).to.equal("128.266");
-    expect(errorsAttr.value).to.equal("15");
-    expect(skippedAttr.value).to.equal("5");
+    expect(testsAttr.value).to.eql("6");
+    expect(failuresAttr.value).to.eql("0");
+    expect(timeAttr.value).to.equal("3.625");
+    expect(errorsAttr.value).to.equal("2");
+    expect(skippedAttr.value).to.equal("0");
 
     testsAttr = testSuitesNode.attributes.getNamedItem("tests");
     failuresAttr = testSuitesNode.attributes.getNamedItem("failures");
@@ -183,11 +179,11 @@ describe("junit xml util", function() {
     errorsAttr = testSuitesNode.attributes.getNamedItem("errors");
     skippedAttr = testSuitesNode.attributes.getNamedItem("skipped");
 
-    expect(testsAttr.value).to.eql("6");
-    expect(failuresAttr.value).to.eql("1");
-    expect(timeAttr.value).to.equal("200.345");
-    expect(errorsAttr.value).to.equal("15");
-    expect(skippedAttr.value).to.equal("7");
+    expect(testsAttr.value).to.eql("10");
+    expect(failuresAttr.value).to.eql("0");
+    expect(timeAttr.value).to.equal("109.012");
+    expect(errorsAttr.value).to.equal("2");
+    expect(skippedAttr.value).to.equal("0");
 
     // Doesn't throw exception
     xmlLib.parseXml(finalStrXml);

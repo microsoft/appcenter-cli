@@ -1,7 +1,5 @@
 export abstract class XmlUtil {
-  abstract appendToTestNameTransformation(xml: Document, text: string): void;
-  abstract removeIgnoredTransformation(xml: Document): void;
-  abstract combine(xml1: Document, xml2: Document): Document;
+  public abstract mergeXmlResults(pathToArchive: string): Promise<Document>;
 
   public collectAllElements(node: Node, name: string): Node[] {
     let result: Node[] = [];

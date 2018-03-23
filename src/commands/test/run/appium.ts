@@ -1,7 +1,6 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as fs from "fs";
 import * as path from "path";
-import * as unzip from "unzip";
 import { CommandArgs, help, name, longName, hasArg, required, ErrorCodes } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { AppiumPreparer } from "../lib/appium-preparer";
@@ -9,7 +8,6 @@ import { parseTestParameters } from "../lib/parameters-parser";
 import { parseIncludedFiles } from "../lib/included-files-parser";
 import { Messages } from "../lib/help-messages";
 import { JUnitXmlUtil } from "../util/junit-xml-util";
-import { DOMParser } from "xmldom";
 
 @help(Messages.TestCloud.Commands.RunAppium)
 export default class RunAppiumTestsCommand extends RunTestsCommand {
@@ -54,42 +52,15 @@ export default class RunAppiumTestsCommand extends RunTestsCommand {
       return;
     }
 
-    let tempPath: string = await pfs.mkTempDir("appcenter-uitestreports")
+    let xmlUtil: JUnitXmlUtil = new JUnitXmlUtil();
     let pathToArchive: string = path.join(reportPath, "junit_xml_zip.zip");
-    let pathToSingleReport: string = path.join(reportPath, this.mergeJUnitXml);
 
-    return new Promise<void>((resolve,reject) => {
-      let xmlUtil: JUnitXmlUtil = new JUnitXmlUtil();
-      let mainXml: Document = xmlUtil.getEmptyXmlDocument();
-      fs.createReadStream(pathToArchive)
-        .pipe(unzip.Parse())
-        .on('entry', function (entry: unzip.Entry) {
-          if(entry.type === 'Directory') {
-            return;
-          }
-          let fullPath = path.join(tempPath, entry.path);
-          entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
+    let xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 
-            let xml = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"));
+    if (!xml) {
+      throw new Error(`Couldn't merge xml test results to ${this.mergeJUnitXml}`);
+    }
 
-            var name: string = "unknown";
-            var matches = entry.path.match("^(.*)_TEST.*");
-            if (matches && matches.length > 1) {
-              name = matches[1].replace(/\./gi, "_");
-            }
-
-            xmlUtil.appendToTestNameTransformation(xml, name);
-            xmlUtil.removeIgnoredTransformation(xml);
-
-            mainXml = xmlUtil.combine(mainXml, xml);
-          }));
-        })
-        .on("close", () => {
-          pfs.writeFile(pathToSingleReport, mainXml)
-          .then(() => {
-            resolve();
-          });
-        });
-    });
+    return pfs.writeFile(path.join(reportPath, this.mergeJUnitXml), xml);
   }
 }

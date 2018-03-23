@@ -1,6 +1,68 @@
+import * as pfs from "../../../util/misc/promisfied-fs";
 import { XmlUtil } from "./xml-util";
+import * as fs from "fs";
+import * as path from "path";
+import * as unzip from "unzip";
+import { DOMParser } from "xmldom";
 
 export class NUnitXmlUtil extends XmlUtil {
+
+  async mergeXmlResults(pathToArchive: string): Promise<Document> {
+    let tempPath: string = await pfs.mkTempDir("appcenter-uitestreports")
+    let mainXml: Document = null;
+
+    let self = this;
+    return new Promise<Document>((resolve,reject) => {
+      let xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
+      fs.createReadStream(pathToArchive)
+        .pipe(unzip.Parse())
+        .on('entry', function (entry: unzip.Entry) {
+          let fullPath = path.join(tempPath, entry.path);
+          entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
+            let xml = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"));
+
+            var name: string = "unknown";
+            var matches = entry.path.match("^(.*)[_-]nunit[_-]report");
+            if (matches && matches.length > 1) {
+              name = matches[1].replace(/\./gi, "_");
+            }
+
+            self.appendToTestNameTransformation(xml, `_${name}`);
+            self.removeIgnoredTransformation(xml);
+            self.removeEmptySuitesTransformation(xml);
+
+            if (mainXml) {
+              mainXml = self.combine(mainXml, xml);
+            } else {
+              mainXml = xml;
+            }
+          }));
+        })
+        .on("close", () => {
+          resolve(mainXml);
+        });
+    });
+  }
+
+  combine(xml1: Document, xml2: Document): Document {
+    this.combineTestResultsAttribute(xml1, xml2, "total");
+    this.combineTestResultsAttribute(xml1, xml2, "errors");
+    this.combineTestResultsAttribute(xml1, xml2, "failures");
+    this.combineTestResultsAttribute(xml1, xml2, "not-run");
+    this.combineTestResultsAttribute(xml1, xml2, "inconclusive");
+    this.combineTestResultsAttribute(xml1, xml2, "ignored");
+    this.combineTestResultsAttribute(xml1, xml2, "skipped");
+    this.combineTestResultsAttribute(xml1, xml2, "invalid");
+
+    let testSuitesParent: Node = this.collectAllElements(xml1, "test-results")[0];
+    let testSuites: Node[] = this.collectChildren(xml2, "test-suite");
+
+    testSuites.forEach((child: Node) => {
+      testSuitesParent.appendChild(child);
+    });
+
+    return xml1;
+  }
 
   appendToTestNameTransformation(xml: Document, text: string): void {
     let testCases: Node[] = this.collectAllElements(xml, "test-case");
@@ -43,26 +105,6 @@ export class NUnitXmlUtil extends XmlUtil {
         node.parentNode.removeChild(node);
       }
     });
-  }
-
-  combine(xml1: Document, xml2: Document): Document {
-    this.combineTestResultsAttribute(xml1, xml2, "total");
-    this.combineTestResultsAttribute(xml1, xml2, "errors");
-    this.combineTestResultsAttribute(xml1, xml2, "failures");
-    this.combineTestResultsAttribute(xml1, xml2, "not-run");
-    this.combineTestResultsAttribute(xml1, xml2, "inconclusive");
-    this.combineTestResultsAttribute(xml1, xml2, "ignored");
-    this.combineTestResultsAttribute(xml1, xml2, "skipped");
-    this.combineTestResultsAttribute(xml1, xml2, "invalid");
-  
-    let testSuitesParent: Node = this.collectAllElements(xml1, "test-results")[0];
-    let testSuites: Node[] = this.collectChildren(xml2, "test-suite");
-  
-    testSuites.forEach((child: Node) => {
-      testSuitesParent.appendChild(child);
-    });
-  
-    return xml1;
   }
 
   combineTestResultsAttribute(xml1: Document, xml2: Document, attributeName: string) {
