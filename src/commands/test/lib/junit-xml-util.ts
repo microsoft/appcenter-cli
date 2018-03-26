@@ -42,6 +42,10 @@ export class JUnitXmlUtil extends XmlUtil {
     });
   }
 
+  public getArchiveName(): string {
+    return "junit_xml_zip.zip";
+  }
+
   combine(xml1: Document, xml2: Document): Document {
     const testSuitesNode: Node = this.collectAllElements(xml1, "testsuites")[0];
     const xml1testSuites: Node[] = this.collectChildren(xml1, "testsuite");

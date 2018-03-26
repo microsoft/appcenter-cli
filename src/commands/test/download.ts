@@ -8,9 +8,9 @@ import * as pfs from "../../util/misc/promisfied-fs";
 import { getUser } from "../../util/profile";
 import { Messages } from "./lib/help-messages";
 import { StateChecker } from "./lib/state-checker";
+import { buildErrorInfo } from "./util/error-info-builder";
 import { XmlUtil } from "./util/xml-util";
-import { NUnitXmlUtil } from "./util/nunit-xml-util";
-import { JUnitXmlUtil } from "./util/junit-xml-util";
+import { XmlUtilBuilder } from "./util/xml-util-builder";
 import * as os from "os";
 import * as path from "path";
 
@@ -58,7 +58,7 @@ export default class DownloadTestsCommand extends AppCommand {
 
         // undefined - in progress (validation, running, etc)
         if (typeof result === "undefined") {
-          return success();
+          return failure(1, `The test run ${this.testRunId} is not complete, please try again once the test has completed successfully`);
         }
       }
 
@@ -69,22 +69,10 @@ export default class DownloadTestsCommand extends AppCommand {
 
       await downloadArtifacts(this, this.streamingOutput, this.outputDir, this.testRunId, testReport.stats.artifacts);
 
-      let xmlUtil: XmlUtil = null;
-      let archiveName: string = null;
-      if (testReport.stats.artifacts["nunit_xml_zip"]) {
-
-        archiveName = "nunit_xml_zip.zip";
-        xmlUtil = new NUnitXmlUtil();
-      } else if (testReport.stats.artifacts["junit_xml_zip"]) {
-
-        archiveName = "junit_xml_zip.zip";
-        xmlUtil = new JUnitXmlUtil();
-      } else {
-        return failure(ErrorCodes.Exception, "Unexpected reports type");
-      }
+      let xmlUtil: XmlUtil = XmlUtilBuilder.buildXmlUtil(testReport.stats.artifacts);
 
       let outputDir = generateAbsolutePath(this.outputDir);
-      let pathToArchive: string = path.join(outputDir, archiveName);
+      let pathToArchive: string = path.join(outputDir, xmlUtil.getArchiveName());
       let xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 
       if (!xml) {
@@ -95,36 +83,8 @@ export default class DownloadTestsCommand extends AppCommand {
 
       return success();
     } catch(err) {
-      let exitCode = err.exitCode || err.errorCode || ErrorCodes.Exception;
-      let message : string = null;
-      let profile = getUser();
-
-      let helpMessage = `Further error details: For help, please send both the reported error above and the following environment information to us by going to https://appcenter.ms/apps and starting a new conversation (using the icon in the bottom right corner of the screen)${os.EOL}
-        Environment: ${os.platform()}
-        App Upload Id: ${this.identifier}
-        Timestamp: ${Date.now()}
-        Operation: ${this.constructor.name}
-        Exit Code: ${exitCode}`;
-
-      if (profile) {
-        helpMessage += `
-        User Email: ${profile.email}
-        User Name: ${profile.userName}
-        User Id: ${profile.userId}
-        `;
-      }
-
-      if (err.message && err.message.indexOf("Not Found") !== -1) {
-        message = `Requested resource not found - please check --app: ${this.identifier}${os.EOL}${os.EOL}${helpMessage}`;
-      } else if (err.errorCode === 5) {
-        message = `Unauthorized error - please check --token or log in to the appcenter CLI.${os.EOL}${os.EOL}${helpMessage}`;
-      } else if (err.errorMessage) {
-        message = `${err.errorMessage}${os.EOL}${os.EOL}${helpMessage}`;
-      } else {
-        message = `${err.message}${os.EOL}${os.EOL}${helpMessage}`;
-      }
-
-      return failure(exitCode, message);
+      let errInfo: { message: string, exitCode: number } = buildErrorInfo(err, getUser(), this);
+      return failure(errInfo.exitCode, errInfo.message);
     } finally {
       this.streamingOutput.finish();
     }

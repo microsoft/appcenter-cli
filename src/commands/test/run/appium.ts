@@ -50,8 +50,8 @@ export default class RunAppiumTestsCommand extends RunTestsCommand {
       return;
     }
 
-    const xmlUtil: JUnitXmlUtil = new JUnitXmlUtil();
-    const pathToArchive: string = path.join(reportPath, "junit_xml_zip.zip");
+    let xmlUtil: JUnitXmlUtil = new JUnitXmlUtil();
+    let pathToArchive: string = path.join(reportPath, xmlUtil.getArchiveName());
 
     const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 

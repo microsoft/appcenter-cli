@@ -22,6 +22,7 @@ import * as os from "os";
 import * as process from "process";
 import * as downloadUtil from "../../../util/misc/download";
 import { TestReport } from "../../../util/apis/generated/models";
+import { buildErrorInfo } from "../util/error-info-builder";
 
 export abstract class RunTestsCommand extends AppCommand {
 
@@ -169,41 +170,10 @@ export abstract class RunTestsCommand extends AppCommand {
         await this.cleanupArtifactsDir(artifactsDir);
         this.streamingOutput.finish();
       }
-    } catch (err) {
-      const exitCode = err.exitCode || err.errorCode || ErrorCodes.Exception;
-      let message : string = null;
-      const profile = getUser();
-
-      let helpMessage = `Further error details: For help, please send both the reported error above and the following environment information to us by going to https://appcenter.ms/apps and starting a new conversation (using the icon in the bottom right corner of the screen)${os.EOL}
-        Environment: ${os.platform()}
-        App Upload Id: ${this.identifier}
-        Timestamp: ${Date.now()}
-        Operation: ${this.constructor.name}
-        Exit Code: ${exitCode}`;
-
-      if (profile) {
-        helpMessage += `
-        User Email: ${profile.email}
-        User Name: ${profile.userName}
-        User Id: ${profile.userId}
-        `;
-      }
-
-      if (err.message && err.message.indexOf("Not Found") !== -1) {
-        message = `Requested resource not found - please check --app: ${this.identifier}${os.EOL}${os.EOL}${helpMessage}`;
-      }
-      if (err.errorCode === 5) {
-        message = `Unauthorized error - please check --token or log in to the appcenter CLI.${os.EOL}${os.EOL}${helpMessage}`;
-      } else if (err.errorMessage) {
-        message = `${err.errorMessage}${os.EOL}${os.EOL}${helpMessage}`;
-      } else {
-        if (!err.message) {
-          err.message = "Could not start your tests. Maybe your subscription has expired.";
-        }
-        message = `${err.message}${os.EOL}${os.EOL}${helpMessage}`;
-      }
-
-      return failure(exitCode, message);
+    }
+    catch (err) {
+      let errInfo: { message: string, exitCode: number } = buildErrorInfo(err, getUser(), this);
+      return failure(errInfo.exitCode, errInfo.message);
     }
   }
 

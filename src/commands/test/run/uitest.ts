@@ -147,8 +147,8 @@ export default class RunUITestsCommand extends RunTestsCommand {
       return;
     }
 
-    const xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
-    const pathToArchive: string = path.join(reportPath, "nunit_xml_zip.zip");
+    let xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
+    let pathToArchive: string = path.join(reportPath, xmlUtil.getArchiveName());
 
     const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 
