@@ -8,9 +8,9 @@ import * as pfs from "../../util/misc/promisfied-fs";
 import { getUser } from "../../util/profile";
 import { Messages } from "./lib/help-messages";
 import { StateChecker } from "./lib/state-checker";
-import { buildErrorInfo } from "./util/error-info-builder";
-import { XmlUtil } from "./util/xml-util";
-import { XmlUtilBuilder } from "./util/xml-util-builder";
+import { buildErrorInfo } from "./lib/error-info-builder";
+import { XmlUtil } from "./lib/xml-util";
+import { XmlUtilBuilder } from "./lib/xml-util-builder";
 import * as os from "os";
 import * as path from "path";
 

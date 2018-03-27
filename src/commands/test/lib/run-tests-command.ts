@@ -22,7 +22,7 @@ import * as os from "os";
 import * as process from "process";
 import * as downloadUtil from "../../../util/misc/download";
 import { TestReport } from "../../../util/apis/generated/models";
-import { buildErrorInfo } from "../util/error-info-builder";
+import { buildErrorInfo } from "../lib/error-info-builder";
 
 export abstract class RunTestsCommand extends AppCommand {
 

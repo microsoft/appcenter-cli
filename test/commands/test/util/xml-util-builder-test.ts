@@ -2,10 +2,10 @@ import { expect } from "chai";
 import { DOMParser, XMLSerializer } from "xmldom";
 import * as xmlLib from "libxmljs";
 import * as path from "path";
-import { JUnitXmlUtil } from "../../../../src/commands/test/util/junit-xml-util";
-import { NUnitXmlUtil } from "../../../../src/commands/test/util/nunit-xml-util";
-import { XmlUtil } from "../../../../src/commands/test/util/xml-util";
-import { XmlUtilBuilder } from "../../../../src/commands/test/util/xml-util-builder";
+import { JUnitXmlUtil } from "../../../../src/commands/test/lib/junit-xml-util";
+import { NUnitXmlUtil } from "../../../../src/commands/test/lib/nunit-xml-util";
+import { XmlUtil } from "../../../../src/commands/test/lib/xml-util";
+import { XmlUtilBuilder } from "../../../../src/commands/test/lib/xml-util-builder";
 
 describe("xml util builder", function() {
 
