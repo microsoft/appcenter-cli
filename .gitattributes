@@ -2,3 +2,9 @@
 # Main entry file needs lf only line endings so that bash shell doesn't barf.
 #
 bin/appcenter.js text eol=lf
+#
+# Avoid crlf translation noise on npm written files
+#
+package.json text eol=lf
+package-lock.json text eol=lf
+
