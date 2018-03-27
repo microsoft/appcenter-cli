@@ -14,6 +14,7 @@ const models = require('./index');
 class HandledErrors {
   /**
    * Create a HandledErrors.
+   * @member {string} [nextLink]
    * @member {array} [errors] Errors list.
    */
   constructor() {
@@ -33,6 +34,13 @@ class HandledErrors {
         name: 'Composite',
         className: 'HandledErrors',
         modelProperties: {
+          nextLink: {
+            required: false,
+            serializedName: 'nextLink',
+            type: {
+              name: 'String'
+            }
+          },
           errors: {
             required: false,
             serializedName: 'errors',

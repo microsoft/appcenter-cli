@@ -40,7 +40,8 @@ class NotificationContent {
             required: true,
             serializedName: 'name',
             constraints: {
-              MaxLength: 64
+              MaxLength: 64,
+              MinLength: 3
             },
             type: {
               name: 'String'
@@ -60,7 +61,8 @@ class NotificationContent {
             required: true,
             serializedName: 'body',
             constraints: {
-              MaxLength: 4000
+              MaxLength: 4000,
+              MinLength: 1
             },
             type: {
               name: 'String'

@@ -25,6 +25,7 @@ class TestReportStats {
    * @member {number} devicesFailed
    * @member {number} devicesSkipped
    * @member {number} stepCount
+   * @member {object} [artifacts]
    */
   constructor() {
   }
@@ -132,6 +133,20 @@ class TestReportStats {
             serializedName: 'step_count',
             type: {
               name: 'Number'
+            }
+          },
+          artifacts: {
+            required: false,
+            serializedName: 'artifacts',
+            type: {
+              name: 'Dictionary',
+              value: {
+                  required: false,
+                  serializedName: 'StringElementType',
+                  type: {
+                    name: 'String'
+                  }
+              }
             }
           }
         }

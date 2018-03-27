@@ -15,7 +15,7 @@ class AlertingAccessTokenResponse {
    * Create a AlertingAccessTokenResponse.
    * @member {string} accessTokenId ID of the access token
    * @member {string} externalProviderName External provider name. Possible
-   * values include: 'github', 'vsts'
+   * values include: 'github', 'vsts', 'jira'
    * @member {string} externalUserEmail The email of external user that used to
    * authenticate aginst the external oauth provider
    * @member {object} externalAccountName The account name of external user

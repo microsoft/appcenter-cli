@@ -7,33 +7,34 @@
 'use strict';
 
 /**
- * Class representing a SearchItemsRequest.
+ * Location for downloading symbol
+ *
  */
-class SearchItemsRequest {
+class SymbolLocation {
   /**
-   * Create a SearchItemsRequest.
-   * @member {string} search
+   * Create a SymbolLocation.
+   * @member {string} uri
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of SearchItemsRequest
+   * Defines the metadata of SymbolLocation
    *
-   * @returns {object} metadata of SearchItemsRequest
+   * @returns {object} metadata of SymbolLocation
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'SearchItemsRequest',
+      serializedName: 'SymbolLocation',
       type: {
         name: 'Composite',
-        className: 'SearchItemsRequest',
+        className: 'SymbolLocation',
         modelProperties: {
-          search: {
+          uri: {
             required: true,
-            serializedName: 'search',
+            serializedName: 'uri',
             type: {
               name: 'String'
             }
@@ -44,4 +45,4 @@ class SearchItemsRequest {
   }
 }
 
-module.exports = SearchItemsRequest;
+module.exports = SymbolLocation;

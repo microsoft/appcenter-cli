@@ -64,6 +64,20 @@ class OrganizationResponseInternal extends models['OrganizationResponse'] {
               name: 'String'
             }
           },
+          createdAt: {
+            required: true,
+            serializedName: 'created_at',
+            type: {
+              name: 'String'
+            }
+          },
+          updatedAt: {
+            required: true,
+            serializedName: 'updated_at',
+            type: {
+              name: 'String'
+            }
+          },
           featureFlags: {
             required: false,
             serializedName: 'feature_flags',

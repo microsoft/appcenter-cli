@@ -7,14 +7,17 @@
 'use strict';
 
 /**
- * Apple credentials needed to log into the Apple Itunes Portal
+ * Apple credentials with username, password or service_connection_id of the
+ * stored credentials is needed.
  *
  */
 class ItunesTeamsRequest {
   /**
    * Create a ItunesTeamsRequest.
-   * @member {string} username The username for the Apple Developer account.
-   * @member {string} password The password for the Apple Developer account.
+   * @member {string} [username] The username for the Apple Developer account.
+   * @member {string} [password] The password for the Apple Developer account.
+   * @member {string} [serviceConnectionId] The service_connection_id of the
+   * stored Apple credentials instead of username, password.
    */
   constructor() {
   }
@@ -34,15 +37,22 @@ class ItunesTeamsRequest {
         className: 'ItunesTeamsRequest',
         modelProperties: {
           username: {
-            required: true,
+            required: false,
             serializedName: 'username',
             type: {
               name: 'String'
             }
           },
           password: {
-            required: true,
+            required: false,
             serializedName: 'password',
+            type: {
+              name: 'String'
+            }
+          },
+          serviceConnectionId: {
+            required: false,
+            serializedName: 'service_connection_id',
             type: {
               name: 'String'
             }

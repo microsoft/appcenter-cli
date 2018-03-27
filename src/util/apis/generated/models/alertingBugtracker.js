@@ -16,7 +16,7 @@ class AlertingBugtracker {
   /**
    * Create a AlertingBugtracker.
    * @member {string} [type] type of bugtracker. Possible values include:
-   * 'github', 'vsts'
+   * 'github', 'vsts', 'jira'
    * @member {string} [state] bugtracker state. Possible values include:
    * 'enabled', 'disabled', 'unauthorized'
    * @member {string} [tokenId] ID of OAuth token

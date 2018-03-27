@@ -36,7 +36,7 @@ class ErrorGroupModels {
         modelProperties: {
           errorCount: {
             required: false,
-            serializedName: 'error_count',
+            serializedName: 'errorCount',
             type: {
               name: 'Number'
             }

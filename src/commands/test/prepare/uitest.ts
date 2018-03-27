@@ -73,11 +73,6 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
   @hasArg
   excludeCategory: string[];
 
-  @help(Messages.TestCloud.Arguments.NUnitXml)
-  @longName("nunit-xml")
-  @hasArg
-  nunitXml: string;
-
   @help(Messages.TestCloud.Arguments.TestChunk)
   @longName("test-chunk")
   testChunk: boolean;
@@ -120,7 +115,6 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
     preparer.fixture = this.fixture;
     preparer.includeCategory = this.includeCategory;
     preparer.excludeCategory = this.excludeCategory;
-    preparer.nunitXml = this.nunitXml;
     preparer.testChunk = this.testChunk;
     preparer.fixtureChunk = this.fixtureChunk;
 

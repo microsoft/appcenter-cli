@@ -13,10 +13,14 @@ import { progressWithResult } from "./interaction";
 import { ITestCloudManifestJson, ITestFrameworkJson, IFileDescriptionJson } from "./test-manifest-reader";
 import { Messages } from "./help-messages";
 import * as _ from "lodash";
+import * as fsHelper from "../../../util/misc/fs-helper";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as temp from "temp";
 import * as os from "os";
+import * as process from "process";
+import * as downloadUtil from "../../../util/misc/download";
+import { TestReport } from "../../../util/apis/generated/models";
 
 export abstract class RunTestsCommand extends AppCommand {
 
@@ -76,6 +80,11 @@ export abstract class RunTestsCommand extends AppCommand {
   @hasArg
   vstsIdVariable: string;
 
+  @help(Messages.TestCloud.Arguments.TestOutputDir)
+  @longName("test-output-dir")
+  @hasArg
+  testOutputDir: string;
+
   protected isAppPathRequired = true;
   private readonly streamingOutput = new StreamingArrayOutput();
 
@@ -113,7 +122,7 @@ export abstract class RunTestsCommand extends AppCommand {
         this.streamingOutput.text(function (testRun){
           let report: string = `Test run id: "${testRun.testRunId}"` + os.EOL;
           if(vstsIdVariable) {
-            report = `##vso[task.setvariable variable=${vstsIdVariable}]"${testRun.testRunId}"` + os.EOL;
+            report = `##vso[task.setvariable variable=${vstsIdVariable}]${testRun.testRunId}` + os.EOL;
           }
           report += "Accepted devices: " + os.EOL;
           testRun.acceptedDevices.map(item => `  - ${item}`).forEach(text => report+=text + os.EOL);
@@ -126,6 +135,16 @@ export abstract class RunTestsCommand extends AppCommand {
 
         if (!this.async) {
           let exitCode = await this.waitForCompletion(client, testRun.testRunId);
+
+          if (this.testOutputDir) {
+
+              // Download json test result
+              var testReport: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
+              if (testReport.stats.artifacts) {
+                await this.downloadArtifacts(testRun.testRunId, testReport.stats.artifacts);
+                await this.mergeTestArtifacts();
+              }
+          }
 
           switch (exitCode) {
             case 1:
@@ -247,22 +266,47 @@ export abstract class RunTestsCommand extends AppCommand {
     return await uploader.uploadAndStart();
   }
 
-  private combinedParameters() : {} {
-      let parameters = this.getParametersFromOptions();
-
-      if (this.testParameters) {
-          return _.merge(parameters, parseTestParameters(this.testParameters))
-      } else {
-        return parameters
-      }
-}
-
-    protected getParametersFromOptions() : {} {
-        return {};
+  protected generateReportPath(): string {
+    if (path.isAbsolute(this.testOutputDir)) {
+      return this.testOutputDir;
     }
+    return path.join(process.cwd(), this.testOutputDir);
+  }
+
+  protected async mergeTestArtifacts(): Promise<void> {
+    // Each command should override it if needed
+  }
+
+  private combinedParameters() : {} {
+    let parameters = this.getParametersFromOptions();
+
+    if (this.testParameters) {
+      return _.merge(parameters, parseTestParameters(this.testParameters))
+    } else {
+      return parameters
+    }
+  }
+
+  protected getParametersFromOptions() : {} {
+    return {};
+  }
 
   private waitForCompletion(client: AppCenterClient, testRunId: string): Promise<number> {
     let checker = new StateChecker(client, testRunId, this.app.ownerName, this.app.appName, this.streamingOutput);
     return checker.checkUntilCompleted(this.timeoutSec);
+  }
+
+  private async downloadArtifacts(testRunId: string, artifacts: { [propertyName: string]: string }): Promise<void> {
+    for (let key in artifacts) {
+
+      let reportPath: string = this.generateReportPath();
+      let pathToArchive: string = path.join(reportPath, `${key.toString()}.zip`);
+      fsHelper.createLongPath(reportPath);
+      await downloadUtil.downloadFileAndSave(artifacts[key], pathToArchive);
+
+      this.streamingOutput.text((command: RunTestsCommand): string => {
+        return `##vso[task.setvariable variable=${key}]${pathToArchive}${os.EOL}`;
+      }, this);
+    }
   }
 }

@@ -15,7 +15,7 @@ class Symbol {
    * @member {string} symbolId The unique id for this symbol (uuid)
    * @member {string} type The type of the symbol for the current symbol
    * upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
-   * 'AndroidProguard'
+   * 'AndroidProguard', 'UWP'
    * @member {string} appId The application that this symbol belongs to
    * @member {string} platform The platform that this symbol is associated with
    * @member {string} url The URL at which the client may download the symbol

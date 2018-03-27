@@ -72,7 +72,7 @@ export function mkdirp (...args: any[]): Promise<string> {
       } else {
         resolve(made);
       }
-    }]));    
+    }]));
   });
 }
 
@@ -175,7 +175,7 @@ export async function walk(dir: string): Promise<string[]> {
 
 async function pathExists(path: string, isFile: boolean): Promise<boolean> {
   let stats: fs.Stats = null;
-  
+
   try {
     stats = await stat(path);
   }

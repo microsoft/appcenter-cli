@@ -17,8 +17,6 @@ class OrganizationResponseManagement extends models['OrganizationResponseInterna
    * Create a OrganizationResponseManagement.
    * @member {string} [email] The organization email, if the app was synced
    * from HockeyApp
-   * @member {string} [createdAt] The date when the organization was created
-   * @member {string} [updatedAt] The date when the organization was updated
    */
   constructor() {
     super();
@@ -66,6 +64,20 @@ class OrganizationResponseManagement extends models['OrganizationResponseInterna
               name: 'String'
             }
           },
+          createdAt: {
+            required: true,
+            serializedName: 'created_at',
+            type: {
+              name: 'String'
+            }
+          },
+          updatedAt: {
+            required: true,
+            serializedName: 'updated_at',
+            type: {
+              name: 'String'
+            }
+          },
           featureFlags: {
             required: false,
             serializedName: 'feature_flags',
@@ -83,20 +95,6 @@ class OrganizationResponseManagement extends models['OrganizationResponseInterna
           email: {
             required: false,
             serializedName: 'email',
-            type: {
-              name: 'String'
-            }
-          },
-          createdAt: {
-            required: false,
-            serializedName: 'created_at',
-            type: {
-              name: 'String'
-            }
-          },
-          updatedAt: {
-            required: false,
-            serializedName: 'updated_at',
             type: {
               name: 'String'
             }

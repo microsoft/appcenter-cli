@@ -1,3 +1,7 @@
+import * as pfs from "../../../util/misc/promisfied-fs";
+import * as os from "os";
+import * as path from "path";
+import { NUnitXmlUtil } from "../lib/nunit-xml-util";
 import { CommandArgs, help, name, longName, hasArg, ErrorCodes, required } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { UITestPreparer } from "../lib/uitest-preparer";
@@ -64,10 +68,10 @@ export default class RunUITestsCommand extends RunTestsCommand {
   @hasArg
   excludeCategory: string[];
 
-  @help(Messages.TestCloud.Arguments.NUnitXml)
-  @longName("nunit-xml")
+  @help(Messages.TestCloud.Arguments.MergeNUnitXml)
+  @longName("merge-nunit-xml")
   @hasArg
-  nunitXml: string;
+  mergeNUnitXml: string;
 
   @help(Messages.TestCloud.Arguments.TestChunk)
   @longName("test-chunk")
@@ -98,6 +102,10 @@ export default class RunUITestsCommand extends RunTestsCommand {
     if (this.testChunk && this.fixtureChunk) {
       throw new Error("Arguments --fixture-chunk and test-chunk cannot be combined.")
     }
+
+    if (!this.testOutputDir && this.mergeNUnitXml) {
+      throw new Error("Argument --test-output-dir is required for argument --merge-nunit-xml");
+    }
   }
 
   protected prepareManifest(artifactsDir: string): Promise<string> {
@@ -111,7 +119,6 @@ export default class RunUITestsCommand extends RunTestsCommand {
     preparer.fixture = this.fixture;
     preparer.includeCategory = this.includeCategory;
     preparer.excludeCategory = this.excludeCategory;
-    preparer.nunitXml = this.nunitXml;
     preparer.testChunk = this.testChunk;
     preparer.fixtureChunk = this.fixtureChunk;
 
@@ -129,5 +136,27 @@ export default class RunUITestsCommand extends RunTestsCommand {
 
   protected getSourceRootDir() {
     return this.buildDir;
+  }
+
+  protected async mergeTestArtifacts(): Promise<void> {
+    if (!this.mergeNUnitXml) {
+      return;
+    }
+
+    let reportPath: string = this.generateReportPath();
+    if (!reportPath) {
+      return;
+    }
+
+    let xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
+    let pathToArchive: string = path.join(reportPath, "nunit_xml_zip.zip");
+
+    let xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
+
+    if (!xml) {
+      throw new Error(`Couldn't merge xml test results to ${this.mergeNUnitXml}`);
+    }
+
+    return pfs.writeFile(path.join(reportPath, this.mergeNUnitXml), xml);
   }
 }

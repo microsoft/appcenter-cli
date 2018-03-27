@@ -7,12 +7,11 @@
 'use strict';
 
 /**
- * frame belonging to the reason of the crash
- *
+ * Class representing a HandledErrorReasonFrame.
  */
-class ErrorStackFrame {
+class HandledErrorReasonFrame {
   /**
-   * Create a ErrorStackFrame.
+   * Create a HandledErrorReasonFrame.
    * @member {string} [className] name of the class
    * @member {string} [method] name of the method
    * @member {boolean} [classMethod] is a class method
@@ -33,22 +32,22 @@ class ErrorStackFrame {
   }
 
   /**
-   * Defines the metadata of ErrorStackFrame
+   * Defines the metadata of HandledErrorReasonFrame
    *
-   * @returns {object} metadata of ErrorStackFrame
+   * @returns {object} metadata of HandledErrorReasonFrame
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'ErrorStackFrame',
+      serializedName: 'HandledErrorReasonFrame',
       type: {
         name: 'Composite',
-        className: 'ErrorStackFrame',
+        className: 'HandledErrorReasonFrame',
         modelProperties: {
           className: {
             required: false,
-            serializedName: 'class_name',
+            serializedName: 'className',
             type: {
               name: 'String'
             }
@@ -62,7 +61,7 @@ class ErrorStackFrame {
           },
           classMethod: {
             required: false,
-            serializedName: 'class_method',
+            serializedName: 'classMethod',
             type: {
               name: 'Boolean'
             }
@@ -83,28 +82,28 @@ class ErrorStackFrame {
           },
           appCode: {
             required: false,
-            serializedName: 'app_code',
+            serializedName: 'appCode',
             type: {
               name: 'Boolean'
             }
           },
           frameworkName: {
             required: false,
-            serializedName: 'framework_name',
+            serializedName: 'frameworkName',
             type: {
               name: 'String'
             }
           },
           codeFormatted: {
             required: false,
-            serializedName: 'code_formatted',
+            serializedName: 'codeFormatted',
             type: {
               name: 'String'
             }
           },
           codeRaw: {
             required: false,
-            serializedName: 'code_raw',
+            serializedName: 'codeRaw',
             type: {
               name: 'String'
             }
@@ -118,21 +117,21 @@ class ErrorStackFrame {
           },
           methodParams: {
             required: false,
-            serializedName: 'method_params',
+            serializedName: 'methodParams',
             type: {
               name: 'String'
             }
           },
           exceptionType: {
             required: false,
-            serializedName: 'exception_type',
+            serializedName: 'exceptionType',
             type: {
               name: 'String'
             }
           },
           osExceptionType: {
             required: false,
-            serializedName: 'os_exception_type',
+            serializedName: 'osExceptionType',
             type: {
               name: 'String'
             }
@@ -143,4 +142,4 @@ class ErrorStackFrame {
   }
 }
 
-module.exports = ErrorStackFrame;
+module.exports = HandledErrorReasonFrame;

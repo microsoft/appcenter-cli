@@ -17,6 +17,8 @@ class OrganizationResponse {
    * @member {string} name The slug name of the organization
    * @member {string} origin The creation origin of this organization. Possible
    * values include: 'appcenter', 'hockeyapp'
+   * @member {string} createdAt The creation date of this organization
+   * @member {string} updatedAt The date the organization was last updated at
    */
   constructor() {
   }
@@ -59,6 +61,20 @@ class OrganizationResponse {
           origin: {
             required: true,
             serializedName: 'origin',
+            type: {
+              name: 'String'
+            }
+          },
+          createdAt: {
+            required: true,
+            serializedName: 'created_at',
+            type: {
+              name: 'String'
+            }
+          },
+          updatedAt: {
+            required: true,
+            serializedName: 'updated_at',
             type: {
               name: 'String'
             }

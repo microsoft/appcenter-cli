@@ -23,6 +23,10 @@ class OrganizationInvitationDetailResponse {
    * @member {string} [organization.name] The slug name of the organization
    * @member {string} [organization.origin] The creation origin of this
    * organization. Possible values include: 'appcenter', 'hockeyapp'
+   * @member {string} [organization.createdAt] The creation date of this
+   * organization
+   * @member {string} [organization.updatedAt] The date the organization was
+   * last updated at
    * @member {string} email The email address of the invited user
    * @member {object} invitedBy
    * @member {string} [invitedBy.id] The unique id (UUID) of the user
@@ -40,6 +44,7 @@ class OrganizationInvitationDetailResponse {
    * Possible values include: 'appcenter', 'hockeyapp', 'codepush'
    * @member {boolean} isExistingUser Indicates whether the invited user
    * already exists
+   * @member {string} [role] The role assigned to the invited user
    */
   constructor() {
   }
@@ -93,6 +98,13 @@ class OrganizationInvitationDetailResponse {
             serializedName: 'is_existing_user',
             type: {
               name: 'Boolean'
+            }
+          },
+          role: {
+            required: false,
+            serializedName: 'role',
+            type: {
+              name: 'String'
             }
           }
         }
