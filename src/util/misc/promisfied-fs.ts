@@ -92,7 +92,7 @@ export async function cp(source: string, target: string): Promise<void> {
 
 export async function cpDir(source: string, target: string): Promise<void> {
   if (!await exists(target)) {
-    await mkdir(target);
+    createLongPath(target);
   }
   let files = await readdir(source);
 
@@ -106,6 +106,10 @@ export async function cpDir(source: string, target: string): Promise<void> {
 
 export function cpFile(source: string, target: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
+    let targetFolder = path.dirname(target);
+    if(!fs.existsSync(targetFolder)) {
+      createLongPath(targetFolder);
+    }
     let sourceStream = fs.createReadStream(source);
     let targetStream = fs.createWriteStream(target);
 
@@ -184,6 +188,21 @@ async function pathExists(path: string, isFile: boolean): Promise<boolean> {
   }
 
   return isFile === stats.isFile();
+}
+
+function createLongPath(target: string) {
+  let targetFolder: string = target;
+  let notExistsFolder: string[] = [];
+
+  while(!fs.existsSync(targetFolder)) {
+    notExistsFolder.push(path.basename(targetFolder));
+    targetFolder = path.resolve(targetFolder, "..");
+  }
+
+  notExistsFolder.reverse().forEach(element => {
+    targetFolder = path.resolve(targetFolder,element);
+    fs.mkdirSync(targetFolder);
+  });
 }
 
 function callFs(func: (...args: any[]) => void, ...args: any[]): Promise<any[]> {
