@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { DOMParser, XMLSerializer } from "xmldom";
 import * as xmlLib from "libxmljs";
 import * as path from "path";
-import { NUnitXmlUtil } from "../../../../src/commands/test/util/nunit-xml-util";
+import { NUnitXmlUtil } from "../../../../src/commands/test/lib/nunit-xml-util";
 
 describe("nunit xml util", function() {
   let strXml =

@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { DOMParser, XMLSerializer } from "xmldom";
 import * as xmlLib from "libxmljs";
 import * as path from "path";
-import { JUnitXmlUtil } from "../../../../src/commands/test/util/junit-xml-util";
+import { JUnitXmlUtil } from "../../../../src/commands/test/lib/junit-xml-util";
 
 describe("junit xml util", function() {
   let strXml =

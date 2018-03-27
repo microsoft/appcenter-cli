@@ -7,7 +7,7 @@ import { AppiumPreparer } from "../lib/appium-preparer";
 import { parseTestParameters } from "../lib/parameters-parser";
 import { parseIncludedFiles } from "../lib/included-files-parser";
 import { Messages } from "../lib/help-messages";
-import { JUnitXmlUtil } from "../util/junit-xml-util";
+import { JUnitXmlUtil } from "../lib/junit-xml-util";
 
 @help(Messages.TestCloud.Commands.RunAppium)
 export default class RunAppiumTestsCommand extends RunTestsCommand {

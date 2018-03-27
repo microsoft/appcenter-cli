@@ -1,7 +1,7 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as os from "os";
 import * as path from "path";
-import { NUnitXmlUtil } from "../util/nunit-xml-util";
+import { NUnitXmlUtil } from "../lib/nunit-xml-util";
 import { CommandArgs, help, name, longName, hasArg, ErrorCodes, required } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { UITestPreparer } from "../lib/uitest-preparer";
