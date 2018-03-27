@@ -134,7 +134,7 @@ export default class ShowCommand extends AppCommand {
   private async getProperties(client: AppCenterClient, app: DefaultApp, eventName: string, startDate: Date, endDate: Date, appVersions: string[] | undefined, limit: any): Promise<IPropertyStatistics[]> {
     let propertiesNames: string[];
     try {
-      const httpContent = await <Promise<ClientResponse<models.EventProperties>>> limit(() => clientRequest<models.EventProperties>((cb) => client.analytics.eventPropertiesMethod(eventName, app.ownerName, app.appName, cb)));
+      const httpContent = await (limit(() => clientRequest<models.EventProperties>((cb) => client.analytics.eventPropertiesMethod(eventName, app.ownerName, app.appName, cb))) as Promise<ClientResponse<models.EventProperties>>);
 
       propertiesNames = httpContent.result.eventProperties;
     } catch (error) {
@@ -152,10 +152,10 @@ export default class ShowCommand extends AppCommand {
 
   private async getPropertyValueStatistics(client: AppCenterClient, app: DefaultApp, eventName: string, eventPropertyName: string, startDate: Date, endDate: Date, appVersions: string[] | undefined, limit: any): Promise<IPropertyValueStatistics[]> {
     try {
-      const httpContent = await <Promise<ClientResponse<models.EventPropertyValues>>> limit(() => clientRequest<models.EventPropertyValues>((cb) => client.analytics.eventPropertyCounts(eventName, eventPropertyName, startDate, app.ownerName, app.appName, {
+      const httpContent = await (limit(() => clientRequest<models.EventPropertyValues>((cb) => client.analytics.eventPropertyCounts(eventName, eventPropertyName, startDate, app.ownerName, app.appName, {
         end: endDate,
         versions: appVersions
-      }, cb)));
+      }, cb))) as Promise<ClientResponse<models.EventPropertyValues>>);
 
       return httpContent.result.values.map((value) => ({
         value: value.name,

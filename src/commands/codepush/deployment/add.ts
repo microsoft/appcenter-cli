@@ -34,8 +34,7 @@ export default class CodePushAddCommand extends AppCommand {
       if (error.statusCode === 404) {
         const appNotFoundErrorMsg = `The app ${this.identifier} does not exist. Please double check the name, and provide it in the form owner/appname. \nRun the command ${chalk.bold(`${scriptName} apps list`)} to see what apps you have access to.`;
         return failure(ErrorCodes.NotFound, appNotFoundErrorMsg);
-      }
-      else if (error.statusCode === 409) {
+      } else if (error.statusCode === 409) {
         const deploymentExistErrorMsg = `A deployment named ${chalk.bold(this.newDeploymentName)} already exists.`;
         return failure(ErrorCodes.Exception, deploymentExistErrorMsg);
       } else {

@@ -18,6 +18,7 @@
   "preferGlobal": true,
   "scripts": {
     "build": "gulp build",
+    "tslint": "tslint --project .",
     "test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s",
     "watch-test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s --watch",
     "autorest:clean": "rimraf src/util/apis/generated",
@@ -78,6 +79,8 @@
     "run-sequence": "^1.2.2",
     "sinon": "^1.17.6",
     "ts-node": "^3.3.0",
+    "tslint": "^5.9.1",
+    "tslint-microsoft-contrib": "^5.0.3",
     "typescript": "^2.5.2"
   },
   "dependencies": {

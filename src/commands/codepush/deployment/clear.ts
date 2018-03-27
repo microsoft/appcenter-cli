@@ -1,5 +1,5 @@
 import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, position, name } from "../../../util/commandline";
-import { AppCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, clientRequest } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
 
@@ -28,7 +28,7 @@ export default class CodePushClearDeploymentCommand extends AppCommand {
 
     try {
       debug("Clearing release history");
-      const httpResponse = await out.progress(`Clearing release history for deployment ${this.deploymentName}...`,
+      await out.progress(`Clearing release history for deployment ${this.deploymentName}...`,
         clientRequest((cb) => client.codePushDeploymentReleases.deleteMethod(this.deploymentName, app.ownerName, app.appName, cb)));
     } catch (error) {
       debug(`Failed to clear deployment history - ${inspect(error)}`);

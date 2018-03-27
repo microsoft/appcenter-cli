@@ -3,12 +3,10 @@
 import * as _ from "lodash";
 import * as os from "os";
 import { isatty } from "tty";
-import { inspect } from "util";
 import * as chalk from "chalk";
 
 const debug = require("debug")("appcenter-cli:util:commandline:help");
 
-import { values, identity } from "lodash";
 const Table = require("cli-table2");
 
 import {
@@ -16,7 +14,7 @@ import {
 } from "./option-decorators";
 
 import {
-  OptionDescription, OptionsDescription, PositionalOptionDescription, PositionalOptionsDescription
+  OptionDescription, PositionalOptionDescription
 } from "./option-parser";
 
 import { out, padLeft, padRight, setDebug } from "../interaction";

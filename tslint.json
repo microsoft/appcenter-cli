@@ -1,0 +1,101 @@
+{
+  "rules": {
+    "arrow-parens": true,
+    "ban": [true,
+      ["_","extend"],
+      ["_","isNull"],
+      ["_", "isDefined"]
+    ],
+    "class-name": true,
+    "curly": true,
+    "eofline": true,
+    "indent": [true, "spaces", 2],
+    "insecure-random": true,
+    "label-position": true,
+    "no-angle-bracket-type-assertion": true,
+    "no-arg": true,
+    "no-banned-terms": true,
+    "no-consecutive-blank-lines": true,
+    "no-construct": true,
+    "no-cookies": true,
+    "no-debugger": true,
+    "no-delete-expression": true,
+    "no-disable-auto-sanitization": true,
+    "no-document-domain": true,
+    "no-document-write": true,
+    "no-duplicate-variable": true,
+    "no-empty": true,
+    "no-eval": true,
+    "no-exec-script": true,
+    "no-function-constructor-with-string-args": true,
+    "no-http-string": [true,
+      "http://www.example.com/?.*",
+      "http://www.examples.com/?.*"
+    ],
+    "no-inner-html": true,
+    "no-octal-literal": true,
+    "no-reserved-keywords": false,
+    "no-shadowed-variable": false, // Not sure if it makes sense
+    "no-string-based-set-immediate": true,
+    "no-string-based-set-interval": true,
+    "no-string-based-set-timeout": true,
+    "no-trailing-whitespace": true,
+    "no-unnecessary-initializer": true,
+    "no-unused-expression": true,
+    "no-unused-variable": [true, {"ignore-pattern": "^_"}],
+    "no-use-before-declare": true,
+    "no-var-keyword": true,
+    "non-literal-require": true,
+    "object-literal-key-quotes": [true, "as-needed"],
+    "one-line": [true,
+      "check-open-brace",
+      "check-catch",
+      "check-else",
+      "check-whitespace"
+    ],
+    "prefer-const": true,
+    "prefer-for-of": false,
+    "possible-timing-attack": true,
+    "quotemark": [true, "double", "avoid-escape"],
+    "radix": true,
+    "semicolon": [true, "always"],
+    "space-before-function-paren": [true, {
+      "anonymous": "always",
+      "named": "never",
+      "asyncArrow": "always"
+    }],
+    "triple-equals": [true, "allow-null-check"],
+    "typedef-whitespace": [true, {
+      "callSignature": "noSpace",
+      "catchClause": "noSpace",
+      "indexSignature": "space",
+      "property-declaration": "noSpace",
+      "variable-declaration": "noSpace"
+    },
+    {
+      "call-signature": "onespace",
+      "index-signature": "onespace",
+      "parameter": "onespace",
+      "property-declaration": "onespace",
+      "variable-declaration": "onespace"
+    }],
+    "variable-name": [
+      false,
+      "allow-pascal-case",
+      "ban-keywords",
+      "check-format"
+    ],
+    "whitespace": [true,
+      "check-branch",
+      "check-decl",
+      "check-operator",
+      "check-module",
+      "check-separator",
+      "check-type",
+      "check-typecast"
+    ]
+  },
+  "rulesDirectory": [
+    "node_modules/tslint-microsoft-contrib"
+  ]
+}
