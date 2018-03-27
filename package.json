@@ -97,7 +97,7 @@
     "mdfind": "^1.0.0",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
-    "ms-rest": "^2.3.0",
+    "ms-rest": "^2.3.2",
     "omelette": "^0.4.0",
     "opener": "^1.4.3",
     "p-limit": "^1.0.0",
