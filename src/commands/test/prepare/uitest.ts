@@ -4,8 +4,6 @@ import { PrepareTestsCommand } from "../lib/prepare-tests-command";
 import { out } from "../../../util/interaction";
 import { Messages } from "../lib/help-messages";
 
-const debug = require("debug")("appcenter-cli:commands:tests:prepare");
-
 @help(Messages.TestCloud.Commands.PrepareUITests)
 export default class PrepareUITestCommand extends PrepareTestsCommand {
   @help(Messages.TestCloud.Arguments.AppPath)

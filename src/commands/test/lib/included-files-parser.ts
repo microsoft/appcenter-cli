@@ -21,9 +21,9 @@ function parseIncludedFileFromSinglePath(includedFile: string, rootDir: string):
 
   if (path.isAbsolute(includedFile)) {
     const targetPath = path.relative(rootDir, includedFile);
-    if (targetPath.indexOf("..") != -1) {
+    if (targetPath.indexOf("..") !== -1) {
       throw new Error(`Invalid included file: "${includedFile}". ` +
-                      `If only a single path is used, it must be inside directory "${rootDir}"`);
+        `If only a single path is used, it must be inside directory "${rootDir}"`);
     }
 
     return {

@@ -43,6 +43,7 @@ export class PrepareTestsCommand extends Command {
 
   // Override this if you need to validate options
   protected async validateOptions(): Promise<void> {
+    return;
   }
 
   // TODO: There is technical debt here.

@@ -1,5 +1,4 @@
 // Functions to support outputting stuff to the user
-const debug = require("debug")("appcenter-cli:util:interaction:out");
 import { inspect } from "util";
 
 import { isQuiet, formatIsJson, formatIsCsv, formatIsParsingCompatible } from "./io-options";

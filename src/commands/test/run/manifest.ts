@@ -27,6 +27,7 @@ export default class RunManifestTestsCommand extends RunTestsCommand {
   }
 
   protected async cleanupArtifactsDir(artifactsDir: string): Promise<void> {
+    return;
   }
 
   protected getSourceRootDir() {

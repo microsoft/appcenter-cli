@@ -29,7 +29,7 @@ export default class CodePushRenameDeploymentCommand extends AppCommand {
 
     try {
       debug("Renaming CodePush deployments");
-      const httpResponse = await out.progress(`Renaming CodePush deployments...`,
+      await out.progress(`Renaming CodePush deployments...`,
         clientRequest((cb) => client.codePushDeployments.update(this.currentDeploymentName, app.ownerName, app.appName, this.newDeploymentName, cb)));
     } catch (error) {
       debug(`Failed to rename deployments - ${inspect(error)}`);

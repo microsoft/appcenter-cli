@@ -55,7 +55,7 @@ export class PathResolver {
       return null;
     }
 
-    if (relativePath.indexOf("..") != -1) {
+    if (relativePath.indexOf("..") !== -1) {
       throw new Error("Pattern cannot contain files that are outside of workspace directory");
     }
 

@@ -26,17 +26,18 @@ export abstract class GenerateCommand extends Command {
 
   // Override this if you need to validate options
   protected async validateOptions(): Promise<void> {
+    return;
   }
 
   protected abstract zipPathAndroid: string;
   protected abstract zipPathiOS: string;
 
   protected isIOS(): boolean {
-    return (this.platform.toLowerCase() == "ios");
+    return (this.platform.toLowerCase() === "ios");
   }
 
   protected isAndroid(): boolean {
-    return (this.platform.toLowerCase() == "android");
+    return (this.platform.toLowerCase() === "android");
   }
 
   public async runNoClient(): Promise<CommandResult> {

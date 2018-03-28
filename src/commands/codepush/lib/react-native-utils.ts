@@ -21,6 +21,7 @@ export interface VersionSearchParams {
 
 export async function getReactNativeProjectAppVersion(versionSearchParams: VersionSearchParams, projectRoot?: string): Promise<string> {
   projectRoot = projectRoot || process.cwd();
+  /* tslint:disable-next-line:non-literal-require */
   const projectPackageJson: any = require(path.join(projectRoot, "package.json"));
   const projectName: string = projectPackageJson.name;
 
@@ -256,11 +257,12 @@ export function isValidOS(os: string): boolean {
 }
 
 export function isValidPlatform(platform: string): boolean {
-  return platform.toLowerCase() == "react-native";
+  return platform.toLowerCase() === "react-native";
 }
 
 export function isReactNativeProject(): boolean {
   try {
+    /* tslint:disable-next-line:non-literal-require */
     const projectPackageJson: any = require(path.join(process.cwd(), "package.json"));
     const projectName: string = projectPackageJson.name;
     if (!projectName) {

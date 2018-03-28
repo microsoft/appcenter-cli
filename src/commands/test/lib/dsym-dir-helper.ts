@@ -18,7 +18,7 @@ export async function getDSymFile(dSymDir: string): Promise<TestRunFile> {
     });
   });
 
-  if (files.length == 0) {
+  if (files.length === 0) {
     throw new Error(`Invalid dSYM directory: cannot find any symbol file (${pattern})`);
   } else if (files.length > 1) {
     throw new Error(`Invalid dSYM directory: found more than one symbol file (${pattern})`);

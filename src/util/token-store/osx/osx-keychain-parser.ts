@@ -117,7 +117,3 @@ export class OsxSecurityParsingStream extends stream.Transform {
 export function createOsxSecurityParsingStream(): NodeJS.ReadWriteStream {
   return es.pipeline(es.split(), new OsxSecurityParsingStream());
 }
-
-export namespace createOsxSecurityParsingStream {
-  const ParsingStream = OsxSecurityParsingStream;
-}

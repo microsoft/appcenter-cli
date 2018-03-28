@@ -14,6 +14,77 @@ import { isDirectory } from "./file-utils";
 // Do not throw an exception if either of these modules are missing, as they may not be needed by the
 // consumer of this file.
 const HASH_ALGORITHM = "sha256";
+export class PackageManifest {
+  private _map: Map<string, string>;
+
+  public constructor(map?: Map<string, string>) {
+    if (!map) {
+      map = new Map<string, string>();
+    }
+    this._map = map;
+  }
+
+  public toMap(): Map<string, string> {
+    return this._map;
+  }
+
+  public computePackageHash(): string {
+    let entries: string[] = [];
+    this._map.forEach((hash: string, name: string): void => {
+      entries.push(name + ":" + hash);
+    });
+
+    // Make sure this list is alphabetically ordered so that other clients
+    // can also compute this hash easily given the update contents.
+    entries = entries.sort();
+
+    return crypto.createHash(HASH_ALGORITHM)
+                  .update(JSON.stringify(entries))
+                  .digest("hex");
+  }
+
+  public serialize(): string {
+    const obj: any = {};
+
+    this._map.forEach(function (value, key) {
+      obj[key] = value;
+    });
+
+    return JSON.stringify(obj);
+  }
+
+  public static deserialize(serializedContents: string): PackageManifest {
+    try {
+      const obj: any = JSON.parse(serializedContents);
+      const map = new Map<string, string>();
+
+      for (const key of Object.keys(obj)) {
+        map.set(key, obj[key]);
+      }
+
+      return new PackageManifest(map);
+    } catch (e) {
+      // Eat it
+      return;
+    }
+  }
+
+  public static normalizePath(filePath: string): string {
+    //replace all backslashes coming from cli running on windows machines by slashes
+    return filePath.replace(/\\/g, "/");
+  }
+
+  public static isIgnored(relativeFilePath: string): boolean {
+    const __MACOSX = "__MACOSX/";
+    const DS_STORE = ".DS_Store";
+    const CODEPUSH_METADATA = ".codepushrelease";
+    return _.startsWith(relativeFilePath, __MACOSX)
+      || relativeFilePath === DS_STORE
+      || _.endsWith(relativeFilePath, "/" + DS_STORE)
+      || relativeFilePath === CODEPUSH_METADATA
+      || _.endsWith(relativeFilePath, "/" + CODEPUSH_METADATA);
+  }
+}
 
 export async function generatePackageHashFromDirectory(directoryPath: string, basePath: string): Promise<string> {
   try {
@@ -85,74 +156,4 @@ export function hashStream(readStream: stream.Readable): Promise<string> {
 
     readStream.pipe(hashStream);
   });
-}
-
-export class PackageManifest {
-  private _map: Map<string, string>;
-
-  public constructor(map?: Map<string, string>) {
-    if (!map) {
-      map = new Map<string, string>();
-    }
-    this._map = map;
-  }
-
-  public toMap(): Map<string, string> {
-    return this._map;
-  }
-
-  public computePackageHash(): string {
-    let entries: string[] = [];
-    this._map.forEach((hash: string, name: string): void => {
-      entries.push(name + ":" + hash);
-    });
-
-    // Make sure this list is alphabetically ordered so that other clients
-    // can also compute this hash easily given the update contents.
-    entries = entries.sort();
-
-    return crypto.createHash(HASH_ALGORITHM)
-                  .update(JSON.stringify(entries))
-                  .digest("hex");
-  }
-
-  public serialize(): string {
-    const obj: any = {};
-
-    this._map.forEach(function (value, key) {
-      obj[key] = value;
-    });
-
-    return JSON.stringify(obj);
-  }
-
-  public static deserialize(serializedContents: string): PackageManifest {
-    try {
-      const obj: any = JSON.parse(serializedContents);
-      const map = new Map<string, string>();
-
-      for (const key of Object.keys(obj)) {
-        map.set(key, obj[key]);
-      }
-
-      return new PackageManifest(map);
-    } catch (e) {
-    }
-  }
-
-  public static normalizePath(filePath: string): string {
-    //replace all backslashes coming from cli running on windows machines by slashes
-    return filePath.replace(/\\/g, "/");
-  }
-
-  public static isIgnored(relativeFilePath: string): boolean {
-    const __MACOSX = "__MACOSX/";
-    const DS_STORE = ".DS_Store";
-    const CODEPUSH_METADATA = ".codepushrelease";
-    return _.startsWith(relativeFilePath, __MACOSX)
-      || relativeFilePath === DS_STORE
-      || _.endsWith(relativeFilePath, "/" + DS_STORE)
-      || relativeFilePath === CODEPUSH_METADATA
-      || _.endsWith(relativeFilePath, "/" + CODEPUSH_METADATA);
-  }
 }

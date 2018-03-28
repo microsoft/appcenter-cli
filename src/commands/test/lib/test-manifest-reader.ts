@@ -65,9 +65,6 @@ export class TestManifestReader {
   }
 
   private async readTestFiles(json: (string | IFileDescriptionJson)[]): Promise<TestRunFile[]> {
-    const resolvedPaths = { };
-    const result: TestRunFile[] = [];
-
     const filePatterns = json.filter((f) => typeof f === "string");
     const fileDescriptions = json.filter((f) => typeof f !== "string");
 

@@ -25,7 +25,7 @@ export function getProfileDirParent(): string {
 
 function existsSync(path: string): boolean {
   try {
-    const s = fs.statSync(path);
+    fs.statSync(path);
     return true;
   } catch (err) {
     if (err.code === "ENOENT") {

@@ -17,7 +17,7 @@ export type Headers = { [headerName: string]: string };
 export default class LegacyCodePushServiceClient {
   private static API_VERSION: number = 2;
 
-  constructor(private accessKey: string, private serverUrl: string, private app: DefaultApp, private customHeaders?: Headers) {
+  constructor(private accessKey: string, private serverUrl: string, private app: DefaultApp) {
     if (!accessKey) { throw new Error("A token must be specified to execute server calls."); }
     if (!serverUrl) { throw new Error("A server url must be specified to execute server calls."); }
   }
@@ -25,7 +25,7 @@ export default class LegacyCodePushServiceClient {
   public release(deploymentName: string, filePath: string, updateMetadata: PackageInfo): Promise<void> {
     const appName = this.app.identifier;
     return new Promise<void>((resolve, reject) => {
-        let options = {
+        const options = {
           url: this.serverUrl + this.urlEncode(`/apps/${this.appNameParam(appName)}/deployments/${deploymentName}/release`),
           headers: {
             Accept: `application/vnd.code-push.v${LegacyCodePushServiceClient.API_VERSION}+json`,
@@ -84,4 +84,3 @@ export default class LegacyCodePushServiceClient {
     return response && response.body ? response.body : error.message;
   }
 }
-

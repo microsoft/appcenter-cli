@@ -229,15 +229,15 @@ export class UITestPreparer {
 
       if (!match) {
         throw new Error(`Found test-cloud.exe at "${path.dirname(latestTestCloudPath)}", but cannot recognize its version.${os.EOL}` +
-                        `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` +
-                        `Minimum required version is "${this.getMinimumVersionString()}".`);
+          `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` +
+          `Minimum required version is "${this.getMinimumVersionString()}".`);
       }
 
       const [, major, minor, build] = match;
-      if (!this.hasMinimumTestCloudVersion(parseInt(major), parseInt(minor), parseInt(build))) {
+      if (!this.hasMinimumTestCloudVersion(parseInt(major, 10), parseInt(minor, 10), parseInt(build, 10))) {
         throw new Error(`The latest version of test-cloud.exe, found at "${path.dirname(latestTestCloudPath)}", ` +
-                        `is too old.${os.EOL}` +
-                        `Please upgrade the NuGet package to version ${this.getMinimumVersionString()} or higher.`);
+          `is too old.${os.EOL}` +
+          `Please upgrade the NuGet package to version ${this.getMinimumVersionString()} or higher.`);
       } else {
         return path.dirname(latestTestCloudPath);
       }

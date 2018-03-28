@@ -2,7 +2,6 @@ import { Command, CommandResult, help, success } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { AppCenterClient } from "../../util/apis";
 
-const debug = require("debug")("appcenter-cli:commands:orgs:list");
 import { getOrgsNamesList } from "./lib/org-users-helper";
 
 @help("Lists organizations in which current user is collaborator")

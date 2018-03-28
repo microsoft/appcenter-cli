@@ -6,8 +6,6 @@ import * as Process from "process";
 import { setupAutoCompleteForShell } from "../util/commandline/autocomplete";
 import { out } from "../util/interaction";
 
-const debug = require("debug")("appcenter-cli:commands:setup-autocomplete");
-
 @help("Setup tab completion for your shell")
 export default class SetupAutoCompleteCommand extends Command {
   private static readonly supportedShells = ["bash", "zsh", "fish"];

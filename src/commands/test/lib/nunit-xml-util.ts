@@ -13,7 +13,6 @@ export class NUnitXmlUtil extends XmlUtil {
 
     const self = this;
     return new Promise<Document>((resolve, reject) => {
-      const xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
       fs.createReadStream(pathToArchive)
         .pipe(unzip.Parse())
         .on("entry", function (entry: unzip.Entry) {

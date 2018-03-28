@@ -9,7 +9,6 @@ import { models, clientRequest, ClientResponse } from "../util/apis";
 import { TokenValueType } from "../util/token-store";
 import { logout } from "./lib/logout";
 
-
 const debug = require("debug")("appcenter-cli:commands:login");
 
 @help("Log in")

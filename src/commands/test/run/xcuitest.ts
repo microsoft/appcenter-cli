@@ -58,7 +58,7 @@ export default class RunXCUITestCommand extends RunTestsCommand {
       (appPath) => /^(?:.(?!-Runner\.app))+\.app$/.test(appPath)
     );
 
-    if (appPaths.length == 0) {
+    if (appPaths.length === 0) {
       throw new TestCloudError(`unable to find app within ${this.buildDir}`);
     }
     if (appPaths.length > 1) {

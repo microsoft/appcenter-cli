@@ -29,4 +29,3 @@ export function telemetryFilter(commandName: string, telemetryIsEnabled: boolean
     });
   };
 }
-

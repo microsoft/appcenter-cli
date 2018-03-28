@@ -10,14 +10,9 @@ import * as fs from "fs";
 import * as rx from "rx-lite";
 import { toPairs } from "lodash";
 
-import { profileDirName } from "../../misc/constants";
-
 const debug = require("debug")("appcenter-cli:util:token-store:file:file-token-store");
 
 import { TokenEntry, TokenStore, TokenKeyType, TokenValueType } from "../token-store";
-
-const defaultPath = profileDirName;
-const defaultFile = "tokens.json";
 
 export class FileTokenStore implements TokenStore {
   private filePath: string;

@@ -29,8 +29,8 @@ export function parseRange(byteRange: string): IByteRange {
   if (separatorIndex === -1) {
     throw new Error(`Invalid byte range: "${byteRange}"`);
   }
-  const start = parseInt(byteRange.substr(0, separatorIndex));
-  const end = parseInt(byteRange.substr(separatorIndex + 1, byteRange.length - separatorIndex - 1));
+  const start = parseInt(byteRange.substr(0, separatorIndex), 10);
+  const end = parseInt(byteRange.substr(separatorIndex + 1, byteRange.length - separatorIndex - 1), 10);
 
   if (isNaN(start) || isNaN(end) || start < 0 || start > end) {
     throw new Error(`Invalid byte range: "${byteRange}"`);

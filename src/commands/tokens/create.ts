@@ -5,8 +5,6 @@ import { out } from "../../util/interaction";
 import { reportToken } from "./lib/format-token";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
-const debug = require("debug")("appcenter-cli:commands:apps:create");
-
 @help("Create a new API token")
 export default class TokenCreateCommand extends Command {
   constructor(args: CommandArgs) {

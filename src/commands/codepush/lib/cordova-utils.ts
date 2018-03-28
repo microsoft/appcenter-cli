@@ -35,7 +35,7 @@ export function isValidOS(os: string): boolean {
 }
 
 export function isValidPlatform(platform: string): boolean {
-  return platform.toLowerCase() == "cordova";
+  return platform.toLowerCase() === "cordova";
 }
 
 // Check whether the Cordova or PhoneGap CLIs are

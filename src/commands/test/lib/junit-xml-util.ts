@@ -110,7 +110,7 @@ export class JUnitXmlUtil extends XmlUtil {
     const testCases: Node[] = this.collectAllElements(xml, "testcase");
 
     testCases.forEach((testCase: Node) => {
-      if (this.collectAllElements(testCase, "skipped").length == 0) {
+      if (this.collectAllElements(testCase, "skipped").length === 0) {
         return;
       }
 

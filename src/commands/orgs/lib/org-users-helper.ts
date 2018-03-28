@@ -1,8 +1,6 @@
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { handleHttpError } from "../../../util/apis/create-client";
 
-const debug = require("debug")("appcenter-cli:commands:orgs:lib:org-users-helper");
-
 export async function getOrgUsers(client: AppCenterClient, organization: string, debug: Function): Promise<models.OrganizationUserResponse[]> {
   try {
     const httpResponse = await clientRequest<models.OrganizationUserResponse[]>((cb) => client.users.listForOrg(organization, cb));

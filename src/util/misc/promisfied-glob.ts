@@ -19,7 +19,7 @@ export function globSingleFile(pattern: string, options?: g.IOptions): Promise<s
         reject(err);
       }
 
-      if (matches.length == 0) {
+      if (matches.length === 0) {
         reject(new Error(`Cannot find any file that matches pattern "${pattern}"`));
       } else if (matches.length > 1) {
         reject(new Error(`Found more than one file that matches pattern "${pattern}`));

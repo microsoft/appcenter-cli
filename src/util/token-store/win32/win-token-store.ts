@@ -15,8 +15,6 @@ import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../token-s
 const debug = require("debug")("appcenter-cli:util:token-store:win32:win-token-store");
 import { inspect } from "util";
 
-type ReadableStream = NodeJS.ReadableStream;
-type WritableStream = NodeJS.WritableStream;
 type Duplex = stream.Duplex;
 
 const credExePath = path.join(__dirname, "../../../../bin/windows/creds.exe");

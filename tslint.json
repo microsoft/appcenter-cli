@@ -2,9 +2,7 @@
   "rules": {
     "arrow-parens": true,
     "ban": [true,
-      ["_","extend"],
-      ["_","isNull"],
-      ["_", "isDefined"]
+      ["_","extend"]
     ],
     "class-name": true,
     "curly": true,

@@ -48,10 +48,12 @@ const environmentsData: EnvironmentsFile = {
       description: "Production"
     },
     local: {
+      /* tslint:disable:no-http-string */
       endpoint: process.env[appCenterEndpointEnvVar] || "http://localhost:1700",
       loginEndpoint: process.env[appCenterLoginEndpointEnvVar] || null,
       portalEndpoint: process.env[appCenterPortalEndpointEnvVar] || "http://localhost:8080",
       description: "Local Development"
+      /* tslint:enable:no-http-string */
     }
   }
 };

@@ -1,6 +1,9 @@
-import { AppCommand, CommandArgs, CommandResult,
-         help, success, shortName, longName, required, hasArg,
-         failure, ErrorCodes } from "../../../util/commandline";
+import {
+  AppCommand, CommandArgs, CommandResult,
+  help, success, shortName, longName, required, hasArg,
+  failure, ErrorCodes
+} from "../../../util/commandline";
+
 import { TestCloudUploader, StartedTestRun } from "./test-cloud-uploader";
 import { StateChecker } from "./state-checker";
 import { AppCenterClient } from "../../../util/apis";
@@ -93,13 +96,15 @@ export abstract class RunTestsCommand extends AppCommand {
     this.include = this.fixArrayParameter(this.include);
 
     if (this.timeoutSec && typeof this.timeoutSec === "string") {
-      this.timeoutSec = parseInt(this.timeoutSec);
+      this.timeoutSec = parseInt(this.timeoutSec, 10);
     }
   }
 
   // Override this if you need to validate options
   protected async validateOptions(): Promise<void> {
+    return;
   }
+
   // TODO: There is technical debt here.
   // There is a lot of confusion and even duplicated code with respect to test params,
   // included files and responsibility of prepare vs run.

@@ -65,7 +65,7 @@ export class XCUITestPreparer {
 
   private async generateTestIpa(): Promise<void> {
     const runnerAppPaths = await pglob.glob(path.join(this.buildDir, "*-Runner.app"));
-    if (runnerAppPaths.length == 0) {
+    if (runnerAppPaths.length === 0) {
       throw new TestCloudError(`Unable to find test runner app within ${this.buildDir}`);
     }
     if (runnerAppPaths.length > 1) {

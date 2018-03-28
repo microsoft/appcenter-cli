@@ -47,10 +47,6 @@ export function runHelp(commandPrototype: any, commandObj: any): void {
   }
 }
 
-function hasOptions(obj: any): boolean {
-  return Object.keys(obj).length > 0;
-}
-
 function getCommandHelp(commandObj: any): string {
   const helpString = getClassHelpText(commandObj.constructor);
   return !!helpString ? helpString : "No help text for command. Dev, fix it!";
@@ -237,10 +233,6 @@ function sortOptionDescriptions(options: OptionDescription[]): OptionDescription
     .reverse() // options from a top prototype are added first, reversing order
     .sortBy([(opt: OptionDescription) => opt.required ? 0 : 1]) // required options should be shown first
     .value();
-}
-
-function highlightString(stringToStyle: string): string {
-  return chalk.bold(stringToStyle);
 }
 
 function filterOptionDescriptions(options: OptionDescription[], isCommon: boolean): OptionDescription[] {

@@ -43,6 +43,7 @@ export namespace prompt {
       });
 
       const timeoutPromise: Promise<boolean> = new Promise((resolve, reject) => {
+        /* tslint:disable-next-line:no-string-based-set-timeout */
         timerId = setTimeout(resolve, timeoutMS);
       }).then(() => {
         (confirmPrompt as any).ui.close();

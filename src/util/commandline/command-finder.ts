@@ -38,10 +38,6 @@ function isDir(dispatchRoot: string, pathParts: string[]): boolean {
   return checkStats(dispatchRoot, pathParts, (s) => s.isDirectory());
 }
 
-function isFile(dispatchRoot: string, pathParts: string[]): boolean {
-  return checkStats(dispatchRoot, pathParts, (s) => s.isFile());
-}
-
 function normalizeCommandNames(command: string[]): string[] {
   return command.map((part) => part.toLowerCase());
 }

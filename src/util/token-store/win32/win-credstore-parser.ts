@@ -36,7 +36,6 @@ class WinCredStoreParsingStream extends Transform {
   _transform(chunk: any, encoding: string, callback: {(err?: Error): void}): void {
 
     const line = chunk.toString();
-    const count = 0;
 
     if (line === "") {
       if (this.currentEntry) {

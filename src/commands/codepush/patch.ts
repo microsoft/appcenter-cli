@@ -83,7 +83,7 @@ export default class PatchCommand extends AppCommand {
       patch.rollout = rollout;
     }
 
-    if (this.releaseLabel == null || this.releaseLabel == "") {
+    if (this.releaseLabel == null || this.releaseLabel === "") {
       debug("Release label is not set, get latest...");
       this.releaseLabel = await this.getLatestReleaseLabel(client, app);
     }

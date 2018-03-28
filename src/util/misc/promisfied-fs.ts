@@ -57,7 +57,7 @@ export function exists(path: string | Buffer): Promise<boolean> {
 }
 
 export function mkdir(path: string | Buffer): Promise<void> {
-  return callFs(fs.mkdir, path).then(() => {});
+  return callFs(fs.mkdir, path).then(() => { return; });
 }
 
 export function mkdirp(path: string): Promise<string>;
@@ -129,16 +129,16 @@ export function rmDir(source: string, recursive: boolean = true): Promise<void> 
       });
     });
   } else {
-    return callFs(fs.rmdir, source).then(() => {});
+    return callFs(fs.rmdir, source).then(() => { return; });
   }
 }
 
 export function unlink(filePath: string): Promise<void> {
-  return callFs(fs.unlink, filePath).then(() => {});
+  return callFs(fs.unlink, filePath).then(() => { return; });
 }
 
 export function close(fd: number): Promise<void> {
-  return callFs(fs.close, fd).then(() => {});
+  return callFs(fs.close, fd).then(() => { return; });
 }
 
 export function openTempFile(prefix: string): Promise<{path: string, fd: number}>;
@@ -156,7 +156,7 @@ export async function directoryExists(path: string): Promise<boolean> {
  }
 
 export async function access(path: string | Buffer, mode: number): Promise<void> {
-  return callFs(fs.access, path, mode).then(() => {});
+  return callFs(fs.access, path, mode).then(() => { return; });
 }
 
 export async function walk(dir: string): Promise<string[]> {

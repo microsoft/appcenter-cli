@@ -71,7 +71,6 @@ export class CalabashPreparer {
   }
 
   private generateTestParameterArgs(): string {
-    const result: string = "";
     return this.testParameters.map(parseTestParameter).map((p) => `"${p.key}:${p.value}"`).join(" ");
   }
 

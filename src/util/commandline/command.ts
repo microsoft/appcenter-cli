@@ -177,6 +177,7 @@ export class Command {
 
   protected getVersion(): string {
     const packageJsonPath = path.join(__dirname, "../../../package.json");
+    /* tslint:disable-next-line:non-literal-require */
     const packageJson: any = require(packageJsonPath);
     return packageJson.version;
   }

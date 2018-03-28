@@ -4,8 +4,6 @@ import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes
 import { out, prompt } from "../../util/interaction";
 import { AppCenterClient, clientRequest } from "../../util/apis";
 
-const debug = require("debug")("appcenter-cli:commands:apps:create");
-
 @help("Delete an API token")
 export default class AppDeleteCommand extends Command {
   constructor(args: CommandArgs) {

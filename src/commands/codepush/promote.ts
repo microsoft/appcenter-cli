@@ -89,7 +89,7 @@ export default class CodePushPromoteCommand extends AppCommand {
 
     try {
       debug("Promote CodePush release");
-      const httpRequest = await out.progress("Promoting CodePush release...", clientRequest<models.CodePushRelease>(
+      await out.progress("Promoting CodePush release...", clientRequest<models.CodePushRelease>(
         (cb) => client.codePushDeployments.promote(this.sourceDeploymentName, this.destinationDeploymentName, app.ownerName,
         app.appName, { release: promote }, cb)));
     } catch (error) {

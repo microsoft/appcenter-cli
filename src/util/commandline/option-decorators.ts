@@ -69,8 +69,6 @@ interface PropertyDecorator {
   (proto: any, propertyKey: string | Symbol): void;
 }
 
-type ClassDecorator = <TFunction extends Function>(target: TFunction) => TFunction | void;
-
 interface PropertyDecoratorBuilder<T> {
   (input: T): PropertyDecorator;
 }

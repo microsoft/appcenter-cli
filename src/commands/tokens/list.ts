@@ -2,8 +2,6 @@ import { Command, CommandArgs, CommandResult, help, success } from "../../util/c
 import { out } from "../../util/interaction";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
-const debug = require("debug")("appcenter-cli:commands:apps:list");
-
 @help("Get a list of API tokens")
 export default class ApiTokenListCommand extends Command {
   constructor(args: CommandArgs) {
