@@ -17,14 +17,14 @@
   },
   "preferGlobal": true,
   "scripts": {
-    "build": "gulp build",
+    "build": "npm run tslint && gulp build:raw",
     "tslint": "tslint --project .",
-    "test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s",
+    "test": "npm run tslint && mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s",
     "watch-test": "mocha --compilers ts:ts-node/register --recursive ./test/**/*-test.[tj]s --watch",
     "autorest:clean": "rimraf src/util/apis/generated",
     "autorest": "npm run autorest:clean && node scripts/autorest.js",
     "clean": "gulp clean",
-    "prepublishOnly": "gulp prepublish",
+    "prepublishOnly": "npm run tslint && gulp prepublish",
     "download-swagger": "gulp download-swagger"
   },
   "repository": {
