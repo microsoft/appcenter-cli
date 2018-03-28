@@ -197,7 +197,7 @@ export abstract class RunTestsCommand extends AppCommand {
       } else if (err.errorMessage) {
         message = `${err.errorMessage}${os.EOL}${os.EOL}${helpMessage}`;
       } else {
-        if(!err.message) {
+        if (!err.message) {
           err.message = "Could not start your tests. Maybe your subscription has expired.";
         }
         message = `${err.message}${os.EOL}${os.EOL}${helpMessage}`;

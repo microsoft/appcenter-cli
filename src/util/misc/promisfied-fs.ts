@@ -103,8 +103,8 @@ export async function cpDir(source: string, target: string): Promise<void> {
 
 export function cpFile(source: string, target: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    let targetFolder = path.dirname(target);
-    if(!fs.existsSync(targetFolder)) {
+    const targetFolder = path.dirname(target);
+    if (!fs.existsSync(targetFolder)) {
       createLongPath(targetFolder);
     }
     const sourceStream = fs.createReadStream(source);
@@ -186,15 +186,15 @@ async function pathExists(path: string, isFile: boolean): Promise<boolean> {
 
 function createLongPath(target: string) {
   let targetFolder: string = target;
-  let notExistsFolder: string[] = [];
+  const notExistsFolder: string[] = [];
 
-  while(!fs.existsSync(targetFolder)) {
+  while (!fs.existsSync(targetFolder)) {
     notExistsFolder.push(path.basename(targetFolder));
     targetFolder = path.resolve(targetFolder, "..");
   }
 
-  notExistsFolder.reverse().forEach(element => {
-    targetFolder = path.resolve(targetFolder,element);
+  notExistsFolder.reverse().forEach((element) => {
+    targetFolder = path.resolve(targetFolder, element);
     fs.mkdirSync(targetFolder);
   });
 }
