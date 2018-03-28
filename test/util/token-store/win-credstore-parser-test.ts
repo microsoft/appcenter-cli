@@ -26,11 +26,6 @@ import { createParsingStream } from "../../../src/util/token-store/win32/win-cre
 import { TokenEntry } from "../../../src/util/token-store";
 import { WinTokenStore } from "../../../src/util/token-store/win32/win-token-store";
 
-
-interface DoneFunc {
-  (err?: Error): void;
-}
-
 // Dummy data for parsing tests
 const entries = {
   entry1:
@@ -150,9 +145,6 @@ describe("Parsing output of creds child process", function () {
   //
   // Helper functions to do each stage of the setup
   //
-  function addExpectedEntry(): Promise<void> {
-    return credStore.set(testTargetName, testToken);
-  }
 
   function runAndParseOutput(): Promise<void> {
     return new Promise<void>((resolve, reject) => {

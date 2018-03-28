@@ -17,6 +17,7 @@ describe("distribute groups download command", () => {
   const fakeToken = "c1o3d3e7";
   const fakeReleaseId = "1";
   const fakeDistributionGroupName = "fakeDistributionGroupName";
+  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const fakeDownloadUrl = "/fake/download/url?format=apk";
   const fakeDownloadUrl2 = "/fake/download/url2?format=ipa";

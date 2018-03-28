@@ -69,7 +69,7 @@ describe("Token cache encoding", function () {
 
     it("should encode objects with property that has no value", function () {
       objects.forEach(function (pair) {
-        let refreshToken: any; //leave it uninitialized so to use the undefined status
+        const refreshToken: any = undefined; //leave it uninitialized so to use the undefined status
         const fakedTokenPair = { a: "faked access token", r: refreshToken };
         const encoding = cacheEncoding.encodeObject(fakedTokenPair);
         expect(encoding).to.equal("a:faked access token::r:");

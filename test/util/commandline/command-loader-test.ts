@@ -38,6 +38,7 @@ describe("Loading commands", function () {
 
   it("should look through subdirs to load", function () {
     const commandLoader = loader(finder(path.join(__dirname, "sample-commands")));
+    /* tslint:disable-next-line:no-unused-variable */
     const { commandFactory: command, commandParts, args: remainingArgs } = commandLoader(["subcommands", "cmd2"]);
     expect(command).to.be.a("function")
       .and.property("name", "Command2");

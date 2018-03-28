@@ -14,6 +14,7 @@ type DoneFunc = {(err?: Error): void};
 // Sample keychain data to test parser
 //
 
+/* tslint:disable:no-octal-literal */
 const entries = {
   entry1:
     'keychain: "/Users/chris/Library/Keychains/login.keychain"\n' +
@@ -80,7 +81,7 @@ describe("security tool output parsing", function () {
 
     before(function (done: {(err?: Error): void}) {
       const dataSource = es.through();
-      const parser = dataSource
+      dataSource
         .pipe(keychainParser.createOsxSecurityParsingStream())
         .pipe(es.writeArray((err: Error, data: any[]) => {
           parsingResult = data;
@@ -116,7 +117,7 @@ describe("security tool output parsing", function () {
 
     before(function (done: DoneFunc) {
       const dataSource = es.through();
-      const parser = dataSource
+      dataSource
         .pipe(keychainParser.createOsxSecurityParsingStream())
         .pipe(es.writeArray((err: Error, data: any[]) => {
           parsingResult = data;
@@ -143,7 +144,7 @@ describe("security tool output parsing", function () {
 
     before(function (done: DoneFunc) {
       const dataSource = es.through();
-      const parser = dataSource
+      dataSource
         .pipe(keychainParser.createOsxSecurityParsingStream())
         .pipe(es.writeArray((err: Error, data: any[]) => {
           parsingResult = data;
@@ -175,7 +176,6 @@ describe("storing complete data in keychain", function () {
 
   const keychain = tokenStore.createOsxTokenStore();
 
-  const parseResults: any[] = [];
   const testUser = "appcenter-user";
   const testPassword = "Sekret!";
   const testTokenId = "1234abcd";
@@ -209,7 +209,6 @@ describe("storing data without a tokenId in keychain", function () {
 
   const keychain = tokenStore.createOsxTokenStore();
 
-  const parseResults: any[] = [];
   const testUser = "appcenter-user";
   const testPassword = "Sekret!";
 

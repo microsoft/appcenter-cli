@@ -31,6 +31,7 @@ describe("upload-symbols command", () => {
   const fakeToken = "c1o3d3e7";
   const fakeSymbolUploadingId = "fakeSymbolUploadingId";
   const fakeUploadUrl = "/upload/here";
+  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const fakeFullUploadUrl = fakeHost + fakeUploadUrl;
 
@@ -280,7 +281,7 @@ describe("upload-symbols command", () => {
     Fs.mkdirSync(testFolderPath);
 
     // creating symbols file inside folder
-    const filePath = createSymbolsFileInsideFolder(testFolderPath, fileName, fileContent);
+    createSymbolsFileInsideFolder(testFolderPath, fileName, fileContent);
 
     return testFolderPath;
   }

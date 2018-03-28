@@ -63,4 +63,3 @@ describe("Validating application file", () => {
     expect(errorCaught).to.equal(true);
   });
 });
-

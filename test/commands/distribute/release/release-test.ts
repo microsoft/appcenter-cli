@@ -23,6 +23,7 @@ describe("release command", () => {
   const fakeReleaseId = "1";
   const fakeReleaseUrl = "/fake/release/url/" + fakeReleaseId;
   const fakeDistributionGroupName = "fakeDistributionGroupName";
+  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const version = "1.0";
   const shortVersion = "1";
@@ -135,11 +136,6 @@ describe("release command", () => {
     const finalPath = Path.join(folderPath, fileName);
     Fs.writeFileSync(finalPath, fileContent);
     return finalPath;
-  }
-
-  async function executeUploadCommand(args: string[]): Promise<CommandResult> {
-    const releaseCommand = new ReleaseBinaryCommand(getCommandArgs(args));
-    return await releaseCommand.execute();
   }
 
   function testCommandSuccess(result: CommandResult, executionScope: Nock.Scope, abortScope: Nock.Scope) {

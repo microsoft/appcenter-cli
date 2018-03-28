@@ -39,7 +39,7 @@
     "no-string-based-set-timeout": true,
     "no-trailing-whitespace": true,
     "no-unnecessary-initializer": true,
-    "no-unused-expression": true,
+    "no-unused-expression-chai": true,
     "no-unused-variable": [true, {"ignore-pattern": "^_"}],
     "no-use-before-declare": true,
     "no-var-keyword": true,
@@ -94,6 +94,7 @@
     ]
   },
   "rulesDirectory": [
-    "node_modules/tslint-microsoft-contrib"
+    "node_modules/tslint-microsoft-contrib",
+    "tslint-no-unused-expression-chai"
   ]
 }

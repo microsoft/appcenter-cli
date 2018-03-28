@@ -12,13 +12,6 @@ describe("junit xml util", function () {
 <testcase classname="com.microsoft.altframeworktraining.StartAppTest" name="canStartAppInTest2" time="22.687"/>\
 </testsuite>';
 
-  const strXml1 =
-'<?xml version="1.0" encoding="utf-8"?>\
-<testsuite tests="2" failures="0" name="com.microsoft.altframeworktraining.StartAppTest" time="72.079" errors="7" skipped="4">\
-  <testcase classname="com.microsoft.altframeworktraining.StartAppTest" name="canStartAppInTest" time="47.273"/>\
-  <testcase classname="com.microsoft.altframeworktraining.StartAppTest" name="canStartAppInTest2" time="24.806"/>\
-</testsuite>';
-
   const strXml2 =
 '<?xml version="1.0" encoding="utf-8"?>\
 <testsuite tests="2" failures="0" name="com.microsoft.altframeworktraining.StartAppTest" time="72.079" errors="0" skipped="0">\
@@ -31,13 +24,6 @@ describe("junit xml util", function () {
   </testsuite>\
 </testsuite>';
 
-  const strXml4 =
-'<?xml version="1.0" encoding="utf-8"?>\
-<testsuite tests="2" failures="0" name="com.microsoft.altframeworktraining.AdditionalAppTest" time="72.079" errors="0" skipped="2">\
-  <testcase classname="com.microsoft.altframeworktraining.AdditionalAppTest" name="canStartAppInTest" time="47.273"/>\
-  <testcase classname="com.microsoft.altframeworktraining.AdditionalAppTest" name="canStartAppInTest2" time="24.806"/>\
-</testsuite>';
-
   const strXml5 =
 '<?xml version="1.0" encoding="utf-8"?>\
 <testsuite tests="2" failures="0" name="com.microsoft.altframeworktraining.AdditionalAppTest" time="72.079" errors="0" skipped="1">\
@@ -45,11 +31,6 @@ describe("junit xml util", function () {
     <skipped/>\
   </testcase>\
   <testcase classname="com.microsoft.altframeworktraining.AdditionalAppTest" name="canStartAppInTest2" time="24.806"/>\
-</testsuite>';
-
-  const strXml6 =
-'<?xml version="1.0" encoding="utf-8"?>\
-<testsuite tests="0" failures="0" name="com.microsoft.altframeworktraining.EmptyTestSuite" time="0" errors="0" skipped="0">\
 </testsuite>';
 
   const xmlUtil: JUnitXmlUtil = new JUnitXmlUtil();
