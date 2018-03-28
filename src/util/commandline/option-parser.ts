@@ -24,9 +24,9 @@ function optionKey(option: OptionDescription): string {
 }
 
 function optionDisplayName(options: OptionDescription): string {
-  const short = options.shortName ? '-' + options.shortName : null;
-  const long = options.longName ? '--' + options.longName : null;
-  return [ short, long ].filter(x => !!x).join(' / ');
+  const short = options.shortName ? "-" + options.shortName : null;
+  const long = options.longName ? "--" + options.longName : null;
+  return [ short, long ].filter((x) => !!x).join(" / ");
 }
 
 // Positional arguments
@@ -44,13 +44,13 @@ export type PositionalOptionsDescription = PositionalOptionDescription[];
 
 function descriptionToMinimistOpts(options: OptionsDescription): minimist.Opts {
 
-  let parseOpts: minimist.Opts = {
-    "boolean": <string[]>[],
-    "string": <string[]>[],
+  const parseOpts: minimist.Opts = {
+    boolean: [] as string[],
+    string: [] as string[],
     alias: {},
     default: {},
     unknown: (arg: string): boolean => {
-      if(arg.charAt(0) === "-") {
+      if (arg.charAt(0) === "-") {
         throw new Error(`Unknown argument ${arg}`);
       }
       return true;
@@ -58,23 +58,23 @@ function descriptionToMinimistOpts(options: OptionsDescription): minimist.Opts {
   };
 
   Object.keys(options)
-    .map(key => options[key])
-    .forEach(option => {
+    .map((key) => options[key])
+    .forEach((option) => {
     const key = optionKey(option);
 
     // Is option a boolean or has a value?
     if (option.hasArg) {
-      (<string[]>parseOpts.string).push(key);
+      (parseOpts.string as string[]).push(key);
     } else {
-      (<string[]>parseOpts.boolean).push(key);
+      (parseOpts.boolean as string[]).push(key);
     }
 
     // If both names are given, set up alias
-    if(option.shortName && option.longName) {
+    if (option.shortName && option.longName) {
       parseOpts.alias[option.shortName] = option.longName;
     }
 
-    if(option.defaultValue !== undefined) {
+    if (option.defaultValue !== undefined) {
       parseOpts.default[key] = option.defaultValue;
     }
 
@@ -108,7 +108,7 @@ export function parseOptions(...params: any[]): void {
   debug(`Raw parsed command line = ${util.inspect(parsed)}`);
 
   // handle flag args
-  Object.keys(flagOptions).forEach(targetPropertyName => {
+  Object.keys(flagOptions).forEach((targetPropertyName) => {
     const option = flagOptions[targetPropertyName];
     const optKey = optionKey(option);
 
@@ -121,7 +121,7 @@ export function parseOptions(...params: any[]): void {
   });
 
   // Handle positional args
-  let positionalArgs = parsed["_"] || [];
+  const positionalArgs = parsed["_"] || [];
 
   positionalOptions.sort((a, b) => {
     if (a.position === null) { return +1; }
@@ -130,7 +130,7 @@ export function parseOptions(...params: any[]): void {
   });
 
   // Check for leftover positional parameters, fail if found
-  const hasRestOption = positionalOptions.some(o => o.position === null);
+  const hasRestOption = positionalOptions.some((o) => o.position === null);
   if (!hasRestOption && positionalArgs.length > positionalOptions.length) {
     const unknownArgs = positionalArgs.slice(positionalOptions.length);
     throw new Error(`Unknown arguments: ${unknownArgs.join(" ")}`);
@@ -155,7 +155,7 @@ export function parseOptions(...params: any[]): void {
       positionalArgs[opt.position] = null;
     } else {
       // This is the rest argument, pick up whatever's left
-      target[opt.propertyName] = positionalArgs.filter(opt => opt !== null);
+      target[opt.propertyName] = positionalArgs.filter((opt) => opt !== null);
     }
   });
 }

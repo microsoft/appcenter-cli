@@ -17,7 +17,7 @@ import {
   OptionDescription, PositionalOptionDescription
 } from "./option-parser";
 
-import { out, padLeft, padRight, setDebug } from "../interaction";
+import { out } from "../interaction";
 
 import { scriptName } from "../misc";
 
@@ -90,7 +90,7 @@ function getStyledOptionsHelpTable(options: string[][]): any {
   const firstColumnWidth = opts.reduce((contenderMaxWidth, optRow) => Math.max(optRow[0].length, contenderMaxWidth), 0);
 
   // Creating a help table object
-  let helpTableObject = new Table(out.getOptionsForTwoColumnTableWithNoBorders(firstColumnWidth));
+  const helpTableObject = new Table(out.getOptionsForTwoColumnTableWithNoBorders(firstColumnWidth));
   opts.forEach((opt) => helpTableObject.push(opt));
 
   return helpTableObject;
@@ -101,7 +101,7 @@ function getSwitchOptionsHelp(commandPrototype: any, isCommon: boolean): string[
   const filteredSwitchOptions = filterOptionDescriptions(_.values(switchOptions), isCommon);
   const options = sortOptionDescriptions(filteredSwitchOptions).map(toSwitchOptionHelp);
   debug(`Command has ${options.length} switch options:`);
-  debug(options.map(o => `${o.shortName}|${o.longName}`).join("/"));
+  debug(options.map((o) => `${o.shortName}|${o.longName}`).join("/"));
   return options.map((optionHelp) => [`    ${switchText(optionHelp)}    `, optionHelp.helpText]);
 }
 
@@ -121,11 +121,10 @@ function getPositionalOptionsHelp(commandPrototype: any): string[][] {
   const options: PositionalOptionHelp[] = getPositionalOptionsDescription(commandPrototype).map(toPositionalOptionHelp);
 
   debug(`Command has ${options.length} positional options:`);
-  debug(options.map(o => o.name).join("/"));
+  debug(options.map((o) => o.name).join("/"));
 
-  return options.map((optionsHelp) => [`    ${optionsHelp.name}    `, optionsHelp.helpText])
+  return options.map((optionsHelp) => [`    ${optionsHelp.name}    `, optionsHelp.helpText]);
 }
-
 
 function switchText(switchOption: SwitchOptionHelp): string {
   // Desired formats look like:
@@ -203,7 +202,7 @@ function getSwitchOptionExamples(commandPrototype: any, includeCommon: boolean =
 
   return sortOptionDescriptions(switchOptionDescriptions)
     .map((description: OptionDescription): string => {
-      let result: string[] = [];
+      const result: string[] = [];
       result.push(description.shortName ? `-${description.shortName}` : "");
       result.push(description.shortName && description.longName ? "|" : "");
       result.push(description.longName ? `--${description.longName}` : "");
@@ -245,5 +244,5 @@ function highlightString(stringToStyle: string): string {
 }
 
 function filterOptionDescriptions(options: OptionDescription[], isCommon: boolean): OptionDescription[] {
-  return isCommon ? options.filter(option => { return option.common }) :  options.filter(option => { return !option.common });
+  return isCommon ? options.filter((option) => { return option.common; }) :  options.filter((option) => { return !option.common; });
 }

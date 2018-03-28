@@ -1,12 +1,9 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
-import * as os from "os";
 import * as path from "path";
 import { NUnitXmlUtil } from "../lib/nunit-xml-util";
-import { CommandArgs, help, name, longName, hasArg, ErrorCodes, required } from "../../../util/commandline";
+import { CommandArgs, help, longName, hasArg } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { UITestPreparer } from "../lib/uitest-preparer";
-import { parseTestParameters } from "../lib/parameters-parser";
-import { parseIncludedFiles } from "../lib/included-files-parser";
 import { Messages } from "../lib/help-messages";
 import { out } from "../../../util/interaction";
 
@@ -91,7 +88,7 @@ export default class RunUITestsCommand extends RunTestsCommand {
 
   protected async validateOptions(): Promise<void> {
     if (this.assemblyDir && !this.buildDir) {
-      out.text("Argument --assembly-dir is obsolete. Please use --build-dir instead.")
+      out.text("Argument --assembly-dir is obsolete. Please use --build-dir instead.");
       this.buildDir = this.assemblyDir;
     }
 
@@ -100,7 +97,7 @@ export default class RunUITestsCommand extends RunTestsCommand {
     }
 
     if (this.testChunk && this.fixtureChunk) {
-      throw new Error("Arguments --fixture-chunk and test-chunk cannot be combined.")
+      throw new Error("Arguments --fixture-chunk and test-chunk cannot be combined.");
     }
 
     if (!this.testOutputDir && this.mergeNUnitXml) {
@@ -109,7 +106,7 @@ export default class RunUITestsCommand extends RunTestsCommand {
   }
 
   protected prepareManifest(artifactsDir: string): Promise<string> {
-    let preparer = new UITestPreparer(artifactsDir, this.buildDir, this.appPath);
+    const preparer = new UITestPreparer(artifactsDir, this.buildDir, this.appPath);
 
     preparer.storeFile = this.storePath;
     preparer.storePassword = this.storePassword;
@@ -127,11 +124,11 @@ export default class RunUITestsCommand extends RunTestsCommand {
 
   protected getParametersFromOptions() : {} {
     if (this.fixtureChunk) {
-        return {"chunker" : "fixture"}
+        return {chunker : "fixture"};
     } else if (this.testChunk) {
-      return {"chunker" : "method"}
+      return {chunker : "method"};
     }
-    return {}
+    return {};
   }
 
   protected getSourceRootDir() {
@@ -143,15 +140,15 @@ export default class RunUITestsCommand extends RunTestsCommand {
       return;
     }
 
-    let reportPath: string = this.generateReportPath();
+    const reportPath: string = this.generateReportPath();
     if (!reportPath) {
       return;
     }
 
-    let xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
-    let pathToArchive: string = path.join(reportPath, "nunit_xml_zip.zip");
+    const xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
+    const pathToArchive: string = path.join(reportPath, "nunit_xml_zip.zip");
 
-    let xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
+    const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 
     if (!xml) {
       throw new Error(`Couldn't merge xml test results to ${this.mergeNUnitXml}`);

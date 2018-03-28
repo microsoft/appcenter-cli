@@ -1,5 +1,5 @@
 /**
- * Some commands have pairs of parameters which are used to specify the same list of users. 
+ * Some commands have pairs of parameters which are used to specify the same list of users.
  * One of these parameters is used to specify list of users as string, another one is used to specify path to file which contains the list of users.
  * This helper handles correct user list retrieval for such parameters.
  */

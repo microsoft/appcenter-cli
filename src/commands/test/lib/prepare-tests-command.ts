@@ -1,11 +1,10 @@
 import { Command, CommandArgs, CommandResult,
-         help, success, name, shortName, longName, required, hasArg,
-         position, failure, notLoggedIn, ErrorCodes } from "../../../util/commandline";
+         help, success, shortName, longName, required, hasArg, failure, ErrorCodes } from "../../../util/commandline";
 import { out } from "../../../util/interaction";
 import { parseTestParameters } from "./parameters-parser";
 import { parseIncludedFiles } from "./included-files-parser";
 import { progressWithResult } from "./interaction";
-import { ITestCloudManifestJson, ITestFrameworkJson, IFileDescriptionJson } from "./test-manifest-reader";
+import { ITestCloudManifestJson } from "./test-manifest-reader";
 import { Messages } from "./help-messages";
 import * as _ from "lodash";
 import * as path from "path";
@@ -52,25 +51,24 @@ export class PrepareTestsCommand extends Command {
   public async runNoClient(): Promise<CommandResult> {
     try {
       await this.validateOptions();
-      let manifestPath = await progressWithResult("Preparing tests", this.prepareManifest());
+      const manifestPath = await progressWithResult("Preparing tests", this.prepareManifest());
       await this.addIncludedFilesAndTestParametersToManifest(manifestPath);
       out.text(this.getSuccessMessage(manifestPath));
 
       return success();
-    }
-    catch (err) {
+    } catch (err) {
       return failure(ErrorCodes.Exception, err.message);
     }
   }
 
   private async addIncludedFilesAndTestParametersToManifest(manifestPath: string): Promise<void> {
-    let manifestJson = await pfs.readFile(manifestPath, "utf8");
-    let manifest = JSON.parse(manifestJson) as ITestCloudManifestJson;
+    const manifestJson = await pfs.readFile(manifestPath, "utf8");
+    const manifest = JSON.parse(manifestJson) as ITestCloudManifestJson;
 
     await this.addIncludedFiles(manifest);
     await this.addTestParameters(manifest);
 
-    let modifiedJson = JSON.stringify(manifest, null, 1);
+    const modifiedJson = JSON.stringify(manifest, null, 1);
     await pfs.writeFile(manifestPath, modifiedJson);
   }
 
@@ -79,10 +77,10 @@ export class PrepareTestsCommand extends Command {
       return;
     }
 
-    let includedFiles = parseIncludedFiles(this.include, this.getSourceRootDir());
+    const includedFiles = parseIncludedFiles(this.include, this.getSourceRootDir());
     for (let i = 0; i < includedFiles.length; i++) {
-      let includedFile = includedFiles[i];
-      let copyTarget = path.join(this.artifactsDir, includedFile.targetPath);
+      const includedFile = includedFiles[i];
+      const copyTarget = path.join(this.artifactsDir, includedFile.targetPath);
       await pfs.cp(includedFile.sourcePath, copyTarget);
 
       manifest.files.push(includedFile.targetPath);
@@ -94,7 +92,7 @@ export class PrepareTestsCommand extends Command {
       return;
     }
 
-    let parsedParameters = parseTestParameters(this.testParameters);
+    const parsedParameters = parseTestParameters(this.testParameters);
     _.merge(manifest.testFramework.data, parsedParameters || {});
   }
 

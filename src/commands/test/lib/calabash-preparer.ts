@@ -35,9 +35,9 @@ export class CalabashPreparer {
   }
 
   public async prepare(): Promise<string> {
-    let command = this.getPrepareCommand();
+    const command = this.getPrepareCommand();
     debug(`Executing command ${command}`);
-    let exitCode = await process.execAndWait(command, this.outMessage, this.outMessage);
+    const exitCode = await process.execAndWait(command, this.outMessage, this.outMessage);
 
     if (exitCode !== 0) {
       throw new TestCloudError(`Cannot prepare Calabash artifacts. Returning exit code ${exitCode}.`, exitCode);
@@ -71,8 +71,8 @@ export class CalabashPreparer {
   }
 
   private generateTestParameterArgs(): string {
-    let result: string = "";
-    return this.testParameters.map(parseTestParameter).map(p => `"${p.key}:${p.value}"`).join(" ");
+    const result: string = "";
+    return this.testParameters.map(parseTestParameter).map((p) => `"${p.key}:${p.value}"`).join(" ");
   }
 
   /*
@@ -90,7 +90,7 @@ export class CalabashPreparer {
    The easiest way to make the experience better is to translate the messages.
   */
   private outMessage(line: string) {
-    let translatedCalabashMessage = line.replace("--config ", "--config-path ");
+    const translatedCalabashMessage = line.replace("--config ", "--config-path ");
     out.text(translatedCalabashMessage);
   }
 }

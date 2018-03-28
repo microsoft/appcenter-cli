@@ -4,7 +4,7 @@ import * as Url from "url";
 import { ErrorCodes, failure } from "../../../util/commandline";
 import { inspect } from "util";
 
-export default class AzureBlobUploadHelper { 
+export default class AzureBlobUploadHelper {
   constructor(private debug: Function) {}
 
   public async upload(uploadUrl: string, zip: string): Promise<void> {

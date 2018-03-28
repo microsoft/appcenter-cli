@@ -65,14 +65,14 @@ export default class PatchCommand extends AppCommand {
 
     const rollout = Number(this.rollout);
     if (this.rollout != null && (!Number.isSafeInteger(rollout) || !isValidRollout(rollout))) {
-        return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
+        return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold("0")} or ${chalk.bold("100")}.`);
     }
 
     if (this.targetBinaryRange != null && !isValidRange(this.targetBinaryRange)) {
       return failure(ErrorCodes.Exception, "Invalid binary version(s) for a release.");
     }
 
-    let patch : models.CodePushReleaseModification = {
+    const patch : models.CodePushReleaseModification = {
       targetBinaryRange: this.targetBinaryRange,
       isMandatory: this.isMandatory,
       isDisabled: this.isDisabled,

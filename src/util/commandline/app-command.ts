@@ -34,7 +34,7 @@ export class AppCommand extends Command {
       }
     // Default app in profile
     } else {
-      let profile = getUser();
+      const profile = getUser();
       if (profile.defaultApp) {
         result = profile.defaultApp;
 
@@ -56,7 +56,7 @@ export function getCurrentApp(optValue: string): ResultOrValue<DefaultApp> {
 
   function fromCommandLineOpt(): ResultOrValue<DefaultApp> {
     if (optValue) {
-      let result = toDefaultApp(optValue);
+      const result = toDefaultApp(optValue);
       if (!result) {
         return ResultOrValue.fromResult<DefaultApp>(failure(ErrorCodes.InvalidParameter,
           `'${optValue}' is not a valid application id`));
@@ -67,7 +67,7 @@ export function getCurrentApp(optValue: string): ResultOrValue<DefaultApp> {
 
   function fromEnvironment(): ResultOrValue<DefaultApp> {
     if (process.env[currentAppVar]) {
-      let result = toDefaultApp(process.env[currentAppVar]);
+      const result = toDefaultApp(process.env[currentAppVar]);
       if (!result) {
         return ResultOrValue.fromResult<DefaultApp>(failure(ErrorCodes.InvalidParameter,
           `'${process.env[currentAppVar]}' (read from environment ${currentAppVar}) is not a valid application id`));
@@ -77,7 +77,7 @@ export function getCurrentApp(optValue: string): ResultOrValue<DefaultApp> {
   }
 
   function fromProfile(): ResultOrValue<DefaultApp> {
-    let profile = getUser();
+    const profile = getUser();
     if (profile && profile.defaultApp) {
       return ResultOrValue.fromValue(profile.defaultApp);
     }

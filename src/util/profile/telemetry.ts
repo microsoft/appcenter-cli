@@ -22,9 +22,9 @@ const telemetryPromptText = os.EOL +
  os.EOL;
 
  function promptForTelemetryEnable() : Promise<boolean> {
-  let width = terminal.columns() - 2;
+  const width = terminal.columns() - 2;
 
-  let promptText = wrap(width)(telemetryPromptText);
+  const promptText = wrap(width)(telemetryPromptText);
   if (!isQuiet()) {
     out.text(promptText);
   }
@@ -64,8 +64,8 @@ function hasTelemetryOptionSaved(): boolean {
 }
 
 function getSavedTelemetryOption(): Promise<boolean> {
-  let fileContents = fs.readFileSync(telemetryFileName(), "utf8");
-  let enabled: any = JSON.parse(fileContents);
+  const fileContents = fs.readFileSync(telemetryFileName(), "utf8");
+  const enabled: any = JSON.parse(fileContents);
   return Promise.resolve(!!enabled);
 }
 

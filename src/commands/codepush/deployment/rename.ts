@@ -1,7 +1,6 @@
 import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, position, name } from "../../../util/commandline";
-import { AppCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
-import * as chalk from "chalk";
 import { inspect } from "util";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:deployment:rename");

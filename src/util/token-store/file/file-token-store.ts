@@ -7,8 +7,6 @@
 //
 
 import * as fs from "fs";
-import * as os from "os";
-import * as path from "path";
 import * as rx from "rx-lite";
 import { toPairs } from "lodash";
 
@@ -36,7 +34,7 @@ export class FileTokenStore implements TokenStore {
 
   list(): rx.Observable<TokenEntry> {
     this.loadTokenStoreCache();
-    return rx.Observable.from(toPairs(this.tokenStoreCache)).map(pair => ({ key: pair[0], accessToken: pair[1]}));
+    return rx.Observable.from(toPairs(this.tokenStoreCache)).map((pair) => ({ key: pair[0], accessToken: pair[1]}));
   }
 
   get(key: TokenKeyType): Promise<TokenEntry> {

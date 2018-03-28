@@ -1,11 +1,8 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
-import * as fs from "fs";
 import * as path from "path";
-import { CommandArgs, help, name, longName, hasArg, required, ErrorCodes } from "../../../util/commandline";
+import { CommandArgs, help, longName, hasArg, required } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { AppiumPreparer } from "../lib/appium-preparer";
-import { parseTestParameters } from "../lib/parameters-parser";
-import { parseIncludedFiles } from "../lib/included-files-parser";
 import { Messages } from "../lib/help-messages";
 import { JUnitXmlUtil } from "../lib/junit-xml-util";
 
@@ -28,7 +25,7 @@ export default class RunAppiumTestsCommand extends RunTestsCommand {
   }
 
   protected prepareManifest(artifactsDir: string): Promise<string> {
-    let preparer = new AppiumPreparer(artifactsDir, this.buildDir);
+    const preparer = new AppiumPreparer(artifactsDir, this.buildDir);
     return preparer.prepare();
   }
 
@@ -47,15 +44,15 @@ export default class RunAppiumTestsCommand extends RunTestsCommand {
       return;
     }
 
-    let reportPath: string = this.generateReportPath();
+    const reportPath: string = this.generateReportPath();
     if (!reportPath) {
       return;
     }
 
-    let xmlUtil: JUnitXmlUtil = new JUnitXmlUtil();
-    let pathToArchive: string = path.join(reportPath, "junit_xml_zip.zip");
+    const xmlUtil: JUnitXmlUtil = new JUnitXmlUtil();
+    const pathToArchive: string = path.join(reportPath, "junit_xml_zip.zip");
 
-    let xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
+    const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 
     if (!xml) {
       throw new Error(`Couldn't merge xml test results to ${this.mergeJUnitXml}`);

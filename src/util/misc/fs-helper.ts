@@ -6,8 +6,7 @@ import * as path from "path";
 export function fileExistsSync(filename: string): boolean {
   try {
     return fs.statSync(filename).isFile();
-  }
-  catch (err) {
+  } catch (err) {
     if (err.code !== "ENOENT") {
       throw err;
     }
@@ -17,15 +16,15 @@ export function fileExistsSync(filename: string): boolean {
 
 export function createLongPath(target: string) {
   let targetFolder: string = target;
-  let notExistsFolder: string[] = [];
+  const notExistsFolder: string[] = [];
 
-  while(!fs.existsSync(targetFolder)) {
+  while (!fs.existsSync(targetFolder)) {
     notExistsFolder.push(path.basename(targetFolder));
     targetFolder = path.resolve(targetFolder, "..");
   }
 
-  notExistsFolder.reverse().forEach(element => {
-    targetFolder = path.resolve(targetFolder,element);
+  notExistsFolder.reverse().forEach((element) => {
+    targetFolder = path.resolve(targetFolder, element);
     fs.mkdirSync(targetFolder);
   });
 }

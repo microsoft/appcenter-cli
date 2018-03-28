@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import * as iba from "../../../util/misc/ios-bundle-archiver";
 import * as path from "path";
 import * as pfs from "../../../util/misc/promisfied-fs";
@@ -41,23 +40,23 @@ export class XCUITestPreparer {
       }
       await pfs.cpFile(this.testIpaPath, path.join(this.artifactsDir, path.basename(this.testIpaPath)));
     }
-  
-    let manifestPath = path.join(this.artifactsDir, "manifest.json");
-    let manifest = await this.createXCUITestManifest();
-    let manifestJson = JSON.stringify(manifest, null, 1);
+
+    const manifestPath = path.join(this.artifactsDir, "manifest.json");
+    const manifest = await this.createXCUITestManifest();
+    const manifestJson = JSON.stringify(manifest, null, 1);
     await pfs.writeFile(manifestPath, manifestJson);
 
     return manifestPath;
   }
 
   private async createXCUITestManifest(): Promise<any> {
-    let ipaArtifactsPath = path.basename(this.testIpaPath); 
-    let result = {
-      "schemaVersion": "1.0.0",
-      "files": [ipaArtifactsPath],
-      "testFramework": {
-        "name": "xcuitest",
-        "data": { }
+    const ipaArtifactsPath = path.basename(this.testIpaPath);
+    const result = {
+      schemaVersion: "1.0.0",
+      files: [ipaArtifactsPath],
+      testFramework: {
+        name: "xcuitest",
+        data: { }
       }
     };
 
@@ -65,7 +64,7 @@ export class XCUITestPreparer {
   }
 
   private async generateTestIpa(): Promise<void> {
-    let runnerAppPaths = await pglob.glob(path.join(this.buildDir, "*-Runner.app"));
+    const runnerAppPaths = await pglob.glob(path.join(this.buildDir, "*-Runner.app"));
     if (runnerAppPaths.length == 0) {
       throw new TestCloudError(`Unable to find test runner app within ${this.buildDir}`);
     }

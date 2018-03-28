@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 
-import { profileDirName, oldProfileDirName, profileFile } from "./constants";
+import { profileDirName, oldProfileDirName } from "./constants";
 
 const debug = require("debug")("appcenter-cli:util:misc:get-profile-dir");
 
@@ -28,7 +28,7 @@ function existsSync(path: string): boolean {
     const s = fs.statSync(path);
     return true;
   } catch (err) {
-    if (err.code === 'ENOENT') {
+    if (err.code === "ENOENT") {
       return false;
     }
     throw err;

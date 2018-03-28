@@ -1,4 +1,4 @@
-import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, shortName, longName, hasArg, position, name } from "../../util/commandline";
+import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, shortName, longName, hasArg } from "../../util/commandline";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
@@ -68,14 +68,14 @@ export default class CodePushPromoteCommand extends AppCommand {
 
     const rollout = Number(this.rollout);
     if (this.rollout != null && (!Number.isSafeInteger(rollout) || !isValidRollout(rollout))) {
-      return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
+      return failure(ErrorCodes.Exception, `Rollout value should be integer value between ${chalk.bold("0")} or ${chalk.bold("100")}.`);
     }
 
     if (this.targetBinaryRange != null && !isValidRange(this.targetBinaryRange)) {
       return failure(ErrorCodes.Exception, "Invalid binary version(s) for a release.");
     }
 
-    let promote : models.CodePushReleasePromote = {
+    const promote : models.CodePushReleasePromote = {
       targetBinaryRange: this.targetBinaryRange,
       description: this.description,
       label: this.label,
@@ -94,7 +94,7 @@ export default class CodePushPromoteCommand extends AppCommand {
         app.appName, { release: promote }, cb)));
     } catch (error) {
       if (error.response.statusCode === 409 && this.disableDuplicateReleaseError) {
-        // 409 (Conflict) status code means that uploaded package is identical 
+        // 409 (Conflict) status code means that uploaded package is identical
         // to the contents of the specified deployment's current release
         console.warn(chalk.yellow("[Warning] " + error.response.body));
         return success();
@@ -104,7 +104,7 @@ export default class CodePushPromoteCommand extends AppCommand {
       }
     }
 
-    out.text(`Successfully promoted ${this.label ? `'${this.label}' of` : ''} the '${this.sourceDeploymentName}' deployment of the '${this.identifier}' app to the '${this.destinationDeploymentName}' deployment.`);
+    out.text(`Successfully promoted ${this.label ? `'${this.label}' of` : ""} the '${this.sourceDeploymentName}' deployment of the '${this.identifier}' app to the '${this.destinationDeploymentName}' deployment.`);
     return success();
   }
 }

@@ -9,7 +9,7 @@ import * as temp from "temp";
 // Turn on tracking to make sure files are cleaned up.
 temp.track();
 
-import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../../../src/util/token-store/token-store";
+import { TokenEntry } from "../../../src/util/token-store/token-store";
 import { createFileTokenStore, FileTokenStore } from "../../../src/util/token-store/file/file-token-store";
 
 describe("File token store", function () {

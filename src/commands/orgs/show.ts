@@ -1,6 +1,6 @@
-import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
+import { Command, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
 import { out } from "../../util/interaction";
-import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
 const debug = require("debug")("appcenter-cli:commands:orgs:show");
 import { inspect } from "util";

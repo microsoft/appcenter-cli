@@ -22,9 +22,9 @@ export function loader(commandFinder: CommandFinder): CommandLoader {
       return null;
     }
     let commandFactory: typeof Command;
-    let commandParts: string[] = findResult.commandParts;
-    let args: string[] = findResult.unusedArgs;
-    let commandPath = findResult.commandPath;
+    const commandParts: string[] = findResult.commandParts;
+    const args: string[] = findResult.unusedArgs;
+    const commandPath = findResult.commandPath;
 
     if (!findResult.isCategory) {
       commandFactory = require(findResult.commandPath).default as typeof Command;
@@ -32,9 +32,9 @@ export function loader(commandFinder: CommandFinder): CommandLoader {
       commandFactory = CategoryCommand;
     }
 
-    if(commandFactory === null) {
+    if (commandFactory === null) {
       debug(`Loaded command from ${findResult.commandPath} but module has no default export`);
     }
     return { commandFactory, commandParts, args, commandPath };
-  }
+  };
 }

@@ -35,7 +35,7 @@ describe("release command", () => {
   const releaseNotes = "Release Notes for v1";
 
   let tmpFolderPath: string;
-  
+
   let uploadSpy: Sinon.SinonSpy;
   let postSymbolSpy: Sinon.SinonSpy;
   let patchSymbolSpy: Sinon.SinonSpy;
@@ -73,7 +73,7 @@ describe("release command", () => {
       // Arrange
       const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
 
-      // Act 
+      // Act
       const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-r", releaseNotes, "-g", fakeDistributionGroupName]));
       const result = await command.execute();
 
@@ -87,7 +87,7 @@ describe("release command", () => {
       const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
       const releaseNotesFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
 
-      // Act 
+      // Act
       const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath, "-g", fakeDistributionGroupName]));
       const result = await command.execute();
 
@@ -114,7 +114,7 @@ describe("release command", () => {
       const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
       const releaseNotesFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
 
-      // Act 
+      // Act
       const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath, "-g", fakeDistributionGroupName]));
       const result = await expect(command.execute()).to.eventually.be.rejected;
 
@@ -128,7 +128,7 @@ describe("release command", () => {
   });
 
   after(() => {
-    Nock.enableNetConnect(); 
+    Nock.enableNetConnect();
   });
 
   function createFile(folderPath: string, fileName: string, fileContent: string): string {
@@ -138,7 +138,7 @@ describe("release command", () => {
   }
 
   async function executeUploadCommand(args: string[]): Promise<CommandResult> {
-    let releaseCommand = new ReleaseBinaryCommand(getCommandArgs(args));
+    const releaseCommand = new ReleaseBinaryCommand(getCommandArgs(args));
     return await releaseCommand.execute();
   }
 
@@ -155,7 +155,7 @@ describe("release command", () => {
   }
 
   function testUploadedFormData() {
-    const formData = <string> uploadSpy.lastCall.args[0];
+    const formData = uploadSpy.lastCall.args[0] as string;
     expect(typeof(formData)).to.eql("string", "Form Data should be string");
     expect(formData).to.have.string(releaseFileContent, "Release file content should be sent");
     expect(formData).to.have.string('name="ipa"', "There should be 'ipa' field in the form data");
@@ -163,7 +163,7 @@ describe("release command", () => {
   }
 
   function getCommandArgs(additionalArgs: string[]): CommandArgs {
-    let args: string[] = ["-a", fakeAppIdentifier, "--token", fakeToken, "--env", "local"].concat(additionalArgs);
+    const args: string[] = ["-a", fakeAppIdentifier, "--token", fakeToken, "--env", "local"].concat(additionalArgs);
     return {
       args,
       command: ["distribute", "release"],
@@ -227,7 +227,7 @@ describe("release command", () => {
       release_notes: releaseNotes
     }).reply(200, ((uri: any, requestBody: any) => {
       distributeSpy(requestBody);
-      return { 
+      return {
         version,
         short_version: shortVersion
       };

@@ -1,5 +1,3 @@
-import { IFileDescriptionJson } from "./test-manifest-reader";
-import { out } from "../../../util/interaction";
 import * as _ from "lodash";
 import * as fs from "fs";
 import * as path from "path";
@@ -25,9 +23,9 @@ export class AppiumPreparer {
     await this.validateBuildDir();
     await pfs.cpDir(this.buildDir, this.artifactsDir);
 
-    let manifestPath = path.join(this.artifactsDir, "manifest.json");
-    let manifest = await this.createAppiumManifest();
-    let manifestJson = JSON.stringify(manifest, null, 1);
+    const manifestPath = path.join(this.artifactsDir, "manifest.json");
+    const manifest = await this.createAppiumManifest();
+    const manifestJson = JSON.stringify(manifest, null, 1);
     await pfs.writeFile(manifestPath, manifestJson);
 
     return manifestPath;
@@ -62,7 +60,7 @@ export class AppiumPreparer {
   }
 
   private async validateTestClassesDirectory(): Promise<void> {
-    let testClassesDir = path.join(this.buildDir, "test-classes");
+    const testClassesDir = path.join(this.buildDir, "test-classes");
     await this.validatePathExists(
       path.join(this.buildDir, "test-classes"),
       false,
@@ -74,11 +72,11 @@ export class AppiumPreparer {
   }
 
   private async hasClassFile(rootPath: string): Promise<boolean> {
-    let entries = await pfs.readdir(rootPath);
+    const entries = await pfs.readdir(rootPath);
     for (let i = 0; i < entries.length; i++) {
-      let entry = entries[i];
-      let fullEntryPath = path.join(rootPath, entry);
-      let stats = await pfs.stat(fullEntryPath);
+      const entry = entries[i];
+      const fullEntryPath = path.join(rootPath, entry);
+      const stats = await pfs.stat(fullEntryPath);
       if (stats.isFile() && entry.endsWith(".class")) {
         return true;
       }
@@ -89,15 +87,14 @@ export class AppiumPreparer {
     }
 
     return false;
-  } 
+  }
 
   private async validatePathExists(path: string, isFile: boolean, errorMessage: string): Promise<void> {
     let stats: fs.Stats = null;
-    
+
     try {
       stats = await pfs.stat(path);
-    }
-    catch (err) {
+    } catch (err) {
       throw new Error(errorMessage);
     }
 
@@ -106,13 +103,13 @@ export class AppiumPreparer {
     }
   }
 
-  private async createAppiumManifest(): Promise<any> { 
-    let result = {
-      "schemaVersion": "1.0.0",
-      "files": [ "pom.xml", "dependency-jars", "test-classes" ],
-      "testFramework": {
-        "name": "appium",
-        "data": { }
+  private async createAppiumManifest(): Promise<any> {
+    const result = {
+      schemaVersion: "1.0.0",
+      files: [ "pom.xml", "dependency-jars", "test-classes" ],
+      testFramework: {
+        name: "appium",
+        data: { }
       }
     };
 

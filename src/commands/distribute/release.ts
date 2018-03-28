@@ -232,14 +232,14 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async getDistributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number): Promise<models.ReleaseDetailsResponse> {
     let releaseRequestResponse: ClientResponse<models.ReleaseDetailsResponse>;
     try {
-      releaseRequestResponse = await out.progress(`Retrieving the release...`, 
-        clientRequest<models.ReleaseDetailsResponse>(async (cb) => client.releases.getLatestByUser(releaseId.toString(), 
+      releaseRequestResponse = await out.progress(`Retrieving the release...`,
+        clientRequest<models.ReleaseDetailsResponse>(async (cb) => client.releases.getLatestByUser(releaseId.toString(),
           app.ownerName, app.appName, cb)));
     } catch (error) {
       if (error === 400) {
         throw failure(ErrorCodes.Exception, "release_id is not an integer or the string latest");
       } else if (error === 404) {
-        throw failure(ErrorCodes.Exception, `The release ${releaseId} can't be found`);        
+        throw failure(ErrorCodes.Exception, `The release ${releaseId} can't be found`);
       } else {
         return null;
       }
