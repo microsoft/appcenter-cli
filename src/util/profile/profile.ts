@@ -4,7 +4,6 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import * as os from "os";
 import * as mkdirp from "mkdirp";
 
 import { environments } from "./environments";
@@ -48,7 +47,7 @@ class ProfileImpl implements Profile {
 
   get accessTokenId(): Promise<string> {
     return tokenStore.get(this.userName)
-      .then(entry => entry.accessToken.id)
+      .then((entry) => entry.accessToken.id)
       .catch((err: Error) => {
         debug(`Failed to get token id from profile, error: ${err.message}`);
         throw err;
@@ -60,7 +59,7 @@ class ProfileImpl implements Profile {
       .catch((err: Error) => tokenStore.get(this.userName, true));
 
     return getter
-      .then(entry => entry.accessToken.token)
+      .then((entry) => entry.accessToken.token)
       .catch((err: Error) => {
         debug(`Failed to get token from profile, error: ${err.message}`);
         throw err;
@@ -84,7 +83,7 @@ class ProfileImpl implements Profile {
   }
 
   save(): Profile {
-    let profile: any = {
+    const profile: any = {
       userId: this.userId,
       userName: this.userName,
       displayName: this.displayName,
@@ -146,8 +145,8 @@ function loadProfile(): Profile | null {
   }
 
   debug("Profile file loaded");
-  let profileContents = fs.readFileSync(profilePath, "utf8");
-  let profile: any = JSON.parse(profileContents);
+  const profileContents = fs.readFileSync(profilePath, "utf8");
+  const profile: any = JSON.parse(profileContents);
   return new ProfileImpl(profile);
 }
 
@@ -163,14 +162,14 @@ export function getUser(): Profile | null {
 export function saveUser(user: any, token: TokenValueType, environment: string, tokenSuppliedByUser: boolean): Promise<Profile> {
   return tokenStore.set(user.name, token)
     .then(() => {
-      let profile = new ProfileImpl(Object.assign({}, user, { environment, tokenSuppliedByUser }));
+      const profile = new ProfileImpl(Object.assign({}, user, { environment, tokenSuppliedByUser }));
       profile.save();
       return profile;
     });
 }
 
 export async function deleteUser(): Promise<void> {
-  let profile = getUser();
+  const profile = getUser();
   if (profile) {
     return profile.logout();
   }

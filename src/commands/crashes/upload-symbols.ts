@@ -19,6 +19,14 @@ import * as _ from "lodash";
 
 const debug = require("debug")("appcenter-cli:commands:apps:crashes:upload-symbols");
 
+enum SymbolFsEntryType {
+  Unknown,
+  DsymFolder,
+  DsymParentFolder,
+  XcArchive,
+  ZipFile
+}
+
 @help("Upload the crash symbols for the application")
 export default class UploadSymbols extends AppCommand {
   @help("Path to a dSYM package, a directory containing dSYM packages, or a zip file containing the dSYM packages.")
@@ -215,12 +223,4 @@ export default class UploadSymbols extends AppCommand {
         throw failure(ErrorCodes.InvalidParameter, `${path} is not a valid XcArchive folder`);
     }
   }
-}
-
-enum SymbolFsEntryType {
-  Unknown,
-  DsymFolder,
-  DsymParentFolder,
-  XcArchive,
-  ZipFile
 }

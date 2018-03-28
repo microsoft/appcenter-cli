@@ -3,13 +3,11 @@ import * as os from "os";
 const opener = require("opener");
 import * as qs from "qs";
 import { Command, CommandArgs, CommandResult, success, failure, succeeded, ErrorCodes, help, shortName, longName, hasArg } from "../util/commandline";
-import { environments, defaultEnvironmentName, getUser, saveUser, deleteUser, getTokenFromEnvironmentVar, appCenterAccessTokenEnvVar } from "../util/profile";
+import { environments, getUser, saveUser, getTokenFromEnvironmentVar, appCenterAccessTokenEnvVar } from "../util/profile";
 import { prompt, out } from "../util/interaction";
-import { models, createAppCenterClient, clientRequest, ClientResponse } from "../util/apis";
+import { models, clientRequest, ClientResponse } from "../util/apis";
 import { TokenValueType } from "../util/token-store";
 import { logout } from "./lib/logout";
-
-import { inspect } from "util";
 
 const debug = require("debug")("appcenter-cli:commands:login");
 
@@ -51,7 +49,7 @@ export default class LoginCommand extends Command {
           token = await this.doUserNameAndPasswordLogin();
         }
 
-        let userResponse = await out.progress("Getting user info ...", this.getUserInfo(token.token));
+        const userResponse = await out.progress("Getting user info ...", this.getUserInfo(token.token));
         await saveUser(userResponse.result, { id: token.id, token: token.token }, this.environmentName, userSuppliedToken);
         out.text(`Logged in as ${userResponse.result.name}`);
         // Force early exit to avoid long standing delays if token deletion is slow
@@ -91,8 +89,8 @@ export default class LoginCommand extends Command {
     const endpoint = environments(this.environmentName).endpoint;
     const client = this.clientFactory.fromUserNameAndPassword(this.userName, this.password, endpoint);
 
-    let createTokenResponse = await out.progress("Logging in...",
-      clientRequest<models.ApiTokensCreateResponse>(cb => client.apiTokens.newMethod({ description: "AppCenter CLI"}, cb)));
+    const createTokenResponse = await out.progress("Logging in...",
+      clientRequest<models.ApiTokensCreateResponse>((cb) => client.apiTokens.newMethod({ description: "AppCenter CLI"}, cb)));
 
     if (createTokenResponse.response.statusCode >= 400) {
       throw new Error("login was not successful");
@@ -137,7 +135,7 @@ export default class LoginCommand extends Command {
   private getUserInfo(token: string): Promise<ClientResponse<models.UserProfileResponse>> {
     const endpoint = environments(this.environmentName).endpoint;
     const client = this.clientFactory.fromToken(token, endpoint);
-    return clientRequest<models.UserProfileResponse>(cb => client.users.get(cb));
+    return clientRequest<models.UserProfileResponse>((cb) => client.users.get(cb));
   }
 
   private async removeLoggedInUser(): Promise<void> {

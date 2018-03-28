@@ -4,8 +4,8 @@ import * as xmlLib from "libxmljs";
 import * as path from "path";
 import { NUnitXmlUtil } from "../../../../src/commands/test/lib/nunit-xml-util";
 
-describe("nunit xml util", function() {
-  let strXml =
+describe("nunit xml util", function () {
+  const strXml =
 '<?xml version="1.0" encoding="utf-8"?>\
 <test-results ignored="1" not-run="1">\
 <test-suite>\
@@ -24,7 +24,7 @@ describe("nunit xml util", function() {
 </test-suite>\
 </test-results>';
 
-  let strXml1 =
+  const strXml1 =
 '<?xml version="1.0" encoding="utf-8"?>\
 <test-results ignored="1" not-run="1">\
 <test-suite>\
@@ -35,12 +35,12 @@ describe("nunit xml util", function() {
 </test-suite>\
 </test-results>';
 
-  let xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
+  const xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
 
   it("should collect all elements", () => {
     let xml: Document = new DOMParser().parseFromString(strXml);
-    let testCases: Node[] = xmlUtil.collectAllElements(xml,"test-case");
-    let testSuites: Node[] = xmlUtil.collectAllElements(xml,"test-suite");
+    const testCases: Node[] = xmlUtil.collectAllElements(xml, "test-case");
+    let testSuites: Node[] = xmlUtil.collectAllElements(xml, "test-suite");
 
     expect(testCases.length).to.eql(2);
     expect(testSuites.length).to.eql(2);
@@ -52,16 +52,16 @@ describe("nunit xml util", function() {
   });
 
   it("should not throw an exception for a non-existent node", () => {
-    let xml: Document = new DOMParser().parseFromString(strXml);
-    let testCases: Node[] = xmlUtil.collectAllElements(xml, "non-existent-test-case");
+    const xml: Document = new DOMParser().parseFromString(strXml);
+    const testCases: Node[] = xmlUtil.collectAllElements(xml, "non-existent-test-case");
 
     expect(testCases.length).to.eql(0);
   });
 
   it("should append postfix", () => {
-    let xml: Document = new DOMParser().parseFromString(strXml);
+    const xml: Document = new DOMParser().parseFromString(strXml);
     xmlUtil.appendToTestNameTransformation(xml, "_new_test_case_postfix");
-    let testCases: Node[] = xmlUtil.collectAllElements(xml, "test-case");
+    const testCases: Node[] = xmlUtil.collectAllElements(xml, "test-case");
 
     expect(testCases[0].attributes.getNamedItem("name").value)
       .to.eql("CreditCardValidator.Droid.UITests.Tests.Test0_new_test_case_postfix");
@@ -70,28 +70,28 @@ describe("nunit xml util", function() {
   });
 
   it("should not throw an exception while appending postfix to a non-existent node", () => {
-    let xml: Document = new DOMParser().parseFromString(strXml1);
+    const xml: Document = new DOMParser().parseFromString(strXml1);
     xmlUtil.appendToTestNameTransformation(xml, "_new_test_case_postfix");
-    let testCases: Node[] = xmlUtil.collectAllElements(xml, "test-case");
+    const testCases: Node[] = xmlUtil.collectAllElements(xml, "test-case");
 
     expect(testCases.length).to.eql(0);
   });
 
   it("should remove ignored transformation", () => {
-    let xml: Document = new DOMParser().parseFromString(strXml);
+    const xml: Document = new DOMParser().parseFromString(strXml);
     xmlUtil.removeIgnoredTransformation(xml);
-    let testCases: Node[] = xmlUtil.collectAllElements(xml, "test-case");
-    let testResults: Node = xmlUtil.collectAllElements(xml, "test-results")[0];
-    let ignoredAttr: Attr = testResults.attributes.getNamedItem("ignored");
-    let notRunAttr: Attr = testResults.attributes.getNamedItem("not-run");
+    const testCases: Node[] = xmlUtil.collectAllElements(xml, "test-case");
+    const testResults: Node = xmlUtil.collectAllElements(xml, "test-results")[0];
+    const ignoredAttr: Attr = testResults.attributes.getNamedItem("ignored");
+    const notRunAttr: Attr = testResults.attributes.getNamedItem("not-run");
 
     expect(testCases.length).to.eql(1);
     expect(ignoredAttr.value).to.eql("0");
-    expect(notRunAttr.value).to.eql("0")
+    expect(notRunAttr.value).to.eql("0");
   });
 
   it("should remove empty suites", () => {
-    let xml: Document = new DOMParser().parseFromString(strXml);
+    const xml: Document = new DOMParser().parseFromString(strXml);
     let testSuites: Node[] = xmlUtil.collectAllElements(xml, "test-suite");
 
     expect(testSuites.length).to.eql(2);
@@ -103,15 +103,15 @@ describe("nunit xml util", function() {
   });
 
   it("should collect only first level children", () => {
-    let xml: Document = new DOMParser().parseFromString(strXml1);
-    let testSuites: Node[] = xmlUtil.collectChildren(xml, "test-suite");
+    const xml: Document = new DOMParser().parseFromString(strXml1);
+    const testSuites: Node[] = xmlUtil.collectChildren(xml, "test-suite");
 
     expect(testSuites.length).to.eql(2);
   });
 
   it("should count all children", () => {
-   let xml: Document = new DOMParser().parseFromString(strXml);
-   let testResults: Node = xmlUtil.collectChildren(xml, "test-results")[0];
+   const xml: Document = new DOMParser().parseFromString(strXml);
+   const testResults: Node = xmlUtil.collectChildren(xml, "test-results")[0];
 
    expect(xmlUtil.countChildren(testResults)).to.eql(8);
   });
@@ -135,13 +135,13 @@ describe("nunit xml util", function() {
   it("should combine xmls correctly", async () => {
 
     // If
-    let pathToArchive: string = path.join(__dirname, "../resources/nunit_xml_zip.zip");
+    const pathToArchive: string = path.join(__dirname, "../resources/nunit_xml_zip.zip");
 
     // When
-    let xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
+    const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 
     // Then
-    var finalStrXml = new XMLSerializer().serializeToString(xml);
+    const finalStrXml = new XMLSerializer().serializeToString(xml);
 
     // Doesn't throw exception
     xmlLib.parseXml(finalStrXml);

@@ -72,8 +72,8 @@ export default class AudienceCommand extends AppCommand {
       this.devices = this.countries = this.languages = this.activeUsers = true;
     }
 
-    let promises: Array<Promise<void>> = [];
-    let statistics: IStatisticsObject = {};
+    const promises: Array<Promise<void>> = [];
+    const statistics: IStatisticsObject = {};
 
     if (this.devices) {
       promises.push(this.loadDevicesStatistics(statistics, client, app, startDate, endDate, appVersion));

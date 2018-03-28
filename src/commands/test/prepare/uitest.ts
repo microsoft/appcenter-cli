@@ -1,13 +1,8 @@
-import { CommandArgs, help, success, name, shortName, longName, required, hasArg,
-         ErrorCodes } from "../../../util/commandline";
+import { CommandArgs, help, longName, required, hasArg } from "../../../util/commandline";
 import { UITestPreparer } from "../lib/uitest-preparer";
 import { PrepareTestsCommand } from "../lib/prepare-tests-command";
 import { out } from "../../../util/interaction";
-import * as outExtensions from "../lib/interaction";
-import * as process from "../../../util/misc/process-helper";
 import { Messages } from "../lib/help-messages";
-
-const debug = require("debug")("appcenter-cli:commands:tests:prepare");
 
 @help(Messages.TestCloud.Commands.PrepareUITests)
 export default class PrepareUITestCommand extends PrepareTestsCommand {
@@ -91,7 +86,7 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
 
   protected async validateOptions(): Promise<void> {
     if (this.assemblyDir && !this.buildDir) {
-      out.text("Argument --assembly-dir is obsolete. Please use --build-dir instead.")
+      out.text("Argument --assembly-dir is obsolete. Please use --build-dir instead.");
       this.buildDir = this.assemblyDir;
     }
 
@@ -100,12 +95,12 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
     }
 
     if (this.testChunk && this.fixtureChunk) {
-        throw new Error("Arguments --fixture-chunk and test-chunk cannot be combined.")
+        throw new Error("Arguments --fixture-chunk and test-chunk cannot be combined.");
     }
   }
 
   protected prepareManifest(): Promise<string> {
-    let preparer = new UITestPreparer(this.artifactsDir, this.buildDir, this.appPath);
+    const preparer = new UITestPreparer(this.artifactsDir, this.buildDir, this.appPath);
 
     preparer.storeFile = this.storePath;
     preparer.storePassword = this.storePassword;

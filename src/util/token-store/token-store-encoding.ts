@@ -10,14 +10,14 @@ import * as _ from "lodash";
 // replace '\' chars with '\\'
 //
 export function escape(s: string): string {
-  var result = '';
+  let result = "";
   _.each(s, function (ch) {
     switch (ch) {
-      case ':':
-        result += '\\:';
+      case ":":
+        result += "\\:";
         break;
-      case '\\':
-        result += '\\\\';
+      case "\\":
+        result += "\\\\";
         break;
       default:
         result += ch;
@@ -31,11 +31,11 @@ export function escape(s: string): string {
 // to their single character equivalents.
 //
 export function unescape(s: string): string {
-  var result = '';
-  var afterSlash = false;
+  let result = "";
+  let afterSlash = false;
   _.each(s, function (ch) {
     if (!afterSlash) {
-      if (ch === '\\') {
+      if (ch === "\\") {
         afterSlash = true;
       } else {
         result += ch;
@@ -47,7 +47,7 @@ export function unescape(s: string): string {
   });
 
   if (afterSlash) {
-    result += '\\';
+    result += "\\";
   }
 
   return result;
@@ -62,14 +62,14 @@ export function encodeObject(obj: any): string {
         return [p[0], p[1].toString()];
       }
       if (_.isDate(p[1])) {
-        return [p[0], (<Date>p[1]).toISOString()];
+        return [p[0], (p[1] as Date).toISOString()];
       }
-      return [p[0], p[1] ? p[1].toString() : ''];
+      return [p[0], p[1] ? p[1].toString() : ""];
     })
     .map(function (p) { return p.map(escape); })
-    .map(function (p) { return p.join(':'); })
+    .map(function (p) { return p.join(":"); })
     .value()
-    .join('::');
+    .join("::");
 }
 
 function endsWith(s: string, ending: string): boolean {
@@ -80,12 +80,12 @@ function partToKeyValue(part: string): string[] {
   const parts: string[] = part.split(":");
   const value: string[] = parts.reduce(
     (accumulator: string[], value: string, index: number, array: string[]): string[] => {
-      if (accumulator[1] !== null && endsWith(accumulator[1], '\\')) {
-        accumulator[1] += ':' + value;
+      if (accumulator[1] !== null && endsWith(accumulator[1], "\\")) {
+        accumulator[1] += ":" + value;
       } else if (accumulator[0] === null) {
         accumulator[0] = value;
-      } else if (endsWith(accumulator[0], '\\')) {
-        accumulator[0] += ':' + value;
+      } else if (endsWith(accumulator[0], "\\")) {
+        accumulator[0] += ":" + value;
       } else {
         accumulator[1] = value;
       }
@@ -95,7 +95,7 @@ function partToKeyValue(part: string): string[] {
 }
 
 export function decodeObject(key: string): any {
-  return _.chain(key.split('::'))
+  return _.chain(key.split("::"))
     .map(partToKeyValue)
     .map(function (pairs) { return pairs.map(unescape); })
     .fromPairs()

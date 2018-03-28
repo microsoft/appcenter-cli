@@ -1,14 +1,12 @@
-import { CommandArgs, help, name, longName, hasArg, ErrorCodes, required } from "../../../util/commandline";
+import { CommandArgs, help, longName, hasArg, required } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { CalabashPreparer } from "../lib/calabash-preparer";
-import { parseTestParameters } from "../lib/parameters-parser";
-import { parseIncludedFiles } from "../lib/included-files-parser";
 import { Messages } from "../lib/help-messages";
 import { out } from "../../../util/interaction";
 
 @help(Messages.TestCloud.Commands.RunCalabash)
 export default class RunCalabashTestsCommand extends RunTestsCommand {
-  
+
   @help(Messages.TestCloud.Arguments.CalabashProjectDir)
   @longName("project-dir")
   @required
@@ -55,7 +53,7 @@ export default class RunCalabashTestsCommand extends RunTestsCommand {
   }
 
   protected prepareManifest(artifactsDir: string): Promise<string> {
-    let preparer = new CalabashPreparer(artifactsDir, this.projectDir, this.appPath, this.testParameters);
+    const preparer = new CalabashPreparer(artifactsDir, this.projectDir, this.appPath, this.testParameters);
 
     preparer.signInfo = this.signInfo;
     preparer.config = this.config;

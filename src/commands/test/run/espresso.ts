@@ -1,8 +1,6 @@
-import { CommandArgs, help, name, longName, hasArg, ErrorCodes, required } from "../../../util/commandline";
+import { CommandArgs, help, longName, hasArg } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { EspressoPreparer } from "../lib/espresso-preparer";
-import { parseTestParameters } from "../lib/parameters-parser";
-import { parseIncludedFiles } from "../lib/included-files-parser";
 import { Messages } from "../lib/help-messages";
 
 @help(Messages.TestCloud.Commands.RunEspresso)
@@ -26,7 +24,7 @@ export default class RunEspressoTestsCommand extends RunTestsCommand {
     if (!this.appPath) {
       throw new Error("Argument --app-path is required");
     }
-    let preparer = new EspressoPreparer(artifactsDir, this.buildDir, this.testApkPath);
+    const preparer = new EspressoPreparer(artifactsDir, this.buildDir, this.testApkPath);
     return preparer.prepare();
   }
 

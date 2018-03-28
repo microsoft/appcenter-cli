@@ -9,7 +9,7 @@ export function prompt(message: string): Promise<string> {
     {
       name: "result", message: message
     }])
-    .then(answers => answers["result"].toString());
+    .then((answers) => answers["result"].toString());
 }
 
 export namespace prompt {
@@ -22,7 +22,7 @@ export namespace prompt {
         default: !!defaultResponse
       }
     ])
-    .then(answers => !!answers["confirm"]);
+    .then((answers) => !!answers["confirm"]);
   }
 
   export function confirmWithTimeout(message: string, timeoutMS: number, defaultResponse?: boolean): Promise<boolean> {
@@ -30,22 +30,23 @@ export namespace prompt {
       return Promise.resolve(!!defaultResponse);
     } else {
       let timerId: NodeJS.Timer;
-      let confirmPrompt = inquirer.prompt({
+      const confirmPrompt = inquirer.prompt({
         type: "confirm",
         name: "confirm",
         message: message,
         default: !!defaultResponse
       });
 
-      let promptCompleted = confirmPrompt.then(answers => {
+      const promptCompleted = confirmPrompt.then((answers) => {
         clearTimeout(timerId);
         return !!answers["confirm"];
       });
 
-      let timeoutPromise: Promise<boolean> = new Promise((resolve, reject) => {
+      const timeoutPromise: Promise<boolean> = new Promise((resolve, reject) => {
+        /* tslint:disable-next-line:no-string-based-set-timeout */
         timerId = setTimeout(resolve, timeoutMS);
       }).then(() => {
-        (<any>confirmPrompt).ui.close();
+        (confirmPrompt as any).ui.close();
         return !!defaultResponse;
       });
 
@@ -60,17 +61,17 @@ export namespace prompt {
         name: "result",
         message: message
       }])
-    .then(answers => answers["result"].toString());
-  };
+    .then((answers) => answers["result"].toString());
+  }
 
   export function question(questions: inquirer.Questions): Promise<inquirer.Answers> {
     if (isQuiet()) {
       if (!Array.isArray(questions)) {
         // Casting is done here due to incompatibility between typings and @types package
-        questions = [<inquirer.Question>questions];
-        
+        questions = [questions as inquirer.Question];
+
       }
-      let answers: any = questions.reduce((answers: any, q: inquirer.Question) => {
+      const answers: any = questions.reduce((answers: any, q: inquirer.Question) => {
         if (answers instanceof Error) {
           return answers;
         }
@@ -89,5 +90,5 @@ export namespace prompt {
     // Wrap inquirer promise in "real" promise, typescript definitions
     // don't line up.
     return Promise.resolve(inquirer.prompt(questions));
-  };
+  }
 }

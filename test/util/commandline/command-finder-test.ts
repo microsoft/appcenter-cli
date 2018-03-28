@@ -10,13 +10,13 @@ describe("Finding commands", function () {
   });
 
   it("should return not found if no such command exists", function () {
-    const commandLine = "no such command".split(' ');
+    const commandLine = "no such command".split(" ");
     const result = commandFinder(commandLine);
     expect(result).to.have.property("found", false);
   });
 
   it("should command parts that were not found if no command exists", function () {
-    const commandLine = "no such command".split(' ');
+    const commandLine = "no such command".split(" ");
     const result = commandFinder(commandLine);
     expect(result.commandParts).to.have.lengthOf(3);
     commandLine.forEach((part, index) => {
@@ -55,7 +55,7 @@ describe("Finding commands", function () {
     const result = commandFinder(commandLine);
     expect(result.commandPath).to.equal(path.join(__dirname, "sample-commands", "cmd1.ts"));
     expect(result.unusedArgs).to.have.lengthOf(commandLine.length - 1);
-    for(let i = 0; i < commandLine.length - 1; ++i) {
+    for (let i = 0; i < commandLine.length - 1; ++i) {
       expect(result.unusedArgs[i]).to.equal(commandLine[i + 1]);
     }
   });

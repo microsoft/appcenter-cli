@@ -2,11 +2,11 @@ import { expect } from "chai";
 
 import { parseOptions, OptionsDescription, PositionalOptionsDescription } from "../../../src/util/commandline/option-parser";
 
-describe("Command line option parsing", function() {
+describe("Command line option parsing", function () {
 
   describe("single option", function () {
     const opts: OptionsDescription = {
-      "singleFlag": {
+      singleFlag: {
         shortName: "a",
         longName: "a-flag",
         required: false
@@ -14,22 +14,22 @@ describe("Command line option parsing", function() {
     };
 
     it("should parse single flag correctly when flag is present", function () {
-      let target: any = {};
-      let args = [ "-a" ];
+      const target: any = {};
+      const args = [ "-a" ];
       parseOptions(opts, target, args);
       expect(target).to.have.property("singleFlag", true);
     });
 
-    it("should succeed parsing when optional flag not present", function() {
-      let target: any = {};
-      let args: string[] = [];
+    it("should succeed parsing when optional flag not present", function () {
+      const target: any = {};
+      const args: string[] = [];
       parseOptions(opts, target, args);
       expect(target).to.have.property("singleFlag", false);
     });
 
     it("should parse long option flag when present", function () {
-      let target: any = {};
-      let args = [ "--a-flag" ];
+      const target: any = {};
+      const args = [ "--a-flag" ];
       parseOptions(opts, target, args);
       expect(target).to.have.property("singleFlag", true);
     });
@@ -43,7 +43,7 @@ describe("Command line option parsing", function() {
   describe("single option with argument", function () {
 
     const opts: OptionsDescription = {
-      "optionWithArg": {
+      optionWithArg: {
         shortName: "a",
         longName: "with-arg",
         hasArg: true
@@ -51,8 +51,8 @@ describe("Command line option parsing", function() {
     };
 
     it("should read argument from next arg if separate", function () {
-      let target: any = {};
-      let args = [ "-a", "argValue" ];
+      const target: any = {};
+      const args = [ "-a", "argValue" ];
       parseOptions(opts, target, args);
       expect(target).to.have.property("optionWithArg", "argValue");
     });
@@ -60,7 +60,7 @@ describe("Command line option parsing", function() {
 
   describe("required option", function () {
     const opts: OptionsDescription = {
-      "req": {
+      req: {
         shortName: "r",
         longName: "required",
         hasArg: true,
@@ -69,13 +69,13 @@ describe("Command line option parsing", function() {
     };
 
     it("should parse correctly when present", function () {
-      let target = {};
+      const target = {};
       parseOptions(opts, target, ["-r", "stuff"]);
       expect(target).to.have.property("req", "stuff");
     });
 
     it("should throw if required argument is not given", function () {
-      let target = {};
+      const target = {};
       expect(() => parseOptions(opts, target, []))
         .to.throw(/missing required option/i);
     });
@@ -83,7 +83,7 @@ describe("Command line option parsing", function() {
 
   describe("option with default value", function () {
     const opts: OptionsDescription = {
-      "def": {
+      def: {
         shortName: "d",
         defaultValue: "defined",
         hasArg: true,
@@ -91,13 +91,13 @@ describe("Command line option parsing", function() {
     };
 
     it("should take command line option if given", function () {
-      let target: any = {};
+      const target: any = {};
       parseOptions(opts, target, "-d specificValue".split(" "));
       expect(target).to.have.property("def", "specificValue");
     });
 
     it("should return default value if not in arguments", function () {
-      let target: any = {};
+      const target: any = {};
       parseOptions(opts, target, []);
       expect(target).to.have.property("def", "defined");
     });
@@ -105,17 +105,17 @@ describe("Command line option parsing", function() {
 
   describe("multiple options", function () {
     const opts: OptionsDescription = {
-      "flag": {
+      flag: {
         shortName: "f",
         longName: "flag"
       },
-      "input": {
+      input: {
         shortName: "i",
         longName: "input",
         required: true,
         hasArg: true
       },
-      "output": {
+      output: {
         longName: "out",
         hasArg: true,
         defaultValue: "out.dat"
@@ -123,7 +123,7 @@ describe("Command line option parsing", function() {
     };
 
     it("should parse all options if all present", function () {
-      let target: any = {};
+      const target: any = {};
       parseOptions(opts, target, "-i in.txt -f --out=myFile.txt".split(" "));
       expect(target).to.have.property("flag", true);
       expect(target).to.have.property("input", "in.txt");
@@ -131,7 +131,7 @@ describe("Command line option parsing", function() {
     });
 
     it("should return default values for options not present", function () {
-      let target: any = {};
+      const target: any = {};
       parseOptions(opts, target, "-f --input myfile.txt".split(" "));
       expect(target).to.have.property("flag", true);
       expect(target).to.have.property("input", "myfile.txt");
@@ -139,7 +139,7 @@ describe("Command line option parsing", function() {
     });
 
     it("should throw if required option missing", function () {
-      let target: any = {};
+      const target: any = {};
       expect(() => parseOptions(opts, target, "--out foo.txt".split(" ")))
         .to.throw(/missing required option -i \/ --input/i);
     });
@@ -157,7 +157,7 @@ describe("Command line option parsing", function() {
         }
       ];
 
-      let target: any = {};
+      const target: any = {};
       parseOptions({}, opts, target, "input.txt".split(" "));
       expect(target).to.have.property("file", "input.txt");
     });
@@ -172,7 +172,7 @@ describe("Command line option parsing", function() {
         }
       ];
 
-      let target: any = {};
+      const target: any = {};
       expect(() => parseOptions({}, opts, target, []))
         .to.throw(/missing required positional argument inputFile/i);
     });
@@ -191,7 +191,7 @@ describe("Command line option parsing", function() {
         }
       ];
 
-      let target: any = {};
+      const target: any = {};
       parseOptions({}, opts, target, "a.txt b.txt c.txt".split(" "));
 
       expect(target).to.have.property("file", "a.txt");
@@ -218,7 +218,7 @@ describe("Command line option parsing", function() {
         }
       ];
 
-      let target: any = {};
+      const target: any = {};
       parseOptions({}, opts, target, "a.txt".split(" "));
 
       expect(target).to.have.property("file", "a.txt");
@@ -235,7 +235,7 @@ describe("Command line option parsing", function() {
         }
       ];
 
-      let target: any = {};
+      const target: any = {};
       expect(() => parseOptions({}, opts, target, "a.txt b.txt".split(" ")))
         .to.throw(Error, /Unknown arguments: b.txt/);
     });
@@ -243,19 +243,19 @@ describe("Command line option parsing", function() {
 
   describe("flags and positional together", function () {
     it("should parse as expected", function () {
-      let flagOpts: OptionsDescription = {
-        "verbose": {
+      const flagOpts: OptionsDescription = {
+        verbose: {
           shortName: "v",
           longName: "verbose"
         },
-        "format": {
+        format: {
           shortName: "f",
           longName: "format",
           hasArg: true
         }
       };
 
-      let positionOpts: PositionalOptionsDescription = [
+      const positionOpts: PositionalOptionsDescription = [
         {
           name: "inputFile",
           propertyName: "inputFile",
@@ -268,7 +268,7 @@ describe("Command line option parsing", function() {
         }
       ];
 
-      let target: any = {};
+      const target: any = {};
       parseOptions(flagOpts, positionOpts, target, "in.txt -v conf.json --format=csv".split(" "));
 
       expect(target).to.have.property("verbose", true);

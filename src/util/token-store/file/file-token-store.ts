@@ -7,19 +7,12 @@
 //
 
 import * as fs from "fs";
-import * as os from "os";
-import * as path from "path";
 import * as rx from "rx-lite";
 import { toPairs } from "lodash";
-
-import { profileDirName } from "../../misc/constants";
 
 const debug = require("debug")("appcenter-cli:util:token-store:file:file-token-store");
 
 import { TokenEntry, TokenStore, TokenKeyType, TokenValueType } from "../token-store";
-
-const defaultPath = profileDirName;
-const defaultFile = "tokens.json";
 
 export class FileTokenStore implements TokenStore {
   private filePath: string;
@@ -36,7 +29,7 @@ export class FileTokenStore implements TokenStore {
 
   list(): rx.Observable<TokenEntry> {
     this.loadTokenStoreCache();
-    return rx.Observable.from(toPairs(this.tokenStoreCache)).map(pair => ({ key: pair[0], accessToken: pair[1]}));
+    return rx.Observable.from(toPairs(this.tokenStoreCache)).map((pair) => ({ key: pair[0], accessToken: pair[1]}));
   }
 
   get(key: TokenKeyType): Promise<TokenEntry> {

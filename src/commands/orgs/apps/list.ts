@@ -4,8 +4,6 @@ import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 
 const debug = require("debug")("appcenter-cli:commands:orgs:apps:list");
 import { inspect } from "util";
-import { getPortalOrgLink } from "../../../util/portal/portal-helper";
-import { getOrgUsers } from "../lib/org-users-helper";
 
 @help("Lists applications of organization")
 export default class OrgAppsListCommand extends Command {

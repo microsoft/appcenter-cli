@@ -176,7 +176,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
   private getFileFullPath(passedFileName: string, directoryPath: string, appName: string, downloadUrl: string): string {
     if (_.isNil(passedFileName)) {
       // creating default file name from app name and "format" query key value of download url
-      const ext = "." + <string> Url.parse(downloadUrl, true).query.format;
+      const ext = "." + Url.parse(downloadUrl, true).query.format as string;
       const name = appName;
       return Path.format({ dir: directoryPath, name, ext, base: null, root: null });
     } else {

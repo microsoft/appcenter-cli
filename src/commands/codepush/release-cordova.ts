@@ -1,5 +1,5 @@
 import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName } from "../../util/commandline";
-import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton"
+import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
@@ -8,9 +8,9 @@ import * as path from "path";
 import * as fs from "fs";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";
 import { isValidOS, isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectAppVersion } from "./lib/cordova-utils";
+import * as childProcess from "child_process";
 
-var childProcess = require("child_process");
-export var execSync = childProcess.execSync;
+export let execSync = childProcess.execSync;
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-cordova");
 
@@ -56,7 +56,7 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
     }
 
     if (this.specifiedTargetBinaryVersion) {
-      this.targetBinaryVersion = this.specifiedTargetBinaryVersion
+      this.targetBinaryVersion = this.specifiedTargetBinaryVersion;
     } else {
       this.targetBinaryVersion = await getCordovaProjectAppVersion();
     }
@@ -68,8 +68,9 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
     this.updateContentsPath = this.getOutputFolder();
     const cordovaCommand: string = this.getCordovaCommand();
 
+    let cordovaCLI: string;
     try {
-      var cordovaCLI: string = getCordovaOrPhonegapCLI();
+      cordovaCLI = getCordovaOrPhonegapCLI();
     } catch (e) {
       return failure(ErrorCodes.Exception, `Unable to ${cordovaCommand} project. Please ensure that either the Cordova or PhoneGap CLI is installed.`);
     }
@@ -94,7 +95,7 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
     if (this.os === "ios") {
       outputFolder = path.join(platformFolder, "www");
     } else if (this.os === "android") {
-      // Since cordova-android 7 assets directory moved to android/app/src/main/assets instead of android/assets                
+      // Since cordova-android 7 assets directory moved to android/app/src/main/assets instead of android/assets
       const outputFolderVer7 = path.join(platformFolder, "app", "src", "main", "assets", "www");
       if (fs.existsSync(outputFolderVer7)) {
         outputFolder = outputFolderVer7;

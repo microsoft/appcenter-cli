@@ -20,7 +20,7 @@ export default class SymbolsUploadingHelper {
       await new AzureBlobUploadHelper(this.debug).upload(uploadUrl, zip);
 
       // sending 'committed' API request to finish uploading
-      const uploadingEndRequestResult: models.SymbolUpload = await this.executeSymbolsUploadingEndRequest(this.client, this.app, symbolUploadId, "committed");
+      await this.executeSymbolsUploadingEndRequest(this.client, this.app, symbolUploadId, "committed");
     } catch (error) {
       // uploading failed, aborting upload request
       await this.abortUploadingRequest(this.client, this.app, symbolUploadId);

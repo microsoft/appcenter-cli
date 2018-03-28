@@ -9,4 +9,4 @@ export default class Command2 extends Command {
   async run(client: AppCenterClient): Promise<CommandResult> {
     return success();
   }
-};
+}

@@ -1,10 +1,8 @@
-import { Command, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../../util/commandline";
+import { Command, CommandResult, help, success, shortName, longName, hasArg, required } from "../../../util/commandline";
 import { out } from "../../../util/interaction";
-import { AppCenterClient, models, clientRequest } from "../../../util/apis";
+import { AppCenterClient, models } from "../../../util/apis";
 
 const debug = require("debug")("appcenter-cli:commands:orgs:collaborators:list");
-import { inspect } from "util";
-import { getPortalOrgLink } from "../../../util/portal/portal-helper";
 import { getOrgUsers } from "../lib/org-users-helper";
 
 @help("Lists collaborators of organization")

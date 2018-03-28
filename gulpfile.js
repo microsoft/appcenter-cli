@@ -52,7 +52,7 @@ gulp.task('generate-autocomplete-tree', function () {
   autocompleteTree.generateAndSave();
 });
 
-gulp.task('build', function(done) {
+gulp.task('build:raw', function(done) {
   runSeq([ 'build-ts', 'copy-assets', 'copy-generated-client' ], 'generate-autocomplete-tree', done);
 });
 
@@ -63,6 +63,13 @@ gulp.task('build-sourcemaps', function(done) {
 gulp.task('clean-sourcemaps', function (cb) {
   return gulp.src('dist/**/*.js.map')
     .pipe(clean())
+});
+
+//
+// Stop people from using gulp build to skip tslint
+//
+gulp.task('build', function () {
+  throw new Error('Do not use gulp build! Run "npm run build" instead!');
 });
 
 //

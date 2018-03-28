@@ -6,7 +6,7 @@ import * as pfs from "../../../../util/misc/promisfied-fs";
 import { copyFileToTmpDir, isDirectory } from "../file-utils";
 
 const CURRENT_CLAIM_VERSION: string = "1.0.0";
-const METADATA_FILE_NAME: string = ".codepushrelease"
+const METADATA_FILE_NAME: string = ".codepushrelease";
 
 interface CodeSigningClaims {
   claimVersion: string;

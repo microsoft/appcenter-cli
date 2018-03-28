@@ -6,10 +6,10 @@ export abstract class XmlUtil {
     if (!node || !name) {
       return result;
     }
-    if(node.nodeName === name) {
+    if (node.nodeName === name) {
       result.push(node);
     }
-    for(let i: number = 0; node.childNodes && i < node.childNodes.length; ++i) {
+    for (let i: number = 0; node.childNodes && i < node.childNodes.length; ++i) {
       result = result.concat(this.collectAllElements(node.childNodes[i], name));
     }
     return result;
@@ -23,7 +23,7 @@ export abstract class XmlUtil {
       return [node];
     }
     let result: Node[] = [];
-    for(let i: number = 0; node.childNodes && i < node.childNodes.length; ++i) {
+    for (let i: number = 0; node.childNodes && i < node.childNodes.length; ++i) {
       result = result.concat(this.collectChildren(node.childNodes[i], name));
     }
     return result;
@@ -33,8 +33,8 @@ export abstract class XmlUtil {
     if (!node || !node.childNodes) {
       return 0;
     }
-    let result = node.childNodes.length;;
-    for(let i: number = 0; i < node.childNodes.length; ++i) {
+    let result = node.childNodes.length;
+    for (let i: number = 0; i < node.childNodes.length; ++i) {
       result += this.countChildren(node.childNodes[i]);
     }
     return result;

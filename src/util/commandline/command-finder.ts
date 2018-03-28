@@ -18,8 +18,7 @@ function checkStats(dispatchRoot: string, pathParts: string[], check: {(stats: f
     debug(`Checking stats for ${filePath}`);
     const stats = fs.statSync(filePath);
     return check(stats);
-  }
-  catch(err) {
+  } catch (err) {
     if (err.code === "ENOENT") {
       return false;
     }
@@ -28,7 +27,7 @@ function checkStats(dispatchRoot: string, pathParts: string[], check: {(stats: f
 }
 
 function stripExtension(name: string): string {
-  let extLen = path.extname(name).length;
+  const extLen = path.extname(name).length;
   if (extLen > 0) {
     return name.slice(0, -extLen);
   }
@@ -36,15 +35,11 @@ function stripExtension(name: string): string {
 }
 
 function isDir(dispatchRoot: string, pathParts: string[]): boolean {
-  return checkStats(dispatchRoot, pathParts, s => s.isDirectory());
-}
-
-function isFile(dispatchRoot: string, pathParts: string[]): boolean {
-  return checkStats(dispatchRoot, pathParts, s => s.isFile());
+  return checkStats(dispatchRoot, pathParts, (s) => s.isDirectory());
 }
 
 function normalizeCommandNames(command: string[]): string[] {
-  return command.map(part => part.toLowerCase());
+  return command.map((part) => part.toLowerCase());
 }
 
 const legalCommandRegex = /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/;
@@ -55,7 +50,7 @@ function isLegalCommandName(commandName: string): boolean {
 }
 
 function splitCommandLine(command: string[]): [string[], string[]] {
-  let partitionPoint = command.findIndex(cmd => !isLegalCommandName(cmd));
+  let partitionPoint = command.findIndex((cmd) => !isLegalCommandName(cmd));
   if (partitionPoint === -1) {
     partitionPoint = command.length;
   }
@@ -81,18 +76,18 @@ export interface CommandFinderResult {
 
 // Helper functions to construct results
 function commandNotFound(commandParts: string[]): CommandFinderResult {
-  debug(`No command found at '${commandParts.join(' ')}'`);
+  debug(`No command found at '${commandParts.join(" ")}'`);
   return {
     found: false,
     isCategory: false,
     commandPath: null,
     commandParts,
     unusedArgs: []
-  }
-};
+  };
+}
 
 function commandFound(commandPath: string, commandParts: string[], unusedArgs: string[]): CommandFinderResult {
-  debug(`Command '${commandParts.join(' ')}' found at ${commandPath}`);
+  debug(`Command '${commandParts.join(" ")}' found at ${commandPath}`);
   return {
     found: true,
     isCategory: false,
@@ -103,7 +98,7 @@ function commandFound(commandPath: string, commandParts: string[], unusedArgs: s
 }
 
 function categoryFound(commandPath: string, commandParts: string[], unusedArgs: string[]): CommandFinderResult {
-  debug(`Category '${commandParts.join(' ')}' found at ${commandPath}`);
+  debug(`Category '${commandParts.join(" ")}' found at ${commandPath}`);
   return {
     found: true,
     isCategory: true,
@@ -124,7 +119,7 @@ export function finder(dispatchRoot: string): CommandFinder {
 
   return function commandFinder(commandLineArgs: string[]): CommandFinderResult {
     debug(`Looking for command ${inspect(commandLineArgs)}`);
-    let [command, args] = splitCommandLine(commandLineArgs);
+    const [command, args] = splitCommandLine(commandLineArgs);
     if (command.length === 0) {
       return categoryFound(toFullPath(dispatchRoot, []), [], commandLineArgs);
     }
@@ -135,8 +130,8 @@ export function finder(dispatchRoot: string): CommandFinder {
         return null;
       }
 
-      let fullCommand = commandDir.concat([commandName]);
-      if (checkStats(dispatchRoot, fullCommand, stats => stats.isDirectory())) {
+      const fullCommand = commandDir.concat([commandName]);
+      if (checkStats(dispatchRoot, fullCommand, (stats) => stats.isDirectory())) {
         return [toFullPath(dispatchRoot, fullCommand), fullCommand, false];
       }
 
@@ -144,19 +139,19 @@ export function finder(dispatchRoot: string): CommandFinder {
       // can ignore any potential file extensions.
       const files = fs.readdirSync(toFullPath(dispatchRoot, commandDir));
 
-      const matching = files.filter(file =>
+      const matching = files.filter((file) =>
         path.parse(file).name === commandName);
 
       if (matching.length > 1) {
-        throw new Error(`Ambiguous match for command '${commandLineArgs.join(' ')}'`);
+        throw new Error(`Ambiguous match for command '${commandLineArgs.join(" ")}'`);
       }
 
       if (matching.length === 0) {
         return null;
       }
 
-      let commandParts = commandDir.concat([matching[0]]);
-      let commandPath = toFullPath(dispatchRoot, commandDir.concat([matching[0]]));
+      const commandParts = commandDir.concat([matching[0]]);
+      const commandPath = toFullPath(dispatchRoot, commandDir.concat([matching[0]]));
       return [commandPath, commandParts, true];
     }
 
@@ -180,5 +175,5 @@ export function finder(dispatchRoot: string): CommandFinder {
 
     // Got here, nothing found
     return commandNotFound(commandLineArgs);
-  }
+  };
 }

@@ -1,4 +1,4 @@
-import {AppCommand, Command, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success} from "../../util/commandline";
+import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
 import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";

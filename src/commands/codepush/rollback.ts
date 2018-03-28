@@ -1,7 +1,6 @@
-import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, shortName, longName, hasArg, position, name } from "../../util/commandline";
+import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, longName, hasArg, position, name } from "../../util/commandline";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out, prompt } from "../../util/interaction";
-import * as chalk from "chalk";
 import { inspect } from "util";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:rollback");
@@ -34,9 +33,9 @@ export default class CodePushRollbackCommand extends AppCommand {
 
     try {
       debug("Rollback CodePush release");
-      const httpRequest = await out.progress("Rollback CodePush release...", clientRequest<models.CodePushRelease>(
+      await out.progress("Rollback CodePush release...", clientRequest<models.CodePushRelease>(
         (cb) => client.codePushDeploymentRelease.rollback(this.deploymentName, app.ownerName, app.appName, { label: this.targetRelease}, cb)));
-    } catch (error){
+    } catch (error) {
       debug(`Failed to rollback CodePush release - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, error.response.body);
     }

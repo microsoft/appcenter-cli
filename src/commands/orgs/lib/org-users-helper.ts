@@ -1,9 +1,5 @@
-import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
-import { failure, ErrorCodes } from "../../../util/commandline";
-import { inspect } from "util";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { handleHttpError } from "../../../util/apis/create-client";
-
-const debug = require("debug")("appcenter-cli:commands:orgs:lib:org-users-helper");
 
 export async function getOrgUsers(client: AppCenterClient, organization: string, debug: Function): Promise<models.OrganizationUserResponse[]> {
   try {

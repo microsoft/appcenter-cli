@@ -1,15 +1,13 @@
 import * as path from "path";
 
 import { expect } from "chai";
-import * as sinon from "sinon";
-import { inspect } from "util";
 
-import { Command, CommandResult, ErrorCodes, runner, failed, succeeded } from "../../../src/util/commandline";
+import { CommandResult, ErrorCodes, runner, failed, succeeded } from "../../../src/util/commandline";
 
 describe("Running commands", function () {
   const run = runner(path.join(__dirname, "sample-commands"));
 
-  it("should execute command when it's legal", function() {
+  it("should execute command when it's legal", function () {
     return run(["cmd1"])
       .then((result: CommandResult) => {
         expect(succeeded(result)).to.be.true;
@@ -18,7 +16,7 @@ describe("Running commands", function () {
 
   it("should fail with not found error if not found", function () {
     return run(["not", "a", "command"])
-      .then((result:CommandResult) => {
+      .then((result: CommandResult) => {
         expect(failed(result)).to.be.true;
         // We need this if check to get typescript to line up types correctly
         if (failed(result)) {

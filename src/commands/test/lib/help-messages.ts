@@ -59,7 +59,7 @@ export module Messages {
 
       export const AppiumBuildDir = "Path to the directory with the Appium tests (usually <project>/target/upload)";
 
-      export const CalabashProjectDir = 'Path to the Calabash workspace directory (usually <project>/features)';
+      export const CalabashProjectDir = "Path to the Calabash workspace directory (usually <project>/features)";
       export const CalabashSignInfo = "Use Signing Info for signing the test server";
       export const CalabashConfigPath = "Path to the Cucumber configuration file (usually cucumber.yml)";
       export const CalabashProfile = "Profile to run. It must exist in the configuration file";

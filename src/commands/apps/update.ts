@@ -1,12 +1,9 @@
 // apps create command
 
-import { AppCommand, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
+import { AppCommand, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportApp } from "./lib/format-app";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
-
-const debug = require("debug")("appcenter-cli:commands:apps:create");
-import { inspect } from "util";
 
 @help("Update an app")
 export default class AppUpdateCommand extends AppCommand {
@@ -48,7 +45,7 @@ export default class AppUpdateCommand extends AppCommand {
 
     const app = this.app;
     const updateAppResponse = await out.progress("Updating app ...",
-      clientRequest<models.AppResponse>(cb => client.apps.update(app.appName, app.ownerName, { app: appAttributes }, cb))
+      clientRequest<models.AppResponse>((cb) => client.apps.update(app.appName, app.ownerName, { app: appAttributes }, cb))
     );
 
     const statusCode = updateAppResponse.response.statusCode;

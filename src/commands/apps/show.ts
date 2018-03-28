@@ -5,9 +5,6 @@ import { out } from "../../util/interaction";
 import { reportApp } from "./lib/format-app";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
-const debug = require("debug")("appcenter-cli:commands:apps:show");
-import { inspect } from "util";
-
 @help("Get the details of an app")
 export default class AppShowCommand extends AppCommand {
   constructor(args: CommandArgs) {
@@ -17,7 +14,7 @@ export default class AppShowCommand extends AppCommand {
   async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
-    const appDetailsResponse = await out.progress("Getting app details ...", clientRequest<models.AppResponse>(cb => client.apps.get(app.ownerName, app.appName, cb)));
+    const appDetailsResponse = await out.progress("Getting app details ...", clientRequest<models.AppResponse>((cb) => client.apps.get(app.ownerName, app.appName, cb)));
 
     const statusCode = appDetailsResponse.response.statusCode;
 

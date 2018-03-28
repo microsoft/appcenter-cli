@@ -1,8 +1,10 @@
-import { AppCommand, CommandArgs, CommandResult,
-         help, success, name, shortName, longName, required, hasArg,
-         failure, ErrorCodes } from "../../../util/commandline";
+import {
+  AppCommand, CommandArgs, CommandResult,
+  help, success, shortName, longName, required, hasArg,
+  failure, ErrorCodes
+} from "../../../util/commandline";
+
 import { TestCloudUploader, StartedTestRun } from "./test-cloud-uploader";
-import { TestCloudError } from "./test-cloud-error";
 import { StateChecker } from "./state-checker";
 import { AppCenterClient } from "../../../util/apis";
 import { StreamingArrayOutput } from "../../../util/interaction";
@@ -10,13 +12,12 @@ import { getUser } from "../../../util/profile";
 import { parseTestParameters } from "./parameters-parser";
 import { parseIncludedFiles } from "./included-files-parser";
 import { progressWithResult } from "./interaction";
-import { ITestCloudManifestJson, ITestFrameworkJson, IFileDescriptionJson } from "./test-manifest-reader";
+import { ITestCloudManifestJson } from "./test-manifest-reader";
 import { Messages } from "./help-messages";
 import * as _ from "lodash";
 import * as fsHelper from "../../../util/misc/fs-helper";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
-import * as temp from "temp";
 import * as os from "os";
 import * as process from "process";
 import * as downloadUtil from "../../../util/misc/download";
@@ -95,13 +96,15 @@ export abstract class RunTestsCommand extends AppCommand {
     this.include = this.fixArrayParameter(this.include);
 
     if (this.timeoutSec && typeof this.timeoutSec === "string") {
-      this.timeoutSec = parseInt(this.timeoutSec);
+      this.timeoutSec = parseInt(this.timeoutSec, 10);
     }
   }
 
   // Override this if you need to validate options
   protected async validateOptions(): Promise<void> {
+    return;
   }
+
   // TODO: There is technical debt here.
   // There is a lot of confusion and even duplicated code with respect to test params,
   // included files and responsibility of prepare vs run.
@@ -111,35 +114,35 @@ export abstract class RunTestsCommand extends AppCommand {
     }
     await this.validateOptions();
     try {
-      let artifactsDir = await this.getArtifactsDir();
+      const artifactsDir = await this.getArtifactsDir();
       this.streamingOutput.start();
       try {
-        let manifestPath = await progressWithResult("Preparing tests", this.prepareManifest(artifactsDir));
+        const manifestPath = await progressWithResult("Preparing tests", this.prepareManifest(artifactsDir));
         await this.addIncludedFilesToManifestAndCopyToArtifactsDir(manifestPath);
-        let testRun = await this.uploadAndStart(client, manifestPath, portalBaseUrl);
+        const testRun = await this.uploadAndStart(client, manifestPath, portalBaseUrl);
 
-        let vstsIdVariable = this.vstsIdVariable;
-        this.streamingOutput.text(function (testRun){
+        const vstsIdVariable = this.vstsIdVariable;
+        this.streamingOutput.text(function (testRun) {
           let report: string = `Test run id: "${testRun.testRunId}"` + os.EOL;
-          if(vstsIdVariable) {
+          if (vstsIdVariable) {
             report = `##vso[task.setvariable variable=${vstsIdVariable}]${testRun.testRunId}` + os.EOL;
           }
           report += "Accepted devices: " + os.EOL;
-          testRun.acceptedDevices.map(item => `  - ${item}`).forEach(text => report+=text + os.EOL);
+          testRun.acceptedDevices.map((item) => `  - ${item}`).forEach((text) => report += text + os.EOL);
           if (testRun.rejectedDevices && testRun.rejectedDevices.length > 0) {
             report += "Rejected devices: " + os.EOL;
-            testRun.rejectedDevices.map(item => `  - ${item}`).forEach(text => report+=text + os.EOL);
+            testRun.rejectedDevices.map((item) => `  - ${item}`).forEach((text) => report += text + os.EOL);
           }
           return report;
         }, testRun );
 
         if (!this.async) {
-          let exitCode = await this.waitForCompletion(client, testRun.testRunId);
+          const exitCode = await this.waitForCompletion(client, testRun.testRunId);
 
           if (this.testOutputDir) {
 
               // Download json test result
-              var testReport: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
+              const testReport: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
               if (testReport.stats.artifacts) {
                 await this.downloadArtifacts(testRun.testRunId, testReport.stats.artifacts);
                 await this.mergeTestArtifacts();
@@ -155,8 +158,8 @@ export abstract class RunTestsCommand extends AppCommand {
           }
         }
 
-        this.streamingOutput.text(function (testRun){
-          let report: string = `Test Report: ${testRun.testRunUrl}` + os.EOL;
+        this.streamingOutput.text(function (testRun) {
+          const report: string = `Test Report: ${testRun.testRunUrl}` + os.EOL;
           return report;
         }, testRun );
 
@@ -166,11 +169,10 @@ export abstract class RunTestsCommand extends AppCommand {
         await this.cleanupArtifactsDir(artifactsDir);
         this.streamingOutput.finish();
       }
-    }
-    catch (err) {
-      let exitCode = err.exitCode || err.errorCode || ErrorCodes.Exception;
+    } catch (err) {
+      const exitCode = err.exitCode || err.errorCode || ErrorCodes.Exception;
       let message : string = null;
-      let profile = getUser();
+      const profile = getUser();
 
       let helpMessage = `Further error details: For help, please send both the reported error above and the following environment information to us by going to https://appcenter.ms/apps and starting a new conversation (using the icon in the bottom right corner of the screen)${os.EOL}
         Environment: ${os.platform()}
@@ -187,21 +189,15 @@ export abstract class RunTestsCommand extends AppCommand {
         `;
       }
 
-      if (err.message && err.message.indexOf("Not Found") !== -1)
-      {
+      if (err.message && err.message.indexOf("Not Found") !== -1) {
         message = `Requested resource not found - please check --app: ${this.identifier}${os.EOL}${os.EOL}${helpMessage}`;
       }
-      if (err.errorCode === 5)
-      {
+      if (err.errorCode === 5) {
         message = `Unauthorized error - please check --token or log in to the appcenter CLI.${os.EOL}${os.EOL}${helpMessage}`;
-      }
-      else if (err.errorMessage)
-      {
+      } else if (err.errorMessage) {
         message = `${err.errorMessage}${os.EOL}${os.EOL}${helpMessage}`;
-      }
-      else
-      {
-        if(!err.message) {
+      } else {
+        if (!err.message) {
           err.message = "Could not start your tests. Maybe your subscription has expired.";
         }
         message = `${err.message}${os.EOL}${os.EOL}${helpMessage}`;
@@ -215,18 +211,18 @@ export abstract class RunTestsCommand extends AppCommand {
     if (!this.include) {
       return;
     }
-    let manifestJson = await pfs.readFile(manifestPath, "utf8");
-    let manifest = JSON.parse(manifestJson) as ITestCloudManifestJson;
-    let includedFiles = parseIncludedFiles(this.include, this.getSourceRootDir());
+    const manifestJson = await pfs.readFile(manifestPath, "utf8");
+    const manifest = JSON.parse(manifestJson) as ITestCloudManifestJson;
+    const includedFiles = parseIncludedFiles(this.include, this.getSourceRootDir());
 
     for (let i = 0; i < includedFiles.length; i++) {
-      let includedFile = includedFiles[i];
-      let copyTarget = path.join(path.dirname(manifestPath), includedFile.targetPath);
+      const includedFile = includedFiles[i];
+      const copyTarget = path.join(path.dirname(manifestPath), includedFile.targetPath);
       await pfs.cp(includedFile.sourcePath, copyTarget);
       manifest.files.push(includedFile.targetPath);
     }
 
-    let modifiedManifest = JSON.stringify(manifest, null, 1);
+    const modifiedManifest = JSON.stringify(manifest, null, 1);
     await pfs.writeFile(manifestPath, modifiedManifest);
   }
 
@@ -239,7 +235,7 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   protected async cleanupArtifactsDir(artifactsDir: string): Promise<void> {
-    await pfs.rmDir(artifactsDir, true).catch(function(err){
+    await pfs.rmDir(artifactsDir, true).catch(function (err) {
       console.warn(`${err} while cleaning up artifacts directory ${artifactsDir}. This is often due to files being locked or in use. Please check your virus scan settings and any local security policies you might have in place for this directory. Continuing without cleanup.`);
     });
   }
@@ -251,7 +247,7 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   protected async uploadAndStart(client: AppCenterClient, manifestPath: string, portalBaseUrl: string): Promise<StartedTestRun> {
-    let uploader = new TestCloudUploader(
+    const uploader = new TestCloudUploader(
       client,
       this.app.ownerName,
       this.app.appName,
@@ -281,12 +277,12 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   private combinedParameters() : {} {
-    let parameters = this.getParametersFromOptions();
+    const parameters = this.getParametersFromOptions();
 
     if (this.testParameters) {
-      return _.merge(parameters, parseTestParameters(this.testParameters))
+      return _.merge(parameters, parseTestParameters(this.testParameters));
     } else {
-      return parameters
+      return parameters;
     }
   }
 
@@ -295,15 +291,15 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   private waitForCompletion(client: AppCenterClient, testRunId: string): Promise<number> {
-    let checker = new StateChecker(client, testRunId, this.app.ownerName, this.app.appName, this.streamingOutput);
+    const checker = new StateChecker(client, testRunId, this.app.ownerName, this.app.appName, this.streamingOutput);
     return checker.checkUntilCompleted(this.timeoutSec);
   }
 
   private async downloadArtifacts(testRunId: string, artifacts: { [propertyName: string]: string }): Promise<void> {
-    for (let key in artifacts) {
+    for (const key in artifacts) {
 
-      let reportPath: string = this.generateReportPath();
-      let pathToArchive: string = path.join(reportPath, `${key.toString()}.zip`);
+      const reportPath: string = this.generateReportPath();
+      const pathToArchive: string = path.join(reportPath, `${key.toString()}.zip`);
       fsHelper.createLongPath(reportPath);
       await downloadUtil.downloadFileAndSave(artifacts[key], pathToArchive);
 
