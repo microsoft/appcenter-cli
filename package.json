@@ -1,6 +1,6 @@
 {
   "name": "appcenter-cli",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Command line tool for Visual Studio App Center",
   "keywords": [
     "microsoft",
@@ -68,7 +68,6 @@
     "autorest": "^2.0.4238",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
-    "eslint-plugin-chai-friendly": "^0.4.1",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-sourcemaps": "^2.2.0",
