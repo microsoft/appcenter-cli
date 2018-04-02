@@ -76,7 +76,7 @@ gulp.task('build', function () {
 // Prepublish script - set up everything before publishing to npm
 //
 gulp.task('prepublish', function(done) {
-  runSeq('clean', 'build', done);
+  runSeq('clean', 'build:raw', done);
 });
 
 //
