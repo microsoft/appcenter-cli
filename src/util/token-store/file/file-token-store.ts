@@ -7,6 +7,7 @@
 //
 
 import * as fs from "fs";
+import * as path from "path";
 import * as rx from "rx-lite";
 import { toPairs } from "lodash";
 
@@ -58,6 +59,15 @@ export class FileTokenStore implements TokenStore {
   private loadTokenStoreCache(): void {
     if (this.tokenStoreCache === null) {
       debug(`Loading token store cache from file ${this.filePath}`);
+      // Ensure directory exists
+      try {
+        fs.mkdirSync(path.dirname(this.filePath));
+      } catch (err) {
+        if (err.code !== "EEXIST") {
+          debug(`Unable to create token store cache directory: ${err.message}`);
+          throw err;
+        }
+      }
       try {
         this.tokenStoreCache = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
         debug(`Token store loaded from file`);
