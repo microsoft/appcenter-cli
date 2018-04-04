@@ -1,7 +1,7 @@
 import {
   AppCommand, CommandArgs, CommandResult,
   help, success, shortName, longName, required, hasArg,
-  failure, ErrorCodes
+  failure
 } from "../../../util/commandline";
 
 import { TestCloudUploader, StartedTestRun } from "./test-cloud-uploader";
@@ -15,11 +15,9 @@ import { progressWithResult } from "./interaction";
 import { ITestCloudManifestJson } from "./test-manifest-reader";
 import { Messages } from "./help-messages";
 import * as _ from "lodash";
-import * as fsHelper from "../../../util/misc/fs-helper";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as os from "os";
-import * as process from "process";
 import * as downloadUtil from "../../../util/misc/download";
 import { TestReport } from "../../../util/apis/generated/models";
 import { buildErrorInfo } from "../lib/error-info-builder";
@@ -170,9 +168,8 @@ export abstract class RunTestsCommand extends AppCommand {
         await this.cleanupArtifactsDir(artifactsDir);
         this.streamingOutput.finish();
       }
-    }
-    catch (err) {
-      let errInfo: { message: string, exitCode: number } = buildErrorInfo(err, getUser(), this);
+    } catch (err) {
+      const errInfo: { message: string, exitCode: number } = buildErrorInfo(err, getUser(), this);
       return failure(errInfo.exitCode, errInfo.message);
     }
   }

@@ -11,7 +11,6 @@ import { StateChecker } from "./lib/state-checker";
 import { buildErrorInfo } from "./lib/error-info-builder";
 import { XmlUtil } from "./lib/xml-util";
 import { XmlUtilBuilder } from "./lib/xml-util-builder";
-import * as os from "os";
 import * as path from "path";
 
 @help(Messages.TestCloud.Commands.Download)
@@ -49,12 +48,12 @@ export default class DownloadTestsCommand extends AppCommand {
     try {
       this.streamingOutput.start();
 
-      let checker = new StateChecker(client, this.testRunId, this.app.ownerName, this.app.appName, this.streamingOutput);
+      const checker = new StateChecker(client, this.testRunId, this.app.ownerName, this.app.appName, this.streamingOutput);
 
       if (this.continuous) {
         await checker.checkUntilCompleted();
       } else {
-        let result: number = await checker.checkOnce();
+        const result: number = await checker.checkOnce();
 
         // undefined - in progress (validation, running, etc)
         if (typeof result === "undefined") {
@@ -62,18 +61,18 @@ export default class DownloadTestsCommand extends AppCommand {
         }
       }
 
-      var testReport: TestReport = await client.test.getTestReport(this.testRunId, this.app.ownerName, this.app.appName);
+      const testReport: TestReport = await client.test.getTestReport(this.testRunId, this.app.ownerName, this.app.appName);
       if (!testReport.stats.artifacts) {
         return failure(ErrorCodes.Exception, "XML reports have not been created");
       }
 
       await downloadArtifacts(this, this.streamingOutput, this.outputDir, this.testRunId, testReport.stats.artifacts);
 
-      let xmlUtil: XmlUtil = XmlUtilBuilder.buildXmlUtil(testReport.stats.artifacts);
+      const xmlUtil: XmlUtil = XmlUtilBuilder.buildXmlUtil(testReport.stats.artifacts);
 
-      let outputDir = generateAbsolutePath(this.outputDir);
-      let pathToArchive: string = path.join(outputDir, xmlUtil.getArchiveName());
-      let xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
+      const outputDir = generateAbsolutePath(this.outputDir);
+      const pathToArchive: string = path.join(outputDir, xmlUtil.getArchiveName());
+      const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 
       if (!xml) {
         return failure(ErrorCodes.Exception, "XML merging has ended with an error");
@@ -82,8 +81,8 @@ export default class DownloadTestsCommand extends AppCommand {
       await pfs.writeFile(path.join(outputDir, this.outputXmlName), xml);
 
       return success();
-    } catch(err) {
-      let errInfo: { message: string, exitCode: number } = buildErrorInfo(err, getUser(), this);
+    } catch (err) {
+      const errInfo: { message: string, exitCode: number } = buildErrorInfo(err, getUser(), this);
       return failure(errInfo.exitCode, errInfo.message);
     } finally {
       this.streamingOutput.finish();

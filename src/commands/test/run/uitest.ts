@@ -1,6 +1,5 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
 import { generateAbsolutePath } from "../../../util/misc/fs-helper";
-import * as os from "os";
 import * as path from "path";
 import { NUnitXmlUtil } from "../lib/nunit-xml-util";
 import { CommandArgs, help, longName, hasArg } from "../../../util/commandline";
@@ -142,13 +141,13 @@ export default class RunUITestsCommand extends RunTestsCommand {
       return;
     }
 
-    let reportPath: string = generateAbsolutePath(this.testOutputDir);
+    const reportPath: string = generateAbsolutePath(this.testOutputDir);
     if (!reportPath) {
       return;
     }
 
-    let xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
-    let pathToArchive: string = path.join(reportPath, xmlUtil.getArchiveName());
+    const xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
+    const pathToArchive: string = path.join(reportPath, xmlUtil.getArchiveName());
 
     const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 

@@ -28,10 +28,10 @@ export function downloadFileAndSave(downloadUrl: string, filePath: string): Prom
 }
 
 export async function downloadArtifacts(command: AppCommand, streamingOutput: StreamingArrayOutput, outputDir: string, testRunId: string, artifacts: { [propertyName: string]: string }): Promise<void> {
-  for (let key in artifacts) {
+  for (const key in artifacts) {
 
-    let reportPath: string = fsHelper.generateAbsolutePath(outputDir);
-    let pathToArchive: string = path.join(reportPath, `${key.toString()}.zip`);
+    const reportPath: string = fsHelper.generateAbsolutePath(outputDir);
+    const pathToArchive: string = path.join(reportPath, `${key.toString()}.zip`);
     fsHelper.createLongPath(reportPath);
     await downloadFileAndSave(artifacts[key], pathToArchive);
 
