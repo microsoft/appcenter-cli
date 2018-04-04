@@ -35,8 +35,11 @@ export async function downloadArtifacts(command: AppCommand, streamingOutput: St
     fsHelper.createLongPath(reportPath);
     await downloadFileAndSave(artifacts[key], pathToArchive);
 
-    streamingOutput.text((command: AppCommand): string => {
-      return `##vso[task.setvariable variable=${key}]${pathToArchive}${os.EOL}`;
-    }, command);
+    // Print only in VSTS environment
+    if (process.env["TF_BUILD"]) {
+      streamingOutput.text((command: AppCommand): string => {
+        return `##vso[task.setvariable variable=${key}]${pathToArchive}${os.EOL}`;
+      }, command);
+    }
   }
 }
