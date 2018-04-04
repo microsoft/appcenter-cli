@@ -34,21 +34,9 @@ describe("Validating application file", () => {
     await AppValidator.validate(appPath);
   });
 
-  it("should accept Android app without shared runtime", async () => {
+  it("should accept Android apps", async () => {
     const appPath = await createFakeAppFile("myApp.apk", []);
     await AppValidator.validate(appPath);
-  });
-
-  it("should reject Android app with shared runtime", async () => {
-    const appPath = await createFakeAppFile("myApp.apk", [ "libmonodroid.so" ]);
-    let errorCaught = false;
-    try {
-      await AppValidator.validate(appPath);
-    } catch (error) {
-      errorCaught = true;
-    }
-
-    expect(errorCaught).to.equal(true);
   });
 
   it("should reject non-Android and non-iOS applications", async () => {
