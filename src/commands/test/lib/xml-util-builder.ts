@@ -13,4 +13,14 @@ export class XmlUtilBuilder {
       throw new Error("Unexpected reports type");
     }
   }
+
+  static buildXmlUtilByString(archiveName: string): XmlUtil {
+    if (archiveName === "nunit_xml_zip.zip") {
+      return new NUnitXmlUtil();
+    } else if (archiveName === "junit_xml_zip.zip") {
+      return new JUnitXmlUtil();
+    } else {
+      throw new Error("Unexpected reports type");
+    }
+  }
 }

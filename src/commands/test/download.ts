@@ -26,7 +26,7 @@ export default class DownloadTestsCommand extends AppCommand {
   @longName("test-output-dir")
   @hasArg
   @required
-  outputDir: string;
+  testOutputDir: string;
 
   @help(Messages.TestCloud.Arguments.MergedFileName)
   @longName("merged-file-name")
@@ -66,11 +66,11 @@ export default class DownloadTestsCommand extends AppCommand {
         return failure(ErrorCodes.Exception, "XML reports have not been created");
       }
 
-      await downloadArtifacts(this, this.streamingOutput, this.outputDir, this.testRunId, testReport.stats.artifacts);
+      await downloadArtifacts(this, this.streamingOutput, this.testOutputDir, this.testRunId, testReport.stats.artifacts);
 
       if (this.outputXmlName) {
         const xmlUtil: XmlUtil = XmlUtilBuilder.buildXmlUtil(testReport.stats.artifacts);
-        const outputDir = generateAbsolutePath(this.outputDir);
+        const outputDir = generateAbsolutePath(this.testOutputDir);
         const pathToArchive: string = path.join(outputDir, xmlUtil.getArchiveName());
         const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 

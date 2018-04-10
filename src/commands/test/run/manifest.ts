@@ -2,6 +2,10 @@ import { CommandArgs, help, longName, required, hasArg } from "../../../util/com
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { Messages } from "../lib/help-messages";
 import * as path from "path";
+import { writeFile, walk } from "../../../util/misc/promisfied-fs";
+import { XmlUtil } from "../lib/xml-util";
+import { XmlUtilBuilder } from "../lib/xml-util-builder";
+import { generateAbsolutePath } from "../../../util/misc/fs-helper";
 
 @help(Messages.TestCloud.Commands.RunManifest)
 export default class RunManifestTestsCommand extends RunTestsCommand {
@@ -11,6 +15,11 @@ export default class RunManifestTestsCommand extends RunTestsCommand {
   @hasArg
   @required
   manifestPath: string;
+
+  @help(Messages.TestCloud.Arguments.MergedFileName)
+  @longName("merged-file-name")
+  @hasArg
+  outputXmlName: string;
 
   protected isAppPathRequired = false;
 
@@ -32,5 +41,34 @@ export default class RunManifestTestsCommand extends RunTestsCommand {
 
   protected getSourceRootDir() {
     return path.dirname(this.manifestPath);
+  }
+
+  protected async mergeTestArtifacts(): Promise<void> {
+    if (!this.outputXmlName) {
+      return;
+    }
+
+    const files: string[] = await walk(this.testOutputDir);
+    let xmlUtil: XmlUtil = null;
+    files.every((file: string) => {
+      if (path.extname(file) === ".zip") {
+        xmlUtil = XmlUtilBuilder.buildXmlUtilByString(path.basename(file));
+        return false;
+      }
+      return true;
+    });
+
+    if (!xmlUtil) {
+      throw new Error("Arficats folder doesn't contain an archive with test results");
+    }
+
+    const outputDir = generateAbsolutePath(this.testOutputDir);
+    const pathToArchive: string = path.join(outputDir, xmlUtil.getArchiveName());
+    const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
+
+    if (!xml) {
+      throw new Error("XML merging has ended with an error");
+    }
+    await writeFile(path.join(outputDir, this.outputXmlName), xml);
   }
 }
