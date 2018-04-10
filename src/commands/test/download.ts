@@ -68,17 +68,17 @@ export default class DownloadTestsCommand extends AppCommand {
 
       await downloadArtifacts(this, this.streamingOutput, this.outputDir, this.testRunId, testReport.stats.artifacts);
 
-      const xmlUtil: XmlUtil = XmlUtilBuilder.buildXmlUtil(testReport.stats.artifacts);
+      if (this.outputXmlName) {
+        const xmlUtil: XmlUtil = XmlUtilBuilder.buildXmlUtil(testReport.stats.artifacts);
+        const outputDir = generateAbsolutePath(this.outputDir);
+        const pathToArchive: string = path.join(outputDir, xmlUtil.getArchiveName());
+        const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 
-      const outputDir = generateAbsolutePath(this.outputDir);
-      const pathToArchive: string = path.join(outputDir, xmlUtil.getArchiveName());
-      const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
-
-      if (!xml) {
-        return failure(ErrorCodes.Exception, "XML merging has ended with an error");
+        if (!xml) {
+          return failure(ErrorCodes.Exception, "XML merging has ended with an error");
+        }
+        await pfs.writeFile(path.join(outputDir, this.outputXmlName), xml);
       }
-
-      await pfs.writeFile(path.join(outputDir, this.outputXmlName), xml);
 
       return success();
     } catch (err) {
