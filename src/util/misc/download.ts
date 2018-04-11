@@ -36,6 +36,7 @@ export async function downloadArtifacts(command: AppCommand, streamingOutput: St
     await downloadFileAndSave(artifacts[key], pathToArchive);
 
     // Print only in VSTS environment
+    // https://docs.microsoft.com/en-us/vsts/build-release/concepts/definitions/build/variables?view=vsts&tabs=batch#tfbuild
     if (process.env["TF_BUILD"]) {
       streamingOutput.text((command: AppCommand): string => {
         return `##vso[task.setvariable variable=${key}]${pathToArchive}${os.EOL}`;

@@ -49,19 +49,15 @@ export default class RunManifestTestsCommand extends RunTestsCommand {
     }
 
     const files: string[] = await walk(this.testOutputDir);
-    let xmlUtil: XmlUtil = null;
-    files.every((file: string) => {
-      if (path.extname(file) === ".zip") {
-        xmlUtil = XmlUtilBuilder.buildXmlUtilByString(path.basename(file));
-        return false;
-      }
-      return true;
+    const archive = files.find((file: string) => {
+      return path.extname(file) === ".zip";
     });
 
-    if (!xmlUtil) {
+    if (!archive) {
       throw new Error("\"test-output-dir\" doesn't contain any mergeable test results (.zip archives containing .xml documents)");
     }
 
+    const xmlUtil: XmlUtil = XmlUtilBuilder.buildXmlUtilByString(path.basename(archive));
     const outputDir = generateAbsolutePath(this.testOutputDir);
     const pathToArchive: string = path.join(outputDir, xmlUtil.getArchiveName());
     const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
@@ -69,6 +65,7 @@ export default class RunManifestTestsCommand extends RunTestsCommand {
     if (!xml) {
       throw new Error("XML merging has ended with an error");
     }
+
     await writeFile(path.join(outputDir, this.outputXmlName), xml);
   }
 }
