@@ -59,7 +59,7 @@ export default class RunManifestTestsCommand extends RunTestsCommand {
     });
 
     if (!xmlUtil) {
-      throw new Error("Arficats folder doesn't contain an archive with test results");
+      throw new Error("\"test-output-dir\" doesn't contain any mergeable test results (.zip archives containing .xml documents)");
     }
 
     const outputDir = generateAbsolutePath(this.testOutputDir);
