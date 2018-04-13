@@ -117,7 +117,7 @@ export abstract class RunTestsCommand extends AppCommand {
       this.streamingOutput.start();
       try {
         const manifestPath = await progressWithResult("Preparing tests", this.prepareManifest(artifactsDir));
-        await this.updateManifestAndCopyToArtifactsDir(manifestPath);
+        await this.updateManifestAndCopyFilesToArtifactsDir(manifestPath);
         const testRun = await this.uploadAndStart(client, manifestPath, portalBaseUrl);
 
         const vstsIdVariable = this.vstsIdVariable;
@@ -174,7 +174,7 @@ export abstract class RunTestsCommand extends AppCommand {
     }
   }
 
-  private async updateManifestAndCopyToArtifactsDir(manifestPath: string): Promise<void> {
+  private async updateManifestAndCopyFilesToArtifactsDir(manifestPath: string): Promise<void> {
     const manifestJson = await pfs.readFile(manifestPath, "utf8");
     const manifest = JSON.parse(manifestJson) as ITestCloudManifestJson;
     manifest.cliVersion = this.getVersion();
