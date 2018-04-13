@@ -104,6 +104,9 @@ export class Command {
 
     if (this.debug) {
       setDebug();
+
+      const version = this.getVersion();
+      console.log(`Using appcenter-cli version: ${version}`);
     }
 
     if (this.quiet) {

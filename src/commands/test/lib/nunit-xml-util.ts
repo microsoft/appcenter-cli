@@ -43,6 +43,10 @@ export class NUnitXmlUtil extends XmlUtil {
     });
   }
 
+  public getArchiveName(): string {
+    return "nunit_xml_zip.zip";
+  }
+
   combine(xml1: Document, xml2: Document): Document {
     this.combineTestResultsAttribute(xml1, xml2, "total");
     this.combineTestResultsAttribute(xml1, xml2, "errors");

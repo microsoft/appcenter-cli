@@ -28,3 +28,10 @@ export function createLongPath(target: string) {
     fs.mkdirSync(targetFolder);
   });
 }
+
+export function generateAbsolutePath(somePath: string): string {
+  if (path.isAbsolute(somePath)) {
+    return somePath;
+  }
+  return path.join(process.cwd(), somePath);
+}

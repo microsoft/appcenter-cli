@@ -1,5 +1,6 @@
 export abstract class XmlUtil {
   public abstract mergeXmlResults(pathToArchive: string): Promise<Document>;
+  public abstract getArchiveName(): string;
 
   public collectAllElements(node: Node, name: string): Node[] {
     let result: Node[] = [];

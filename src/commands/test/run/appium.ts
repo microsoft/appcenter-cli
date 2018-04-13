@@ -1,5 +1,6 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
+import { generateAbsolutePath } from "../../../util/misc/fs-helper";
 import { CommandArgs, help, longName, hasArg, required } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { AppiumPreparer } from "../lib/appium-preparer";
@@ -44,13 +45,13 @@ export default class RunAppiumTestsCommand extends RunTestsCommand {
       return;
     }
 
-    const reportPath: string = this.generateReportPath();
+    const reportPath: string = generateAbsolutePath(this.testOutputDir);
     if (!reportPath) {
       return;
     }
 
     const xmlUtil: JUnitXmlUtil = new JUnitXmlUtil();
-    const pathToArchive: string = path.join(reportPath, "junit_xml_zip.zip");
+    const pathToArchive: string = path.join(reportPath, xmlUtil.getArchiveName());
 
     const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 
