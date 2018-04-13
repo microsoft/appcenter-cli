@@ -44,7 +44,7 @@ export async function downloadArtifacts(command: AppCommand, streamingOutput: St
     }
 
     streamingOutput.text((command: AppCommand): string => {
-      return `Downloaded artifacts to ${pathToArchive}${os.EOL}`;
+      return `Downloaded artifacts to ${pathToArchive}`;
     }, command);
   }
 }

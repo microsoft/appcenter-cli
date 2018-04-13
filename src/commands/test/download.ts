@@ -82,7 +82,7 @@ export default class DownloadTestsCommand extends AppCommand {
         await pfs.writeFile(xmlPath, xml);
 
         this.streamingOutput.text((command: AppCommand): string => {
-          return `Merged test results to ${xmlPath}${os.EOL}`;
+          return `Merged test results to ${xmlPath}`;
         }, this);
       }
 
