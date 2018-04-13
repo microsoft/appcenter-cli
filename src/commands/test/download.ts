@@ -12,6 +12,7 @@ import { buildErrorInfo } from "./lib/error-info-builder";
 import { XmlUtil } from "./lib/xml-util";
 import { XmlUtilBuilder } from "./lib/xml-util-builder";
 import * as path from "path";
+import * as os from "os";
 
 @help(Messages.TestCloud.Commands.Download)
 export default class DownloadTestsCommand extends AppCommand {
@@ -77,7 +78,12 @@ export default class DownloadTestsCommand extends AppCommand {
         if (!xml) {
           return failure(ErrorCodes.Exception, "XML merging has ended with an error");
         }
-        await pfs.writeFile(path.join(outputDir, this.outputXmlName), xml);
+        const xmlPath = path.join(outputDir, this.outputXmlName);
+        await pfs.writeFile(xmlPath, xml);
+
+        this.streamingOutput.text((command: AppCommand): string => {
+          return `Merged test results to ${xmlPath}${os.EOL}`;
+        }, this);
       }
 
       return success();

@@ -42,5 +42,9 @@ export async function downloadArtifacts(command: AppCommand, streamingOutput: St
         return `##vso[task.setvariable variable=${key}]${pathToArchive}${os.EOL}`;
       }, command);
     }
+
+    streamingOutput.text((command: AppCommand): string => {
+      return `Downloaded artifacts to ${pathToArchive}${os.EOL}`;
+    }, command);
   }
 }
