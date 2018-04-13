@@ -7,6 +7,7 @@ import * as _ from "lodash";
 describe("TestManifestReader.readManifest", () => {
   const expectedManifest = new TestManifest(
     "1.0.0",
+    "1.0.14",
     new TestRunFile(
         "test/commands/test/sample-test-workspace/apps/app.txt",
         "app.txt",
@@ -58,6 +59,7 @@ describe("TestManifestReader.readManifest", () => {
   function normalizeManifest(manifest: TestManifest) {
     return {
       schemaVersion: manifest.version,
+      cliVersion: manifest.cliVersion,
       testFramework: manifest.testFramework,
       applicationFile: normalizeFile(manifest.applicationFile),
       files: _.sortBy(manifest.testFiles.map(normalizeFile), ["sourcePath"])

@@ -2,7 +2,7 @@
 import * as Result from "./command-result";
 import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription, common } from "./option-decorators";
 import { parseOptions } from "./option-parser";
-import { isDebug, setDebug, setQuiet, OutputFormatSupport, setFormatJson, out } from "../interaction";
+import { setDebug, setQuiet, OutputFormatSupport, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
 import { getUser, environments, telemetryIsEnabled, getPortalUrlForEndpoint, getEnvFromEnvironmentVar, getTokenFromEnvironmentVar, appCenterAccessTokenEnvVar } from "../profile";

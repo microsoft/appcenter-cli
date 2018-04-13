@@ -117,7 +117,7 @@ export abstract class RunTestsCommand extends AppCommand {
       this.streamingOutput.start();
       try {
         const manifestPath = await progressWithResult("Preparing tests", this.prepareManifest(artifactsDir));
-        await this.addIncludedFilesToManifestAndCopyToArtifactsDir(manifestPath);
+        await this.updateManifestAndCopyToArtifactsDir(manifestPath);
         const testRun = await this.uploadAndStart(client, manifestPath, portalBaseUrl);
 
         const vstsIdVariable = this.vstsIdVariable;
@@ -174,19 +174,20 @@ export abstract class RunTestsCommand extends AppCommand {
     }
   }
 
-  private async addIncludedFilesToManifestAndCopyToArtifactsDir(manifestPath: string): Promise<void> {
-    if (!this.include) {
-      return;
-    }
+  private async updateManifestAndCopyToArtifactsDir(manifestPath: string): Promise<void> {
     const manifestJson = await pfs.readFile(manifestPath, "utf8");
     const manifest = JSON.parse(manifestJson) as ITestCloudManifestJson;
-    const includedFiles = parseIncludedFiles(this.include, this.getSourceRootDir());
+    manifest.cliVersion = this.getVersion();
 
-    for (let i = 0; i < includedFiles.length; i++) {
-      const includedFile = includedFiles[i];
-      const copyTarget = path.join(path.dirname(manifestPath), includedFile.targetPath);
-      await pfs.cp(includedFile.sourcePath, copyTarget);
-      manifest.files.push(includedFile.targetPath);
+    if (this.include) {
+      const includedFiles = parseIncludedFiles(this.include, this.getSourceRootDir());
+
+      for (let i = 0; i < includedFiles.length; i++) {
+        const includedFile = includedFiles[i];
+        const copyTarget = path.join(path.dirname(manifestPath), includedFile.targetPath);
+        await pfs.cp(includedFile.sourcePath, copyTarget);
+        manifest.files.push(includedFile.targetPath);
+      }
     }
 
     const modifiedManifest = JSON.stringify(manifest, null, 1);

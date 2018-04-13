@@ -17,6 +17,8 @@ export interface ITestFrameworkJson {
 export interface ITestCloudManifestJson {
   schemaVersion: string;
 
+  cliVersion: string;
+
   files: (string | IFileDescriptionJson)[];
 
   applicationFile?: string;
@@ -55,6 +57,7 @@ export class TestManifestReader {
 
     return new TestManifest(
       json.schemaVersion,
+      json.cliVersion,
       applicationFile,
       files,
       new TestFrameworkData(
