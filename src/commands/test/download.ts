@@ -12,7 +12,6 @@ import { buildErrorInfo } from "./lib/error-info-builder";
 import { XmlUtil } from "./lib/xml-util";
 import { XmlUtilBuilder } from "./lib/xml-util-builder";
 import * as path from "path";
-import * as os from "os";
 
 @help(Messages.TestCloud.Commands.Download)
 export default class DownloadTestsCommand extends AppCommand {
