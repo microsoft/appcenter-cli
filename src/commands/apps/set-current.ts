@@ -11,7 +11,7 @@ export default class SetCurrentAppCommand extends Command {
 
   @name("app")
   @position(0)
-  @help("owner/app to set as default")
+  @help("Owner/app to set as default")
   @required
   appId: string;
 
