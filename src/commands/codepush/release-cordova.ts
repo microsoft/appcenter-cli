@@ -65,7 +65,6 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
       return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
     }
 
-    this.updateContentsPath = this.getOutputFolder();
     const cordovaCommand: string = this.getCordovaCommand();
 
     let cordovaCLI: string;
@@ -74,13 +73,20 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
     } catch (e) {
       return failure(ErrorCodes.Exception, `Unable to ${cordovaCommand} project. Please ensure that either the Cordova or PhoneGap CLI is installed.`);
     }
-
+    
     out.text(chalk.cyan(`Running "${cordovaCLI} ${cordovaCommand}" command:\n`));
     try {
       execSync([cordovaCLI, cordovaCommand, this.os, "--verbose"].join(" "), { stdio: "inherit" });
     } catch (error) {
       debug(`Failed to release a CodePush update - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, `Unable to ${cordovaCommand} project. Please ensure that the CWD represents a Cordova project and that the "${this.os}" platform was added by running "${cordovaCLI} platform add ${this.os}".`);
+    }
+
+    try {
+      this.updateContentsPath = this.getOutputFolder();
+    } catch (error) {
+      debug(`Failed to release a CodePush update - ${inspect(error)}`);
+      return failure(ErrorCodes.Exception, `No output folder found. Please ensure that the CWD represents a Cordova project and that the "${this.os}" platform was added by running "${cordovaCLI} platform add ${this.os}".`);
     }
 
     out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));
@@ -93,18 +99,18 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
     let outputFolder: string;
 
     if (this.os === "ios") {
-      outputFolder = path.join(platformFolder, "www");
+      return path.join(platformFolder, "www");
     } else if (this.os === "android") {
       // Since cordova-android 7 assets directory moved to android/app/src/main/assets instead of android/assets
       const outputFolderVer7 = path.join(platformFolder, "app", "src", "main", "assets", "www");
+      const outputFolderPre7 = path.join(platformFolder, "assets", "www");
       if (fs.existsSync(outputFolderVer7)) {
-        outputFolder = outputFolderVer7;
-      } else {
-        outputFolder = path.join(platformFolder, "assets", "www");
+        return outputFolderVer7;
+      } else if (fs.existsSync(outputFolderPre7)) {
+        return outputFolderPre7;
       }
     }
-
-    return outputFolder;
+    throw new Error(`${this.os} output folder does not exists`);
   }
 
   private getCordovaCommand(): string {
