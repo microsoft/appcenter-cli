@@ -73,7 +73,7 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
     } catch (e) {
       return failure(ErrorCodes.Exception, `Unable to ${cordovaCommand} project. Please ensure that either the Cordova or PhoneGap CLI is installed.`);
     }
-    
+
     out.text(chalk.cyan(`Running "${cordovaCLI} ${cordovaCommand}" command:\n`));
     try {
       execSync([cordovaCLI, cordovaCommand, this.os, "--verbose"].join(" "), { stdio: "inherit" });
@@ -96,7 +96,6 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
   private getOutputFolder(): string {
     const projectRoot: string = process.cwd();
     const platformFolder: string = path.join(projectRoot, "platforms", this.os);
-    let outputFolder: string;
 
     if (this.os === "ios") {
       return path.join(platformFolder, "www");
