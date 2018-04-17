@@ -63,8 +63,10 @@
     "@types/semver": "^5.3.33",
     "@types/sinon": "^2.3.5",
     "@types/temp": "^0.8.29",
+    "@types/unzip": "^0.1.0",
     "@types/which": "^1.0.28",
     "@types/xml2js": "^0.4.0",
+    "@types/xmldom": "^0.1.29",
     "autorest": "^2.0.4238",
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
@@ -85,8 +87,6 @@
     "typescript": "^2.5.2"
   },
   "dependencies": {
-    "@types/unzip": "^0.1.0",
-    "@types/xmldom": "^0.1.29",
     "azure-storage": "^2.1.0",
     "bplist": "0.0.4",
     "chalk": "^1.1.3",
