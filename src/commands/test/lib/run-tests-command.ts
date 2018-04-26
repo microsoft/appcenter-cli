@@ -157,10 +157,12 @@ export abstract class RunTestsCommand extends AppCommand {
           }
         }
 
-        this.streamingOutput.text(function (testRun) {
-          const report: string = `Test Report: ${testRun.testRunUrl}` + os.EOL;
-          return report;
-        }, testRun );
+        if (!(this.async && this.format)) {
+          this.streamingOutput.text(function (testRun) {
+            const report: string = `Test Report: ${testRun.testRunUrl}` + os.EOL;
+            return report;
+          }, testRun );
+        }
 
         return success();
       }
