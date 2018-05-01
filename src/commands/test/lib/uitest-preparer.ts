@@ -191,11 +191,16 @@ export class UITestPreparer {
     }
 
     let testCloudPath = path.join(toolsDir, "test-cloud.exe");
+    const testCloudPathDev = path.join(toolsDir, "Xamarin.UITest.Console.exe");
 
-    if (!await fileExists(testCloudPath)) {
-      throw new Error(`Cannot find test-cloud.exe, the exe was not found in the path specified by "--uitest-tools-dir".${os.EOL}` +
+    if (!await fileExists(testCloudPath) && !await fileExists(testCloudPathDev)) {
+      throw new Error(`Cannot find test-cloud.exe.., the exe was not found in the path specified by "--uitest-tools-dir".${os.EOL}` +
         `Please check that ${testCloudPath} points to a test-cloud.exe.${os.EOL}` +
         `Minimum required version is "${this.getMinimumVersionString()}".`);
+    }
+
+    if (!await fileExists(testCloudPath)) {
+      testCloudPath = testCloudPathDev;
     }
 
     if (testCloudPath.includes(" ")) {
