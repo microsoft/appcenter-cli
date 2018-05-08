@@ -3,7 +3,6 @@ import { progressWithResult } from "./interaction";
 import { TestManifest, TestRunFile } from "./test-manifest";
 import { TestManifestReader } from "./test-manifest-reader";
 import { AppValidator } from "./app-validator";
-import { getDSymFile } from "./dsym-dir-helper";
 import { getOrgsNamesList } from "../../orgs/lib/org-users-helper";
 import * as PortalHelper from "../../../util/portal/portal-helper";
 import * as _ from "lodash";
@@ -32,7 +31,6 @@ export class TestCloudUploader {
   private readonly _portalBaseUrl : string;
 
   public appPath: string;
-  public dSymPath: string;
   public testParameters: { [key: string]: any };
   public testSeries: string;
   public language: string;
@@ -85,11 +83,6 @@ export class TestCloudUploader {
     const appFile = await progressWithResult("Validating application file", this.validateAndCreateAppFile(manifest));
 
     const allFiles = _.concat(manifest.testFiles, [appFile]);
-
-    if (this.dSymPath) {
-      const dSymFile = await progressWithResult("Validating DSym file", getDSymFile(this.dSymPath));
-      allFiles.push(dSymFile);
-    }
 
     await progressWithResult("Uploading files", this.uploadFilesUsingBatch(testRun.testRunId, allFiles));
 

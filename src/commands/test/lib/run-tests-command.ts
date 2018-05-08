@@ -229,8 +229,11 @@ export abstract class RunTestsCommand extends AppCommand {
     uploader.language = this.language;
     uploader.locale = this.locale;
     uploader.testSeries = this.testSeries;
-    uploader.dSymPath = this.dSymDir;
     uploader.testParameters = this.combinedParameters();
+
+    if (this.dSymDir) {
+      console.warn("The option --dsym-dir is deprecated and ignored");
+    }
 
     return await uploader.uploadAndStart();
   }

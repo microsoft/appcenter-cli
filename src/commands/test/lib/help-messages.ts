@@ -47,7 +47,7 @@ export module Messages {
 
       export const PrepareArtifactsDir = "Path to the artifacts directory to create";
       export const RunDevices = "Device selection slug";
-      export const RunDSymDir = "Path to the directory with iOS symbol files";
+      export const RunDSymDir = "Path to the directory with iOS symbol files. This option is deprecated and ignored";
       export const RunLocale = "The system locale for the test run. For example, en_US";
       export const RunLanguage = "Override the language (iOS only) for the test run";
       export const Fixture = "NUnit fixture / namespace to run. If used with include / exclude the fixture filter is applied first (Can be used multiple times)";
