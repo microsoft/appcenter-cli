@@ -1,4 +1,4 @@
-import { CommandArgs, help, longName, required, hasArg } from "../../../util/commandline";
+import { CommandArgs, help, longName, hasArg } from "../../../util/commandline";
 import { XCUITestPreparer } from "../lib/xcuitest-preparer";
 import { PrepareTestsCommand } from "../lib/prepare-tests-command";
 import { Messages } from "../lib/help-messages";
@@ -21,7 +21,7 @@ export default class PrepareXCUITestCommand extends PrepareTestsCommand {
   }
 
   protected prepareManifest(): Promise<string> {
-    let preparer = new XCUITestPreparer(this.artifactsDir, this.buildDir, this.testIpaPath);
+    const preparer = new XCUITestPreparer(this.artifactsDir, this.buildDir, this.testIpaPath);
     return preparer.prepare();
   }
 

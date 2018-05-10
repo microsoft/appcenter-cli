@@ -19,7 +19,7 @@ import * as cacheEncoding from "../../../src/util/token-store/token-store-encodi
 
 describe("Token cache encoding", function () {
   describe("string escaping", function () {
-    let strings = [
+    const strings = [
       [ "nospecialcharacters", "nospecialcharacters" ],
       [ ":string:with:colons:", "\\:string\\:with\\:colons\\:" ],
       [ "string\\with\\backslashes\\", "string\\\\with\\\\backslashes\\\\" ],
@@ -28,23 +28,23 @@ describe("Token cache encoding", function () {
 
     it("should escape strings correctly", function () {
       strings.forEach(function (pair) {
-        let original = pair[0];
-        let expected = pair[1];
+        const original = pair[0];
+        const expected = pair[1];
         expect(cacheEncoding.escape(original)).to.equal(expected);
       });
     });
 
     it("should unescape strings correctly", function () {
       strings.forEach(function (pair) {
-        let original = pair[1];
-        let expected = pair[0];
+        const original = pair[1];
+        const expected = pair[0];
         expect(cacheEncoding.unescape(original)).to.equal(expected);
       });
     });
   });
 
   describe("object encoding", function () {
-    let objects: [any, string][] = [
+    const objects: [any, string][] = [
       [
         {
           userId: "user@someorg.example",
@@ -60,8 +60,8 @@ describe("Token cache encoding", function () {
 
     it("should encode objects correctly", function () {
       objects.forEach(function (pair) {
-        let obj = pair[0];
-        let encoding = pair[1];
+        const obj = pair[0];
+        const encoding = pair[1];
 
         expect(cacheEncoding.encodeObject(obj)).to.equal(encoding);
       });
@@ -69,19 +69,19 @@ describe("Token cache encoding", function () {
 
     it("should encode objects with property that has no value", function () {
       objects.forEach(function (pair) {
-        let refreshToken: any; //leave it uninitialized so to use the undefined status
-        let fakedTokenPair = { a: "faked access token", r: refreshToken };
-        let encoding = cacheEncoding.encodeObject(fakedTokenPair);
+        const refreshToken: any = undefined; //leave it uninitialized so to use the undefined status
+        const fakedTokenPair = { a: "faked access token", r: refreshToken };
+        const encoding = cacheEncoding.encodeObject(fakedTokenPair);
         expect(encoding).to.equal("a:faked access token::r:");
       });
     });
 
     it("should decode objects correctly", function () {
       objects.forEach(function (pair: [any, string]): void {
-        let obj = pair[0];
-        let encoding = pair[1];
+        const obj = pair[0];
+        const encoding = pair[1];
 
-        let decoded = cacheEncoding.decodeObject(encoding);
+        const decoded = cacheEncoding.decodeObject(encoding);
         expect(decoded).to.contain.all.keys(Object.keys(_.omit(obj, ["boolValue", "expiresOn"])));
         if (_.has(obj, "boolValue")) {
           expect(decoded.boolValue).to.equal(obj.boolValue.toString());

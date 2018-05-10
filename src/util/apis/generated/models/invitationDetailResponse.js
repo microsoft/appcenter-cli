@@ -37,6 +37,10 @@ class InvitationDetailResponse {
    * @member {string} [organization.name] The slug name of the organization
    * @member {string} [organization.origin] The creation origin of this
    * organization. Possible values include: 'appcenter', 'hockeyapp'
+   * @member {string} [organization.createdAt] The creation date of this
+   * organization
+   * @member {string} [organization.updatedAt] The date the organization was
+   * last updated at
    * @member {object} [app]
    * @member {string} [app.appSecret] A unique and secret key used to identify
    * the app in communication with the ingestion endpoint for crash reporting

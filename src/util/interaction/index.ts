@@ -8,4 +8,4 @@ export * from "./padding";
 export * from "./terminal";
 
 import StreamingArrayOutput from "./streaming-array-output";
-export { StreamingArrayOutput }
+export { StreamingArrayOutput };

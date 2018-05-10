@@ -1,7 +1,7 @@
 import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success } from "../../../util/commandline";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
-import { AppCenterClient, models, clientRequest, clientCall } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import * as _ from "lodash";
 import * as chalk from "chalk";
 import { scriptName } from "../../../util/misc";
@@ -10,7 +10,7 @@ const debug = require("debug")("appcenter-cli:commands:codepush:deployments:list
 
 @help("List the deployments associated with an app")
 export default class CodePushDeploymentListListCommand extends AppCommand {
-  
+
   constructor(args: CommandArgs) {
     super(args);
   }

@@ -125,6 +125,33 @@ export interface SuccessResponse {
 
 /**
  * @class
+ * Initializes a new instance of the AADTenantAddRequest class.
+ * @constructor
+ * @member {string} userId The user wanting to add this tenant to the
+ * organization, must be an admin of the organization
+ * @member {string} aadTenantId The AAD tenant id
+ * @member {string} displayName The name of the AAD Tenant
+ */
+export interface AADTenantAddRequest {
+  userId: string;
+  aadTenantId: string;
+  displayName: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AADTenantResponse class.
+ * @constructor
+ * @member {string} aadTenantId The AAD tenant id
+ * @member {string} displayName The name of the AAD Tenant
+ */
+export interface AADTenantResponse {
+  aadTenantId: string;
+  displayName: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the ApiTokensPostRequest class.
  * @constructor
  * @member {string} [description] The description of the token
@@ -1120,12 +1147,16 @@ export interface InternalUserSignupResponse {
  * @member {string} name The slug name of the organization
  * @member {string} origin The creation origin of this organization. Possible
  * values include: 'appcenter', 'hockeyapp'
+ * @member {string} createdAt The creation date of this organization
+ * @member {string} updatedAt The date the organization was last updated at
  */
 export interface OrganizationResponse {
   id: string;
   displayName: string;
   name: string;
   origin: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 /**
@@ -1155,6 +1186,10 @@ export interface OrganizationResponse {
  * @member {string} [organization.name] The slug name of the organization
  * @member {string} [organization.origin] The creation origin of this
  * organization. Possible values include: 'appcenter', 'hockeyapp'
+ * @member {string} [organization.createdAt] The creation date of this
+ * organization
+ * @member {string} [organization.updatedAt] The date the organization was last
+ * updated at
  * @member {object} [app]
  * @member {string} [app.appSecret] A unique and secret key used to identify
  * the app in communication with the ingestion endpoint for crash reporting and
@@ -1212,6 +1247,10 @@ export interface OrgNameAvailabilityResponse {
  * @member {string} [organization.name] The slug name of the organization
  * @member {string} [organization.origin] The creation origin of this
  * organization. Possible values include: 'appcenter', 'hockeyapp'
+ * @member {string} [organization.createdAt] The creation date of this
+ * organization
+ * @member {string} [organization.updatedAt] The date the organization was last
+ * updated at
  * @member {string} email The email address of the invited user
  * @member {object} invitedBy
  * @member {string} [invitedBy.id] The unique id (UUID) of the user
@@ -1229,6 +1268,7 @@ export interface OrgNameAvailabilityResponse {
  * Possible values include: 'appcenter', 'hockeyapp', 'codepush'
  * @member {boolean} isExistingUser Indicates whether the invited user already
  * exists
+ * @member {string} [role] The role assigned to the invited user
  */
 export interface OrganizationInvitationDetailResponse {
   id: string;
@@ -1236,6 +1276,7 @@ export interface OrganizationInvitationDetailResponse {
   email: string;
   invitedBy: UserProfileResponse;
   isExistingUser: boolean;
+  role?: string;
 }
 
 /**
@@ -1244,10 +1285,12 @@ export interface OrganizationInvitationDetailResponse {
  * @constructor
  * @member {string} id The unique ID (UUID) of the invitation
  * @member {string} email The email address of the invited user
+ * @member {object} role The role assigned to the invited user
  */
 export interface OrganizationInvitationSimpleDetailResponse {
   id: string;
   email: string;
+  role: any;
 }
 
 /**
@@ -1267,13 +1310,9 @@ export interface OrganizationResponseInternal extends OrganizationResponse {
  * @constructor
  * @member {string} [email] The organization email, if the app was synced from
  * HockeyApp
- * @member {string} [createdAt] The date when the organization was created
- * @member {string} [updatedAt] The date when the organization was updated
  */
 export interface OrganizationResponseManagement extends OrganizationResponseInternal {
   email?: string;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
 /**
@@ -1487,248 +1526,6 @@ export interface UserProfileResponseManagement extends UserProfileResponseIntern
  */
 export interface UserSettingResponse {
   marketingOptIn?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the SharedConnectionRequest class.
- * @constructor
- * SharedConnectionRequest
- *
- * @member {string} [displayName] display name of shared connection
- * @member {string} serviceType Polymorphic Discriminator
- */
-export interface SharedConnectionRequest {
-  displayName?: string;
-  serviceType: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the SharedConnectionUpdateRequest class.
- * @constructor
- * SharedConnectionRequest
- *
- * @member {string} [displayName] display name of shared connection
- * @member {object} data represents the data for connecting to service
- */
-export interface SharedConnectionUpdateRequest {
-  displayName?: string;
-  data: any;
-}
-
-/**
- * @class
- * Initializes a new instance of the SharedConnectionResponse class.
- * @constructor
- * SharedConnectionResponse
- *
- * @member {string} id id of the shared connection
- * @member {string} [displayName] display name of shared connection
- * @member {string} serviceType service type of shared connection can be
- * apple|googleplay|jira. Possible values include: 'apple', 'jira',
- * 'googleplay'
- */
-export interface SharedConnectionResponse {
-  id: string;
-  displayName?: string;
-  serviceType: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the PrivateSharedConnectionResponse class.
- * @constructor
- * PrivateSharedConnectionResponse
- *
- * @member {string} id id of the shared connection
- * @member {string} [displayName] display name of shared connection
- * @member {string} serviceType service type of shared connection can be
- * apple|googleplay|jira. Possible values include: 'apple', 'jira',
- * 'googleplay'
- */
-export interface PrivateSharedConnectionResponse {
-  id: string;
-  displayName?: string;
-  serviceType: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the AppleSecretDetails class.
- * @constructor
- * Apple secret details
- *
- * @member {string} username username to connect to apple store
- * @member {string} password password to connect to apple store
- */
-export interface AppleSecretDetails {
-  username: string;
-  password: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the AppleConnectionSecretRequest class.
- * @constructor
- * Apple connection secrets
- *
- * @member {object} data apple secret details
- * @member {string} [data.username] username to connect to apple store
- * @member {string} [data.password] password to connect to apple store
- */
-export interface AppleConnectionSecretRequest extends SharedConnectionRequest {
-  data: AppleSecretDetails;
-}
-
-/**
- * @class
- * Initializes a new instance of the AppleSecretDetailsResponse class.
- * @constructor
- * Apple secret details
- *
- * @member {string} username username to connect to apple store
- */
-export interface AppleSecretDetailsResponse {
-  username: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the AppleConnectionSecretResponse class.
- * @constructor
- * Apple connection secrets
- *
- * @member {object} data apple secret details
- * @member {string} [data.username] username to connect to apple store
- */
-export interface AppleConnectionSecretResponse extends SharedConnectionResponse {
-  data: AppleSecretDetailsResponse;
-}
-
-/**
- * @class
- * Initializes a new instance of the PrivateAppleConnectionSecretResponse class.
- * @constructor
- * private Apple connection secrets response
- *
- * @member {object} data apple secret details
- * @member {string} [data.username] username to connect to apple store
- * @member {string} [data.password] password to connect to apple store
- */
-export interface PrivateAppleConnectionSecretResponse extends PrivateSharedConnectionResponse {
-  data: AppleSecretDetails;
-}
-
-/**
- * @class
- * Initializes a new instance of the JiraSecretDetails class.
- * @constructor
- * Jira secret details
- *
- * @member {string} baseUrl baseUrl to connect to jira instance
- * @member {string} username username to connect to jira instance
- * @member {string} password password to connect to jira instance
- */
-export interface JiraSecretDetails {
-  baseUrl: string;
-  username: string;
-  password: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the JiraConnectionSecretRequest class.
- * @constructor
- * Jira connection secrets
- *
- * @member {object} data jira secret details
- * @member {string} [data.baseUrl] baseUrl to connect to jira instance
- * @member {string} [data.username] username to connect to jira instance
- * @member {string} [data.password] password to connect to jira instance
- */
-export interface JiraConnectionSecretRequest extends SharedConnectionRequest {
-  data: JiraSecretDetails;
-}
-
-/**
- * @class
- * Initializes a new instance of the JiraSecretDetailsResponse class.
- * @constructor
- * Jira secret details
- *
- * @member {string} baseUrl baseUrl to connect to jira instance
- * @member {string} username username to connect to jira instance
- */
-export interface JiraSecretDetailsResponse {
-  baseUrl: string;
-  username: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the JiraConnectionSecretResponse class.
- * @constructor
- * Jira connection secrets
- *
- * @member {object} data jira secret details
- * @member {string} [data.baseUrl] baseUrl to connect to jira instance
- * @member {string} [data.username] username to connect to jira instance
- */
-export interface JiraConnectionSecretResponse extends SharedConnectionResponse {
-  data: JiraSecretDetailsResponse;
-}
-
-/**
- * @class
- * Initializes a new instance of the PrivateJiraConnectionSecretResponse class.
- * @constructor
- * private Jira connection secrets response
- *
- * @member {object} data jira secret details
- * @member {string} [data.baseUrl] baseUrl to connect to jira instance
- * @member {string} [data.username] username to connect to jira instance
- * @member {string} [data.password] password to connect to jira instance
- */
-export interface PrivateJiraConnectionSecretResponse extends PrivateSharedConnectionResponse {
-  data: JiraSecretDetails;
-}
-
-/**
- * @class
- * Initializes a new instance of the GooglePlayConnectionSecretRequest class.
- * @constructor
- * Google Play connection secrets this should be the JSON file data which is
- * provided by google play
- *
- * @member {object} data google secret details
- */
-export interface GooglePlayConnectionSecretRequest extends SharedConnectionRequest {
-  data: any;
-}
-
-/**
- * @class
- * Initializes a new instance of the GooglePlayConnectionSecretResponse class.
- * @constructor
- * Google Play connection secrets
- *
- * @member {object} data google play secret details
- */
-export interface GooglePlayConnectionSecretResponse extends SharedConnectionResponse {
-  data: any;
-}
-
-/**
- * @class
- * Initializes a new instance of the PrivateGooglePlayConnectionSecretResponse class.
- * @constructor
- * private google connection secrets response
- *
- * @member {object} data google secret details
- */
-export interface PrivateGooglePlayConnectionSecretResponse extends PrivateSharedConnectionResponse {
-  data: any;
 }
 
 /**
@@ -2621,7 +2418,8 @@ export interface XamarinSDKBundle {
  * @class
  * Initializes a new instance of the BuildParams class.
  * @constructor
- * @member {string} [sourceVersion] Version to build
+ * @member {string} [sourceVersion] Version to build which represents the full
+ * Git commit reference
  * @member {boolean} [debug] Run build in debug mode
  */
 export interface BuildParams {
@@ -2654,7 +2452,8 @@ export interface BuildLog {
  * @class
  * Initializes a new instance of the DistributionRequest class.
  * @constructor
- * @member {string} distributionGroupId The distribution group ID
+ * @member {string} distributionGroupId A distribution group ID or a store
+ * group ID
  * @member {string} [releaseNotes] The release notes
  */
 export interface DistributionRequest {
@@ -2926,6 +2725,22 @@ export interface SendNotificationRequestEmailContents {
 export interface SendNotificationRequest {
   userIds: string[];
   emailContents: SendNotificationRequestEmailContents;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the UserInteractionMetricsResponse class.
+ * @constructor
+ * Response for retrieving user interaction metrics.
+ *
+ * @member {boolean} [lessThan100Apps] check if the user has less than 100
+ * apps.
+ * @member {boolean} [hasMoreThan1Release] check if the user's whole apps has
+ * more than 1 releases.
+ */
+export interface UserInteractionMetricsResponse {
+  lessThan100Apps?: boolean;
+  hasMoreThan1Release?: boolean;
 }
 
 /**
@@ -3358,6 +3173,113 @@ export interface ReleaseUploadEndResponse {
 
 /**
  * @class
+ * Initializes a new instance of the ArchIdentifier class.
+ * @constructor
+ * An object containing a UUID for an architecture for an iOS app.
+ *
+ * @member {string} architecture The architecture that the UUID belongs to,
+ * i.e. armv7 or arm64.
+ * @member {uuid} uuid The unique identifier.
+ */
+export interface ArchIdentifier {
+  architecture: string;
+  uuid: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ProvisioningProfile class.
+ * @constructor
+ * An object containing information about an iOS provisioning profile.
+ *
+ * @member {string} name The name of the provisioning profile.
+ * @member {string} applicationIdentifier The application identifier.
+ * @member {string} teamIdentifier The team identifier.
+ * @member {string} profileType Possible values include: 'adhoc', 'enterprise',
+ * 'other'
+ * @member {date} expiredAt The profile's expiration date in RFC 3339 format,
+ * i.e. 2017-07-21T17:32:28Z
+ * @member {array} [udids]
+ */
+export interface ProvisioningProfile {
+  name: string;
+  applicationIdentifier: string;
+  teamIdentifier: string;
+  profileType: string;
+  expiredAt: Date;
+  udids?: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseCreateRequest class.
+ * @constructor
+ * A request containing information for creating a release.
+ *
+ * @member {string} [uploadedBy] The user that uploaded the build.
+ * @member {string} name The display name of the app, extracted from the build.
+ * @member {string} version The release's version.<br>
+ * For iOS: CFBundleVersion from info.plist.<br>
+ * For Android: android:versionCode from AppManifest.xml.
+ * @member {string} buildVersion The release's short version.<br>
+ * For iOS: CFBundleShortVersionString from info.plist.<br>
+ * For Android: android:versionName from AppManifest.xml.
+ * @member {string} uniqueIdentifier The identifier of the app's bundle.
+ * @member {string} minimumOsVersion The release's minimum required operating
+ * system.
+ * @member {string} [deviceFamily] The release's device family.
+ * @member {array} [languages] The languages supported by the release.
+ * @member {string} fingerprint MD5 checksum of the release binary.
+ * @member {number} size The release's size in bytes.
+ * @member {string} packageUrl The URL to the release's binary.
+ * @member {string} [iconUrl] The URL to the release's icon.
+ * @member {array} [ipaUuids] A list of UUIDs for architectures for an iOS app.
+ * @member {object} [provision]
+ * @member {string} [provision.name] The name of the provisioning profile.
+ * @member {string} [provision.applicationIdentifier] The application
+ * identifier.
+ * @member {string} [provision.teamIdentifier] The team identifier.
+ * @member {string} [provision.profileType] Possible values include: 'adhoc',
+ * 'enterprise', 'other'
+ * @member {date} [provision.expiredAt] The profile's expiration date in RFC
+ * 3339 format, i.e. 2017-07-21T17:32:28Z
+ * @member {array} [provision.udids]
+ * @member {array} [appexProvisioningProfiles] iOS app extension provisioning
+ * profiles included in the release.
+ */
+export interface ReleaseCreateRequest {
+  uploadedBy?: string;
+  name: string;
+  version: string;
+  buildVersion: string;
+  uniqueIdentifier: string;
+  minimumOsVersion: string;
+  deviceFamily?: string;
+  languages?: string[];
+  fingerprint: string;
+  size: number;
+  packageUrl: string;
+  iconUrl?: string;
+  ipaUuids?: ArchIdentifier[];
+  provision?: ProvisioningProfile;
+  appexProvisioningProfiles?: ProvisioningProfile[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseCreateResponse class.
+ * @constructor
+ * The response from the release creation API that just contains the created
+ * release's distinct id.
+ *
+ * @member {number} releaseDistinctId The distinct ID of the release.
+ */
+export interface ReleaseCreateResponse {
+  releaseDistinctId: number;
+}
+
+/**
+ * @class
  * Initializes a new instance of the ReleaseUpdateRequest class.
  * @constructor
  * A request containing information for updating a release.
@@ -3481,6 +3403,56 @@ export interface ReleaseUpdateError extends ErrorDetails {
   releaseNotes?: string;
   mandatoryUpdate?: boolean;
   destinations?: DestinationError[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AutoProvisioningConfigRequest class.
+ * @constructor
+ * A request containing information for creating a Auto Provisioning Config.
+ *
+ * @member {string} appleDeveloperAccountKey A key to a secret in
+ * customer-credential-store. apple_developer_account refers to the user's
+ * developer account that is used to log into https://developer.apple.com.
+ * Normally the user's email.
+ * @member {string} appleDistributionCertificateKey A key to a secret in
+ * customer-credential-store. distribution_certificate refers to the cusomer's
+ * certificate (that holds the private key) that will be used to sign the app.
+ * @member {boolean} allowAutoProvisioning When *true* enables auto
+ * provisioning
+ */
+export interface AutoProvisioningConfigRequest {
+  appleDeveloperAccountKey: string;
+  appleDistributionCertificateKey: string;
+  allowAutoProvisioning: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AutoProvisioningConfigResponse class.
+ * @constructor
+ * A response from API containing information for a Auto Provisioning Config.
+ *
+ * @member {number} [id] The identifier of the config.
+ * @member {string} [appId] The identifier of the App.
+ * @member {string} [destinationId] The identifier of the destination.
+ * @member {string} [appleDeveloperAccountKey] A key to a secret in
+ * customer-credential-store. apple_developer_account refers to the user's
+ * developer account that is used to log into https://developer.apple.com.
+ * Normally the user's email.
+ * @member {string} [appleDistributionCertificateKey] A key to a secret in
+ * customer-credential-store. distribution_certificate refers to the cusomer's
+ * certificate (that holds the private key) that will be used to sign the app.
+ * @member {boolean} [allowAutoProvisioning] When *true* enables auto
+ * provisioning
+ */
+export interface AutoProvisioningConfigResponse {
+  id?: number;
+  appId?: string;
+  destinationId?: string;
+  appleDeveloperAccountKey?: string;
+  appleDistributionCertificateKey?: string;
+  allowAutoProvisioning?: boolean;
 }
 
 /**
@@ -3609,10 +3581,12 @@ export interface ResignStatus {
  * @constructor
  * The publising information.
  *
- * @member {string} username The username for the Apple Developer account to
+ * @member {string} [username] The username for the Apple Developer account to
  * publish the devices to.
- * @member {string} password The password for the Apple Developer account to
+ * @member {string} [password] The password for the Apple Developer account to
  * publish the devices to.
+ * @member {string} [accountServiceConnectionId] The service_connection_id of
+ * the stored Apple credentials instead of username, password.
  * @member {boolean} [publishAllDevices] When set to true, all unprovisioned
  * devices will be published to the Apple Developer account.  When false, only
  * the provided devices will be published to the Apple Developer account.
@@ -3620,8 +3594,9 @@ export interface ResignStatus {
  * Apple Developer account.
  */
 export interface PublishDevicesRequest {
-  username: string;
-  password: string;
+  username?: string;
+  password?: string;
+  accountServiceConnectionId?: string;
   publishAllDevices?: boolean;
   devices?: string[];
 }
@@ -3673,16 +3648,85 @@ export interface AppleLoginResponse {
 
 /**
  * @class
- * Initializes a new instance of the ItunesTeamsRequest class.
+ * Initializes a new instance of the ApplicationStatusRequest class.
  * @constructor
- * Apple credentials needed to log into the Apple Itunes Portal
+ * The information needed to fetch the status of an application
  *
  * @member {string} username The username for the Apple Developer account.
  * @member {string} password The password for the Apple Developer account.
+ * @member {string} bundleIdentifier Bundle Identifier of application in Apple
+ * Itunes portal.
+ * @member {string} trackIdentifier Track Identifier for which the status is to
+ * be fetched.
+ * @member {string} [buildVersion] The version of build for which real time
+ * status is to be fetched.
+ * @member {string} [teamIdentifier] Identifier of the team to use when logged
+ * in.
+ * @member {string} [trainVersion] The Train version for which the status is to
+ * be fetched.
  */
-export interface ItunesTeamsRequest {
+export interface ApplicationStatusRequest {
   username: string;
   password: string;
+  bundleIdentifier: string;
+  trackIdentifier: string;
+  buildVersion?: string;
+  teamIdentifier?: string;
+  trainVersion?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ApplicationStatusResponse class.
+ * @constructor
+ * The status information from Itunes portal
+ *
+ * @member {string} versionType The type of version being returned
+ * (production/edit/test flight).
+ * @member {string} [version] The version of the application
+ */
+export interface ApplicationStatusResponse {
+  versionType: string;
+  version?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ItunesAppsRequest class.
+ * @constructor
+ * Apple credentials with username, password or service_connection_id of the
+ * stored credentials is needed along with team_identifier.
+ *
+ * @member {string} [username] The username for the Apple Developer account.
+ * @member {string} [password] The password for the Apple Developer account.
+ * @member {string} [serviceConnectionId] The service_connection_id of the
+ * stored Apple credentials instead of username, password.
+ * @member {string} [teamIdentifier] Identifier of the team to use when logged
+ * in.
+ */
+export interface ItunesAppsRequest {
+  username?: string;
+  password?: string;
+  serviceConnectionId?: string;
+  teamIdentifier?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ItunesTeamsRequest class.
+ * @constructor
+ * Apple credentials with username, password or service_connection_id of the
+ * stored credentials is needed.
+ *
+ * @member {string} [username] The username for the Apple Developer account.
+ * @member {string} [password] The password for the Apple Developer account.
+ * @member {string} [serviceConnectionId] The service_connection_id of the
+ * stored Apple credentials instead of username, password.
+ */
+export interface ItunesTeamsRequest {
+  username?: string;
+  password?: string;
+  serviceConnectionId?: string;
 }
 
 /**
@@ -3771,12 +3815,15 @@ export interface AppleTestFlightGroupResponse {
  * Apple credentials needed to log into the Apple Developer Portal and access
  * provisioning profiles
  *
- * @member {string} username The username for the Apple Developer account.
- * @member {string} password The password for the Apple Developer account.
+ * @member {string} [username] The username for the Apple Developer account.
+ * @member {string} [password] The password for the Apple Developer account.
+ * @member {string} [serviceConnectionId] The service_connection_id of the
+ * stored Apple credentials instad of username, password.
  */
 export interface AvailabilityOfDevicesRequest {
-  username: string;
-  password: string;
+  username?: string;
+  password?: string;
+  serviceConnectionId?: string;
 }
 
 /**
@@ -3846,12 +3893,16 @@ export interface UpdateDevicesRequestDestinationsItem {
  * @member {number} [releaseId] When provided, will update the provided release
  * with the new set of devices. By default the latest release of the
  * distribution group is used when this property is omitted.
- * @member {string} username The username for the Apple Developer account to
+ * @member {string} [username] The username for the Apple Developer account to
  * publish the devices to.
- * @member {string} password The password for the Apple Developer account to
+ * @member {string} [password] The password for the Apple Developer account to
  * publish the devices to.
- * @member {string} p12Base64 The certificate to use for resigning the
+ * @member {string} [accountServiceConnectionId] The service_connection_id of
+ * the stored Apple credentials instead of username, password.
+ * @member {string} [p12Base64] The certificate to use for resigning the
  * application with the updated provisioning profiles.
+ * @member {string} [p12ServiceConnectionId] The service_connection_id of the
+ * stored Apple certificate instead of p12_base64 value.
  * @member {string} [p12Password] The password certificate if one is needed.
  * @member {boolean} [publishAllDevices] When set to true, all unprovisioned
  * devices will be published to the Apple Developer account.  When false, only
@@ -3863,9 +3914,11 @@ export interface UpdateDevicesRequestDestinationsItem {
  */
 export interface UpdateDevicesRequest {
   releaseId?: number;
-  username: string;
-  password: string;
-  p12Base64: string;
+  username?: string;
+  password?: string;
+  accountServiceConnectionId?: string;
+  p12Base64?: string;
+  p12ServiceConnectionId?: string;
   p12Password?: string;
   publishAllDevices?: boolean;
   devices?: string[];
@@ -4261,6 +4314,28 @@ export interface IntuneCategories {
 
 /**
  * @class
+ * Initializes a new instance of the UserInfo class.
+ * @constructor
+ * @member {string} [odatacontext] context
+ * @member {string} [id] the display name for the category
+ * @member {string} [displayName] the display name for the category
+ * @member {string} [givenName] the display name for the category
+ * @member {string} [jobTitle] the display name for the category
+ * @member {string} [mail] the display name for the category
+ * @member {string} [userPrincipalName] modified date for category
+ */
+export interface UserInfo {
+  odatacontext?: string;
+  id?: string;
+  displayName?: string;
+  givenName?: string;
+  jobTitle?: string;
+  mail?: string;
+  userPrincipalName?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the IntuneGroupValue class.
  * @constructor
  * @member {string} [id] the id of the Group
@@ -4332,6 +4407,44 @@ export interface CreateStoreSecretResponse {
  */
 export interface ReleasePublishErrorResponse {
   message?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the StatusData class.
+ * @constructor
+ * Status Data from store
+ *
+ * @member {string} [status] status from store
+ * @member {string} [storetype] store type
+ * @member {string} [track] track information from store
+ * @member {string} [version] version of the app from store
+ */
+export interface StatusData {
+  status?: string;
+  storetype?: string;
+  track?: string;
+  version?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseRealTimeStatusResponse class.
+ * @constructor
+ * status of the app from store
+ *
+ * @member {string} [releaseId] release id
+ * @member {string} [appId] app id
+ * @member {object} [status]
+ * @member {string} [status.status] status from store
+ * @member {string} [status.storetype] store type
+ * @member {string} [status.track] track information from store
+ * @member {string} [status.version] version of the app from store
+ */
+export interface ReleaseRealTimeStatusResponse {
+  releaseId?: string;
+  appId?: string;
+  status?: StatusData;
 }
 
 /**
@@ -4569,7 +4682,7 @@ export interface IntuneAppsResponse {
  * @member {string} symbolId The unique id for this symbol (uuid)
  * @member {string} type The type of the symbol for the current symbol upload.
  * Possible values include: 'Apple', 'JavaScript', 'Breakpad',
- * 'AndroidProguard'
+ * 'AndroidProguard', 'UWP'
  * @member {string} appId The application that this symbol belongs to
  * @member {string} platform The platform that this symbol is associated with
  * @member {string} url The URL at which the client may download the symbol
@@ -4656,7 +4769,8 @@ export interface UploadedSymbolInfo {
  * values include: 'created', 'committed', 'aborted', 'processing', 'indexed',
  * 'failed'
  * @member {string} symbolType The type of the symbol for the current symbol
- * upload. Possible values include: 'Apple', 'Breakpad', 'AndroidProguard'
+ * upload. Possible values include: 'Apple', 'Breakpad', 'AndroidProguard',
+ * 'UWP'
  * @member {array} [symbolsUploaded] The symbols found in the upload
  * @member {string} [origin] The origin of the symbol upload. Possible values
  * include: 'User', 'System'
@@ -4680,9 +4794,21 @@ export interface SymbolUpload {
 
 /**
  * @class
- * Initializes a new instance of the SymbolUploadLocation class.
+ * Initializes a new instance of the SymbolLocation class.
  * @constructor
  * Location for downloading symbol
+ *
+ * @member {string} uri
+ */
+export interface SymbolLocation {
+  uri: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SymbolUploadLocation class.
+ * @constructor
+ * Location for downloading symbol upload
  *
  * @member {string} uri
  */
@@ -4698,7 +4824,8 @@ export interface SymbolUploadLocation {
  * process
  *
  * @member {string} symbolType The type of the symbol for the current symbol
- * upload. Possible values include: 'Apple', 'Breakpad', 'AndroidProguard'
+ * upload. Possible values include: 'Apple', 'Breakpad', 'AndroidProguard',
+ * 'UWP'
  * @member {string} [clientCallback] The callback URL that the client can
  * optionally provide to get status updates for the current symbol upload
  * @member {string} [fileName] The file name for the symbol upload
@@ -5208,6 +5335,32 @@ export interface HockeyAppCrashForwardingChange {
 
 /**
  * @class
+ * Initializes a new instance of the AlertingCrashGroup class.
+ * @constructor
+ * @member {string} [url]
+ * @member {string} [appDisplayName]
+ * @member {string} [appPlatform] SDK/Platform this thread is beeing generated
+ * from. Possible values include: 'ios', 'android', 'xamarin', 'react-native',
+ * 'ndk', 'unity', 'other'
+ * @member {string} [appVersion]
+ * @member {string} [id]
+ * @member {string} [name]
+ * @member {string} [reason]
+ * @member {array} [stackTrace]
+ */
+export interface AlertingCrashGroup {
+  url?: string;
+  appDisplayName?: string;
+  appPlatform?: string;
+  appVersion?: string;
+  id?: string;
+  name?: string;
+  reason?: string;
+  stackTrace?: string[];
+}
+
+/**
+ * @class
  * Initializes a new instance of the MissingSymbol class.
  * @constructor
  * missing symbol
@@ -5354,44 +5507,6 @@ export interface MissingSymbolCrashGroupsInfoResponse {
 export interface FailureResponse {
   code: string;
   message: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the SearchItemsRequest class.
- * @constructor
- * @member {string} search
- */
-export interface SearchItemsRequest {
-  search: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the SearchItem class.
- * @constructor
- * @member {string} crashId
- * @member {string} [displayId]
- * @member {date} timestamp
- * @member {string} version
- * @member {string} build
- * @member {string} device
- * @member {string} osVersion
- * @member {string} [osType]
- * @member {string} userName
- * @member {string} [userEmail]
- */
-export interface SearchItem {
-  crashId: string;
-  displayId?: string;
-  timestamp: Date;
-  version: string;
-  build: string;
-  device: string;
-  osVersion: string;
-  osType?: string;
-  userName: string;
-  userEmail?: string;
 }
 
 /**
@@ -5705,6 +5820,18 @@ export interface LogWithProperties extends Log {
  */
 export interface StartSessionLog extends Log {
   sessionId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the HanledErrorLog class.
+ * @constructor
+ * Required explicit begin session log (a marker event for analytics service).
+ *
+ * @member {uuid} errorId Error ID.
+ */
+export interface HanledErrorLog extends Log {
+  errorId: string;
 }
 
 /**
@@ -6283,7 +6410,7 @@ export interface DateTimeDecimalCounts {
  * Initializes a new instance of the AvailableVersions class.
  * @constructor
  * @member {array} [versions] List of available versions.
- * @member {number} [totalCount] The full number of versions accross all pages.
+ * @member {number} [totalCount] The full number of versions across all pages.
  */
 export interface AvailableVersions {
   versions?: string[];
@@ -6378,10 +6505,52 @@ export interface CrashGroupModels {
 
 /**
  * @class
- * Initializes a new instance of the ErrorStackFrame class.
+ * Initializes a new instance of the ErrorGroupState class.
  * @constructor
- * frame belonging to the reason of the crash
- *
+ * @member {string} state Possible values include: 'open', 'closed', 'ignored'
+ */
+export interface ErrorGroupState {
+  state: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorGroupListItem class.
+ * @constructor
+ * @member {string} errorGroupId
+ * @member {string} appVersion
+ * @member {number} count
+ * @member {number} deviceCount
+ * @member {date} lastOccurrence
+ * @member {string} [exceptionType]
+ * @member {string} [exceptionMessage]
+ */
+export interface ErrorGroupListItem extends ErrorGroupState {
+  errorGroupId: string;
+  appVersion: string;
+  count: number;
+  deviceCount: number;
+  lastOccurrence: Date;
+  exceptionType?: string;
+  exceptionMessage?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorGroups class.
+ * @constructor
+ * @member {string} [nextLink]
+ * @member {array} [errorGroups]
+ */
+export interface ErrorGroups {
+  nextLink?: string;
+  errorGroups?: ErrorGroupListItem[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the HandledErrorReasonFrame class.
+ * @constructor
  * @member {string} [className] name of the class
  * @member {string} [method] name of the method
  * @member {boolean} [classMethod] is a class method
@@ -6398,7 +6567,7 @@ export interface CrashGroupModels {
  * @member {string} [exceptionType] Exception type.
  * @member {string} [osExceptionType] OS exception type. (aka. SIGNAL)
  */
-export interface ErrorStackFrame {
+export interface HandledErrorReasonFrame {
   className?: string;
   method?: string;
   classMethod?: boolean;
@@ -6416,16 +6585,6 @@ export interface ErrorStackFrame {
 
 /**
  * @class
- * Initializes a new instance of the ErrorGroupState class.
- * @constructor
- * @member {string} state Possible values include: 'open', 'closed', 'ignored'
- */
-export interface ErrorGroupState {
-  state: string;
-}
-
-/**
- * @class
  * Initializes a new instance of the ErrorGroup class.
  * @constructor
  * @member {string} errorGroupId
@@ -6434,25 +6593,11 @@ export interface ErrorGroupState {
  * @member {number} deviceCount
  * @member {date} firstOccurrence
  * @member {date} lastOccurrence
- * @member {string} name
- * @member {string} [summary]
- * @member {object} [reasonFrame]
- * @member {string} [reasonFrame.className] name of the class
- * @member {string} [reasonFrame.method] name of the method
- * @member {boolean} [reasonFrame.classMethod] is a class method
- * @member {string} [reasonFrame.file] name of the file
- * @member {number} [reasonFrame.line] line number
- * @member {boolean} [reasonFrame.appCode] this line isn't from any framework
- * @member {string} [reasonFrame.frameworkName] Name of the framework
- * @member {string} [reasonFrame.codeFormatted] Formatted frame string
- * @member {string} [reasonFrame.codeRaw] Unformatted Frame string
- * @member {string} [reasonFrame.language] programming language of the frame.
- * Possible values include: 'JavaScript', 'CSharp', 'Objective-C',
- * 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
- * @member {string} [reasonFrame.methodParams] parameters of the frames method
- * @member {string} [reasonFrame.exceptionType] Exception type.
- * @member {string} [reasonFrame.osExceptionType] OS exception type. (aka.
- * SIGNAL)
+ * @member {string} [exceptionType]
+ * @member {string} [exceptionMessage]
+ * @member {string} [exceptionFile]
+ * @member {string} [exceptionLine]
+ * @member {array} [reasonFrames]
  */
 export interface ErrorGroup extends ErrorGroupState {
   errorGroupId: string;
@@ -6461,19 +6606,11 @@ export interface ErrorGroup extends ErrorGroupState {
   deviceCount: number;
   firstOccurrence: Date;
   lastOccurrence: Date;
-  name: string;
-  summary?: string;
-  reasonFrame?: ErrorStackFrame;
-}
-
-/**
- * @class
- * Initializes a new instance of the ErrorGroups class.
- * @constructor
- * @member {array} [errorGroups]
- */
-export interface ErrorGroups {
-  errorGroups?: ErrorGroup[];
+  exceptionType?: string;
+  exceptionMessage?: string;
+  exceptionFile?: string;
+  exceptionLine?: string;
+  reasonFrames?: HandledErrorReasonFrame[];
 }
 
 /**
@@ -6524,9 +6661,11 @@ export interface HandledError {
  * @class
  * Initializes a new instance of the HandledErrors class.
  * @constructor
+ * @member {string} [nextLink]
  * @member {array} [errors] Errors list.
  */
 export interface HandledErrors {
+  nextLink?: string;
   errors?: HandledError[];
 }
 
@@ -6535,30 +6674,12 @@ export interface HandledErrors {
  * Initializes a new instance of the HandledErrorDetails class.
  * @constructor
  * @member {string} [name]
- * @member {string} [summary]
- * @member {object} [reasonFrame]
- * @member {string} [reasonFrame.className] name of the class
- * @member {string} [reasonFrame.method] name of the method
- * @member {boolean} [reasonFrame.classMethod] is a class method
- * @member {string} [reasonFrame.file] name of the file
- * @member {number} [reasonFrame.line] line number
- * @member {boolean} [reasonFrame.appCode] this line isn't from any framework
- * @member {string} [reasonFrame.frameworkName] Name of the framework
- * @member {string} [reasonFrame.codeFormatted] Formatted frame string
- * @member {string} [reasonFrame.codeRaw] Unformatted Frame string
- * @member {string} [reasonFrame.language] programming language of the frame.
- * Possible values include: 'JavaScript', 'CSharp', 'Objective-C',
- * 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
- * @member {string} [reasonFrame.methodParams] parameters of the frames method
- * @member {string} [reasonFrame.exceptionType] Exception type.
- * @member {string} [reasonFrame.osExceptionType] OS exception type. (aka.
- * SIGNAL)
+ * @member {array} [reasonFrames]
  * @member {object} [properties]
  */
 export interface HandledErrorDetails extends HandledError {
   name?: string;
-  summary?: string;
-  reasonFrame?: ErrorStackFrame;
+  reasonFrames?: HandledErrorReasonFrame[];
   properties?: { [propertyName: string]: string };
 }
 
@@ -6566,11 +6687,13 @@ export interface HandledErrorDetails extends HandledError {
  * @class
  * Initializes a new instance of the ErrorGroupModel class.
  * @constructor
- * @member {string} [modelName] model's name
- * @member {number} [errorCount] count of model
+ * @member {string} [modelName] model name
+ * @member {string} [modelCode] model code
+ * @member {number} [errorCount] count of errors in a model
  */
 export interface ErrorGroupModel {
   modelName?: string;
+  modelCode?: string;
   errorCount?: number;
 }
 
@@ -6932,6 +7055,38 @@ export interface GetReleasesContainer {
 
 /**
  * @class
+ * Initializes a new instance of the FilterReleasesContainer class.
+ * @constructor
+ * @member {array} [releases]
+ */
+export interface FilterReleasesContainer {
+  releases?: Release[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the FilterVersionsContainerVersionsItem class.
+ * @constructor
+ * @member {string} version App version
+ * @member {string} build App build number
+ */
+export interface FilterVersionsContainerVersionsItem {
+  version: string;
+  build: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the FilterVersionsContainer class.
+ * @constructor
+ * @member {array} [versions]
+ */
+export interface FilterVersionsContainer {
+  versions?: FilterVersionsContainerVersionsItem[];
+}
+
+/**
+ * @class
  * Initializes a new instance of the ReleaseCount class.
  * @constructor
  * @member {string} releaseId
@@ -6956,6 +7111,60 @@ export interface ReleaseCount {
 export interface ReleaseCounts {
   total?: number;
   counts: ReleaseCount[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DailySession class.
+ * @constructor
+ * @member {string} [datetime] the ISO 8601 datetime
+ * @member {number} [count]
+ */
+export interface DailySession {
+  datetime?: string;
+  count?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseDailySessions class.
+ * @constructor
+ * @member {number} [totalSessionCounts]
+ * @member {number} [avgSessionsPerDay]
+ * @member {array} [sessions] Sessions per day
+ */
+export interface ReleaseDailySessions {
+  totalSessionCounts?: number;
+  avgSessionsPerDay?: number;
+  sessions?: DailySession[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DateTimeDownloadReleaseCount class.
+ * @constructor
+ * @member {string} [datetime] the ISO 8601 datetime
+ * @member {number} [total]
+ * @member {number} [unique]
+ */
+export interface DateTimeDownloadReleaseCount {
+  datetime?: string;
+  total?: number;
+  unique?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DateTimeDownloadReleaseCounts class.
+ * @constructor
+ * @member {number} [total]
+ * @member {number} [unique]
+ * @member {array} [counts] Release Counts per day
+ */
+export interface DateTimeDownloadReleaseCounts {
+  total?: number;
+  unique?: number;
+  counts?: DateTimeDownloadReleaseCount[];
 }
 
 /**
@@ -7388,130 +7597,6 @@ export interface LogFlowErrorLog extends LogFlowLog {
 
 /**
  * @class
- * Initializes a new instance of the ExportConfiguration class.
- * @constructor
- * Export configuration
- *
- * @member {string} [resourceName] The resource name on azure
- * @member {string} [resourceGroup] The resource group name on azure
- * @member {string} type Polymorphic Discriminator
- */
-export interface ExportConfiguration {
-  resourceName?: string;
-  resourceGroup?: string;
-  type: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ExportConfigurationBlobStorageConnectionString class.
- * @constructor
- * Configuration for export to Blob Storage with customer provided connection
- * string
- *
- * @member {string} connectionString Connection string for blob storage account
- */
-export interface ExportConfigurationBlobStorageConnectionString extends ExportConfiguration {
-  connectionString: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ExportConfigurationAppInsightsKey class.
- * @constructor
- * Configuration for export to Application Insights resource with customer
- * provided intrumentation key
- *
- * @member {string} instrumentationKey Instrumentation key for Application
- * Insights resource
- */
-export interface ExportConfigurationAppInsightsKey extends ExportConfiguration {
-  instrumentationKey: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ExportConfigurationBlobStorageLinkedSubscription class.
- * @constructor
- * Configuration for export to Blob Storage with customer linked subscription.
- *
- * @member {string} subscriptionId Id of customer subscription linked in App
- * Center
- */
-export interface ExportConfigurationBlobStorageLinkedSubscription extends ExportConfiguration {
-  subscriptionId: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ExportConfigurationAppInsightsLinkedSubscription class.
- * @constructor
- * Configuration for export to Application Insights resource with customer
- * linked subscription.
- *
- * @member {string} subscriptionId Id of customer subscription linked in App
- * Center
- */
-export interface ExportConfigurationAppInsightsLinkedSubscription extends ExportConfiguration {
-  subscriptionId: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ExportConfigurationResult class.
- * @constructor
- * Export configuration result
- *
- * @member {string} id Export configuration id
- * @member {string} exportType Target resource type of export configuration.
- * Possible values include: 'BlobStorage', 'AppInsights'
- * @member {string} creationTime Creation time in ISO 8601 format
- * @member {string} [lastRunTime] Latest time in ISO 8601 format when export
- * completed successfully
- * @member {string} state State of the export job. Possible values include:
- * 'Enabled', 'Disabled', 'Pending', 'Deleted', 'Invalid'
- * @member {string} [stateInfo] Additional information about export
- * configuration state
- * @member {string} [resourceGroup] resource group for the storage account/App
- * Insights resource
- * @member {string} [resourceName] Storage accout or Appinsights resource name
- * @member {object} [exportConfiguration]
- * @member {string} [exportConfiguration.resourceName] The resource name on
- * azure
- * @member {string} [exportConfiguration.resourceGroup] The resource group name
- * on azure
- * @member {string} [exportConfiguration.type] Polymorphic Discriminator
- */
-export interface ExportConfigurationResult {
-  id: string;
-  exportType: string;
-  creationTime: string;
-  lastRunTime?: string;
-  state: string;
-  stateInfo?: string;
-  resourceGroup?: string;
-  resourceName?: string;
-  exportConfiguration?: ExportConfiguration;
-}
-
-/**
- * @class
- * Initializes a new instance of the ExportConfigurationListResult class.
- * @constructor
- * List of export configurations
- *
- * @member {array} values
- * @member {number} [total] the total count of exports
- * @member {string} [nextLink]
- */
-export interface ExportConfigurationListResult {
-  values: ExportConfigurationResult[];
-  total?: number;
-  nextLink?: string;
-}
-
-/**
- * @class
  * Initializes a new instance of the NotificationTarget class.
  * @constructor
  * Generic notification target.
@@ -7837,6 +7922,130 @@ export interface NotificationConfigGoogleResult extends NotificationConfigResult
 export interface NotificationConfigWindowsResult extends NotificationConfigResult {
   packageSid: string;
   secretKey?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfiguration class.
+ * @constructor
+ * Export configuration
+ *
+ * @member {string} [resourceName] The resource name on azure
+ * @member {string} [resourceGroup] The resource group name on azure
+ * @member {string} type Polymorphic Discriminator
+ */
+export interface ExportConfiguration {
+  resourceName?: string;
+  resourceGroup?: string;
+  type: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfigurationBlobStorageConnectionString class.
+ * @constructor
+ * Configuration for export to Blob Storage with customer provided connection
+ * string
+ *
+ * @member {string} connectionString Connection string for blob storage account
+ */
+export interface ExportConfigurationBlobStorageConnectionString extends ExportConfiguration {
+  connectionString: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfigurationAppInsightsKey class.
+ * @constructor
+ * Configuration for export to Application Insights resource with customer
+ * provided intrumentation key
+ *
+ * @member {string} instrumentationKey Instrumentation key for Application
+ * Insights resource
+ */
+export interface ExportConfigurationAppInsightsKey extends ExportConfiguration {
+  instrumentationKey: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfigurationBlobStorageLinkedSubscription class.
+ * @constructor
+ * Configuration for export to Blob Storage with customer linked subscription.
+ *
+ * @member {string} subscriptionId Id of customer subscription linked in App
+ * Center
+ */
+export interface ExportConfigurationBlobStorageLinkedSubscription extends ExportConfiguration {
+  subscriptionId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfigurationAppInsightsLinkedSubscription class.
+ * @constructor
+ * Configuration for export to Application Insights resource with customer
+ * linked subscription.
+ *
+ * @member {string} subscriptionId Id of customer subscription linked in App
+ * Center
+ */
+export interface ExportConfigurationAppInsightsLinkedSubscription extends ExportConfiguration {
+  subscriptionId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfigurationResult class.
+ * @constructor
+ * Export configuration result
+ *
+ * @member {string} id Export configuration id
+ * @member {string} exportType Target resource type of export configuration.
+ * Possible values include: 'BlobStorage', 'AppInsights'
+ * @member {string} creationTime Creation time in ISO 8601 format
+ * @member {string} [lastRunTime] Latest time in ISO 8601 format when export
+ * completed successfully
+ * @member {string} state State of the export job. Possible values include:
+ * 'Enabled', 'Disabled', 'Pending', 'Deleted', 'Invalid'
+ * @member {string} [stateInfo] Additional information about export
+ * configuration state
+ * @member {string} [resourceGroup] resource group for the storage account/App
+ * Insights resource
+ * @member {string} [resourceName] Storage accout or Appinsights resource name
+ * @member {object} [exportConfiguration]
+ * @member {string} [exportConfiguration.resourceName] The resource name on
+ * azure
+ * @member {string} [exportConfiguration.resourceGroup] The resource group name
+ * on azure
+ * @member {string} [exportConfiguration.type] Polymorphic Discriminator
+ */
+export interface ExportConfigurationResult {
+  id: string;
+  exportType: string;
+  creationTime: string;
+  lastRunTime?: string;
+  state: string;
+  stateInfo?: string;
+  resourceGroup?: string;
+  resourceName?: string;
+  exportConfiguration?: ExportConfiguration;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfigurationListResult class.
+ * @constructor
+ * List of export configurations
+ *
+ * @member {array} values
+ * @member {number} [total] the total count of exports
+ * @member {string} [nextLink]
+ */
+export interface ExportConfigurationListResult {
+  values: ExportConfigurationResult[];
+  total?: number;
+  nextLink?: string;
 }
 
 /**
@@ -8416,6 +8625,7 @@ export interface Subscription {
  * @member {number} devicesFailed
  * @member {number} devicesSkipped
  * @member {number} stepCount
+ * @member {object} [artifacts]
  */
 export interface TestReportStats {
   os: number;
@@ -8431,6 +8641,7 @@ export interface TestReportStats {
   devicesFailed: number;
   devicesSkipped: number;
   stepCount: number;
+  artifacts?: { [propertyName: string]: string };
 }
 
 /**
@@ -8561,6 +8772,7 @@ export interface TestReportDeviceLogsItem {
  * @member {number} [stats.devicesFailed]
  * @member {number} [stats.devicesSkipped]
  * @member {number} [stats.stepCount]
+ * @member {object} [stats.artifacts]
  * @member {string} id
  * @member {number} schemaVersion
  * @member {number} revision
@@ -9346,7 +9558,7 @@ export interface AlertingJiraBugtrackerSettings extends AlertingBugtrackerSettin
  * Alerting bugtracker resource
  *
  * @member {string} [type] type of bugtracker. Possible values include:
- * 'github', 'vsts'
+ * 'github', 'vsts', 'jira'
  * @member {string} [state] bugtracker state. Possible values include:
  * 'enabled', 'disabled', 'unauthorized'
  * @member {string} [tokenId] ID of OAuth token
@@ -9414,7 +9626,8 @@ export interface AlertBugTrackerRepo {
  * @constructor
  * List of bug tracker repositories
  *
- * @member {string} [repoType] Possible values include: 'github', 'vsts'
+ * @member {string} [repoType] Possible values include: 'github', 'vsts',
+ * 'jira'
  * @member {array} repositories
  */
 export interface AlertBugTrackerReposResult {
@@ -9443,7 +9656,7 @@ export interface AlertCrashGroupStateChange {
  *
  * @member {string} accessTokenId ID of the access token
  * @member {string} externalProviderName External provider name. Possible
- * values include: 'github', 'vsts'
+ * values include: 'github', 'vsts', 'jira'
  * @member {string} externalUserEmail The email of external user that used to
  * authenticate aginst the external oauth provider
  * @member {object} externalAccountName The account name of external user that
@@ -9612,11 +9825,20 @@ export interface NewAppReleaseAlertingEvent extends AlertingEvent {
  * @member {string} [id]
  * @member {string} [url]
  * @member {string} [title]
+ * @member {string} [bugTrackerType] Possible values include: 'github', 'vsts',
+ * 'jira'
+ * @member {string} [repoName]
+ * @member {string} [mobileCenterId]
+ * @member {string} [eventType]
  */
 export interface BugTrackerIssueResult {
   id?: string;
   url?: string;
   title?: string;
+  bugTrackerType?: string;
+  repoName?: string;
+  mobileCenterId?: string;
+  eventType?: string;
 }
 
 /**
@@ -10114,6 +10336,71 @@ export interface BillingError {
 
 /**
  * @class
+ * Initializes a new instance of the BillingPlansChangeTypeResponse class.
+ * @constructor
+ * Responses for requests that detect billing plans change type
+ *
+ * @member {string} [result] Possible values include: 'NoChange', 'Downgrade',
+ * 'Upgrade'
+ */
+export interface BillingPlansChangeTypeResponse {
+  result?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the BillingPlansSelection class.
+ * @constructor
+ * Selection of a billing plan for one or more services
+ *
+ * @member {object} [buildService]
+ * @member {number} [buildService.count] Number of instances of the billing
+ * plan.
+ * @member {object} [buildService.plan]
+ * @member {string} [buildService.plan.id] The Billing Plan ID
+ * @member {string} [buildService.plan.version] Version of the Billing Plan
+ * schema
+ * @member {number} [buildService.plan.priceBucket] Price bucket of the billing
+ * plan. Free plans start with 0, paid plans have higher price buckets
+ * @member {string} [buildService.plan.service] Name of the service that the
+ * plan applies to. Possible values include: 'Build', 'Push', 'Test'
+ * @member {object} [buildService.plan.limits]
+ * @member {object} [buildService.plan.attributes]
+ * @member {object} [pushService]
+ * @member {number} [pushService.count] Number of instances of the billing
+ * plan.
+ * @member {object} [pushService.plan]
+ * @member {string} [pushService.plan.id] The Billing Plan ID
+ * @member {string} [pushService.plan.version] Version of the Billing Plan
+ * schema
+ * @member {number} [pushService.plan.priceBucket] Price bucket of the billing
+ * plan. Free plans start with 0, paid plans have higher price buckets
+ * @member {string} [pushService.plan.service] Name of the service that the
+ * plan applies to. Possible values include: 'Build', 'Push', 'Test'
+ * @member {object} [pushService.plan.limits]
+ * @member {object} [pushService.plan.attributes]
+ * @member {object} [testService]
+ * @member {number} [testService.count] Number of instances of the billing
+ * plan.
+ * @member {object} [testService.plan]
+ * @member {string} [testService.plan.id] The Billing Plan ID
+ * @member {string} [testService.plan.version] Version of the Billing Plan
+ * schema
+ * @member {number} [testService.plan.priceBucket] Price bucket of the billing
+ * plan. Free plans start with 0, paid plans have higher price buckets
+ * @member {string} [testService.plan.service] Name of the service that the
+ * plan applies to. Possible values include: 'Build', 'Push', 'Test'
+ * @member {object} [testService.plan.limits]
+ * @member {object} [testService.plan.attributes]
+ */
+export interface BillingPlansSelection {
+  buildService?: BillingPlanSelection;
+  pushService?: BillingPlanSelection;
+  testService?: BillingPlanSelection;
+}
+
+/**
+ * @class
  * Initializes a new instance of the UsageRecordStatus class.
  * @constructor
  * Status of the usage record creation
@@ -10176,6 +10463,39 @@ export interface MessageEnvelope {
   messageId?: string;
   messageType?: string;
   message?: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DataSubjectRightResponse class.
+ * @constructor
+ * @member {string} token Unique request identifier
+ * @member {string} createdAt ISO 8601 format timestamp of when request was
+ * created.
+ */
+export interface DataSubjectRightResponse {
+  token: string;
+  createdAt: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DataSubjectRightStatusResponse class.
+ * @constructor
+ * @member {string} [sasUrl] Azure Storage shared access signature (SAS) URL
+ * for exported user data.
+ * @member {boolean} [sasUrlExpired] Whether Azure Storage shared access
+ * signature (SAS) URL has expired or not.
+ * @member {string} status Status of data subject right request. Possible
+ * values include: 'None', 'Created', 'Queued', 'InProgress', 'Completed',
+ * 'Failed'
+ * @member {string} message explanation message of the status
+ */
+export interface DataSubjectRightStatusResponse {
+  sasUrl?: string;
+  sasUrlExpired?: boolean;
+  status: string;
+  message: string;
 }
 
 /**

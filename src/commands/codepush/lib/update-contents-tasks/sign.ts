@@ -6,7 +6,7 @@ import * as pfs from "../../../../util/misc/promisfied-fs";
 import { copyFileToTmpDir, isDirectory } from "../file-utils";
 
 const CURRENT_CLAIM_VERSION: string = "1.0.0";
-const METADATA_FILE_NAME: string = ".codepushrelease"
+const METADATA_FILE_NAME: string = ".codepushrelease";
 
 interface CodeSigningClaims {
   claimVersion: string;
@@ -28,8 +28,12 @@ export default async function sign(privateKeyPath: string, updateContentsPath: s
   }
 
   // If releasing a single file, copy the file to a temporary 'CodePush' directory in which to publish the release
-  if (!isDirectory(updateContentsPath)) {
-    updateContentsPath = copyFileToTmpDir(updateContentsPath);
+  try {
+    if (!isDirectory(updateContentsPath)) {
+      updateContentsPath = copyFileToTmpDir(updateContentsPath);
+    }
+  } catch (error) {
+    Promise.reject(error);
   }
 
   signatureFilePath = path.join(updateContentsPath, METADATA_FILE_NAME);

@@ -34,14 +34,14 @@ class ErrorGroupOperatingSystem {
         modelProperties: {
           operatingSystemName: {
             required: false,
-            serializedName: 'operating_system_name',
+            serializedName: 'operatingSystemName',
             type: {
               name: 'String'
             }
           },
           errorCount: {
             required: false,
-            serializedName: 'error_count',
+            serializedName: 'errorCount',
             type: {
               name: 'Number'
             }

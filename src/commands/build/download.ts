@@ -1,4 +1,4 @@
-import {AppCommand, Command, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
+import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
 import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
@@ -105,14 +105,6 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     });
   }
 
-  private async getApkOrIpaZipObject(downloadedZip: Buffer): Promise<JsZip.JSZipObject> {
-    const zip = await new JsZip().loadAsync(downloadedZip, { checkCRC32: true });
-    // looking for apk or ipa
-    return  _.find(
-      <JsZip.JSZipObject[]> _.values(zip.files),
-      (file) => _.includes(DownloadBuildStatusCommand.applicationPackagesExtensions, Path.extname(file.name).toLowerCase()));
-  }
-
   private async generateNameForOutputFile(branchName: string, extension: string): Promise<string> {
     // file name should be unique for the directory
     const filesInDirectory = (await Pfs.readdir(this.directory)).map((name) => name.toLowerCase());
@@ -211,7 +203,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   private getPayload(zip: JsZip): JsZip.JSZipObject {
     // looking for apk, ipa or xcarchive
     return  _.find(
-        <JsZip.JSZipObject[]> _.values(zip.files),
+         _.values(zip.files) as JsZip.JSZipObject[],
         (file) => _.includes(DownloadBuildStatusCommand.applicationPackagesExtensions, Path.extname(file.name).toLowerCase()));
   }
 

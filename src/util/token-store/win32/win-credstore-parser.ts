@@ -17,7 +17,7 @@ const fieldRe = /^([^:]+):\s(.*)$/;
 // field names to property names.
 //
 function fieldNameToPropertyName(fieldName: string): string {
-  let parts = fieldName.split(" ");
+  const parts = fieldName.split(" ");
   parts[0] = parts[0].toLowerCase();
   return parts.join("");
 }
@@ -35,8 +35,7 @@ class WinCredStoreParsingStream extends Transform {
 
   _transform(chunk: any, encoding: string, callback: {(err?: Error): void}): void {
 
-    let line = chunk.toString();
-    let count = 0;
+    const line = chunk.toString();
 
     if (line === "") {
       if (this.currentEntry) {
@@ -64,7 +63,7 @@ class WinCredStoreParsingStream extends Transform {
 }
 
 function createParsingStream(): NodeJS.ReadWriteStream {
-  return <NodeJS.ReadWriteStream>pipeline(split(), new WinCredStoreParsingStream());
+  return pipeline(split(), new WinCredStoreParsingStream()) as NodeJS.ReadWriteStream;
 }
 
 namespace createParsingStream {

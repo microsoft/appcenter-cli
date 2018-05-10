@@ -16,24 +16,24 @@ export type Headers = { [headerName: string]: string };
 
 export default class LegacyCodePushServiceClient {
   private static API_VERSION: number = 2;
-  
-  constructor(private accessKey: string, private serverUrl: string, private app: DefaultApp, private customHeaders?: Headers) {
-    if (!accessKey) throw new Error("A token must be specified to execute server calls.");
-    if (!serverUrl) throw new Error("A server url must be specified to execute server calls.");
+
+  constructor(private accessKey: string, private serverUrl: string, private app: DefaultApp) {
+    if (!accessKey) { throw new Error("A token must be specified to execute server calls."); }
+    if (!serverUrl) { throw new Error("A server url must be specified to execute server calls."); }
   }
 
   public release(deploymentName: string, filePath: string, updateMetadata: PackageInfo): Promise<void> {
     const appName = this.app.identifier;
     return new Promise<void>((resolve, reject) => {
-        var options = {
+        const options = {
           url: this.serverUrl + this.urlEncode(`/apps/${this.appNameParam(appName)}/deployments/${deploymentName}/release`),
           headers: {
-            "Accept": `application/vnd.code-push.v${LegacyCodePushServiceClient.API_VERSION}+json`,
-            "Authorization": `Bearer ${this.accessKey}`
+            Accept: `application/vnd.code-push.v${LegacyCodePushServiceClient.API_VERSION}+json`,
+            Authorization: `Bearer ${this.accessKey}`
           },
           formData: {
-            "packageInfo": JSON.stringify(updateMetadata),
-            "package": fs.createReadStream(filePath)
+            packageInfo: JSON.stringify(updateMetadata),
+            package: fs.createReadStream(filePath)
           }
         };
 
@@ -43,7 +43,7 @@ export default class LegacyCodePushServiceClient {
             return;
           }
           if (httpResponse.statusCode === 201) {
-            resolve(<void>null);
+            resolve(null as void);
           } else {
             reject({ request: request, response: httpResponse });
             return;
@@ -54,14 +54,14 @@ export default class LegacyCodePushServiceClient {
 
   // A template string tag function that URL encodes the substituted values
   private urlEncode(strings: any, ...values: string[]): string {
-    var result = "";
-    for (var i = 0; i < strings.length; i++) {
+    let result = "";
+    for (let i = 0; i < strings.length; i++) {
         result += strings[i];
         if (i < values.length) {
             result += encodeURIComponent(values[i]);
         }
     }
-  
+
     return result;
   }
 
@@ -83,7 +83,4 @@ export default class LegacyCodePushServiceClient {
   private getErrorMessage(error: Error, response: request.RequestResponse): string {
     return response && response.body ? response.body : error.message;
   }
-} 
-
-
-
+}

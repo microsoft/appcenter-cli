@@ -6,7 +6,8 @@ const request = require('request');
 
 const endpoints = {
   prod: "https://api.appcenter.ms",
-  int: "https://bifrost-int.trafficmanager.net"
+  int: "https://bifrost-int.trafficmanager.net",
+  dev: "https://appcenter-api.dev.xtc.xmn.co"
 };
 
 const defaultVersion = 'preview';

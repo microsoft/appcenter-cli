@@ -9,80 +9,11 @@ import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as stream from "stream";
 import * as _ from "lodash";
-import { isDirectory } from "./file-utils"
+import { isDirectory } from "./file-utils";
 
 // Do not throw an exception if either of these modules are missing, as they may not be needed by the
 // consumer of this file.
 const HASH_ALGORITHM = "sha256";
-
-export async function generatePackageHashFromDirectory(directoryPath: string, basePath: string): Promise<string> {
-  if (!isDirectory(directoryPath)) {
-    throw new Error("Not a directory. Please either create a directory, or use hashFile().");
-  }
-
-  let manifest: PackageManifest = await generatePackageManifestFromDirectory(directoryPath, basePath);
-  return manifest.computePackageHash();
-}
-
-export function generatePackageManifestFromDirectory(directoryPath: string, basePath: string): Promise<PackageManifest> {
-  return new Promise<PackageManifest>(async (resolve, reject) => {
-    var fileHashesMap = new Map<string, string>();
-
-    let files: string[] = await pfs.walk(directoryPath);
-
-    if (!files || files.length === 0) {
-      reject("Error: Can't sign the release because no files were found.");
-      return;
-    }
-
-    // Hash the files sequentially, because streaming them in parallel is not necessarily faster
-    var generateManifestPromise: Promise<void> = files.reduce((soFar: Promise<void>, filePath: string) => {
-      return soFar
-        .then(() => {
-          var relativePath: string = PackageManifest.normalizePath(path.relative(basePath, filePath));
-          if (!PackageManifest.isIgnored(relativePath)) {
-            return hashFile(filePath)
-              .then((hash: string) => {
-                fileHashesMap.set(relativePath, hash);
-              });
-          }
-        });
-    }, Promise.resolve(<void>null));
-
-    generateManifestPromise
-      .then(() => {
-        resolve(new PackageManifest(fileHashesMap));
-      }, reject);
-  })
-}
-
-export function hashFile(filePath: string): Promise<string> {
-  var readStream: fs.ReadStream = fs.createReadStream(filePath);
-  return hashStream(readStream);
-}
-
-export function hashStream(readStream: stream.Readable): Promise<string> {
-  return new Promise<string>((resolve, reject) => {
-    var hashStream = <stream.Transform><any>crypto.createHash(HASH_ALGORITHM);
-
-    readStream
-      .on("error", (error: any): void => {
-        hashStream.end();
-        reject(error);
-      })
-      .on("end", (): void => {
-        hashStream.end();
-
-        var buffer = <Buffer>hashStream.read();
-        var hash: string = buffer.toString("hex");
-
-        resolve(hash);
-      });
-
-    readStream.pipe(hashStream);
-  });
-}
-
 export class PackageManifest {
   private _map: Map<string, string>;
 
@@ -98,7 +29,7 @@ export class PackageManifest {
   }
 
   public computePackageHash(): string {
-    var entries: string[] = [];
+    let entries: string[] = [];
     this._map.forEach((hash: string, name: string): void => {
       entries.push(name + ":" + hash);
     });
@@ -109,11 +40,11 @@ export class PackageManifest {
 
     return crypto.createHash(HASH_ALGORITHM)
                   .update(JSON.stringify(entries))
-                  .digest("hex")
+                  .digest("hex");
   }
 
   public serialize(): string {
-    var obj: any = {};
+    const obj: any = {};
 
     this._map.forEach(function (value, key) {
       obj[key] = value;
@@ -124,15 +55,17 @@ export class PackageManifest {
 
   public static deserialize(serializedContents: string): PackageManifest {
     try {
-      var obj: any = JSON.parse(serializedContents);
-      var map = new Map<string, string>();
+      const obj: any = JSON.parse(serializedContents);
+      const map = new Map<string, string>();
 
-      for (var key of Object.keys(obj)) {
+      for (const key of Object.keys(obj)) {
         map.set(key, obj[key]);
       }
 
       return new PackageManifest(map);
     } catch (e) {
+      // Eat it
+      return;
     }
   }
 
@@ -151,4 +84,76 @@ export class PackageManifest {
       || relativeFilePath === CODEPUSH_METADATA
       || _.endsWith(relativeFilePath, "/" + CODEPUSH_METADATA);
   }
+}
+
+export async function generatePackageHashFromDirectory(directoryPath: string, basePath: string): Promise<string> {
+  try {
+    if (!isDirectory(directoryPath)) {
+      throw new Error("Not a directory. Please either create a directory, or use hashFile().");
+    }
+  } catch (error) {
+    throw new Error("Directory does not exist. Please either create a directory, or use hashFile().");
+  }
+
+  const manifest: PackageManifest = await generatePackageManifestFromDirectory(directoryPath, basePath);
+  return manifest.computePackageHash();
+}
+
+export function generatePackageManifestFromDirectory(directoryPath: string, basePath: string): Promise<PackageManifest> {
+  return new Promise<PackageManifest>(async (resolve, reject) => {
+    const fileHashesMap = new Map<string, string>();
+
+    const files: string[] = await pfs.walk(directoryPath);
+
+    if (!files || files.length === 0) {
+      reject("Error: Can't sign the release because no files were found.");
+      return;
+    }
+
+    // Hash the files sequentially, because streaming them in parallel is not necessarily faster
+    const generateManifestPromise: Promise<void> = files.reduce((soFar: Promise<void>, filePath: string) => {
+      return soFar
+        .then(() => {
+          const relativePath: string = PackageManifest.normalizePath(path.relative(basePath, filePath));
+          if (!PackageManifest.isIgnored(relativePath)) {
+            return hashFile(filePath)
+              .then((hash: string) => {
+                fileHashesMap.set(relativePath, hash);
+              });
+          }
+        });
+    }, Promise.resolve(null as void));
+
+    generateManifestPromise
+      .then(() => {
+        resolve(new PackageManifest(fileHashesMap));
+      }, reject);
+  });
+}
+
+export function hashFile(filePath: string): Promise<string> {
+  const readStream: fs.ReadStream = fs.createReadStream(filePath);
+  return hashStream(readStream);
+}
+
+export function hashStream(readStream: stream.Readable): Promise<string> {
+  return new Promise<string>((resolve, reject) => {
+    const hashStream = crypto.createHash(HASH_ALGORITHM) as any as stream.Transform;
+
+    readStream
+      .on("error", (error: any): void => {
+        hashStream.end();
+        reject(error);
+      })
+      .on("end", (): void => {
+        hashStream.end();
+
+        const buffer = hashStream.read() as Buffer;
+        const hash: string = buffer.toString("hex");
+
+        resolve(hash);
+      });
+
+    readStream.pipe(hashStream);
+  });
 }

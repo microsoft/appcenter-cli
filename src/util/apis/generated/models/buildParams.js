@@ -12,7 +12,8 @@
 class BuildParams {
   /**
    * Create a BuildParams.
-   * @member {string} [sourceVersion] Version to build
+   * @member {string} [sourceVersion] Version to build which represents the
+   * full Git commit reference
    * @member {boolean} [debug] Run build in debug mode
    */
   constructor() {

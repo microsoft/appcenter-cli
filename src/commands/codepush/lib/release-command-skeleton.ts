@@ -1,7 +1,7 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success, defaultValue, succeeded } from "../../../util/commandline";
+import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success, defaultValue } from "../../../util/commandline";
 import { CommandArgs } from "../../../util/commandline/command";
-import { AppCenterClient, models, clientRequest } from "../../../util/apis";
-import { out, prompt } from "../../../util/interaction";
+import { AppCenterClient } from "../../../util/apis";
+import { out } from "../../../util/interaction";
 import { getUser, DefaultApp } from "../../../util/profile/index";
 import { inspect } from "util";
 import * as fs from "fs";
@@ -11,18 +11,18 @@ import { sign, zip } from "../lib/update-contents-tasks";
 import { isBinaryOrZip } from "../lib/file-utils";
 import { environments } from "../lib/environment";
 import { isValidRange, isValidRollout, isValidDeployment } from "../lib/validation-utils";
-import { AppCenterCodePushRelease, LegacyCodePushRelease }  from "../lib/release-strategy/index";
+import { LegacyCodePushRelease }  from "../lib/release-strategy/index";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-skeleton");
 
 export interface ReleaseStrategy {
-    release(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata:{
+    release(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata: {
       appVersion?: string;
       description?: string;
       isDisabled?: boolean;
       isMandatory?: boolean;
       rollout?: number;
-    }, token?: string, serverUrl?: string): Promise<void>
+    }, token?: string, serverUrl?: string): Promise<void>;
 }
 
 export default class CodePushReleaseCommandSkeleton extends AppCommand {
@@ -80,9 +80,9 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     super(args);
 
     // Сurrently use old service due to we have limitation of 1MB payload limit through bifrost service
-    this.releaseStrategy = new LegacyCodePushRelease(); 
+    this.releaseStrategy = new LegacyCodePushRelease();
   }
-  
+
   public async run(client: AppCenterClient): Promise<CommandResult> {
     throw new Error("For dev purposes only!");
   }
@@ -91,7 +91,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     this.rollout = Number(this.specifiedRollout);
 
     const validationResult: CommandResult =  await this.validate(client);
-    if (!validationResult.succeeded) return validationResult;
+    if (!validationResult.succeeded) { return validationResult; }
 
     this.deploymentName = this.specifiedDeploymentName;
 
@@ -103,9 +103,9 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
 
     try {
       const app = this.app;
-      const serverUrl = environments(this.environmentName || getUser().environment).managementEndpoint;
+      const serverUrl = this.getServerUrl();
       const token = this.token || await getUser().accessToken;
-      
+
       await out.progress("Creating CodePush release...",  this.releaseStrategy.release(client, app, this.deploymentName, updateContentsZipPath, {
         appVersion: this.targetBinaryVersion,
         description: this.description,
@@ -113,7 +113,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
         isMandatory: this.mandatory,
         rollout: this.rollout
       }, token, serverUrl));
-     
+
       out.text(`Successfully released an update containing the "${this.updateContentsPath}" `
         + `${fs.lstatSync(this.updateContentsPath).isDirectory() ? "directory" : "file"}`
         + ` to the "${this.deploymentName}" deployment of the "${this.app.appName}" app.`);
@@ -121,7 +121,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
       return success();
     } catch (error) {
       if (error.response.statusCode === 409 && this.disableDuplicateReleaseError) {
-        // 409 (Conflict) status code means that uploaded package is identical 
+        // 409 (Conflict) status code means that uploaded package is identical
         // to the contents of the specified deployment's current release
         console.warn(chalk.yellow("[Warning] " + error.response.body));
         return success();
@@ -131,6 +131,22 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
       }
     } finally {
       await pfs.rmDir(updateContentsZipPath);
+    }
+  }
+
+  private getServerUrl(): string | undefined {
+    const environment = environments(this.getEnvironmentName());
+    return environment && environment.managementEndpoint;
+  }
+
+  private getEnvironmentName(): string | undefined {
+    if (this.environmentName) {
+      return this.environmentName;
+    }
+
+    const user = getUser();
+    if (user) {
+      return user.environment;
     }
   }
 
@@ -144,12 +160,12 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     }
 
     if (!Number.isSafeInteger(this.rollout) || !isValidRollout(this.rollout)) {
-      return failure(ErrorCodes.InvalidParameter, `Rollout value should be integer value between ${chalk.bold('0')} or ${chalk.bold('100')}.`);
+      return failure(ErrorCodes.InvalidParameter, `Rollout value should be integer value between ${chalk.bold("0")} or ${chalk.bold("100")}.`);
     }
 
     if (!this.deploymentName && !(await isValidDeployment(client, this.app, this.specifiedDeploymentName))) {
       return failure(ErrorCodes.InvalidParameter, `Deployment "${this.specifiedDeploymentName}" does not exist.`);
-    } 
+    }
 
     return success();
   }

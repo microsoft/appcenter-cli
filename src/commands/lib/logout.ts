@@ -1,4 +1,4 @@
-import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { AppCenterClient, clientRequest } from "../../util/apis";
 import { Profile, deleteUser } from "../../util/profile";
 import { out } from "../../util/interaction";
 
@@ -17,16 +17,16 @@ async function performLogout(client: AppCenterClient, user: Profile): Promise<vo
     let tokenId: string;
     try {
       await Promise.race([
-          clientRequest(async cb => {
+          clientRequest(async (cb) => {
             try {
               tokenId = await user.accessTokenId;
-              if (!tokenId) {
+              if (!tokenId || tokenId === "null") {
                 tokenId = "current";
               }
               debug(`Attempting to delete token id ${tokenId} off server`);
               client.apiTokens.deleteMethod(tokenId, cb);
-            } catch(err) {
-              debug('Could not retrieve current token from token store');
+            } catch (err) {
+              debug("Could not retrieve current token from token store");
               cb(err, null, null, null);
             }
           }),
@@ -41,10 +41,10 @@ async function performLogout(client: AppCenterClient, user: Profile): Promise<vo
     }
   }
   try {
-    debug('Deleting user token from token store');
+    debug("Deleting user token from token store");
     await deleteUser();
   } catch (err) {
     // Noop, it's ok if deletion fails
-    debug('User token deletion failed');
+    debug("User token deletion failed");
   }
 }

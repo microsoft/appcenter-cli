@@ -1,7 +1,7 @@
 import * as iba from "../../../util/misc/ios-bundle-archiver";
 import * as path from "path";
 import * as pfs from "../../../util/misc/promisfied-fs";
-import { CommandArgs, help, longName, hasArg, required } from "../../../util/commandline";
+import { CommandArgs, help, longName, hasArg } from "../../../util/commandline";
 import { Messages } from "../lib/help-messages";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { TestCloudError } from "../lib/test-cloud-error";
@@ -27,7 +27,7 @@ export default class RunXCUITestCommand extends RunTestsCommand {
   }
 
   protected prepareManifest(artifactsDir: string): Promise<string> {
-    let preparer = new XCUITestPreparer(artifactsDir, this.buildDir, this.testIpaPath);
+    const preparer = new XCUITestPreparer(artifactsDir, this.buildDir, this.testIpaPath);
     return preparer.prepare();
   }
 
@@ -54,11 +54,11 @@ export default class RunXCUITestCommand extends RunTestsCommand {
   }
 
   private async generateAppIpa(): Promise<void> {
-    let appPaths = (await pfs.readdir(this.buildDir)).filter(
+    const appPaths = (await pfs.readdir(this.buildDir)).filter(
       (appPath) => /^(?:.(?!-Runner\.app))+\.app$/.test(appPath)
     );
 
-    if (appPaths.length == 0) {
+    if (appPaths.length === 0) {
       throw new TestCloudError(`unable to find app within ${this.buildDir}`);
     }
     if (appPaths.length > 1) {

@@ -10,17 +10,17 @@ import * as fs from "fs";
 export async function unpackZipToPath(path: string, zip: JSZip, root: string = ""): Promise<void> {
   const entries = zip.filter((relativePath, file) => file.name.startsWith(root));
 
-  for (const entry of entries){
+  for (const entry of entries) {
     const zipPath = entry.name.substring(root.length);
 
     if (entry.dir) {
       await Pfs.mkdirp(Path.join(path, zipPath));
     } else {
       const fileDirPath = Path.join(path, Path.dirname(zipPath));
-      // Creating directory path if needed    
+      // Creating directory path if needed
       await Pfs.mkdirp(fileDirPath);
 
-      let buffer: Buffer = await entry.async("nodebuffer");
+      const buffer: Buffer = await entry.async("nodebuffer");
       await Pfs.writeFile(Path.join(fileDirPath, Path.basename(zipPath)), buffer);
     }
   }
@@ -30,10 +30,10 @@ export async function unpackZipToPath(path: string, zip: JSZip, root: string = "
  * Writes zip file to the specified location
  */
 export async function writeZipToPath(path: string, zip: JSZip, compression: "STORE" | "DEFLATE"): Promise<void> {
-  let zipBuffer = await (<Promise<Buffer>> zip.generateAsync({
+  const zipBuffer = await (zip.generateAsync({
     type: "nodebuffer",
     compression
-  }));
+  }) as Promise<Buffer>);
 
   await Pfs.writeFile(path, zipBuffer);
 }
@@ -42,12 +42,12 @@ export async function writeZipToPath(path: string, zip: JSZip, compression: "STO
  * Adds the folder and it's content to the zip
  */
 export async function addFolderToZipRecursively(path: string, zip: JSZip): Promise<void> {
-  let subEntitiesNames = await Pfs.readdir(path);
-  let folderZip = zip.folder(Path.basename(path));
+  const subEntitiesNames = await Pfs.readdir(path);
+  const folderZip = zip.folder(Path.basename(path));
 
-  for (let subEntityName of subEntitiesNames){
-    let subEntityPath = Path.join(path, subEntityName);
-    let subEntityStats = await Pfs.stat(subEntityPath);
+  for (const subEntityName of subEntitiesNames) {
+    const subEntityPath = Path.join(path, subEntityName);
+    const subEntityStats = await Pfs.stat(subEntityPath);
     if (subEntityStats.isDirectory()) {
       await addFolderToZipRecursively(subEntityPath, folderZip);
     } else {

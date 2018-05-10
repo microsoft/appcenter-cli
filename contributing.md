@@ -7,7 +7,7 @@ local CI configurations).
 
 ## Technologies Used
 
-App Center cli is written using Node.js version 6 and [Typescript](http://typescriptlang.org). Wrappers over the Bifrost HTTP API are
+App Center cli is written using Node.js version 8 and [Typescript](http://typescriptlang.org). Wrappers over the App Center HTTP API are
 generated using the [AutoRest](https://github.com/Azure/autorest) code generator. And the usual
 plethora of npm modules.
 
@@ -19,7 +19,7 @@ will be used to record and playback mock http traffic. [Note: this isn't set up 
 
 ## Prerequisites
 
-Install the latest version of Node 6 or Node 8 from [here](https://nodejs.org). If you are on a Mac, we recommend
+Install the latest version of Node 8 from [here](https://nodejs.org). If you are on a Mac, we recommend
 a 64-bit version.
 
 Also have a working git installation. The code is available from this [repo](https://github.com/Microsoft/appcenter-cli).
@@ -37,13 +37,11 @@ works well.
 
 #### Typescript compiler
 
-The typescript compilation can be run via the `npm run build` command, but if you want the Typescript compiler available directly,
-install it on your machine by doing `npm install -g typescript`.
+The typescript compilation can be run via the `npm run build` command.
 
 #### gulp
 
-gulp is used as a task runner to get everything built and in the right place. Everything is hooked up through NPM scripts, but if you
-want to save some characters at the command line, install `npm install -g gulp-cli`.
+gulp is used as a task runner under the hood, but should not be called directly. Use the npm scripts listed below.
 
 #### ts-node
 
@@ -87,11 +85,12 @@ There are a bunch of scripts in package.json file. Here's what they are and what
 
 | Script command | What it does |
 |----------------|------------- |
-| `npm run build` | Compiles the typescript into javascript, creates `dist` directory |
-| `npm run test` | Runs the test suite. Can also be run with `npm test` |
+| `npm run build` | Runs tslint, compiles the typescript into javascript, creates `dist` directory |
+| `npm run test` | Runs tslint, runs the test suite. Can also be run with `npm test` |
 | `npm run watch-test` | Runs a watcher on the test file that will rerun tests automatically on save |
 | `npm run clean` | Cleans up any compilation output |
 | `npm run autorest` | Regenerate the HTTP client libraries. Downloads required tools as part of this process |
+| `npm run tslint` | Run tslint over the codebase |
 
 There will be more over time.
 
@@ -102,7 +101,7 @@ The gulpfile.js file contains the following targets that can be called manually 
 | Target | npm script | What it does |
 |--------|------------|--------------|
 | `default` | | Runs the `build` task |
-| `build` | `build` | Runs the build (build-ts, copy-assets, copy-generated-clients) |
+| `build:raw` | `build` | Runs the build (build-ts, copy-assets, copy-generated-clients) |
 | `build-sourcemaps` | | Create sourcemap files for the compiled typescript to aid in debugging |
 | `build-ts-sourcemaps` | | Run Typescript compiler to output sourcemap files |
 | `build-ts` | | Runs typesscript compiler, using settings in tsconfig.json |
@@ -110,7 +109,7 @@ The gulpfile.js file contains the following targets that can be called manually 
 | `clean-sourcemaps` | | Delete generated source map files from dist directory |
 | `copy-assets` | | Copies .txt files from src to dist (category descriptions) |
 | `copy-generated-client` | | Copies the generated HTTP client code to dist |
-| `prepublish` | `prepublish` | Runs the `clean` and `build` tasks before publishing to npm |
+| `prepublish` | `prepublish` | Runs the `clean` and `build:raw` tasks before publishing to npm |
 
 # Touring the codebase
 
@@ -224,6 +223,17 @@ To get consistent user experience among commands for all beacons, the command li
 # Development Processes
 
 We follow the standard GitHub flow. Each person working on the cli should create their own fork of the repo. Work in your own repo (preferably on a feature branch). When ready, send a pull request to the master Microsoft/MobileCenter-cli repo against the master branch. After review, the pull request will be merged.
+
+# Submitting a PR
+
+PR submitters should include a description of the change they would like to include in the [changelog](https://docs.microsoft.com/en-us/appcenter/general/changelog). Each time a PR is merged and the next version of the CLI is released, the first paragraph in the PR description will be copied into the changelog.
+
+A good description should include:
+
+- Friendly description of the fixes/changes made
+- Details of the change
+
+An example of a good description is: "Distribute your app via the CLI: Users can now create & manage your distribution groups, upload your release and distribute it using the new CLI version 0.8.0."
 
 # Building Installers
 

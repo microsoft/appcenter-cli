@@ -16,7 +16,7 @@ function createValidBuildDirSpec(): fsLayout.IDirSpec {
       "test.class": "Fake *.class file"
     }
   };
-};
+}
 
 describe("Preparing Appium workspace", () => {
   let buildDir: string = null;
@@ -36,51 +36,51 @@ describe("Preparing Appium workspace", () => {
   });
 
   it("should fail when there is no POM file", async () => {
-    let spec = createValidBuildDirSpec();
+    const spec = createValidBuildDirSpec();
     delete spec["pom.xml"];
 
     buildDir = await fsLayout.createLayout(spec);
 
-    let preparer = new AppiumPreparer(artifactsDir, buildDir);
+    const preparer = new AppiumPreparer(artifactsDir, buildDir);
     await expect(preparer.prepare()).to.eventually.be.rejected;
   });
 
   it("should fail when there is no dependency-jars directory", async () => {
-    let spec = createValidBuildDirSpec();
+    const spec = createValidBuildDirSpec();
     delete spec["dependency-jars"];
 
     buildDir = await fsLayout.createLayout(spec);
 
-    let preparer = new AppiumPreparer(artifactsDir, buildDir);
+    const preparer = new AppiumPreparer(artifactsDir, buildDir);
     await expect(preparer.prepare()).to.eventually.be.rejected;
   });
 
   it("should fail when there is no test-classes directory", async () => {
-    let spec = createValidBuildDirSpec();
+    const spec = createValidBuildDirSpec();
     delete spec["test-classes"];
 
     buildDir = await fsLayout.createLayout(spec);
 
-    let preparer = new AppiumPreparer(artifactsDir, buildDir);
+    const preparer = new AppiumPreparer(artifactsDir, buildDir);
     await expect(preparer.prepare()).to.eventually.be.rejected;
   });
 
   it("should fail when there is no *.class file inside test-classes directory", async () => {
-    let spec = createValidBuildDirSpec();
+    const spec = createValidBuildDirSpec();
     spec["test-classes"] = { };
 
     buildDir = await fsLayout.createLayout(spec);
 
-    let preparer = new AppiumPreparer(artifactsDir, buildDir);
+    const preparer = new AppiumPreparer(artifactsDir, buildDir);
     await expect(preparer.prepare()).to.eventually.be.rejected;
   });
 
   it("should create valid manifest file when workspace is correct", async () => {
-    let spec = createValidBuildDirSpec();
+    const spec = createValidBuildDirSpec();
     buildDir = await fsLayout.createLayout(spec);
-    
-    let preparer = new AppiumPreparer(artifactsDir, buildDir);
-    let manifestPath = await preparer.prepare();
+
+    const preparer = new AppiumPreparer(artifactsDir, buildDir);
+    const manifestPath = await preparer.prepare();
 
     expect(manifestPath).to.eql(path.join(artifactsDir, "manifest.json"));
   });

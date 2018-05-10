@@ -3,12 +3,10 @@
 import * as _ from "lodash";
 import * as os from "os";
 import { isatty } from "tty";
-import { inspect } from "util";
 import * as chalk from "chalk";
 
 const debug = require("debug")("appcenter-cli:util:commandline:help");
 
-import { values, identity } from "lodash";
 const Table = require("cli-table2");
 
 import {
@@ -16,10 +14,10 @@ import {
 } from "./option-decorators";
 
 import {
-  OptionDescription, OptionsDescription, PositionalOptionDescription, PositionalOptionsDescription
+  OptionDescription, PositionalOptionDescription
 } from "./option-parser";
 
-import { out, padLeft, padRight, setDebug } from "../interaction";
+import { out } from "../interaction";
 
 import { scriptName } from "../misc";
 
@@ -47,10 +45,6 @@ export function runHelp(commandPrototype: any, commandObj: any): void {
     out.help("Common Options (works on all commands):");
     out.help(commonSwitchOptionsHelpTable.toString());
   }
-}
-
-function hasOptions(obj: any): boolean {
-  return Object.keys(obj).length > 0;
 }
 
 function getCommandHelp(commandObj: any): string {
@@ -92,7 +86,7 @@ function getStyledOptionsHelpTable(options: string[][]): any {
   const firstColumnWidth = opts.reduce((contenderMaxWidth, optRow) => Math.max(optRow[0].length, contenderMaxWidth), 0);
 
   // Creating a help table object
-  let helpTableObject = new Table(out.getOptionsForTwoColumnTableWithNoBorders(firstColumnWidth));
+  const helpTableObject = new Table(out.getOptionsForTwoColumnTableWithNoBorders(firstColumnWidth));
   opts.forEach((opt) => helpTableObject.push(opt));
 
   return helpTableObject;
@@ -103,7 +97,7 @@ function getSwitchOptionsHelp(commandPrototype: any, isCommon: boolean): string[
   const filteredSwitchOptions = filterOptionDescriptions(_.values(switchOptions), isCommon);
   const options = sortOptionDescriptions(filteredSwitchOptions).map(toSwitchOptionHelp);
   debug(`Command has ${options.length} switch options:`);
-  debug(options.map(o => `${o.shortName}|${o.longName}`).join("/"));
+  debug(options.map((o) => `${o.shortName}|${o.longName}`).join("/"));
   return options.map((optionHelp) => [`    ${switchText(optionHelp)}    `, optionHelp.helpText]);
 }
 
@@ -123,11 +117,10 @@ function getPositionalOptionsHelp(commandPrototype: any): string[][] {
   const options: PositionalOptionHelp[] = getPositionalOptionsDescription(commandPrototype).map(toPositionalOptionHelp);
 
   debug(`Command has ${options.length} positional options:`);
-  debug(options.map(o => o.name).join("/"));
+  debug(options.map((o) => o.name).join("/"));
 
-  return options.map((optionsHelp) => [`    ${optionsHelp.name}    `, optionsHelp.helpText])
+  return options.map((optionsHelp) => [`    ${optionsHelp.name}    `, optionsHelp.helpText]);
 }
-
 
 function switchText(switchOption: SwitchOptionHelp): string {
   // Desired formats look like:
@@ -205,7 +198,7 @@ function getSwitchOptionExamples(commandPrototype: any, includeCommon: boolean =
 
   return sortOptionDescriptions(switchOptionDescriptions)
     .map((description: OptionDescription): string => {
-      let result: string[] = [];
+      const result: string[] = [];
       result.push(description.shortName ? `-${description.shortName}` : "");
       result.push(description.shortName && description.longName ? "|" : "");
       result.push(description.longName ? `--${description.longName}` : "");
@@ -242,10 +235,6 @@ function sortOptionDescriptions(options: OptionDescription[]): OptionDescription
     .value();
 }
 
-function highlightString(stringToStyle: string): string {
-  return chalk.bold(stringToStyle);
-}
-
 function filterOptionDescriptions(options: OptionDescription[], isCommon: boolean): OptionDescription[] {
-  return isCommon ? options.filter(option => { return option.common }) :  options.filter(option => { return !option.common });
+  return isCommon ? options.filter((option) => { return option.common; }) :  options.filter((option) => { return !option.common; });
 }

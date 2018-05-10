@@ -3,9 +3,7 @@ import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
-import * as Pfs from "../../../util/misc/promisfied-fs";
 import * as Os from "os";
-import { DefaultApp } from "../../../util/profile";
 import { getUsersList } from "../../../util/misc/list-of-users-helper";
 import { getOrgUsers } from "../lib/org-users-helper";
 

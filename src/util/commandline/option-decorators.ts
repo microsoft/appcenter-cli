@@ -10,7 +10,6 @@ const unknownRequiredsKey = Symbol("UnknownRequireds");
 const unknownDefaultValueKey = Symbol("UnknownDefaultValues");
 const unknownHelpTextKey = Symbol("UnknownDescription");
 
-
 export const classHelpTextKey = Symbol("ClassHelpText");
 
 export function getOptionsDescription(target: any): OptionsDescription {
@@ -70,8 +69,6 @@ interface PropertyDecorator {
   (proto: any, propertyKey: string | Symbol): void;
 }
 
-type ClassDecorator = <TFunction extends Function>(target: TFunction) => TFunction | void;
-
 interface PropertyDecoratorBuilder<T> {
   (input: T): PropertyDecorator;
 }
@@ -106,9 +103,9 @@ function updateUnknowns(option: OptionDescription | PositionalOptionDescription,
 function makeStringDecorator(descriptionFieldName: string): PropertyDecoratorBuilder<string> {
   return function decoratorBuilder(name: string): PropertyDecorator {
     return function paramDecorator(proto: any, propertyKey: string): void {
-      let optionsDescription = getLocalOptionsDescription(proto);
-      let option = optionsDescription[propertyKey] || {};
-      (<any>option)[descriptionFieldName] = name;
+      const optionsDescription = getLocalOptionsDescription(proto);
+      const option = optionsDescription[propertyKey] || {};
+      (option as any)[descriptionFieldName] = name;
       updateUnknowns(option, propertyKey, proto);
       optionsDescription[propertyKey] = option;
     };
@@ -117,9 +114,9 @@ function makeStringDecorator(descriptionFieldName: string): PropertyDecoratorBui
 
 function makeBoolDecorator(descriptionFieldName: string): PropertyDecorator {
   return function paramDecorator(proto: any, propertyKey: string): void {
-      let optionsDescription = getLocalOptionsDescription(proto);
-      let option = optionsDescription[propertyKey] || {};
-      (<any>option)[descriptionFieldName] = true;
+      const optionsDescription = getLocalOptionsDescription(proto);
+      const option = optionsDescription[propertyKey] || {};
+      (option as any)[descriptionFieldName] = true;
       updateUnknowns(option, propertyKey, proto);
       optionsDescription[propertyKey] = option;
   };
@@ -130,19 +127,19 @@ export const shortName = makeStringDecorator("shortName");
 export const longName = makeStringDecorator("longName");
 
 export const hasArg = makeBoolDecorator("hasArg");
-export const common = makeBoolDecorator('common');
+export const common = makeBoolDecorator("common");
 
 function makePositionalDecorator<T>(descriptionFieldName: string): PropertyDecoratorBuilder<T> {
   return function positionalDecoratorBuilder(value: T): PropertyDecorator {
     return function positionalDecorator(proto: any, propertyKey: string): void {
-      let optionsDescription = getLocalPositionalOptionsDescription(proto);
-      let option = optionsDescription.find(opt => opt.propertyName === propertyKey);
+      const optionsDescription = getLocalPositionalOptionsDescription(proto);
+      let option = optionsDescription.find((opt) => opt.propertyName === propertyKey);
       if (option === undefined) {
         option = { propertyName: propertyKey, name: "", position: -1 };
         optionsDescription.push(option);
         updateUnknowns(option, propertyKey, proto);
       }
-      (<any>option)[descriptionFieldName] = value;
+      (option as any)[descriptionFieldName] = value;
     };
   };
 }
@@ -156,20 +153,20 @@ export const name = makePositionalDecorator<string>("name");
 // know which one the parameter is until a later decorator runs.
 //
 function saveDecoratedValue(proto: any, propertyKey: string | Symbol, descriptionProperty: string, value: any, unknownFieldKey: Symbol) {
-    let flagOpts: any = getLocalOptionsDescription(proto);
+    const flagOpts: any = getLocalOptionsDescription(proto);
     if (flagOpts.hasOwnProperty(propertyKey.toString())) {
       flagOpts[propertyKey.toString()][descriptionProperty] = value;
       return;
     }
 
-    let positionalOpts: any[] = getLocalPositionalOptionsDescription(proto);
-    let opt = positionalOpts.find(opt => opt.propertyName === propertyKey);
+    const positionalOpts: any[] = getLocalPositionalOptionsDescription(proto);
+    const opt = positionalOpts.find((opt) => opt.propertyName === propertyKey);
     if (opt !== undefined) {
       opt[descriptionProperty] = value;
       return;
     }
 
-    let unknownValues = proto[<any>unknownFieldKey] = proto[<any>unknownFieldKey] || new Map<string, string>();
+    const unknownValues = proto[unknownFieldKey as any] = proto[unknownFieldKey as any] || new Map<string, string>();
     unknownValues.set(propertyKey.toString(), value);
 }
 
@@ -193,7 +190,7 @@ export function help(helpText: string) : {(...args: any[]): any} {
   return function helpDecoratorFactory(...args: any[]): any {
     debug(`@help decorator called with ${args.length} arguments: ${inspect(args)}`);
     if (args.length === 1) {
-      let ctor = args[0];
+      const ctor = args[0];
       ctor[classHelpTextKey] = helpText;
       return ctor;
     }
@@ -201,8 +198,8 @@ export function help(helpText: string) : {(...args: any[]): any} {
     // Typescript docs are incorrect - property decorators get three args, and the last one is
     // undefined
     if (args.length === 3 && typeof args[0] === "object" && args[2] === undefined) {
-      let proto = args[0];
-      let propertyName = <string>args[1];
+      const proto = args[0];
+      const propertyName = args[1] as string;
       return saveDecoratedValue(proto, propertyName, "helpText", helpText, unknownHelpTextKey);
     }
     throw new Error("@help not valid in this location");

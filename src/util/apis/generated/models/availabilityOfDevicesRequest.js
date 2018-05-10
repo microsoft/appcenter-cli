@@ -14,8 +14,10 @@
 class AvailabilityOfDevicesRequest {
   /**
    * Create a AvailabilityOfDevicesRequest.
-   * @member {string} username The username for the Apple Developer account.
-   * @member {string} password The password for the Apple Developer account.
+   * @member {string} [username] The username for the Apple Developer account.
+   * @member {string} [password] The password for the Apple Developer account.
+   * @member {string} [serviceConnectionId] The service_connection_id of the
+   * stored Apple credentials instad of username, password.
    */
   constructor() {
   }
@@ -35,15 +37,22 @@ class AvailabilityOfDevicesRequest {
         className: 'AvailabilityOfDevicesRequest',
         modelProperties: {
           username: {
-            required: true,
+            required: false,
             serializedName: 'username',
             type: {
               name: 'String'
             }
           },
           password: {
-            required: true,
+            required: false,
             serializedName: 'password',
+            type: {
+              name: 'String'
+            }
+          },
+          serviceConnectionId: {
+            required: false,
+            serializedName: 'service_connection_id',
             type: {
               name: 'String'
             }

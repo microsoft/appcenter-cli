@@ -16,7 +16,7 @@ export class AppCenterClientCredentials {
   signRequest(request: WebResource, callback: {(err: Error): void}): void {
     debug("Getting token for request");
     this.getToken()
-      .then(token => {
+      .then((token) => {
         debug(`got token ${token} of type ${typeof token}`);
         request.headers["x-api-token"] = token;
         callback(null);

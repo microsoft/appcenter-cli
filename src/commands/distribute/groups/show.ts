@@ -1,5 +1,5 @@
 import { AppCommand, CommandResult, help, success, shortName, longName, required, hasArg, ErrorCodes, failure } from "../../../util/commandline";
-import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 
@@ -32,7 +32,7 @@ export default class ShowDistributionGroupCommand extends AppCommand {
     let distributionGroupMembers: models.DistributionGroupUserGetResponse[];
     try {
       debug(`Getting users of distribution group ${this.distributionGroup}`);
-      let response = await distributionGroupMembersRequestResponse;
+      const response = await distributionGroupMembersRequestResponse;
       if (response.response.statusCode < 400) {
         distributionGroupMembers = response.result;
       } else {
@@ -50,7 +50,7 @@ export default class ShowDistributionGroupCommand extends AppCommand {
     let basicReleasesDetails: models.BasicReleaseDetailsResponse[];
     try {
       debug(`Getting releases details for distribution group ${this.distributionGroup}`);
-      let response = await basicReleasesDetailsRequestResponse;
+      const response = await basicReleasesDetailsRequestResponse;
       if (response.response.statusCode < 400) {
         basicReleasesDetails = response.result;
       } else {

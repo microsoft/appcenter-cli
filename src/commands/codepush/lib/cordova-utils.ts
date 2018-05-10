@@ -5,11 +5,12 @@ import * as path from "path";
 
 export function getCordovaProjectAppVersion(projectRoot?: string): Promise<string> {
   return new Promise<string>((resolve, reject) => {
+    let configString: string;
     try {
       projectRoot = projectRoot || process.cwd();
-      var configString: string = fs.readFileSync(path.join(projectRoot, "config.xml"), { encoding: "utf8" });
+      configString = fs.readFileSync(path.join(projectRoot, "config.xml"), { encoding: "utf8" });
     } catch (error) {
-      reject(new Error(`Unable to find or read "config.xml" in the CWD. The "release-cordova" command must be executed in a Cordova project folder.`));
+      return reject(new Error(`Unable to find or read "config.xml" in the CWD. The "release-cordova" command must be executed in a Cordova project folder.`));
     }
 
     xml2js.parseString(configString, (err: Error, parsedConfig: any) => {
@@ -34,13 +35,13 @@ export function isValidOS(os: string): boolean {
 }
 
 export function isValidPlatform(platform: string): boolean {
-  return platform.toLowerCase() == "cordova";
+  return platform.toLowerCase() === "cordova";
 }
 
 // Check whether the Cordova or PhoneGap CLIs are
 // installed, and if not, fail early
 export function getCordovaOrPhonegapCLI(): string {
-  var cordovaCLI: string = "cordova";
+  let cordovaCLI: string = "cordova";
 
   try {
     which.sync(cordovaCLI);

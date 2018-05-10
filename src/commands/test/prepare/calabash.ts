@@ -1,13 +1,8 @@
-import { CommandArgs, help, success, name, longName, required, hasArg,
-         ErrorCodes } from "../../../util/commandline";
+import { CommandArgs, help, longName, required, hasArg } from "../../../util/commandline";
 import { CalabashPreparer } from "../lib/calabash-preparer";
 import { PrepareTestsCommand } from "../lib/prepare-tests-command";
 import { out } from "../../../util/interaction";
-import * as outExtensions from "../lib/interaction";
-import * as process from "../../../util/misc/process-helper";
 import { Messages } from "../lib/help-messages";
-
-const debug = require("debug")("appcenter-cli:commands:test:prepare:calabash");
 
 @help(Messages.TestCloud.Commands.PrepareCalabash)
 export default class PrepareCalabashCommand extends PrepareTestsCommand {
@@ -62,7 +57,7 @@ export default class PrepareCalabashCommand extends PrepareTestsCommand {
     }
 
     if (this.config && this.configPath) {
-      throw new Error("Arguments --config-path and --config (obsolete) were both used. Please use only --config-path.")
+      throw new Error("Arguments --config-path and --config (obsolete) were both used. Please use only --config-path.");
     }
 
     if (this.config) {
@@ -76,7 +71,7 @@ export default class PrepareCalabashCommand extends PrepareTestsCommand {
   }
 
   protected prepareManifest(): Promise<string> {
-    let preparer = new CalabashPreparer(this.artifactsDir, this.projectDir, this.appPath, this.testParameters);
+    const preparer = new CalabashPreparer(this.artifactsDir, this.projectDir, this.appPath, this.testParameters);
 
     preparer.signInfo = this.signInfo;
     preparer.config = this.configPath;

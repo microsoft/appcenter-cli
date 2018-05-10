@@ -19,6 +19,8 @@ exports.Failure = require('./failure');
 exports.ErrorDetails = require('./errorDetails');
 exports.ErrorResponse = require('./errorResponse');
 exports.SuccessResponse = require('./successResponse');
+exports.AADTenantAddRequest = require('./aADTenantAddRequest');
+exports.AADTenantResponse = require('./aADTenantResponse');
 exports.ApiTokensPostRequest = require('./apiTokensPostRequest');
 exports.AppPatchRequest = require('./appPatchRequest');
 exports.AppRepoPatchRequest = require('./appRepoPatchRequest');
@@ -100,23 +102,6 @@ exports.UserProfileResponseInternalSettings = require('./userProfileResponseInte
 exports.UserProfileResponseInternal = require('./userProfileResponseInternal');
 exports.UserProfileResponseManagement = require('./userProfileResponseManagement');
 exports.UserSettingResponse = require('./userSettingResponse');
-exports.SharedConnectionRequest = require('./sharedConnectionRequest');
-exports.SharedConnectionUpdateRequest = require('./sharedConnectionUpdateRequest');
-exports.SharedConnectionResponse = require('./sharedConnectionResponse');
-exports.PrivateSharedConnectionResponse = require('./privateSharedConnectionResponse');
-exports.AppleSecretDetails = require('./appleSecretDetails');
-exports.AppleConnectionSecretRequest = require('./appleConnectionSecretRequest');
-exports.AppleSecretDetailsResponse = require('./appleSecretDetailsResponse');
-exports.AppleConnectionSecretResponse = require('./appleConnectionSecretResponse');
-exports.PrivateAppleConnectionSecretResponse = require('./privateAppleConnectionSecretResponse');
-exports.JiraSecretDetails = require('./jiraSecretDetails');
-exports.JiraConnectionSecretRequest = require('./jiraConnectionSecretRequest');
-exports.JiraSecretDetailsResponse = require('./jiraSecretDetailsResponse');
-exports.JiraConnectionSecretResponse = require('./jiraConnectionSecretResponse');
-exports.PrivateJiraConnectionSecretResponse = require('./privateJiraConnectionSecretResponse');
-exports.GooglePlayConnectionSecretRequest = require('./googlePlayConnectionSecretRequest');
-exports.GooglePlayConnectionSecretResponse = require('./googlePlayConnectionSecretResponse');
-exports.PrivateGooglePlayConnectionSecretResponse = require('./privateGooglePlayConnectionSecretResponse');
 exports.FileAsset = require('./fileAsset');
 exports.SourceRepository = require('./sourceRepository');
 exports.VSTSProfile = require('./vSTSProfile');
@@ -180,6 +165,7 @@ exports.TesterAppWithReleaseResponseOwner = require('./testerAppWithReleaseRespo
 exports.TesterAppWithReleaseResponse = require('./testerAppWithReleaseResponse');
 exports.SendNotificationRequestEmailContents = require('./sendNotificationRequestEmailContents');
 exports.SendNotificationRequest = require('./sendNotificationRequest');
+exports.UserInteractionMetricsResponse = require('./userInteractionMetricsResponse');
 exports.ReleaseUpdateResponseDestinationsItem = require('./releaseUpdateResponseDestinationsItem');
 exports.ReleaseUpdateResponse = require('./releaseUpdateResponse');
 exports.PrivateReleaseDetailsResponse = require('./privateReleaseDetailsResponse');
@@ -195,11 +181,17 @@ exports.ReleaseDetailsResponse = require('./releaseDetailsResponse');
 exports.ReleaseUploadBeginResponse = require('./releaseUploadBeginResponse');
 exports.ReleaseUploadEndRequest = require('./releaseUploadEndRequest');
 exports.ReleaseUploadEndResponse = require('./releaseUploadEndResponse');
+exports.ArchIdentifier = require('./archIdentifier');
+exports.ProvisioningProfile = require('./provisioningProfile');
+exports.ReleaseCreateRequest = require('./releaseCreateRequest');
+exports.ReleaseCreateResponse = require('./releaseCreateResponse');
 exports.ReleaseUpdateRequest = require('./releaseUpdateRequest');
 exports.PrivateReleaseUpdateRequest = require('./privateReleaseUpdateRequest');
 exports.ProvisioningProfileResponse = require('./provisioningProfileResponse');
 exports.DestinationError = require('./destinationError');
 exports.ReleaseUpdateError = require('./releaseUpdateError');
+exports.AutoProvisioningConfigRequest = require('./autoProvisioningConfigRequest');
+exports.AutoProvisioningConfigResponse = require('./autoProvisioningConfigResponse');
 exports.AnalyticsReleasesParameter = require('./analyticsReleasesParameter');
 exports.AnalyticsReleasesResponse = require('./analyticsReleasesResponse');
 exports.DeviceConfigurationResponse = require('./deviceConfigurationResponse');
@@ -210,6 +202,9 @@ exports.PublishDevicesRequest = require('./publishDevicesRequest');
 exports.PublishDevicesResponse = require('./publishDevicesResponse');
 exports.AppleLoginRequest = require('./appleLoginRequest');
 exports.AppleLoginResponse = require('./appleLoginResponse');
+exports.ApplicationStatusRequest = require('./applicationStatusRequest');
+exports.ApplicationStatusResponse = require('./applicationStatusResponse');
+exports.ItunesAppsRequest = require('./itunesAppsRequest');
 exports.ItunesTeamsRequest = require('./itunesTeamsRequest');
 exports.ItunesTeamsResponse = require('./itunesTeamsResponse');
 exports.AllItunesAppsResponse = require('./allItunesAppsResponse');
@@ -239,12 +234,15 @@ exports.PrivateIntuneStoreRequest = require('./privateIntuneStoreRequest');
 exports.PrivateCreateStoreRequest = require('./privateCreateStoreRequest');
 exports.IntuneCategoryValue = require('./intuneCategoryValue');
 exports.IntuneCategories = require('./intuneCategories');
+exports.UserInfo = require('./userInfo');
 exports.IntuneGroupValue = require('./intuneGroupValue');
 exports.IntuneGroups = require('./intuneGroups');
 exports.SecretDetails = require('./secretDetails');
 exports.CreateStoreSecretRequest = require('./createStoreSecretRequest');
 exports.CreateStoreSecretResponse = require('./createStoreSecretResponse');
 exports.ReleasePublishErrorResponse = require('./releasePublishErrorResponse');
+exports.StatusData = require('./statusData');
+exports.ReleaseRealTimeStatusResponse = require('./releaseRealTimeStatusResponse');
 exports.ExternalStoreResponse = require('./externalStoreResponse');
 exports.GooglePlayTestersResponse = require('./googlePlayTestersResponse');
 exports.StoreSecretResponse = require('./storeSecretResponse');
@@ -263,6 +261,7 @@ exports.SymbolStatusResponse = require('./symbolStatusResponse');
 exports.SymbolUploadUserInfo = require('./symbolUploadUserInfo');
 exports.UploadedSymbolInfo = require('./uploadedSymbolInfo');
 exports.SymbolUpload = require('./symbolUpload');
+exports.SymbolLocation = require('./symbolLocation');
 exports.SymbolUploadLocation = require('./symbolUploadLocation');
 exports.SymbolUploadBeginRequest = require('./symbolUploadBeginRequest');
 exports.SymbolUploadBeginResponse = require('./symbolUploadBeginResponse');
@@ -285,6 +284,7 @@ exports.CrashDetails = require('./crashDetails');
 exports.Crash = require('./crash');
 exports.HockeyAppCrashForwardingInfo = require('./hockeyAppCrashForwardingInfo');
 exports.HockeyAppCrashForwardingChange = require('./hockeyAppCrashForwardingChange');
+exports.AlertingCrashGroup = require('./alertingCrashGroup');
 exports.MissingSymbol = require('./missingSymbol');
 exports.CrashLocation = require('./crashLocation');
 exports.ParkedCrash = require('./parkedCrash');
@@ -293,8 +293,6 @@ exports.MissingSymbolCrashGroup = require('./missingSymbolCrashGroup');
 exports.MissingSymbolCrashGroupsResponse = require('./missingSymbolCrashGroupsResponse');
 exports.MissingSymbolCrashGroupsInfoResponse = require('./missingSymbolCrashGroupsInfoResponse');
 exports.FailureResponse = require('./failureResponse');
-exports.SearchItemsRequest = require('./searchItemsRequest');
-exports.SearchItem = require('./searchItem');
 exports.CrashingAppDetail = require('./crashingAppDetail');
 exports.ActiveCrashingAppDetails = require('./activeCrashingAppDetails');
 exports.LogTraceDefinition = require('./logTraceDefinition');
@@ -305,6 +303,7 @@ exports.GenericLog = require('./genericLog');
 exports.GenericLogContainer = require('./genericLogContainer');
 exports.LogWithProperties = require('./logWithProperties');
 exports.StartSessionLog = require('./startSessionLog');
+exports.HanledErrorLog = require('./hanledErrorLog');
 exports.StartServiceLog = require('./startServiceLog');
 exports.CustomProperty = require('./customProperty');
 exports.CustomPropertyLog = require('./customPropertyLog');
@@ -354,10 +353,11 @@ exports.CrashOverall = require('./crashOverall');
 exports.CrashesOverallItem = require('./crashesOverallItem');
 exports.CrashGroupModel = require('./crashGroupModel');
 exports.CrashGroupModels = require('./crashGroupModels');
-exports.ErrorStackFrame = require('./errorStackFrame');
 exports.ErrorGroupState = require('./errorGroupState');
-exports.ErrorGroup = require('./errorGroup');
+exports.ErrorGroupListItem = require('./errorGroupListItem');
 exports.ErrorGroups = require('./errorGroups');
+exports.HandledErrorReasonFrame = require('./handledErrorReasonFrame');
+exports.ErrorGroup = require('./errorGroup');
 exports.ErrorDownloadLink = require('./errorDownloadLink');
 exports.ErrorFreeDevicePercentages = require('./errorFreeDevicePercentages');
 exports.HandledError = require('./handledError');
@@ -392,8 +392,15 @@ exports.ReleaseWithDistributionGroupAndUserId = require('./releaseWithDistributi
 exports.NotifyReleasesContainer = require('./notifyReleasesContainer');
 exports.DeleteReleasesContainer = require('./deleteReleasesContainer');
 exports.GetReleasesContainer = require('./getReleasesContainer');
+exports.FilterReleasesContainer = require('./filterReleasesContainer');
+exports.FilterVersionsContainerVersionsItem = require('./filterVersionsContainerVersionsItem');
+exports.FilterVersionsContainer = require('./filterVersionsContainer');
 exports.ReleaseCount = require('./releaseCount');
 exports.ReleaseCounts = require('./releaseCounts');
+exports.DailySession = require('./dailySession');
+exports.ReleaseDailySessions = require('./releaseDailySessions');
+exports.DateTimeDownloadReleaseCount = require('./dateTimeDownloadReleaseCount');
+exports.DateTimeDownloadReleaseCounts = require('./dateTimeDownloadReleaseCounts');
 exports.LogFlowDevice = require('./logFlowDevice');
 exports.LogFlowLog = require('./logFlowLog');
 exports.LogFlowLogContainer = require('./logFlowLogContainer');
@@ -413,13 +420,6 @@ exports.LogFlowPageLog = require('./logFlowPageLog');
 exports.LogFlowEventLog = require('./logFlowEventLog');
 exports.LogFlowPushInstallationLog = require('./logFlowPushInstallationLog');
 exports.LogFlowErrorLog = require('./logFlowErrorLog');
-exports.ExportConfiguration = require('./exportConfiguration');
-exports.ExportConfigurationBlobStorageConnectionString = require('./exportConfigurationBlobStorageConnectionString');
-exports.ExportConfigurationAppInsightsKey = require('./exportConfigurationAppInsightsKey');
-exports.ExportConfigurationBlobStorageLinkedSubscription = require('./exportConfigurationBlobStorageLinkedSubscription');
-exports.ExportConfigurationAppInsightsLinkedSubscription = require('./exportConfigurationAppInsightsLinkedSubscription');
-exports.ExportConfigurationResult = require('./exportConfigurationResult');
-exports.ExportConfigurationListResult = require('./exportConfigurationListResult');
 exports.NotificationTarget = require('./notificationTarget');
 exports.NotificationOverviewResult = require('./notificationOverviewResult');
 exports.NotificationsListResult = require('./notificationsListResult');
@@ -441,6 +441,13 @@ exports.NotificationConfigAppleResult = require('./notificationConfigAppleResult
 exports.NotificationConfigAppleTokenResult = require('./notificationConfigAppleTokenResult');
 exports.NotificationConfigGoogleResult = require('./notificationConfigGoogleResult');
 exports.NotificationConfigWindowsResult = require('./notificationConfigWindowsResult');
+exports.ExportConfiguration = require('./exportConfiguration');
+exports.ExportConfigurationBlobStorageConnectionString = require('./exportConfigurationBlobStorageConnectionString');
+exports.ExportConfigurationAppInsightsKey = require('./exportConfigurationAppInsightsKey');
+exports.ExportConfigurationBlobStorageLinkedSubscription = require('./exportConfigurationBlobStorageLinkedSubscription');
+exports.ExportConfigurationAppInsightsLinkedSubscription = require('./exportConfigurationAppInsightsLinkedSubscription');
+exports.ExportConfigurationResult = require('./exportConfigurationResult');
+exports.ExportConfigurationListResult = require('./exportConfigurationListResult');
 exports.DeviceConfigurationImage = require('./deviceConfigurationImage');
 exports.DeviceDimensions = require('./deviceDimensions');
 exports.DeviceResolution = require('./deviceResolution');
@@ -543,18 +550,19 @@ exports.BillingResourceUsage = require('./billingResourceUsage');
 exports.AggregatedBillingInformation = require('./aggregatedBillingInformation');
 exports.BillingErrorError = require('./billingErrorError');
 exports.BillingError = require('./billingError');
+exports.BillingPlansChangeTypeResponse = require('./billingPlansChangeTypeResponse');
+exports.BillingPlansSelection = require('./billingPlansSelection');
 exports.UsageRecordStatus = require('./usageRecordStatus');
 exports.VersionedBillingPlan = require('./versionedBillingPlan');
 exports.MessageEnvelope = require('./messageEnvelope');
+exports.DataSubjectRightResponse = require('./dataSubjectRightResponse');
+exports.DataSubjectRightStatusResponse = require('./dataSubjectRightStatusResponse');
 exports.ListOKResponseItem = require('./listOKResponseItem');
 exports.discriminators = {
-  'SharedConnectionRequest' : exports.SharedConnectionRequest,
-  'SharedConnectionRequest.AppleConnectionSecretRequest' : exports.AppleConnectionSecretRequest,
-  'SharedConnectionRequest.JiraConnectionSecretRequest' : exports.JiraConnectionSecretRequest,
-  'SharedConnectionRequest.GooglePlayConnectionSecretRequest' : exports.GooglePlayConnectionSecretRequest,
   'Log' : exports.Log,
   'Log.LogWithProperties' : exports.LogWithProperties,
   'Log.start_session' : exports.StartSessionLog,
+  'Log.handled_error' : exports.HanledErrorLog,
   'Log.start_service' : exports.StartServiceLog,
   'CustomProperty' : exports.CustomProperty,
   'Log.custom_properties' : exports.CustomPropertyLog,
@@ -582,11 +590,6 @@ exports.discriminators = {
   'LogFlowLog.event' : exports.LogFlowEventLog,
   'LogFlowLog.push_installation' : exports.LogFlowPushInstallationLog,
   'LogFlowLog.error' : exports.LogFlowErrorLog,
-  'ExportConfiguration' : exports.ExportConfiguration,
-  'ExportConfiguration.blob_storage_connection_string' : exports.ExportConfigurationBlobStorageConnectionString,
-  'ExportConfiguration.application_insights_instrumentation_key' : exports.ExportConfigurationAppInsightsKey,
-  'ExportConfiguration.blob_storage_linked_subscription' : exports.ExportConfigurationBlobStorageLinkedSubscription,
-  'ExportConfiguration.application_insights_linked_subscription' : exports.ExportConfigurationAppInsightsLinkedSubscription,
   'NotificationTarget' : exports.NotificationTarget,
   'NotificationTarget.audiences_target' : exports.NotificationTargetAudiences,
   'NotificationTarget.devices_target' : exports.NotificationTargetDevices,
@@ -600,6 +603,11 @@ exports.discriminators = {
   'NotificationConfigResult.apns_token_config' : exports.NotificationConfigAppleTokenResult,
   'NotificationConfigResult.gcm_config' : exports.NotificationConfigGoogleResult,
   'NotificationConfigResult.wns_config' : exports.NotificationConfigWindowsResult,
+  'ExportConfiguration' : exports.ExportConfiguration,
+  'ExportConfiguration.blob_storage_connection_string' : exports.ExportConfigurationBlobStorageConnectionString,
+  'ExportConfiguration.application_insights_instrumentation_key' : exports.ExportConfigurationAppInsightsKey,
+  'ExportConfiguration.blob_storage_linked_subscription' : exports.ExportConfigurationBlobStorageLinkedSubscription,
+  'ExportConfiguration.application_insights_linked_subscription' : exports.ExportConfigurationAppInsightsLinkedSubscription,
   'AlertingBugtrackerSettings' : exports.AlertingBugtrackerSettings,
   'AlertingBugtrackerSettings.vsts' : exports.AlertingVstsBugtrackerSettings,
   'AlertingBugtrackerSettings.github' : exports.AlertingGithubBugtrackerSettings,

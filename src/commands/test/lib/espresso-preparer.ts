@@ -1,7 +1,4 @@
-import { IFileDescriptionJson } from "./test-manifest-reader";
-import { out } from "../../../util/interaction";
 import * as _ from "lodash";
-import * as fs from "fs";
 import * as path from "path";
 import * as pglob from "../../../util/misc/promisfied-glob";
 import * as pfs from "../../../util/misc/promisfied-fs";
@@ -37,14 +34,13 @@ export class EspressoPreparer {
         throw new Error(`File not found for test apk path: "${this.testApkPath}"`);
       }
       await pfs.cpFile(this.testApkPath, path.join(this.artifactsDir, path.basename(this.testApkPath)));
-    }
-    else {
+    } else {
       await this.validateBuildDir();
       await pfs.cpDir(this.buildDir, this.artifactsDir);
     }
-    let manifestPath = path.join(this.artifactsDir, "manifest.json");
-    let manifest = await this.createEspressoManifest();
-    let manifestJson = JSON.stringify(manifest, null, 1);
+    const manifestPath = path.join(this.artifactsDir, "manifest.json");
+    const manifest = await this.createEspressoManifest();
+    const manifestJson = JSON.stringify(manifest, null, 1);
     await pfs.writeFile(manifestPath, manifestJson);
 
     return manifestPath;
@@ -66,30 +62,28 @@ export class EspressoPreparer {
   }
 
   private async detectTestApkPathFromBuildDir(): Promise<string> {
-    let apkPattern = path.join(this.buildDir, "*androidTest.apk");
-    let files = await pglob.glob(apkPattern);
-    
+    const apkPattern = path.join(this.buildDir, "*androidTest.apk");
+    const files = await pglob.glob(apkPattern);
+
     if (files.length === 0) {
        throw new Error(`An apk with name matching "*androidTest.apk" was not found inside directory inside build directory "${this.buildDir}"`);
-    }
-    else if (files.length >= 2) {
+    } else if (files.length >= 2) {
        throw new Error(`Multiple apks with name matching "*androidTest.apk" were found inside build directory "${this.buildDir}". A unique match is required.`);
-    }
-    else {
-      let apkPath = files[files.length - 1];
+    } else {
+      const apkPath = files[files.length - 1];
       return apkPath;
     }
   }
 
   private async createEspressoManifest(): Promise<any> {
-    let apkFullPath = this.testApkPath ? this.testApkPath : await this.detectTestApkPathFromBuildDir();
-    let apkArtifactsPath = path.basename(apkFullPath); 
-    let result = {
-      "schemaVersion": "1.0.0",
-      "files": [apkArtifactsPath],
-      "testFramework": {
-        "name": "espresso",
-        "data": { }
+    const apkFullPath = this.testApkPath ? this.testApkPath : await this.detectTestApkPathFromBuildDir();
+    const apkArtifactsPath = path.basename(apkFullPath);
+    const result = {
+      schemaVersion: "1.0.0",
+      files: [apkArtifactsPath],
+      testFramework: {
+        name: "espresso",
+        data: { }
       }
     };
 

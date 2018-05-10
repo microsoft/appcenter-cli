@@ -15,8 +15,6 @@ import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../token-s
 const debug = require("debug")("appcenter-cli:util:token-store:win32:win-token-store");
 import { inspect } from "util";
 
-type ReadableStream = NodeJS.ReadableStream;
-type WritableStream = NodeJS.WritableStream;
 type Duplex = stream.Duplex;
 
 const credExePath = path.join(__dirname, "../../../../bin/windows/creds.exe");
@@ -81,10 +79,10 @@ export class WinTokenStore implements TokenStore {
   list(): Observable<TokenEntry> {
     const prefixer = new Prefixer(false);
     return Observable.create<TokenEntry>((observer: Observer<TokenEntry>) => {
-      let credsProcess = childProcess.spawn(credExePath, ['-s', '-g', '-t', `${targetNamePrefix}*`]);
+      const credsProcess = childProcess.spawn(credExePath, ["-s", "-g", "-t", `${targetNamePrefix}*`]);
 
       debug("Creds process started for list, monitoring output");
-      let credStream = credsProcess.stdout
+      const credStream = credsProcess.stdout
         .pipe(parser.createParsingStream())
         .pipe(es.mapSync(prefixer.removePrefixFromCred.bind(prefixer)) as any as Duplex);
 
@@ -109,11 +107,11 @@ export class WinTokenStore implements TokenStore {
  */
   get(key: TokenKeyType, useOldName: boolean = false): Promise<TokenEntry> {
     const prefixer = new Prefixer(useOldName);
-    let args = [ "-s", "-t", prefixer.ensurePrefix(key) ];
+    const args = [ "-s", "-t", prefixer.ensurePrefix(key) ];
 
-    let credsProcess = childProcess.spawn(credExePath, args);
+    const credsProcess = childProcess.spawn(credExePath, args);
     let result: any = null;
-    let errors: string[] = [];
+    const errors: string[] = [];
 
     debug(`Getting key with args ${inspect(args)}`);
     return new Promise<TokenEntry>((resolve, reject) => {
@@ -121,7 +119,7 @@ export class WinTokenStore implements TokenStore {
         .pipe(es.mapSync(prefixer.removePrefixFromCred.bind(prefixer)) as any as Duplex)
         .on("data", (credential: any) => {
           result = credential;
-          result.targetName = prefixer.removePrefix(result.targetName)
+          result.targetName = prefixer.removePrefix(result.targetName);
         });
 
       credsProcess.stderr.pipe(es.split() as any as Duplex)
@@ -133,7 +131,7 @@ export class WinTokenStore implements TokenStore {
         if (code === 0) {
           debug(`Completed getting token, result = ${inspect(result)}`);
           return resolve(credToTokenEntry(result));
-        };
+        }
         return reject(new Error(`Getting credential failed, exit code ${code}: ${errors.join(", ")}`));
       });
     });
@@ -151,7 +149,7 @@ export class WinTokenStore implements TokenStore {
    */
   set(key: TokenKeyType, credential: TokenValueType): Promise<void> {
     const prefixer = new Prefixer(false);
-    let args = [ "-a", "-t", prefixer.ensurePrefix(key), "-p", encodeTokenValueAsHex(credential) ];
+    const args = [ "-a", "-t", prefixer.ensurePrefix(key), "-p", encodeTokenValueAsHex(credential) ];
 
     debug(`Saving token with args ${inspect(args)}`);
     return new Promise<void>((resolve, reject) => {
@@ -178,10 +176,10 @@ export class WinTokenStore implements TokenStore {
   */
   remove(key: TokenKeyType): Promise<void> {
     const prefixer = new Prefixer(false);
-    let args = [ "-d", "-t", prefixer.ensurePrefix(key) ];
+    const args = [ "-d", "-t", prefixer.ensurePrefix(key) ];
 
-    if (key.slice(-1) === '*') {
-      args.push('-g');
+    if (key.slice(-1) === "*") {
+      args.push("-g");
     }
 
     debug(`Deleting token with args ${inspect(args)}`);

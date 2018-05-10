@@ -11,11 +11,11 @@ import { telemetryFilter } from "./telemetry-filter";
 const BasicAuthenticationCredentials = require("ms-rest").BasicAuthenticationCredentials;
 import { ServiceCallback, ServiceError, WebResource } from "ms-rest";
 
-const createLogger = require('ms-rest').LogFilter.create;
+const createLogger = require("ms-rest").LogFilter.create;
 
 import { isDebug } from "../interaction";
 import { Profile } from "../profile";
-import { failure, success, ErrorCodes } from "../../util/commandline/command-result";
+import { failure, ErrorCodes } from "../../util/commandline/command-result";
 
 export interface AppCenterClientFactory {
   fromUserNameAndPassword(userName: string, password: string, endpoint: string): AppCenterClient;
@@ -44,10 +44,10 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
 
       if (typeof token === "string") {
         debug("Creating from token as string");
-        tokenFunc = () => Promise.resolve(<string>token);
+        tokenFunc = () => Promise.resolve(token as string);
       } else if (typeof token === "object") {
         debug("Creating from token as promise");
-        tokenFunc = () => <Promise<string>>token;
+        tokenFunc = () => token as Promise<string>;
       } else {
         debug("Creating from token as function");
         tokenFunc = token;
@@ -71,8 +71,7 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
 export function clientCall<T>(action: {(cb: ServiceCallback<any>): void}): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     action((err: Error, result: T) => {
-      if (err) { reject(err); }
-      else { resolve(result); }
+      if (err) { reject(err); } else { resolve(result); }
     });
   });
 }
@@ -85,17 +84,15 @@ export interface ClientResponse<T> {
   response: IncomingMessage;
 }
 
-export async function handleHttpError(error: any, check404: boolean, 
+export async function handleHttpError(error: any, check404: boolean,
     messageDefault: string, message404: string = `404 Error received from api`, message401: string = `401 Error received from api`): Promise<void> {
   if (check404 && error.statusCode === 404) {
     throw failure(ErrorCodes.InvalidParameter, message404);
   }
-  
+
   if (error.statusCode === 401) {
     throw failure(ErrorCodes.NotLoggedIn, message401);
-  }
-  
-  else {
+  } else {
     debug(`${messageDefault}- ${inspect(error)}`);
     throw failure(ErrorCodes.Exception, messageDefault);
   }
@@ -105,8 +102,7 @@ export async function handleHttpError(error: any, check404: boolean,
 export function clientRequest<T>(action: {(cb: ServiceCallback<any>): void}): Promise<ClientResponse<T>> {
   return new Promise<ClientResponse<T>>((resolve, reject) => {
     action((err: Error | ServiceError, result: T, request: WebResource, response: IncomingMessage) => {
-      if (err) { reject(err); }
-      else {
+      if (err) { reject(err); } else {
         resolve({ result, response});
       }
     });

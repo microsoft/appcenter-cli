@@ -2830,7 +2830,7 @@ function _eventsDelete(eventName, ownerName, appName, options, callback) {
  * pagination.
  *
  * @param {string} [options.inlinecount] Controls whether or not to include a
- * count of all the items accross all pages. Possible values include:
+ * count of all the items across all pages. Possible values include:
  * 'allpages', 'none'
  *
  * @param {string} [options.orderby] controls the sorting order and sorting
@@ -7640,7 +7640,7 @@ class Analytics {
    * pagination.
    *
    * @param {string} [options.inlinecount] Controls whether or not to include a
-   * count of all the items accross all pages. Possible values include:
+   * count of all the items across all pages. Possible values include:
    * 'allpages', 'none'
    *
    * @param {string} [options.orderby] controls the sorting order and sorting
@@ -7695,7 +7695,7 @@ class Analytics {
    * pagination.
    *
    * @param {string} [options.inlinecount] Controls whether or not to include a
-   * count of all the items accross all pages. Possible values include:
+   * count of all the items across all pages. Possible values include:
    * 'allpages', 'none'
    *
    * @param {string} [options.orderby] controls the sorting order and sorting

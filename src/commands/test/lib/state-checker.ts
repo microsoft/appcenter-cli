@@ -17,10 +17,10 @@ export class StateChecker {
     this.testRunId = testRunId;
     this.ownerName = ownerName;
     this.appName = appName;
-    if(!streamingOutput){
+    if (!streamingOutput) {
       this.streamingOutput = new StreamingArrayOutput();
       this.isInternalStreamingOutput = true;
-    }else{
+    } else {
       this.streamingOutput = streamingOutput;
       this.isInternalStreamingOutput = false;
     }
@@ -28,34 +28,33 @@ export class StateChecker {
 
   public async checkUntilCompleted(timeoutSec: number = null): Promise<number> {
     let exitCode = 0;
-    let startTime = process.hrtime();
-    if(this.isInternalStreamingOutput){
+    const startTime = process.hrtime();
+    if (this.isInternalStreamingOutput) {
       this.streamingOutput.start();
     }
     while (true) {
-      let state = await out.progress("Checking status...", this.getTestRunState(this.client, this.testRunId));
-      if (state && state.message)
-      {
+      const state = await out.progress("Checking status...", this.getTestRunState(this.client, this.testRunId));
+      if (state && state.message) {
         this.streamingOutput.text((state) => `Current test status: ${state.message.join(os.EOL)}`, state);
       }
-      
+
       if (typeof state.exitCode === "number") {
         exitCode = state.exitCode;
         break;
       }
 
       if (timeoutSec) {
-        let elapsedSeconds = process.hrtime(startTime)[0];
+        const elapsedSeconds = process.hrtime(startTime)[0];
         if (elapsedSeconds + state.waitTime > timeoutSec) {
           exitCode = ExitCodes.Timeout;
-          this.streamingOutput.text(timeoutSec => `After ${timeoutSec} seconds, command timed out waiting for tests to finish.`, timeoutSec)
+          this.streamingOutput.text((timeoutSec) => `After ${timeoutSec} seconds, command timed out waiting for tests to finish.`, timeoutSec);
           break;
         }
       }
 
       await out.progress(`Waiting ${state.waitTime} seconds...`, this.delay(1000 * state.waitTime));
     }
-    if(this.isInternalStreamingOutput){
+    if (this.isInternalStreamingOutput) {
       this.streamingOutput.finish();
     }
 
@@ -63,14 +62,14 @@ export class StateChecker {
   }
 
   public async checkOnce(): Promise<number> {
-    let state = await out.progress("Checking status...", this.getTestRunState(this.client, this.testRunId));
-    if(this.isInternalStreamingOutput){
+    const state = await out.progress("Checking status...", this.getTestRunState(this.client, this.testRunId));
+    if (this.isInternalStreamingOutput) {
       this.streamingOutput.start();
     }
 
     this.streamingOutput.text((state) => `Current test status: ${state.message.join(os.EOL)}`, state);
 
-    if(this.isInternalStreamingOutput){
+    if (this.isInternalStreamingOutput) {
       this.streamingOutput.finish();
     }
 
@@ -78,7 +77,7 @@ export class StateChecker {
   }
 
   private getTestRunState(client: AppCenterClient, testRunId: string): Promise<models.TestRunState> {
-    return clientCall(cb => {
+    return clientCall((cb) => {
       client.test.getTestRunState(
         testRunId,
         this.ownerName,
@@ -89,7 +88,9 @@ export class StateChecker {
   }
 
   private async delay(milliseconds: number): Promise<void> {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
+      // Turn off tslint false error
+      /* tslint:disable-next-line:no-string-based-set-timeout */
       setTimeout(resolve, milliseconds);
     });
   }

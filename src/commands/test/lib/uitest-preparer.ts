@@ -47,12 +47,12 @@ export class UITestPreparer {
   public async prepare(): Promise<string> {
     this.validateArguments();
 
-    let command = await this.getPrepareCommand();
+    const command = await this.getPrepareCommand();
     debug(`Executing command ${command}`);
-    let exitCode = await process.execAndWait(command, this.outMessage, this.outMessage);
+    const exitCode = await process.execAndWait(command, this.outMessage, this.outMessage);
 
     if (exitCode !== 0) {
-      let message = this.convertErrorCode(exitCode);
+      const message = this.convertErrorCode(exitCode);
       throw new TestCloudError(`Cannot prepare UI Test artifacts using command: ${command}.${os.EOL}${os.EOL}${message}`, exitCode);
     }
 
@@ -60,7 +60,7 @@ export class UITestPreparer {
   }
 
   private convertErrorCode(exitCode: number): string {
-    let tryAgain = `, please try again. If you can't work out how to fix this issue, please contact support.`;
+    const tryAgain = `, please try again. If you can't work out how to fix this issue, please contact support.`;
 
     switch (exitCode) {
       case 1:
@@ -139,7 +139,7 @@ export class UITestPreparer {
       command += `mono `;
     }
 
-    let testCloudBinary = await this.getTestCloudExecutablePath();
+    const testCloudBinary = await this.getTestCloudExecutablePath();
     command += `${testCloudBinary} prepare "${this.appPath}"`;
 
     if (this.storeFile) {
@@ -153,43 +153,38 @@ export class UITestPreparer {
     }
 
     if (this.fixture) {
-      this.fixture.forEach(item => {
+      this.fixture.forEach((item) => {
         command += ` --fixture "${item}"`;
       });
     }
 
     if (this.includeCategory) {
-      this.includeCategory.forEach(category => {
+      this.includeCategory.forEach((category) => {
         command += ` --include "${category}"`;
       });
     }
 
     if (this.excludeCategory) {
-      this.excludeCategory.forEach(category => {
+      this.excludeCategory.forEach((category) => {
         command += ` --exclude "${category}"`;
       });
     }
 
-    if (this.nunitXml) {
-      command += ` --nunit-xml "${this.nunitXml}"`;
-    }
-
     if (this.testChunk) {
-      command += ` --test-chunk "${this.testChunk}"`;
+      command += ` --test-chunk`;
     }
 
     if (this.fixtureChunk) {
-      command += ` --fixture-chunk "${this.fixtureChunk}"`;
+      command += ` --fixture-chunk`;
     }
 
     return command;
   }
 
   private async getTestCloudExecutablePath(): Promise<string> {
-    let toolsDir = this.uiTestToolsDir || await this.findXamarinUITestNugetDir(this.buildDir);
+    const toolsDir = this.uiTestToolsDir || await this.findXamarinUITestNugetDir(this.buildDir);
 
-    if (!await directoryExists(toolsDir))
-    {
+    if (!await directoryExists(toolsDir)) {
       throw new Error(`Cannot find test-cloud.exe, the path specified by "--uitest-tools-dir" was not found.${os.EOL}` +
         `Please check that "${toolsDir}" is a valid directory and contains test-cloud.exe.${os.EOL}` +
         `Minimum required version is "${this.getMinimumVersionString()}".`);
@@ -197,8 +192,7 @@ export class UITestPreparer {
 
     let testCloudPath = path.join(toolsDir, "test-cloud.exe");
 
-    if (!await fileExists(testCloudPath))
-    {
+    if (!await fileExists(testCloudPath)) {
       throw new Error(`Cannot find test-cloud.exe, the exe was not found in the path specified by "--uitest-tools-dir".${os.EOL}` +
         `Please check that ${testCloudPath} points to a test-cloud.exe.${os.EOL}` +
         `Minimum required version is "${this.getMinimumVersionString()}".`);
@@ -214,11 +208,11 @@ export class UITestPreparer {
   }
 
   private async findXamarinUITestNugetDir(root: string): Promise<string> {
-    let possibleNugetDirPattern = path.join(root, "packages", "Xamarin.UITest.*", "tools", "test-cloud.exe");
-    let files = (await glob(possibleNugetDirPattern)).sort();
+    const possibleNugetDirPattern = path.join(root, "packages", "Xamarin.UITest.*", "tools", "test-cloud.exe");
+    const files = (await glob(possibleNugetDirPattern)).sort();
 
     if (files.length === 0) {
-       let parentDir = path.dirname(root);
+       const parentDir = path.dirname(root);
 
        if (parentDir === root) {
          throw new Error(`Cannot find test-cloud.exe, which is required to prepare UI tests.${os.EOL}` +
@@ -226,28 +220,25 @@ export class UITestPreparer {
           `"${this.buildDir}" and all of its parent directories.${os.EOL}` +
           `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` +
           `Minimum required version is "${this.getMinimumVersionString()}".`);
-       }
-       else {
+       } else {
          return await this.findXamarinUITestNugetDir(parentDir);
        }
-    }
-    else {
-      let latestTestCloudPath = files[files.length - 1];
-      let match = latestTestCloudPath.match(/Xamarin\.UITest\.(\d+)\.(\d+)\.(\d+)/);
+    } else {
+      const latestTestCloudPath = files[files.length - 1];
+      const match = latestTestCloudPath.match(/Xamarin\.UITest\.(\d+)\.(\d+)\.(\d+)/);
 
       if (!match) {
         throw new Error(`Found test-cloud.exe at "${path.dirname(latestTestCloudPath)}", but cannot recognize its version.${os.EOL}` +
-                        `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` +
-                        `Minimum required version is "${this.getMinimumVersionString()}".`);
+          `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` +
+          `Minimum required version is "${this.getMinimumVersionString()}".`);
       }
 
-      let [, major, minor, build] = match;
-      if (!this.hasMinimumTestCloudVersion(parseInt(major), parseInt(minor), parseInt(build))) {
+      const [, major, minor, build] = match;
+      if (!this.hasMinimumTestCloudVersion(parseInt(major, 10), parseInt(minor, 10), parseInt(build, 10))) {
         throw new Error(`The latest version of test-cloud.exe, found at "${path.dirname(latestTestCloudPath)}", ` +
-                        `is too old.${os.EOL}` +
-                        `Please upgrade the NuGet package to version ${this.getMinimumVersionString()} or higher.`);
-      }
-      else {
+          `is too old.${os.EOL}` +
+          `Please upgrade the NuGet package to version ${this.getMinimumVersionString()} or higher.`);
+      } else {
         return path.dirname(latestTestCloudPath);
       }
     }
@@ -258,16 +249,15 @@ export class UITestPreparer {
   }
 
   private hasMinimumTestCloudVersion(major: number, minor: number, build: number): boolean {
-    let currentVersion = [major, minor, build];
+    const currentVersion = [major, minor, build];
 
-    let minLength = Math.min(currentVersion.length, minimumVersion.length);
+    const minLength = Math.min(currentVersion.length, minimumVersion.length);
 
     for (let i = 0; i < minLength; i++) {
-      if (currentVersion[i] > minimumVersion[i])
-      {
+      if (currentVersion[i] > minimumVersion[i]) {
         return true;
       }
-      
+
       if (currentVersion[i] < minimumVersion[i]) {
         return false;
       }
@@ -275,7 +265,6 @@ export class UITestPreparer {
 
     return true;
   }
-
 
   /*
     the UITest preparer sometimes prints messages with it's own executable name, such as

@@ -7,7 +7,6 @@ import * as _ from "lodash";
 import * as rx from "rx-lite";
 import * as childProcess from "child_process";
 import * as es from "event-stream";
-import * as os from "os";
 import * as stream from "stream";
 
 import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../token-store";
@@ -16,7 +15,7 @@ import { createOsxSecurityParsingStream, OsxSecurityParsingStream } from "./osx-
 const debug = require("debug")("appcenter-cli:util:token-store:osx:osx-token-store");
 import { inspect } from "util";
 
-const securityPath = '/usr/bin/security';
+const securityPath = "/usr/bin/security";
 const serviceName = "appcenter-cli";
 const oldServiceName = "mobile-center-cli";
 
@@ -24,7 +23,7 @@ export class OsxTokenStore implements TokenStore {
   list(): rx.Observable<TokenEntry> {
 
     return rx.Observable.create((observer: rx.Observer<TokenEntry>) => {
-      var securityProcess = childProcess.spawn(securityPath, ['dump-keychain']);
+      const securityProcess = childProcess.spawn(securityPath, ["dump-keychain"]);
 
       const securityStream = securityProcess.stdout
         .pipe(es.split() as any as stream.Duplex)
@@ -40,9 +39,9 @@ export class OsxTokenStore implements TokenStore {
           return;
         }
 
-        let key: TokenKeyType = data.acct;
+        const key: TokenKeyType = data.acct;
         // Have to get specific token to get tokens, but we have ids
-        let accessToken: TokenValueType = {
+        const accessToken: TokenValueType = {
           id: data.gena,
           token: null
         };
@@ -51,14 +50,13 @@ export class OsxTokenStore implements TokenStore {
       });
       securityStream.on("end", (err: Error) => {
         debug(`output from security program complete`);
-        if (err) { observer.onError(err); }
-        else { observer.onCompleted(); }
+        if (err) { observer.onError(err); } else { observer.onCompleted(); }
       });
     });
   }
 
   get(key: TokenKeyType, useOldName: boolean = false): Promise<TokenEntry> {
-    var args = [
+    const args = [
       "find-generic-password",
       "-a", key,
       "-s", useOldName ? oldServiceName : serviceName,
@@ -73,7 +71,7 @@ export class OsxTokenStore implements TokenStore {
         if (err) { return reject(err); }
         const match = /^password: (?:0x[0-9A-F]+. )?"(.*)"$/m.exec(stderr);
         if (match) {
-          let accessToken = match[1].replace(/\\134/g, "\\");
+          const accessToken = match[1].replace(/\\134/g, "\\");
 
           debug(`stdout for security program = "${stdout}"`);
           debug(`parsing stdout`);
@@ -106,20 +104,21 @@ export class OsxTokenStore implements TokenStore {
   }
 
   set(key: TokenKeyType, value: TokenValueType): Promise<void> {
-    var args = [
+    const args = [
       "add-generic-password",
       "-a", key,
       "-D", "appcenter cli password",
       "-s", serviceName,
       "-w", value.token,
-      "-G", value.id,
       "-U"
     ];
+
+    if (value.id) { args.push("-G", value.id); }
 
     return new Promise<void>((resolve, reject) => {
       childProcess.execFile(securityPath, args, function (err, stdout, stderr) {
         if (err) {
-          return reject(new Error('Could not add password to keychain: ' + stderr));
+          return reject(new Error("Could not add password to keychain: " + stderr));
         }
         return resolve();
       });
@@ -127,16 +126,16 @@ export class OsxTokenStore implements TokenStore {
   }
 
   remove(key: TokenKeyType): Promise<void> {
-    var args = [
-      'delete-generic-password',
-      '-a', key,
-      '-s', serviceName
+    const args = [
+      "delete-generic-password",
+      "-a", key,
+      "-s", serviceName
     ];
 
     return new Promise<void>((resolve, reject) => {
       childProcess.execFile(securityPath, args, function (err, stdout, stderr) {
         if (err) {
-          return reject(new Error('Could not remove account from keychain, ' + stderr));
+          return reject(new Error("Could not remove account from keychain, " + stderr));
         }
         return resolve();
       });

@@ -957,7 +957,7 @@ function _list(ownerName, appName, options, callback) {
  *
  * @param {string} body.symbolType The type of the symbol for the current
  * symbol upload. Possible values include: 'Apple', 'Breakpad',
- * 'AndroidProguard'
+ * 'AndroidProguard', 'UWP'
  *
  * @param {string} [body.clientCallback] The callback URL that the client can
  * optionally provide to get status updates for the current symbol upload
@@ -1648,7 +1648,7 @@ class SymbolUploads {
    *
    * @param {string} body.symbolType The type of the symbol for the current
    * symbol upload. Possible values include: 'Apple', 'Breakpad',
-   * 'AndroidProguard'
+   * 'AndroidProguard', 'UWP'
    *
    * @param {string} [body.clientCallback] The callback URL that the client can
    * optionally provide to get status updates for the current symbol upload
@@ -1698,7 +1698,7 @@ class SymbolUploads {
    *
    * @param {string} body.symbolType The type of the symbol for the current
    * symbol upload. Possible values include: 'Apple', 'Breakpad',
-   * 'AndroidProguard'
+   * 'AndroidProguard', 'UWP'
    *
    * @param {string} [body.clientCallback] The callback URL that the client can
    * optionally provide to get status updates for the current symbol upload

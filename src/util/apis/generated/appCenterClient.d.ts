@@ -37,10 +37,10 @@ declare class AppCenterClient extends ServiceClient {
   distributionGroupInvitations: operations.DistributionGroupInvitations;
   appInvitations: operations.AppInvitations;
   users: operations.Users;
-  apps: operations.Apps;
   releases: operations.Releases;
   teams: operations.Teams;
   azureSubscription: operations.AzureSubscription;
+  apps: operations.Apps;
   organizations: operations.Organizations;
   builds: operations.Builds;
   crashes: operations.Crashes;

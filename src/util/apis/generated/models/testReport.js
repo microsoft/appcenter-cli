@@ -32,6 +32,7 @@ class TestReport {
    * @member {number} [stats.devicesFailed]
    * @member {number} [stats.devicesSkipped]
    * @member {number} [stats.stepCount]
+   * @member {object} [stats.artifacts]
    * @member {string} id
    * @member {number} schemaVersion
    * @member {number} revision

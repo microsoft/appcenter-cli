@@ -20,9 +20,7 @@
 import * as _ from "lodash";
 import * as es from "event-stream";
 import * as stream from "stream";
-import * as util from "util";
 
-import { inspect } from "util";
 const debug = require("debug")("appcenter-cli:util:token-store:osx:osx-keychain-parser");
 
 //
@@ -46,7 +44,6 @@ const attrRe = /^    (?:(0x[0-9a-fA-F]+) |"([a-z]{4})")<[^>]+>=(?:(<NULL>)|"([^"
 //       current entry object until we hit either a non-indented line
 //       or end. At which point we emit.
 //
-
 
 export class OsxSecurityParsingStream extends stream.Transform {
   currentEntry: any;
@@ -72,7 +69,7 @@ export class OsxSecurityParsingStream extends stream.Transform {
         // Did we match a four-char named field? We don't care about hex fields
         if (attrMatch[2]) {
           // We skip nulls, and grab text rather than hex encoded versions of value
-          let value = attrMatch[6] || attrMatch[4];
+          const value = attrMatch[6] || attrMatch[4];
           if (value) {
             this.processAttributeLine(attrMatch[2], value);
           }
@@ -88,7 +85,7 @@ export class OsxSecurityParsingStream extends stream.Transform {
   }
 
   emitCurrentEntry(): void {
-    if(this.currentEntry) {
+    if (this.currentEntry) {
       this.push(this.currentEntry);
       this.currentEntry = null;
     }
@@ -119,8 +116,4 @@ export class OsxSecurityParsingStream extends stream.Transform {
 
 export function createOsxSecurityParsingStream(): NodeJS.ReadWriteStream {
   return es.pipeline(es.split(), new OsxSecurityParsingStream());
-}
-
-export namespace createOsxSecurityParsingStream {
-  const ParsingStream = OsxSecurityParsingStream;
 }
