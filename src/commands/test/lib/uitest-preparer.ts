@@ -143,7 +143,7 @@ export class UITestPreparer {
     command += `${testCloudBinary} prepare "${this.appPath}"`;
 
     if (this.storeFile) {
-      command += ` "${this.storeFile}" "${this.storePassword}" "${this.keyAlias}" "${this.keyPassword}"`;
+      command += ` keystore "${this.storeFile}" "${this.storePassword}" "${this.keyAlias}" "${this.keyPassword}"`;
     }
 
     command += ` --assembly-dir "${this.buildDir}" --artifacts-dir "${this.artifactsDir}"`;
