@@ -1,6 +1,6 @@
 import {
   AppCommand, CommandArgs, CommandResult,
-  help, success, shortName, longName, required, hasArg,
+  help, success, shortName, longName, hasArg,
   failure
 } from "../../../util/commandline";
 
@@ -19,8 +19,10 @@ import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as os from "os";
 import * as downloadUtil from "../../../util/misc/download";
-import { TestReport } from "../../../util/apis/generated/models";
+import { TestReport, DeviceSet } from "../../../util/apis/generated/models";
 import { buildErrorInfo } from "../lib/error-info-builder";
+import { Questions } from "inquirer";
+import { prompt } from "../../../util/interaction";
 
 export abstract class RunTestsCommand extends AppCommand {
 
@@ -32,7 +34,6 @@ export abstract class RunTestsCommand extends AppCommand {
   @help(Messages.TestCloud.Arguments.RunDevices)
   @longName("devices")
   @hasArg
-  @required
   devices: string;
 
   @help(Messages.TestCloud.Arguments.RunDSymDir)
@@ -118,6 +119,9 @@ export abstract class RunTestsCommand extends AppCommand {
       try {
         const manifestPath = await progressWithResult("Preparing tests", this.prepareManifest(artifactsDir));
         await this.updateManifestAndCopyFilesToArtifactsDir(manifestPath);
+        if (!this.devices || this.devices.length === 0) {
+          await this.promptDevices(client);
+        }
         const testRun = await this.uploadAndStart(client, manifestPath, portalBaseUrl);
 
         const vstsIdVariable = this.vstsIdVariable;
@@ -133,19 +137,19 @@ export abstract class RunTestsCommand extends AppCommand {
             testRun.rejectedDevices.map((item) => `  - ${item}`).forEach((text) => report += text + os.EOL);
           }
           return report;
-        }, testRun );
+        }, testRun);
 
         if (!this.async) {
           const exitCode = await this.waitForCompletion(client, testRun.testRunId);
 
           if (this.testOutputDir) {
 
-              // Download json test result
-              const testReport: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
-              if (testReport.stats.artifacts) {
-                await downloadUtil.downloadArtifacts(this, this.streamingOutput, this.testOutputDir, testRun.testRunId, testReport.stats.artifacts);
-                await this.mergeTestArtifacts();
-              }
+            // Download json test result
+            const testReport: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
+            if (testReport.stats.artifacts) {
+              await downloadUtil.downloadArtifacts(this, this.streamingOutput, this.testOutputDir, testRun.testRunId, testReport.stats.artifacts);
+              await this.mergeTestArtifacts();
+            }
           }
 
           switch (exitCode) {
@@ -161,7 +165,7 @@ export abstract class RunTestsCommand extends AppCommand {
           this.streamingOutput.text(function (testRun) {
             const report: string = `Test Report: ${testRun.testRunUrl}` + os.EOL;
             return report;
-          }, testRun );
+          }, testRun);
         }
 
         return success();
@@ -174,6 +178,38 @@ export abstract class RunTestsCommand extends AppCommand {
       const errInfo: { message: string, exitCode: number } = buildErrorInfo(err, getUser(), this);
       return failure(errInfo.exitCode, errInfo.message);
     }
+  }
+
+  private sortDeviceSets(a: DeviceSet, b: DeviceSet): number {
+    if (a.name > b.name) {
+      return 1;
+    }
+    if (a.name < b.name) {
+      return -1;
+    }
+    return 0;
+  }
+
+  private async promptDevices(client: AppCenterClient): Promise<void> {
+    let configs: DeviceSet[] = await client.test.listDeviceSetsOfOwner(this.app.ownerName, this.app.appName);
+    // Sort devices list like it was done on AppCenter Portal
+    configs = configs.sort(this.sortDeviceSets);
+    const choices = configs.map((config: DeviceSet) => {
+      return {
+        name: config.name,
+        value: config.slug
+      };
+    });
+    const questions: Questions = [
+      {
+        type: "list",
+        name: "deviceSlug",
+        message: "Pick a device set to use",
+        choices: choices
+      }
+    ];
+    const answers: any = await prompt.question(questions);
+    this.devices = `${this.app.ownerName}/${answers.deviceSlug}`;
   }
 
   private async updateManifestAndCopyFilesToArtifactsDir(manifestPath: string): Promise<void> {
@@ -242,7 +278,7 @@ export abstract class RunTestsCommand extends AppCommand {
     // Each command should override it if needed
   }
 
-  private combinedParameters() : {} {
+  private combinedParameters(): {} {
     const parameters = this.getParametersFromOptions();
 
     if (this.testParameters) {
@@ -252,7 +288,7 @@ export abstract class RunTestsCommand extends AppCommand {
     }
   }
 
-  protected getParametersFromOptions() : {} {
+  protected getParametersFromOptions(): {} {
     return {};
   }
 
