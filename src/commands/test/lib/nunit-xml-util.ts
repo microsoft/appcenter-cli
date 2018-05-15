@@ -11,17 +11,17 @@ export class NUnitXmlUtil extends XmlUtil {
     const tempPath: string = await pfs.mkTempDir("appcenter-uitestreports");
     let mainXml: Document = null;
 
-    const self = this;
+    const self: NUnitXmlUtil = this;
     return new Promise<Document>((resolve, reject) => {
       fs.createReadStream(pathToArchive)
         .pipe(unzip.Parse())
         .on("entry", function (entry: unzip.Entry) {
-          const fullPath = path.join(tempPath, entry.path);
+          const fullPath: string = path.join(tempPath, entry.path);
           entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
-            const xml = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"));
+            const xml: Document = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"));
 
             let name: string = "unknown";
-            const matches = entry.path.match("^(.*)[_-]nunit[_-]report");
+            const matches: RegExpMatchArray = entry.path.match("^(.*)[_-]nunit[_-]report");
             if (matches && matches.length > 1) {
               name = matches[1].replace(/\./gi, "_");
             }
@@ -84,8 +84,8 @@ export class NUnitXmlUtil extends XmlUtil {
       if (ignoredAttr) {
         const notRunAttr: Attr = testResult.attributes.getNamedItem("not-run");
         if (notRunAttr) {
-          const notRun = Number(notRunAttr.value);
-          const ignored = Number(ignoredAttr.value);
+          const notRun: number = Number(notRunAttr.value);
+          const ignored: number = Number(ignoredAttr.value);
           notRunAttr.value = String(notRun - ignored);
         }
         ignoredAttr.value = "0";
@@ -128,7 +128,7 @@ export class NUnitXmlUtil extends XmlUtil {
   }
 
   addTestResultsAttribute(xml: Document, attributeName: string, value: number) {
-    const currentValue = this.getTestResultsAttribute(xml, attributeName);
+    const currentValue: number = this.getTestResultsAttribute(xml, attributeName);
     const testResults: Element[] = this.collectAllElements(xml.documentElement, "test-results");
     const attr: Attr = testResults[0].attributes.getNamedItem(attributeName);
     if (attr) {

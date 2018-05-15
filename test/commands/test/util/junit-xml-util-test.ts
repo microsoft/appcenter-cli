@@ -5,26 +5,26 @@ import * as path from "path";
 import { JUnitXmlUtil } from "../../../../src/commands/test/lib/junit-xml-util";
 
 describe("junit xml util", function () {
-  const strXml =
+  const strXml: string =
 '<?xml version="1.0" encoding="utf-8"?>\
 <testsuite tests="2" failures="1" name="com.microsoft.altframeworktraining.StartAppTest" time="56.187" errors="8" skipped="1">\
 <testcase classname="com.microsoft.altframeworktraining.StartAppTest" name="canStartAppInTest" time="33.5"/>\
 <testcase classname="com.microsoft.altframeworktraining.StartAppTest" name="canStartAppInTest2" time="22.687"/>\
 </testsuite>';
 
-  const strXml2 =
+  const strXml2: string =
 '<?xml version="1.0" encoding="utf-8"?>\
 <testsuite tests="2" failures="0" name="com.microsoft.altframeworktraining.StartAppTest" time="72.079" errors="0" skipped="0">\
 </testsuite>';
 
-  const strXml3 =
+  const strXml3: string =
 '<?xml version="1.0" encoding="utf-8"?>\
 <testsuite tests="2" failures="0" name="com.microsoft.altframeworktraining.StartAppTest" time="72.079" errors="0" skipped="0">\
   <testsuite tests="2" failures="0" name="com.microsoft.altframeworktraining.StartAppTest" time="72.079" errors="0" skipped="0">\
   </testsuite>\
 </testsuite>';
 
-  const strXml5 =
+  const strXml5: string =
 '<?xml version="1.0" encoding="utf-8"?>\
 <testsuite tests="2" failures="0" name="com.microsoft.altframeworktraining.AdditionalAppTest" time="72.079" errors="0" skipped="1">\
   <testcase classname="com.microsoft.altframeworktraining.AdditionalAppTest" name="canStartAppInTest" time="47.273">\
@@ -130,7 +130,7 @@ describe("junit xml util", function () {
     const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 
     // Then
-    const finalStrXml = new XMLSerializer().serializeToString(xml);
+    const finalStrXml: string = new XMLSerializer().serializeToString(xml);
     const testSuites: Element[] = xmlUtil.collectAllElements(xml.documentElement, "testsuite");
     const testCases: Element[] = xmlUtil.collectAllElements(xml.documentElement, "testcase");
     const testSuitesNode: Element = xmlUtil.collectAllElements(xml.documentElement, "testsuites")[0];

@@ -5,7 +5,7 @@ import * as path from "path";
 import { NUnitXmlUtil } from "../../../../src/commands/test/lib/nunit-xml-util";
 
 describe("nunit xml util", function () {
-  const strXml =
+  const strXml: string =
 '<?xml version="1.0" encoding="utf-8"?>\
 <test-results ignored="1" not-run="1">\
 <test-suite>\
@@ -24,7 +24,7 @@ describe("nunit xml util", function () {
 </test-suite>\
 </test-results>';
 
-  const strXml1 =
+  const strXml1: string =
 '<?xml version="1.0" encoding="utf-8"?>\
 <test-results ignored="1" not-run="1">\
 <test-suite>\
@@ -141,7 +141,7 @@ describe("nunit xml util", function () {
     const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
 
     // Then
-    const finalStrXml = new XMLSerializer().serializeToString(xml);
+    const finalStrXml: string = new XMLSerializer().serializeToString(xml);
 
     // Doesn't throw exception
     xmlLib.parseXml(finalStrXml);

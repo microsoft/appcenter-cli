@@ -11,7 +11,7 @@ export class JUnitXmlUtil extends XmlUtil {
     const tempPath: string = await pfs.mkTempDir("appcenter-junittestreports");
     let mainXml: Document = this.getEmptyXmlDocument();
 
-    const self = this;
+    const self: JUnitXmlUtil = this;
     return new Promise<Document>((resolve, reject) => {
       fs.createReadStream(pathToArchive)
         .pipe(unzip.Parse())
@@ -19,13 +19,13 @@ export class JUnitXmlUtil extends XmlUtil {
           if (entry.type === "Directory") {
             return;
           }
-          const fullPath = path.join(tempPath, entry.path);
+          const fullPath: string = path.join(tempPath, entry.path);
           entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
 
-            const xml = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"));
+            const xml: Document = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"));
 
             let name: string = "unknown";
-            const matches = entry.path.match("^(.*)_TEST.*");
+            const matches: RegExpMatchArray = entry.path.match("^(.*)_TEST.*");
             if (matches && matches.length > 1) {
               name = matches[1].replace(/\./gi, "_");
             }
