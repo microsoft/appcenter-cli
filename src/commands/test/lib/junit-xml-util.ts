@@ -47,11 +47,11 @@ export class JUnitXmlUtil extends XmlUtil {
   }
 
   combine(xml1: Document, xml2: Document): Document {
-    const testSuitesNode: Node = this.collectAllElements(xml1, "testsuites")[0];
-    const xml1testSuites: Node[] = this.collectChildren(xml1, "testsuite");
-    const xml2TestSuites: Node[] = this.collectChildren(xml2, "testsuite");
+    const testSuitesElement: Element = this.collectAllElements(xml1.documentElement, "testsuites")[0];
+    const xml1testSuites: Element[] = this.collectChildren(xml1.documentElement, "testsuite");
+    const xml2TestSuites: Element[] = this.collectChildren(xml2.documentElement, "testsuite");
 
-    xml2TestSuites.forEach((xml2TestSuite: Node) => {
+    xml2TestSuites.forEach((xml2TestSuite: Element) => {
       let needToAddNewTestSuite: boolean = true;
 
       // Skip test suite without test cases
@@ -62,7 +62,7 @@ export class JUnitXmlUtil extends XmlUtil {
       // Combine all test cases in one test suite with the same class name
       const testSuiteName: string = xml2TestSuite.attributes.getNamedItem("name").value;
 
-      xml1testSuites.every((xml1TestSuite: Node) => {
+      xml1testSuites.every((xml1TestSuite: Element) => {
         const suiteNameAttr: Attr = xml1TestSuite.attributes.getNamedItem("name");
         if (!suiteNameAttr || suiteNameAttr.value !== testSuiteName) {
 
@@ -73,8 +73,8 @@ export class JUnitXmlUtil extends XmlUtil {
         // Combine test suite attributes
         this.combineAllAttributes(xml1TestSuite, xml2TestSuite);
 
-        const testCases: Node[] = this.collectChildren(xml2TestSuite, "testcase");
-        testCases.forEach((testCase: Node) => {
+        const testCases: Element[] = this.collectChildren(xml2TestSuite, "testcase");
+        testCases.forEach((testCase: Element) => {
           xml1TestSuite.appendChild(testCase);
         });
 
@@ -85,11 +85,11 @@ export class JUnitXmlUtil extends XmlUtil {
       });
 
       if (needToAddNewTestSuite) {
-        testSuitesNode.appendChild(xml2TestSuite);
+        testSuitesElement.appendChild(xml2TestSuite);
       }
 
       // Add test suite info to summary
-      this.combineAllAttributes(testSuitesNode, xml2TestSuite);
+      this.combineAllAttributes(testSuitesElement, xml2TestSuite);
     });
 
     return xml1;
@@ -101,8 +101,8 @@ export class JUnitXmlUtil extends XmlUtil {
   }
 
   appendToTestNameTransformation(xml: Document, text: string): void {
-    const testCases: Node[] = this.collectAllElements(xml, "testcase");
-    testCases.forEach((testCase: Node) => {
+    const testCases: Element[] = this.collectAllElements(xml.documentElement, "testcase");
+    testCases.forEach((testCase: Element) => {
       const name: Attr = testCase.attributes.getNamedItem("name");
       if (name) {
         name.value = `${name.value}${text}`;
@@ -111,14 +111,14 @@ export class JUnitXmlUtil extends XmlUtil {
   }
 
   removeIgnoredTransformation(xml: Document): void {
-    const testCases: Node[] = this.collectAllElements(xml, "testcase");
+    const testCases: Element[] = this.collectAllElements(xml.documentElement, "testcase");
 
-    testCases.forEach((testCase: Node) => {
+    testCases.forEach((testCase: Element) => {
       if (this.collectAllElements(testCase, "skipped").length === 0) {
         return;
       }
 
-      const parent: Node = testCase.parentNode;
+      const parent: Element = testCase.parentNode as Element;
       parent.removeChild(testCase);
 
       const testCaseTime: number = Number(testCase.attributes.getNamedItem("time").value);
@@ -141,26 +141,26 @@ export class JUnitXmlUtil extends XmlUtil {
   }
 
   removeEmptySuitesTransformation(xml: Document): void {
-    const testSuites: Node[] = this.collectAllElements(xml, "testsuite");
-    testSuites.forEach((testSuite: Node) => {
+    const testSuites: Element[] = this.collectAllElements(xml.documentElement, "testsuite");
+    testSuites.forEach((testSuite: Element) => {
       if (this.collectAllElements(testSuite, "testcase").length === 0) {
-        testSuite.parentNode.removeChild(testSuite);
+        testSuite.parentElement.removeChild(testSuite);
         xml.removeChild(testSuite);
       }
     });
   }
 
-  combineAllAttributes(node1: Node, node2: Node) {
-    this.combineAttributes(node1, node2, "tests");
-    this.combineAttributes(node1, node2, "failures");
-    this.combineAttributes(node1, node2, "time");
-    this.combineAttributes(node1, node2, "errors");
-    this.combineAttributes(node1, node2, "skipped");
+  combineAllAttributes(element1: Element, element2: Element) {
+    this.combineAttributes(element1, element2, "tests");
+    this.combineAttributes(element1, element2, "failures");
+    this.combineAttributes(element1, element2, "time");
+    this.combineAttributes(element1, element2, "errors");
+    this.combineAttributes(element1, element2, "skipped");
   }
 
-  combineAttributes(node1: Node, node2: Node, attributeName: string) {
-    const attr1: Attr = node1.attributes.getNamedItem(attributeName);
-    const attr2: Attr = node2.attributes.getNamedItem(attributeName);
+  combineAttributes(element1: Element, element2: Element, attributeName: string) {
+    const attr1: Attr = element1.attributes.getNamedItem(attributeName);
+    const attr2: Attr = element2.attributes.getNamedItem(attributeName);
 
     if (!attr1 || !attr1.value) {
       return;

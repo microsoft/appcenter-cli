@@ -37,8 +37,8 @@ describe("junit xml util", function () {
 
   it("should collect all elements", () => {
     const xml: Document = new DOMParser().parseFromString(strXml);
-    const testCases: Node[] = xmlUtil.collectAllElements(xml, "testcase");
-    const testSuites: Node[] = xmlUtil.collectAllElements(xml, "testsuite");
+    const testCases: Element[] = xmlUtil.collectAllElements(xml.documentElement, "testcase");
+    const testSuites: Element[] = xmlUtil.collectAllElements(xml.documentElement, "testsuite");
 
     expect(testCases.length).to.eql(2);
     expect(testSuites.length).to.eql(1);
@@ -46,7 +46,7 @@ describe("junit xml util", function () {
 
   it("should not throw an exception for a non-existent node", () => {
     const xml: Document = new DOMParser().parseFromString(strXml);
-    const testCases: Node[] = xmlUtil.collectAllElements(xml, "non-existent-test-case");
+    const testCases: Element[] = xmlUtil.collectAllElements(xml.documentElement, "non-existent-test-case");
 
     expect(testCases.length).to.eql(0);
   });
@@ -54,7 +54,7 @@ describe("junit xml util", function () {
   it("should append postfix", () => {
     const xml: Document = new DOMParser().parseFromString(strXml);
     xmlUtil.appendToTestNameTransformation(xml, "_new_test_case_postfix");
-    const testCases: Node[] = xmlUtil.collectAllElements(xml, "testcase");
+    const testCases: Element[] = xmlUtil.collectAllElements(xml.documentElement, "testcase");
 
     expect(testCases[0].attributes.getNamedItem("name").value)
       .to.eql("canStartAppInTest_new_test_case_postfix");
@@ -65,7 +65,7 @@ describe("junit xml util", function () {
   it("should not throw an exception while appending postfix to a non-existent node", () => {
     const xml: Document = new DOMParser().parseFromString(strXml2);
     xmlUtil.appendToTestNameTransformation(xml, "_new_test_case_postfix");
-    const testCases: Node[] = xmlUtil.collectAllElements(xml, "testcase");
+    const testCases: Element[] = xmlUtil.collectAllElements(xml.documentElement, "testcase");
 
     expect(testCases.length).to.eql(0);
   });
@@ -79,8 +79,8 @@ describe("junit xml util", function () {
     xmlUtil.removeIgnoredTransformation(xml);
 
     // Then
-    const testCases: Node[] = xmlUtil.collectAllElements(xml, "testcase");
-    const testResults: Node = xmlUtil.collectAllElements(xml, "testsuite")[0];
+    const testCases: Element[] = xmlUtil.collectAllElements(xml.documentElement, "testcase");
+    const testResults: Element = xmlUtil.collectAllElements(xml.documentElement, "testsuite")[0];
     const skippedAttr: Attr = testResults.attributes.getNamedItem("skipped");
     const testsAttr: Attr = testResults.attributes.getNamedItem("tests");
     const timeAttr: Attr = testResults.attributes.getNamedItem("time");
@@ -93,14 +93,14 @@ describe("junit xml util", function () {
 
   it("should collect only first level children", () => {
     const xml: Document = new DOMParser().parseFromString(strXml3);
-    const testSuites: Node[] = xmlUtil.collectChildren(xml, "testsuite");
+    const testSuites: Element[] = xmlUtil.collectChildren(xml.documentElement, "testsuite");
 
     expect(testSuites.length).to.eql(1);
   });
 
   it("should count all children", () => {
    const xml: Document = new DOMParser().parseFromString(strXml);
-   const testResults: Node = xmlUtil.collectChildren(xml, "testsuite")[0];
+   const testResults: Element = xmlUtil.collectChildren(xml.documentElement, "testsuite")[0];
 
    expect(xmlUtil.countChildren(testResults)).to.eql(2);
   });
@@ -109,13 +109,13 @@ describe("junit xml util", function () {
     let result: Node[] = xmlUtil.collectAllElements(null, "");
     expect(result.length).to.eql(0);
 
-    result = xmlUtil.collectAllElements({} as Node, null);
+    result = xmlUtil.collectAllElements({} as Element, null);
     expect(result.length).to.eql(0);
 
     result = xmlUtil.collectChildren(null, "");
     expect(result.length).to.eql(0);
 
-    result = xmlUtil.collectChildren({} as Node, null);
+    result = xmlUtil.collectChildren({} as Element, null);
     expect(result.length).to.eql(0);
 
     expect(xmlUtil.countChildren(null)).to.eql(0);
@@ -131,13 +131,13 @@ describe("junit xml util", function () {
 
     // Then
     const finalStrXml = new XMLSerializer().serializeToString(xml);
-    const testSuites: Node[] = xmlUtil.collectAllElements(xml, "testsuite");
-    const testCases: Node[] = xmlUtil.collectAllElements(xml, "testcase");
-    const testSuitesNode: Node = xmlUtil.collectAllElements(xml, "testsuites")[0];
+    const testSuites: Element[] = xmlUtil.collectAllElements(xml.documentElement, "testsuite");
+    const testCases: Element[] = xmlUtil.collectAllElements(xml.documentElement, "testcase");
+    const testSuitesNode: Element = xmlUtil.collectAllElements(xml.documentElement, "testsuites")[0];
 
     expect(testSuites.length).to.eql(2);
 
-    const firstTestSuite: Node = testSuites[0];
+    const firstTestSuite: Element = testSuites[0];
 
     expect(testSuites.length).to.eql(2);
     expect(testCases.length).to.eql(10);
@@ -172,7 +172,7 @@ describe("junit xml util", function () {
 
   it("should create correct empty xml", () => {
     const xml: Document = xmlUtil.getEmptyXmlDocument();
-    const testSuitesNode: Node = xmlUtil.collectAllElements(xml, "testsuites")[0];
+    const testSuitesNode: Element = xmlUtil.collectAllElements(xml.documentElement, "testsuites")[0];
 
     const testsAttr: Attr = testSuitesNode.attributes.getNamedItem("tests");
     const failuresAttr: Attr = testSuitesNode.attributes.getNamedItem("failures");
