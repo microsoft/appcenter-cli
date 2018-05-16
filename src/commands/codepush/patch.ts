@@ -26,10 +26,12 @@ export default class PatchCommand extends AppCommand {
 
   @help("Specifies whether this release should be considered mandatory. (Putting -m flag means mandatory)")
   @shortName("m")
+  @longName("mandatory")
   public isMandatory: boolean;
 
   @help("Specifies whether this release should be immediately downloadable. (Putting -x flag means disabled)")
   @shortName("x")
+  @longName("disabled")
   public isDisabled: boolean;
 
   @help("Specifies binary app version(s) that specifies this release is targeting for. (The value must be a semver expression such as 1.1.0, ~1.2.3)")
