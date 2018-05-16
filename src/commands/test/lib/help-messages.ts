@@ -35,6 +35,7 @@ export module Messages {
       export const Stop = "Stop the started test run.";
 
       export const Download = "Download the report artifacts, unpack and merge them.";
+      export const Interactive = "Start a test run interactively. All the parameters will be prompted on-the-go.";
     }
 
     export module Arguments {
