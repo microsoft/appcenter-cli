@@ -13,7 +13,7 @@ export default class RunEspressoInteractiveTestsCommand extends AppCommand {
   }
 
   public async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
-    out.text("\nRunning command: " + this._args.command.join(" ") + this._args.args.join(" ") + "\n");
+    out.text("\nRunning command: " + this._args.command.join(" ") + " " + this._args.args.join(" ") + "\n");
     return new RunEspressoTestsCommand(this._args).run(client, portalBaseUrl);
   }
 }

@@ -1,12 +1,13 @@
 import * as fs from "fs";
 import * as path from "path";
-import { prompt } from "../../util/interaction";
+import { prompt, out } from "../../util/interaction";
 import RunEspressoInteractiveTestsCommand from "./lib/interactive/espresso";
 import { help, CommandArgs, AppCommand, CommandResult } from "../../util/commandline";
 import { Messages } from "./lib/help-messages";
 import { AppCenterClient } from "../../util/apis";
-import { DeviceSet } from "../../util/apis/generated/models";
+import { DeviceSet, DeviceConfiguration } from "../../util/apis/generated/models";
 import { Questions } from "inquirer";
+import { DeviceConfigurationSort } from "./lib/deviceConfigurationSort";
 enum TestFramework {
   "Espresso" = 1,
   "Appium" = 2,
@@ -31,7 +32,7 @@ export default class InteractiveTestsCommand extends AppCommand {
     const configs: Promise<DeviceSet[]> = client.test.listDeviceSetsOfOwner(this.app.ownerName, this.app.appName);
     const scanPromise: Promise<void> = this.scanFolder();
     const frameworkName: TestFramework = await this.promptFramework();
-    const devices: string = await this.promptDevices(await configs);
+    const devices: string = await this.promptDevices(await configs, client);
     const async: boolean = await this.isAsync();
     this.interactiveArgs.push("--devices", devices);
     if (async) {
@@ -118,24 +119,48 @@ export default class InteractiveTestsCommand extends AppCommand {
     return 0;
   }
 
-  private async promptDevices(configs: DeviceSet[]): Promise<string> {
-    configs = configs.sort(this.sortDeviceSets);
-    const choices = configs.map((config: DeviceSet) => {
-      return {
-        name: config.name,
-        value: config.slug
-      };
-    });
+  private async getDevices(client: AppCenterClient): Promise<DeviceConfiguration[]> {
+    const configs: DeviceConfiguration[] = await client.test.getDeviceConfigurations(this.app.ownerName, this.app.appName);
+    // Sort devices list like it was done on AppCenter Portal
+    return configs.sort(DeviceConfigurationSort.compare);
+  }
+
+  private async promptDevices(configs: DeviceSet[], client: AppCenterClient): Promise<string> {
+    let choices;
+    if (configs.length === 0) {
+      const devices = await out.progress("No device sets: getting list of devices...", this.getDevices(client));
+      choices = devices.map((config: DeviceConfiguration) => {
+        return {
+          name: config.name,
+          value: config.id
+        };
+      });
+    } else {
+      configs = configs.sort(this.sortDeviceSets);
+      choices = configs.map((config: DeviceSet) => {
+        return {
+          name: config.name,
+          value: config.slug
+        };
+      });
+    }
     const questions: Questions = [
       {
         type: "list",
         name: "deviceSlug",
-        message: "Pick a device set to use",
+        message: configs.length ? "Pick a device set to use" : "Pick a device to use",
         choices: choices
       }
     ];
     const answers: any = await prompt.question(questions);
-    return `${this.app.ownerName}/${answers.deviceSlug}`;
+    let deviceId: string;
+    if (configs.length) {
+      deviceId = `${this.app.ownerName}/${answers.deviceSlug}`;
+    } else {
+      const deviceSelection: any = await client.test.createDeviceSelection(this.app.ownerName, this.app.appName, [answers.deviceSlug]);
+      deviceId = deviceSelection.shortId;
+    }
+    return deviceId;
   }
 
   private async scanFolder(): Promise<void> {
