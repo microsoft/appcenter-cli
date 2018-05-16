@@ -17,10 +17,14 @@ enum TestFramework {
   "Manifest" = 6
 }
 
+interface ApkFile {
+  name: string;
+  path: string;
+}
+
 @help(Messages.TestCloud.Commands.Interactive)
 export default class InteractiveTestsCommand extends AppCommand {
   private interactiveArgs: string[] = [];
-  private apkNames: [{ name: string; path: string }];
   private _args: CommandArgs;
 
   constructor(args: CommandArgs) {
@@ -29,22 +33,25 @@ export default class InteractiveTestsCommand extends AppCommand {
   }
 
   public async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
-    const configs: Promise<DeviceSet[]> = client.test.listDeviceSetsOfOwner(this.app.ownerName, this.app.appName);
-    const scanPromise: Promise<void> = this.scanFolder();
+    const getDeviceSets: Promise<DeviceSet[]> = client.test.listDeviceSetsOfOwner(this.app.ownerName, this.app.appName);
+    const searchApks: Promise<ApkFile[]> = this.scanFolder();
     const frameworkName: TestFramework = await this.promptFramework();
-    const devices: string = await this.promptDevices(await configs, client);
-    const async: boolean = await this.isAsync();
+
+    const devices: string = await this.promptDevices(await getDeviceSets, client);
     this.interactiveArgs.push("--devices", devices);
+
+    const async: boolean = await this.isAsync();
     if (async) {
       this.interactiveArgs.push("--async");
     }
-    await scanPromise;
-    const apkPath: string = await this.promptApk();
+
+    const listOfApks: ApkFile[] = await searchApks;
+    const apkPath: string = await this.promptApk(listOfApks);
     this.interactiveArgs.push("--app-path", apkPath);
 
     switch (frameworkName) {
       case TestFramework.Espresso: {
-        const testApkPath: string = await this.promptApk(true);
+        const testApkPath: string = await this.promptApk(listOfApks, true);
         this.interactiveArgs.push("--test-apk-path", testApkPath);
         return new RunEspressoInteractiveTestsCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
       }
@@ -71,8 +78,8 @@ export default class InteractiveTestsCommand extends AppCommand {
     return answers.framework;
   }
 
-  private async promptApk(forTest: boolean = false): Promise<string> {
-    const choices = this.apkNames.map((apkName) => {
+  private async promptApk(listOfApks: ApkFile[], forTest: boolean = false): Promise<string> {
+    const choices = listOfApks.map((apkName) => {
       return {
         name: apkName.name,
         value: apkName.path
@@ -121,13 +128,14 @@ export default class InteractiveTestsCommand extends AppCommand {
 
   private async getDevices(client: AppCenterClient): Promise<DeviceConfiguration[]> {
     const configs: DeviceConfiguration[] = await client.test.getDeviceConfigurations(this.app.ownerName, this.app.appName);
-    // Sort devices list like it was done on AppCenter Portal
+    // Sort devices list like it is done on AppCenter Portal
     return configs.sort(DeviceConfigurationSort.compare);
   }
 
-  private async promptDevices(configs: DeviceSet[], client: AppCenterClient): Promise<string> {
+  private async promptDevices(deviceSets: DeviceSet[], client: AppCenterClient): Promise<string> {
     let choices;
-    if (configs.length === 0) {
+    const noDeviceSets: boolean = deviceSets.length === 0;
+    if (noDeviceSets) {
       const devices = await out.progress("No device sets: getting list of devices...", this.getDevices(client));
       choices = devices.map((config: DeviceConfiguration) => {
         return {
@@ -136,8 +144,8 @@ export default class InteractiveTestsCommand extends AppCommand {
         };
       });
     } else {
-      configs = configs.sort(this.sortDeviceSets);
-      choices = configs.map((config: DeviceSet) => {
+      deviceSets = deviceSets.sort(this.sortDeviceSets);
+      choices = deviceSets.map((config: DeviceSet) => {
         return {
           name: config.name,
           value: config.slug
@@ -148,32 +156,34 @@ export default class InteractiveTestsCommand extends AppCommand {
       {
         type: "list",
         name: "deviceSlug",
-        message: configs.length ? "Pick a device set to use" : "Pick a device to use",
+        message: noDeviceSets ? "Pick a device to use" : "Pick a device set to use",
         choices: choices
       }
     ];
     const answers: any = await prompt.question(questions);
     let deviceId: string;
-    if (configs.length) {
-      deviceId = `${this.app.ownerName}/${answers.deviceSlug}`;
-    } else {
+    if (noDeviceSets) {
       const deviceSelection: any = await client.test.createDeviceSelection(this.app.ownerName, this.app.appName, [answers.deviceSlug]);
       deviceId = deviceSelection.shortId;
+    } else {
+      deviceId = `${this.app.ownerName}/${answers.deviceSlug}`;
     }
     return deviceId;
   }
 
-  private async scanFolder(): Promise<void> {
-    this.scanRecurse(process.cwd());
+  private async scanFolder(): Promise<ApkFile[]> {
+    const apkNames: ApkFile[] = [];
+    this.scanRecurse(process.cwd(), apkNames);
+    return apkNames;
   }
 
-  private scanRecurse(dirname: string) {
+  private scanRecurse(dirname: string, apkNames: ApkFile[]) {
     const dirContent = fs.readdirSync(dirname);
     for (const dir of dirContent) {
       const fullDir = path.join(dirname, dir);
       if (fs.lstatSync(fullDir).isDirectory()) {
         if (dir !== "node_modules") {
-          this.scanRecurse(fullDir);
+          this.scanRecurse(fullDir, apkNames);
         }
       } else {
         if (path.parse(dir).ext === ".apk") {
@@ -181,14 +191,13 @@ export default class InteractiveTestsCommand extends AppCommand {
             name: path.relative(process.cwd(), fullDir),
             path: fullDir
           };
-          if (!this.apkNames) {
-            this.apkNames = [foundApk];
+          if (!apkNames) {
+            apkNames = [foundApk];
           } else {
-            this.apkNames.push(foundApk);
+            apkNames.push(foundApk);
           }
         }
       }
     }
   }
-
 }
