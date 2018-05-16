@@ -2,13 +2,13 @@ import { PathResolver } from "../../../../src/commands/test/lib/path-resolver";
 import { expect } from "chai";
 import * as path from "path";
 
-function normalizePaths(paths: string[]): string[] {    
-  return paths.map(p => p.replace(new RegExp("/", 'g'), path.sep)).sort();
+function normalizePaths(paths: string[]): string[] {
+  return paths.map((p) => p.replace(new RegExp("/", "g"), path.sep)).sort();
 }
 
 function verifyResult(actual: string[], expected: string[]) {
-  let normalizedExpected = normalizePaths(expected);
-  let normalizedActual = normalizePaths(actual);
+  const normalizedExpected = normalizePaths(expected);
+  const normalizedActual = normalizePaths(actual);
   expect(normalizedActual).to.eql(normalizedExpected);
 }
 
@@ -20,24 +20,24 @@ describe("Resolving paths", () => {
   });
 
   it("should resolve single file", async () => {
-    let result = await pathResolver.resolve("lib/tests.rb");
+    const result = await pathResolver.resolve("lib/tests.rb");
     verifyResult(result, ["lib/tests.rb"]);
   });
 
   it("should resolve all files in directory", async () => {
-    let result = await pathResolver.resolve("resources/");
+    const result = await pathResolver.resolve("resources/");
     verifyResult(
-      result, 
-      [ 
+      result,
+      [
         "resources/pl-PL/messages.csv",
         "resources/messages.csv",
         "resources/ReadMe.txt"
       ]
-    )
+    );
   });
 
   it("should resolve files with asterisk (*)", async () => {
-    let result = await pathResolver.resolve("resources/*");
+    const result = await pathResolver.resolve("resources/*");
     verifyResult(
       result,
       [
@@ -47,7 +47,7 @@ describe("Resolving paths", () => {
   });
 
   it("should resolve files with double asterisk (**)", async () => {
-    let result = await pathResolver.resolve("**/*.csv");
+    const result = await pathResolver.resolve("**/*.csv");
     verifyResult(
       result,
       [
@@ -56,32 +56,30 @@ describe("Resolving paths", () => {
       ]);
   });
 
-  it("should reject files outside of workspace", async() => {
+  it("should reject files outside of workspace", async () => {
     let failed = false;
     try {
       await pathResolver.resolve("../path-resolver-test.ts");
-    }
-    catch (Error) {
+    } catch (Error) {
       failed = true;
     }
 
     expect(failed).to.true;
   });
 
-  it("should reject not existing file", async() => {
+  it("should reject not existing file", async () => {
     let failed = false;
     try {
       await pathResolver.resolve("not_existing_file_or_dir");
-    }
-    catch (Error) {
+    } catch (Error) {
       failed = true;
     }
 
     expect(failed).to.true;
   });
 
-  it("should return all files for multiple patterns", async() => {
-    let result = await pathResolver.resolve(["**/*.csv", "**/*.rb", "lib"]);
+  it("should return all files for multiple patterns", async () => {
+    const result = await pathResolver.resolve(["**/*.csv", "**/*.rb", "lib"]);
     verifyResult(
       result,
       [

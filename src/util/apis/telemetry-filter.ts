@@ -3,7 +3,6 @@
 //
 
 import { WebResource } from "ms-rest";
-import { getProfileDir } from "../misc";
 import { Readable, Writable } from "stream";
 
 const requestPipeline = require("ms-rest/lib/requestPipeline");
@@ -24,10 +23,9 @@ export function telemetryFilter(commandName: string, telemetryIsEnabled: boolean
         resource.headers[sessionHeaderName] = sessionId;
         resource.headers[commandNameHeaderName] = commandName;
       }
-      let nextStream = next(resource, callback);
+      const nextStream = next(resource, callback);
       (resource.pipeInput(input, nextStream) as any as Readable).pipe(output);
       input.resume();
     });
   };
 }
-

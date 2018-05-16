@@ -1,18 +1,18 @@
 import LegacyCodePushServiceClient from "../../lib/legacy-codepush-service-client";
 import { ReleaseStrategy } from "../release-command-skeleton";
-import { AppCenterClient, models, clientRequest } from "../../../../util/apis";
+import { AppCenterClient } from "../../../../util/apis";
 import { DefaultApp } from "../../../../util/profile/index";
 import { PackageInfo } from "../../lib/legacy-codepush-service-client";
 
 export default class LegacyCodePushRelease implements ReleaseStrategy {
-  public async release(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata: 
-    { appVersion?: string; 
-      description?: string; 
-      isDisabled?: boolean; 
-      isMandatory?: boolean; 
+  public async release(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata:
+    { appVersion?: string;
+      description?: string;
+      isDisabled?: boolean;
+      isMandatory?: boolean;
       rollout?: number; }, token?: string, serverUrl?: string): Promise<void> {
 
-      var releaseData: PackageInfo = {
+      const releaseData: PackageInfo = {
         description: updateMetadata.description,
         isDisabled: updateMetadata.isDisabled,
         isMandatory: updateMetadata.isMandatory,
@@ -20,11 +20,7 @@ export default class LegacyCodePushRelease implements ReleaseStrategy {
         appVersion: updateMetadata.appVersion
       };
 
-      await new LegacyCodePushServiceClient(token, serverUrl, app, null)
-        .release(deploymentName, updateContentsZipPath, releaseData);   
-  } 
+      await new LegacyCodePushServiceClient(token, serverUrl, app)
+        .release(deploymentName, updateContentsZipPath, releaseData);
+  }
 }
-
-      
-
-      

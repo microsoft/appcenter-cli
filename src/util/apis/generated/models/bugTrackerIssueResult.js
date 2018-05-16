@@ -17,6 +17,11 @@ class BugTrackerIssueResult {
    * @member {string} [id]
    * @member {string} [url]
    * @member {string} [title]
+   * @member {string} [bugTrackerType] Possible values include: 'github',
+   * 'vsts', 'jira'
+   * @member {string} [repoName]
+   * @member {string} [mobileCenterId]
+   * @member {string} [eventType]
    */
   constructor() {
   }
@@ -52,6 +57,34 @@ class BugTrackerIssueResult {
           title: {
             required: false,
             serializedName: 'title',
+            type: {
+              name: 'String'
+            }
+          },
+          bugTrackerType: {
+            required: false,
+            serializedName: 'bug_tracker_type',
+            type: {
+              name: 'String'
+            }
+          },
+          repoName: {
+            required: false,
+            serializedName: 'repo_name',
+            type: {
+              name: 'String'
+            }
+          },
+          mobileCenterId: {
+            required: false,
+            serializedName: 'mobile_center_id',
+            type: {
+              name: 'String'
+            }
+          },
+          eventType: {
+            required: false,
+            serializedName: 'event_type',
             type: {
               name: 'String'
             }

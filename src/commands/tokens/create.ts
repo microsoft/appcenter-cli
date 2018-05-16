@@ -1,12 +1,9 @@
 // token create command
 
-import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
+import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg } from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportToken } from "./lib/format-token";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
-
-const debug = require("debug")("appcenter-cli:commands:apps:create");
-import { inspect } from "util";
 
 @help("Create a new API token")
 export default class TokenCreateCommand extends Command {
@@ -26,7 +23,7 @@ export default class TokenCreateCommand extends Command {
     };
 
     const createTokenResponse = await out.progress("Creating token ...",
-      clientRequest<models.ApiTokensCreateResponse>(cb => client.apiTokens.newMethod(tokenAttributes, cb))
+      clientRequest<models.ApiTokensCreateResponse>((cb) => client.apiTokens.newMethod(tokenAttributes, cb))
     );
 
     const statusCode = createTokenResponse.response.statusCode;

@@ -1,5 +1,5 @@
 import { AppCommand, CommandArgs, CommandResult,
-         help, success, name, longName, shortName, required, hasArg,
+         help, success, longName, shortName, required, hasArg,
          failure } from "../../util/commandline";
 import { StateChecker } from "./lib/state-checker";
 import { AppCenterClient } from "../../util/apis";
@@ -23,14 +23,13 @@ export default class StatusCommand extends AppCommand {
   }
 
   async run(client: AppCenterClient): Promise<CommandResult> {
-    let checker = new StateChecker(client, this.testRunId, this.app.ownerName, this.app.appName);
+    const checker = new StateChecker(client, this.testRunId, this.app.ownerName, this.app.appName);
 
-    let exitCode = this.continuous ? await checker.checkUntilCompleted() : await checker.checkOnce();
+    const exitCode = this.continuous ? await checker.checkUntilCompleted() : await checker.checkOnce();
 
     if (!exitCode) {
       return success();
-    }
-    else {
+    } else {
       return failure(exitCode, `Test run failed. Returning exit code ${exitCode}.`);
     }
   }

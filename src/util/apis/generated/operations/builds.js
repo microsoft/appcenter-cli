@@ -705,7 +705,8 @@ function _getDownloadUri(buildId, downloadType, ownerName, appName, options, cal
  *
  * @param {string} appName The name of the application
  *
- * @param {string} distributionGroupId The distribution group ID
+ * @param {string} distributionGroupId A distribution group ID or a store group
+ * ID
  *
  * @param {object} [options] Optional Parameters.
  *
@@ -1570,7 +1571,8 @@ function _listByBranch(branch, ownerName, appName, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
- * @param {string} [options.sourceVersion] Version to build
+ * @param {string} [options.sourceVersion] Version to build which represents
+ * the full Git commit reference
  *
  * @param {boolean} [options.debug] Run build in debug mode
  *
@@ -2342,7 +2344,8 @@ class Builds {
    *
    * @param {string} appName The name of the application
    *
-   * @param {string} distributionGroupId The distribution group ID
+   * @param {string} distributionGroupId A distribution group ID or a store group
+   * ID
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -2380,7 +2383,8 @@ class Builds {
    *
    * @param {string} appName The name of the application
    *
-   * @param {string} distributionGroupId The distribution group ID
+   * @param {string} distributionGroupId A distribution group ID or a store group
+   * ID
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -2907,7 +2911,8 @@ class Builds {
    *
    * @param {object} [options] Optional Parameters.
    *
-   * @param {string} [options.sourceVersion] Version to build
+   * @param {string} [options.sourceVersion] Version to build which represents
+   * the full Git commit reference
    *
    * @param {boolean} [options.debug] Run build in debug mode
    *
@@ -2945,7 +2950,8 @@ class Builds {
    *
    * @param {object} [options] Optional Parameters.
    *
-   * @param {string} [options.sourceVersion] Version to build
+   * @param {string} [options.sourceVersion] Version to build which represents
+   * the full Git commit reference
    *
    * @param {boolean} [options.debug] Run build in debug mode
    *

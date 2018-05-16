@@ -1,8 +1,6 @@
-import { CommandArgs, help, success, name, longName, required, hasArg,
-         ErrorCodes } from "../../../util/commandline";
+import { CommandArgs, help, longName, required, hasArg } from "../../../util/commandline";
 import { AppiumPreparer } from "../lib/appium-preparer";
 import { PrepareTestsCommand } from "../lib/prepare-tests-command";
-import { out } from "../../../util/interaction";
 import { Messages } from "../lib/help-messages";
 
 @help(Messages.TestCloud.Commands.PrepareAppium)
@@ -18,7 +16,7 @@ export default class PrepareAppiumCommand extends PrepareTestsCommand {
   }
 
   protected prepareManifest(): Promise<string> {
-    let preparer = new AppiumPreparer(this.artifactsDir, this.buildDir);
+    const preparer = new AppiumPreparer(this.artifactsDir, this.buildDir);
     return preparer.prepare();
   }
 

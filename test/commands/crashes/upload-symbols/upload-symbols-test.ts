@@ -2,7 +2,6 @@ import * as JsZip from "jszip";
 import { expect, use } from "chai";
 import * as Fs from "fs";
 import * as Pfs from "../../../../src/util/misc/promisfied-fs";
-import { IncomingMessage } from "http";
 import * as _ from "lodash";
 import * as Nock from "nock";
 import * as Path from "path";
@@ -21,7 +20,6 @@ MockRequire("../../../../src/commands/crashes/lib/azure-blob-upload-helper", {
 import UploadSymbolsCommand from "../../../../src/commands/crashes/upload-symbols";
 MockRequire.stopAll();
 
-import { AppCenterClient } from "../../../../src/util/apis";
 import { CommandArgs, CommandResult } from "../../../../src/util/commandline";
 
 Temp.track();
@@ -33,6 +31,7 @@ describe("upload-symbols command", () => {
   const fakeToken = "c1o3d3e7";
   const fakeSymbolUploadingId = "fakeSymbolUploadingId";
   const fakeUploadUrl = "/upload/here";
+  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const fakeFullUploadUrl = fakeHost + fakeUploadUrl;
 
@@ -81,7 +80,7 @@ describe("upload-symbols command", () => {
       const zipPath = await createZipWithFile();
 
       // Act
-      let result = await executeUploadCommand(["-s", zipPath]);
+      const result = await executeUploadCommand(["-s", zipPath]);
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
@@ -95,14 +94,14 @@ describe("upload-symbols command", () => {
       const dsymFolder = createFolderWithSymbolsFile(tmpFolderPath, dSymFolder1Name, symbolsFile1Name, symbolsFileContent);
 
       // Act
-      let result = await executeUploadCommand(["-s", dsymFolder]);
+      const result = await executeUploadCommand(["-s", dsymFolder]);
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
       const [url, zipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
       expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
 
-      let uploadedZipEntries = getEntitiesList(await getUploadedZip(zipPath));
+      const uploadedZipEntries = getEntitiesList(await getUploadedZip(zipPath));
       expect(uploadedZipEntries.length).to.eql(2, "Only two entries are expected to be in the ZIP");
       expect(uploadedZipEntries).to.contain(Path.join(dSymFolder1Name, symbolsFile1Name), "Test file should be inside the uploaded ZIP");
       expect(uploadedZipEntries).to.contain(dSymFolder1Name + Path.sep, ".dSYM folder should be inside the uploaded ZIP");
@@ -113,14 +112,14 @@ describe("upload-symbols command", () => {
       const dsymParentFolder = createDsymParentFolder(tmpFolderPath, dSymParentFolderName);
 
       // Act
-      let result = await executeUploadCommand(["-s", dsymParentFolder]);
+      const result = await executeUploadCommand(["-s", dsymParentFolder]);
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
       const [url, zipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
       expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
 
-      let uploadedZipEntries = getEntitiesList(await getUploadedZip(zipPath));
+      const uploadedZipEntries = getEntitiesList(await getUploadedZip(zipPath));
       expect(uploadedZipEntries.length).to.eql(4, "Only four entries are expected to be in the ZIP");
       expect(uploadedZipEntries).to.contain(dSymFolder1Name + Path.sep, "First .dSYM folder should be inside the uploaded ZIP");
       expect(uploadedZipEntries).to.contain(dSymFolder2Name + Path.sep, "Second .dSYM folder should be inside the uploaded ZIP");
@@ -133,14 +132,14 @@ describe("upload-symbols command", () => {
       const xcarchiveFolder = createXcArchiveFolder();
 
       // Act
-      let result = await executeUploadCommand(["-x", xcarchiveFolder]);
+      const result = await executeUploadCommand(["-x", xcarchiveFolder]);
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
       const [url, zipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
       expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
 
-      let uploadedZipEntries = getEntitiesList(await getUploadedZip(zipPath));
+      const uploadedZipEntries = getEntitiesList(await getUploadedZip(zipPath));
       expect(uploadedZipEntries.length).to.eql(4, "Only four entries are expected to be in the ZIP");
       expect(uploadedZipEntries).to.contain(dSymFolder1Name + Path.sep, "First .dSYM folder should be inside the uploaded ZIP");
       expect(uploadedZipEntries).to.contain(dSymFolder2Name + Path.sep, "Second .dSYM folder should be inside the uploaded ZIP");
@@ -154,7 +153,7 @@ describe("upload-symbols command", () => {
       const mappingsFilePath = createMappingsFile(mappingsFileContent);
 
       // Act
-      let result = await executeUploadCommand(["-s", zipPath, "-m", mappingsFilePath]);
+      const result = await executeUploadCommand(["-s", zipPath, "-m", mappingsFilePath]);
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
@@ -162,19 +161,19 @@ describe("upload-symbols command", () => {
       expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
       expect(uploadedZipPath).not.to.eql(zipPath, "Uploaded ZIP path should be different from original ZIP path");
 
-      let uploadedZipEntries = getEntitiesList(await getUploadedZip(uploadedZipPath));
+      const uploadedZipEntries = getEntitiesList(await getUploadedZip(uploadedZipPath));
       expect(uploadedZipEntries.length).to.eql(2, "Only two entries are expected to be in the ZIP");
       expect(uploadedZipEntries).to.contain(symbolsFile1Name, "Test file should be inside the uploaded ZIP");
       expect(uploadedZipEntries).to.contain(mappingsFileName, "Mappings file should be inside the uploaded ZIP");
     });
 
-    it("uploads ZIP with updated sourcemap file", async() => {
+    it("uploads ZIP with updated sourcemap file", async () => {
       // Arrange
       const zipPath = await createZipWithFileAndMappings();
       const newMappingsFilePath = createMappingsFile(alternativeMappingsFileContent);
 
       // Act
-      let result = await executeUploadCommand(["-s", zipPath, "-m", newMappingsFilePath]);
+      const result = await executeUploadCommand(["-s", zipPath, "-m", newMappingsFilePath]);
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
@@ -182,10 +181,10 @@ describe("upload-symbols command", () => {
       expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
       expect(uploadedZipPath).not.to.eql(zipPath, "Uploaded ZIP path should be different from original ZIP path");
 
-      let uploadedZip = await getUploadedZip(uploadedZipPath);
-      let mappingsFileEntry = uploadedZip.file(mappingsFileName);
+      const uploadedZip = await getUploadedZip(uploadedZipPath);
+      const mappingsFileEntry = uploadedZip.file(mappingsFileName);
       expect(mappingsFileEntry).to.not.eql(null, "Mappings file should exist in the uploaded ZIP");
-      let content = await mappingsFileEntry.async("text");
+      const content = await mappingsFileEntry.async("text");
       expect(content).eql(alternativeMappingsFileContent, "Mappings should have updated content: " + alternativeMappingsFileContent);
     });
   });
@@ -205,7 +204,7 @@ describe("upload-symbols command", () => {
       const zipPath = await createZipWithFile();
 
       // Act
-      let result = await expect(executeUploadCommand(["-s", zipPath])).to.eventually.be.rejected;
+      const result = await expect(executeUploadCommand(["-s", zipPath])).to.eventually.be.rejected;
 
       // Assert
       testUploadFailure(result, expectedRequestsScope, skippedRequestsScope);
@@ -225,7 +224,7 @@ describe("upload-symbols command", () => {
   });
 
   async function executeUploadCommand(args: string[]): Promise<CommandResult> {
-    let uploadSymbolsCommand = new UploadSymbolsCommand(getCommandArgs(args));
+    const uploadSymbolsCommand = new UploadSymbolsCommand(getCommandArgs(args));
     return await uploadSymbolsCommand.execute();
   }
 
@@ -248,8 +247,8 @@ describe("upload-symbols command", () => {
     // packing temp contents file to the zip
     const testZipFile = "testZip.zip";
     const testZipFilePath = Path.join(tmpFolderPath, testZipFile);
-    let zip = new JsZip();
-    let testFileContent = await Pfs.readFile(symbolsFilePath);
+    const zip = new JsZip();
+    const testFileContent = await Pfs.readFile(symbolsFilePath);
     zip.file(symbolsFile1Name, testFileContent);
 
     // writing zip file
@@ -265,10 +264,10 @@ describe("upload-symbols command", () => {
     const zipFilePath = await createZipWithFile();
 
     // adding mappings file to the created zip and writing it back
-    let zipContentBuffer = await Pfs.readFile(zipFilePath);
-    let zip = await new JsZip().loadAsync(zipContentBuffer);
+    const zipContentBuffer = await Pfs.readFile(zipFilePath);
+    const zip = await new JsZip().loadAsync(zipContentBuffer);
     zip.file(mappingsFileName, mappingsFileContent);
-    let updatedZipContentBuffer = await zip.generateAsync({
+    const updatedZipContentBuffer = await zip.generateAsync({
       type: "nodebuffer"
     });
     await Pfs.writeFile(zipFilePath, updatedZipContentBuffer);
@@ -282,7 +281,7 @@ describe("upload-symbols command", () => {
     Fs.mkdirSync(testFolderPath);
 
     // creating symbols file inside folder
-    const filePath = createSymbolsFileInsideFolder(testFolderPath, fileName, fileContent);
+    createSymbolsFileInsideFolder(testFolderPath, fileName, fileContent);
 
     return testFolderPath;
   }
@@ -316,7 +315,7 @@ describe("upload-symbols command", () => {
   }
 
   function getCommandArgs(additionalArgs: string[]): CommandArgs {
-    let args: string[] = ["-a", fakeAppIdentifier, "--token", fakeToken, "--env", "local"].concat(additionalArgs);
+    const args: string[] = ["-a", fakeAppIdentifier, "--token", fakeToken, "--env", "local"].concat(additionalArgs);
     return {
       args,
       command: ["crashes", "upload-symbols"],

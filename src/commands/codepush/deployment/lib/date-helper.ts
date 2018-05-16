@@ -1,4 +1,4 @@
-import { differenceInMinutes, format }  from 'date-fns';
+import { differenceInMinutes, format }  from "date-fns";
 
 export function formatDate(unixOffset: number): string {
     let formattedDateString: string;

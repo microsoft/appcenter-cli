@@ -15,7 +15,7 @@ export default class AppDeleteCommand extends AppCommand {
     const confirmation = await prompt.confirm(`Do you really want to delete the app "${app.identifier}"`);
 
     if (confirmation) {
-      const deleteAppResponse = await out.progress("Deleting app ...", clientRequest<models.AppResponse>(cb => client.apps.deleteMethod(app.appName, app.ownerName, cb)));
+      const deleteAppResponse = await out.progress("Deleting app ...", clientRequest<models.AppResponse>((cb) => client.apps.deleteMethod(app.appName, app.ownerName, cb)));
 
       const statusCode = deleteAppResponse.response.statusCode;
       if (statusCode >= 400) {

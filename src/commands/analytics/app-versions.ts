@@ -1,11 +1,8 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
-import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
+import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success } from "../../util/commandline";
+import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
-import * as Request from "request";
-import * as Path from "path";
-import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../util/profile";
 import * as Os from "os";
 import { parseDate } from "./lib/date-parsing-helper";

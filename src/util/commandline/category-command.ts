@@ -1,5 +1,4 @@
 import * as fs from "fs";
-import * as os from "os";
 import * as path from "path";
 import { Command, CommandArgs } from "./command";
 import { CommandResult, success } from "./command-result";
@@ -54,7 +53,7 @@ export class CategoryCommand extends Command {
     const helpPath = path.join(this.commandPath, category, "category.txt");
     try {
       // Replacing CRLF with LF to make sure that cli-table2 will be able to correctly split the string
-      const helpText = fs.readFileSync(helpPath, "utf8").replace(/\r\n/g,'\n');
+      const helpText = fs.readFileSync(helpPath, "utf8").replace(/\r\n/g, "\n");
       return helpText;
     } catch (err) {
       if (err.code === "ENOENT") {
@@ -72,16 +71,16 @@ export class CategoryCommand extends Command {
   }
 
   subCategories(contents: [string, fs.Stats][]): string[][] {
-    return contents.filter(item => item[1].isDirectory() && item[0] !== "lib")
-      .map(item => {
+    return contents.filter((item) => item[1].isDirectory() && item[0] !== "lib")
+      .map((item) => {
          return [chalk.bold(`    ${item[0]}    `), this.categoryHelp(item[0])];
       });
   }
 
   categoryCommands(contents: [string, fs.Stats][]): string[][] {
     // Locate commands in category directory
-    return contents.filter(item => item[1].isFile() && /\.[tj]s$/.test(item[0]))
-      .map(item => {
+    return contents.filter((item) => item[1].isFile() && /\.[tj]s$/.test(item[0]))
+      .map((item) => {
         return [chalk.bold(`    ${this.commandName(item)}    `), this.commandHelp(item)];
       });
   }
@@ -93,9 +92,11 @@ export class CategoryCommand extends Command {
   commandHelp(item: [string, fs.Stats]): string {
     const fullCommandPath = path.join(this.commandPath, item[0]);
     try {
+      // Turn off tslint error, string is validated above
+      /* tslint:disable-next-line:non-literal-require */
       const cmd = require(fullCommandPath).default;
       return getClassHelpText(cmd);
-    } catch(err) {
+    } catch (err) {
       return `Unable to load ${fullCommandPath} to read help`;
     }
   }

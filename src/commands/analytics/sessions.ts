@@ -137,8 +137,8 @@ export default class SessionCommand extends AppCommand {
       const averageSessionsPerDay = totalSessionsCount / requestsResult.sessionCounts.length;
       const previousAverageSessionsPerDay = previousTotalSessionsCount / requestsResult.previousSessionCounts.length;
 
-      const averageSessionDuration = <number> IsoDuration.toSeconds(IsoDuration.parse(requestsResult.sessionDurationsDistribution.averageDuration));
-      const previousAverageSessionDuration = <number> IsoDuration.toSeconds(IsoDuration.parse(requestsResult.sessionDurationsDistribution.previousAverageDuration));
+      const averageSessionDuration: number = IsoDuration.toSeconds(IsoDuration.parse(requestsResult.sessionDurationsDistribution.averageDuration));
+      const previousAverageSessionDuration: number = IsoDuration.toSeconds(IsoDuration.parse(requestsResult.sessionDurationsDistribution.previousAverageDuration));
 
       jsonOutput.statistics = {
         totalSessions: {

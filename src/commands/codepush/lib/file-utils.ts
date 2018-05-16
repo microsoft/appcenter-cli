@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
-import * as rimraf from "rimraf"
+import * as rimraf from "rimraf";
 import * as temp from "temp";
 
 export function isBinaryOrZip(path: string): boolean {
@@ -16,11 +16,11 @@ export function isDirectory(path: string): boolean {
 
 export function copyFileToTmpDir(filePath: string): string {
   if (!isDirectory(filePath)) {
-    let outputFolderPath: string = temp.mkdirSync("code-push");
-    rimraf.sync(outputFolderPath)
+    const outputFolderPath: string = temp.mkdirSync("code-push");
+    rimraf.sync(outputFolderPath);
     fs.mkdirSync(outputFolderPath);
 
-    let outputFilePath: string = path.join(outputFolderPath, path.basename(filePath));
+    const outputFilePath: string = path.join(outputFolderPath, path.basename(filePath));
     fs.writeFileSync(outputFilePath, fs.readFileSync(filePath));
 
     return outputFolderPath;
@@ -32,6 +32,7 @@ export function generateRandomFilename(length: number): string {
   const validChar: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   for (let i = 0; i < length; i++) {
+    /* tslint:disable-next-line:insecure-random */
     filename += validChar.charAt(Math.floor(Math.random() * validChar.length));
   }
 

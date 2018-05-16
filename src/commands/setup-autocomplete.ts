@@ -1,14 +1,10 @@
-import { Command, CommandResult, help, success, name, position, ErrorCodes, failure, shortName, longName, hasArg } from "../util/commandline";
+import { Command, CommandResult, help, name, position, ErrorCodes, failure, shortName, longName, hasArg } from "../util/commandline";
 import * as _ from "lodash";
 import * as Path from "path";
-import * as Pfs from "../util/misc/promisfied-fs";
 import * as mkdirp from "mkdirp";
 import * as Process from "process";
 import { setupAutoCompleteForShell } from "../util/commandline/autocomplete";
 import { out } from "../util/interaction";
-
-const debug = require("debug")("appcenter-cli:commands:setup-autocomplete");
-import { inspect } from "util";
 
 @help("Setup tab completion for your shell")
 export default class SetupAutoCompleteCommand extends Command {

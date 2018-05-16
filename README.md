@@ -6,7 +6,7 @@ commands that they'd like to execute. You can currently login and view/configure
 
 # Prerequisites
 
-App Center CLI requires Node.js version 6.3 or better. Do not use Node.js 7.1.0, there is a known issue that breaks the CLI code (and many other projects) on Windows 10. This bug has been fixed in later releases of Node.js 7.
+App Center CLI requires Node.js version 8 or better.
 
 # Installation
 
@@ -95,6 +95,7 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 | `appcenter telemetry off` | Turn off the sending of telemetry |
 | `appcenter telemetry on` | Turn on the sending of telemetry |
 | | |
+| `appcenter test download` | Download the report artifacts, unpack and merge them |
 | `appcenter test status` | Checks the status of the started test run |
 | `appcenter test stop` | Stop the started test run |
 | `appcenter test generate appium` | Generates an Appium project |

@@ -36,14 +36,14 @@ class ErrorGroupOperatingSystems {
         modelProperties: {
           errorCount: {
             required: false,
-            serializedName: 'error_count',
+            serializedName: 'errorCount',
             type: {
               name: 'Number'
             }
           },
           operatingSystems: {
             required: false,
-            serializedName: 'operating_systems',
+            serializedName: 'operatingSystems',
             type: {
               name: 'Sequence',
               element: {

@@ -14,6 +14,7 @@ const models = require('./index');
 class ErrorGroups {
   /**
    * Create a ErrorGroups.
+   * @member {string} [nextLink]
    * @member {array} [errorGroups]
    */
   constructor() {
@@ -33,17 +34,24 @@ class ErrorGroups {
         name: 'Composite',
         className: 'ErrorGroups',
         modelProperties: {
+          nextLink: {
+            required: false,
+            serializedName: 'nextLink',
+            type: {
+              name: 'String'
+            }
+          },
           errorGroups: {
             required: false,
-            serializedName: 'error_groups',
+            serializedName: 'errorGroups',
             type: {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ErrorGroupElementType',
+                  serializedName: 'ErrorGroupListItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ErrorGroup'
+                    className: 'ErrorGroupListItem'
                   }
               }
             }

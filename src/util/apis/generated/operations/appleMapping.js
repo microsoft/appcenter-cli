@@ -27,7 +27,7 @@ const WebResource = msRest.WebResource;
  *
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
- *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      {array} [result]   - The deserialized result object if an error did not occur.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -82,7 +82,7 @@ function _testFlightGroups(ownerName, appName, options, callback) {
       return callback(err);
     }
     let statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400) {
+    if (statusCode !== 200) {
       let error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -96,6 +96,10 @@ function _testFlightGroups(ownerName, appName, options, callback) {
           if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
           error.code = internalError ? internalError.code : parsedErrorResponse.code;
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
         error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
@@ -138,23 +142,6 @@ function _testFlightGroups(ownerName, appName, options, callback) {
         return callback(deserializationError);
       }
     }
-    // Deserialize Response
-    if (statusCode === 400) {
-      let parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        let deserializationError1 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
 
     return callback(null, result, httpRequest, response);
   });
@@ -179,6 +166,7 @@ function _testFlightGroups(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      See {@link AppleMappingResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -233,7 +221,7 @@ function _get(ownerName, appName, options, callback) {
       return callback(err);
     }
     let statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400) {
+    if (statusCode !== 200) {
       let error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -247,6 +235,10 @@ function _get(ownerName, appName, options, callback) {
           if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
           error.code = internalError ? internalError.code : parsedErrorResponse.code;
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
         error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
@@ -275,23 +267,6 @@ function _get(ownerName, appName, options, callback) {
         return callback(deserializationError);
       }
     }
-    // Deserialize Response
-    if (statusCode === 400) {
-      let parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        let deserializationError1 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
 
     return callback(null, result, httpRequest, response);
   });
@@ -315,8 +290,7 @@ function _get(ownerName, appName, options, callback) {
  *
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
- *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ErrorDetails} for more information.
+ *                      {null} [result]   - The deserialized result object if an error did not occur.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -371,7 +345,7 @@ function _deleteMethod(ownerName, appName, options, callback) {
       return callback(err);
     }
     let statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400) {
+    if (statusCode !== 200) {
       let error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -386,6 +360,10 @@ function _deleteMethod(ownerName, appName, options, callback) {
           error.code = internalError ? internalError.code : parsedErrorResponse.code;
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
       } catch (defaultError) {
         error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
                          `- "${responseBody}" for the default response.`;
@@ -396,23 +374,6 @@ function _deleteMethod(ownerName, appName, options, callback) {
     // Create Result
     let result = null;
     if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 400) {
-      let parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
 
     return callback(null, result, httpRequest, response);
   });
@@ -453,6 +414,7 @@ function _deleteMethod(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      See {@link AppleMappingResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -524,7 +486,7 @@ function _create(body, ownerName, appName, options, callback) {
       return callback(err);
     }
     let statusCode = response.statusCode;
-    if (statusCode !== 201 && statusCode !== 400 && statusCode !== 409) {
+    if (statusCode !== 201) {
       let error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -538,6 +500,10 @@ function _create(body, ownerName, appName, options, callback) {
           if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
           error.code = internalError ? internalError.code : parsedErrorResponse.code;
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
         error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
@@ -564,40 +530,6 @@ function _create(body, ownerName, appName, options, callback) {
         deserializationError.request = msRest.stripRequest(httpRequest);
         deserializationError.response = msRest.stripResponse(response);
         return callback(deserializationError);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 400) {
-      let parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        let deserializationError1 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 409) {
-      let parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        let deserializationError2 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
-        deserializationError2.request = msRest.stripRequest(httpRequest);
-        deserializationError2.response = msRest.stripResponse(response);
-        return callback(deserializationError2);
       }
     }
 
@@ -633,7 +565,7 @@ class AppleMapping {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -670,7 +602,7 @@ class AppleMapping {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Object} - The deserialized result object.
+   *                      @resolve {Array} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -678,7 +610,7 @@ class AppleMapping {
    *
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
-   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      {array} [result]   - The deserialized result object if an error did not occur.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -718,7 +650,7 @@ class AppleMapping {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<AppleMappingResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -755,7 +687,7 @@ class AppleMapping {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Object} - The deserialized result object.
+   *                      @resolve {AppleMappingResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -764,6 +696,7 @@ class AppleMapping {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      See {@link AppleMappingResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -803,7 +736,7 @@ class AppleMapping {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<null>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -840,7 +773,7 @@ class AppleMapping {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ErrorDetails} - The deserialized result object.
+   *                      @resolve {null} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -848,8 +781,7 @@ class AppleMapping {
    *
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
-   *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ErrorDetails} for more information.
+   *                      {null} [result]   - The deserialized result object if an error did not occur.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -905,7 +837,7 @@ class AppleMapping {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<AppleMappingResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -958,7 +890,7 @@ class AppleMapping {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Object} - The deserialized result object.
+   *                      @resolve {AppleMappingResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -967,6 +899,7 @@ class AppleMapping {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      See {@link AppleMappingResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

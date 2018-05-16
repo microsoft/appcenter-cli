@@ -1,8 +1,6 @@
-import { CommandArgs, help, success, name, shortName, longName, required, hasArg,
-         ErrorCodes } from "../../../util/commandline";
+import { CommandArgs, help, longName, hasArg } from "../../../util/commandline";
 import { EspressoPreparer } from "../lib/espresso-preparer";
 import { PrepareTestsCommand } from "../lib/prepare-tests-command";
-import { out } from "../../../util/interaction";
 import { Messages } from "../lib/help-messages";
 
 @help(Messages.TestCloud.Commands.PrepareEspresso)
@@ -22,7 +20,7 @@ export default class PrepareEspressoCommand extends PrepareTestsCommand {
   }
 
   protected prepareManifest(): Promise<string> {
-    let preparer = new EspressoPreparer(this.artifactsDir, this.buildDir, this.testApkPath);
+    const preparer = new EspressoPreparer(this.artifactsDir, this.buildDir, this.testApkPath);
     return preparer.prepare();
   }
 

@@ -1,5 +1,5 @@
 import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName } from "../../util/commandline";
-import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton"
+import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
@@ -8,9 +8,9 @@ import * as path from "path";
 import * as fs from "fs";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";
 import { isValidOS, isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectAppVersion } from "./lib/cordova-utils";
+import * as childProcess from "child_process";
 
-var childProcess = require("child_process");
-export var execSync = childProcess.execSync;
+export let execSync = childProcess.execSync;
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-cordova");
 
@@ -56,7 +56,7 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
     }
 
     if (this.specifiedTargetBinaryVersion) {
-      this.targetBinaryVersion = this.specifiedTargetBinaryVersion
+      this.targetBinaryVersion = this.specifiedTargetBinaryVersion;
     } else {
       this.targetBinaryVersion = await getCordovaProjectAppVersion();
     }
@@ -65,11 +65,11 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
       return failure(ErrorCodes.InvalidParameter, "Invalid binary version(s) for a release.");
     }
 
-    this.updateContentsPath = this.getOutputFolder();
     const cordovaCommand: string = this.getCordovaCommand();
 
+    let cordovaCLI: string;
     try {
-      var cordovaCLI: string = getCordovaOrPhonegapCLI();
+      cordovaCLI = getCordovaOrPhonegapCLI();
     } catch (e) {
       return failure(ErrorCodes.Exception, `Unable to ${cordovaCommand} project. Please ensure that either the Cordova or PhoneGap CLI is installed.`);
     }
@@ -82,6 +82,13 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
       return failure(ErrorCodes.Exception, `Unable to ${cordovaCommand} project. Please ensure that the CWD represents a Cordova project and that the "${this.os}" platform was added by running "${cordovaCLI} platform add ${this.os}".`);
     }
 
+    try {
+      this.updateContentsPath = this.getOutputFolder();
+    } catch (error) {
+      debug(`Failed to release a CodePush update - ${inspect(error)}`);
+      return failure(ErrorCodes.Exception, `No output folder found. Please ensure that the CWD represents a Cordova project and that the "${this.os}" platform was added by running "${cordovaCLI} platform add ${this.os}".`);
+    }
+
     out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));
     return await this.release(client);
   }
@@ -89,21 +96,20 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
   private getOutputFolder(): string {
     const projectRoot: string = process.cwd();
     const platformFolder: string = path.join(projectRoot, "platforms", this.os);
-    let outputFolder: string;
 
     if (this.os === "ios") {
-      outputFolder = path.join(platformFolder, "www");
+      return path.join(platformFolder, "www");
     } else if (this.os === "android") {
-      // Since cordova-android 7 assets directory moved to android/app/src/main/assets instead of android/assets                
+      // Since cordova-android 7 assets directory moved to android/app/src/main/assets instead of android/assets
       const outputFolderVer7 = path.join(platformFolder, "app", "src", "main", "assets", "www");
+      const outputFolderPre7 = path.join(platformFolder, "assets", "www");
       if (fs.existsSync(outputFolderVer7)) {
-        outputFolder = outputFolderVer7;
-      } else {
-        outputFolder = path.join(platformFolder, "assets", "www");
+        return outputFolderVer7;
+      } else if (fs.existsSync(outputFolderPre7)) {
+        return outputFolderPre7;
       }
     }
-
-    return outputFolder;
+    throw new Error(`${this.os} output folder does not exists`);
   }
 
   private getCordovaCommand(): string {

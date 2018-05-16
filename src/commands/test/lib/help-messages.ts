@@ -7,32 +7,34 @@ export module Messages {
       export const GenerateUITest = "Generates a Xamarin.UITest project";
 
       export const PrepareAppium = "Creates an artifacts directory with Appium tests.";
-      export const PrepareCalabash = `Creates an artifacts directory with Calabash tests.${os.EOL}` + 
-                                     `Required external tools:${os.EOL}` + 
-                                     `- Ruby ${os.EOL}` + 
+      export const PrepareCalabash = `Creates an artifacts directory with Calabash tests.${os.EOL}` +
+                                     `Required external tools:${os.EOL}` +
+                                     `- Ruby ${os.EOL}` +
                                      `- Gem xamarin-test-cloud`;
       export const PrepareEspresso = "Creates an artifacts directory with Espresso tests.";
       export const PrepareUITests = `Creates an artifacts directory with Xamarin UI Tests.${os.EOL}` +
-                                    `Required external tools:${os.EOL}` + 
-                                    `- .NET Framework on Windows, Mono Runtime on OS X${os.EOL}` + 
+                                    `Required external tools:${os.EOL}` +
+                                    `- .NET Framework on Windows, Mono Runtime on OS X${os.EOL}` +
                                     `- NuGet package Xamarin.UITests, version 2.0.1 or higher`;
       export const PrepareXCUITest = "Creates an artifacts directory with XCUITest tests.";
-      
+
       export const RunAppium = "Starts a test run with Appium tests.";
-      export const RunCalabash = `Starts a test run with Calabash tests.${os.EOL}` + 
-                                 `Required external tools:${os.EOL}` + 
-                                 `- Ruby ${os.EOL}` + 
+      export const RunCalabash = `Starts a test run with Calabash tests.${os.EOL}` +
+                                 `Required external tools:${os.EOL}` +
+                                 `- Ruby ${os.EOL}` +
                                  `- Gem xamarin-test-cloud`;
       export const RunEspresso = "Starts a test run with Espresso tests.";
       export const RunManifest = "Starts a test run with previously prepared artifacts.";
-      export const RunUITests = `Starts a test run with Xamarin UI Tests.${os.EOL}` + 
-                                `Required external tools:${os.EOL}` + 
-                                `- .NET Framework on Windows, Mono Runtime on OS X${os.EOL}` + 
+      export const RunUITests = `Starts a test run with Xamarin UI Tests.${os.EOL}` +
+                                `Required external tools:${os.EOL}` +
+                                `- .NET Framework on Windows, Mono Runtime on OS X${os.EOL}` +
                                 `- NuGet package Xamarin.UITests, version 2.0.1 or higher`;
       export const RunXCUITest = "Starts a test run with XCUITest tests.";
 
       export const Status = "Checks the status of the started test run.";
       export const Stop = "Stop the started test run.";
+
+      export const Download = "Download the report artifacts, unpack and merge them.";
     }
 
     export module Arguments {
@@ -45,13 +47,12 @@ export module Messages {
 
       export const PrepareArtifactsDir = "Path to the artifacts directory to create";
       export const RunDevices = "Device selection slug";
-      export const RunDSymDir = "Path to the directory with iOS symbol files";
+      export const RunDSymDir = "Path to the directory with iOS symbol files. This option is deprecated and ignored";
       export const RunLocale = "The system locale for the test run. For example, en_US";
       export const RunLanguage = "Override the language (iOS only) for the test run";
       export const Fixture = "NUnit fixture / namespace to run. If used with include / exclude the fixture filter is applied first (Can be used multiple times)";
       export const IncludeCategory = "NUnit category to run. (Can be used multiple times)";
       export const ExcludeCategory = "NUnit category to not run. (Can be used multiple times) (When include and/or fixture are combined with exclude, all tests with the included categories are run, except for those also marked with the excluded categories)";
-      export const NUnitXml = "Output NUnit xml report to target file";
       export const TestChunk = "Run tests in parallel by method";
       export const FixtureChunk = "Run tests in parallel by fixture";
       export const RunTestSeries = "Name of the test series";
@@ -59,13 +60,13 @@ export module Messages {
       export const Timeout = "Maximum time (in seconds) to wait for test results";
 
       export const AppiumBuildDir = "Path to the directory with the Appium tests (usually <project>/target/upload)";
-      
-      export const CalabashProjectDir = 'Path to the Calabash workspace directory (usually <project>/features)';
+
+      export const CalabashProjectDir = "Path to the Calabash workspace directory (usually <project>/features)";
       export const CalabashSignInfo = "Use Signing Info for signing the test server";
       export const CalabashConfigPath = "Path to the Cucumber configuration file (usually cucumber.yml)";
       export const CalabashProfile = "Profile to run. It must exist in the configuration file";
       export const CalabashSkipConfigCheck = "Force running without Cucumber profile";
-      
+
       export const EspressoBuildDir = "Path to the Espresso output directory (usually <project>/build/outputs/apk)";
       export const EspressoTestApkPath = "Path to the *.apk file with the Espresso tests. If not set, build-dir is used to discover it";
 
@@ -86,6 +87,14 @@ export module Messages {
       export const XCUITestBuildDir = "Path to the build output directory (usually <project>/Build/Products/Debug-iphoneos)";
 
       export const VSTSIdVariable = "Outputs the Test Run Id to the named VSTS variable";
+      export const TestOutputDir = "Path to the directory for test results. This parameter won't work when you run using --async because we have to wait for test results. The results will be saved in the working directory if the relative path is specified";
+      export const MergeNUnitXml = "Merge the xml files in to the <output.xml> file. This parameter won't work when you run using --async because we have to wait for test results";
+      export const MergeJUnitXml = "Merge the xml files in to the <output.xml> file. This parameter won't work when you run using --async because we have to wait for test results";
+
+      export const DownloadTestRunId = "ID of the started test run";
+      export const DownloadTestOutputDir = "Directory to download the .zip file(s) into for merging";
+      export const MergedFileName = "Name of the merged XML file";
+      export const Continuous = "Continuously checks the test run status until it completes";
     }
   }
 }

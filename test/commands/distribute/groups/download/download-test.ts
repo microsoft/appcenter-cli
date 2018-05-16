@@ -17,6 +17,7 @@ describe("distribute groups download command", () => {
   const fakeToken = "c1o3d3e7";
   const fakeReleaseId = "1";
   const fakeDistributionGroupName = "fakeDistributionGroupName";
+  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const fakeDownloadUrl = "/fake/download/url?format=apk";
   const fakeDownloadUrl2 = "/fake/download/url2?format=ipa";
@@ -40,7 +41,7 @@ describe("distribute groups download command", () => {
     const executionScope = _.flow(setupGetLatestReleaseDetailsResponse, setupGetReleaseFileResponse)(Nock(fakeHost));
     const skippedScope = _.flow(setupGetReleasesForDistributionGroupResponse, setupGetReleaseDetailsResponse, setupGetReleaseFile2Response)(Nock(fakeHost));
 
-    // Act 
+    // Act
     const command = new DownloadBinaryFromDistributionGroupCommand(
       getCommandArgs(["-g", fakeDistributionGroupName, "-f", Path.basename(releaseFilePath), "-d", Path.dirname(releaseFilePath)]));
     const result = await command.execute();
@@ -57,7 +58,7 @@ describe("distribute groups download command", () => {
     const executionScope = _.flow(setupGetReleasesForDistributionGroupResponse, setupGetReleaseDetailsResponse, setupGetReleaseFile2Response)(Nock(fakeHost));
     const skippedScope = _.flow(setupGetLatestReleaseDetailsResponse, setupGetReleaseFileResponse)(Nock(fakeHost));
 
-    // Act 
+    // Act
     const command = new DownloadBinaryFromDistributionGroupCommand(
       getCommandArgs(["-g", fakeDistributionGroupName, "-f", Path.basename(releaseFilePath), "-d", Path.dirname(releaseFilePath), "-i", fakeReleaseId]));
     const result = await command.execute();
@@ -73,7 +74,7 @@ describe("distribute groups download command", () => {
   });
 
   after(() => {
-    Nock.enableNetConnect(); 
+    Nock.enableNetConnect();
   });
 
   function testCommandSuccess(result: CommandResult, executionScope: Nock.Scope, abortScope?: Nock.Scope) {
@@ -83,7 +84,7 @@ describe("distribute groups download command", () => {
   }
 
   function getCommandArgs(additionalArgs: string[]): CommandArgs {
-    let args: string[] = ["-a", fakeAppIdentifier, "--token", fakeToken, "--env", "local"].concat(additionalArgs);
+    const args: string[] = ["-a", fakeAppIdentifier, "--token", fakeToken, "--env", "local"].concat(additionalArgs);
     return {
       args,
       command: ["distribute", "groups", "download"],

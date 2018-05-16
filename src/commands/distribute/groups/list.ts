@@ -1,4 +1,4 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, help, success} from "../../../util/commandline";
+import { AppCommand, CommandResult, ErrorCodes, failure, help, success } from "../../../util/commandline";
 import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
@@ -36,7 +36,7 @@ export default class ListDistributionGroupsCommand extends AppCommand {
 
     debug("Creating requests for retrieving user counts of distribution groups");
     const distributionGroupUsersPromises: Array<Promise<ClientResponse<models.DistributionGroupUserGetResponse[]>>> = [];
-    for (const distributionGroupName of distributionGroupsNames){
+    for (const distributionGroupName of distributionGroupsNames) {
       distributionGroupUsersPromises.push(limit(() => clientRequest<models.DistributionGroupUserGetResponse[]>(
           (cb) => client.distributionGroups.listUsers(this.app.ownerName, this.app.appName, distributionGroupName, cb))));
     }

@@ -14,11 +14,11 @@ export async function pollContinuously<T>(executeRequest: () => PromiseLike<T>, 
       const executionResult = await out.progress(progressMessage, Promise.race([executeRequest(), waitingForCtrlC]));
       if (executionResult === ctrlCPressed) {
         // user pressed ctrl+c, exiting
-        break;        
+        break;
       }
 
       // processing result
-      processResponse(<T> executionResult, requestsDone);
+      processResponse(executionResult as T, requestsDone);
 
       if (!pollContinuously) {
         break;
@@ -27,7 +27,7 @@ export async function pollContinuously<T>(executeRequest: () => PromiseLike<T>, 
       requestsDone++;
 
       // waiting before next request
-      const delayBeforeNextRequest = new Promise<void>((resolve) => { 
+      const delayBeforeNextRequest = new Promise<void>((resolve) => {
         timeoutTimer = setTimeout(() => resolve(), delayBetweenRequests);
       });
 

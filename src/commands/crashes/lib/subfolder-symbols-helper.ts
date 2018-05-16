@@ -15,7 +15,7 @@ export async function packDsymParentFolderContents(path: string, debug: Function
   debug(`Compressing the dSYM sub-folders of ${path} to the in-memory ZIP archive`);
   const zipArchive = new JsZip();
   const childrenDsymFolders = getChildrenDsymFolderPaths(path, debug);
-  for (const dSymPath of childrenDsymFolders){
+  for (const dSymPath of childrenDsymFolders) {
     try {
       debug(`Adding the sub-folder ${dSymPath} to the ZIP archive`);
       await JsZipHelper.addFolderToZipRecursively(dSymPath, zipArchive);
@@ -44,7 +44,7 @@ export function getChildrenDsymFolderPaths(parentPath: string, debug: Function):
           return false;
         }
         try {
-          let childStats = Fs.statSync(childPath);
+          const childStats = Fs.statSync(childPath);
           return childStats.isDirectory();
         } catch (error) {
           debug(`Error when getting statistics for the file ${parentPath} - ${inspect(error)}`);

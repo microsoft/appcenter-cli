@@ -1,7 +1,6 @@
 import * as fs from "fs";
 import * as pfs from "../../../../util/misc/promisfied-fs";
 import * as path from "path";
-import * as JsZip from "jszip";
 import * as yazl from "yazl";
 import { generateRandomFilename, normalizePath, isDirectory } from "../file-utils";
 
@@ -12,7 +11,7 @@ interface ReleaseFile {
 
 export default function zip(updateContentsPath: string): Promise<string> {
   return new Promise<string>(async (resolve, reject) => {
-    let releaseFiles: ReleaseFile[] = [];
+    const releaseFiles: ReleaseFile[] = [];
 
     try {
       if (!isDirectory(updateContentsPath)) {

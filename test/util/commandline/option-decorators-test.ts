@@ -1,21 +1,20 @@
 import { expect } from "chai";
 
-import { OptionsDescription, OptionDescription, PositionalOptionsDescription, PositionalOptionDescription } from "../../../src/util/commandline/option-parser";
 import {
   getOptionsDescription, getPositionalOptionsDescription, getClassHelpText,
-  shortName, longName, name, defaultValue, required, hasArg, help, position, 
+  shortName, longName, name, defaultValue, required, hasArg, help, position,
   common
 } from "../../../src/util/commandline/option-decorators";
 
 describe("Command line option parsing", function () {
-  describe("options decorators", function() {
+  describe("options decorators", function () {
     it("should return empty description for class without decorators", function () {
       class Sample {
         public value: string;
-      };
+      }
 
-      let source = new Sample();
-      let opts = getOptionsDescription(Object.getPrototypeOf(source));
+      const source = new Sample();
+      const opts = getOptionsDescription(Object.getPrototypeOf(source));
       expect(Object.keys(opts)).to.have.length(0);
     });
 
@@ -23,9 +22,9 @@ describe("Command line option parsing", function () {
       class Sample {
         @shortName("v")
         public value: string;
-      };
+      }
 
-      let opts = getOptionsDescription(Sample.prototype);
+      const opts = getOptionsDescription(Sample.prototype);
       expect(opts).to.have.property("value");
       expect(opts["value"].shortName).to.equal("v");
     });
@@ -46,23 +45,23 @@ describe("Command line option parsing", function () {
         @required
         @common
         public anotherArg: string;
-      };
+      }
 
-      let opts = getOptionsDescription(Object.getPrototypeOf(new Sample()));
+      const opts = getOptionsDescription(Object.getPrototypeOf(new Sample()));
       expect(opts).to.have.property("flag");
       expect(opts).to.have.property("value");
       expect(opts).to.have.property("anotherArg");
 
-      let flagOpt = opts["flag"];
+      const flagOpt = opts["flag"];
       expect(flagOpt).to.have.property("shortName", "f");
       expect(flagOpt.required).to.be.true;
 
-      let valueOpt = opts["value"];
+      const valueOpt = opts["value"];
       expect(valueOpt).to.have.property("shortName", "v");
       expect(valueOpt).to.have.property("longName", "value");
       expect(valueOpt).to.have.property("defaultValue", "this is the default");
 
-      let anotherOpt = opts["anotherArg"];
+      const anotherOpt = opts["anotherArg"];
       expect(anotherOpt).to.have.property("longName", "another");
       expect(anotherOpt.required).to.be.true;
       expect(anotherOpt.hasArg).to.be.true;
@@ -87,7 +86,7 @@ describe("Command line option parsing", function () {
         public input: string;
       }
 
-      let opts = getOptionsDescription(Sample.prototype);
+      const opts = getOptionsDescription(Sample.prototype);
       expect(Object.keys(opts)).to.include("help")
         .and.to.include("logLevel")
         .and.to.include("input");
@@ -110,7 +109,7 @@ describe("Command line option parsing", function () {
         public rest: string[];
       }
 
-      let opts = getPositionalOptionsDescription(Sample.prototype);
+      const opts = getPositionalOptionsDescription(Sample.prototype);
       expect(opts).to.be.instanceof(Array).and.to.have.lengthOf(1);
     });
   });

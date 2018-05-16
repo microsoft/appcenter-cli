@@ -7,19 +7,13 @@
 //
 
 import * as fs from "fs";
-import * as os from "os";
 import * as path from "path";
 import * as rx from "rx-lite";
 import { toPairs } from "lodash";
 
-import { profileDirName } from "../../misc/constants";
-
 const debug = require("debug")("appcenter-cli:util:token-store:file:file-token-store");
 
 import { TokenEntry, TokenStore, TokenKeyType, TokenValueType } from "../token-store";
-
-const defaultPath = profileDirName;
-const defaultFile = "tokens.json";
 
 export class FileTokenStore implements TokenStore {
   private filePath: string;
@@ -36,7 +30,7 @@ export class FileTokenStore implements TokenStore {
 
   list(): rx.Observable<TokenEntry> {
     this.loadTokenStoreCache();
-    return rx.Observable.from(toPairs(this.tokenStoreCache)).map(pair => ({ key: pair[0], accessToken: pair[1]}));
+    return rx.Observable.from(toPairs(this.tokenStoreCache)).map((pair) => ({ key: pair[0], accessToken: pair[1]}));
   }
 
   get(key: TokenKeyType): Promise<TokenEntry> {
@@ -65,6 +59,15 @@ export class FileTokenStore implements TokenStore {
   private loadTokenStoreCache(): void {
     if (this.tokenStoreCache === null) {
       debug(`Loading token store cache from file ${this.filePath}`);
+      // Ensure directory exists
+      try {
+        fs.mkdirSync(path.dirname(this.filePath));
+      } catch (err) {
+        if (err.code !== "EEXIST") {
+          debug(`Unable to create token store cache directory: ${err.message}`);
+          throw err;
+        }
+      }
       try {
         this.tokenStoreCache = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
         debug(`Token store loaded from file`);

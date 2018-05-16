@@ -671,6 +671,70 @@ export interface OrgInvitations {
 
 
     /**
+     * Allows the role of an invited user to be changed
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} userEmail The user email of the user to update
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The user's role in the organizatiion.
+     * Possible values include: 'admin', 'collaborator'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updateWithHttpOperationResponse(orgName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Allows the role of an invited user to be changed
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} userEmail The user email of the user to update
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The user's role in the organizatiion.
+     * Possible values include: 'admin', 'collaborator'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    update(orgName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    update(orgName: string, userEmail: string, callback: ServiceCallback<void>): void;
+    update(orgName: string, userEmail: string, options: { role? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
      * Cancels an existing organization for the user and sends a new one
      *
      * @param {string} orgName The organization's name
@@ -1751,925 +1815,121 @@ export interface Users {
 
 /**
  * @class
- * Apps
- * __NOTE__: An instance of this class is automatically created for an
- * instance of the AppCenterClient.
- */
-export interface Apps {
-
-
-    /**
-     * Return a list of releases for a app a tester has access to.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    testerAppReleasesWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TesterAppRelease[]>>;
-
-    /**
-     * Return a list of releases for a app a tester has access to.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Array} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    testerAppReleases(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TesterAppRelease[]>;
-    testerAppReleases(ownerName: string, appName: string, callback: ServiceCallback<models.TesterAppRelease[]>): void;
-    testerAppReleases(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TesterAppRelease[]>): void;
-
-
-    /**
-     * Return a list of applications that the user has tester permission to with
-     * the latest release for each.
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    latestReleasesWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TesterAppWithReleaseResponse[]>>;
-
-    /**
-     * Return a list of applications that the user has tester permission to with
-     * the latest release for each.
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Array} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    latestReleases(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TesterAppWithReleaseResponse[]>;
-    latestReleases(callback: ServiceCallback<models.TesterAppWithReleaseResponse[]>): void;
-    latestReleases(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TesterAppWithReleaseResponse[]>): void;
-
-
-    /**
-     * Creates a new app for the organization and returns it to the caller
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {object} app The data for the app
-     *
-     * @param {string} [app.description] A short text describing the app
-     *
-     * @param {string} app.displayName The descriptive name of the app. This can
-     * contain any characters
-     *
-     * @param {string} [app.name] The name of the app used in URLs
-     *
-     * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
-     *
-     * @param {string} app.platform The platform of the app. Possible values
-     * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin'
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    createForOrgWithHttpOperationResponse(orgName: string, app: models.AppRequest, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
-
-    /**
-     * Creates a new app for the organization and returns it to the caller
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {object} app The data for the app
-     *
-     * @param {string} [app.description] A short text describing the app
-     *
-     * @param {string} app.displayName The descriptive name of the app. This can
-     * contain any characters
-     *
-     * @param {string} [app.name] The name of the app used in URLs
-     *
-     * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
-     *
-     * @param {string} app.platform The platform of the app. Possible values
-     * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin'
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {AppResponse} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppResponse} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    createForOrg(orgName: string, app: models.AppRequest, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
-    createForOrg(orgName: string, app: models.AppRequest, callback: ServiceCallback<models.AppResponse>): void;
-    createForOrg(orgName: string, app: models.AppRequest, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
-
-
-    /**
-     * Returns a list of apps for the organization
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    listForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse[]>>;
-
-    /**
-     * Returns a list of apps for the organization
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Array} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    listForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse[]>;
-    listForOrg(orgName: string, callback: ServiceCallback<models.AppResponse[]>): void;
-    listForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse[]>): void;
-
-
-    /**
-     * Removes the user from the app
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} userEmail The user email of the user to delete
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    removeUserWithHttpOperationResponse(ownerName: string, appName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
-
-    /**
-     * Removes the user from the app
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} userEmail The user email of the user to delete
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {null} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {null} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    removeUser(ownerName: string, appName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
-    removeUser(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<void>): void;
-    removeUser(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-
-
-    /**
-     * Update user permission for the app
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} userEmail The user email of the user to patch
-     *
-     * @param {array} permissions The permissions the user has for the app
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    updateUserPermissionsWithHttpOperationResponse(ownerName: string, appName: string, userEmail: string, permissions: string[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
-
-    /**
-     * Update user permission for the app
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} userEmail The user email of the user to patch
-     *
-     * @param {array} permissions The permissions the user has for the app
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {null} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {null} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    updateUserPermissions(ownerName: string, appName: string, userEmail: string, permissions: string[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
-    updateUserPermissions(ownerName: string, appName: string, userEmail: string, permissions: string[], callback: ServiceCallback<void>): void;
-    updateUserPermissions(ownerName: string, appName: string, userEmail: string, permissions: string[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-
-
-    /**
-     * Transfers ownership of an app to a different user or organization
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} destinationOwnerName The name of the owner (user or
-     * organization) to which the app is being transferred
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    transferOwnershipWithHttpOperationResponse(ownerName: string, appName: string, destinationOwnerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
-
-    /**
-     * Transfers ownership of an app to a different user or organization
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} destinationOwnerName The name of the owner (user or
-     * organization) to which the app is being transferred
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {AppResponse} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppResponse} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    transferOwnership(ownerName: string, appName: string, destinationOwnerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
-    transferOwnership(ownerName: string, appName: string, destinationOwnerName: string, callback: ServiceCallback<models.AppResponse>): void;
-    transferOwnership(ownerName: string, appName: string, destinationOwnerName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
-
-
-    /**
-     * Returns the testers associated with the app specified with the given app
-     * name which belongs to the given owner.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    listTestersWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UserProfileResponse[]>>;
-
-    /**
-     * Returns the testers associated with the app specified with the given app
-     * name which belongs to the given owner.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Array} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    listTesters(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.UserProfileResponse[]>;
-    listTesters(ownerName: string, appName: string, callback: ServiceCallback<models.UserProfileResponse[]>): void;
-    listTesters(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UserProfileResponse[]>): void;
-
-
-    /**
-     * Returns the details of all teams that have access to the app.
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    getTeamsWithHttpOperationResponse(appName: string, ownerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TeamAppResponse[]>>;
-
-    /**
-     * Returns the details of all teams that have access to the app.
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Array} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    getTeams(appName: string, ownerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TeamAppResponse[]>;
-    getTeams(appName: string, ownerName: string, callback: ServiceCallback<models.TeamAppResponse[]>): void;
-    getTeams(appName: string, ownerName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TeamAppResponse[]>): void;
-
-
-    /**
-     * Return a specific app with the given app name which belongs to the given
-     * owner.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    getWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
-
-    /**
-     * Return a specific app with the given app name which belongs to the given
-     * owner.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {AppResponse} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppResponse} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    get(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
-    get(ownerName: string, appName: string, callback: ServiceCallback<models.AppResponse>): void;
-    get(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
-
-
-    /**
-     * Partially updates a single app
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.app] The partial data for the app
-     *
-     * @param {string} [options.app.description] A short text describing the app
-     *
-     * @param {string} [options.app.displayName] The display name of the app
-     *
-     * @param {string} [options.app.name] The name of the app used in URLs
-     *
-     * @param {string} [options.app.iconUrl] The string representation of the URL
-     * pointing to the app's icon
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    updateWithHttpOperationResponse(appName: string, ownerName: string, options?: { app? : models.AppPatchRequest, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
-
-    /**
-     * Partially updates a single app
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.app] The partial data for the app
-     *
-     * @param {string} [options.app.description] A short text describing the app
-     *
-     * @param {string} [options.app.displayName] The display name of the app
-     *
-     * @param {string} [options.app.name] The name of the app used in URLs
-     *
-     * @param {string} [options.app.iconUrl] The string representation of the URL
-     * pointing to the app's icon
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {AppResponse} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppResponse} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    update(appName: string, ownerName: string, options?: { app? : models.AppPatchRequest, customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
-    update(appName: string, ownerName: string, callback: ServiceCallback<models.AppResponse>): void;
-    update(appName: string, ownerName: string, options: { app? : models.AppPatchRequest, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
-
-
-    /**
-     * Delete an app
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    deleteMethodWithHttpOperationResponse(appName: string, ownerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
-
-    /**
-     * Delete an app
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {null} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {null} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    deleteMethod(appName: string, ownerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
-    deleteMethod(appName: string, ownerName: string, callback: ServiceCallback<void>): void;
-    deleteMethod(appName: string, ownerName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-
-
-    /**
-     * Creates a new app and returns it to the caller
-     *
-     * @param {object} app The data for the app
-     *
-     * @param {string} [app.description] A short text describing the app
-     *
-     * @param {string} app.displayName The descriptive name of the app. This can
-     * contain any characters
-     *
-     * @param {string} [app.name] The name of the app used in URLs
-     *
-     * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
-     *
-     * @param {string} app.platform The platform of the app. Possible values
-     * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin'
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    createWithHttpOperationResponse(app: models.AppRequest, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
-
-    /**
-     * Creates a new app and returns it to the caller
-     *
-     * @param {object} app The data for the app
-     *
-     * @param {string} [app.description] A short text describing the app
-     *
-     * @param {string} app.displayName The descriptive name of the app. This can
-     * contain any characters
-     *
-     * @param {string} [app.name] The name of the app used in URLs
-     *
-     * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
-     *
-     * @param {string} app.platform The platform of the app. Possible values
-     * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin'
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {AppResponse} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link AppResponse} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    create(app: models.AppRequest, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
-    create(app: models.AppRequest, callback: ServiceCallback<models.AppResponse>): void;
-    create(app: models.AppRequest, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
-
-
-    /**
-     * Returns a list of apps
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.orderBy] The name of the attribute by which to
-     * order the response by. By default, apps are in order of creation. All
-     * results are ordered in ascending order. Possible values include:
-     * 'display_name', 'name'
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    listWithHttpOperationResponse(options?: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse[]>>;
-
-    /**
-     * Returns a list of apps
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.orderBy] The name of the attribute by which to
-     * order the response by. By default, apps are in order of creation. All
-     * results are ordered in ascending order. Possible values include:
-     * 'display_name', 'name'
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Array} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    list(options?: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse[]>;
-    list(callback: ServiceCallback<models.AppResponse[]>): void;
-    list(options: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse[]>): void;
-}
-
-/**
- * @class
  * Releases
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
  */
 export interface Releases {
+
+
+    /**
+     * Return a list of releases for a app a tester has access to.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listTesterWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TesterAppRelease[]>>;
+
+    /**
+     * Return a list of releases for a app a tester has access to.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    listTester(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TesterAppRelease[]>;
+    listTester(ownerName: string, appName: string, callback: ServiceCallback<models.TesterAppRelease[]>): void;
+    listTester(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TesterAppRelease[]>): void;
+
+
+    /**
+     * Return a list of applications that the user has tester permission to with
+     * the latest release for each.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listLatestWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TesterAppWithReleaseResponse[]>>;
+
+    /**
+     * Return a list of applications that the user has tester permission to with
+     * the latest release for each.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    listLatest(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TesterAppWithReleaseResponse[]>;
+    listLatest(callback: ServiceCallback<models.TesterAppWithReleaseResponse[]>): void;
+    listLatest(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TesterAppWithReleaseResponse[]>): void;
 
 
     /**
@@ -3178,7 +2438,7 @@ export interface Releases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listLatestWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BasicReleaseDetailsResponse[]>>;
+    listLatest1WithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BasicReleaseDetailsResponse[]>>;
 
     /**
      * Get the latest release from every distribution group associated with an
@@ -3214,9 +2474,9 @@ export interface Releases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listLatest(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BasicReleaseDetailsResponse[]>;
-    listLatest(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
-    listLatest(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
+    listLatest1(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BasicReleaseDetailsResponse[]>;
+    listLatest1(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
+    listLatest1(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
 
 
     /**
@@ -4476,6 +3736,810 @@ export interface AzureSubscription {
 
 /**
  * @class
+ * Apps
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface Apps {
+
+
+    /**
+     * Creates a new app for the organization and returns it to the caller
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} app The data for the app
+     *
+     * @param {string} [app.description] A short text describing the app
+     *
+     * @param {string} app.displayName The descriptive name of the app. This can
+     * contain any characters
+     *
+     * @param {string} [app.name] The name of the app used in URLs
+     *
+     * @param {string} app.os The OS the app will be running on. Possible values
+     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+     *
+     * @param {string} app.platform The platform of the app. Possible values
+     * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
+     * 'Xamarin'
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    createForOrgWithHttpOperationResponse(orgName: string, app: models.AppRequest, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
+
+    /**
+     * Creates a new app for the organization and returns it to the caller
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} app The data for the app
+     *
+     * @param {string} [app.description] A short text describing the app
+     *
+     * @param {string} app.displayName The descriptive name of the app. This can
+     * contain any characters
+     *
+     * @param {string} [app.name] The name of the app used in URLs
+     *
+     * @param {string} app.os The OS the app will be running on. Possible values
+     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+     *
+     * @param {string} app.platform The platform of the app. Possible values
+     * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
+     * 'Xamarin'
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AppResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AppResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    createForOrg(orgName: string, app: models.AppRequest, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
+    createForOrg(orgName: string, app: models.AppRequest, callback: ServiceCallback<models.AppResponse>): void;
+    createForOrg(orgName: string, app: models.AppRequest, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+
+
+    /**
+     * Returns a list of apps for the organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse[]>>;
+
+    /**
+     * Returns a list of apps for the organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    listForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse[]>;
+    listForOrg(orgName: string, callback: ServiceCallback<models.AppResponse[]>): void;
+    listForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse[]>): void;
+
+
+    /**
+     * Removes the user from the app
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} userEmail The user email of the user to delete
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    removeUserWithHttpOperationResponse(ownerName: string, appName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Removes the user from the app
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} userEmail The user email of the user to delete
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    removeUser(ownerName: string, appName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    removeUser(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<void>): void;
+    removeUser(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Update user permission for the app
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} userEmail The user email of the user to patch
+     *
+     * @param {array} permissions The permissions the user has for the app
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updateUserPermissionsWithHttpOperationResponse(ownerName: string, appName: string, userEmail: string, permissions: string[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Update user permission for the app
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} userEmail The user email of the user to patch
+     *
+     * @param {array} permissions The permissions the user has for the app
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    updateUserPermissions(ownerName: string, appName: string, userEmail: string, permissions: string[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    updateUserPermissions(ownerName: string, appName: string, userEmail: string, permissions: string[], callback: ServiceCallback<void>): void;
+    updateUserPermissions(ownerName: string, appName: string, userEmail: string, permissions: string[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Transfers ownership of an app to a different user or organization
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} destinationOwnerName The name of the owner (user or
+     * organization) to which the app is being transferred
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    transferOwnershipWithHttpOperationResponse(ownerName: string, appName: string, destinationOwnerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
+
+    /**
+     * Transfers ownership of an app to a different user or organization
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} destinationOwnerName The name of the owner (user or
+     * organization) to which the app is being transferred
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AppResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AppResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    transferOwnership(ownerName: string, appName: string, destinationOwnerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
+    transferOwnership(ownerName: string, appName: string, destinationOwnerName: string, callback: ServiceCallback<models.AppResponse>): void;
+    transferOwnership(ownerName: string, appName: string, destinationOwnerName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+
+
+    /**
+     * Returns the testers associated with the app specified with the given app
+     * name which belongs to the given owner.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listTestersWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.UserProfileResponse[]>>;
+
+    /**
+     * Returns the testers associated with the app specified with the given app
+     * name which belongs to the given owner.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    listTesters(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.UserProfileResponse[]>;
+    listTesters(ownerName: string, appName: string, callback: ServiceCallback<models.UserProfileResponse[]>): void;
+    listTesters(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.UserProfileResponse[]>): void;
+
+
+    /**
+     * Returns the details of all teams that have access to the app.
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getTeamsWithHttpOperationResponse(appName: string, ownerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TeamAppResponse[]>>;
+
+    /**
+     * Returns the details of all teams that have access to the app.
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getTeams(appName: string, ownerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TeamAppResponse[]>;
+    getTeams(appName: string, ownerName: string, callback: ServiceCallback<models.TeamAppResponse[]>): void;
+    getTeams(appName: string, ownerName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TeamAppResponse[]>): void;
+
+
+    /**
+     * Return a specific app with the given app name which belongs to the given
+     * owner.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
+
+    /**
+     * Return a specific app with the given app name which belongs to the given
+     * owner.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AppResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AppResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    get(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
+    get(ownerName: string, appName: string, callback: ServiceCallback<models.AppResponse>): void;
+    get(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+
+
+    /**
+     * Partially updates a single app
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.app] The partial data for the app
+     *
+     * @param {string} [options.app.description] A short text describing the app
+     *
+     * @param {string} [options.app.displayName] The display name of the app
+     *
+     * @param {string} [options.app.name] The name of the app used in URLs
+     *
+     * @param {string} [options.app.iconUrl] The string representation of the URL
+     * pointing to the app's icon
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updateWithHttpOperationResponse(appName: string, ownerName: string, options?: { app? : models.AppPatchRequest, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
+
+    /**
+     * Partially updates a single app
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.app] The partial data for the app
+     *
+     * @param {string} [options.app.description] A short text describing the app
+     *
+     * @param {string} [options.app.displayName] The display name of the app
+     *
+     * @param {string} [options.app.name] The name of the app used in URLs
+     *
+     * @param {string} [options.app.iconUrl] The string representation of the URL
+     * pointing to the app's icon
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AppResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AppResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    update(appName: string, ownerName: string, options?: { app? : models.AppPatchRequest, customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
+    update(appName: string, ownerName: string, callback: ServiceCallback<models.AppResponse>): void;
+    update(appName: string, ownerName: string, options: { app? : models.AppPatchRequest, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+
+
+    /**
+     * Delete an app
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteMethodWithHttpOperationResponse(appName: string, ownerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Delete an app
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteMethod(appName: string, ownerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteMethod(appName: string, ownerName: string, callback: ServiceCallback<void>): void;
+    deleteMethod(appName: string, ownerName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Creates a new app and returns it to the caller
+     *
+     * @param {object} app The data for the app
+     *
+     * @param {string} [app.description] A short text describing the app
+     *
+     * @param {string} app.displayName The descriptive name of the app. This can
+     * contain any characters
+     *
+     * @param {string} [app.name] The name of the app used in URLs
+     *
+     * @param {string} app.os The OS the app will be running on. Possible values
+     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+     *
+     * @param {string} app.platform The platform of the app. Possible values
+     * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
+     * 'Xamarin'
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    createWithHttpOperationResponse(app: models.AppRequest, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
+
+    /**
+     * Creates a new app and returns it to the caller
+     *
+     * @param {object} app The data for the app
+     *
+     * @param {string} [app.description] A short text describing the app
+     *
+     * @param {string} app.displayName The descriptive name of the app. This can
+     * contain any characters
+     *
+     * @param {string} [app.name] The name of the app used in URLs
+     *
+     * @param {string} app.os The OS the app will be running on. Possible values
+     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+     *
+     * @param {string} app.platform The platform of the app. Possible values
+     * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
+     * 'Xamarin'
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AppResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AppResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    create(app: models.AppRequest, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
+    create(app: models.AppRequest, callback: ServiceCallback<models.AppResponse>): void;
+    create(app: models.AppRequest, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+
+
+    /**
+     * Returns a list of apps
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.orderBy] The name of the attribute by which to
+     * order the response by. By default, apps are in order of creation. All
+     * results are ordered in ascending order. Possible values include:
+     * 'display_name', 'name'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listWithHttpOperationResponse(options?: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse[]>>;
+
+    /**
+     * Returns a list of apps
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.orderBy] The name of the attribute by which to
+     * order the response by. By default, apps are in order of creation. All
+     * results are ordered in ascending order. Possible values include:
+     * 'display_name', 'name'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    list(options?: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse[]>;
+    list(callback: ServiceCallback<models.AppResponse[]>): void;
+    list(options: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse[]>): void;
+}
+
+/**
+ * @class
  * Organizations
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
@@ -5090,7 +5154,8 @@ export interface Builds {
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} distributionGroupId The distribution group ID
+     * @param {string} distributionGroupId A distribution group ID or a store group
+     * ID
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -5116,7 +5181,8 @@ export interface Builds {
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} distributionGroupId The distribution group ID
+     * @param {string} distributionGroupId A distribution group ID or a store group
+     * ID
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -5493,7 +5559,8 @@ export interface Builds {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.sourceVersion] Version to build
+     * @param {string} [options.sourceVersion] Version to build which represents
+     * the full Git commit reference
      *
      * @param {boolean} [options.debug] Run build in debug mode
      *
@@ -5519,7 +5586,8 @@ export interface Builds {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.sourceVersion] Version to build
+     * @param {string} [options.sourceVersion] Version to build which represents
+     * the full Git commit reference
      *
      * @param {boolean} [options.debug] Run build in debug mode
      *
@@ -6134,84 +6202,6 @@ export interface Crashes {
     listAttachments(crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashAttachment[]>;
     listAttachments(crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashAttachment[]>): void;
     listAttachments(crashId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashAttachment[]>): void;
-
-
-    /**
-     * query azure search
-     *
-     * @param {string} crashGroupId id of a specific group
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} search
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.dateFrom]
-     *
-     * @param {date} [options.dateTo]
-     *
-     * @param {string} [options.appVersion] version
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    searchCrashesWithHttpOperationResponse(crashGroupId: string, ownerName: string, appName: string, search: string, options?: { dateFrom? : Date, dateTo? : Date, appVersion? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
-
-    /**
-     * query azure search
-     *
-     * @param {string} crashGroupId id of a specific group
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} search
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {date} [options.dateFrom]
-     *
-     * @param {date} [options.dateTo]
-     *
-     * @param {string} [options.appVersion] version
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Object} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    searchCrashes(crashGroupId: string, ownerName: string, appName: string, search: string, options?: { dateFrom? : Date, dateTo? : Date, appVersion? : string, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    searchCrashes(crashGroupId: string, ownerName: string, appName: string, search: string, callback: ServiceCallback<any>): void;
-    searchCrashes(crashGroupId: string, ownerName: string, appName: string, search: string, options: { dateFrom? : Date, dateTo? : Date, appVersion? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 
 
     /**
@@ -8698,6 +8688,68 @@ export interface Symbols {
 
 
     /**
+     * Gets the URL to download the symbol
+     *
+     * @param {string} symbolId The ID of the symbol (uuid of the symbol)
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getLocationWithHttpOperationResponse(symbolId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * Gets the URL to download the symbol
+     *
+     * @param {string} symbolId The ID of the symbol (uuid of the symbol)
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getLocation(symbolId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    getLocation(symbolId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    getLocation(symbolId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
      * Marks a symbol by id (uuid) as ignored
      *
      * @param {string} symbolId The ID of the symbol (uuid of the symbol)
@@ -9230,7 +9282,7 @@ export interface SymbolUploads {
      *
      * @param {string} body.symbolType The type of the symbol for the current
      * symbol upload. Possible values include: 'Apple', 'Breakpad',
-     * 'AndroidProguard'
+     * 'AndroidProguard', 'UWP'
      *
      * @param {string} [body.clientCallback] The callback URL that the client can
      * optionally provide to get status updates for the current symbol upload
@@ -9268,7 +9320,7 @@ export interface SymbolUploads {
      *
      * @param {string} body.symbolType The type of the symbol for the current
      * symbol upload. Possible values include: 'Apple', 'Breakpad',
-     * 'AndroidProguard'
+     * 'AndroidProguard', 'UWP'
      *
      * @param {string} [body.clientCallback] The callback URL that the client can
      * optionally provide to get status updates for the current symbol upload
@@ -10428,7 +10480,7 @@ export interface Push {
      * based on which column
      *
      * @param {string} [options.inlinecount] Controls whether or not to include a
-     * count of all the items accross all pages. Possible values include:
+     * count of all the items across all pages. Possible values include:
      * 'allpages', 'none'
      *
      * @param {boolean} [options.includeArchived] Include arhived push
@@ -10465,7 +10517,7 @@ export interface Push {
      * based on which column
      *
      * @param {string} [options.inlinecount] Controls whether or not to include a
-     * count of all the items accross all pages. Possible values include:
+     * count of all the items across all pages. Possible values include:
      * 'allpages', 'none'
      *
      * @param {boolean} [options.includeArchived] Include arhived push
@@ -11145,6 +11197,74 @@ export interface StoreReleases {
 
 
     /**
+     * Return the Real time Status publishing of release from store.
+     *
+     * @param {string} storeName The name of the store
+     *
+     * @param {number} releaseId The id of the release
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ReleaseRealTimeStatusResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getRealTimeStatusByReleaseIdWithHttpOperationResponse(storeName: string, releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ReleaseRealTimeStatusResponse>>;
+
+    /**
+     * Return the Real time Status publishing of release from store.
+     *
+     * @param {string} storeName The name of the store
+     *
+     * @param {number} releaseId The id of the release
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ReleaseRealTimeStatusResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ReleaseRealTimeStatusResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ReleaseRealTimeStatusResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getRealTimeStatusByReleaseId(storeName: string, releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ReleaseRealTimeStatusResponse>;
+    getRealTimeStatusByReleaseId(storeName: string, releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<models.ReleaseRealTimeStatusResponse>): void;
+    getRealTimeStatusByReleaseId(storeName: string, releaseId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseRealTimeStatusResponse>): void;
+
+
+    /**
      * Return the Error Details of release which failed in publishing.
      *
      * @param {string} storeName The name of the store
@@ -11162,11 +11282,11 @@ export interface StoreReleases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ReleasePublishErrorResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getPublishErrorWithHttpOperationResponse(storeName: string, releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    getPublishErrorWithHttpOperationResponse(storeName: string, releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ReleasePublishErrorResponse>>;
 
     /**
      * Return the Error Details of release which failed in publishing.
@@ -11191,7 +11311,7 @@ export interface StoreReleases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Object} - The deserialized result object.
+     *                      @resolve {ReleasePublishErrorResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -11199,15 +11319,17 @@ export interface StoreReleases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *                      {ReleasePublishErrorResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ReleasePublishErrorResponse} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getPublishError(storeName: string, releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    getPublishError(storeName: string, releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    getPublishError(storeName: string, releaseId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getPublishError(storeName: string, releaseId: number, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ReleasePublishErrorResponse>;
+    getPublishError(storeName: string, releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<models.ReleasePublishErrorResponse>): void;
+    getPublishError(storeName: string, releaseId: number, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleasePublishErrorResponse>): void;
 
 
     /**
@@ -11294,11 +11416,11 @@ export interface StoreReleases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+    deleteMethodWithHttpOperationResponse(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * delete the release with release Id
@@ -11323,7 +11445,7 @@ export interface StoreReleases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *                      @resolve {null} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -11331,16 +11453,15 @@ export interface StoreReleases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorDetails} for more information.
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
-    deleteMethod(storeName: string, releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
-    deleteMethod(storeName: string, releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteMethod(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteMethod(storeName: string, releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+    deleteMethod(storeName: string, releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -11359,11 +11480,11 @@ export interface StoreReleases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    listWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.StoresBasicReleaseDetails[]>>;
 
     /**
      * Return all releases published  in a store
@@ -11386,7 +11507,7 @@ export interface StoreReleases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Object} - The deserialized result object.
+     *                      @resolve {Array} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -11394,15 +11515,15 @@ export interface StoreReleases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    list(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    list(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    list(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.StoresBasicReleaseDetails[]>;
+    list(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<models.StoresBasicReleaseDetails[]>): void;
+    list(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.StoresBasicReleaseDetails[]>): void;
 
 
     /**
@@ -11479,7 +11600,7 @@ export interface Stores {
     /**
      * Return the store details for specified store name.
      *
-     * @param {string} storeName The id of the store
+     * @param {string} storeName The name of the store
      *
      * @param {string} ownerName The name of the owner
      *
@@ -11492,16 +11613,16 @@ export interface Stores {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ExternalStoreResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    getWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExternalStoreResponse>>;
 
     /**
      * Return the store details for specified store name.
      *
-     * @param {string} storeName The id of the store
+     * @param {string} storeName The name of the store
      *
      * @param {string} ownerName The name of the owner
      *
@@ -11519,7 +11640,7 @@ export interface Stores {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Object} - The deserialized result object.
+     *                      @resolve {ExternalStoreResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -11527,15 +11648,16 @@ export interface Stores {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *                      {ExternalStoreResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ExternalStoreResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    get(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    get(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    get(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExternalStoreResponse>;
+    get(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<models.ExternalStoreResponse>): void;
+    get(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExternalStoreResponse>): void;
 
 
     /**
@@ -11554,11 +11676,11 @@ export interface Stores {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+    deleteMethodWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * delete the store based on specific store name.
@@ -11581,7 +11703,7 @@ export interface Stores {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *                      @resolve {null} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -11589,16 +11711,15 @@ export interface Stores {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorDetails} for more information.
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
-    deleteMethod(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
-    deleteMethod(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteMethod(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteMethod(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+    deleteMethod(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -11673,11 +11794,11 @@ export interface Stores {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<ExternalStoreResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(body: models.ExternalStoreRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    createWithHttpOperationResponse(body: models.ExternalStoreRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExternalStoreResponse>>;
 
     /**
      * Create a new external store for the specified application.
@@ -11756,7 +11877,7 @@ export interface Stores {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Object} - The deserialized result object.
+     *                      @resolve {ExternalStoreResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -11764,15 +11885,16 @@ export interface Stores {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *                      {ExternalStoreResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ExternalStoreResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(body: models.ExternalStoreRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    create(body: models.ExternalStoreRequest, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    create(body: models.ExternalStoreRequest, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    create(body: models.ExternalStoreRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExternalStoreResponse>;
+    create(body: models.ExternalStoreRequest, ownerName: string, appName: string, callback: ServiceCallback<models.ExternalStoreResponse>): void;
+    create(body: models.ExternalStoreRequest, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExternalStoreResponse>): void;
 
 
     /**
@@ -14105,11 +14227,11 @@ export interface AppleMapping {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    testFlightGroupsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    testFlightGroupsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppleTestFlightGroupsResponse[]>>;
 
     /**
      * Fetch all apple test flight groups
@@ -14130,7 +14252,7 @@ export interface AppleMapping {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Object} - The deserialized result object.
+     *                      @resolve {Array} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -14138,15 +14260,15 @@ export interface AppleMapping {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    testFlightGroups(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    testFlightGroups(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    testFlightGroups(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    testFlightGroups(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppleTestFlightGroupsResponse[]>;
+    testFlightGroups(ownerName: string, appName: string, callback: ServiceCallback<models.AppleTestFlightGroupsResponse[]>): void;
+    testFlightGroups(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppleTestFlightGroupsResponse[]>): void;
 
 
     /**
@@ -14163,11 +14285,11 @@ export interface AppleMapping {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<AppleMappingResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    getWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppleMappingResponse>>;
 
     /**
      * Get mapping of apple app to an existing app in apple store.
@@ -14188,7 +14310,7 @@ export interface AppleMapping {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Object} - The deserialized result object.
+     *                      @resolve {AppleMappingResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -14196,15 +14318,16 @@ export interface AppleMapping {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *                      {AppleMappingResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AppleMappingResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    get(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    get(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    get(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppleMappingResponse>;
+    get(ownerName: string, appName: string, callback: ServiceCallback<models.AppleMappingResponse>): void;
+    get(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppleMappingResponse>): void;
 
 
     /**
@@ -14221,11 +14344,11 @@ export interface AppleMapping {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+    deleteMethodWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * Delete mapping of apple app to an existing app in apple store.
@@ -14246,7 +14369,7 @@ export interface AppleMapping {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *                      @resolve {null} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -14254,16 +14377,15 @@ export interface AppleMapping {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link ErrorDetails} for more information.
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
-    deleteMethod(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
-    deleteMethod(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteMethod(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteMethod(ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+    deleteMethod(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -14296,11 +14418,11 @@ export interface AppleMapping {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<AppleMappingResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(body: models.AppleMappingRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    createWithHttpOperationResponse(body: models.AppleMappingRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppleMappingResponse>>;
 
     /**
      * Create a mapping for an existing app in apple store for the specified
@@ -14337,7 +14459,7 @@ export interface AppleMapping {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Object} - The deserialized result object.
+     *                      @resolve {AppleMappingResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -14345,15 +14467,16 @@ export interface AppleMapping {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *                      {AppleMappingResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AppleMappingResponse} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(body: models.AppleMappingRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    create(body: models.AppleMappingRequest, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    create(body: models.AppleMappingRequest, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    create(body: models.AppleMappingRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppleMappingResponse>;
+    create(body: models.AppleMappingRequest, ownerName: string, appName: string, callback: ServiceCallback<models.AppleMappingResponse>): void;
+    create(body: models.AppleMappingRequest, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppleMappingResponse>): void;
 }
 
 /**
@@ -15680,7 +15803,7 @@ export interface Analytics {
      * pagination.
      *
      * @param {string} [options.inlinecount] Controls whether or not to include a
-     * count of all the items accross all pages. Possible values include:
+     * count of all the items across all pages. Possible values include:
      * 'allpages', 'none'
      *
      * @param {string} [options.orderby] controls the sorting order and sorting
@@ -15723,7 +15846,7 @@ export interface Analytics {
      * pagination.
      *
      * @param {string} [options.inlinecount] Controls whether or not to include a
-     * count of all the items accross all pages. Possible values include:
+     * count of all the items across all pages. Possible values include:
      * 'allpages', 'none'
      *
      * @param {string} [options.orderby] controls the sorting order and sorting

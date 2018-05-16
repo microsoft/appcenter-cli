@@ -1,17 +1,13 @@
 import { AppCenterClient, models, clientCall, clientRequest } from "../../../util/apis";
-import { out } from "../../../util/interaction";
-import { getUser } from "../../../util/profile";
 import { progressWithResult } from "./interaction";
 import { TestManifest, TestRunFile } from "./test-manifest";
 import { TestManifestReader } from "./test-manifest-reader";
 import { AppValidator } from "./app-validator";
-import { parseRange, getByteRange } from "./byte-range-helper";
-import { getDSymFile } from "./dsym-dir-helper";
 import { getOrgsNamesList } from "../../orgs/lib/org-users-helper";
 import * as PortalHelper from "../../../util/portal/portal-helper";
 import * as _ from "lodash";
 import * as fs from "fs";
-import * as http from 'http';
+import * as http from "http";
 import * as path from "path";
 import * as request from "request";
 
@@ -35,8 +31,7 @@ export class TestCloudUploader {
   private readonly _portalBaseUrl : string;
 
   public appPath: string;
-  public dSymPath: string;
-  public testParameters: { [key:string]: any };
+  public testParameters: { [key: string]: any };
   public testSeries: string;
   public language: string;
   public locale: string;
@@ -70,34 +65,28 @@ export class TestCloudUploader {
   }
 
   public async uploadAndStart(): Promise<StartedTestRun> {
-    let orgs = await getOrgsNamesList(this._client);
+    const orgs = await getOrgsNamesList(this._client);
     let isOrg = false;
-    for (let org of orgs) {
-      if (org.name === this._userName)
-      {
+    for (const org of orgs) {
+      if (org.name === this._userName) {
         isOrg = true;
       }
     }
-    
-    let manifest = await progressWithResult<TestManifest>(
+
+    const manifest = await progressWithResult<TestManifest>(
       "Validating arguments",
       this.validateAndParseManifest());
 
-    let testRun = await progressWithResult("Creating new test run", this.createTestRun(isOrg));
+    const testRun = await progressWithResult("Creating new test run", this.createTestRun(isOrg));
     debug(`Test run id: ${testRun.testRunId}`);
 
-    let appFile = await progressWithResult("Validating application file", this.validateAndCreateAppFile(manifest));
+    const appFile = await progressWithResult("Validating application file", this.validateAndCreateAppFile(manifest));
 
-    let allFiles = _.concat(manifest.testFiles, [appFile]);
-
-    if (this.dSymPath) {
-      let dSymFile = await progressWithResult("Validating DSym file", getDSymFile(this.dSymPath));
-      allFiles.push(dSymFile);
-    }
+    const allFiles = _.concat(manifest.testFiles, [appFile]);
 
     await progressWithResult("Uploading files", this.uploadFilesUsingBatch(testRun.testRunId, allFiles));
 
-    let startResult = await progressWithResult("Starting test run", this.startTestRun(testRun.testRunId, manifest));
+    const startResult = await progressWithResult("Starting test run", this.startTestRun(testRun.testRunId, manifest));
 
     testRun.acceptedDevices = startResult.acceptedDevices || [];
     testRun.rejectedDevices = startResult.rejectedDevices || [];
@@ -107,13 +96,12 @@ export class TestCloudUploader {
 
   private async validateAndParseManifest(): Promise<TestManifest> {
     return await TestManifestReader.readFromFile(this._manifestPath);
-  };
+  }
 
   private async validateAndCreateAppFile(manifest: TestManifest): Promise<TestRunFile> {
-    let result = manifest.applicationFile ?
+    const result = manifest.applicationFile ?
       manifest.applicationFile
-      : await TestRunFile.create(this.appPath, path.basename(this.appPath), "app-file")
-
+      : await TestRunFile.create(this.appPath, path.basename(this.appPath), "app-file");
 
     if (!result) {
       throw new Error("If test manifest doesn't contain path to application file, it must be provided using --app-path option");
@@ -132,10 +120,9 @@ export class TestCloudUploader {
          (err: Error, _result: any, _request: any, response: http.IncomingMessage) => {
           if (err) {
             reject(err);
-          }
-          else {
-            let location: string = response.headers["location"];
-            let testRunId = _.last(location.split("/"));
+          } else {
+            const location: string = response.headers["location"];
+            const testRunId = _.last(location.split("/"));
             resolve({
                 acceptedDevices: [],
                 rejectedDevices: [],
@@ -148,20 +135,20 @@ export class TestCloudUploader {
   }
 
   private async uploadFilesUsingBatch(testRunId: string, files: TestRunFile[]): Promise<void> {
-    let checkHashesResult = await this.uploadHashesBatch(testRunId, files.map(f => { return { file: f }; }));
+    const checkHashesResult = await this.uploadHashesBatch(testRunId, files.map((f) => { return { file: f }; }));
 
-    let limit = pLimit(paralleRequests);
-    let uploadNewFilesTasks = checkHashesResult
-      .filter(r => r.response.uploadStatus.statusCode === 412)
-      .map(r => limit(() => this.uploadFile(testRunId, r.file)));
+    const limit = pLimit(paralleRequests);
+    const uploadNewFilesTasks = checkHashesResult
+      .filter((r) => r.response.uploadStatus.statusCode === 412)
+      .map((r) => limit(() => this.uploadFile(testRunId, r.file)));
 
     await Promise.all(uploadNewFilesTasks);
   }
 
   private async uploadHashesBatch(testRunId: string, files: { file: TestRunFile, byteRange?: string }[]): Promise<{ file: TestRunFile, response: models.TestCloudFileHashResponse }[]> {
-    let mappedFiles = files.map(f => this.testRunFileToFileHash(f.file, f.byteRange));
+    const mappedFiles = files.map((f) => this.testRunFileToFileHash(f.file, f.byteRange));
 
-    let clientResponse = await clientRequest<models.TestCloudFileHashResponse[]>(cb => {
+    const clientResponse = await clientRequest<models.TestCloudFileHashResponse[]>((cb) => {
       this._client.test.uploadHashesBatch(
         testRunId,
         mappedFiles,
@@ -182,7 +169,7 @@ export class TestCloudUploader {
   }
 
   private async uploadFile(testRunId: string, file: TestRunFile): Promise<void> {
-    let directUrl = await this.getDirectUploadUrl(this._client, testRunId, file);
+    const directUrl = await this.getDirectUploadUrl(this._client, testRunId, file);
     await this.makeDirectUpload(directUrl, file);
   }
 
@@ -195,9 +182,8 @@ export class TestCloudUploader {
         (err, _result, _request, response) => {
           if (err) {
             reject(err);
-          }
-          else {
-            let location: string = response.headers["location"];
+          } else {
+            const location: string = response.headers["location"];
             resolve(location);
           }
         }
@@ -208,7 +194,7 @@ export class TestCloudUploader {
   private async makeDirectUpload(directUrl: string, file: TestRunFile): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       try {
-        let formData = {
+        const formData = {
           relative_path: file.targetRelativePath,
           file: fs.createReadStream(file.sourcePath),
           file_type: file.fileType
@@ -221,26 +207,23 @@ export class TestCloudUploader {
           (err, response, body) => {
             if (err) {
               reject(err);
-            }
-            else if (response.statusCode >= 400) {
+            } else if (response.statusCode >= 400) {
               reject(new Error(`Cannot upload file. Response: ${response.statusCode}; Message: ${body}`));
-            }
-            else {
+            } else {
               resolve();
             }
           }
         );
-      }
-      catch (err) {
+      } catch (err) {
         reject(err);
       }
     });
   }
 
   private startTestRun(testRunId: string, manifest: TestManifest): Promise<models.TestCloudStartTestRunResult> {
-    let allTestParameters = _.merge(manifest.testFramework.data || { }, this.testParameters || { });
+    const allTestParameters = _.merge(manifest.testFramework.data || { }, this.testParameters || { });
 
-    let startOptions: models.TestCloudStartTestRunOptions = {
+    const startOptions: models.TestCloudStartTestRunOptions = {
       testFramework: manifest.testFramework.name,
       deviceSelection: this._devices,
       locale: this.locale,
@@ -249,7 +232,7 @@ export class TestCloudUploader {
       testParameters: allTestParameters
     };
 
-    return clientCall(cb => {
+    return clientCall((cb) => {
       this._client.test.startTestRun(
         testRunId,
         startOptions,

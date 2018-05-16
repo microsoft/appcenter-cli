@@ -1,24 +1,21 @@
-import { parseRange, getByteRange, IByteRange } from "../../../../src/commands/test/lib/byte-range-helper";
+import { parseRange, getByteRange } from "../../../../src/commands/test/lib/byte-range-helper";
 import { expect } from "chai";
-import * as temp from "temp";
-import * as fs from "fs";
 import * as pfs from "../../../../src/util/misc/promisfied-fs";
 
 async function createFileWithByteRange(start: number, range: number[], totalSize: number): Promise<string> {
-  let pathAndFd = await pfs.openTempFile("byte_range_test");
+  const pathAndFd = await pfs.openTempFile("byte_range_test");
   try {
     if (start > 0) {
       await appendData(pathAndFd.fd, getRandomBytes(start));
-    }    
+    }
     await appendData(pathAndFd.fd, range);
-    
-    let remaining = totalSize - start - range.length;
+
+    const remaining = totalSize - start - range.length;
     if (remaining > 0) {
       await appendData(pathAndFd.fd, getRandomBytes(remaining));
     }
     await pfs.close(pathAndFd.fd);
-  }
-  catch (err) {
+  } catch (err) {
     await pfs.close(pathAndFd.fd);
     await pfs.unlink(pathAndFd.path);
     throw err;
@@ -28,9 +25,10 @@ async function createFileWithByteRange(start: number, range: number[], totalSize
 }
 
 function getRandomBytes(length: number): number[] {
-  let result: number[] = [];
-  
+  const result: number[] = [];
+
   for (let i = 0; i < length; i++) {
+    /* tslint:disable-next-line:insecure-random */
     result.push(Math.floor(Math.random() * 256));
   }
 
@@ -46,7 +44,7 @@ describe("parseRange", () => {
     expect(parseRange("1-10")).to.deep.equal({ start: 1, length: 10 });
     expect(parseRange("2-3")).to.deep.equal({ start: 2, length: 2 });
     expect(parseRange("1-1")).to.deep.equal({ start: 1, length: 1 });
-    expect(parseRange("1024-2048")).to.deep.equal({ start: 1024, length: 1025 }); 
+    expect(parseRange("1024-2048")).to.deep.equal({ start: 1024, length: 1025 });
   });
 
   it("should throw if range is incorrect", () => {
@@ -59,10 +57,10 @@ describe("parseRange", () => {
 
 describe("getByteRange", () => {
   it("should return correct range is within file size", async () => {
-    let expectedRange = [ 1, 1, 3, 4, 5 ];
-    let testFile = await createFileWithByteRange(10, expectedRange, 1024);
+    const expectedRange = [ 1, 1, 3, 4, 5 ];
+    const testFile = await createFileWithByteRange(10, expectedRange, 1024);
     try {
-      let actualRange = await getByteRange(testFile, 10, expectedRange.length);
+      const actualRange = await getByteRange(testFile, 10, expectedRange.length);
       expect(actualRange).to.deep.equal(expectedRange);
     }
     finally {
@@ -71,10 +69,10 @@ describe("getByteRange", () => {
   });
 
   it("should remove bytes outside of file size", async () => {
-    let expectedRange = [ 1, 1, 3 ];
-    let testFile = await createFileWithByteRange(0, expectedRange, expectedRange.length);
+    const expectedRange = [ 1, 1, 3 ];
+    const testFile = await createFileWithByteRange(0, expectedRange, expectedRange.length);
     try {
-      let actualRange = await getByteRange(testFile, 0, 1024);
+      const actualRange = await getByteRange(testFile, 0, 1024);
       expect(actualRange).to.deep.equal(expectedRange);
     }
     finally {
@@ -82,4 +80,3 @@ describe("getByteRange", () => {
     }
   });
 });
-

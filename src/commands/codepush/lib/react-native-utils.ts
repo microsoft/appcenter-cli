@@ -5,12 +5,12 @@ import * as xml2js from "xml2js";
 import { out } from "../../../util/interaction";
 import { isValidVersion } from "./validation-utils";
 import { fileDoesNotExistOrIsDirectory } from "./file-utils";
-var plist = require("plist");
-var g2js = require("gradle-to-js/lib/parser");
-var properties = require("properties");
-var childProcess = require("child_process");
+const plist = require("plist");
+const g2js = require("gradle-to-js/lib/parser");
+const properties = require("properties");
+const childProcess = require("child_process");
 
-export var spawn = childProcess.spawn;
+export let spawn = childProcess.spawn;
 
 export interface VersionSearchParams {
   os: string; // ios or android
@@ -21,12 +21,12 @@ export interface VersionSearchParams {
 
 export async function getReactNativeProjectAppVersion(versionSearchParams: VersionSearchParams, projectRoot?: string): Promise<string> {
   projectRoot = projectRoot || process.cwd();
-  var projectPackageJson: any = require(path.join(projectRoot, "package.json"));
-  var projectName: string = projectPackageJson.name;
+  /* tslint:disable-next-line:non-literal-require */
+  const projectPackageJson: any = require(path.join(projectRoot, "package.json"));
+  const projectName: string = projectPackageJson.name;
 
   const fileExists = (file: string): boolean => {
-    try { return fs.statSync(file).isFile() }
-    catch (e) { return false }
+    try { return fs.statSync(file).isFile(); } catch (e) { return false; }
   };
 
   out.text(chalk.cyan(`Detecting ${versionSearchParams.os} app version:\n`));
@@ -55,7 +55,7 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         path.join(iOSDirectory, plistFileName)
       ];
 
-      resolvedPlistFile = (<any>knownLocations).find(fileExists);
+      resolvedPlistFile = (knownLocations as any).find(fileExists);
 
       if (!resolvedPlistFile) {
         throw new Error(`Unable to find either of the following plist files in order to infer your app's binary version: "${knownLocations.join("\", \"")}". If your plist has a different name, or is located in a different directory, consider using either the "--plist-file" or "--plist-file-prefix" parameters to help inform the CLI how to find it.`);
@@ -64,8 +64,9 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
 
     const plistContents = fs.readFileSync(resolvedPlistFile).toString();
 
+    let parsedPlist: any;
     try {
-      var parsedPlist = plist.parse(plistContents);
+      parsedPlist = plist.parse(plistContents);
     } catch (e) {
       throw new Error(`Unable to parse "${resolvedPlistFile}". Please ensure it is a well-formed plist file.`);
     }
@@ -105,8 +106,8 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         // In this case 'buildGradle.android' prop represents array instead of object
         // due to parsing issue in 'g2js.parseFile' method.
         if (buildGradle.android instanceof Array) {
-          for (var i = 0; i < buildGradle.android.length; i++) {
-            var gradlePart = buildGradle.android[i];
+          for (let i = 0; i < buildGradle.android.length; i++) {
+            const gradlePart = buildGradle.android[i];
             if (gradlePart.defaultConfig && gradlePart.defaultConfig.versionName) {
               versionName = gradlePart.defaultConfig.versionName;
               break;
@@ -142,8 +143,8 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         ];
 
         // Search for gradle properties across all `gradle.properties` files
-        var propertiesFile: string = null;
-        for (var i = 0; i < knownLocations.length; i++) {
+        let propertiesFile: string = null;
+        for (let i = 0; i < knownLocations.length; i++) {
           propertiesFile = knownLocations[i];
           if (fileExists(propertiesFile)) {
             const propertiesContent: string = fs.readFileSync(propertiesFile).toString();
@@ -171,10 +172,13 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         return appVersion.toString();
       });
   } else {
-    var appxManifestFileName: string = "Package.appxmanifest";
+    const appxManifestFileName: string = "Package.appxmanifest";
+    let appxManifestContents: string;
+    let appxManifestContainingFolder: string;
+
     try {
-      var appxManifestContainingFolder: string = path.join("windows", projectName);
-      var appxManifestContents: string = fs.readFileSync(path.join(appxManifestContainingFolder, appxManifestFileName)).toString();
+      appxManifestContainingFolder = path.join("windows", projectName);
+      appxManifestContents = fs.readFileSync(path.join(appxManifestContainingFolder, appxManifestFileName)).toString();
     } catch (err) {
       throw new Error(`Unable to find or read "${appxManifestFileName}" in the "${path.join("windows", projectName)}" folder.`);
     }
@@ -185,7 +189,7 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
           return;
         }
         try {
-          let appVersion: string = parsedAppxManifest.Package.Identity[0]["$"].Version.match(/^\d+\.\d+\.\d+/)[0];
+          const appVersion: string = parsedAppxManifest.Package.Identity[0]["$"].Version.match(/^\d+\.\d+\.\d+/)[0];
           out.text(`Using the target binary version value "${appVersion}" from the "Identity" key in the "${appxManifestFileName}" file.\n`);
           return resolve(appVersion);
         } catch (e) {
@@ -198,8 +202,8 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
 }
 
 export function runReactNativeBundleCommand(bundleName: string, development: boolean, entryFile: string, outputFolder: string, platform: string, sourcemapOutput: string): Promise<void> {
-  let reactNativeBundleArgs: string[] = [];
-  let envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
+  const reactNativeBundleArgs: string[] = [];
+  const envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
 
   if (typeof envNodeArgs !== "undefined") {
       Array.prototype.push.apply(reactNativeBundleArgs, envNodeArgs.trim().split(/\s+/));
@@ -219,7 +223,7 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
   }
 
   out.text(chalk.cyan("Running \"react-native bundle\" command:\n"));
-  var reactNativeBundleProcess = spawn("node", reactNativeBundleArgs);
+  const reactNativeBundleProcess = spawn("node", reactNativeBundleArgs);
   out.text(`node ${reactNativeBundleArgs.join(" ")}`);
 
   return new Promise<void>((resolve, reject) => {
@@ -236,7 +240,7 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
               reject(new Error(`"react-native bundle" command exited with code ${exitCode}.`));
           }
 
-          resolve(<void>null);
+          resolve(null as void);
       });
   });
 }
@@ -253,13 +257,14 @@ export function isValidOS(os: string): boolean {
 }
 
 export function isValidPlatform(platform: string): boolean {
-  return platform.toLowerCase() == "react-native";
+  return platform.toLowerCase() === "react-native";
 }
 
 export function isReactNativeProject(): boolean {
   try {
-    var projectPackageJson: any = require(path.join(process.cwd(), "package.json"));
-    var projectName: string = projectPackageJson.name;
+    /* tslint:disable-next-line:non-literal-require */
+    const projectPackageJson: any = require(path.join(process.cwd(), "package.json"));
+    const projectName: string = projectPackageJson.name;
     if (!projectName) {
       throw new Error(`The "package.json" file in the CWD does not have the "name" field set.`);
     }

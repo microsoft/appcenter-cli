@@ -26,7 +26,8 @@ class SymbolUpload {
    * values include: 'created', 'committed', 'aborted', 'processing',
    * 'indexed', 'failed'
    * @member {string} symbolType The type of the symbol for the current symbol
-   * upload. Possible values include: 'Apple', 'Breakpad', 'AndroidProguard'
+   * upload. Possible values include: 'Apple', 'Breakpad', 'AndroidProguard',
+   * 'UWP'
    * @member {array} [symbolsUploaded] The symbols found in the upload
    * @member {string} [origin] The origin of the symbol upload. Possible values
    * include: 'User', 'System'

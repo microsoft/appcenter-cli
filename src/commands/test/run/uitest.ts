@@ -1,8 +1,10 @@
-import { CommandArgs, help, name, longName, hasArg, ErrorCodes, required } from "../../../util/commandline";
+import * as pfs from "../../../util/misc/promisfied-fs";
+import { generateAbsolutePath } from "../../../util/misc/fs-helper";
+import * as path from "path";
+import { NUnitXmlUtil } from "../lib/nunit-xml-util";
+import { CommandArgs, help, longName, hasArg } from "../../../util/commandline";
 import { RunTestsCommand } from "../lib/run-tests-command";
 import { UITestPreparer } from "../lib/uitest-preparer";
-import { parseTestParameters } from "../lib/parameters-parser";
-import { parseIncludedFiles } from "../lib/included-files-parser";
 import { Messages } from "../lib/help-messages";
 import { out } from "../../../util/interaction";
 
@@ -64,19 +66,17 @@ export default class RunUITestsCommand extends RunTestsCommand {
   @hasArg
   excludeCategory: string[];
 
-  @help(Messages.TestCloud.Arguments.NUnitXml)
-  @longName("nunit-xml")
+  @help(Messages.TestCloud.Arguments.MergeNUnitXml)
+  @longName("merge-nunit-xml")
   @hasArg
-  nunitXml: string;
+  mergeNUnitXml: string;
 
   @help(Messages.TestCloud.Arguments.TestChunk)
   @longName("test-chunk")
-  @hasArg
   testChunk: boolean;
 
   @help(Messages.TestCloud.Arguments.FixtureChunk)
   @longName("fixture-chunk")
-  @hasArg
   fixtureChunk: boolean;
 
   constructor(args: CommandArgs) {
@@ -89,17 +89,25 @@ export default class RunUITestsCommand extends RunTestsCommand {
 
   protected async validateOptions(): Promise<void> {
     if (this.assemblyDir && !this.buildDir) {
-      out.text("Argument --assembly-dir is obsolete. Please use --build-dir instead.")
+      out.text("Argument --assembly-dir is obsolete. Please use --build-dir instead.");
       this.buildDir = this.assemblyDir;
     }
 
     if (!this.buildDir) {
-      throw new Error("Argument --build-dir is required");
+      throw new Error("Argument --build-dir is required.");
+    }
+
+    if (this.testChunk && this.fixtureChunk) {
+      throw new Error("Arguments --fixture-chunk and test-chunk cannot be combined.");
+    }
+
+    if (!this.testOutputDir && this.mergeNUnitXml) {
+      throw new Error("Argument --test-output-dir is required for argument --merge-nunit-xml");
     }
   }
 
   protected prepareManifest(artifactsDir: string): Promise<string> {
-    let preparer = new UITestPreparer(artifactsDir, this.buildDir, this.appPath);
+    const preparer = new UITestPreparer(artifactsDir, this.buildDir, this.appPath);
 
     preparer.storeFile = this.storePath;
     preparer.storePassword = this.storePassword;
@@ -109,14 +117,44 @@ export default class RunUITestsCommand extends RunTestsCommand {
     preparer.fixture = this.fixture;
     preparer.includeCategory = this.includeCategory;
     preparer.excludeCategory = this.excludeCategory;
-    preparer.nunitXml = this.nunitXml;
     preparer.testChunk = this.testChunk;
     preparer.fixtureChunk = this.fixtureChunk;
 
     return preparer.prepare();
   }
 
+  protected getParametersFromOptions() : {} {
+    if (this.fixtureChunk) {
+        return {chunker : "fixture"};
+    } else if (this.testChunk) {
+      return {chunker : "method"};
+    }
+    return {};
+  }
+
   protected getSourceRootDir() {
     return this.buildDir;
+  }
+
+  protected async mergeTestArtifacts(): Promise<void> {
+    if (!this.mergeNUnitXml) {
+      return;
+    }
+
+    const reportPath: string = generateAbsolutePath(this.testOutputDir);
+    if (!reportPath) {
+      return;
+    }
+
+    const xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
+    const pathToArchive: string = path.join(reportPath, xmlUtil.getArchiveName());
+
+    const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
+
+    if (!xml) {
+      throw new Error(`Couldn't merge xml test results to ${this.mergeNUnitXml}`);
+    }
+
+    return pfs.writeFile(path.join(reportPath, this.mergeNUnitXml), xml);
   }
 }

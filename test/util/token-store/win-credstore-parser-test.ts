@@ -19,20 +19,12 @@
 //
 
 import * as _ from "lodash";
-import * as childProcess from "child_process";
 import * as es from "event-stream";
 import * as os from "os";
-import * as util from "util";
 import { expect } from "chai";
 import { createParsingStream } from "../../../src/util/token-store/win32/win-credstore-parser";
-import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../../../src/util/token-store";
+import { TokenEntry } from "../../../src/util/token-store";
 import { WinTokenStore } from "../../../src/util/token-store/win32/win-token-store";
-
-import { inspect } from "util";
-
-interface DoneFunc {
-  (err?: Error): void;
-}
 
 // Dummy data for parsing tests
 const entries = {
@@ -51,18 +43,18 @@ User Name: creds.exe
 Credential: 00010203AABBCCDD`
 };
 
-describe('credstore output parsing', function () {
+describe("credstore output parsing", function () {
   let parsingResult: any[];
 
   function parseEntries(entryString: string): Promise<void> {
     parsingResult = [];
-    let dataSource = es.through();
+    const dataSource = es.through();
     return new Promise<void>((resolve, reject) => {
-      let parser = dataSource.pipe(createParsingStream());
-      parser.on('data', function (data: any): void {
+      const parser = dataSource.pipe(createParsingStream());
+      parser.on("data", function (data: any): void {
         parsingResult.push(data);
       });
-      parser.on('end', function (): void {
+      parser.on("end", function (): void {
         resolve();
       });
 
@@ -71,71 +63,71 @@ describe('credstore output parsing', function () {
     });
   }
 
-  describe('one entry without password', function () {
+  describe("one entry without password", function () {
     before(function () {
       return parseEntries(entries.entry1 + os.EOL);
     });
 
-    it('should have one result', function () {
+    it("should have one result", function () {
       expect(parsingResult).to.have.length(1);
     });
 
-    it('should have expected target', function () {
+    it("should have expected target", function () {
       expect(parsingResult[0].targetName).to
-        .equal('AppCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/');
+        .equal("AppCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/");
     });
 
-    it('should not have a credential', function () {
-      expect(parsingResult[0]).to.not.have.property('credential');
+    it("should not have a credential", function () {
+      expect(parsingResult[0]).to.not.have.property("credential");
     });
 
-    it('should be generic type', function () {
-      expect(parsingResult[0].type).to.equal('Generic');
+    it("should be generic type", function () {
+      expect(parsingResult[0].type).to.equal("Generic");
     });
 
-    it('should have creds user name', function () {
-      expect(parsingResult[0].userName).to.equal('creds.exe');
+    it("should have creds user name", function () {
+      expect(parsingResult[0].userName).to.equal("creds.exe");
     });
   });
 
-  describe('two entries without passwords', function () {
+  describe("two entries without passwords", function () {
     before(function () {
       return parseEntries(entries.entry1 + os.EOL + os.EOL + entries.entry2);
     });
 
-    it('should have two results', function () {
+    it("should have two results", function () {
       expect(parsingResult).to.have.lengthOf(2);
     });
 
-    it('should have expected targets', function () {
+    it("should have expected targets", function () {
       expect(parsingResult[0].targetName).to
-        .equal('AppCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/');
+        .equal("AppCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/");
       expect(parsingResult[1].targetName).to
-        .equal('AzureXplatCli:target=userId:someotheruser@domain.example::resourceId:https\\://management.core.windows.net/');
+        .equal("AzureXplatCli:target=userId:someotheruser@domain.example::resourceId:https\\://management.core.windows.net/");
     });
   });
 
-  describe('one entry with credential', function () {
+  describe("one entry with credential", function () {
     before(function () {
       return parseEntries(entries.entry1WithCredential + os.EOL);
     });
 
-    it('should have expected credential', function () {
-      expect(parsingResult[0].credential).to.equal('00010203AABBCCDD');
+    it("should have expected credential", function () {
+      expect(parsingResult[0].credential).to.equal("00010203AABBCCDD");
     });
   });
 });
 
-describe('Parsing output of creds child process', function () {
-  if (os.platform() !== 'win32') {
-    console.log('These tests only run on Windows');
+describe("Parsing output of creds child process", function () {
+  if (os.platform() !== "win32") {
+    console.log("These tests only run on Windows");
     return;
   }
 
-  let parseResults: TokenEntry[] = [];
+  const parseResults: TokenEntry[] = [];
   let expectedEntry: TokenEntry = null;
 
-  const testTargetName='mobileCenterTest@org.example';
+  const testTargetName = "mobileCenterTest@org.example";
   const testToken = { id: "id1", token: "Sekret!" };
   const credStore = new WinTokenStore();
 
@@ -153,9 +145,6 @@ describe('Parsing output of creds child process', function () {
   //
   // Helper functions to do each stage of the setup
   //
-  function addExpectedEntry(): Promise<void> {
-    return credStore.set(testTargetName, testToken);
-  }
 
   function runAndParseOutput(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
@@ -177,19 +166,19 @@ describe('Parsing output of creds child process', function () {
     return credStore.remove(testTargetName);
   }
 
-  it('should have entries', function () {
+  it("should have entries", function () {
     expect(parseResults).to.have.length.above(0);
   });
 
-  it('should have expected entry', function () {
+  it("should have expected entry", function () {
     expect(expectedEntry).to.not.be.null;
   });
 
-  it('should have expected credential id', function () {
+  it("should have expected credential id", function () {
     expect(expectedEntry.accessToken.id).to.equal(testToken.id);
   });
 
-  it ('should have expected credential token', function () {
+  it ("should have expected credential token", function () {
     expect(expectedEntry.accessToken.token).to.equal(testToken.token);
-  })
+  });
 });

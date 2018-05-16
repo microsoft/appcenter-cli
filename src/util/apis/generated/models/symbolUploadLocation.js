@@ -7,7 +7,7 @@
 'use strict';
 
 /**
- * Location for downloading symbol
+ * Location for downloading symbol upload
  *
  */
 class SymbolUploadLocation {

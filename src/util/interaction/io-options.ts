@@ -16,18 +16,18 @@ export function setQuiet(): void { quiet = true; }
 let format: "list" | "json" | "csv" = "list";
 
 // Can be used to prevent output which will make output un-parsable
-export function formatIsParsingCompatible(): boolean { return format === "json" || format === "csv"; };
+export function formatIsParsingCompatible(): boolean { return format === "json" || format === "csv"; }
 
 // Key is a string to be passed to "--output" parameter, e.g. "json"
 // Value is a function which can be used to switch to this parameter, e.g. setFormatJson
 export type OutputFormatSupport = { [formatKey: string]: () => void };
 
-export function formatIsJson(): boolean { return format === "json"; };
+export function formatIsJson(): boolean { return format === "json"; }
 export function setFormatJson(): void { format = "json"; }
 
 export function supportsCsv(supportedFormats: OutputFormatSupport): void {
   supportedFormats["csv"] = setFormatCsv;
 }
 
-export function formatIsCsv(): boolean { return format === "csv"; };
+export function formatIsCsv(): boolean { return format === "csv"; }
 export function setFormatCsv(): void { format = "csv"; }

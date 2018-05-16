@@ -2,8 +2,6 @@ import { CommandResult, hasArg, help, longName, required, shortName } from "../.
 import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton";
 import { AppCenterClient } from "../../util/apis";
 
-const debug = require("debug")("appcenter-cli:commands:codepush:release");
-
 @help("Release an update to an app deployment")
 export default class CodePushReleaseCommand extends CodePushReleaseCommandSkeleton {
   @help("Path to update contents folder")

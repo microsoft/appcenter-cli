@@ -1,4 +1,4 @@
-import { Command, CommandArgs, CommandResult, help, runner, success, name, position, isCommandFailedResult, ErrorCodes, failure } from "../util/commandline";
+import { Command, CommandArgs, CommandResult, help, runner, name, position, isCommandFailedResult, ErrorCodes, failure } from "../util/commandline";
 import { scriptName } from "../util/misc";
 
 const debug = require("debug")("appcenter-cli:commands:help");

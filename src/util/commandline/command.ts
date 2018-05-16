@@ -1,17 +1,15 @@
 // Base class for all command handlers
 import * as Result from "./command-result";
 import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription, common } from "./option-decorators";
-import { OptionsDescription, PositionalOptionsDescription, parseOptions } from "./option-parser";
-import { setDebug, isDebug, setQuiet, OutputFormatSupport, setFormatJson, out } from "../interaction";
+import { parseOptions } from "./option-parser";
+import { setDebug, setQuiet, OutputFormatSupport, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
 import { getUser, environments, telemetryIsEnabled, getPortalUrlForEndpoint, getEnvFromEnvironmentVar, getTokenFromEnvironmentVar, appCenterAccessTokenEnvVar } from "../profile";
 import { AppCenterClient, createAppCenterClient, AppCenterClientFactory } from "../apis";
 import * as path from "path";
-import * as PortalHelper from "../portal/portal-helper";
 
 const debug = require("debug")("appcenter-cli:util:commandline:command");
-import { inspect } from "util";
 
 export interface CommandArgs {
   command: string[];
@@ -85,7 +83,6 @@ export class Command {
   @common
   public version: boolean;
 
-
   @longName("disable-telemetry")
   @help("Disable telemetry for this command")
   @common
@@ -107,6 +104,9 @@ export class Command {
 
     if (this.debug) {
       setDebug();
+
+      const version = this.getVersion();
+      console.log(`Using appcenter-cli version: ${version}`);
     }
 
     if (this.quiet) {
@@ -166,7 +166,7 @@ export class Command {
   }
 
   protected showVersion(): Result.CommandResult {
-    out.text(s => s,`${scriptName} version ${this.getVersion()}`);
+    out.text((s) => s, `${scriptName} version ${this.getVersion()}`);
     return Result.success();
   }
 
@@ -180,16 +180,15 @@ export class Command {
 
   protected getVersion(): string {
     const packageJsonPath = path.join(__dirname, "../../../package.json");
+    /* tslint:disable-next-line:non-literal-require */
     const packageJson: any = require(packageJsonPath);
     return packageJson.version;
   }
 
-  protected fixArrayParameter(input: any): string[]
-  {
+  protected fixArrayParameter(input: any): string[] {
     if (!input) {
       return [];
-    }
-    else if (typeof input === "string") {
+    } else if (typeof input === "string") {
       return [ input ];
     }
 
