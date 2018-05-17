@@ -1,8 +1,7 @@
 import {
   AppCommand, CommandArgs, CommandResult,
-  help, success, shortName, longName, hasArg,
-  failure,
-  required
+  help, success, shortName, longName, required, hasArg,
+  failure
 } from "../../../util/commandline";
 
 import { TestCloudUploader, StartedTestRun } from "./test-cloud-uploader";
@@ -32,8 +31,8 @@ export abstract class RunTestsCommand extends AppCommand {
 
   @help(Messages.TestCloud.Arguments.RunDevices)
   @longName("devices")
-  @required
   @hasArg
+  @required
   devices: string;
 
   @help(Messages.TestCloud.Arguments.RunDSymDir)
@@ -134,19 +133,19 @@ export abstract class RunTestsCommand extends AppCommand {
             testRun.rejectedDevices.map((item) => `  - ${item}`).forEach((text) => report += text + os.EOL);
           }
           return report;
-        }, testRun);
+        }, testRun );
 
         if (!this.async) {
           const exitCode = await this.waitForCompletion(client, testRun.testRunId);
 
           if (this.testOutputDir) {
 
-            // Download json test result
-            const testReport: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
-            if (testReport.stats.artifacts) {
-              await downloadUtil.downloadArtifacts(this, this.streamingOutput, this.testOutputDir, testRun.testRunId, testReport.stats.artifacts);
-              await this.mergeTestArtifacts();
-            }
+              // Download json test result
+              const testReport: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
+              if (testReport.stats.artifacts) {
+                await downloadUtil.downloadArtifacts(this, this.streamingOutput, this.testOutputDir, testRun.testRunId, testReport.stats.artifacts);
+                await this.mergeTestArtifacts();
+              }
           }
 
           switch (exitCode) {
@@ -162,7 +161,7 @@ export abstract class RunTestsCommand extends AppCommand {
           this.streamingOutput.text(function (testRun) {
             const report: string = `Test Report: ${testRun.testRunUrl}` + os.EOL;
             return report;
-          }, testRun);
+          }, testRun );
         }
 
         return success();
@@ -243,7 +242,7 @@ export abstract class RunTestsCommand extends AppCommand {
     // Each command should override it if needed
   }
 
-  private combinedParameters(): {} {
+  private combinedParameters() : {} {
     const parameters = this.getParametersFromOptions();
 
     if (this.testParameters) {
@@ -253,7 +252,7 @@ export abstract class RunTestsCommand extends AppCommand {
     }
   }
 
-  protected getParametersFromOptions(): {} {
+  protected getParametersFromOptions() : {} {
     return {};
   }
 
