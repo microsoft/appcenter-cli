@@ -2,16 +2,17 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import { prompt, out } from "../../util/interaction";
-import RunEspressoWizardTestCommand from "./lib/wizard/espresso";
+import { Questions } from "inquirer";
 import { help, CommandArgs, AppCommand, CommandResult } from "../../util/commandline";
 import { Messages } from "./lib/help-messages";
 import { AppCenterClient } from "../../util/apis";
 import { DeviceSet, DeviceConfiguration, AppResponse } from "../../util/apis/generated/models";
-import { Questions } from "inquirer";
 import { DeviceConfigurationSort } from "./lib/deviceConfigurationSort";
+import RunEspressoWizardTestCommand from "./lib/wizard/espresso";
 import RunAppiumWizardTestCommand from "./lib/wizard/appium";
 import RunUitestWizardTestCommand from "./lib/wizard/uitests";
 import RunXCUIWizardTestCommand from "./lib/wizard/xcuitest";
+
 enum TestFramework {
   "Espresso" = 1,
   "Appium" = 2,
@@ -22,12 +23,13 @@ enum TestFramework {
 }
 
 interface AppFile {
-  name: string;
-  path: string;
+  name: string; // To be displayed to user.
+  path: string; // Full path.
 }
 
 @help(Messages.TestCloud.Commands.Wizard)
 export default class WizardTestCommand extends AppCommand {
+
   private interactiveArgs: string[] = [];
   private _args: CommandArgs;
   private isAndroidApp: boolean;
@@ -40,10 +42,12 @@ export default class WizardTestCommand extends AppCommand {
   public async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     const getDeviceSets: Promise<DeviceSet[]> = client.test.listDeviceSetsOfOwner(this.app.ownerName, this.app.appName);
     const getAppOS: Promise<AppResponse> = client.apps.get(this.app.ownerName, this.app.appName);
+
     const frameworkName: TestFramework = await this.promptFramework();
 
     this.isAndroidApp = (await getAppOS).os.toLowerCase() === "android";
     const searchApps: Promise<AppFile[]> = this.scanFolder();
+
     const devices: string = await this.promptDevices(await getDeviceSets, client);
     this.interactiveArgs.push("--devices", devices);
 
@@ -62,29 +66,24 @@ export default class WizardTestCommand extends AppCommand {
         this.interactiveArgs.push("--test-apk-path", testApkPath);
         return new RunEspressoWizardTestCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
       }
+      case TestFramework.XCUI: {
+        const testIpaPath: string = await this.promptAppFile(listOfAppFiles, true);
+        this.interactiveArgs.push("--test-ipa-path", testIpaPath);
+        return new RunXCUIWizardTestCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
+      }
       case TestFramework.Appium: {
         return new RunAppiumWizardTestCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
       }
       case TestFramework.Xamarin: {
         return new RunUitestWizardTestCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
       }
-      case TestFramework.Calabash: out.text(os.EOL + `Interactive mode is not supported. Usage: appcenter test run calabash ${this.interactiveArgs.join(" ")}`
-        + os.EOL + os.EOL + "Additional parameters: " +
-        os.EOL + `--project-dir: ${Messages.TestCloud.Arguments.CalabashProjectDir}` +
-        os.EOL + `--sign-info: ${Messages.TestCloud.Arguments.CalabashSignInfo}` +
-        os.EOL + `--config-path: ${Messages.TestCloud.Arguments.CalabashConfigPath}` +
-        os.EOL + `--profile: ${Messages.TestCloud.Arguments.CalabashProfile}` +
-        os.EOL + `--skip-config-check: ${Messages.TestCloud.Arguments.CalabashSkipConfigCheck}`);
+      case TestFramework.Calabash: {
+        this.printCalabashHelp();
         return { succeeded: true };
-      case TestFramework.Manifest: out.text(os.EOL + `Interactive mode is not supported. Usage: appcenter test run manifest ${this.interactiveArgs.join(" ")}`
-        + os.EOL + os.EOL + "Additional parameters: " +
-        os.EOL + `--manifest-path: Path to manifest file` +
-        os.EOL + `--merged-file-name: ${Messages.TestCloud.Arguments.MergedFileName}`);
+      }
+      case TestFramework.Manifest: {
+        this.printManifestHelp();
         return { succeeded: true };
-      case TestFramework.XCUI: {
-        const testIpaPath: string = await this.promptAppFile(listOfAppFiles, true);
-        this.interactiveArgs.push("--test-ipa-path", testIpaPath);
-        return new RunXCUIWizardTestCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
       }
       default: throw new Error("Unknown framework name!");
     }
@@ -117,6 +116,7 @@ export default class WizardTestCommand extends AppCommand {
           value: appName.path
         };
       });
+
       choices.push({
         name: "Enter path manually",
         value: "manual"
@@ -170,6 +170,7 @@ export default class WizardTestCommand extends AppCommand {
 
   private async getDevices(client: AppCenterClient): Promise<DeviceConfiguration[]> {
     const configs: DeviceConfiguration[] = await client.test.getDeviceConfigurations(this.app.ownerName, this.app.appName);
+
     // Sort devices list like it is done on AppCenter Portal
     return configs.sort(DeviceConfigurationSort.compare);
   }
@@ -177,6 +178,7 @@ export default class WizardTestCommand extends AppCommand {
   private async promptDevices(deviceSets: DeviceSet[], client: AppCenterClient): Promise<string> {
     let choices;
     const noDeviceSets: boolean = deviceSets.length === 0;
+
     if (noDeviceSets) {
       const devices = await out.progress("No device sets: getting list of devices...", this.getDevices(client));
       choices = devices.map((config: DeviceConfiguration) => {
@@ -228,7 +230,7 @@ export default class WizardTestCommand extends AppCommand {
           this.scanRecurse(fullDir, appNames);
         }
       } else {
-        if ((this.isAndroidApp && path.parse(dir).ext === ".apk") || (!this.isAndroidApp && path.parse(dir).ext === ".ipa")) {
+        if (this.isApplicationFile(dir)) {
           const foundApp = {
             name: path.relative(process.cwd(), fullDir),
             path: fullDir
@@ -241,5 +243,27 @@ export default class WizardTestCommand extends AppCommand {
         }
       }
     }
+  }
+
+  private isApplicationFile(file: string): boolean {
+    const fileExtension: string = path.parse(file).ext;
+    return (this.isAndroidApp && fileExtension === ".apk") || (!this.isAndroidApp && fileExtension === ".ipa");
+  }
+
+  private printCalabashHelp() {
+    out.text(os.EOL + `Interactive mode is not supported. Usage: appcenter test run calabash ${this.interactiveArgs.join(" ")}` +
+      os.EOL + os.EOL + "Additional parameters: " +
+      os.EOL + `--project-dir: ${Messages.TestCloud.Arguments.CalabashProjectDir}` +
+      os.EOL + `--sign-info: ${Messages.TestCloud.Arguments.CalabashSignInfo}` +
+      os.EOL + `--config-path: ${Messages.TestCloud.Arguments.CalabashConfigPath}` +
+      os.EOL + `--profile: ${Messages.TestCloud.Arguments.CalabashProfile}` +
+      os.EOL + `--skip-config-check: ${Messages.TestCloud.Arguments.CalabashSkipConfigCheck}`);
+  }
+
+  private printManifestHelp() {
+    out.text(os.EOL + `Interactive mode is not supported. Usage: appcenter test run manifest ${this.interactiveArgs.join(" ")}` +
+      os.EOL + os.EOL + "Additional parameters: " +
+      os.EOL + `--manifest-path: Path to manifest file` +
+      os.EOL + `--merged-file-name: ${Messages.TestCloud.Arguments.MergedFileName}`);
   }
 }

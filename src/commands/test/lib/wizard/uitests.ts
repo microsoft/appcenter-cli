@@ -5,6 +5,7 @@ import { AppCenterClient } from "../../../../util/apis";
 import { prompt, out } from "../../../../util/interaction";
 import RunUITestsCommand from "../../run/uitest";
 import { Questions } from "inquirer";
+import { UITestPreparer } from "../uitest-preparer";
 
 interface BuildFolder {
   name: string;
@@ -12,8 +13,8 @@ interface BuildFolder {
 }
 
 export default class RunUitestWizardTestCommand extends AppCommand {
-
   private _args: CommandArgs;
+
   constructor(args: CommandArgs, interactiveArgs: string[]) {
     super(args);
     this._args = args;
@@ -22,12 +23,14 @@ export default class RunUitestWizardTestCommand extends AppCommand {
 
   public async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     const searchFolder: Promise<BuildFolder[]> = this.scanFolder();
+
     if (this._args.args.indexOf("--async") < 0) {
       const mergeXml: boolean = await this.promptMergeXml();
       if (mergeXml) {
         this._args.args.push("--merge-nunit-xml");
       }
     }
+
     const foundFolders: BuildFolder[] = await searchFolder;
     const folder: string = await this.promptFolder(foundFolders);
     this._args.args.push("--build-dir", folder);
@@ -56,39 +59,50 @@ export default class RunUitestWizardTestCommand extends AppCommand {
 
   private async scanFolder(): Promise<BuildFolder[]> {
     const foundFolders: BuildFolder[] = [];
-    this.scanRecurse(process.cwd(), foundFolders);
+    await this.scanRecurse(process.cwd(), foundFolders);
     return foundFolders;
   }
 
-  private scanRecurse(dirname: string, folders: BuildFolder[]) {
+  private async scanRecurse(dirname: string, folders: BuildFolder[]) {
     const dirContent = fs.readdirSync(dirname);
     for (const dir of dirContent) {
       const fullDir = path.join(dirname, dir);
+
       if (fs.lstatSync(fullDir).isDirectory()) {
         if (dir !== "node_modules") {
-          if (fs.readdirSync(fullDir).length > 0) {
-            const dirContents: string[] = fs.readdirSync(fullDir);
+          const dirContents: string[] = fs.readdirSync(fullDir);
 
+          if (dirContents.length > 0) {
             const configs = dirContents.filter((file) => {
               return file === "packages.config";
             });
             const projects = dirContents.filter((file) => {
-              return path.parse(file).ext === ".csproj" || path.parse(dir).ext === ".fsproj";
+              const extension: string = path.parse(file).ext;
+              return extension === ".csproj" || extension === ".fsproj";
             });
             const containsConfigAndProjectFiles: boolean = configs.length > 0 && projects.length > 0;
 
             if (containsConfigAndProjectFiles) {
-              const foundFolder: BuildFolder = {
-                name: path.relative(process.cwd(), fullDir.split(dir)[0]),
-                path: fullDir.split(dir)[0]
-              };
-              if (!folders) {
-                folders = [foundFolder];
-              } else {
-                folders.push(foundFolder);
+              let containsTools: boolean = true;
+              try {
+                await UITestPreparer.findXamarinUITestNugetDir(fullDir, fullDir);
+              } catch (e) {
+                containsTools = false;
+              }
+
+              if (containsTools) {
+                const foundFolder: BuildFolder = {
+                  name: path.relative(process.cwd(), fullDir.split(dir)[0]),
+                  path: fullDir.split(dir)[0]
+                };
+                if (!folders) {
+                  folders = [foundFolder];
+                } else {
+                  folders.push(foundFolder);
+                }
               }
             } else {
-              this.scanRecurse(fullDir, folders);
+              await this.scanRecurse(fullDir, folders);
             }
           }
         }
@@ -97,7 +111,6 @@ export default class RunUitestWizardTestCommand extends AppCommand {
   }
 
   private async promptFolder(listOfFolders: BuildFolder[]): Promise<string> {
-
     if (listOfFolders.length) {
       const choices = listOfFolders.map((folder) => {
         return {

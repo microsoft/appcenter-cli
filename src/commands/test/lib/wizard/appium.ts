@@ -6,7 +6,7 @@ import { prompt, out } from "../../../../util/interaction";
 import RunAppiumTestsCommand from "../../run/appium";
 import { Questions } from "inquirer";
 
-// Used to sort the found folders in the order of their predictably suitability for containing the appium tests.
+// Used to sort the found folders in the order of their predicted probability of containing the appium tests.
 // Any match level implies that the folder contains "dependency-jars" and "test-classes" with at least one .class file folders.
 enum FolderMatchLevel {
   PerfectMatch = 1, // Conforms to the the exact structure (target/upload/..) and has a .jar file under the target.
@@ -35,6 +35,7 @@ export default class RunAppiumWizardTestCommand extends AppCommand {
 
   public async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     const searchFolder: Promise<UploadFolder[]> = this.scanFolder();
+
     if (this._args.args.indexOf("--async") < 0) {
       const mergeXml: boolean = await this.promptMergeXml();
       if (mergeXml) {
@@ -80,23 +81,26 @@ export default class RunAppiumWizardTestCommand extends AppCommand {
       const fullDir = path.join(dirname, dir);
       if (fs.lstatSync(fullDir).isDirectory()) {
         if (dir !== "node_modules") {
+
           if (targetFolderParentLevel >= 0) {
             targetFolderParentLevel++;
           }
-          if (targetFolderParentLevel >= 0) {
-            targetFolderParentLevel++;
+          if (jarFileParentLevel >= 0) {
+            jarFileParentLevel++;
           }
           const isTarget: boolean = dir === "target";
           if (isTarget) {
             targetFolderParentLevel = 0;
           }
           uploadFolderIsParent = dir === "upload";
-          if (fs.readdirSync(fullDir).length > 0) {
-            const containsClassFiles: boolean = fs.readdirSync(fullDir).some((dir) => {
+
+          const dirContents: string[] = fs.readdirSync(fullDir);
+          if (dirContents.length > 0) {
+            const containsClassFiles: boolean = dirContents.some((dir) => {
               return path.parse(dir).ext === ".class";
             });
             if (dir === "dependency-jars" || (dir === "test-classes" && containsClassFiles)) {
-              if (containsPartRequiredData) {
+              if (containsPartRequiredData) { // If already contains either "dependency-jars" or "test-classes"
                 const matchLevel: FolderMatchLevel = this.calculateMatchLevel(targetFolderParentLevel, uploadFolderIsParent, jarFileParentLevel);
                 const foundFolder: UploadFolder = {
                   name: path.relative(process.cwd(), fullDir.split(dir)[0]),
