@@ -92,8 +92,8 @@ export default class RunUitestWizardTestCommand extends AppCommand {
 
               if (containsTools) {
                 const foundFolder: BuildFolder = {
-                  name: path.relative(process.cwd(), fullDir.split(dir)[0]),
-                  path: fullDir.split(dir)[0]
+                  name: path.relative(process.cwd(), fullDir),
+                  path: fullDir
                 };
                 if (!folders) {
                   folders = [foundFolder];
