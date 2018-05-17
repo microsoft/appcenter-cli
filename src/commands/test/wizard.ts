@@ -228,7 +228,7 @@ export default class WizardTestCommand extends AppCommand {
           this.scanRecurse(fullDir, appNames);
         }
       } else {
-        if ((this.isAndroidApp && path.parse(dir).ext === ".apk") || path.parse(dir).ext === ".ipa") {
+        if ((this.isAndroidApp && path.parse(dir).ext === ".apk") || (!this.isAndroidApp && path.parse(dir).ext === ".ipa")) {
           const foundApp = {
             name: path.relative(process.cwd(), fullDir),
             path: fullDir
