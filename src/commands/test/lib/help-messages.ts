@@ -3,6 +3,7 @@ import * as os from "os";
 export module Messages {
   export module TestCloud {
     export module Commands {
+      export const Wizard = "Start a test run interactively. All the parameters will be prompted on-the-go.";
       export const GenerateAppium = "Generates an Appium project";
       export const GenerateUITest = "Generates a Xamarin.UITest project";
 
@@ -35,7 +36,6 @@ export module Messages {
       export const Stop = "Stop the started test run.";
 
       export const Download = "Download the report artifacts, unpack and merge them.";
-      export const Interactive = "Start a test run interactively. All the parameters will be prompted on-the-go.";
     }
 
     export module Arguments {

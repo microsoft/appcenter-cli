@@ -1,13 +1,17 @@
 import * as fs from "fs";
+import * as os from "os";
 import * as path from "path";
 import { prompt, out } from "../../util/interaction";
-import RunEspressoInteractiveTestsCommand from "./lib/interactive/espresso";
+import RunEspressoWizardTestCommand from "./lib/wizard/espresso";
 import { help, CommandArgs, AppCommand, CommandResult } from "../../util/commandline";
 import { Messages } from "./lib/help-messages";
 import { AppCenterClient } from "../../util/apis";
-import { DeviceSet, DeviceConfiguration } from "../../util/apis/generated/models";
+import { DeviceSet, DeviceConfiguration, AppResponse } from "../../util/apis/generated/models";
 import { Questions } from "inquirer";
 import { DeviceConfigurationSort } from "./lib/deviceConfigurationSort";
+import RunAppiumWizardTestCommand from "./lib/wizard/appium";
+import RunUitestWizardTestCommand from "./lib/wizard/uitests";
+import RunXCUIWizardTestCommand from "./lib/wizard/xcuitest";
 enum TestFramework {
   "Espresso" = 1,
   "Appium" = 2,
@@ -17,15 +21,16 @@ enum TestFramework {
   "Manifest" = 6
 }
 
-interface ApkFile {
+interface AppFile {
   name: string;
   path: string;
 }
 
-@help(Messages.TestCloud.Commands.Interactive)
-export default class InteractiveTestsCommand extends AppCommand {
+@help(Messages.TestCloud.Commands.Wizard)
+export default class WizardTestCommand extends AppCommand {
   private interactiveArgs: string[] = [];
   private _args: CommandArgs;
+  private isAndroidApp: boolean;
 
   constructor(args: CommandArgs) {
     super(args);
@@ -34,9 +39,11 @@ export default class InteractiveTestsCommand extends AppCommand {
 
   public async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     const getDeviceSets: Promise<DeviceSet[]> = client.test.listDeviceSetsOfOwner(this.app.ownerName, this.app.appName);
-    const searchApks: Promise<ApkFile[]> = this.scanFolder();
+    const getAppOS: Promise<AppResponse> = client.apps.get(this.app.ownerName, this.app.appName);
     const frameworkName: TestFramework = await this.promptFramework();
 
+    this.isAndroidApp = (await getAppOS).os.toLowerCase() === "android";
+    const searchApps: Promise<AppFile[]> = this.scanFolder();
     const devices: string = await this.promptDevices(await getDeviceSets, client);
     this.interactiveArgs.push("--devices", devices);
 
@@ -45,15 +52,39 @@ export default class InteractiveTestsCommand extends AppCommand {
       this.interactiveArgs.push("--async");
     }
 
-    const listOfApks: ApkFile[] = await searchApks;
-    const apkPath: string = await this.promptApk(listOfApks);
-    this.interactiveArgs.push("--app-path", apkPath);
+    const listOfAppFiles: AppFile[] = await searchApps;
+    const appPath: string = await this.promptAppFile(listOfAppFiles);
+    this.interactiveArgs.push("--app-path", appPath);
 
     switch (frameworkName) {
       case TestFramework.Espresso: {
-        const testApkPath: string = await this.promptApk(listOfApks, true);
+        const testApkPath: string = await this.promptAppFile(listOfAppFiles, true);
         this.interactiveArgs.push("--test-apk-path", testApkPath);
-        return new RunEspressoInteractiveTestsCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
+        return new RunEspressoWizardTestCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
+      }
+      case TestFramework.Appium: {
+        return new RunAppiumWizardTestCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
+      }
+      case TestFramework.Xamarin: {
+        return new RunUitestWizardTestCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
+      }
+      case TestFramework.Calabash: out.text(os.EOL + `Interactive mode is not supported. Usage: appcenter test run calabash ${this.interactiveArgs.join(" ")}`
+        + os.EOL + os.EOL + "Additional parameters: " +
+        os.EOL + `--project-dir: ${Messages.TestCloud.Arguments.CalabashProjectDir}` +
+        os.EOL + `--sign-info: ${Messages.TestCloud.Arguments.CalabashSignInfo}` +
+        os.EOL + `--config-path: ${Messages.TestCloud.Arguments.CalabashConfigPath}` +
+        os.EOL + `--profile: ${Messages.TestCloud.Arguments.CalabashProfile}` +
+        os.EOL + `--skip-config-check: ${Messages.TestCloud.Arguments.CalabashSkipConfigCheck}`);
+        return { succeeded: true };
+      case TestFramework.Manifest: out.text(os.EOL + `Interactive mode is not supported. Usage: appcenter test run manifest ${this.interactiveArgs.join(" ")}`
+        + os.EOL + os.EOL + "Additional parameters: " +
+        os.EOL + `--manifest-path: Path to manifest file` +
+        os.EOL + `--merged-file-name: ${Messages.TestCloud.Arguments.MergedFileName}`);
+        return { succeeded: true };
+      case TestFramework.XCUI: {
+        const testIpaPath: string = await this.promptAppFile(listOfAppFiles, true);
+        this.interactiveArgs.push("--test-ipa-path", testIpaPath);
+        return new RunXCUIWizardTestCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
       }
       default: throw new Error("Unknown framework name!");
     }
@@ -78,23 +109,34 @@ export default class InteractiveTestsCommand extends AppCommand {
     return answers.framework;
   }
 
-  private async promptApk(listOfApks: ApkFile[], forTest: boolean = false): Promise<string> {
-    const choices = listOfApks.map((apkName) => {
-      return {
-        name: apkName.name,
-        value: apkName.path
-      };
-    });
-    const questions: Questions = [
-      {
-        type: "list",
-        name: "apkPath",
-        message: forTest ? "Pick a test apk" : "Pick an app apk",
-        choices: choices
+  private async promptAppFile(listOfAppFiles: AppFile[], forTest: boolean = false): Promise<string> {
+    if (listOfAppFiles.length) {
+      const choices = listOfAppFiles.map((appName) => {
+        return {
+          name: appName.name,
+          value: appName.path
+        };
+      });
+      choices.push({
+        name: "Enter path manually",
+        value: "manual"
+      });
+      const questions: Questions = [
+        {
+          type: "list",
+          name: "appPath",
+          message: forTest ? "Pick a test app" : "Pick an app",
+          choices: choices
+        }
+      ];
+      const answers: any = await prompt.question(questions);
+      if (answers.appPath === "manual") {
+        return await prompt(`Please provide the path to the ${forTest ? "test app" : "app"}.`);
       }
-    ];
-    const answers: any = await prompt.question(questions);
-    return answers.apkPath;
+      return answers.appPath;
+    } else {
+      return await prompt(`We could not find any app files inside the current folder. Please provide the path to the ${forTest ? "test app" : "app"}.`);
+    }
   }
 
   private async isAsync(): Promise<boolean> {
@@ -171,30 +213,30 @@ export default class InteractiveTestsCommand extends AppCommand {
     return deviceId;
   }
 
-  private async scanFolder(): Promise<ApkFile[]> {
-    const apkNames: ApkFile[] = [];
-    this.scanRecurse(process.cwd(), apkNames);
-    return apkNames;
+  private async scanFolder(): Promise<AppFile[]> {
+    const appNames: AppFile[] = [];
+    this.scanRecurse(process.cwd(), appNames);
+    return appNames;
   }
 
-  private scanRecurse(dirname: string, apkNames: ApkFile[]) {
+  private scanRecurse(dirname: string, appNames: AppFile[]) {
     const dirContent = fs.readdirSync(dirname);
     for (const dir of dirContent) {
       const fullDir = path.join(dirname, dir);
       if (fs.lstatSync(fullDir).isDirectory()) {
         if (dir !== "node_modules") {
-          this.scanRecurse(fullDir, apkNames);
+          this.scanRecurse(fullDir, appNames);
         }
       } else {
-        if (path.parse(dir).ext === ".apk") {
-          const foundApk = {
+        if ((this.isAndroidApp && path.parse(dir).ext === ".apk") || path.parse(dir).ext === ".ipa") {
+          const foundApp = {
             name: path.relative(process.cwd(), fullDir),
             path: fullDir
           };
-          if (!apkNames) {
-            apkNames = [foundApk];
+          if (!appNames) {
+            appNames = [foundApp];
           } else {
-            apkNames.push(foundApk);
+            appNames.push(foundApp);
           }
         }
       }
