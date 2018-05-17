@@ -119,6 +119,9 @@ export class TestCloudUploader {
          this._appName,
          (err: Error, _result: any, _request: any, response: http.IncomingMessage) => {
           if (err) {
+            if ((err as any).statusCode === 404) {
+              err.message = "The app name was not found for the provided org name";
+            }
             reject(err);
           } else {
             const location: string = response.headers["location"];
