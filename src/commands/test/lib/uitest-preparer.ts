@@ -143,7 +143,7 @@ export class UITestPreparer {
     command += `${testCloudBinary} prepare "${this.appPath}"`;
 
     if (this.storeFile) {
-      command += ` "${this.storeFile}" "${this.storePassword}" "${this.keyAlias}" "${this.keyPassword}"`;
+      command += ` keystore "${this.storeFile}" "${this.storePassword}" "${this.keyAlias}" "${this.keyPassword}"`;
     }
 
     command += ` --assembly-dir "${this.buildDir}" --artifacts-dir "${this.artifactsDir}"`;
@@ -193,9 +193,12 @@ export class UITestPreparer {
     let testCloudPath = path.join(toolsDir, "test-cloud.exe");
 
     if (!await fileExists(testCloudPath)) {
-      throw new Error(`Cannot find test-cloud.exe, the exe was not found in the path specified by "--uitest-tools-dir".${os.EOL}` +
-        `Please check that ${testCloudPath} points to a test-cloud.exe.${os.EOL}` +
-        `Minimum required version is "${UITestPreparer.getMinimumVersionString()}".`);
+      testCloudPath = path.join(toolsDir, "Xamarin.UITest.Console.exe");
+      if (!await fileExists(testCloudPath)) {
+        throw new Error(`Cannot find test-cloud.exe, the exe was not found in the path specified by "--uitest-tools-dir".${os.EOL}` +
+          `Please check that ${testCloudPath} points to a test-cloud.exe.${os.EOL}` +
+          `Minimum required version is "${UITestPreparer.getMinimumVersionString()}".`);
+      }
     }
 
     if (testCloudPath.includes(" ")) {

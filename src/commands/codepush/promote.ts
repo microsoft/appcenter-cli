@@ -37,10 +37,12 @@ export default class CodePushPromoteCommand extends AppCommand {
 
   @help("Specifies whether this release should be considered mandatory. (Putting -m flag means mandatory)")
   @shortName("m")
+  @longName("mandatory")
   public isMandatory: boolean;
 
   @help("Specifies whether this release should be immediately downloadable. (Putting -x flag means disabled)")
   @shortName("x")
+  @longName("disabled")
   public isDisabled: boolean;
 
   @help("Specifies that if the update is identical to the latest release on the deployment, the CLI should generate a warning instead of an error")
