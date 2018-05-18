@@ -180,7 +180,7 @@ export default class WizardTestCommand extends AppCommand {
     const noDeviceSets: boolean = deviceSets.length === 0;
 
     if (noDeviceSets) {
-      const devices = await out.progress("No device sets: getting list of devices...", this.getDevices(client));
+      const devices = await out.progress("Getting list of devices...", this.getDevices(client));
       choices = devices.map((config: DeviceConfiguration) => {
         return {
           name: config.name,
@@ -194,6 +194,10 @@ export default class WizardTestCommand extends AppCommand {
           name: config.name,
           value: config.slug
         };
+      });
+      choices.push({
+        name: "I want to use a single device",
+        value: "manual"
       });
     }
     const questions: Questions = [
@@ -210,7 +214,11 @@ export default class WizardTestCommand extends AppCommand {
       const deviceSelection: any = await client.test.createDeviceSelection(this.app.ownerName, this.app.appName, [answers.deviceSlug]);
       deviceId = deviceSelection.shortId;
     } else {
-      deviceId = `${this.app.ownerName}/${answers.deviceSlug}`;
+      if (answers.deviceSlug === "manual") {
+        return await this.promptDevices([], client);
+      } else {
+        deviceId = `${this.app.ownerName}/${answers.deviceSlug}`;
+      }
     }
     return deviceId;
   }
