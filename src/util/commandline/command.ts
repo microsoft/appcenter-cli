@@ -8,6 +8,8 @@ import { scriptName } from "../misc";
 import { getUser, environments, telemetryIsEnabled, getPortalUrlForEndpoint, getEnvFromEnvironmentVar, getTokenFromEnvironmentVar, appCenterAccessTokenEnvVar } from "../profile";
 import { AppCenterClient, createAppCenterClient, AppCenterClientFactory } from "../apis";
 import * as path from "path";
+import { execSync } from "child_process";
+import * as os from "os";
 
 const debug = require("debug")("appcenter-cli:util:commandline:command");
 
@@ -111,6 +113,13 @@ export class Command {
 
     if (this.quiet) {
       setQuiet();
+    }
+
+    // Check if a new cli version is available
+    const result: Buffer = execSync("npm show appcenter-cli version");
+    const newVersion: string = result.toString("utf-8", 0, result.length - os.EOL.length);
+    if (newVersion !== this.getVersion()) {
+      console.log(`The new version is available: ${newVersion}`);
     }
 
     if (this.format) {
