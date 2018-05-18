@@ -189,7 +189,7 @@ export default class RunAppiumWizardTestCommand extends AppCommand {
         }
       ];
       const answers: any = await prompt.question(questions);
-      if (answers.apkPath === "manual") {
+      if (answers.folderPath === "manual") {
         return await prompt("Please provide the path to the Appium tests.");
       }
       return answers.folderPath;

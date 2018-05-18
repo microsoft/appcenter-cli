@@ -131,7 +131,7 @@ export default class RunUitestWizardTestCommand extends AppCommand {
         }
       ];
       const answers: any = await prompt.question(questions);
-      if (answers.apkPath === "manual") {
+      if (answers.folderPath === "manual") {
         return await prompt("Please provide the path to the Xamarin tests.");
       }
       return answers.folderPath;
