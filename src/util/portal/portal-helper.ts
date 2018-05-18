@@ -4,9 +4,9 @@ export function getPortalBuildLink(portalBaseUrl: string, appOwner: string, appN
 
 export function getPortalTestLink(portalBaseUrl: string, isOrg: boolean, appOwner: string, appName: string, seriesName: string, testRunId: string): string {
   if (isOrg) {
-    return `${portalBaseUrl}/orgs/${appOwner}/apps/${appName}/test/series/${seriesName}/runs/${testRunId}`;
+    return encodeURI(`${portalBaseUrl}/orgs/${appOwner}/apps/${appName}/test/series/${seriesName}/runs/${testRunId}`);
   } else {
-    return `${portalBaseUrl}/users/${appOwner}/apps/${appName}/test/series/${seriesName}/runs/${testRunId}`;
+    return encodeURI(`${portalBaseUrl}/users/${appOwner}/apps/${appName}/test/series/${seriesName}/runs/${testRunId}`);
   }
 }
 
