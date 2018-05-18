@@ -42,10 +42,9 @@ export default class WizardTestCommand extends AppCommand {
   public async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     const getDeviceSets: Promise<DeviceSet[]> = client.test.listDeviceSetsOfOwner(this.app.ownerName, this.app.appName);
     const getAppOS: Promise<AppResponse> = client.apps.get(this.app.ownerName, this.app.appName);
+    this.isAndroidApp = (await getAppOS).os.toLowerCase() === "android";
 
     const frameworkName: TestFramework = await this.promptFramework();
-
-    this.isAndroidApp = (await getAppOS).os.toLowerCase() === "android";
     const searchApps: Promise<AppFile[]> = this.scanFolder();
 
     const devices: string = await this.promptDevices(await getDeviceSets, client);
@@ -90,7 +89,15 @@ export default class WizardTestCommand extends AppCommand {
   }
 
   private async promptFramework(): Promise<TestFramework> {
-    const choices = Object.keys(TestFramework).filter((k) => typeof TestFramework[k as any] === "number").map((framework) => {
+    const choices = Object.keys(TestFramework).filter((framework) => {
+      if (this.isAndroidApp && framework === "XCUI") {
+        return false;
+      }
+      if (!this.isAndroidApp && framework === "Espresso") {
+        return false;
+      }
+      return typeof TestFramework[framework as any] === "number";
+    }).map((framework) => {
       return {
         name: framework,
         value: TestFramework[framework as any]
