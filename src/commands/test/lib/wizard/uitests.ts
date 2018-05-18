@@ -6,6 +6,7 @@ import { prompt, out } from "../../../../util/interaction";
 import RunUITestsCommand from "../../run/uitest";
 import { Questions } from "inquirer";
 import { UITestPreparer } from "../uitest-preparer";
+import { directoryExistsSync } from "../../../../util/misc/fs-helper";
 
 interface BuildFolder {
   name: string;
@@ -132,7 +133,17 @@ export default class RunUitestWizardTestCommand extends AppCommand {
       ];
       const answers: any = await prompt.question(questions);
       if (answers.folderPath === "manual") {
-        return await prompt("Please provide the path to the Xamarin tests.");
+        let pathIsValid: boolean;
+        let dirPath: string;
+        while (!pathIsValid) {
+          dirPath = await prompt(`Please provide the path to the Xamarin tests.`);
+          if (dirPath.length === 0) {
+            pathIsValid = false;
+          } else {
+            pathIsValid = directoryExistsSync(path.resolve(dirPath));
+          }
+        }
+        return dirPath;
       }
       return answers.folderPath;
     } else {

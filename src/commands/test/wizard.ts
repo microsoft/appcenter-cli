@@ -12,6 +12,7 @@ import RunEspressoWizardTestCommand from "./lib/wizard/espresso";
 import RunAppiumWizardTestCommand from "./lib/wizard/appium";
 import RunUitestWizardTestCommand from "./lib/wizard/uitests";
 import RunXCUIWizardTestCommand from "./lib/wizard/xcuitest";
+import { fileExistsSync } from "../../util/misc";
 
 enum TestFramework {
   "Espresso" = 1,
@@ -138,7 +139,17 @@ export default class WizardTestCommand extends AppCommand {
       ];
       const answers: any = await prompt.question(questions);
       if (answers.appPath === "manual") {
-        return await prompt(`Please provide the path to the ${forTest ? "test app" : "app"}.`);
+        let pathIsValid: boolean;
+        let filePath: string;
+        while (!pathIsValid) {
+          filePath = await prompt(`Please provide the path to the ${forTest ? "test app" : "app"}.`);
+          if (filePath.length === 0) {
+            pathIsValid = false;
+          } else {
+            pathIsValid = fileExistsSync(path.resolve(filePath));
+          }
+        }
+        return filePath;
       }
       return answers.appPath;
     } else {

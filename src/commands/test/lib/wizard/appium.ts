@@ -5,6 +5,7 @@ import { AppCenterClient } from "../../../../util/apis";
 import { prompt, out } from "../../../../util/interaction";
 import RunAppiumTestsCommand from "../../run/appium";
 import { Questions } from "inquirer";
+import { directoryExistsSync } from "../../../../util/misc/fs-helper";
 
 // Used to sort the found folders in the order of their predicted probability of containing the appium tests.
 // Any match level implies that the folder contains "dependency-jars" and "test-classes" with at least one .class file folders.
@@ -190,7 +191,17 @@ export default class RunAppiumWizardTestCommand extends AppCommand {
       ];
       const answers: any = await prompt.question(questions);
       if (answers.folderPath === "manual") {
-        return await prompt("Please provide the path to the Appium tests.");
+        let pathIsValid: boolean;
+        let dirPath: string;
+        while (!pathIsValid) {
+          dirPath = await prompt(`Please provide the path to the Appium tests.`);
+          if (dirPath.length === 0) {
+            pathIsValid = false;
+          } else {
+            pathIsValid = directoryExistsSync(path.resolve(dirPath));
+          }
+        }
+        return dirPath;
       }
       return answers.folderPath;
     } else {
