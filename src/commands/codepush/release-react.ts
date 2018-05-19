@@ -68,6 +68,8 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
 
   @help("Option that gets passed to react-native bundler. Can be specified multiple times")
   @longName("extra-bundler-option")
+  @defaultValue([])
+  @hasArg
   public extraBundlerOptions: string | string[];
 
   private os: string;
@@ -144,8 +146,8 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
       this.targetBinaryVersion = await getReactNativeProjectAppVersion(versionSearchParams);
     }
 
-    if (!(this.extraBundlerOptions instanceof Array)) {
-      this.extraBundlerOptions = (typeof this.extraBundlerOptions === 'undefined') ? [] : [this.extraBundlerOptions];
+    if (typeof this.extraBundlerOptions === "string") {
+      this.extraBundlerOptions = [this.extraBundlerOptions];
     }
 
     try {
