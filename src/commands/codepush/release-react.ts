@@ -1,4 +1,4 @@
-import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName } from "../../util/commandline";
+import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, defaultValue } from "../../util/commandline";
 import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
@@ -65,6 +65,10 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
   @longName("target-binary-version")
   @hasArg
   public specifiedTargetBinaryVersion: string;
+
+  @help("Option that gets passed to react-native bundler. Can be specified multiple times")
+  @longName("extra-bundler-option")
+  public extraBundlerOptions: string | string[];
 
   private os: string;
 
@@ -140,10 +144,14 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
       this.targetBinaryVersion = await getReactNativeProjectAppVersion(versionSearchParams);
     }
 
+    if (!(this.extraBundlerOptions instanceof Array)) {
+      this.extraBundlerOptions = (typeof this.extraBundlerOptions === 'undefined') ? [] : [this.extraBundlerOptions];
+    }
+
     try {
       createEmptyTmpReleaseFolder(this.updateContentsPath);
       removeReactTmpDir();
-      await runReactNativeBundleCommand(this.bundleName, this.development, this.entryFile, this.updateContentsPath, this.os, this.sourcemapOutput);
+      await runReactNativeBundleCommand(this.bundleName, this.development, this.entryFile, this.updateContentsPath, this.os, this.sourcemapOutput, this.extraBundlerOptions);
 
       out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));
 

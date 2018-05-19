@@ -201,7 +201,7 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
   }
 }
 
-export function runReactNativeBundleCommand(bundleName: string, development: boolean, entryFile: string, outputFolder: string, platform: string, sourcemapOutput: string): Promise<void> {
+export function runReactNativeBundleCommand(bundleName: string, development: boolean, entryFile: string, outputFolder: string, platform: string, sourcemapOutput: string, extraBundlerOptions: string[]): Promise<void> {
   const reactNativeBundleArgs: string[] = [];
   const envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
 
@@ -216,6 +216,7 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
       "--dev", development,
       "--entry-file", entryFile,
       "--platform", platform,
+      ...extraBundlerOptions,
   ]);
 
   if (sourcemapOutput) {
