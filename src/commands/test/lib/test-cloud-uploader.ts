@@ -120,7 +120,7 @@ export class TestCloudUploader {
          (err: Error, _result: any, _request: any, response: http.IncomingMessage) => {
           if (err) {
             if ((err as any).statusCode === 404) {
-              err.message = "The app name was not found for the provided org name";
+              err.message = `The app named ${this._appName} does not exist in the organization or user: ${this._userName}`;
             }
             reject(err);
           } else {
