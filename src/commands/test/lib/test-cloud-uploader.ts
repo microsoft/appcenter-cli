@@ -119,6 +119,9 @@ export class TestCloudUploader {
          this._appName,
          (err: Error, _result: any, _request: any, response: http.IncomingMessage) => {
           if (err) {
+            if ((err as any).statusCode === 404) {
+              err.message = `The app named ${this._appName} does not exist in the organization or user: ${this._userName}`;
+            }
             reject(err);
           } else {
             const location: string = response.headers["location"];
