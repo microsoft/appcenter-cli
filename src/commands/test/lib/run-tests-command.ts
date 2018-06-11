@@ -10,7 +10,7 @@ import { AppCenterClient } from "../../../util/apis";
 import { StreamingArrayOutput } from "../../../util/interaction";
 import { getUser } from "../../../util/profile";
 import { parseTestParameters } from "./parameters-parser";
-import { parseIncludedFiles } from "./included-files-parser";
+import { copyIncludedFiles } from "./included-files-parser";
 import { progressWithResult } from "./interaction";
 import { ITestCloudManifestJson } from "./test-manifest-reader";
 import { Messages } from "./help-messages";
@@ -181,16 +181,7 @@ export abstract class RunTestsCommand extends AppCommand {
     const manifest = JSON.parse(manifestJson) as ITestCloudManifestJson;
     manifest.cliVersion = this.getVersion();
 
-    if (this.include) {
-      const includedFiles = parseIncludedFiles(this.include, this.getSourceRootDir());
-
-      for (let i = 0; i < includedFiles.length; i++) {
-        const includedFile = includedFiles[i];
-        const copyTarget = path.join(path.dirname(manifestPath), includedFile.targetPath);
-        await pfs.cp(includedFile.sourcePath, copyTarget);
-        manifest.files.push(includedFile.targetPath);
-      }
-    }
+    copyIncludedFiles(manifest, this.include, path.dirname(manifestPath));
 
     const modifiedManifest = JSON.stringify(manifest, null, 1);
     await pfs.writeFile(manifestPath, modifiedManifest);

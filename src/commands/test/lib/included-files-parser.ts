@@ -1,7 +1,31 @@
-import { IFileDescriptionJson } from "./test-manifest-reader";
+import { IFileDescriptionJson, ITestCloudManifestJson } from "./test-manifest-reader";
 import * as path from "path";
+import * as pfs from "../../../util/misc/promisfied-fs";
+import { validateXmlFile } from "./xml-util";
+import { out } from "../../../util/interaction";
 
 const invalidCharactersRegexp = /['"!#$%&+^<=>`|]/;
+
+export async function copyIncludedFiles(manifest: ITestCloudManifestJson, include: string[], rootDir: string) {
+  if (!include) {
+    return;
+  }
+
+  const includedFiles = parseIncludedFiles(include, rootDir);
+
+  for (let i = 0; i < includedFiles.length; i++) {
+    const includedFile = includedFiles[i];
+    const copyTarget = path.join(path.dirname(rootDir), includedFile.targetPath);
+
+    if (copyTarget.indexOf(".dll.config") !== -1 && !validateXmlFile(copyTarget)) {
+      out.text(`Warning: The XML config file ${copyTarget} was not a valid XML file. This file will not be uploaded.`);
+      continue;
+    }
+
+    await pfs.cp(includedFile.sourcePath, copyTarget);
+    manifest.files.push(includedFile.targetPath);
+  }
+}
 
 export function parseIncludedFiles(includedFiles: string[], rootDir: string): IFileDescriptionJson[] {
   return includedFiles.map((f) => parseIncludedFile(f, rootDir));
