@@ -11,7 +11,7 @@ const fs = require('fs')
 const os = require('os')
 const path = require('path')
 const util = require('util')
-const Table = require('cli-table2')
+const Table = require('cli-table3')
 const { getClassHelpText, getOptionsDescription, getPositionalOptionsDescription } = require('../dist/util/commandline/option-decorators')
 const { getOptionsForTwoColumnTableWithNoBorders } = require('../dist/util/interaction/out')
 function checkStats(dir, fileName, checker) {

@@ -7,7 +7,7 @@ import * as os from "os";
 import * as wrap from "wordwrap";
 import * as tty from "tty";
 
-const Table = require("cli-table2");
+const Table = require("cli-table3");
 const Spinner = require("cli-spinner").Spinner;
 
 import { terminal } from "./terminal";
@@ -96,9 +96,9 @@ export function text(...args: any[]): void {
 
 //
 // Output tabular data.
-// By default, does a simple default table using cli-table2.
+// By default, does a simple default table using cli-table3.
 // If you want to, you can pass in explicit table initialization
-// options. See https://github.com/jamestalmage/cli-table2 for docs
+// options. See https://github.com/jamestalmage/cli-table3 for docs
 // on the module.
 //
 export function table(options: any, data: any[]): void;
@@ -123,7 +123,7 @@ export function table(...args: any[]): void {
   }
 }
 
-// Formatting helper for cli-table2 - default command output table style
+// Formatting helper for cli-table3 - default command output table style
 export function getCommandOutputTableOptions(header: string[]): object {
   return {
     head: header,
@@ -134,7 +134,7 @@ export function getCommandOutputTableOptions(header: string[]): object {
 }
 
 //
-// Formatting helper for cli-table2 - two columns with no table outlines. Used by
+// Formatting helper for cli-table3 - two columns with no table outlines. Used by
 // help commands for formatting lists of options, commands, etc.
 //
 export function getOptionsForTwoColumnTableWithNoBorders(firstColumnWidth: number) {
@@ -421,7 +421,7 @@ function getMarginStringFromLevel(level: number) {
 }
 
 //
-// Formatting helper for cli-table2 - table with borders which can be moved to the right
+// Formatting helper for cli-table3 - table with borders which can be moved to the right
 // It is used to show sub-tables
 //
 function getTableWithLeftMarginOptions(leftMargin: string) {
