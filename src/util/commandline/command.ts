@@ -88,6 +88,12 @@ export class Command {
   @common
   public disableTelemetry: boolean;
 
+  @longName("telemetry-source")
+  @help("Custom telemetry source")
+  @hasArg
+  @common
+  public telemetrySource: string;
+
   // Entry point for runner. DO NOT override in command definition!
   async execute(): Promise<Result.CommandResult> {
     debug(`Initial execution of command`);
@@ -120,7 +126,9 @@ export class Command {
         return Promise.resolve(Result.failure(Result.ErrorCodes.InvalidParameter, `Unknown output format ${this.format}`));
       }
     }
-    this.clientFactory = createAppCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry));
+
+    const telemetrySource = this.telemetrySource || "cli";
+    this.clientFactory = createAppCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry), telemetrySource);
     return this.runNoClient();
   }
 
