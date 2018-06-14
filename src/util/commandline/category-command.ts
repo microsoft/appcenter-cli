@@ -7,7 +7,7 @@ import { scriptName } from "../misc";
 import { getClassHelpText } from "./option-decorators";
 import * as chalk from "chalk";
 
-const Table = require("cli-table2");
+const Table = require("cli-table3");
 const debug = require("debug")("appcenter-cli:util:commandline:category-command");
 
 // "filler" command used to display category help
@@ -52,7 +52,7 @@ export class CategoryCommand extends Command {
     debug(`Looking for category description in directory ${this.commandPath}`);
     const helpPath = path.join(this.commandPath, category, "category.txt");
     try {
-      // Replacing CRLF with LF to make sure that cli-table2 will be able to correctly split the string
+      // Replacing CRLF with LF to make sure that cli-table3 will be able to correctly split the string
       const helpText = fs.readFileSync(helpPath, "utf8").replace(/\r\n/g, "\n");
       return helpText;
     } catch (err) {
