@@ -235,6 +235,7 @@ function sortOptionDescriptions(options: OptionDescription[]): OptionDescription
     .value();
 }
 
-function filterOptionDescriptions(options: OptionDescription[], isCommon: boolean): OptionDescription[] {
-  return isCommon ? options.filter((option) => { return option.common; }) :  options.filter((option) => { return !option.common; });
+function filterOptionDescriptions(options: OptionDescription[], isCommon: boolean, includeInternal: boolean = false): OptionDescription[] {
+  const filtered = isCommon ? options.filter((option) => { return option.common; }) : options.filter((option) => { return !option.common; });
+  return includeInternal ? filtered : filtered.filter((option) => { return !option.internal; });
 }

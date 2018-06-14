@@ -23,10 +23,10 @@ export interface AppCenterClientFactory {
   fromProfile(user: Profile): AppCenterClient;
 }
 
-export function createAppCenterClient(command: string[], telemetryEnabled: boolean): AppCenterClientFactory {
+export function createAppCenterClient(command: string[], telemetryEnabled: boolean, telemetrySource: string): AppCenterClientFactory {
   function createClientOptions(): any {
     debug(`Creating client options, isDebug = ${isDebug()}`);
-    const filters = [userAgentFilter, telemetryFilter(command.join(" "), telemetryEnabled)];
+    const filters = [userAgentFilter, telemetryFilter(command.join(" "), telemetryEnabled, telemetrySource)];
     return {
       filters: isDebug() ? [createLogger()].concat(filters) : filters
     };

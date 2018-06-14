@@ -1,6 +1,6 @@
 // Base class for all command handlers
 import * as Result from "./command-result";
-import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription, common } from "./option-decorators";
+import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription, common, internal } from "./option-decorators";
 import { parseOptions } from "./option-parser";
 import { setDebug, setQuiet, OutputFormatSupport, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
@@ -88,6 +88,12 @@ export class Command {
   @common
   public disableTelemetry: boolean;
 
+  @longName("telemetry-source")
+  @hasArg
+  @common
+  @internal
+  public telemetrySource: string;
+
   // Entry point for runner. DO NOT override in command definition!
   async execute(): Promise<Result.CommandResult> {
     debug(`Initial execution of command`);
@@ -120,7 +126,9 @@ export class Command {
         return Promise.resolve(Result.failure(Result.ErrorCodes.InvalidParameter, `Unknown output format ${this.format}`));
       }
     }
-    this.clientFactory = createAppCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry));
+
+    const telemetrySource = this.telemetrySource || "cli";
+    this.clientFactory = createAppCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry), telemetrySource);
     return this.runNoClient();
   }
 

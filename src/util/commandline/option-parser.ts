@@ -13,6 +13,7 @@ export interface OptionDescription {
   hasArg?: boolean;                 // Does this option take an argument?
   helpText?: string;                // Help text for this parameter
   common?: boolean;                 // Is this option an common option?
+  internal?: boolean;               // Is this option an internal option?
 }
 
 export interface OptionsDescription {
