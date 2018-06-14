@@ -96,29 +96,30 @@ export default class RunAppiumWizardTestCommand extends AppCommand {
           uploadFolderIsParent = dir === "upload";
 
           const dirContents: string[] = fs.readdirSync(fullDir);
-          if (dirContents.length > 0) {
-            const containsClassFiles: boolean = dirContents.some((dir) => {
-              return path.parse(dir).ext === ".class";
-            });
-            if (dir === "dependency-jars" || (dir === "test-classes" && containsClassFiles)) {
-              if (containsPartRequiredData) { // If already contains either "dependency-jars" or "test-classes"
-                const matchLevel: FolderMatchLevel = this.calculateMatchLevel(targetFolderParentLevel, uploadFolderIsParent, jarFileParentLevel);
-                const foundFolder: UploadFolder = {
-                  name: path.relative(process.cwd(), fullDir.split(dir)[0]),
-                  path: fullDir.split(dir)[0],
-                  matchLevel: matchLevel
-                };
-                if (!folders) {
-                  folders = [foundFolder];
-                } else {
-                  folders.push(foundFolder);
-                }
+          if (dirContents.length === 0) {
+            continue;
+          }
+          const containsClassFiles: boolean = dirContents.some((dir) => {
+            return path.parse(dir).ext === ".class";
+          });
+          if (dir === "dependency-jars" || (dir === "test-classes" && containsClassFiles)) {
+            if (containsPartRequiredData) { // If already contains either "dependency-jars" or "test-classes"
+              const matchLevel: FolderMatchLevel = this.calculateMatchLevel(targetFolderParentLevel, uploadFolderIsParent, jarFileParentLevel);
+              const foundFolder: UploadFolder = {
+                name: path.relative(process.cwd(), fullDir.split(dir)[0]),
+                path: fullDir.split(dir)[0],
+                matchLevel: matchLevel
+              };
+              if (!folders) {
+                folders = [foundFolder];
               } else {
-                containsPartRequiredData = true;
+                folders.push(foundFolder);
               }
             } else {
-              this.scanRecurse(fullDir, folders, targetFolderParentLevel, uploadFolderIsParent, jarFileParentLevel);
+              containsPartRequiredData = true;
             }
+          } else {
+            this.scanRecurse(fullDir, folders, targetFolderParentLevel, uploadFolderIsParent, jarFileParentLevel);
           }
         }
       } else {
@@ -170,42 +171,41 @@ export default class RunAppiumWizardTestCommand extends AppCommand {
       }
     });
 
-    if (shownFolders.length) {
-      const choices = shownFolders.map((folder) => {
-        return {
-          name: folder.name,
-          value: folder.path
-        };
-      });
-      choices.push({
-        name: "Enter path manually",
-        value: "manual"
-      });
-      const questions: Questions = [
-        {
-          type: "list",
-          name: "folderPath",
-          message: "Pick a folder with the packed Appium tests",
-          choices: choices
-        }
-      ];
-      const answers: any = await prompt.question(questions);
-      if (answers.folderPath === "manual") {
-        let pathIsValid: boolean;
-        let dirPath: string;
-        while (!pathIsValid) {
-          dirPath = await prompt(`Please provide the path to the Appium tests.`);
-          if (dirPath.length === 0) {
-            pathIsValid = false;
-          } else {
-            pathIsValid = directoryExistsSync(path.resolve(dirPath));
-          }
-        }
-        return dirPath;
-      }
-      return answers.folderPath;
-    } else {
+    if (shownFolders.length === 0) {
       return await prompt("We could not find any folders with Appium tests. Please provide the path to them.");
     }
+    const choices = shownFolders.map((folder) => {
+      return {
+        name: folder.name,
+        value: folder.path
+      };
+    });
+    choices.push({
+      name: "Enter path manually",
+      value: "manual"
+    });
+    const questions: Questions = [
+      {
+        type: "list",
+        name: "folderPath",
+        message: "Pick a folder with the packed Appium tests",
+        choices: choices
+      }
+    ];
+    const answers: any = await prompt.question(questions);
+    if (answers.folderPath === "manual") {
+      let pathIsValid: boolean;
+      let dirPath: string;
+      while (!pathIsValid) {
+        dirPath = await prompt(`Please provide the path to the Appium tests.`);
+        if (dirPath.length === 0) {
+          pathIsValid = false;
+        } else {
+          pathIsValid = directoryExistsSync(path.resolve(dirPath));
+        }
+      }
+      return dirPath;
+    }
+    return answers.folderPath;
   }
 }

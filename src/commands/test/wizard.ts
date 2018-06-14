@@ -10,15 +10,15 @@ import { DeviceSet, DeviceConfiguration, AppResponse } from "../../util/apis/gen
 import { DeviceConfigurationSort } from "./lib/deviceConfigurationSort";
 import RunEspressoWizardTestCommand from "./lib/wizard/espresso";
 import RunAppiumWizardTestCommand from "./lib/wizard/appium";
-import RunUitestWizardTestCommand from "./lib/wizard/uitests";
+import RunUitestWizardTestCommand from "./lib/wizard/uitest";
 import RunXCUIWizardTestCommand from "./lib/wizard/xcuitest";
 import { fileExistsSync } from "../../util/misc";
 
 enum TestFramework {
   "Espresso" = 1,
   "Appium" = 2,
-  "XCUI" = 3,
-  "Xamarin" = 4,
+  "XCUITest" = 3,
+  "Xamarin.UITest" = 4,
   "Calabash" = 5,
   "Manifest" = 6
 }
@@ -66,7 +66,7 @@ export default class WizardTestCommand extends AppCommand {
         this.interactiveArgs.push("--test-apk-path", testApkPath);
         return new RunEspressoWizardTestCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
       }
-      case TestFramework.XCUI: {
+      case TestFramework.XCUITest: {
         const testIpaPath: string = await this.promptAppFile(listOfAppFiles, true);
         this.interactiveArgs.push("--test-ipa-path", testIpaPath);
         return new RunXCUIWizardTestCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
@@ -74,7 +74,7 @@ export default class WizardTestCommand extends AppCommand {
       case TestFramework.Appium: {
         return new RunAppiumWizardTestCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
       }
-      case TestFramework.Xamarin: {
+      case TestFramework["Xamarin.UITest"]: {
         return new RunUitestWizardTestCommand(this._args, this.interactiveArgs).run(client, portalBaseUrl);
       }
       case TestFramework.Calabash: {
@@ -91,7 +91,7 @@ export default class WizardTestCommand extends AppCommand {
 
   private async promptFramework(): Promise<TestFramework> {
     const choices = Object.keys(TestFramework).filter((framework) => {
-      if (this.isAndroidApp && framework === "XCUI") {
+      if (this.isAndroidApp && framework === "XCUITest") {
         return false;
       }
       if (!this.isAndroidApp && framework === "Espresso") {
@@ -117,44 +117,43 @@ export default class WizardTestCommand extends AppCommand {
   }
 
   private async promptAppFile(listOfAppFiles: AppFile[], forTest: boolean = false): Promise<string> {
-    if (listOfAppFiles.length) {
-      const choices = listOfAppFiles.map((appName) => {
-        return {
-          name: appName.name,
-          value: appName.path
-        };
-      });
-
-      choices.push({
-        name: "Enter path manually",
-        value: "manual"
-      });
-      const questions: Questions = [
-        {
-          type: "list",
-          name: "appPath",
-          message: forTest ? "Pick a test app" : "Pick an app",
-          choices: choices
-        }
-      ];
-      const answers: any = await prompt.question(questions);
-      if (answers.appPath === "manual") {
-        let pathIsValid: boolean;
-        let filePath: string;
-        while (!pathIsValid) {
-          filePath = await prompt(`Please provide the path to the ${forTest ? "test app" : "app"}.`);
-          if (filePath.length === 0) {
-            pathIsValid = false;
-          } else {
-            pathIsValid = fileExistsSync(path.resolve(filePath));
-          }
-        }
-        return filePath;
-      }
-      return answers.appPath;
-    } else {
+    if (listOfAppFiles.length === 0) {
       return await prompt(`We could not find any app files inside the current folder. Please provide the path to the ${forTest ? "test app" : "app"}.`);
     }
+    const choices = listOfAppFiles.map((appName) => {
+      return {
+        name: appName.name,
+        value: appName.path
+      };
+    });
+
+    choices.push({
+      name: "Enter path manually",
+      value: "manual"
+    });
+    const questions: Questions = [
+      {
+        type: "list",
+        name: "appPath",
+        message: forTest ? "Pick a test app" : "Pick an app",
+        choices: choices
+      }
+    ];
+    const answers: any = await prompt.question(questions);
+    if (answers.appPath === "manual") {
+      let pathIsValid: boolean;
+      let filePath: string;
+      while (!pathIsValid) {
+        filePath = await prompt(`Please provide the path to the ${forTest ? "test app" : "app"}.`);
+        if (filePath.length === 0) {
+          pathIsValid = false;
+        } else {
+          pathIsValid = fileExistsSync(path.resolve(filePath));
+        }
+      }
+      return filePath;
+    }
+    return answers.appPath;
   }
 
   private async isAsync(): Promise<boolean> {

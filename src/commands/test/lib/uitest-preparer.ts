@@ -182,7 +182,7 @@ export class UITestPreparer {
   }
 
   private async getTestCloudExecutablePath(): Promise<string> {
-    const toolsDir = this.uiTestToolsDir || await UITestPreparer.findXamarinUITestNugetDir(this.buildDir, this.buildDir);
+    const toolsDir = this.uiTestToolsDir || await UITestPreparer.findXamarinUITestNugetDir(this.buildDir);
 
     if (!await directoryExists(toolsDir)) {
       throw new Error(`Cannot find test-cloud.exe, the path specified by "--uitest-tools-dir" was not found.${os.EOL}` +
@@ -210,7 +210,7 @@ export class UITestPreparer {
     return testCloudPath;
   }
 
-  public static async findXamarinUITestNugetDir(root: string, buildDir: string): Promise<string> {
+  public static async findXamarinUITestNugetDir(root: string, buildDir?: string): Promise<string> {
     const possibleNugetDirPattern = path.join(root, "packages", "Xamarin.UITest.*", "tools", "test-cloud.exe");
     const files = (await glob(possibleNugetDirPattern)).sort();
 
@@ -220,7 +220,7 @@ export class UITestPreparer {
        if (parentDir === root) {
          throw new Error(`Cannot find test-cloud.exe, which is required to prepare UI tests.${os.EOL}` +
           `We have searched for directory "packages${path.sep}Xamarin.UITest.*${path.sep}tools" inside ` +
-          `"${buildDir}" and all of its parent directories.${os.EOL}` +
+          `"${buildDir || parentDir}" and all of its parent directories.${os.EOL}` +
           `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` +
           `Minimum required version is "${this.getMinimumVersionString()}".`);
        } else {
