@@ -11,7 +11,7 @@ import { directoryExistsSync } from "../../../../util/misc/fs-helper";
 interface BuildFolder {
   name: string;
   path: string;
-  perfectMatch: boolean;
+  perfectMatch: boolean; // Means build folder has Xamarin.UITest.dll under lib folder exactly.
 }
 
 export default class RunUitestWizardTestCommand extends AppCommand {
