@@ -7,7 +7,7 @@ import * as chalk from "chalk";
 
 const debug = require("debug")("appcenter-cli:util:commandline:help");
 
-const Table = require("cli-table2");
+const Table = require("cli-table3");
 
 import {
   getClassHelpText, getOptionsDescription, getPositionalOptionsDescription

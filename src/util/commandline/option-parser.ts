@@ -6,13 +6,13 @@ const debug = require("debug")("appcenter-cli:util:commandline:option-parser");
 // Flag arguments
 
 export interface OptionDescription {
-  shortName?: string;    // Short flag for option, single character
-  longName?: string;     // long name for option
-  required?: boolean;    // Is this is a required parameter, if not present defaults to false
-  defaultValue?: string; // Default value for this option if it's not present
-  hasArg?: boolean;      // Does this option take an argument?
-  helpText?: string;     // Help text for this parameter
-  common?: boolean;      // Is this option an common option?
+  shortName?: string;               // Short flag for option, single character
+  longName?: string;                // long name for option
+  required?: boolean;               // Is this is a required parameter, if not present defaults to false
+  defaultValue?: string | string[]; // Default value for this option if it's not present
+  hasArg?: boolean;                 // Does this option take an argument?
+  helpText?: string;                // Help text for this parameter
+  common?: boolean;                 // Is this option an common option?
 }
 
 export interface OptionsDescription {
