@@ -1,6 +1,6 @@
 // Base class for all command handlers
 import * as Result from "./command-result";
-import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription, common } from "./option-decorators";
+import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription, common, internal } from "./option-decorators";
 import { parseOptions } from "./option-parser";
 import { setDebug, setQuiet, OutputFormatSupport, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
@@ -89,9 +89,9 @@ export class Command {
   public disableTelemetry: boolean;
 
   @longName("telemetry-source")
-  @help("Custom telemetry source")
   @hasArg
   @common
+  @internal
   public telemetrySource: string;
 
   // Entry point for runner. DO NOT override in command definition!
