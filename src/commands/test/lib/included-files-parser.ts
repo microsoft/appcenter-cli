@@ -3,6 +3,7 @@ import * as path from "path";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import { validateXmlFile } from "./xml-util";
 import { out } from "../../../util/interaction";
+import _ = require("lodash");
 
 const invalidCharactersRegexp = /['"!#$%&+^<=>`|]/;
 
@@ -17,7 +18,7 @@ export async function copyIncludedFiles(manifest: ITestCloudManifestJson, includ
     const includedFile = includedFiles[i];
     const copyTarget = path.join(path.dirname(rootDir), includedFile.targetPath);
 
-    if (copyTarget.indexOf(".dll.config") !== -1 && !validateXmlFile(copyTarget)) {
+    if (_.endsWith(".dll.config") && !validateXmlFile(copyTarget)) {
       out.text(`Warning: The XML config file ${copyTarget} was not a valid XML file. This file will not be uploaded.`);
       continue;
     }
