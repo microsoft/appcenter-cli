@@ -5,13 +5,11 @@ import { AppCenterClient } from "../../../../util/apis";
 import { prompt, out } from "../../../../util/interaction";
 import RunUITestsCommand from "../../run/uitest";
 import { Questions } from "inquirer";
-import { UITestPreparer } from "../uitest-preparer";
 import { directoryExistsSync } from "../../../../util/misc/fs-helper";
 
 interface BuildFolder {
   name: string;
   path: string;
-  perfectMatch: boolean; // Means build folder has Xamarin.UITest.dll under lib folder exactly.
 }
 
 export default class RunUitestWizardTestCommand extends AppCommand {
@@ -79,76 +77,44 @@ export default class RunUitestWizardTestCommand extends AppCommand {
       const dirContents: string[] = fs.readdirSync(fullDir);
 
       if (dirContents.length === 0) {
-        await this.scanRecurse(fullDir, folders);
+        continue;
       } else {
-        let containsTools: boolean = true;
-        try {
-          await UITestPreparer.findXamarinUITestNugetDir(fullDir, fullDir);
-        } catch (e) {
-          containsTools = false;
-        }
-
-        if (!containsTools) {
-          continue;
-        }
-
-        const xamarinDll = this.findXamarinDll(fullDir);
-        if (!xamarinDll) {
-          continue;
-        }
-        const xamarinDllParentFolder = path.dirname(xamarinDll).split(path.sep).pop();
-
-        const foundFolder: BuildFolder = {
-          name: path.relative(process.cwd(), fullDir),
-          path: fullDir,
-          perfectMatch: xamarinDllParentFolder === "lib"
-        };
-        if (!folders) {
-          folders = [foundFolder];
+        const xamarinNunitDll = this.findXamarinNunitDll(fullDir);
+        if (!xamarinNunitDll) {
+          await this.scanRecurse(fullDir, folders);
         } else {
-          folders.push(foundFolder);
+          const foundFolder: BuildFolder = {
+            name: path.relative(process.cwd(), fullDir),
+            path: fullDir
+          };
+          if (!folders) {
+            folders = [foundFolder];
+          } else {
+            folders.push(foundFolder);
+          }
         }
       }
     }
   }
 
-  private findXamarinDll(dirname: string): string {
+  private findXamarinNunitDll(dirname: string): boolean {
     const dirContent = fs.readdirSync(dirname);
+    let found = 0;
     for (const dir of dirContent) {
       const fullDir = path.join(dirname, dir);
-      if (fs.lstatSync(fullDir).isDirectory()) {
-        const found = this.findXamarinDll(fullDir);
-        if (found) {
-          return found;
-        }
-      } else {
-        if (dir === "Xamarin.UITest.dll") {
-          return fullDir;
+      if (!fs.lstatSync(fullDir).isDirectory()) {
+        if (dir === "Xamarin.UITest.dll" || dir === "nunit.framework.dll") {
+          found++;
         }
       }
     }
-    return null;
+    return found === 2;
   }
 
   private async promptFolder(listOfFolders: BuildFolder[]): Promise<string> {
     if (listOfFolders.length === 0) {
       return await prompt("We could not find any folders with Xamarin tests. Please provide the path to them.");
     }
-    listOfFolders = listOfFolders.sort((folder1, folder2) => {
-      if (folder1.perfectMatch) {
-        if (folder2.perfectMatch) {
-          return 0;
-        } else {
-          return -1;
-        }
-      } else {
-        if (folder2.perfectMatch) {
-          return 1;
-        } else {
-          return 0;
-        }
-      }
-    });
     const choices = listOfFolders.map((folder) => {
       return {
         name: folder.name,
