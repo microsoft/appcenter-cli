@@ -15,11 +15,12 @@ const sessionHeaderName = "diagnostic-context";
 const commandNameHeaderName = "cli-command-name";
 
 export function telemetryFilter(commandName: string, telemetryIsEnabled: boolean) : {(resource: WebResource, next: any, callback: any): any} {
+  const telemetrySource = process.env.TELEMETRY_SOURCE || "cli";
   return (resource: WebResource, next: any, callback: any): any => {
     return requestPipeline.interimStream((input: Readable, output: Writable) => {
       input.pause();
       if (telemetryIsEnabled) {
-        resource.headers["internal-request-source"] = "cli";
+        resource.headers["internal-request-source"] = telemetrySource;
         resource.headers[sessionHeaderName] = sessionId;
         resource.headers[commandNameHeaderName] = commandName;
       }
