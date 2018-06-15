@@ -1,7 +1,112 @@
 import { IFileDescriptionJson } from "../../../../src/commands/test/lib/test-manifest-reader";
 import { expect } from "chai";
-import { parseIncludedFiles } from "../../../../src/commands/test/lib/included-files-parser";
+import { copyIncludedFiles, parseIncludedFiles } from "../../../../src/commands/test/lib/included-files-parser";
+import * as xmlUtil from "../../../../src/commands/test/lib/xml-util";
+import * as pfs from "../../../../src/util/misc/promisfied-fs";
 import * as os from "os";
+import * as Sinon from "sinon";
+
+describe("copyIncludedFiles", () => {
+  let sandbox: Sinon.SinonSandbox = null;
+
+  beforeEach(() => {
+    sandbox = Sinon.sandbox.create();
+  });
+  afterEach(() => {
+      sandbox.restore();
+  });
+
+  it("should do nothing if null include is sent", async () => {
+    const inputManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
+    files: ["file1", "file2"], testFramework: { name: "", data: "" } };
+    const expectedManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
+      files: ["file1", "file2"], testFramework: { name: "", data: "" } };
+
+    await copyIncludedFiles(inputManifest, null, null);
+
+    expect(inputManifest).to.deep.equal(expectedManifest);
+  });
+
+  it("should do nothing if empty include is sent", async () => {
+    const inputManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
+    files: ["file1", "file2"], testFramework: { name: "", data: "" } };
+    const expectedManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
+      files: ["file1", "file2"], testFramework: { name: "", data: "" } };
+
+    await copyIncludedFiles(inputManifest, [], null);
+
+    expect(inputManifest).to.deep.equal(expectedManifest);
+  });
+
+  it("should do nothing if something.dll.config exists in include", async () => {
+    const inputManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
+    files: ["file1", "file2"], testFramework: { name: "", data: "" } };
+    const expectedManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
+      files: ["file1", "file2"], testFramework: { name: "", data: "" } };
+
+    sandbox.stub(xmlUtil, "validateXmlFile").callsFake(() => { return false; });
+
+    await copyIncludedFiles(inputManifest, ["something.dll.config"], "/path/to/files/");
+
+    expect(inputManifest).to.deep.equal(expectedManifest);
+  });
+
+  it("should add file if something.dll exists in include", async () => {
+    const inputManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
+    files: ["file1", "file2"], testFramework: { name: "", data: "" } };
+    const expectedManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
+      files: ["file1", "file2", "something.dll"], testFramework: { name: "", data: "" } };
+
+    sandbox.stub(xmlUtil, "validateXmlFile").callsFake(() => { return true; });
+    sandbox.stub(pfs, "cp").returns(null);
+
+    await copyIncludedFiles(inputManifest, ["something.dll"], "/path/to/files/");
+
+    expect(inputManifest).to.deep.equal(expectedManifest);
+  });
+
+  it("should add something.dll.config if it is valid xml", async () => {
+    const inputManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
+    files: ["file1", "file2"], testFramework: { name: "", data: "" } };
+    const expectedManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
+      files: ["file1", "file2", "something.dll.config"], testFramework: { name: "", data: "" } };
+
+    sandbox.stub(xmlUtil, "validateXmlFile").callsFake(() => { return true; });
+    sandbox.stub(pfs, "cp").returns(null);
+
+    await copyIncludedFiles(inputManifest, ["something.dll.config"], "/path/to/files/");
+
+    expect(inputManifest).to.deep.equal(expectedManifest);
+  });
+
+  it("should add something.dll but not something.dll.config if it is not valid xml", async () => {
+    const inputManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
+    files: ["file1", "file2"], testFramework: { name: "", data: "" } };
+    const expectedManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
+      files: ["file1", "file2", "something.dll"], testFramework: { name: "", data: "" } };
+
+    sandbox.stub(xmlUtil, "validateXmlFile").callsFake(() => { return false; });
+    sandbox.stub(pfs, "cp").returns(null);
+
+    await copyIncludedFiles(inputManifest, ["something.dll", "something.dll.config"], "/path/to/files/");
+
+    expect(inputManifest).to.deep.equal(expectedManifest);
+  });
+
+  it("should add something.dll and something.dll.config if it is valid xml", async () => {
+    const inputManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
+    files: ["file1", "file2"], testFramework: { name: "", data: "" } };
+    const expectedManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
+      files: ["file1", "file2", "something.dll", "something.dll.config"], testFramework: { name: "", data: "" } };
+
+    sandbox.stub(xmlUtil, "validateXmlFile").callsFake(() => { return true; });
+    sandbox.stub(pfs, "cp").returns(null);
+
+    await copyIncludedFiles(inputManifest, ["something.dll", "something.dll.config"], "/path/to/files/");
+
+    expect(inputManifest).to.deep.equal(expectedManifest);
+  });
+});
 
 describe("parseIncludedFiles", () => {
   const windowsRootDir = "d:\\workspace";

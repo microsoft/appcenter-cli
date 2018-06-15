@@ -12,13 +12,13 @@ export async function copyIncludedFiles(manifest: ITestCloudManifestJson, includ
     return;
   }
 
-  const includedFiles = parseIncludedFiles(include, rootDir);
+  const includedFiles = this.parseIncludedFiles(include, rootDir);
 
   for (let i = 0; i < includedFiles.length; i++) {
     const includedFile = includedFiles[i];
     const copyTarget = path.join(path.dirname(rootDir), includedFile.targetPath);
 
-    if (_.endsWith(".dll.config") && !validateXmlFile(copyTarget)) {
+    if (_.endsWith(copyTarget, ".dll.config") && !validateXmlFile(copyTarget)) {
       out.text(`Warning: The XML config file ${copyTarget} was not a valid XML file. This file will not be uploaded.`);
       continue;
     }
