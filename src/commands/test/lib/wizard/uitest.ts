@@ -74,41 +74,30 @@ export default class RunUitestWizardTestCommand extends AppCommand {
       if (dir === "node_modules") {
         continue;
       }
-      const dirContents: string[] = fs.readdirSync(fullDir);
+      const subDirContent: string[] = fs.readdirSync(fullDir);
 
-      if (dirContents.length === 0) {
+      if (subDirContent.length === 0) {
         continue;
+      }
+      const xamarinNunitDll = this.findXamarinNunitDll(subDirContent);
+      if (!xamarinNunitDll) {
+        await this.scanRecurse(fullDir, folders);
       } else {
-        const xamarinNunitDll = this.findXamarinNunitDll(fullDir);
-        if (!xamarinNunitDll) {
-          await this.scanRecurse(fullDir, folders);
+        const foundFolder: BuildFolder = {
+          name: path.relative(process.cwd(), fullDir),
+          path: fullDir
+        };
+        if (!folders) {
+          folders = [foundFolder];
         } else {
-          const foundFolder: BuildFolder = {
-            name: path.relative(process.cwd(), fullDir),
-            path: fullDir
-          };
-          if (!folders) {
-            folders = [foundFolder];
-          } else {
-            folders.push(foundFolder);
-          }
+          folders.push(foundFolder);
         }
       }
     }
   }
 
-  private findXamarinNunitDll(dirname: string): boolean {
-    const dirContent = fs.readdirSync(dirname);
-    let found = 0;
-    for (const dir of dirContent) {
-      const fullDir = path.join(dirname, dir);
-      if (!fs.lstatSync(fullDir).isDirectory()) {
-        if (dir === "Xamarin.UITest.dll" || dir === "nunit.framework.dll") {
-          found++;
-        }
-      }
-    }
-    return found === 2;
+  private findXamarinNunitDll(dirContent: string[]): boolean {
+    return dirContent.indexOf("Xamarin.UITest.dll") > -1 && dirContent.indexOf("nunit.framework.dll") > -1;
   }
 
   private async promptFolder(listOfFolders: BuildFolder[]): Promise<string> {
