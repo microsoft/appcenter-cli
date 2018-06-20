@@ -16,14 +16,17 @@ export async function copyIncludedFiles(manifest: ITestCloudManifestJson, includ
 
   for (let i = 0; i < includedFiles.length; i++) {
     const includedFile = includedFiles[i];
-    const copyTarget = path.join(path.dirname(rootDir), includedFile.targetPath);
 
-    if (_.endsWith(copyTarget, ".dll.config") && (manifest.files.indexOf(includedFile.targetPath.slice(0, -7)) > -1
-        || include.indexOf(includedFile.targetPath.slice(0, -7)) > -1) && !validXmlFile(copyTarget)) {
-      out.text(`Warning: The XML config file ${copyTarget} was not a valid XML file. This file will not be uploaded.`);
-      continue;
+    if (_.endsWith(includedFile.targetPath, ".dll.config")) {
+      const assemblyName = includedFile.targetPath.slice(0, -7);
+      const hasCorrespondingAssembly = manifest.files.indexOf(assemblyName) > -1 || include.indexOf(assemblyName) > -1;
+      if (hasCorrespondingAssembly && !validXmlFile(includedFile.targetPath)) {
+        out.text(`Warning: The XML config file ${includedFile.targetPath} was not a valid XML file. This file will not be uploaded.`);
+        continue;
+      }
     }
 
+    const copyTarget = path.join(path.dirname(rootDir), includedFile.targetPath);
     await pfs.cp(includedFile.sourcePath, copyTarget);
     manifest.files.push(includedFile.targetPath);
   }
