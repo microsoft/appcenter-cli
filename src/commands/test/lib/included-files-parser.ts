@@ -7,26 +7,22 @@ import _ = require("lodash");
 
 const invalidCharactersRegexp = /['"!#$%&+^<=>`|]/;
 
-export async function processIncludedFiles(manifest: ITestCloudManifestJson, include: string[], rootDir: string): Promise<ITestCloudManifestJson> {
+export async function processIncludedFiles(manifest: ITestCloudManifestJson, include: string[], rootDir: string) {
   if (!include) {
-    return manifest;
+    return;
   }
 
   const filteredFiles = this.filterIncludedFiles(manifest.files, include);
   const includedFiles = this.parseIncludedFiles(filteredFiles, rootDir);
-  const output = await this.copyIncludedFiles(manifest, includedFiles, rootDir);
-
-  return output;
+  await this.copyIncludedFiles(manifest, includedFiles, rootDir);
 }
 
-export async function copyIncludedFiles(manifest: ITestCloudManifestJson, includedFiles: IFileDescriptionJson[], rootDir: string): Promise<ITestCloudManifestJson> {
+export async function copyIncludedFiles(manifest: ITestCloudManifestJson, includedFiles: IFileDescriptionJson[], rootDir: string) {
   for (const includedFile of includedFiles) {
     const copyTarget = path.join(path.dirname(rootDir), includedFile.targetPath);
     await pfs.cp(includedFile.sourcePath, copyTarget);
     manifest.files.push(includedFile.targetPath);
   }
-
-  return manifest;
 }
 
 export function parseIncludedFiles(includedFiles: string[], rootDir: string): IFileDescriptionJson[] {
@@ -35,11 +31,11 @@ export function parseIncludedFiles(includedFiles: string[], rootDir: string): IF
 
 export function filterIncludedFiles(manifestFiles: string[], include: string[]): string[] {
   if (!include) {
-    return manifestFiles;
+    return [];
   }
 
   const allIncludedFiles = manifestFiles.concat(include);
-  const output = manifestFiles.slice(0);
+  const output = [];
   for (const file of include) {
     if (validFile(file, allIncludedFiles)) {
       output.push(file);

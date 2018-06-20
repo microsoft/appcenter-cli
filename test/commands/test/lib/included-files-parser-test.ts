@@ -17,14 +17,14 @@ describe("filterIncludedFiles", () => {
   });
 
   it("should do nothing if null include is sent", async () => {
-    const expected = JSON.parse(JSON.stringify(input));
+    const expected: string[] = [];
     const output = await filterIncludedFiles(input, null);
 
     expect(output).to.deep.equal(expected);
   });
 
   it("should do nothing if empty include is sent", async () => {
-    const expected = JSON.parse(JSON.stringify(input));
+    const expected: string[] = [];
     const output = await filterIncludedFiles(input, []);
 
     expect(output).to.deep.equal(expected);
@@ -33,7 +33,7 @@ describe("filterIncludedFiles", () => {
   describe("validXmlFile", function () {
     context("when valid", function () {
       it("should add something.dll.config if something.dll doesn't exist in include", async () => {
-        const expected = ["file1", "file2", "something.dll.config"];
+        const expected = ["something.dll.config"];
         sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
         const output = await filterIncludedFiles(input, ["something.dll.config"]);
 
@@ -41,7 +41,7 @@ describe("filterIncludedFiles", () => {
       });
 
       it("should add something.dll.config", async () => {
-        const expected = ["file1", "file2", "something.dll.config"];
+        const expected = ["something.dll.config"];
         sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
         const output = await filterIncludedFiles(input, ["something.dll.config"]);
 
@@ -49,7 +49,7 @@ describe("filterIncludedFiles", () => {
       });
 
       it("should add something.dll and something.dll.config", async () => {
-        const expected = ["file1", "file2", "something.dll", "something.dll.config"];
+        const expected = ["something.dll", "something.dll.config"];
         sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
         const output = await filterIncludedFiles(input, ["something.dll", "something.dll.config"]);
 
@@ -61,7 +61,7 @@ describe("filterIncludedFiles", () => {
   describe("validXmlFile", function () {
     context("when invalid", function () {
       it("should add something.dll.config if something.dll doesn't exist in include", async () => {
-        const expected = ["file1", "file2", "something.dll.config"];
+        const expected = ["something.dll.config"];
         sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return false; });
         const output = await filterIncludedFiles(input, ["something.dll.config"]);
 
@@ -69,7 +69,7 @@ describe("filterIncludedFiles", () => {
       });
 
       it("should add something.dll but not something.dll.config", async () => {
-        const expected = ["file1", "file2", "something.dll"];
+        const expected = ["something.dll"];
         sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return false; });
         const output = await filterIncludedFiles(input, ["something.dll", "something.dll.config"]);
 
@@ -79,7 +79,7 @@ describe("filterIncludedFiles", () => {
   });
 
   it("should add file if something.dll exists in include", async () => {
-    const expected = ["file1", "file2", "something.dll"];
+    const expected = ["something.dll"];
     sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
     const output = await filterIncludedFiles(input, ["something.dll"]);
 
