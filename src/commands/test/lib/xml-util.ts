@@ -45,7 +45,7 @@ export abstract class XmlUtil {
   }
 }
 
-export function validateXmlFile(file: string): boolean {
+export function validXmlFile(file: string): boolean {
   try {
     const xml = new DOMParser().parseFromString(fs.readFileSync(file, "utf-8"));
 

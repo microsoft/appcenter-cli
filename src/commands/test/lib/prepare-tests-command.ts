@@ -72,7 +72,7 @@ export class PrepareTestsCommand extends Command {
     await pfs.writeFile(manifestPath, modifiedJson);
   }
 
-  protected async addIncludedFiles(manifest: ITestCloudManifestJson): Promise<void> {
+  protected async addIncludedFiles(manifest: ITestCloudManifestJson) {
     copyIncludedFiles(manifest, this.include, this.getSourceRootDir());
   }
 

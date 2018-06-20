@@ -61,7 +61,7 @@
     "@types/request": "^2.0.3",
     "@types/rimraf": "^2.0.2",
     "@types/semver": "^5.3.33",
-    "@types/sinon": "^2.3.5",
+    "@types/sinon": "^2.3.7",
     "@types/temp": "^0.8.29",
     "@types/unzip": "^0.1.0",
     "@types/which": "^1.0.28",
