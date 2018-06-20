@@ -10,7 +10,7 @@ import { AppCenterClient } from "../../../util/apis";
 import { StreamingArrayOutput } from "../../../util/interaction";
 import { getUser } from "../../../util/profile";
 import { parseTestParameters } from "./parameters-parser";
-import { copyIncludedFiles } from "./included-files-parser";
+import { processIncludedFiles } from "./included-files-parser";
 import { progressWithResult } from "./interaction";
 import { ITestCloudManifestJson } from "./test-manifest-reader";
 import { Messages } from "./help-messages";
@@ -181,7 +181,7 @@ export abstract class RunTestsCommand extends AppCommand {
     const manifest = JSON.parse(manifestJson) as ITestCloudManifestJson;
     manifest.cliVersion = this.getVersion();
 
-    copyIncludedFiles(manifest, this.include, path.dirname(manifestPath));
+    processIncludedFiles(manifest, this.include, path.dirname(manifestPath));
 
     const modifiedManifest = JSON.stringify(manifest, null, 1);
     await pfs.writeFile(manifestPath, modifiedManifest);

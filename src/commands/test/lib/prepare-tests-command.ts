@@ -2,7 +2,7 @@ import { Command, CommandArgs, CommandResult,
          help, success, shortName, longName, required, hasArg, failure, ErrorCodes } from "../../../util/commandline";
 import { out } from "../../../util/interaction";
 import { parseTestParameters } from "./parameters-parser";
-import { copyIncludedFiles } from "./included-files-parser";
+import { processIncludedFiles } from "./included-files-parser";
 import { progressWithResult } from "./interaction";
 import { ITestCloudManifestJson } from "./test-manifest-reader";
 import { Messages } from "./help-messages";
@@ -73,7 +73,7 @@ export class PrepareTestsCommand extends Command {
   }
 
   protected async addIncludedFiles(manifest: ITestCloudManifestJson) {
-    copyIncludedFiles(manifest, this.include, this.getSourceRootDir());
+    processIncludedFiles(manifest, this.include, this.getSourceRootDir());
   }
 
   protected async addTestParameters(manifest: ITestCloudManifestJson): Promise<void> {

@@ -1,68 +1,59 @@
-import { IFileDescriptionJson, ITestCloudManifestJson } from "../../../../src/commands/test/lib/test-manifest-reader";
+import { IFileDescriptionJson } from "../../../../src/commands/test/lib/test-manifest-reader";
 import { expect } from "chai";
-import { copyIncludedFiles, parseIncludedFiles } from "../../../../src/commands/test/lib/included-files-parser";
+import { parseIncludedFiles, filterIncludedFiles } from "../../../../src/commands/test/lib/included-files-parser";
 import * as xmlUtil from "../../../../src/commands/test/lib/xml-util";
-import * as pfs from "../../../../src/util/misc/promisfied-fs";
 import * as os from "os";
 import * as Sinon from "sinon";
 
-describe("copyIncludedFiles", () => {
+describe("filterIncludedFiles", () => {
   let sandbox: Sinon.SinonSandbox = null;
-  let inputManifest: ITestCloudManifestJson = null;
+  const input = ["file1", "file2"];
 
   beforeEach(() => {
     sandbox = Sinon.createSandbox();
-    inputManifest = { schemaVersion: "1.0.0", cliVersion: "1.0.0",  applicationFile: "",
-    files: ["file1", "file2"], testFramework: { name: "", data: "" } };
   });
   afterEach(() => {
       sandbox.restore();
   });
 
   it("should do nothing if null include is sent", async () => {
-    const expectedManifest = JSON.parse(JSON.stringify(inputManifest));
-    const output = await copyIncludedFiles(inputManifest, null, null);
+    const expected = JSON.parse(JSON.stringify(input));
+    const output = await filterIncludedFiles(input, null);
 
-    expect(output).to.deep.equal(expectedManifest);
+    expect(output).to.deep.equal(expected);
   });
 
   it("should do nothing if empty include is sent", async () => {
-    const expectedManifest = JSON.parse(JSON.stringify(inputManifest));
-    const output = await copyIncludedFiles(inputManifest, [], null);
+    const expected = JSON.parse(JSON.stringify(input));
+    const output = await filterIncludedFiles(input, []);
 
-    expect(output).to.deep.equal(expectedManifest);
+    expect(output).to.deep.equal(expected);
   });
 
   describe("validXmlFile", function () {
     context("when valid", function () {
       it("should add something.dll.config if something.dll doesn't exist in include", async () => {
-        const expectedManifest = JSON.parse(JSON.stringify(inputManifest));
-        expectedManifest.files = ["file1", "file2", "something.dll.config"];
+        const expected = ["file1", "file2", "something.dll.config"];
         sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
-        sandbox.stub(pfs, "cp").returns(null);
-        const output = await copyIncludedFiles(inputManifest, ["something.dll.config"], "/path/to/files/");
+        const output = await filterIncludedFiles(input, ["something.dll.config"]);
 
-        expect(output).to.deep.equal(expectedManifest);
+        expect(output).to.deep.equal(expected);
       });
 
       it("should add something.dll.config", async () => {
-        const expectedManifest = JSON.parse(JSON.stringify(inputManifest));
-        expectedManifest.files = ["file1", "file2", "something.dll.config"];
+        const expected = ["file1", "file2", "something.dll.config"];
         sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
-        sandbox.stub(pfs, "cp").returns(null);
-        const output = await copyIncludedFiles(inputManifest, ["something.dll.config"], "/path/to/files/");
+        const output = await filterIncludedFiles(input, ["something.dll.config"]);
 
-        expect(output).to.deep.equal(expectedManifest);
+        expect(output).to.deep.equal(expected);
       });
 
       it("should add something.dll and something.dll.config", async () => {
-        const expectedManifest = JSON.parse(JSON.stringify(inputManifest));
-        expectedManifest.files = ["file1", "file2", "something.dll", "something.dll.config"];
+        const expected = ["file1", "file2", "something.dll", "something.dll.config"];
         sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
-        sandbox.stub(pfs, "cp").returns(null);
-        const output = await copyIncludedFiles(inputManifest, ["something.dll", "something.dll.config"], "/path/to/files/");
+        const output = await filterIncludedFiles(input, ["something.dll", "something.dll.config"]);
 
-        expect(output).to.deep.equal(expectedManifest);
+        expect(output).to.deep.equal(expected);
       });
     });
   });
@@ -70,35 +61,29 @@ describe("copyIncludedFiles", () => {
   describe("validXmlFile", function () {
     context("when invalid", function () {
       it("should add something.dll.config if something.dll doesn't exist in include", async () => {
-        const expectedManifest = JSON.parse(JSON.stringify(inputManifest));
-        expectedManifest.files = ["file1", "file2", "something.dll.config"];
+        const expected = ["file1", "file2", "something.dll.config"];
         sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return false; });
-        sandbox.stub(pfs, "cp").returns(null);
-        const output = await copyIncludedFiles(inputManifest, ["something.dll.config"], "/path/to/files/");
+        const output = await filterIncludedFiles(input, ["something.dll.config"]);
 
-        expect(output).to.deep.equal(expectedManifest);
+        expect(output).to.deep.equal(expected);
       });
 
       it("should add something.dll but not something.dll.config", async () => {
-        const expectedManifest = JSON.parse(JSON.stringify(inputManifest));
-        expectedManifest.files = ["file1", "file2", "something.dll"];
+        const expected = ["file1", "file2", "something.dll"];
         sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return false; });
-        sandbox.stub(pfs, "cp").returns(null);
-        const output = await copyIncludedFiles(inputManifest, ["something.dll", "something.dll.config"], "/path/to/files/");
+        const output = await filterIncludedFiles(input, ["something.dll", "something.dll.config"]);
 
-        expect(output).to.deep.equal(expectedManifest);
+        expect(output).to.deep.equal(expected);
       });
     });
   });
 
   it("should add file if something.dll exists in include", async () => {
-    const expectedManifest = JSON.parse(JSON.stringify(inputManifest));
-    expectedManifest.files = ["file1", "file2", "something.dll"];
+    const expected = ["file1", "file2", "something.dll"];
     sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
-    sandbox.stub(pfs, "cp").returns(null);
-    const output = await copyIncludedFiles(inputManifest, ["something.dll"], "/path/to/files/");
+    const output = await filterIncludedFiles(input, ["something.dll"]);
 
-    expect(output).to.deep.equal(expectedManifest);
+    expect(output).to.deep.equal(expected);
   });
 });
 

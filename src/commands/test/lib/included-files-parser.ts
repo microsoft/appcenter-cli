@@ -7,25 +7,20 @@ import _ = require("lodash");
 
 const invalidCharactersRegexp = /['"!#$%&+^<=>`|]/;
 
-export async function copyIncludedFiles(manifest: ITestCloudManifestJson, include: string[], rootDir: string): Promise<ITestCloudManifestJson> {
+export async function processIncludedFiles(manifest: ITestCloudManifestJson, include: string[], rootDir: string): Promise<ITestCloudManifestJson> {
   if (!include) {
     return manifest;
   }
 
-  const includedFiles = this.parseIncludedFiles(include, rootDir);
+  const filteredFiles = this.filterIncludedFiles(manifest.files, include);
+  const includedFiles = this.parseIncludedFiles(filteredFiles, rootDir);
+  const output = await this.copyIncludedFiles(manifest, includedFiles, rootDir);
 
-  for (let i = 0; i < includedFiles.length; i++) {
-    const includedFile = includedFiles[i];
+  return output;
+}
 
-    if (_.endsWith(includedFile.targetPath, ".dll.config")) {
-      const assemblyName = includedFile.targetPath.slice(0, -7);
-      const hasCorrespondingAssembly = manifest.files.indexOf(assemblyName) > -1 || include.indexOf(assemblyName) > -1;
-      if (hasCorrespondingAssembly && !validXmlFile(includedFile.targetPath)) {
-        out.text(`Warning: The XML config file ${includedFile.targetPath} was not a valid XML file. This file will not be uploaded.`);
-        continue;
-      }
-    }
-
+export async function copyIncludedFiles(manifest: ITestCloudManifestJson, includedFiles: IFileDescriptionJson[], rootDir: string): Promise<ITestCloudManifestJson> {
+  for (const includedFile of includedFiles) {
     const copyTarget = path.join(path.dirname(rootDir), includedFile.targetPath);
     await pfs.cp(includedFile.sourcePath, copyTarget);
     manifest.files.push(includedFile.targetPath);
@@ -36,6 +31,35 @@ export async function copyIncludedFiles(manifest: ITestCloudManifestJson, includ
 
 export function parseIncludedFiles(includedFiles: string[], rootDir: string): IFileDescriptionJson[] {
   return includedFiles.map((f) => parseIncludedFile(f, rootDir));
+}
+
+export function filterIncludedFiles(manifestFiles: string[], include: string[]): string[] {
+  if (!include) {
+    return manifestFiles;
+  }
+
+  const allIncludedFiles = manifestFiles.concat(include);
+  const output = manifestFiles.slice(0);
+  for (const file of include) {
+    if (validFile(file, allIncludedFiles)) {
+      output.push(file);
+    }
+  }
+
+  return output;
+}
+
+function validFile(fileName: string, allIncludedFiles: string[]) : boolean {
+  if (_.endsWith(fileName, ".dll.config")) {
+    const assemblyName = fileName.slice(0, -7);
+    const hasCorrespondingAssembly = allIncludedFiles.indexOf(assemblyName) > -1;
+    if (hasCorrespondingAssembly && !validXmlFile(fileName)) {
+      out.text(`Warning: The XML config file ${fileName} was not a valid XML file. This file will not be uploaded.`);
+      return false;
+    }
+  }
+
+  return true;
 }
 
 function parseIncludedFile(includedFile: string, rootDir: string): IFileDescriptionJson {
