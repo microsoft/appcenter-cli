@@ -181,7 +181,7 @@ export abstract class RunTestsCommand extends AppCommand {
     const manifest = JSON.parse(manifestJson) as ITestCloudManifestJson;
     manifest.cliVersion = this.getVersion();
 
-    processIncludedFiles(manifest, this.include, path.dirname(manifestPath), this.getSourceRootDir());
+    await processIncludedFiles(manifest, this.include, path.dirname(manifestPath), this.getSourceRootDir());
 
     const modifiedManifest = JSON.stringify(manifest, null, 1);
     await pfs.writeFile(manifestPath, modifiedManifest);

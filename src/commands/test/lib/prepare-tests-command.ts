@@ -73,7 +73,7 @@ export class PrepareTestsCommand extends Command {
   }
 
   protected async addIncludedFiles(manifest: ITestCloudManifestJson) {
-    processIncludedFiles(manifest, this.include, this.artifactsDir, this.getSourceRootDir());
+    await processIncludedFiles(manifest, this.include, this.artifactsDir, this.getSourceRootDir());
   }
 
   protected async addTestParameters(manifest: ITestCloudManifestJson): Promise<void> {
