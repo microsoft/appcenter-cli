@@ -7,13 +7,13 @@ import _ = require("lodash");
 
 const invalidCharactersRegexp = /['"!#$%&+^<=>`|]/;
 
-export async function processIncludedFiles(manifest: ITestCloudManifestJson, include: string[], rootDir: string) {
+export async function processIncludedFiles(manifest: ITestCloudManifestJson, include: string[], rootDir: string, sourceRootDir: string) {
   if (!include) {
     return;
   }
 
   const filteredFiles = this.filterIncludedFiles(manifest.files, include);
-  const includedFiles = this.parseIncludedFiles(filteredFiles, rootDir);
+  const includedFiles = this.parseIncludedFiles(filteredFiles, sourceRootDir);
   await this.copyIncludedFiles(manifest, includedFiles, rootDir);
 }
 
