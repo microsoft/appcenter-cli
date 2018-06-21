@@ -35,14 +35,7 @@ export function filterIncludedFiles(manifestFiles: string[], include: string[]):
   }
 
   const allIncludedFiles = manifestFiles.concat(include);
-  const output = [];
-  for (const file of include) {
-    if (validFile(file, allIncludedFiles)) {
-      output.push(file);
-    }
-  }
-
-  return output;
+  return include.filter((f) => validFile(f, allIncludedFiles));
 }
 
 function validFile(fileName: string, allIncludedFiles: string[]) : boolean {
