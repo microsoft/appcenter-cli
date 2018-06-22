@@ -1,3 +1,6 @@
+import * as fs from "fs";
+import { DOMParser } from "xmldom";
+
 export abstract class XmlUtil {
   public abstract mergeXmlResults(pathToArchive: string): Promise<Document>;
   public abstract getArchiveName(): string;
@@ -39,5 +42,15 @@ export abstract class XmlUtil {
       result += this.countChildren(node.childNodes[i]);
     }
     return result;
+  }
+}
+
+export function validXmlFile(file: string): boolean {
+  try {
+    const xml = new DOMParser().parseFromString(fs.readFileSync(file, "utf-8"));
+
+    return xml != null;
+  } catch {
+    return false;
   }
 }

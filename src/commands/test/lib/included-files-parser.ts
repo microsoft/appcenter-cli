@@ -1,10 +1,54 @@
-import { IFileDescriptionJson } from "./test-manifest-reader";
+import { IFileDescriptionJson, ITestCloudManifestJson } from "./test-manifest-reader";
 import * as path from "path";
+import * as pfs from "../../../util/misc/promisfied-fs";
+import { validXmlFile } from "./xml-util";
+import { out } from "../../../util/interaction";
+import _ = require("lodash");
 
 const invalidCharactersRegexp = /['"!#$%&+^<=>`|]/;
 
+export async function processIncludedFiles(manifest: ITestCloudManifestJson, include: string[], rootDir: string, sourceRootDir: string) {
+  if (!include) {
+    return;
+  }
+
+  const filteredFiles = this.filterIncludedFiles(manifest.files, include);
+  const includedFiles = this.parseIncludedFiles(filteredFiles, sourceRootDir);
+  await this.copyIncludedFiles(manifest, includedFiles, rootDir);
+}
+
+export async function copyIncludedFiles(manifest: ITestCloudManifestJson, includedFiles: IFileDescriptionJson[], rootDir: string) {
+  for (const includedFile of includedFiles) {
+    const copyTarget = path.join(path.dirname(rootDir), includedFile.targetPath);
+    await pfs.cp(includedFile.sourcePath, copyTarget);
+    manifest.files.push(includedFile.targetPath);
+  }
+}
+
 export function parseIncludedFiles(includedFiles: string[], rootDir: string): IFileDescriptionJson[] {
   return includedFiles.map((f) => parseIncludedFile(f, rootDir));
+}
+
+export function filterIncludedFiles(manifestFiles: string[], include: string[]): string[] {
+  if (!include) {
+    return [];
+  }
+
+  const allIncludedFiles = manifestFiles.concat(include);
+  return include.filter((f) => validFile(f, allIncludedFiles));
+}
+
+function validFile(fileName: string, allIncludedFiles: string[]) : boolean {
+  if (_.endsWith(fileName, ".dll.config")) {
+    const assemblyName = fileName.slice(0, -7);
+    const hasCorrespondingAssembly = allIncludedFiles.indexOf(assemblyName) > -1;
+    if (hasCorrespondingAssembly && !validXmlFile(fileName)) {
+      out.text(`Warning: The XML config file ${fileName} was not a valid XML file. This file will not be uploaded.`);
+      return false;
+    }
+  }
+
+  return true;
 }
 
 function parseIncludedFile(includedFile: string, rootDir: string): IFileDescriptionJson {
