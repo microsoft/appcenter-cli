@@ -22,7 +22,7 @@ export class JUnitXmlUtil extends XmlUtil {
           const fullPath = path.join(tempPath, entry.path);
           entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
 
-            const xml = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"));
+            const xml = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
 
             let name: string = "unknown";
             const matches = entry.path.match("^(.*)_TEST.*");
@@ -97,7 +97,7 @@ export class JUnitXmlUtil extends XmlUtil {
 
   getEmptyXmlDocument(): Document {
     return new DOMParser().parseFromString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
-<testsuites tests=\"0\" failures=\"0\" time=\"0\" errors=\"0\" skipped=\"0\"></testsuites>");
+<testsuites tests=\"0\" failures=\"0\" time=\"0\" errors=\"0\" skipped=\"0\"></testsuites>", "text/xml");
   }
 
   appendToTestNameTransformation(xml: Document, text: string): void {

@@ -18,7 +18,7 @@ export class NUnitXmlUtil extends XmlUtil {
         .on("entry", function (entry: unzip.Entry) {
           const fullPath = path.join(tempPath, entry.path);
           entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
-            const xml = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"));
+            const xml = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
 
             let name: string = "unknown";
             const matches = entry.path.match("^(.*)[_-]nunit[_-]report");
