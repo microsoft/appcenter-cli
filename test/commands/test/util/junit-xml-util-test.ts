@@ -170,6 +170,22 @@ describe("junit xml util", function () {
     xmlLib.parseXml(finalStrXml);
   });
 
+  it("should throw an explicit exception", async () => {
+    let exception = false;
+    // If
+    const pathToArchive: string = path.join(__dirname, "../resources/broken/junit_xml_zip.zip");
+
+    // When
+    try {
+      await xmlUtil.mergeXmlResults(pathToArchive);
+    } catch (e) {
+      exception = true;
+    }
+
+    // Exception was thrown
+    expect(exception).to.eql(true);
+  });
+
   it("should create correct empty xml", () => {
     const xml: Document = xmlUtil.getEmptyXmlDocument();
     const testSuitesNode: Element = xmlUtil.collectAllElements(xml.documentElement, "testsuites")[0];

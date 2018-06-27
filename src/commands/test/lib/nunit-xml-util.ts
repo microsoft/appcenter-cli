@@ -16,10 +16,22 @@ export class NUnitXmlUtil extends XmlUtil {
       fs.createReadStream(pathToArchive)
         .pipe(unzip.Parse())
         .on("entry", function (entry: unzip.Entry) {
+          // Skip directories and hidden system files
+          if (entry.type === "Directory" || path.basename(entry.path).substring(0, 1) === ".") {
+            return;
+          }
           const fullPath: string = path.join(tempPath, entry.path);
           entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
             try {
-              const xml: Document = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
+              // Handle DOMParser warnings, errors and fatalErrors like JS exceptions
+              const configuration: object = {
+                locator: {},
+                errorHandler: function (level: string, msg: string) {
+                  throw `DOMParser${level}: ${msg}`;
+                }
+              };
+
+              const xml: Document = new DOMParser(configuration).parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
 
               let name: string = "unknown";
               const matches: RegExpMatchArray = entry.path.match("^(.*)[_-]nunit[_-]report");

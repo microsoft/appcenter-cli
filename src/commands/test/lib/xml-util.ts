@@ -47,7 +47,14 @@ export abstract class XmlUtil {
 
 export function validXmlFile(file: string): boolean {
   try {
-    const xml = new DOMParser().parseFromString(fs.readFileSync(file, "utf-8"), "text/xml");
+    const configuration: object = {
+      locator: {},
+      errorHandler: function (level: string, msg: string) {
+        throw `DOMParser${level}: ${msg}`;
+      }
+    };
+
+    const xml = new DOMParser(configuration).parseFromString(fs.readFileSync(file, "utf-8"), "text/xml");
 
     return xml != null;
   } catch {

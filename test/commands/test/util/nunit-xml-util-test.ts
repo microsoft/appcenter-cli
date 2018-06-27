@@ -146,4 +146,20 @@ describe("nunit xml util", function () {
     // Doesn't throw exception
     xmlLib.parseXml(finalStrXml);
   });
+
+  it("should throw an explicit exception", async () => {
+    let exception = false;
+    // If
+    const pathToArchive: string = path.join(__dirname, "../resources/broken/nunit_xml_zip.zip");
+
+    // When
+    try {
+      await xmlUtil.mergeXmlResults(pathToArchive);
+    } catch (e) {
+      exception = true;
+    }
+
+    // Exception was thrown
+    expect(exception).to.eql(true);
+  });
 });
