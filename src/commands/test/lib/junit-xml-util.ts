@@ -21,19 +21,22 @@ export class JUnitXmlUtil extends XmlUtil {
           }
           const fullPath: string = path.join(tempPath, entry.path);
           entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
+            try {
+              const xml: Document = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
 
-            const xml: Document = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
+              let name: string = "unknown";
+              const matches: RegExpMatchArray = entry.path.match("^(.*)_TEST.*");
+              if (matches && matches.length > 1) {
+                name = matches[1].replace(/\./gi, "_");
+              }
 
-            let name: string = "unknown";
-            const matches: RegExpMatchArray = entry.path.match("^(.*)_TEST.*");
-            if (matches && matches.length > 1) {
-              name = matches[1].replace(/\./gi, "_");
+              self.appendToTestNameTransformation(xml, name);
+              self.removeIgnoredTransformation(xml);
+
+              mainXml = self.combine(mainXml, xml);
+            } catch (e) {
+              reject(e);
             }
-
-            self.appendToTestNameTransformation(xml, name);
-            self.removeIgnoredTransformation(xml);
-
-            mainXml = self.combine(mainXml, xml);
           }));
         })
         .on("close", () => {
