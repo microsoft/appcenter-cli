@@ -18,22 +18,26 @@ export class NUnitXmlUtil extends XmlUtil {
         .on("entry", function (entry: unzip.Entry) {
           const fullPath = path.join(tempPath, entry.path);
           entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
-            const xml = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
+            try {
+              const xml = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
 
-            let name: string = "unknown";
-            const matches = entry.path.match("^(.*)[_-]nunit[_-]report");
-            if (matches && matches.length > 1) {
-              name = matches[1].replace(/\./gi, "_");
-            }
+              let name: string = "unknown";
+              const matches = entry.path.match("^(.*)[_-]nunit[_-]report");
+              if (matches && matches.length > 1) {
+                name = matches[1].replace(/\./gi, "_");
+              }
 
-            self.appendToTestNameTransformation(xml, `_${name}`);
-            self.removeIgnoredTransformation(xml);
-            self.removeEmptySuitesTransformation(xml);
+              self.appendToTestNameTransformation(xml, `_${name}`);
+              self.removeIgnoredTransformation(xml);
+              self.removeEmptySuitesTransformation(xml);
 
-            if (mainXml) {
-              mainXml = self.combine(mainXml, xml);
-            } else {
-              mainXml = xml;
+              if (mainXml) {
+                mainXml = self.combine(mainXml, xml);
+              } else {
+                mainXml = xml;
+              }
+            } catch (e) {
+              reject(e);
             }
           }));
         })
