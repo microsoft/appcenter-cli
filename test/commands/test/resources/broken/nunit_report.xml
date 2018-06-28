@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-results name="Xamarin Testcloud UITest" date="2018-03-22" time="15:26:14" total="2" errors="0" failures="0" not-run="15" inconclusive="0" ignored="15" skipped="0" invalid="0"
+  <test-suite type="Assembly" name="CreditCardValidator.Droid.UITests.dll" executed="True" result="Success" success="True" time="185.220" asserts="0">
+    <results>
+      
+    <test-suite type="Namespace" name="CreditCardValidator" executed="True" result="Success" success="True" time="185.213" asserts="0">
+        <results>
+          
+        <test-suite type="Namespace" name="Droid" executed="True" result="Success" success="True" time="185.213" asserts="0">
+              
+            <test-suite type="Namespace" name="UITests" executed="True" result="Success" success="True" time="185.212" asserts="0">
+                <results>
+                  
+                  
+                <test-suite type="TestFixture" name="Tests" executed="True" result="Success" success="True" time="163.643" asserts="0">
+                    <categories>
+                      
+                    <category name="Test1"/></categories>
+                    <results>
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                      
+                    <test-case name="CreditCardValidator.Droid.UITests.Tests.Test0" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test1" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test10" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test11" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test12" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test13" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test14" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test15" executed="True" result="Success" success="True" time="58.793" asserts="0">
+                        <reason>
+                          <message><![CDATA[Test15]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test2" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test3" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test4" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test5" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test6" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test7" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test8" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case><test-case name="CreditCardValidator.Droid.UITests.Tests.Test9" executed="False" result="Ignored">
+                        <reason>
+                          <message><![CDATA[]]></message>
+                        </reason>
+                      </test-case></results>
+                  </test-suite><test-suite type="TestFixture" name="Tests2" executed="True" result="Success" success="True" time="21.561" asserts="0">
+                    <categories>
+                      
+                    <category name="Test2"/></categories>
+                    <results>
+                      
+                    <test-case name="CreditCardValidator.Droid.UITests.Tests2.Test2" executed="True" result="Success" success="True" time="15.481" asserts="0">
+                        <reason>
+                          <message><![CDATA[Test2]]></message>
+                        </reason>
+                      </test-case></results>
+                  </test-suite></results>
+              </test-suite></results>
+          </test-suite></results>
+      </test-suite>
+  </test-suite>
+</test-results>
