@@ -1,7 +1,6 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
 import { XmlUtil } from "./xml-util";
 import * as fs from "fs";
-import * as path from "path";
 import * as unzip from "unzip";
 import { DOMParser } from "xmldom";
 
@@ -12,51 +11,31 @@ export class NUnitXmlUtil extends XmlUtil {
     let mainXml: Document = null;
 
     const self: NUnitXmlUtil = this;
-    return new Promise<Document>((resolve, reject) => {
-      fs.createReadStream(pathToArchive)
-        .pipe(unzip.Parse())
-        .on("entry", function (entry: unzip.Entry) {
-          // Skip directories and hidden system files
-          if (entry.type === "Directory" || path.basename(entry.path).substring(0, 1) === ".") {
-            return;
-          }
-          const fullPath: string = path.join(tempPath, entry.path);
-          entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
-            try {
-              // Handle DOMParser warnings, errors and fatalErrors like JS exceptions
-              const configuration: object = {
-                locator: {},
-                errorHandler: function (level: string, msg: string) {
-                  throw `DOMParser${level}: ${msg}`;
-                }
-              };
 
-              const xml: Document = new DOMParser(configuration).parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
+    return this.getMergeXmlResultsPromise(pathToArchive, tempPath,
+      (fullPath: string, entry: unzip.Entry) => {
+        const xml: Document = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
 
-              let name: string = "unknown";
-              const matches: RegExpMatchArray = entry.path.match("^(.*)[_-]nunit[_-]report");
-              if (matches && matches.length > 1) {
-                name = matches[1].replace(/\./gi, "_");
-              }
+        let name: string = "unknown";
+        const matches: RegExpMatchArray = entry.path.match("^(.*)[_-]nunit[_-]report");
+        if (matches && matches.length > 1) {
+          name = matches[1].replace(/\./gi, "_");
+        }
 
-              self.appendToTestNameTransformation(xml, `_${name}`);
-              self.removeIgnoredTransformation(xml);
-              self.removeEmptySuitesTransformation(xml);
+        self.appendToTestNameTransformation(xml, `_${name}`);
+        self.removeIgnoredTransformation(xml);
+        self.removeEmptySuitesTransformation(xml);
 
-              if (mainXml) {
-                mainXml = self.combine(mainXml, xml);
-              } else {
-                mainXml = xml;
-              }
-            } catch (e) {
-              reject(e);
-            }
-          }));
-        })
-        .on("close", () => {
-          resolve(mainXml);
-        });
-    });
+        if (mainXml) {
+          mainXml = self.combine(mainXml, xml);
+        } else {
+          mainXml = xml;
+        }
+      },
+      (resolve: Function) => {
+        resolve(mainXml);
+      }
+    );
   }
 
   public getArchiveName(): string {

@@ -1,9 +1,19 @@
 import * as fs from "fs";
+import * as path from "path";
+import * as unzip from "unzip";
 import { DOMParser } from "xmldom";
 
 export abstract class XmlUtil {
   public abstract mergeXmlResults(pathToArchive: string): Promise<Document>;
   public abstract getArchiveName(): string;
+
+  // Handle DOMParser warnings, errors and fatalErrors like JS exceptions
+  public static DOMParserConfig: object = {
+    locator: {},
+    errorHandler: function (level: string, msg: string) {
+      throw `DOMParser${level}: ${msg}`;
+    }
+  };
 
   public collectAllElements(element: Element, name: string): Element[] {
     let result: Element[] = [];
@@ -43,18 +53,35 @@ export abstract class XmlUtil {
     }
     return result;
   }
+
+  public getMergeXmlResultsPromise(pathToArchive: string, tempPath: string, processXml: Function, resolvePromise: Function): Promise<Document> {
+    return new Promise<Document>((resolve, reject) => {
+      fs.createReadStream(pathToArchive)
+        .pipe(unzip.Parse())
+        .on("entry", function (entry: unzip.Entry) {
+          // Skip directories and hidden system files
+          if (entry.type === "Directory" || path.basename(entry.path).substring(0, 1) === ".") {
+            return;
+          }
+          const fullPath: string = path.join(tempPath, entry.path);
+          entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
+            try {
+              processXml(fullPath, entry);
+            } catch (e) {
+              reject(e);
+            }
+          }));
+        })
+        .on("close", () => {
+          resolvePromise(resolve);
+        });
+    });
+  }
 }
 
 export function validXmlFile(file: string): boolean {
   try {
-    const configuration: object = {
-      locator: {},
-      errorHandler: function (level: string, msg: string) {
-        throw `DOMParser${level}: ${msg}`;
-      }
-    };
-
-    const xml = new DOMParser(configuration).parseFromString(fs.readFileSync(file, "utf-8"), "text/xml");
+    const xml = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(file, "utf-8"), "text/xml");
 
     return xml != null;
   } catch {
