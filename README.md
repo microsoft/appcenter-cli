@@ -95,6 +95,7 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 | `appcenter telemetry off` | Turn off the sending of telemetry |
 | `appcenter telemetry on` | Turn on the sending of telemetry |
 | | |
+| `appcenter test wizard` | Start a test run interactively. All the parameters will be prompted on-the-go |
 | `appcenter test download` | Download the report artifacts, unpack and merge them |
 | `appcenter test status` | Checks the status of the started test run |
 | `appcenter test stop` | Stop the started test run |

@@ -23,7 +23,7 @@ export class EspressoPreparer {
       throw new Error("You must not specify both build dir and test apk path.");
     }
     if (!(this.buildDir || this.testApkPath)) {
-      throw new Error("Either projectDir, buildDir or testApkPath must be specified");
+      throw new Error("Either artifacts-dir, build-dir or test-apk-path must be specified");
     }
   }
 

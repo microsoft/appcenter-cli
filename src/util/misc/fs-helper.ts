@@ -14,6 +14,17 @@ export function fileExistsSync(filename: string): boolean {
   return false;
 }
 
+export function directoryExistsSync(dirname: string): boolean {
+  try {
+    return fs.statSync(dirname).isDirectory();
+  } catch (err) {
+    if (err.code !== "ENOENT") {
+      throw err;
+    }
+  }
+  return false;
+}
+
 export function createLongPath(target: string) {
   let targetFolder: string = target;
   const notExistsFolder: string[] = [];
