@@ -87,6 +87,7 @@
     "typescript": "^2.8.3"
   },
   "dependencies": {
+    "@types/update-notifier": "^2.2.0",
     "azure-storage": "^2.8.2",
     "bplist": "0.0.4",
     "chalk": "^1.1.3",
@@ -118,6 +119,7 @@
     "semver": "^5.4.1",
     "temp": "^0.8.3",
     "unzip": "^0.1.11",
+    "update-notifier": "^2.5.0",
     "uuid": "^3.0.1",
     "which": "^1.3.0",
     "wordwrap": "^1.0.0",
