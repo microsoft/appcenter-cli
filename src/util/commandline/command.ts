@@ -8,7 +8,6 @@ import { scriptName } from "../misc";
 import { getUser, environments, telemetryIsEnabled, getPortalUrlForEndpoint, getEnvFromEnvironmentVar, getTokenFromEnvironmentVar, appCenterAccessTokenEnvVar } from "../profile";
 import { AppCenterClient, createAppCenterClient, AppCenterClientFactory } from "../apis";
 import * as path from "path";
-import updateNotifier = require("update-notifier");
 
 const debug = require("debug")("appcenter-cli:util:commandline:command");
 
@@ -114,8 +113,6 @@ export class Command {
       setQuiet();
     }
 
-    this.checkForUpdates();
-
     if (this.format) {
       if (this.format in this.additionalSupportedOutputFormats) {
         this.additionalSupportedOutputFormats[this.format]();
@@ -182,7 +179,9 @@ export class Command {
   }
 
   protected getVersion(): string {
-    const packageJson = this.getPackage();
+    const packageJsonPath = path.join(__dirname, "../../../package.json");
+    /* tslint:disable-next-line:non-literal-require */
+    const packageJson: any = require(packageJsonPath);
     return packageJson.version;
   }
 
@@ -194,18 +193,5 @@ export class Command {
     }
 
     return input;
-  }
-
-  private checkForUpdates(): void {
-    debug("Check for updates");
-    const notifier = updateNotifier({pkg: this.getPackage()});
-    notifier.notify();
-  }
-
-  private getPackage(): updateNotifier.Package {
-    const packageJsonPath = path.join(__dirname, "../../../package.json");
-    /* tslint:disable-next-line:non-literal-require */
-    const packageJson: updateNotifier.Package = require(packageJsonPath);
-    return packageJson;
   }
 }
