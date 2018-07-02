@@ -1,7 +1,6 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
 import { XmlUtil } from "./xml-util";
 import * as fs from "fs";
-import * as path from "path";
 import * as unzip from "unzip";
 import { DOMParser } from "xmldom";
 
@@ -11,36 +10,32 @@ export class NUnitXmlUtil extends XmlUtil {
     const tempPath: string = await pfs.mkTempDir("appcenter-uitestreports");
     let mainXml: Document = null;
 
-    const self = this;
-    return new Promise<Document>((resolve, reject) => {
-      fs.createReadStream(pathToArchive)
-        .pipe(unzip.Parse())
-        .on("entry", function (entry: unzip.Entry) {
-          const fullPath = path.join(tempPath, entry.path);
-          entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
-            const xml = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"));
+    const self: NUnitXmlUtil = this;
 
-            let name: string = "unknown";
-            const matches = entry.path.match("^(.*)[_-]nunit[_-]report");
-            if (matches && matches.length > 1) {
-              name = matches[1].replace(/\./gi, "_");
-            }
+    return this.getMergeXmlResultsPromise(pathToArchive, tempPath,
+      (fullPath: string, entry: unzip.Entry) => {
+        const xml: Document = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
 
-            self.appendToTestNameTransformation(xml, `_${name}`);
-            self.removeIgnoredTransformation(xml);
-            self.removeEmptySuitesTransformation(xml);
+        let name: string = "unknown";
+        const matches: RegExpMatchArray = entry.path.match("^(.*)[_-]nunit[_-]report");
+        if (matches && matches.length > 1) {
+          name = matches[1].replace(/\./gi, "_");
+        }
 
-            if (mainXml) {
-              mainXml = self.combine(mainXml, xml);
-            } else {
-              mainXml = xml;
-            }
-          }));
-        })
-        .on("close", () => {
-          resolve(mainXml);
-        });
-    });
+        self.appendToTestNameTransformation(xml, `_${name}`);
+        self.removeIgnoredTransformation(xml);
+        self.removeEmptySuitesTransformation(xml);
+
+        if (mainXml) {
+          mainXml = self.combine(mainXml, xml);
+        } else {
+          mainXml = xml;
+        }
+      },
+      (resolve: Function) => {
+        resolve(mainXml);
+      }
+    );
   }
 
   public getArchiveName(): string {
@@ -57,10 +52,10 @@ export class NUnitXmlUtil extends XmlUtil {
     this.combineTestResultsAttribute(xml1, xml2, "skipped");
     this.combineTestResultsAttribute(xml1, xml2, "invalid");
 
-    const testSuitesParent: Node = this.collectAllElements(xml1, "test-results")[0];
-    const testSuites: Node[] = this.collectChildren(xml2, "test-suite");
+    const testSuitesParent: Element = this.collectAllElements(xml1.documentElement, "test-results")[0];
+    const testSuites: Element[] = this.collectChildren(xml2.documentElement, "test-suite");
 
-    testSuites.forEach((child: Node) => {
+    testSuites.forEach((child: Element) => {
       testSuitesParent.appendChild(child);
     });
 
@@ -68,8 +63,8 @@ export class NUnitXmlUtil extends XmlUtil {
   }
 
   appendToTestNameTransformation(xml: Document, text: string): void {
-    const testCases: Node[] = this.collectAllElements(xml, "test-case");
-    testCases.forEach((testCase: Node) => {
+    const testCases: Element[] = this.collectAllElements(xml.documentElement, "test-case");
+    testCases.forEach((testCase: Element) => {
       const name: Attr = testCase.attributes.getNamedItem("name");
       if (name) {
         name.value = `${name.value}${text}`;
@@ -78,34 +73,34 @@ export class NUnitXmlUtil extends XmlUtil {
   }
 
   removeIgnoredTransformation(xml: Document): void {
-    const testResults: Node[] = this.collectAllElements(xml, "test-results");
-    testResults.forEach((testResult: Node) => {
+    const testResults: Element[] = this.collectAllElements(xml.documentElement, "test-results");
+    testResults.forEach((testResult: Element) => {
       const ignoredAttr: Attr = testResult.attributes.getNamedItem("ignored");
       if (ignoredAttr) {
         const notRunAttr: Attr = testResult.attributes.getNamedItem("not-run");
         if (notRunAttr) {
-          const notRun = Number(notRunAttr.value);
-          const ignored = Number(ignoredAttr.value);
+          const notRun: number = Number(notRunAttr.value);
+          const ignored: number = Number(ignoredAttr.value);
           notRunAttr.value = String(notRun - ignored);
         }
         ignoredAttr.value = "0";
       }
     });
 
-    const nodes: Node[] = this.collectAllElements(xml, "test-case");
-    nodes.forEach((node: Node) => {
-      const resultAttr = node.attributes.getNamedItem("result");
+    const elements: Element[] = this.collectAllElements(xml.documentElement, "test-case");
+    elements.forEach((element: Element) => {
+      const resultAttr: Attr = element.attributes.getNamedItem("result");
       if (resultAttr && resultAttr.value === "Ignored") {
-        node.parentNode.removeChild(node);
+        element.parentNode.removeChild(element);
       }
     });
   }
 
   removeEmptySuitesTransformation(xml: Document): void {
-    const nodes: Node[] = this.collectAllElements(xml, "test-suite");
-    nodes.forEach((node: Node) => {
-      if (this.countChildren(node) <= 1) {
-        node.parentNode.removeChild(node);
+    const elements: Element[] = this.collectAllElements(xml.documentElement, "test-suite");
+    elements.forEach((element: Element) => {
+      if (this.countChildren(element) <= 1) {
+        element.parentNode.removeChild(element);
       }
     });
   }
@@ -115,7 +110,7 @@ export class NUnitXmlUtil extends XmlUtil {
   }
 
   getTestResultsAttribute(xml: Document, attributeName: string): number {
-    const testResults: Node[] = this.collectAllElements(xml, "test-results");
+    const testResults: Element[] = this.collectAllElements(xml.documentElement, "test-results");
     if (testResults.length === 0) {
       return 0;
     }
@@ -128,8 +123,8 @@ export class NUnitXmlUtil extends XmlUtil {
   }
 
   addTestResultsAttribute(xml: Document, attributeName: string, value: number) {
-    const currentValue = this.getTestResultsAttribute(xml, attributeName);
-    const testResults: Node[] = this.collectAllElements(xml, "test-results");
+    const currentValue: number = this.getTestResultsAttribute(xml, attributeName);
+    const testResults: Element[] = this.collectAllElements(xml.documentElement, "test-results");
     const attr: Attr = testResults[0].attributes.getNamedItem(attributeName);
     if (attr) {
       attr.value = String(currentValue + value);

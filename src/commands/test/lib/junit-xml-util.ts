@@ -1,7 +1,6 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
 import { XmlUtil } from "./xml-util";
 import * as fs from "fs";
-import * as path from "path";
 import * as unzip from "unzip";
 import { DOMParser } from "xmldom";
 
@@ -11,35 +10,27 @@ export class JUnitXmlUtil extends XmlUtil {
     const tempPath: string = await pfs.mkTempDir("appcenter-junittestreports");
     let mainXml: Document = this.getEmptyXmlDocument();
 
-    const self = this;
-    return new Promise<Document>((resolve, reject) => {
-      fs.createReadStream(pathToArchive)
-        .pipe(unzip.Parse())
-        .on("entry", function (entry: unzip.Entry) {
-          if (entry.type === "Directory") {
-            return;
-          }
-          const fullPath = path.join(tempPath, entry.path);
-          entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
+    const self: JUnitXmlUtil = this;
 
-            const xml = new DOMParser().parseFromString(fs.readFileSync(fullPath, "utf-8"));
+    return this.getMergeXmlResultsPromise(pathToArchive, tempPath,
+      (fullPath: string, entry: unzip.Entry) => {
+        const xml: Document = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
 
-            let name: string = "unknown";
-            const matches = entry.path.match("^(.*)_TEST.*");
-            if (matches && matches.length > 1) {
-              name = matches[1].replace(/\./gi, "_");
-            }
+        let name: string = "unknown";
+        const matches: RegExpMatchArray = entry.path.match("^(.*)_TEST.*");
+        if (matches && matches.length > 1) {
+          name = matches[1].replace(/\./gi, "_");
+        }
 
-            self.appendToTestNameTransformation(xml, name);
-            self.removeIgnoredTransformation(xml);
+        self.appendToTestNameTransformation(xml, name);
+        self.removeIgnoredTransformation(xml);
 
-            mainXml = self.combine(mainXml, xml);
-          }));
-        })
-        .on("close", () => {
-          resolve(mainXml);
-        });
-    });
+        mainXml = self.combine(mainXml, xml);
+      },
+      (resolve: Function) => {
+        resolve(mainXml);
+      }
+    );
   }
 
   public getArchiveName(): string {
@@ -47,11 +38,11 @@ export class JUnitXmlUtil extends XmlUtil {
   }
 
   combine(xml1: Document, xml2: Document): Document {
-    const testSuitesNode: Node = this.collectAllElements(xml1, "testsuites")[0];
-    const xml1testSuites: Node[] = this.collectChildren(xml1, "testsuite");
-    const xml2TestSuites: Node[] = this.collectChildren(xml2, "testsuite");
+    const testSuitesElement: Element = this.collectAllElements(xml1.documentElement, "testsuites")[0];
+    const xml1testSuites: Element[] = this.collectChildren(xml1.documentElement, "testsuite");
+    const xml2TestSuites: Element[] = this.collectChildren(xml2.documentElement, "testsuite");
 
-    xml2TestSuites.forEach((xml2TestSuite: Node) => {
+    xml2TestSuites.forEach((xml2TestSuite: Element) => {
       let needToAddNewTestSuite: boolean = true;
 
       // Skip test suite without test cases
@@ -62,7 +53,7 @@ export class JUnitXmlUtil extends XmlUtil {
       // Combine all test cases in one test suite with the same class name
       const testSuiteName: string = xml2TestSuite.attributes.getNamedItem("name").value;
 
-      xml1testSuites.every((xml1TestSuite: Node) => {
+      xml1testSuites.every((xml1TestSuite: Element) => {
         const suiteNameAttr: Attr = xml1TestSuite.attributes.getNamedItem("name");
         if (!suiteNameAttr || suiteNameAttr.value !== testSuiteName) {
 
@@ -73,8 +64,8 @@ export class JUnitXmlUtil extends XmlUtil {
         // Combine test suite attributes
         this.combineAllAttributes(xml1TestSuite, xml2TestSuite);
 
-        const testCases: Node[] = this.collectChildren(xml2TestSuite, "testcase");
-        testCases.forEach((testCase: Node) => {
+        const testCases: Element[] = this.collectChildren(xml2TestSuite, "testcase");
+        testCases.forEach((testCase: Element) => {
           xml1TestSuite.appendChild(testCase);
         });
 
@@ -85,11 +76,11 @@ export class JUnitXmlUtil extends XmlUtil {
       });
 
       if (needToAddNewTestSuite) {
-        testSuitesNode.appendChild(xml2TestSuite);
+        testSuitesElement.appendChild(xml2TestSuite);
       }
 
       // Add test suite info to summary
-      this.combineAllAttributes(testSuitesNode, xml2TestSuite);
+      this.combineAllAttributes(testSuitesElement, xml2TestSuite);
     });
 
     return xml1;
@@ -97,12 +88,12 @@ export class JUnitXmlUtil extends XmlUtil {
 
   getEmptyXmlDocument(): Document {
     return new DOMParser().parseFromString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
-<testsuites tests=\"0\" failures=\"0\" time=\"0\" errors=\"0\" skipped=\"0\"></testsuites>");
+<testsuites tests=\"0\" failures=\"0\" time=\"0\" errors=\"0\" skipped=\"0\"></testsuites>", "text/xml");
   }
 
   appendToTestNameTransformation(xml: Document, text: string): void {
-    const testCases: Node[] = this.collectAllElements(xml, "testcase");
-    testCases.forEach((testCase: Node) => {
+    const testCases: Element[] = this.collectAllElements(xml.documentElement, "testcase");
+    testCases.forEach((testCase: Element) => {
       const name: Attr = testCase.attributes.getNamedItem("name");
       if (name) {
         name.value = `${name.value}${text}`;
@@ -111,14 +102,14 @@ export class JUnitXmlUtil extends XmlUtil {
   }
 
   removeIgnoredTransformation(xml: Document): void {
-    const testCases: Node[] = this.collectAllElements(xml, "testcase");
+    const testCases: Element[] = this.collectAllElements(xml.documentElement, "testcase");
 
-    testCases.forEach((testCase: Node) => {
+    testCases.forEach((testCase: Element) => {
       if (this.collectAllElements(testCase, "skipped").length === 0) {
         return;
       }
 
-      const parent: Node = testCase.parentNode;
+      const parent: Element = testCase.parentNode as Element;
       parent.removeChild(testCase);
 
       const testCaseTime: number = Number(testCase.attributes.getNamedItem("time").value);
@@ -141,26 +132,26 @@ export class JUnitXmlUtil extends XmlUtil {
   }
 
   removeEmptySuitesTransformation(xml: Document): void {
-    const testSuites: Node[] = this.collectAllElements(xml, "testsuite");
-    testSuites.forEach((testSuite: Node) => {
+    const testSuites: Element[] = this.collectAllElements(xml.documentElement, "testsuite");
+    testSuites.forEach((testSuite: Element) => {
       if (this.collectAllElements(testSuite, "testcase").length === 0) {
-        testSuite.parentNode.removeChild(testSuite);
+        testSuite.parentElement.removeChild(testSuite);
         xml.removeChild(testSuite);
       }
     });
   }
 
-  combineAllAttributes(node1: Node, node2: Node) {
-    this.combineAttributes(node1, node2, "tests");
-    this.combineAttributes(node1, node2, "failures");
-    this.combineAttributes(node1, node2, "time");
-    this.combineAttributes(node1, node2, "errors");
-    this.combineAttributes(node1, node2, "skipped");
+  combineAllAttributes(element1: Element, element2: Element) {
+    this.combineAttributes(element1, element2, "tests");
+    this.combineAttributes(element1, element2, "failures");
+    this.combineAttributes(element1, element2, "time");
+    this.combineAttributes(element1, element2, "errors");
+    this.combineAttributes(element1, element2, "skipped");
   }
 
-  combineAttributes(node1: Node, node2: Node, attributeName: string) {
-    const attr1: Attr = node1.attributes.getNamedItem(attributeName);
-    const attr2: Attr = node2.attributes.getNamedItem(attributeName);
+  combineAttributes(element1: Element, element2: Element, attributeName: string) {
+    const attr1: Attr = element1.attributes.getNamedItem(attributeName);
+    const attr2: Attr = element2.attributes.getNamedItem(attributeName);
 
     if (!attr1 || !attr1.value) {
       return;

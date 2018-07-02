@@ -1,7 +1,91 @@
 import { IFileDescriptionJson } from "../../../../src/commands/test/lib/test-manifest-reader";
 import { expect } from "chai";
-import { parseIncludedFiles } from "../../../../src/commands/test/lib/included-files-parser";
+import { parseIncludedFiles, filterIncludedFiles } from "../../../../src/commands/test/lib/included-files-parser";
+import * as xmlUtil from "../../../../src/commands/test/lib/xml-util";
 import * as os from "os";
+import * as Sinon from "sinon";
+
+describe("filterIncludedFiles", () => {
+  let sandbox: Sinon.SinonSandbox = null;
+  const input = ["file1", "file2"];
+
+  beforeEach(() => {
+    sandbox = Sinon.createSandbox();
+  });
+  afterEach(() => {
+      sandbox.restore();
+  });
+
+  it("should do nothing if null include is sent", async () => {
+    const expected: string[] = [];
+    const output = await filterIncludedFiles(input, null);
+
+    expect(output).to.deep.equal(expected);
+  });
+
+  it("should do nothing if empty include is sent", async () => {
+    const expected: string[] = [];
+    const output = await filterIncludedFiles(input, []);
+
+    expect(output).to.deep.equal(expected);
+  });
+
+  describe("validXmlFile", function () {
+    context("when valid", function () {
+      it("should add something.dll.config if something.dll doesn't exist in include", async () => {
+        const expected = ["something.dll.config"];
+        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
+        const output = await filterIncludedFiles(input, ["something.dll.config"]);
+
+        expect(output).to.deep.equal(expected);
+      });
+
+      it("should add something.dll.config", async () => {
+        const expected = ["something.dll.config"];
+        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
+        const output = await filterIncludedFiles(input, ["something.dll.config"]);
+
+        expect(output).to.deep.equal(expected);
+      });
+
+      it("should add something.dll and something.dll.config", async () => {
+        const expected = ["something.dll", "something.dll.config"];
+        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
+        const output = await filterIncludedFiles(input, ["something.dll", "something.dll.config"]);
+
+        expect(output).to.deep.equal(expected);
+      });
+    });
+  });
+
+  describe("validXmlFile", function () {
+    context("when invalid", function () {
+      it("should add something.dll.config if something.dll doesn't exist in include", async () => {
+        const expected = ["something.dll.config"];
+        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return false; });
+        const output = await filterIncludedFiles(input, ["something.dll.config"]);
+
+        expect(output).to.deep.equal(expected);
+      });
+
+      it("should add something.dll but not something.dll.config", async () => {
+        const expected = ["something.dll"];
+        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return false; });
+        const output = await filterIncludedFiles(input, ["something.dll", "something.dll.config"]);
+
+        expect(output).to.deep.equal(expected);
+      });
+    });
+  });
+
+  it("should add file if something.dll exists in include", async () => {
+    const expected = ["something.dll"];
+    sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
+    const output = await filterIncludedFiles(input, ["something.dll"]);
+
+    expect(output).to.deep.equal(expected);
+  });
+});
 
 describe("parseIncludedFiles", () => {
   const windowsRootDir = "d:\\workspace";

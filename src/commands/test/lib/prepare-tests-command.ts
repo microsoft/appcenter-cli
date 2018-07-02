@@ -2,12 +2,11 @@ import { Command, CommandArgs, CommandResult,
          help, success, shortName, longName, required, hasArg, failure, ErrorCodes } from "../../../util/commandline";
 import { out } from "../../../util/interaction";
 import { parseTestParameters } from "./parameters-parser";
-import { parseIncludedFiles } from "./included-files-parser";
+import { processIncludedFiles } from "./included-files-parser";
 import { progressWithResult } from "./interaction";
 import { ITestCloudManifestJson } from "./test-manifest-reader";
 import { Messages } from "./help-messages";
 import * as _ from "lodash";
-import * as path from "path";
 import * as pfs from "../../../util/misc/promisfied-fs";
 
 export class PrepareTestsCommand extends Command {
@@ -73,19 +72,8 @@ export class PrepareTestsCommand extends Command {
     await pfs.writeFile(manifestPath, modifiedJson);
   }
 
-  protected async addIncludedFiles(manifest: ITestCloudManifestJson): Promise<void> {
-    if (!this.include) {
-      return;
-    }
-
-    const includedFiles = parseIncludedFiles(this.include, this.getSourceRootDir());
-    for (let i = 0; i < includedFiles.length; i++) {
-      const includedFile = includedFiles[i];
-      const copyTarget = path.join(this.artifactsDir, includedFile.targetPath);
-      await pfs.cp(includedFile.sourcePath, copyTarget);
-
-      manifest.files.push(includedFile.targetPath);
-    }
+  protected async addIncludedFiles(manifest: ITestCloudManifestJson) {
+    await processIncludedFiles(manifest, this.include, this.artifactsDir, this.getSourceRootDir());
   }
 
   protected async addTestParameters(manifest: ITestCloudManifestJson): Promise<void> {
