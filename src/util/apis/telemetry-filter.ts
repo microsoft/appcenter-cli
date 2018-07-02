@@ -4,6 +4,7 @@
 
 import { WebResource } from "ms-rest";
 import { Readable, Writable } from "stream";
+import { getTelemetrySourceFromEnvironmentVar } from "../profile";
 
 const requestPipeline = require("ms-rest/lib/requestPipeline");
 
@@ -15,7 +16,7 @@ const sessionHeaderName = "diagnostic-context";
 const commandNameHeaderName = "cli-command-name";
 
 export function telemetryFilter(commandName: string, telemetryIsEnabled: boolean) : {(resource: WebResource, next: any, callback: any): any} {
-  const telemetrySource = process.env.TELEMETRY_SOURCE || "cli";
+  const telemetrySource = getTelemetrySourceFromEnvironmentVar() || "cli";
   return (resource: WebResource, next: any, callback: any): any => {
     return requestPipeline.interimStream((input: Readable, output: Writable) => {
       input.pause();
