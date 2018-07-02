@@ -33,7 +33,17 @@ function runCli() {
   var commandLine = require('../dist/util/commandline');
 
   var runner = commandLine.runner(path.join(__dirname, '..', 'dist', 'commands'));
-  runner(process.argv.slice(2))
+  var args = process.argv.slice(2);
+
+  if (args.indexOf('--quiet') === -1) {
+    const updateNotifier = require('update-notifier');
+    const pkg = require(path.join(__dirname, '..', 'package.json'));
+
+    const notifier = updateNotifier({pkg});
+    notifier.notify();
+  }
+
+  runner(args)
     .then(function (result) {
       if (commandLine.failed(result)) {
         const chalk = require("chalk");
