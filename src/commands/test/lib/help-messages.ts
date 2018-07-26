@@ -88,9 +88,9 @@ export module Messages {
       export const XCUITestBuildDir = "Path to the build output directory (usually <project>/Build/Products/Debug-iphoneos)";
 
       export const VSTSIdVariable = "Outputs the Test Run Id to the named VSTS variable";
-      export const TestOutputDir = "Path to the directory for test results. This parameter won't work when you run using --async because we have to wait for test results. The results will be saved in the working directory if the relative path is specified";
-      export const MergeNUnitXml = "Merge the xml files in to the <output.xml> file. This parameter won't work when you run using --async because we have to wait for test results";
-      export const MergeJUnitXml = "Merge the xml files in to the <output.xml> file. This parameter won't work when you run using --async because we have to wait for test results";
+      export const TestOutputDir = "Path to the directory for test results. This parameter won't work when you run using --async because we have to wait for test results. The results will be saved in the working directory if a relative path is specified";
+      export const MergeNUnitXml = "Merge the xml files in to the <arg> file. This parameter won't work when you run using --async because we have to wait for test results";
+      export const MergeJUnitXml = "Merge the xml files in to the <arg> file. This parameter won't work when you run using --async because we have to wait for test results";
 
       export const DownloadTestRunId = "ID of the started test run";
       export const DownloadTestOutputDir = "Directory to download the .zip file(s) into for merging";
