@@ -79,7 +79,7 @@ export abstract class RunTestsCommand extends AppCommand {
   vstsIdVariable: string;
 
   protected isAppPathRequired = true;
-  protected readonly streamingOutput = new StreamingArrayOutput();
+  private readonly streamingOutput = new StreamingArrayOutput();
 
   constructor(args: CommandArgs) {
     super(args);
@@ -98,7 +98,7 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
     // Override this if additional processing is needed need after test run completes
-  protected async afterCompletion(client: AppCenterClient, testRun: StartedTestRun): Promise<void> {
+  protected async afterCompletion(client: AppCenterClient, testRun: StartedTestRun, streamingOutput: StreamingArrayOutput): Promise<void> {
     return;
   }
 
@@ -135,7 +135,7 @@ export abstract class RunTestsCommand extends AppCommand {
 
         if (!this.async) {
           const exitCode = await this.waitForCompletion(client, testRun.testRunId);
-          await this.afterCompletion(client, testRun);
+          await this.afterCompletion(client, testRun, this.streamingOutput);
 
           switch (exitCode) {
             case 1:

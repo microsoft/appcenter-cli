@@ -5,6 +5,7 @@ import { AppCenterClient } from "../../../util/apis";
 import { StartedTestRun } from "./test-cloud-uploader";
 import { TestReport } from "../../../util/apis/generated/models";
 import * as downloadUtil from "../../../util/misc/download";
+import { StreamingArrayOutput } from "../../../util/interaction";
 
 export abstract class RunTestsDownloadResultCommand extends RunTestsCommand {
     @help(Messages.TestCloud.Arguments.TestOutputDir)
@@ -14,13 +15,12 @@ export abstract class RunTestsDownloadResultCommand extends RunTestsCommand {
 
     protected abstract async mergeTestArtifacts(): Promise<void>;
 
-    // TODO: create a CompleredTestRun type?
-    protected async afterCompletion(client: AppCenterClient, testRun: StartedTestRun): Promise<void> {
+    protected async afterCompletion(client: AppCenterClient, testRun: StartedTestRun, streamingOutput: StreamingArrayOutput): Promise<void> {
         if (this.testOutputDir) {
             // Download json test result
             const testReport: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
             if (testReport.stats.artifacts) {
-                await downloadUtil.downloadArtifacts(this, this.streamingOutput, this.testOutputDir, testRun.testRunId, testReport.stats.artifacts);
+                await downloadUtil.downloadArtifacts(this, streamingOutput, this.testOutputDir, testRun.testRunId, testReport.stats.artifacts);
                 await this.mergeTestArtifacts();
             }
         }
