@@ -3,13 +3,13 @@ import { generateAbsolutePath } from "../../../util/misc/fs-helper";
 import * as path from "path";
 import { NUnitXmlUtil } from "../lib/nunit-xml-util";
 import { CommandArgs, help, longName, hasArg } from "../../../util/commandline";
-import { RunTestsCommand } from "../lib/run-tests-command";
 import { UITestPreparer } from "../lib/uitest-preparer";
 import { Messages } from "../lib/help-messages";
 import { out } from "../../../util/interaction";
+import { RunTestsDownloadResultCommand } from "../lib/run-tests-download-result-command";
 
 @help(Messages.TestCloud.Commands.RunUITests)
-export default class RunUITestsCommand extends RunTestsCommand {
+export default class RunUITestsCommand extends RunTestsDownloadResultCommand {
 
   @help(Messages.TestCloud.Arguments.UITestsBuildDir)
   @longName("build-dir")

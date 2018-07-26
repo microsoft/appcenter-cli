@@ -18,8 +18,6 @@ import * as _ from "lodash";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as os from "os";
-import * as downloadUtil from "../../../util/misc/download";
-import { TestReport } from "../../../util/apis/generated/models";
 import { buildErrorInfo } from "../lib/error-info-builder";
 
 export abstract class RunTestsCommand extends AppCommand {
@@ -80,13 +78,8 @@ export abstract class RunTestsCommand extends AppCommand {
   @hasArg
   vstsIdVariable: string;
 
-  @help(Messages.TestCloud.Arguments.TestOutputDir)
-  @longName("test-output-dir")
-  @hasArg
-  testOutputDir: string;
-
   protected isAppPathRequired = true;
-  private readonly streamingOutput = new StreamingArrayOutput();
+  protected readonly streamingOutput = new StreamingArrayOutput();
 
   constructor(args: CommandArgs) {
     super(args);
@@ -101,6 +94,11 @@ export abstract class RunTestsCommand extends AppCommand {
 
   // Override this if you need to validate options
   protected async validateOptions(): Promise<void> {
+    return;
+  }
+
+    // Override this if additional processing is needed need after test run completes
+  protected async afterCompletion(client: AppCenterClient, testRun: StartedTestRun): Promise<void> {
     return;
   }
 
@@ -137,16 +135,7 @@ export abstract class RunTestsCommand extends AppCommand {
 
         if (!this.async) {
           const exitCode = await this.waitForCompletion(client, testRun.testRunId);
-
-          if (this.testOutputDir) {
-
-              // Download json test result
-              const testReport: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
-              if (testReport.stats.artifacts) {
-                await downloadUtil.downloadArtifacts(this, this.streamingOutput, this.testOutputDir, testRun.testRunId, testReport.stats.artifacts);
-                await this.mergeTestArtifacts();
-              }
-          }
+          await this.afterCompletion(client, testRun);
 
           switch (exitCode) {
             case 1:
@@ -227,10 +216,6 @@ export abstract class RunTestsCommand extends AppCommand {
     }
 
     return await uploader.uploadAndStart();
-  }
-
-  protected async mergeTestArtifacts(): Promise<void> {
-    // Each command should override it if needed
   }
 
   private combinedParameters() : {} {

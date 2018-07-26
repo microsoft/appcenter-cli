@@ -2,13 +2,13 @@ import * as pfs from "../../../util/misc/promisfied-fs";
 import * as path from "path";
 import { generateAbsolutePath } from "../../../util/misc/fs-helper";
 import { CommandArgs, help, longName, hasArg, required } from "../../../util/commandline";
-import { RunTestsCommand } from "../lib/run-tests-command";
 import { AppiumPreparer } from "../lib/appium-preparer";
 import { Messages } from "../lib/help-messages";
 import { JUnitXmlUtil } from "../lib/junit-xml-util";
+import { RunTestsDownloadResultCommand } from "../lib/run-tests-download-result-command";
 
 @help(Messages.TestCloud.Commands.RunAppium)
-export default class RunAppiumTestsCommand extends RunTestsCommand {
+export default class RunAppiumTestsCommand extends RunTestsDownloadResultCommand {
 
   @help(Messages.TestCloud.Arguments.AppiumBuildDir)
   @longName("build-dir")
