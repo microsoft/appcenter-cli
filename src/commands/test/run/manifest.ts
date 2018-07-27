@@ -1,14 +1,14 @@
 import { CommandArgs, help, longName, required, hasArg } from "../../../util/commandline";
-import { RunTestsCommand } from "../lib/run-tests-command";
 import { Messages } from "../lib/help-messages";
 import * as path from "path";
 import { writeFile, walk } from "../../../util/misc/promisfied-fs";
 import { XmlUtil } from "../lib/xml-util";
 import { XmlUtilBuilder } from "../lib/xml-util-builder";
 import { generateAbsolutePath } from "../../../util/misc/fs-helper";
+import { RunTestsDownloadResultCommand } from "../lib/run-tests-download-result-command";
 
 @help(Messages.TestCloud.Commands.RunManifest)
-export default class RunManifestTestsCommand extends RunTestsCommand {
+export default class RunManifestTestsCommand extends RunTestsDownloadResultCommand {
 
   @help("Path to manifest file")
   @longName("manifest-path")
