@@ -98,6 +98,7 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 | `appcenter test download` | Download the report artifacts, unpack and merge them |
 | `appcenter test status` | Checks the status of the started test run |
 | `appcenter test stop` | Stop the started test run |
+| `appcenter test wizard` | Start a test run interactively. All the parameters will be prompted on-the-go |
 | `appcenter test generate appium` | Generates an Appium project |
 | `appcenter test generate uitest` | Generates a Xamarin.UITest project |
 | `appcenter test prepare appium` | Creates an artifacts directory with Appium tests |
