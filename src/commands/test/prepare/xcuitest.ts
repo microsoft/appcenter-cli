@@ -25,6 +25,10 @@ export default class PrepareXCUITestCommand extends PrepareTestsCommand {
     return preparer.prepare();
   }
 
+  protected getSourceRootDir() {
+    return this.buildDir;
+  }
+
   protected async validateOptions(): Promise<void> {
     if (this.buildDir && this.testIpaPath) {
       throw Error("--build-dir cannot be used with --test-ipa-path");

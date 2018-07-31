@@ -86,7 +86,7 @@ export class PrepareTestsCommand extends Command {
   }
 
   protected prepareManifest(): Promise<string> {
-    throw new Error("This method must be overriden in derived classes");
+    throw new Error("prepareManifest method must be overriden in derived classes");
   }
 
   protected getSuccessMessage(manifestPath: string) {
@@ -94,6 +94,6 @@ export class PrepareTestsCommand extends Command {
   }
 
   protected getSourceRootDir(): string {
-    throw new Error("This method must be overriden in derived classes");
+    throw new Error("getSourceRootDir method must be overriden in derived classes");
   }
 }
