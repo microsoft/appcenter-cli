@@ -27,6 +27,60 @@ export function copyFileToTmpDir(filePath: string): string {
   }
 }
 
+export function moveReleaseFilesInTmpFolder(updateContentsPath: string): string {
+    let tmpUpdateContentsPath: string = temp.mkdirSync("code-push");
+    tmpUpdateContentsPath = path.join(tmpUpdateContentsPath, "CodePush");
+    fs.mkdirSync(tmpUpdateContentsPath);
+
+    if (isDirectory(updateContentsPath)) {
+      copyFolderRecursiveSync(normalizePath(updateContentsPath), normalizePath(tmpUpdateContentsPath));
+    } else {
+      copyFileSync(updateContentsPath, tmpUpdateContentsPath);
+    }
+
+    return tmpUpdateContentsPath;
+}
+
+export function getLastFolderInPath(path: string): string {
+  const splittedPath = path.split("/").filter((el) => { return el !== ""; });
+  if (isDirectory(path)) {
+    return splittedPath[splittedPath.length - 1];
+  } else {
+    return splittedPath[splittedPath.length - 2];
+  }
+}
+
+function copyFileSync(source: string, target: string) {
+  let targetFile = target;
+  if (fs.existsSync(target)) {
+      if (fs.lstatSync(target).isDirectory()) {
+          targetFile = path.join(target, path.basename(source));
+      }
+  }
+  fs.writeFileSync(targetFile, fs.readFileSync(source));
+}
+
+function copyFolderRecursiveSync(source: string, target: string) {
+  let files = [];
+
+  const targetFolder = path.join(target, path.basename(source));
+  if (!fs.existsSync(targetFolder)) {
+    fs.mkdirSync(targetFolder);
+  }
+
+  if (fs.lstatSync(source).isDirectory()) {
+    files = fs.readdirSync(source);
+    files.forEach(function (file) {
+      const curSource = path.join(source, file);
+      if (fs.lstatSync(curSource).isDirectory()) {
+        copyFolderRecursiveSync(curSource, targetFolder);
+      } else {
+        copyFileSync(curSource, targetFolder);
+      }
+    });
+  }
+}
+
 export function generateRandomFilename(length: number): string {
   let filename: string = "";
   const validChar: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
