@@ -42,7 +42,7 @@ export function moveReleaseFilesInTmpFolder(updateContentsPath: string): string 
 }
 
 export function getLastFolderInPath(path: string): string {
-  const splittedPath = path.split("/").filter((el) => { return el !== ""; });
+  const splittedPath = normalizePath(path).split("/").filter((el) => { return el !== ""; });
   if (isDirectory(path)) {
     return splittedPath[splittedPath.length - 1];
   } else {
