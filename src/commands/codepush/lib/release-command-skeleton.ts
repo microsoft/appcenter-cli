@@ -103,7 +103,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
       // In React-Native case we should add "CodePush" name folder as root for relase files for keeping sync with React Native client SDK.
       // Also single file also should be in "CodePush" folder.
       if (platform === "react-native" && (getLastFolderInPath(this.updateContentsPath) !== "CodePush" || !isDirectory(this.updateContentsPath))) {
-        this.updateContentsPath = moveReleaseFilesInTmpFolder(normalizePath(this.updateContentsPath));
+        await moveReleaseFilesInTmpFolder(this.updateContentsPath).then((tmpPath: string) => { this.updateContentsPath = tmpPath; });
       }
 
       await sign(this.privateKeyPath, this.updateContentsPath);

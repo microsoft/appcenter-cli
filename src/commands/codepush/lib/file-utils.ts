@@ -3,6 +3,7 @@ import * as path from "path";
 import * as os from "os";
 import * as rimraf from "rimraf";
 import * as temp from "temp";
+import * as pfs from "../../../util/misc/promisfied-fs";
 
 export function isBinaryOrZip(path: string): boolean {
   return path.search(/\.zip$/i) !== -1
@@ -27,18 +28,19 @@ export function copyFileToTmpDir(filePath: string): string {
   }
 }
 
-export function moveReleaseFilesInTmpFolder(updateContentsPath: string): string {
+export async function moveReleaseFilesInTmpFolder(updateContentsPath: string): Promise<string> {
     let tmpUpdateContentsPath: string = temp.mkdirSync("code-push");
     tmpUpdateContentsPath = path.join(tmpUpdateContentsPath, "CodePush");
     fs.mkdirSync(tmpUpdateContentsPath);
 
     if (isDirectory(updateContentsPath)) {
-      copyFolderRecursiveSync(normalizePath(updateContentsPath), normalizePath(tmpUpdateContentsPath));
+      await pfs.cp(normalizePath(updateContentsPath), normalizePath(tmpUpdateContentsPath));
     } else {
-      copyFileSync(updateContentsPath, tmpUpdateContentsPath);
+      const targetFileName = path.parse(updateContentsPath).base;
+      await pfs.cpFile(updateContentsPath, path.join(tmpUpdateContentsPath, targetFileName));
     }
 
-    return tmpUpdateContentsPath;
+    return Promise.resolve(tmpUpdateContentsPath);
 }
 
 export function getLastFolderInPath(path: string): string {
@@ -47,37 +49,6 @@ export function getLastFolderInPath(path: string): string {
     return splittedPath[splittedPath.length - 1];
   } else {
     return splittedPath[splittedPath.length - 2];
-  }
-}
-
-function copyFileSync(source: string, target: string) {
-  let targetFile = target;
-  if (fs.existsSync(target)) {
-      if (fs.lstatSync(target).isDirectory()) {
-          targetFile = path.join(target, path.basename(source));
-      }
-  }
-  fs.writeFileSync(targetFile, fs.readFileSync(source));
-}
-
-function copyFolderRecursiveSync(source: string, target: string) {
-  let files = [];
-
-  const targetFolder = path.join(target, path.basename(source));
-  if (!fs.existsSync(targetFolder)) {
-    fs.mkdirSync(targetFolder);
-  }
-
-  if (fs.lstatSync(source).isDirectory()) {
-    files = fs.readdirSync(source);
-    files.forEach(function (file) {
-      const curSource = path.join(source, file);
-      if (fs.lstatSync(curSource).isDirectory()) {
-        copyFolderRecursiveSync(curSource, targetFolder);
-      } else {
-        copyFileSync(curSource, targetFolder);
-      }
-    });
   }
 }
 
