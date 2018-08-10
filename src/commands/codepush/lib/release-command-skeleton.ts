@@ -8,7 +8,7 @@ import * as fs from "fs";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as chalk from "chalk";
 import { sign, zip } from "../lib/update-contents-tasks";
-import { isBinaryOrZip, normalizePath, getLastFolderInPath, moveReleaseFilesInTmpFolder, isDirectory } from "../lib/file-utils";
+import { isBinaryOrZip, getLastFolderInPath, moveReleaseFilesInTmpFolder, isDirectory } from "../lib/file-utils";
 import { environments } from "../lib/environment";
 import { isValidRange, isValidRollout, isValidDeployment } from "../lib/validation-utils";
 import { LegacyCodePushRelease }  from "../lib/release-strategy/index";
