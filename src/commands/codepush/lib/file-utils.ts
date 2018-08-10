@@ -37,7 +37,7 @@ export async function moveReleaseFilesInTmpFolder(updateContentsPath: string): P
       await pfs.cp(normalizePath(updateContentsPath), normalizePath(tmpUpdateContentsPath));
     } else {
       const targetFileName = path.parse(updateContentsPath).base;
-      await pfs.cpFile(updateContentsPath, path.join(tmpUpdateContentsPath, targetFileName));
+      await pfs.cpFile(normalizePath(updateContentsPath), path.join(tmpUpdateContentsPath, targetFileName));
     }
 
     return Promise.resolve(tmpUpdateContentsPath);
