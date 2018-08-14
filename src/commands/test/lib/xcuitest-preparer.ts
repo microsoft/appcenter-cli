@@ -9,17 +9,21 @@ export class XCUITestPreparer {
   private readonly buildDir: string;
   private testIpaPath: string;
 
-  constructor(artifactsDir: string, buildDir: string, testIpaPath: string) {
+  constructor(artifactsDir: string, buildDir: string, testIpaPath: string, include?: string[]) {
     if (!artifactsDir) {
-      throw new Error("Argument artifactsDir is required");
+      throw new Error("Argument --artifacts-dir is required");
     }
 
     if (!(buildDir || testIpaPath)) {
-      throw new Error("Either buildDir or testIpaPath argument is required");
+      throw new Error("Either --build-dir or --test-ipa-path argument is required");
     }
 
     if (buildDir && testIpaPath) {
-      throw new Error("Arguments buildDir and testIpaPath cannot be used together");
+      throw new Error("Arguments --build-dir and --test-ipa-path cannot be used together");
+    }
+
+    if (include) {
+      throw new Error("Argument --include cannot be used for XCUITest");
     }
 
     this.artifactsDir = artifactsDir;

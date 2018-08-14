@@ -8,9 +8,13 @@ export class EspressoPreparer {
   private readonly buildDir: string;
   private readonly testApkPath: string;
 
-  constructor(artifactsDir: string, buildDir: string, testApkPath?: string) {
+  constructor(artifactsDir: string, buildDir: string, testApkPath?: string, include?: string[]) {
     if (!artifactsDir) {
-      throw new Error("Argument artifactsDir is required");
+      throw new Error("Argument --artifacts-dir is required");
+    }
+
+    if (include) {
+      throw new Error("Argument --include cannot be used for Espresso");
     }
 
     this.buildDir = buildDir;
@@ -23,7 +27,7 @@ export class EspressoPreparer {
       throw new Error("You must not specify both build dir and test apk path.");
     }
     if (!(this.buildDir || this.testApkPath)) {
-      throw new Error("Either artifacts-dir, build-dir or test-apk-path must be specified");
+      throw new Error("Either --artifacts-dir, --build-dir or --test-apk-path must be specified");
     }
   }
 

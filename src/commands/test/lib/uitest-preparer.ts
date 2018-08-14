@@ -30,13 +30,13 @@ export class UITestPreparer {
 
   constructor(artifactsDir: string, buildDir: string, appPath: string) {
     if (!artifactsDir) {
-      throw new Error("Argument artifactsDir is required");
+      throw new Error("Argument --artifacts-dir is required");
     }
     if (!buildDir) {
-      throw new Error("Argument buildDir is required");
+      throw new Error("Argument --build-dir is required");
     }
     if (!appPath) {
-      throw new Error("Argument appPath is required");
+      throw new Error("Argument --app-path is required");
     }
 
     this.appPath = appPath;

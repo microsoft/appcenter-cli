@@ -16,6 +16,11 @@ export default class RunEspressoTestsCommand extends RunTestsCommand {
   @hasArg
   testApkPath: string;
 
+  @help(Messages.TestCloud.Arguments.NotSupported + " for Espresso")
+  @longName("include")
+  @hasArg
+  include: string[];
+
   constructor(args: CommandArgs) {
     super(args);
   }
@@ -24,7 +29,7 @@ export default class RunEspressoTestsCommand extends RunTestsCommand {
     if (!this.appPath) {
       throw new Error("Argument --app-path is required");
     }
-    const preparer = new EspressoPreparer(artifactsDir, this.buildDir, this.testApkPath);
+    const preparer = new EspressoPreparer(artifactsDir, this.buildDir, this.testApkPath, this.include);
     return preparer.prepare();
   }
 
