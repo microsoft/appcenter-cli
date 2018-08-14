@@ -13,7 +13,7 @@ export class EspressoPreparer {
       throw new Error("Argument --artifacts-dir is required");
     }
 
-    if (include) {
+    if (include && include.length) {
       throw new Error("Argument --include cannot be used for Espresso");
     }
 

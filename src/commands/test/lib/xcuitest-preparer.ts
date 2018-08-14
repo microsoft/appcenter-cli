@@ -22,7 +22,7 @@ export class XCUITestPreparer {
       throw new Error("Arguments --build-dir and --test-ipa-path cannot be used together");
     }
 
-    if (include) {
+    if (include && include.length) {
       throw new Error("Argument --include cannot be used for XCUITest");
     }
 
