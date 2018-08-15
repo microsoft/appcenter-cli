@@ -96,6 +96,8 @@ export module Messages {
       export const DownloadTestOutputDir = "Directory to download the .zip file(s) into for merging";
       export const MergedFileName = "Name of the merged XML file";
       export const Continuous = "Continuously checks the test run status until it completes";
+
+      export const NotSupported = "Attribute is not supported";
     }
   }
 }

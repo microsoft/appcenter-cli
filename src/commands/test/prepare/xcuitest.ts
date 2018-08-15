@@ -16,12 +16,17 @@ export default class PrepareXCUITestCommand extends PrepareTestsCommand {
   @hasArg
   testIpaPath: string;
 
+  @help(Messages.TestCloud.Arguments.NotSupported + " for XCUITest")
+  @longName("include")
+  @hasArg
+  include: string[];
+
   constructor(args: CommandArgs) {
     super(args);
   }
 
   protected prepareManifest(): Promise<string> {
-    const preparer = new XCUITestPreparer(this.artifactsDir, this.buildDir, this.testIpaPath);
+    const preparer = new XCUITestPreparer(this.artifactsDir, this.buildDir, this.testIpaPath, this.include);
     return preparer.prepare();
   }
 
