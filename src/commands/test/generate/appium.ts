@@ -1,5 +1,4 @@
-import { CommandArgs,
-         help } from "../../../util/commandline";
+import { CommandArgs, help } from "../../../util/commandline";
 import { GenerateCommand } from "../lib/generate-command";
 import { Messages } from "../lib/help-messages";
 
@@ -12,4 +11,8 @@ export default class GenerateAppiumCommand extends GenerateCommand {
 
   protected zipPathAndroid = "Appium/Android-1.0.zip";
   protected zipPathiOS = "Appium/iOS-1.0.zip";
+
+  protected async processTemplate(): Promise<void> {
+    return;
+  }
 }

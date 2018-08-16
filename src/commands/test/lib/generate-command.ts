@@ -32,6 +32,8 @@ export abstract class GenerateCommand extends Command {
   protected abstract zipPathAndroid: string;
   protected abstract zipPathiOS: string;
 
+  protected abstract async processTemplate(): Promise<void>;
+
   protected isIOS(): boolean {
     return (this.platform.toLowerCase() === "ios");
   }
@@ -61,6 +63,7 @@ export abstract class GenerateCommand extends Command {
     const zipFile = await pfs.readFile(zipFilePath);
     const zip = await new JsZip().loadAsync(zipFile);
     await JsZipHelper.unpackZipToPath(this.outputPath, zip);
+    await this.processTemplate();
     await pfs.unlink(zipFilePath);
 
     return success();
