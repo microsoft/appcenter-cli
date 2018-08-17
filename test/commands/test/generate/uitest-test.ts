@@ -7,18 +7,42 @@ import GenerateUITestCommand from "../../../../src/commands/test/generate/uitest
 
 describe("Validating UITest template generation", () => {
   let sandbox: Sinon.SinonSandbox = null;
+  const templateDir: string = "../../../../src/commands/test/generate/templates/uitest/android";
+  const tempTemplateDir: string = "../resources/uitest-template-files-tmp";
 
   beforeEach(async () => {
     sandbox = Sinon.createSandbox();
-    await pfs.mkdirp(path.join(__dirname, "../resources/UITest-template-files-tmp"));
+    await pfs.mkdirp(path.join(__dirname, tempTemplateDir));
 
-    await pfs.cpDir(path.join(__dirname, "../../../../src/commands/test/generate/templates/uitest/android/AppCenter.UITest.Android"),
-                    path.join(__dirname, "../resources/UITest-template-files-tmp/AppCenter.UITest.Android"));
+    await pfs.cpDir(path.join(__dirname, templateDir),
+                    path.join(__dirname, tempTemplateDir));
   });
 
   afterEach(async () => {
     sandbox.restore();
-    await pfs.rmDir(path.join(__dirname, "../resources/UITest-template-files-tmp"));
+    await pfs.rmDir(path.join(__dirname, tempTemplateDir));
+  });
+
+  it("should create test template in folder", async () => {
+    // Arrange
+    const args: CommandArgs = {
+      command: ["test", "generate", "uitest"],
+      commandPath: "Test",
+      args: ["--platform", "Android", "--output-path", path.join(__dirname, tempTemplateDir)]
+    };
+
+    const command = new GenerateUITestCommand(args);
+
+    // Act
+    await command.execute();
+
+    // Assert
+    expect(await pfs.exists(path.join(command.outputPath, `AppCenter.UITest.${command.platform}`))).to.be.true;
+    expect(await pfs.exists(path.join(command.outputPath, `AppCenter.UITest.${command.platform}.sln`))).to.be.true;
+    expect(await pfs.exists(path.join(command.outputPath, `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`))).to.be.true;
+    expect(await pfs.exists(path.join(command.outputPath, `AppCenter.UITest.${command.platform}/Tests.cs`))).to.be.true;
+    expect(await pfs.exists(path.join(command.outputPath, `AppCenter.UITest.${command.platform}/packages.config`))).to.be.true;
+    expect(await pfs.exists(path.join(command.outputPath, `AppCenter.UITest.${command.platform}/Properties/AssemblyInfo.cs`))).to.be.true;
   });
 
   it("should update NuGet version", async () => {
@@ -27,7 +51,7 @@ describe("Validating UITest template generation", () => {
     const args: CommandArgs = {
       command: ["test", "generate", "uitest"],
       commandPath: "Test",
-      args: ["--platform", "Android", "--output-path", path.join(__dirname, "../resources/UITest-template-files-tmp")]
+      args: ["--platform", "Android", "--output-path", path.join(__dirname, tempTemplateDir)]
     };
 
     const command = new GenerateUITestCommand(args);
