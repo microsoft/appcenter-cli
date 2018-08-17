@@ -12,6 +12,7 @@ import { isBinaryOrZip } from "../lib/file-utils";
 import { environments } from "../lib/environment";
 import { isValidRange, isValidRollout, isValidDeployment } from "../lib/validation-utils";
 import { LegacyCodePushRelease }  from "../lib/release-strategy/index";
+import { getTokenFromEnvironmentVar } from "../../../util/profile/environment-vars";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-skeleton");
 
@@ -104,7 +105,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     try {
       const app = this.app;
       const serverUrl = this.getServerUrl();
-      const token = this.token || await getUser().accessToken;
+      const token = this.token || getTokenFromEnvironmentVar() || await getUser().accessToken;
 
       await out.progress("Creating CodePush release...",  this.releaseStrategy.release(client, app, this.deploymentName, updateContentsZipPath, {
         appVersion: this.targetBinaryVersion,
