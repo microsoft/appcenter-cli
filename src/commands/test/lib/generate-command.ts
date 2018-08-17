@@ -3,9 +3,6 @@ import { Command, CommandArgs, CommandResult,
          failure, ErrorCodes } from "../../../util/commandline";
 import { Messages } from "../lib/help-messages";
 import * as pfs from "../../../util/misc/promisfied-fs";
-import * as JsZip from "jszip";
-import * as phttps from "../../../util/misc/promisfied-https";
-import * as JsZipHelper from "../../../util/misc/jszip-helper";
 
 export abstract class GenerateCommand extends Command {
   @help(Messages.TestCloud.Arguments.AppPlatform)
@@ -29,8 +26,8 @@ export abstract class GenerateCommand extends Command {
     return;
   }
 
-  protected abstract zipPathAndroid: string;
-  protected abstract zipPathiOS: string;
+  protected abstract templatePathAndroid: string;
+  protected abstract templatePathiOS: string;
 
   protected abstract async processTemplate(): Promise<void>;
 
@@ -56,22 +53,10 @@ export abstract class GenerateCommand extends Command {
       }
     }
 
-    const zipFilePath = (await pfs.openTempFile(null)).path;
-
-    await phttps.getToFile(await this.zipUrl(), zipFilePath);
-
-    const zipFile = await pfs.readFile(zipFilePath);
-    const zip = await new JsZip().loadAsync(zipFile);
-    await JsZipHelper.unpackZipToPath(this.outputPath, zip);
+    const templatePath = this.isIOS() ? this.templatePathiOS : this.templatePathAndroid;
+    await pfs.cpDir(templatePath, this.outputPath);
     await this.processTemplate();
-    await pfs.unlink(zipFilePath);
 
     return success();
-  }
-
-  private async zipUrl(): Promise<string> {
-    let url = "https://s3-eu-west-1.amazonaws.com/xtc-frameworks/testcloud-project-templates/";
-
-    return url += this.isIOS() ? this.zipPathiOS : this.zipPathAndroid;
   }
 }

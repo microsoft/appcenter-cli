@@ -12,7 +12,7 @@ describe("Validating UITest template generation", () => {
     sandbox = Sinon.createSandbox();
     await pfs.mkdirp(path.join(__dirname, "../resources/UITest-template-files-tmp"));
 
-    await pfs.cpDir(path.join(__dirname, "../resources/UITest-template-files/AppCenter.UITest.Android"),
+    await pfs.cpDir(path.join(__dirname, "../../../../src/commands/test/generate/templates/uitest/android/AppCenter.UITest.Android"),
                     path.join(__dirname, "../resources/UITest-template-files-tmp/AppCenter.UITest.Android"));
   });
 
