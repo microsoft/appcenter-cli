@@ -1,17 +1,14 @@
 import { expect } from "chai";
-import * as Sinon from "sinon";
 import * as path from "path";
 import * as pfs from "../../../../src/util/misc/promisfied-fs";
 import { CommandArgs } from "../../../../src/util/commandline";
 import GenerateAppiumCommand from "../../../../src/commands/test/generate/appium";
 
 describe("Validating Appium template generation", () => {
-  let sandbox: Sinon.SinonSandbox = null;
   const templateDir: string = "../../../../src/commands/test/generate/templates/appium/ios";
   const tempTemplateDir: string = "../resources/appium-template-files-tmp";
 
   beforeEach(async () => {
-    sandbox = Sinon.createSandbox();
     await pfs.mkdirp(path.join(__dirname, tempTemplateDir));
 
     await pfs.cpDir(path.join(__dirname, templateDir),
@@ -19,7 +16,6 @@ describe("Validating Appium template generation", () => {
   });
 
   afterEach(async () => {
-    sandbox.restore();
     await pfs.rmDir(path.join(__dirname, tempTemplateDir));
   });
 
