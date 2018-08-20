@@ -52,12 +52,21 @@ gulp.task('generate-autocomplete-tree', function () {
   autocompleteTree.generateAndSave();
 });
 
+gulp.task('remove-test-templates', function (done) {
+  rimraf('dist/commands/test/generate/templates', done);
+});
+
+gulp.task('copy-test-templates', function () {
+  return gulp.src('src/commands/test/generate/templates/**/*')
+    .pipe(gulp.dest('dist/commands/test/generate/templates'));
+});
+
 gulp.task('build:raw', function(done) {
-  runSeq([ 'build-ts', 'copy-assets', 'copy-generated-client' ], 'generate-autocomplete-tree', done);
+  runSeq([ 'build-ts', 'copy-assets', 'copy-generated-client' ], 'remove-test-templates', 'generate-autocomplete-tree', 'copy-test-templates', done);
 });
 
 gulp.task('build-sourcemaps', function(done) {
-  runSeq([ 'build-ts-sourcemaps', 'copy-assets', 'copy-generated-client' ], 'generate-autocomplete-tree', done);
+  runSeq([ 'build-ts-sourcemaps', 'copy-assets', 'copy-generated-client' ], 'remove-test-templates', 'generate-autocomplete-tree', 'copy-test-templates', done);
 });
 
 gulp.task('clean-sourcemaps', function (cb) {
