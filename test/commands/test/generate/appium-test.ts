@@ -5,14 +5,10 @@ import { CommandArgs } from "../../../../src/util/commandline";
 import GenerateAppiumCommand from "../../../../src/commands/test/generate/appium";
 
 describe("Validating Appium template generation", () => {
-  const templateDir: string = "../../../../src/commands/test/generate/templates/appium/ios";
   const tempTemplateDir: string = "../resources/appium-template-files-tmp";
 
   beforeEach(async () => {
     await pfs.mkdirp(path.join(__dirname, tempTemplateDir));
-
-    await pfs.cpDir(path.join(__dirname, templateDir),
-                    path.join(__dirname, tempTemplateDir));
   });
 
   afterEach(async () => {

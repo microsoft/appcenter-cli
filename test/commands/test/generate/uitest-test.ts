@@ -28,7 +28,7 @@ describe("Validating UITest template generation", () => {
     const args: CommandArgs = {
       command: ["test", "generate", "uitest"],
       commandPath: "Test",
-      args: ["--platform", "Android", "--output-path", path.join(__dirname, tempTemplateDir)]
+      args: ["--platform", "Android", "--output-path", path.join(__dirname, `${tempTemplateDir}/test`)]
     };
 
     const command = new GenerateUITestCommand(args);
