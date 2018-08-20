@@ -94,3 +94,8 @@ gulp.task('prepublish',
     'build:raw'
   )
 );
+
+//
+// Default task - build the code
+//
+gulp.task('default', gulp.series('build:raw'));
