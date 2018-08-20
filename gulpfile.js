@@ -2,12 +2,9 @@
 
 const clean = require('gulp-clean');
 const gulp = require('gulp');
-const minimist = require('minimist');
-const runSeq = require('run-sequence');
 const rimraf = require('rimraf');
 const sourcemaps = require('gulp-sourcemaps');
 const ts = require('gulp-typescript');
-const util = require('util');
 const autocompleteTree = require('./scripts/autocomplete-tree');
 
 let tsProject = ts.createProject('tsconfig.json');
@@ -48,8 +45,9 @@ gulp.task('copy-generated-client', function () {
     .pipe(gulp.dest('dist/util/apis/generated'));
 });
 
-gulp.task('generate-autocomplete-tree', function () {
+gulp.task('generate-autocomplete-tree', function (done) {
   autocompleteTree.generateAndSave();
+  done();
 });
 
 gulp.task('remove-test-templates', function (done) {
@@ -61,15 +59,21 @@ gulp.task('copy-test-templates', function () {
     .pipe(gulp.dest('dist/commands/test/generate/templates'));
 });
 
-gulp.task('build:raw', function(done) {
-  runSeq([ 'build-ts', 'copy-assets', 'copy-generated-client' ], 'remove-test-templates', 'generate-autocomplete-tree', 'copy-test-templates', done);
-});
+gulp.task('build:raw',
+  gulp.series(
+    gulp.parallel('build-ts', 'copy-assets', 'copy-generated-client'),
+    gulp.series('remove-test-templates', 'generate-autocomplete-tree', 'copy-test-templates')
+  )
+);
 
-gulp.task('build-sourcemaps', function(done) {
-  runSeq([ 'build-ts-sourcemaps', 'copy-assets', 'copy-generated-client' ], 'remove-test-templates', 'generate-autocomplete-tree', 'copy-test-templates', done);
-});
+gulp.task('build-sourcemaps',
+  gulp.series(
+    gulp.parallel('build-ts-sourcemaps', 'copy-assets', 'copy-generated-client'),
+    gulp.series('remove-test-templates', 'generate-autocomplete-tree', 'copy-test-templates')
+  )
+);
 
-gulp.task('clean-sourcemaps', function (cb) {
+gulp.task('clean-sourcemaps', function () {
   return gulp.src('dist/**/*.js.map')
     .pipe(clean())
 });
@@ -84,12 +88,9 @@ gulp.task('build', function () {
 //
 // Prepublish script - set up everything before publishing to npm
 //
-gulp.task('prepublish', function(done) {
-  runSeq('clean', 'build:raw', done);
-});
-
-//
-// Default task - build the code
-//
-
-gulp.task('default', [ 'build' ]);
+gulp.task('prepublish',
+  gulp.series(
+    'clean',
+    'build:raw'
+  )
+);

@@ -79,7 +79,6 @@
     "mocha": "^5.2.0",
     "mock-require": "^2.0.2",
     "nock": "^9.6.1",
-    "run-sequence": "^1.2.2",
     "sinon": "^5.1.1",
     "ts-node": "^3.3.0",
     "tslint": "^5.11.0",
