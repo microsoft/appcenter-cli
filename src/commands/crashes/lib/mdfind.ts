@@ -1,6 +1,6 @@
 /**
  * Node module for searching OSX Spotlight, using the built-in mdfind shell command.
- * Forked from brandonhorst/node-mdfind github repo, because original npm package contains unsecure dependencies.
+ * Forked from brandonhorst/node-mdfind github repo, because original npm package contains insecure dependencies.
  * {@link https://github.com/brandonhorst/node-mdfind/blob/master/src/index.js Original js file}
  */
 
