@@ -50,26 +50,22 @@ gulp.task('generate-autocomplete-tree', function (done) {
   done();
 });
 
-gulp.task('remove-test-templates', function (done) {
-  rimraf('dist/commands/test/generate/templates', done);
-});
-
 gulp.task('copy-test-templates', function () {
-  return gulp.src('src/commands/test/generate/templates/**/*')
-    .pipe(gulp.dest('dist/commands/test/generate/templates'));
+  return gulp.src('src/commands/test/lib/templates/**/*')
+    .pipe(gulp.dest('dist/commands/test/lib/templates'));
 });
 
 gulp.task('build:raw',
   gulp.series(
     gulp.parallel('build-ts', 'copy-assets', 'copy-generated-client'),
-    gulp.series('remove-test-templates', 'generate-autocomplete-tree', 'copy-test-templates')
+    gulp.series('generate-autocomplete-tree', 'copy-test-templates')
   )
 );
 
 gulp.task('build-sourcemaps',
   gulp.series(
     gulp.parallel('build-ts-sourcemaps', 'copy-assets', 'copy-generated-client'),
-    gulp.series('remove-test-templates', 'generate-autocomplete-tree', 'copy-test-templates')
+    gulp.series('generate-autocomplete-tree', 'copy-test-templates')
   )
 );
 

@@ -10,8 +10,8 @@ export default class GenerateAppiumCommand extends GenerateCommand {
     super(args);
   }
 
-  protected templatePathAndroid = path.join(__dirname, "templates/appium/android");
-  protected templatePathiOS = path.join(__dirname, "templates/appium/ios");
+  protected templatePathAndroid = path.join(__dirname, "../lib/templates/appium/android");
+  protected templatePathiOS = path.join(__dirname, "../lib/templates/appium/ios");
 
   protected async processTemplate(): Promise<void> {
     return;

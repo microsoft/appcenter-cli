@@ -12,8 +12,8 @@ export default class GenerateUITestCommand extends GenerateCommand {
     super(args);
   }
 
-  protected templatePathAndroid = path.join(__dirname, "templates/uitest/android");
-  protected templatePathiOS = path.join(__dirname, "templates/uitest/ios");
+  protected templatePathAndroid = path.join(__dirname, "../lib/templates/uitest/android");
+  protected templatePathiOS = path.join(__dirname, "../lib/templates/uitest/ios");
 
   protected async processTemplate(): Promise<void> {
     const platform = this.isIOS() ? "iOS" : "Android";
