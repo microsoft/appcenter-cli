@@ -7,7 +7,7 @@ import GenerateUITestCommand from "../../../../src/commands/test/generate/uitest
 
 describe("Validating UITest template generation", () => {
   let sandbox: Sinon.SinonSandbox = null;
-  const templateDir: string = "../../../../src/commands/test/generate/templates/uitest/android";
+  const templateDir: string = "../../../../src/commands/test/lib/templates/uitest/android";
   const tempTemplateDir: string = "../resources/uitest-template-files-tmp";
 
   beforeEach(async () => {
