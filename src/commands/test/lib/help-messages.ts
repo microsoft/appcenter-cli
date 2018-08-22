@@ -35,7 +35,7 @@ export module Messages {
       export const Status = "Checks the status of the started test run.";
       export const Stop = "Stop the started test run.";
 
-      export const Download = "Download the report artifacts, unpack and merge them.";
+      export const Download = "Download the report artifacts, unpack and merge them. This command is only available for UITest and Appium test runs.";
     }
 
     export module Arguments {
