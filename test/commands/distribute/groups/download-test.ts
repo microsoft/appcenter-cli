@@ -5,8 +5,8 @@ import * as Path from "path";
 import * as Temp from "temp";
 import * as _ from "lodash";
 
-import DownloadBinaryFromDistributionGroupCommand from "../../../../../src/commands/distribute/groups/download";
-import { CommandArgs, CommandResult } from "../../../../../src/util/commandline";
+import DownloadBinaryFromDistributionGroupCommand from "../../../../src/commands/distribute/groups/download";
+import { CommandArgs, CommandResult } from "../../../../src/util/commandline";
 
 Temp.track();
 
