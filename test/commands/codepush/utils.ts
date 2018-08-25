@@ -12,6 +12,7 @@ export interface FakeParamsForRequests {
   path: string;
   appVersion: string;
   host: string;
+  token: string;
 }
 
 export function getFakeParamsForRequest(): FakeParamsForRequests {
@@ -21,6 +22,7 @@ export function getFakeParamsForRequest(): FakeParamsForRequests {
     path: "fake/path",
     appVersion: "v0.1",
     host: "https://api.appcenter.ms/",
+    token: "c1o3d3e7",
   };
 
   return fakeParamsForRequests;
@@ -40,7 +42,7 @@ export function createFile(folderPath: string, fileName: string, fileContent: st
 }
 
 export function getCommandArgsForReleaseCommand(additionalArgs: string[], fakeConsts: FakeParamsForRequests, ): CommandArgs {
-  const args: string[] = ["-a", `${fakeConsts.userName}/${fakeConsts.appName}`, "-d", "Staging", "-t", "1.0"].concat(additionalArgs);
+  const args: string[] = ["-a", `${fakeConsts.userName}/${fakeConsts.appName}`, "-d", "Staging", "-t", "1.0", "--token", fakeConsts.token].concat(additionalArgs);
   return {
     args,
     command: ["codepush", "release"],
