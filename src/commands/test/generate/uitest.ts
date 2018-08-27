@@ -20,16 +20,25 @@ export default class GenerateUITestCommand extends GenerateCommand {
     const packageFilePath = path.join(this.outputPath, `AppCenter.UITest.${platform}/packages.config`);
     const projectFilePath = path.join(this.outputPath, `AppCenter.UITest.${platform}/AppCenter.UITest.${platform}.csproj`);
 
-    try {
-      const latestVersion: string = await this.getLatestUITestVersionNumber();
+    let latestVersion: string;
 
+    try {
+      latestVersion = await this.getLatestUITestVersionNumber();
+    } catch (e) {
+      console.warn("Can't retrieve latest UITest version. Using default version from template. Details: " + e);
+      return;
+    }
+
+    try {
       // Replace version inside packages.config file
       await this.replaceVersionInFile(packageFilePath, /(id="Xamarin\.UITest" version=")(\d+(\.\d+)+)/, latestVersion);
 
       // Replace version inside *.csproj file
       await this.replaceVersionInFile(projectFilePath, /(packages\\Xamarin\.UITest\.)(\d+(\.\d+)+)/, latestVersion);
     } catch (e) {
-      console.warn("Can't update UITest version. Using default version from template. Details: " + e);
+      await this.copyTemplates();
+      console.warn("Can't update UITest version. Using default templates. Details: " + e);
+      return;
     }
   }
 
@@ -47,10 +56,10 @@ export default class GenerateUITestCommand extends GenerateCommand {
           if (stableVersions.length) {
             resolve(stableVersions[stableVersions.length - 1]);
           } else {
-            reject("Can't load latest UITest version number: response does not contain valid versions");
+            reject("Can't load latest UITest NuGet version number: response does not contain valid versions");
           }
         } else {
-          reject(`Can't load latest UITest version number: ${response.statusCode}: ${error}`);
+          reject(`Can't load latest UITest NuGet version number: ${response.statusCode}: ${error}`);
         }
       });
     });
