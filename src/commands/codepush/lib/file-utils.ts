@@ -40,7 +40,7 @@ export async function moveReleaseFilesInTmpFolder(updateContentsPath: string): P
       await pfs.cpFile(normalizePath(updateContentsPath), path.join(tmpUpdateContentsPath, targetFileName));
     }
 
-    return Promise.resolve(tmpUpdateContentsPath);
+    return tmpUpdateContentsPath;
 }
 
 export function getLastFolderInPath(path: string): string {
