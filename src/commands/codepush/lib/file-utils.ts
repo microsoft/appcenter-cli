@@ -3,6 +3,7 @@ import * as path from "path";
 import * as os from "os";
 import * as rimraf from "rimraf";
 import * as temp from "temp";
+import * as pfs from "../../../util/misc/promisfied-fs";
 
 export function isBinaryOrZip(path: string): boolean {
   return path.search(/\.zip$/i) !== -1
@@ -24,6 +25,30 @@ export function copyFileToTmpDir(filePath: string): string {
     fs.writeFileSync(outputFilePath, fs.readFileSync(filePath));
 
     return outputFolderPath;
+  }
+}
+
+export async function moveReleaseFilesInTmpFolder(updateContentsPath: string): Promise<string> {
+    let tmpUpdateContentsPath: string = temp.mkdirSync("code-push");
+    tmpUpdateContentsPath = path.join(tmpUpdateContentsPath, "CodePush");
+    fs.mkdirSync(tmpUpdateContentsPath);
+
+    if (isDirectory(updateContentsPath)) {
+      await pfs.cp(normalizePath(updateContentsPath), normalizePath(tmpUpdateContentsPath));
+    } else {
+      const targetFileName = path.parse(updateContentsPath).base;
+      await pfs.cpFile(normalizePath(updateContentsPath), path.join(tmpUpdateContentsPath, targetFileName));
+    }
+
+    return tmpUpdateContentsPath;
+}
+
+export function getLastFolderInPath(path: string): string {
+  const splittedPath = normalizePath(path).split("/").filter((el) => { return el !== ""; });
+  if (isDirectory(path)) {
+    return splittedPath[splittedPath.length - 1];
+  } else {
+    return splittedPath[splittedPath.length - 2];
   }
 }
 
