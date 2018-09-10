@@ -9,10 +9,10 @@ export class AppiumPreparer {
 
   constructor(artifactsDir: string, buildDir: string) {
     if (!artifactsDir) {
-      throw new Error("Argument artifactsDir is required");
+      throw new Error("Argument --artifacts-dir is required");
     }
     if (!buildDir) {
-      throw new Error("Argument buildDir is required");
+      throw new Error("Argument --build-dir is required");
     }
 
     this.artifactsDir = artifactsDir;

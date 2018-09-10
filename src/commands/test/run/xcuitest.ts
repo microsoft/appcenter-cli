@@ -20,6 +20,11 @@ export default class RunXCUITestCommand extends RunTestsCommand {
   @hasArg
   testIpaPath: string;
 
+  @help(Messages.TestCloud.Arguments.NotSupported + " for XCUITest")
+  @longName("include")
+  @hasArg
+  include: string[];
+
   protected isAppPathRequired = false;
 
   constructor(args: CommandArgs) {
@@ -27,7 +32,7 @@ export default class RunXCUITestCommand extends RunTestsCommand {
   }
 
   protected prepareManifest(artifactsDir: string): Promise<string> {
-    const preparer = new XCUITestPreparer(artifactsDir, this.buildDir, this.testIpaPath);
+    const preparer = new XCUITestPreparer(artifactsDir, this.buildDir, this.testIpaPath, this.include);
     return preparer.prepare();
   }
 

@@ -8,6 +8,7 @@ import { DefaultApp } from "../../util/profile";
 import UploadSymbolsHelper from "./lib/symbols-uploading-helper";
 import { getSymbolsZipFromXcarchive } from "./lib/subfolder-symbols-helper";
 import { createTempFileFromZip } from "./lib/temp-zip-file-helper";
+import { mdfind } from "./lib/mdfind";
 
 import * as Pfs from "../../util/misc/promisfied-fs";
 import * as Path from "path";
@@ -19,7 +20,6 @@ import * as Os from "os";
 import * as ChildProcess from "child_process";
 
 const debug = require("debug")("appcenter-cli:commands:apps:crashes:upload-missing-symbols");
-const mdfind = require("mdfind");
 const bplist = require("bplist");
 
 @help("Upload missing crash symbols for the application (only from macOS)")
