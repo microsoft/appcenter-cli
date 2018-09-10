@@ -1,6 +1,6 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success, defaultValue } from "../../../util/commandline";
 import { CommandArgs } from "../../../util/commandline/command";
-import { AppCenterClient } from "../../../util/apis";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { getUser, DefaultApp } from "../../../util/profile/index";
 import { inspect } from "util";
@@ -8,10 +8,11 @@ import * as fs from "fs";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import * as chalk from "chalk";
 import { sign, zip } from "../lib/update-contents-tasks";
-import { isBinaryOrZip } from "../lib/file-utils";
+import { isBinaryOrZip, getLastFolderInPath, moveReleaseFilesInTmpFolder, isDirectory } from "../lib/file-utils";
 import { environments } from "../lib/environment";
 import { isValidRange, isValidRollout, isValidDeployment } from "../lib/validation-utils";
 import { LegacyCodePushRelease }  from "../lib/release-strategy/index";
+import { getTokenFromEnvironmentVar } from "../../../util/profile/environment-vars";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-skeleton");
 
@@ -96,6 +97,16 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     this.deploymentName = this.specifiedDeploymentName;
 
     if (this.privateKeyPath) {
+      const appInfo = (await out.progress("Getting app info...", clientRequest<models.AppResponse>(
+        (cb) => client.apps.get(this.app.ownerName, this.app.appName, cb)))).result;
+      const platform = appInfo.platform.toLowerCase();
+
+      // In React-Native case we should add "CodePush" name folder as root for relase files for keeping sync with React Native client SDK.
+      // Also single file also should be in "CodePush" folder.
+      if (platform === "react-native" && (getLastFolderInPath(this.updateContentsPath) !== "CodePush" || !isDirectory(this.updateContentsPath))) {
+        await moveReleaseFilesInTmpFolder(this.updateContentsPath).then((tmpPath: string) => { this.updateContentsPath = tmpPath; });
+      }
+
       await sign(this.privateKeyPath, this.updateContentsPath);
     }
 
@@ -104,7 +115,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     try {
       const app = this.app;
       const serverUrl = this.getServerUrl();
-      const token = this.token || await getUser().accessToken;
+      const token = this.token || getTokenFromEnvironmentVar() || await getUser().accessToken;
 
       await out.progress("Creating CodePush release...",  this.releaseStrategy.release(client, app, this.deploymentName, updateContentsZipPath, {
         appVersion: this.targetBinaryVersion,

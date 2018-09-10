@@ -40,7 +40,6 @@
     "no-trailing-whitespace": true,
     "no-unnecessary-initializer": true,
     "no-unused-expression-chai": true,
-    "no-unused-variable": [true, {"ignore-pattern": "^_"}],
     "no-use-before-declare": true,
     "no-var-keyword": true,
     "non-literal-require": true,
