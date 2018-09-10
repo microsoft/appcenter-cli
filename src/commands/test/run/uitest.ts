@@ -113,6 +113,7 @@ export default class RunUITestsCommand extends RunTestsDownloadResultCommand {
     preparer.storePassword = this.storePassword;
     preparer.keyAlias = this.keyAlias;
     preparer.keyPassword = this.keyPassword;
+    preparer.signInfo = this.signInfo;
     preparer.uiTestToolsDir = this.uiTestToolsDir;
     preparer.fixture = this.fixture;
     preparer.includeCategory = this.includeCategory;
