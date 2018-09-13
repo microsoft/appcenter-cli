@@ -37,6 +37,21 @@ describe("autocomplete", () => {
     expect(testProfileContent).contain("begin appcenter completion");
   });
 
+  it("should not enable bash_completion and appcenter completion if autocomplete was enabled before", () => {
+    // Arange
+    fs.appendFileSync(testProfilePath, "begin appcenter completion");
+
+    // Act
+    autocomplete.setupAutoCompleteForShell(testProfilePath, "zsh");
+
+    // Assert
+    const testProfileContent = fs.readFileSync(testProfilePath, { encoding: "utf-8" });
+
+    expect(testProfileContent).contain("Test bash_profile data");
+    expect(testProfileContent).not.contain("end bash_completion");
+    expect(testProfileContent).not.contain("end appcenter completion");
+  });
+
   afterEach(() => {
     sandbox.restore();
     fs.writeFileSync(testProfilePath, "Test bash_profile data");
