@@ -29,13 +29,34 @@ export function executeAutoComplete() {
 
 export function setupAutoCompleteForShell(path?: string, shell?: string): any {
   const autoCompleteObject = getAutoCompleteObject();
+  let initFile = path;
+
   if (shell) {
     autoCompleteObject.shell = shell;
   } else {
     autoCompleteObject.shell = autoCompleteObject.getActiveShell();
   }
 
-  autoCompleteObject.setupShellInitFile(path);
+  if (!initFile) {
+    initFile = autoCompleteObject.getDefaultShellInitFile();
+  }
+
+  // For bash we need to enable bash_completion before appcenter cli completion
+  if (autoCompleteObject.shell === "bash") {
+    const sources = `[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+[ -f /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
+[ -f /etc/bash_completion ] && . /etc/bash_completion`;
+
+    const template = `
+# begin bash_completion configuration for ${appName} completion
+${sources}
+# end bash_completion configuration for ${appName} completion
+`;
+
+    Fs.appendFileSync(initFile, template);
+  }
+
+  autoCompleteObject.setupShellInitFile(initFile);
 }
 
 function getReplyHandler(lineEndsWithWhitespaceChar: boolean): (args: string[], autocompleteTree: IAutocompleteTree) => string[] {
