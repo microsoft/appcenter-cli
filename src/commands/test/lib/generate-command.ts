@@ -3,9 +3,6 @@ import { Command, CommandArgs, CommandResult,
          failure, ErrorCodes } from "../../../util/commandline";
 import { Messages } from "../lib/help-messages";
 import * as pfs from "../../../util/misc/promisfied-fs";
-import * as JsZip from "jszip";
-import * as phttps from "../../../util/misc/promisfied-https";
-import * as JsZipHelper from "../../../util/misc/jszip-helper";
 
 export abstract class GenerateCommand extends Command {
   @help(Messages.TestCloud.Arguments.AppPlatform)
@@ -29,8 +26,10 @@ export abstract class GenerateCommand extends Command {
     return;
   }
 
-  protected abstract zipPathAndroid: string;
-  protected abstract zipPathiOS: string;
+  protected abstract templatePathAndroid: string;
+  protected abstract templatePathiOS: string;
+
+  protected abstract async processTemplate(): Promise<void>;
 
   protected isIOS(): boolean {
     return (this.platform.toLowerCase() === "ios");
@@ -38,6 +37,11 @@ export abstract class GenerateCommand extends Command {
 
   protected isAndroid(): boolean {
     return (this.platform.toLowerCase() === "android");
+  }
+
+  protected async copyTemplates(): Promise<void> {
+    const templatePath = this.isIOS() ? this.templatePathiOS : this.templatePathAndroid;
+    await pfs.cpDir(templatePath, this.outputPath);
   }
 
   public async runNoClient(): Promise<CommandResult> {
@@ -54,21 +58,9 @@ export abstract class GenerateCommand extends Command {
       }
     }
 
-    const zipFilePath = (await pfs.openTempFile(null)).path;
-
-    await phttps.getToFile(await this.zipUrl(), zipFilePath);
-
-    const zipFile = await pfs.readFile(zipFilePath);
-    const zip = await new JsZip().loadAsync(zipFile);
-    await JsZipHelper.unpackZipToPath(this.outputPath, zip);
-    await pfs.unlink(zipFilePath);
+    await this.copyTemplates();
+    await this.processTemplate();
 
     return success();
-  }
-
-  private async zipUrl(): Promise<string> {
-    let url = "https://s3-eu-west-1.amazonaws.com/xtc-frameworks/testcloud-project-templates/";
-
-    return url += this.isIOS() ? this.zipPathiOS : this.zipPathAndroid;
   }
 }

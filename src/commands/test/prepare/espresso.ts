@@ -15,12 +15,17 @@ export default class PrepareEspressoCommand extends PrepareTestsCommand {
   @hasArg
   testApkPath: string;
 
+  @help(Messages.TestCloud.Arguments.NotSupported + " for Espresso")
+  @longName("include")
+  @hasArg
+  include: string[];
+
   constructor(args: CommandArgs) {
     super(args);
   }
 
   protected prepareManifest(): Promise<string> {
-    const preparer = new EspressoPreparer(this.artifactsDir, this.buildDir, this.testApkPath);
+    const preparer = new EspressoPreparer(this.artifactsDir, this.buildDir, this.testApkPath, this.include);
     return preparer.prepare();
   }
 

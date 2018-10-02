@@ -35,7 +35,7 @@ export module Messages {
       export const Status = "Checks the status of the started test run.";
       export const Stop = "Stop the started test run.";
 
-      export const Download = "Download the report artifacts, unpack and merge them.";
+      export const Download = "Download the report artifacts, unpack and merge them. This command is only available for UITest and Appium test runs.";
     }
 
     export module Arguments {
@@ -96,6 +96,8 @@ export module Messages {
       export const DownloadTestOutputDir = "Directory to download the .zip file(s) into for merging";
       export const MergedFileName = "Name of the merged XML file";
       export const Continuous = "Continuously checks the test run status until it completes";
+
+      export const NotSupported = "Attribute is not supported";
     }
   }
 }

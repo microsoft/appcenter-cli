@@ -29,13 +29,48 @@ export function executeAutoComplete() {
 
 export function setupAutoCompleteForShell(path?: string, shell?: string): any {
   const autoCompleteObject = getAutoCompleteObject();
+  let initFile = path;
+
   if (shell) {
     autoCompleteObject.shell = shell;
   } else {
     autoCompleteObject.shell = autoCompleteObject.getActiveShell();
   }
 
-  autoCompleteObject.setupShellInitFile(path);
+  if (!initFile) {
+    initFile = autoCompleteObject.getDefaultShellInitFile();
+  }
+
+  let initFileContent;
+
+  try {
+    initFileContent = Fs.readFileSync(initFile, { encoding: "utf-8" });
+  } catch (exception) {
+    throw `Can't read init file (${initFile}): ${exception}`;
+  }
+
+  try {
+    // For bash we need to enable bash_completion before appcenter cli completion
+    if (autoCompleteObject.shell === "bash" && initFileContent.indexOf("begin bash_completion configuration") === -1) {
+      const sources = `[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+[ -f /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
+[ -f /etc/bash_completion ] && . /etc/bash_completion`;
+
+      const template = `
+# begin bash_completion configuration for ${appName} completion
+${sources}
+# end bash_completion configuration for ${appName} completion
+`;
+
+      Fs.appendFileSync(initFile, template);
+    }
+
+    if (initFileContent.indexOf(`begin ${appName} completion`) === -1) {
+      autoCompleteObject.setupShellInitFile(initFile);
+    }
+  } catch (exception) {
+    throw `Can't setup autocomplete. Please make sure that init file (${initFile}) exist and you have write permissions: ${exception}`;
+  }
 }
 
 function getReplyHandler(lineEndsWithWhitespaceChar: boolean): (args: string[], autocompleteTree: IAutocompleteTree) => string[] {

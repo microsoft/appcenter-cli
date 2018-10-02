@@ -19,13 +19,13 @@ export class CalabashPreparer {
 
   constructor(artifactsDir: string, projectDir: string, appPath: string, testParameters: string[]) {
     if (!artifactsDir) {
-      throw new Error("Argument artifactsDir is required");
+      throw new Error("Argument --artifacts-dir is required");
     }
     if (!projectDir) {
-      throw new Error("Argument projectDir is required");
+      throw new Error("Argument --project-dir is required");
     }
     if (!appPath) {
-      throw new Error("Argument appPath is required");
+      throw new Error("Argument --app-path is required");
     }
 
     this.artifactsDir = artifactsDir;

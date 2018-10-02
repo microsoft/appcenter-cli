@@ -110,10 +110,15 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     if (!_.isNil(name)) {
       try {
         const httpRequest = await clientRequest<models.DistributionGroupResponse>((cb) => client.distributionGroups.get(app.ownerName, app.appName, name, cb));
-        if (httpRequest.response.statusCode !== 404) {
-          throw httpRequest.response.statusCode;
-        }
+
+        // Throw an exception if 404 error was not thrown during clientRequest
+        throw httpRequest.response.statusCode;
       } catch (error) {
+        if (error && error.response && error.response.statusCode === 404) {
+          // 404 is correct status code for this case
+          return;
+        }
+
         if (error === 200) {
           throw failure(ErrorCodes.InvalidParameter, `distribution group ${name} already exists`);
         } else {
