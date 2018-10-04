@@ -24,13 +24,36 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
   async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
     let releases: models.CodePushRelease[];
+    let metrics: models.CodePushReleaseMetric[];
     try {
-      const httpRequest = await out.progress("Getting CodePush releases...", clientRequest<models.CodePushRelease[]>(
+      const releasesHttpRequest = await out.progress("Getting CodePush releases...", clientRequest<models.CodePushRelease[]>(
         (cb) => client.codePushDeploymentReleases.get(this.deploymentName, app.ownerName, app.appName, cb)));
-      releases = httpRequest.result;
-      out.table(out.getCommandOutputTableOptions(["Label", "Release Time", "App Version", "Mandatory", "Description"]),
-        releases.map((release) =>
-          [release.label, formatDate(release.uploadTime), release.targetBinaryRange, release.isMandatory, release.description]));
+      releases = releasesHttpRequest.result;
+
+      const metricsHttpRequest = await out.progress("Getting CodePush releases metrics...", clientRequest<models.CodePushReleaseMetric[]>(
+        (cb) => client.codePushDeploymentMetrics.get(this.deploymentName, app.ownerName, app.appName, cb)));
+      metrics = metricsHttpRequest.result;
+
+      let releasesTotalActive: number = 0;
+      metrics.forEach((metric) => releasesTotalActive += metric.active);
+
+      let tableTitles: string[] = ["Label", "Release Time", "Released by", "App Version", "Mandatory", "Description", "Install Metrics"];
+      tableTitles = tableTitles.map((title) => chalk.cyan(title));
+
+      out.table(
+        out.getCommandOutputTableOptions(tableTitles),
+        releases.map((release) => {
+          return [
+            release.label,
+            formatDate(release.uploadTime),
+            release.releasedBy,
+            release.targetBinaryRange,
+            (release.isMandatory) ? "Yes" : "No",
+            release.description,
+            this.generateReleaseMetricsString(release, metrics, releasesTotalActive)
+          ];
+        })
+      );
       return success();
     } catch (error) {
       debug(`Failed to get list of CodePush deployments - ${inspect(error)}`);
@@ -44,5 +67,48 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
         return failure(ErrorCodes.Exception, error.response.body);
       }
     }
+  }
+
+  private generateReleaseMetricsString(release: models.CodePushRelease, metrics: models.CodePushReleaseMetric[], releasesTotalActive: number): string {
+    let metricsString: string = "";
+
+    const releaseMetrics: models.CodePushReleaseMetric = metrics.find((metric) => metric.label === release.label);
+    if (releaseMetrics) {
+
+      const activePercent: number = (releaseMetrics.downloaded) ? releaseMetrics.active / releasesTotalActive * 100 : 0.0;
+      let percentString: string;
+      if (activePercent === 100.0) {
+        percentString = "100%";
+      } else if (activePercent === 0.0) {
+        percentString = "0%";
+      } else {
+        percentString = activePercent.toPrecision(2) + "%";
+      }
+
+      metricsString += chalk.green("Active: ") + percentString + ` (${releaseMetrics.active} of ${releasesTotalActive})\n`;
+      metricsString += chalk.green("Installed: ") + releaseMetrics.installed;
+
+      const pending: number = releaseMetrics.downloaded - releaseMetrics.installed - releaseMetrics.failed;
+      if (pending) {
+        metricsString += ` (${pending} pending)`;
+      }
+
+      if (releaseMetrics.failed > 0) {
+        metricsString += "\n" + chalk.red("Rollback: " + releaseMetrics.failed);
+      }
+
+      if (release.rollout && release.rollout !== 100) {
+        metricsString += "\n" + chalk.green("Rollout: ") + release.rollout + "%";
+      }
+
+    } else {
+      metricsString = chalk.magenta("No installs recorded");
+    }
+
+    if (release.isDisabled) {
+      metricsString += "\n" + chalk.green("Disabled: ") + "Yes";
+    }
+
+    return metricsString;
   }
 }
