@@ -37,7 +37,7 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
       let releasesTotalActive: number = 0;
       metrics.forEach((metric) => releasesTotalActive += metric.active);
 
-      let tableTitles: string[] = ["Label", "Release Time", "Released by", "App Version", "Mandatory", "Description", "Install Metrics"];
+      let tableTitles: string[] = ["Label", "Release Time", "App Version", "Mandatory", "Description", "Install Metrics"];
       tableTitles = tableTitles.map((title) => chalk.cyan(title));
 
       out.table(
@@ -46,7 +46,6 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
           let releaseRow: string[] = [
             release.label,
             formatDate(release.uploadTime),
-            release.releasedBy,
             release.targetBinaryRange,
             (release.isMandatory) ? "Yes" : "No",
             release.description,
@@ -54,7 +53,7 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
           ];
 
           if (release.isDisabled) {
-            releaseRow = releaseRow.map((element) => { return this.applyDimChalkSkippingLineBreaks(element) });
+            releaseRow = releaseRow.map((element) => { return this.applyDimChalkSkippingLineBreaks(element); });
           }
 
           return releaseRow;
