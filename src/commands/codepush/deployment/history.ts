@@ -43,7 +43,7 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
       out.table(
         out.getCommandOutputTableOptions(tableTitles),
         releases.map((release) => {
-          return [
+          let releaseRow: string[] = [
             release.label,
             formatDate(release.uploadTime),
             release.releasedBy,
@@ -52,6 +52,12 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
             release.description,
             this.generateReleaseMetricsString(release, metrics, releasesTotalActive)
           ];
+
+          if (release.isDisabled) {
+            releaseRow = releaseRow.map((element) => { return this.applyDimChalkSkippingLineBreaks(element) });
+          }
+
+          return releaseRow;
         })
       );
       return success();
@@ -110,5 +116,14 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
     }
 
     return metricsString;
+  }
+
+  private applyDimChalkSkippingLineBreaks(applyString: string): string {
+    // Used to prevent "chalk" from applying styles to linebreaks which
+    // causes table border chars to have the style applied as well.
+    return applyString
+      .split("\n")
+      .map((line: string) => chalk.dim(line))
+      .join("\n");
   }
 }
