@@ -89,7 +89,7 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
   private generateMetricsString(releaseMetrics: models.CodePushReleaseMetric, releasesTotalActive: number): string {
     let metricsString: string = "";
 
-    const activePercent: number = (releaseMetrics.downloaded) ? releaseMetrics.active / releasesTotalActive * 100 : 0.0;
+    const activePercent: number = (releasesTotalActive) ? releaseMetrics.active / releasesTotalActive * 100 : 0.0;
     let percentString: string;
     if (activePercent === 100.0) {
       percentString = "100%";
