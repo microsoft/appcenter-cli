@@ -1,15 +1,21 @@
-import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success } from "../../../util/commandline";
+import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, shortName, longName } from "../../../util/commandline";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import * as _ from "lodash";
 import * as chalk from "chalk";
 import { scriptName } from "../../../util/misc";
+import { formatDate } from "./lib/date-helper";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:deployments:list");
 
 @help("List the deployments associated with an app")
 export default class CodePushDeploymentListListCommand extends AppCommand {
+
+  @help("Specifies whether to display the deployment keys [boolean] [default: false]")
+  @shortName("k")
+  @longName("displayKeys")
+  public displayKeys: boolean;
 
   constructor(args: CommandArgs) {
     super(args);
@@ -22,7 +28,17 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
       const httpRequest = await out.progress("Getting CodePush deployments...", clientRequest<models.Deployment[]>(
         (cb) => client.codePushDeployments.list(app.ownerName, app.appName, cb)));
       deployments = httpRequest.result;
-      out.table(out.getCommandOutputTableOptions(["Name", "Key"]), deployments.map((deployment) => [deployment.name, deployment.key]));
+
+      if (this.displayKeys) {
+        out.table(out.getCommandOutputTableOptions(this.generateColoredTableTitles(["Name", "Key"])),
+          deployments.map((deployment) => [deployment.name, deployment.key])
+        );
+      } else {
+        out.table(out.getCommandOutputTableOptions(this.generateColoredTableTitles(["Name", "Update Metadata", "Install Metrics"])),
+          await this.generateTableInfoRows(deployments, client)
+        );
+      }
+
       return success();
     } catch (error) {
       debug(`Failed to get list of Codepush deployments - ${inspect(error)}`);
@@ -33,5 +49,77 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
         return failure(ErrorCodes.Exception, "Failed to get list of deployments for the app");
       }
     }
+  }
+
+  private generateColoredTableTitles(tableTitles: string[]): string[] {
+    return tableTitles.map((title) => chalk.cyan(title));
+  }
+
+  private async generateTableInfoRows(deployments: models.Deployment[], client: AppCenterClient): Promise<string[][]> {
+    return await Promise.all(deployments.map(async (deployment: models.Deployment): Promise<string[]> => {
+      let metadataString: string = "";
+      let metricsString: string = "";
+
+      if (deployment.latestRelease) {
+        metadataString = this.generateMetadataString(deployment.latestRelease);
+
+        let metrics: models.CodePushReleaseMetric[];
+        const httpRequest = await out.progress("Getting CodePush deployments metrics...", clientRequest<models.CodePushReleaseMetric[]>(
+          (cb) => client.codePushDeploymentMetrics.get(deployment.name, this.app.ownerName, this.app.appName, cb)));
+        metrics = httpRequest.result;
+
+        let releasesTotalActive: number = 0;
+        metrics.forEach((metric) => releasesTotalActive += metric.active);
+
+        const releaseMetrics: models.CodePushReleaseMetric = metrics.find((metric) => metric.label === deployment.latestRelease.label);
+        if (releaseMetrics) {
+          metricsString = this.generateMetricsString(releaseMetrics, releasesTotalActive);
+        } else {
+          metricsString = chalk.magenta("No installs recorded");
+        }
+      } else {
+        metadataString = chalk.magenta("No updates released");
+        metricsString = chalk.magenta("No installs recorded");
+      }
+
+      return [deployment.name, metadataString, metricsString];
+    }));
+  }
+
+  private generateMetricsString(releaseMetrics: models.CodePushReleaseMetric, releasesTotalActive: number): string {
+    let metricsString: string = "";
+
+    const activePercent: number = (releaseMetrics.downloaded) ? releaseMetrics.active / releasesTotalActive * 100 : 0.0;
+    let percentString: string;
+    if (activePercent === 100.0) {
+      percentString = "100%";
+    } else if (activePercent === 0.0) {
+      percentString = "0%";
+    } else {
+      percentString = activePercent.toPrecision(2) + "%";
+    }
+
+    metricsString += chalk.green("Active: ") + percentString + ` (${releaseMetrics.active} of ${releasesTotalActive})\n`;
+    metricsString += chalk.green("Installed: ") + releaseMetrics.installed;
+
+    const pending: number = releaseMetrics.downloaded - releaseMetrics.installed - releaseMetrics.failed;
+    if (pending) {
+      metricsString += ` (${pending} pending)`;
+    }
+
+    return metricsString;
+  }
+
+  private generateMetadataString(release: models.CodePushRelease): string {
+    let metadataString: string = "";
+    const lineFeed: string = "\n";
+
+    metadataString += chalk.green("Label: ") + release.label + lineFeed;
+    metadataString += chalk.green("App Version: ") + release.targetBinaryRange + lineFeed;
+    metadataString += chalk.green("Mandatory: ") + (release.isMandatory ? "Yes" : "No") + lineFeed;
+    metadataString += chalk.green("Release Time: ") + formatDate(release.uploadTime) + lineFeed;
+    metadataString += chalk.green("Released By: ") + release.releasedBy;
+
+    return metadataString;
   }
 }
