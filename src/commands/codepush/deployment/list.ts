@@ -34,6 +34,8 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
           deployments.map((deployment) => [deployment.name, deployment.key])
         );
       } else {
+        out.text("To display deployment keys add -k|--displayKeys option");
+
         out.table(out.getCommandOutputTableOptions(this.generateColoredTableTitles(["Name", "Update Metadata", "Install Metrics"])),
           await this.generateTableInfoRows(deployments, client)
         );
