@@ -120,9 +120,13 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
   private applyDimChalkSkippingLineBreaks(applyString: string): string {
     // Used to prevent "chalk" from applying styles to linebreaks which
     // causes table border chars to have the style applied as well.
-    return applyString
+    let chalkedString: string = "";
+    if (applyString) {
+      chalkedString = applyString
       .split("\n")
       .map((line: string) => chalk.dim(line))
       .join("\n");
+  }
+    return chalkedString;
   }
 }
