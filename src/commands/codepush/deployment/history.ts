@@ -80,7 +80,7 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
     const releaseMetrics: models.CodePushReleaseMetric = metrics.find((metric) => metric.label === release.label);
     if (releaseMetrics) {
 
-      const activePercent: number = (releaseMetrics.downloaded) ? releaseMetrics.active / releasesTotalActive * 100 : 0.0;
+      const activePercent: number = (releasesTotalActive) ? releaseMetrics.active / releasesTotalActive * 100 : 0.0;
       let percentString: string;
       if (activePercent === 100.0) {
         percentString = "100%";
