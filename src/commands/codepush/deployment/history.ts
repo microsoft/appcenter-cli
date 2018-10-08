@@ -103,16 +103,19 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
         percentString = activePercent.toPrecision(2) + "%";
       }
 
-      metricsString += chalk.green("Active: ") + percentString + ` (${releaseMetrics.active} of ${releasesTotalActive})\n`;
-      metricsString += chalk.green("Installed: ") + releaseMetrics.installed;
+      metricsString += chalk.green("Active: ") + percentString + ` (${releaseMetrics.active} of ${releasesTotalActive})`;
 
-      const pending: number = releaseMetrics.downloaded - releaseMetrics.installed - releaseMetrics.failed;
-      if (pending) {
-        metricsString += ` (${pending} pending)`;
+      if (releaseMetrics.installed) {
+        metricsString += "\n" + chalk.green("Installed: ") + releaseMetrics.installed;
+
+        const pending: number = releaseMetrics.downloaded - releaseMetrics.installed - releaseMetrics.failed;
+        if (pending > 0) {
+          metricsString += ` (${pending} pending)`;
+        }
       }
 
       if (releaseMetrics.failed > 0) {
-        metricsString += "\n" + chalk.red("Rollback: " + releaseMetrics.failed);
+        metricsString += "\n" + chalk.red("Rollbacks: " + releaseMetrics.failed);
       }
 
       if (release.rollout && release.rollout !== 100) {
