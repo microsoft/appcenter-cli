@@ -45,7 +45,7 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
         releases.map((release) => {
           let releaseRow: string[] = [
             release.label,
-            formatDate(release.uploadTime),
+            formatDate(release.uploadTime) + this.generateReleaseAdditionalInfoString(release),
             release.targetBinaryRange,
             (release.isMandatory) ? "Yes" : "No",
             release.description,
@@ -72,6 +72,19 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
         return failure(ErrorCodes.Exception, error.response.body);
       }
     }
+  }
+
+  private generateReleaseAdditionalInfoString(release: models.CodePushRelease): string {
+    let additionalInfo: string = "";
+    if (release.releaseMethod === "Promote") {
+      additionalInfo = `(Promoted ${release.originalLabel} from ${release.originalDeployment})`;
+    } else if (release.releaseMethod === "Rollback") {
+      const labelNumber: number = parseInt(release.label.substring(1), 10);
+      const previousReleaseLabel: string = "v" + (labelNumber - 1);
+      additionalInfo = `(Rolled back ${previousReleaseLabel} to ${release.originalLabel})`;
+    }
+
+    return (additionalInfo) ? "\n" + chalk.magenta(additionalInfo) : "";
   }
 
   private generateReleaseMetricsString(release: models.CodePushRelease, metrics: models.CodePushReleaseMetric[], releasesTotalActive: number): string {
@@ -123,10 +136,10 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
     let chalkedString: string = "";
     if (applyString) {
       chalkedString = applyString
-      .split("\n")
-      .map((line: string) => chalk.dim(line))
-      .join("\n");
-  }
+        .split("\n")
+        .map((line: string) => chalk.dim(line))
+        .join("\n");
+    }
     return chalkedString;
   }
 }
