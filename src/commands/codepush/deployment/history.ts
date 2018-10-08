@@ -34,8 +34,7 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
         (cb) => client.codePushDeploymentMetrics.get(this.deploymentName, app.ownerName, app.appName, cb)));
       metrics = metricsHttpRequest.result;
 
-      let releasesTotalActive: number = 0;
-      metrics.forEach((metric) => releasesTotalActive += metric.active);
+      const releasesTotalActive = metrics.reduce((sum, releaseMetrics) => sum += releaseMetrics.active, 0);
 
       let tableTitles: string[] = ["Label", "Release Time", "App Version", "Mandatory", "Description", "Install Metrics"];
       tableTitles = tableTitles.map((title) => chalk.cyan(title));
