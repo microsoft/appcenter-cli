@@ -74,12 +74,12 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
   }
 
   private generateReleaseAdditionalInfoString(release: models.CodePushRelease): string {
-    let additionalInfo: string = "";
+    let additionalInfo = "";
     if (release.releaseMethod === "Promote") {
       additionalInfo = `(Promoted ${release.originalLabel} from ${release.originalDeployment})`;
     } else if (release.releaseMethod === "Rollback") {
-      const labelNumber: number = parseInt(release.label.substring(1), 10);
-      const previousReleaseLabel: string = "v" + (labelNumber - 1);
+      const labelNumber = parseInt(release.label.substring(1), 10);
+      const previousReleaseLabel = "v" + (labelNumber - 1);
       additionalInfo = `(Rolled back ${previousReleaseLabel} to ${release.originalLabel})`;
     }
 
@@ -87,12 +87,12 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
   }
 
   private generateReleaseMetricsString(release: models.CodePushRelease, metrics: models.CodePushReleaseMetric[], releasesTotalActive: number): string {
-    let metricsString: string = "";
+    let metricsString = "";
 
     const releaseMetrics: models.CodePushReleaseMetric = metrics.find((metric) => metric.label === release.label);
     if (releaseMetrics) {
 
-      const activePercent: number = (releasesTotalActive) ? releaseMetrics.active / releasesTotalActive * 100 : 0.0;
+      const activePercent = (releasesTotalActive) ? releaseMetrics.active / releasesTotalActive * 100 : 0.0;
       let percentString: string;
       if (activePercent === 100.0) {
         percentString = "100%";
@@ -107,7 +107,7 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
       if (releaseMetrics.installed) {
         metricsString += "\n" + chalk.green("Installed: ") + releaseMetrics.installed;
 
-        const pending: number = releaseMetrics.downloaded - releaseMetrics.installed - releaseMetrics.failed;
+        const pending = releaseMetrics.downloaded - releaseMetrics.installed - releaseMetrics.failed;
         if (pending > 0) {
           metricsString += ` (${pending} pending)`;
         }
@@ -135,11 +135,11 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
   private applyDimChalkSkippingLineBreaks(applyString: string): string {
     // Used to prevent "chalk" from applying styles to linebreaks which
     // causes table border chars to have the style applied as well.
-    let chalkedString: string = "";
+    let chalkedString = "";
     if (applyString) {
       chalkedString = applyString
         .split("\n")
-        .map((line: string) => chalk.dim(line))
+        .map((line) => chalk.dim(line))
         .join("\n");
     }
     return chalkedString;
