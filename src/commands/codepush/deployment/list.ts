@@ -2,7 +2,6 @@ import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, succ
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
-import * as _ from "lodash";
 import * as chalk from "chalk";
 import { scriptName } from "../../../util/misc";
 import { formatDate } from "./lib/date-helper";
@@ -12,7 +11,7 @@ const debug = require("debug")("appcenter-cli:commands:codepush:deployments:list
 @help("List the deployments associated with an app")
 export default class CodePushDeploymentListListCommand extends AppCommand {
 
-  @help("Specifies whether to display the deployment keys [boolean] [default: false]")
+  @help("Specifies whether to display the deployment keys")
   @shortName("k")
   @longName("displayKeys")
   public displayKeys: boolean;
@@ -34,7 +33,7 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
           deployments.map((deployment) => [deployment.name, deployment.key])
         );
       } else {
-        out.text("To display deployment keys add -k|--displayKeys option");
+        out.text("Note: To display deployment keys add -k|--displayKeys option");
 
         out.table(out.getCommandOutputTableOptions(this.generateColoredTableTitles(["Name", "Update Metadata", "Install Metrics"])),
           await this.generateTableInfoRows(deployments, client)
@@ -64,21 +63,8 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
 
       if (deployment.latestRelease) {
         metadataString = this.generateMetadataString(deployment.latestRelease);
+        metricsString = await this.getMetricsString(deployment, client);
 
-        let metrics: models.CodePushReleaseMetric[];
-        const httpRequest = await out.progress("Getting CodePush deployments metrics...", clientRequest<models.CodePushReleaseMetric[]>(
-          (cb) => client.codePushDeploymentMetrics.get(deployment.name, this.app.ownerName, this.app.appName, cb)));
-        metrics = httpRequest.result;
-
-        let releasesTotalActive: number = 0;
-        metrics.forEach((metric) => releasesTotalActive += metric.active);
-
-        const releaseMetrics: models.CodePushReleaseMetric = metrics.find((metric) => metric.label === deployment.latestRelease.label);
-        if (releaseMetrics) {
-          metricsString = this.generateMetricsString(releaseMetrics, releasesTotalActive);
-        } else {
-          metricsString = chalk.magenta("No installs recorded");
-        }
       } else {
         metadataString = chalk.magenta("No updates released");
         metricsString = chalk.magenta("No installs recorded");
@@ -88,28 +74,48 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
     }));
   }
 
+  private async getMetricsString(deployment: models.Deployment, client: AppCenterClient): Promise<string> {
+    let metrics: models.CodePushReleaseMetric[];
+    const httpRequest = await out.progress("Getting CodePush deployments metrics...", clientRequest<models.CodePushReleaseMetric[]>(
+      (cb) => client.codePushDeploymentMetrics.get(deployment.name, this.app.ownerName, this.app.appName, cb)));
+    metrics = httpRequest.result;
+
+    let releasesTotalActive: number = 0;
+    metrics.forEach((metric) => releasesTotalActive += metric.active);
+
+    const releaseMetrics: models.CodePushReleaseMetric = metrics.find((metric) => metric.label === deployment.latestRelease.label);
+
+    return this.generateMetricsString(releaseMetrics, releasesTotalActive);
+  }
+
   private generateMetricsString(releaseMetrics: models.CodePushReleaseMetric, releasesTotalActive: number): string {
-    let metricsString: string = "";
+    if (releaseMetrics) {
+      let metricsString: string = "";
 
-    const activePercent: number = (releasesTotalActive) ? releaseMetrics.active / releasesTotalActive * 100 : 0.0;
-    let percentString: string;
-    if (activePercent === 100.0) {
-      percentString = "100%";
-    } else if (activePercent === 0.0) {
-      percentString = "0%";
+      const activePercent: number = (releasesTotalActive) ? releaseMetrics.active / releasesTotalActive * 100 : 0.0;
+      let percentString: string;
+      if (activePercent === 100.0) {
+        percentString = "100%";
+      } else if (activePercent === 0.0) {
+        percentString = "0%";
+      } else {
+        percentString = activePercent.toPrecision(2) + "%";
+      }
+
+      metricsString += chalk.green("Active: ") + percentString + ` (${releaseMetrics.active} of ${releasesTotalActive})\n`;
+      if (releaseMetrics.installed != null) {
+        metricsString += chalk.green("Installed: ") + releaseMetrics.installed;
+      }
+
+      const pending: number = releaseMetrics.downloaded - releaseMetrics.installed - releaseMetrics.failed;
+      if (pending) {
+        metricsString += ` (${pending} pending)`;
+      }
+
+      return metricsString;
     } else {
-      percentString = activePercent.toPrecision(2) + "%";
+      return chalk.magenta("No installs recorded");
     }
-
-    metricsString += chalk.green("Active: ") + percentString + ` (${releaseMetrics.active} of ${releasesTotalActive})\n`;
-    metricsString += chalk.green("Installed: ") + releaseMetrics.installed;
-
-    const pending: number = releaseMetrics.downloaded - releaseMetrics.installed - releaseMetrics.failed;
-    if (pending) {
-      metricsString += ` (${pending} pending)`;
-    }
-
-    return metricsString;
   }
 
   private generateMetadataString(release: models.CodePushRelease): string {
