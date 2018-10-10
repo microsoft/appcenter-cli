@@ -18,6 +18,7 @@ describe("CodePush deployment history", () => {
   const fakeNonExistentAppIdentifier = "Non/Existent";
   const fakeDeploymentName = "Staging";
   const fakeNonExistentDeploymentName = "Dev";
+  const fakeEmail = "fake@email.com";
   const fakeToken = "c1o3d3e7";
   // tslint:disable-next-line:no-http-string
   const fakeHost = "http://localhost:1700";
@@ -28,10 +29,11 @@ describe("CodePush deployment history", () => {
     { label: "v1", releaseMethod: "Upload", description: "First Release!" },
     { label: "v2", releaseMethod: "Promote", originalLabel: "v6", originalDeployment: "TestDep" },
     { label: "v3", releaseMethod: "Rollback", originalLabel: "v1", isDisabled: true },
-    { label: "v4", releaseMethod: "Upload" },
+    { label: "v4", releaseMethod: "Upload", rollout: 0 },
     { label: "v5", releaseMethod: "Upload", rollout: 56 },
-    { label: "v6", releaseMethod: "Upload" },
+    { label: "v6", releaseMethod: "Upload", isDisabled: true },
     { label: "v7", releaseMethod: "Upload" },
+    { label: "v8", releaseMethod: "Upload", rollout: 0 },
   ];
 
   const fakeMetrics: models.CodePushReleaseMetric[] = [
@@ -52,6 +54,7 @@ describe("CodePush deployment history", () => {
     "",
     "",
     "",
+    "",
     ""
   ];
 
@@ -59,10 +62,11 @@ describe("CodePush deployment history", () => {
     "Active: 38% (3 of 8)" + lineFeed + "Installed: 5 (3 pending)" + lineFeed + "Rollbacks: 2",
     "Active: 25% (2 of 8)" + lineFeed + "Installed: 4",
     "No installs recorded" + lineFeed + "Disabled: Yes",
-    "No installs recorded",
+    "No installs recorded" + lineFeed + "Rollout: 0%",
     "Active: 13% (1 of 8)" + lineFeed + "Installed: 1" + lineFeed + "Rollout: 56%",
+    "Active: 0% (0 of 8)" + lineFeed + "Disabled: Yes",
     "Active: 0% (0 of 8)",
-    "Active: 0% (0 of 8)",
+    "No installs recorded" + lineFeed + "Rollout: 0%",
   ];
 
   const fakeReleasesResponse = [
@@ -74,7 +78,7 @@ describe("CodePush deployment history", () => {
       is_mandatory: false,
       label: "v1",
       package_hash: "123",
-      released_by: "fake@email.com",
+      released_by: fakeEmail,
       release_method: "Upload",
       rollout: 100,
       size: 5000,
@@ -89,7 +93,7 @@ describe("CodePush deployment history", () => {
       is_mandatory: true,
       label: "v2",
       package_hash: "456",
-      released_by: "fake@email.com",
+      released_by: fakeEmail,
       release_method: "Upload",
       rollout: 55,
       size: 10000,
@@ -104,11 +108,11 @@ describe("CodePush deployment history", () => {
       is_mandatory: true,
       label: "v3",
       package_hash: "789",
-      released_by: "fake@email.com",
+      released_by: fakeEmail,
       release_method: "Promote",
       original_label: "v1",
       original_deployment: "TestDep",
-      rollout: 55,
+      rollout: 33,
       size: 15000,
       upload_time: 1538122289999,
       diff_package_map: {}
@@ -124,7 +128,7 @@ describe("CodePush deployment history", () => {
   const expectedOutTableRows = [
     ["v1", formatDate(fakeReleasesResponse[0].upload_time), "1.0", "No", "", "Active: 50% (1 of 2)\nInstalled: 1 (1 pending)"],
     ["v2", formatDate(fakeReleasesResponse[1].upload_time), "1.0", "Yes", "Description", "Active: 0% (0 of 2)\nInstalled: 1\nRollout: 55%\nDisabled: Yes"],
-    ["v3", formatDate(fakeReleasesResponse[2].upload_time) + "\n(Promoted v1 from TestDep)", "1.1", "Yes", "", "No installs recorded"]
+    ["v3", formatDate(fakeReleasesResponse[2].upload_time) + "\n(Promoted v1 from TestDep)", "1.1", "Yes", "", "No installs recorded\nRollout: 33%"]
   ];
 
   describe("deployment history unit tests", () => {

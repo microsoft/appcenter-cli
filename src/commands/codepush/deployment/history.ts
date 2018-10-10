@@ -52,7 +52,7 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
           ];
 
           if (release.isDisabled) {
-            releaseRow = releaseRow.map((element) => { return this.applyDimChalkSkippingLineBreaks(element); });
+            releaseRow = releaseRow.map((element) => this.applyDimChalkSkippingLineBreaks(element));
           }
 
           return releaseRow;
@@ -104,7 +104,7 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
 
       metricsString += chalk.green("Active: ") + percentString + ` (${releaseMetrics.active} of ${releasesTotalActive})`;
 
-      if (releaseMetrics.installed) {
+      if (releaseMetrics.installed != null) {
         metricsString += "\n" + chalk.green("Installed: ") + releaseMetrics.installed;
 
         const pending = releaseMetrics.downloaded - releaseMetrics.installed - releaseMetrics.failed;
@@ -114,15 +114,15 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
       }
 
       if (releaseMetrics.failed > 0) {
-        metricsString += "\n" + chalk.red("Rollbacks: " + releaseMetrics.failed);
-      }
-
-      if (release.rollout && release.rollout !== 100) {
-        metricsString += "\n" + chalk.green("Rollout: ") + release.rollout + "%";
+        metricsString += "\n" + chalk.green("Rollbacks: ") + chalk.red(releaseMetrics.failed.toString());
       }
 
     } else {
       metricsString = chalk.magenta("No installs recorded");
+    }
+
+    if (release.rollout != null && release.rollout !== 100) {
+      metricsString += "\n" + chalk.green("Rollout: ") + release.rollout + "%";
     }
 
     if (release.isDisabled) {
