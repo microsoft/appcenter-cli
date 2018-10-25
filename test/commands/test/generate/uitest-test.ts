@@ -81,4 +81,87 @@ describe("Validating UITest template generation", () => {
     projectFileContent = await pfs.readFile(projectFilePath, "utf8");
     expect(projectFileContent).contain(fakeLatestVersion);
   });
+
+  it("should not touch NuGet version on failure", async () => {
+    // Arrange
+    const args: CommandArgs = {
+      command: ["test", "generate", "uitest"],
+      commandPath: "Test",
+      args: ["--platform", "Android", "--output-path", path.join(__dirname, tempTemplateDir)]
+    };
+
+    const command = new GenerateUITestCommand(args);
+    sandbox.stub(command as any, "getLatestUITestVersionNumber").callsFake(() => {
+      return new Promise<string>((resolve) => {
+        throw "Test error";
+      });
+    });
+
+    const packageFilePath = path.join(command.outputPath, `AppCenter.UITest.${command.platform}/packages.config`);
+    const projectFilePath = path.join(command.outputPath, `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`);
+
+    // Assert
+    let packageFileContent = await pfs.readFile(packageFilePath, "utf8");
+    expect(packageFileContent).contain("2.2.5");
+
+    let projectFileContent = await pfs.readFile(projectFilePath, "utf8");
+    expect(projectFileContent).contain("2.2.5");
+
+    // Act
+    await (command as any).processTemplate();
+
+    // Assert
+    packageFileContent = await pfs.readFile(packageFilePath, "utf8");
+    expect(packageFileContent).contain("2.2.5");
+
+    projectFileContent = await pfs.readFile(projectFilePath, "utf8");
+    expect(projectFileContent).contain("2.2.5");
+  });
+
+  it("should recover original template files on failure", async () => {
+    // Arrange
+    const fakeLatestVersion = "2.5.6";
+    const args: CommandArgs = {
+      command: ["test", "generate", "uitest"],
+      commandPath: "Test",
+      args: ["--platform", "Android", "--output-path", path.join(__dirname, tempTemplateDir)]
+    };
+
+    const command = new GenerateUITestCommand(args);
+    sandbox.stub(command as any, "getLatestUITestVersionNumber").callsFake(() => {
+      return new Promise<string>((resolve) => {
+       resolve(fakeLatestVersion);
+      });
+    });
+
+    sandbox.stub(command as any, "replaceVersionInFile").callsFake((filePath: string, regex: RegExp, version: string) => {
+      return new Promise<void>((resolve) => {
+        if (filePath.indexOf("packages.config") !== -1) {
+          resolve();
+        } else {
+          throw "Test error";
+        }
+      });
+    });
+
+    const packageFilePath = path.join(command.outputPath, `AppCenter.UITest.${command.platform}/packages.config`);
+    const projectFilePath = path.join(command.outputPath, `AppCenter.UITest.${command.platform}/AppCenter.UITest.${command.platform}.csproj`);
+
+    // Assert
+    let packageFileContent = await pfs.readFile(packageFilePath, "utf8");
+    expect(packageFileContent).not.contain(fakeLatestVersion);
+
+    let projectFileContent = await pfs.readFile(projectFilePath, "utf8");
+    expect(projectFileContent).not.contain(fakeLatestVersion);
+
+    // Act
+    await (command as any).processTemplate();
+
+    // Assert
+    packageFileContent = await pfs.readFile(packageFilePath, "utf8");
+    expect(packageFileContent).not.contain(fakeLatestVersion);
+
+    projectFileContent = await pfs.readFile(projectFilePath, "utf8");
+    expect(projectFileContent).not.contain(fakeLatestVersion);
+  });
 });
