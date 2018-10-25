@@ -1,4 +1,4 @@
-import { Command, CommandResult, help, name, position, ErrorCodes, failure, shortName, longName, hasArg } from "../util/commandline";
+import { Command, CommandResult, help, name, position, ErrorCodes, success, failure, shortName, longName, hasArg } from "../util/commandline";
 import * as _ from "lodash";
 import * as Path from "path";
 import * as mkdirp from "mkdirp";
@@ -45,6 +45,7 @@ export default class SetupAutoCompleteCommand extends Command {
     });
 
     setupAutoCompleteForShell(this.shellProfilePath, this.shell);
-    // Omelette exits process, no need to return command result
+
+    return success();
   }
 }

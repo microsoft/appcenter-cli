@@ -39,6 +39,11 @@ export abstract class GenerateCommand extends Command {
     return (this.platform.toLowerCase() === "android");
   }
 
+  protected async copyTemplates(): Promise<void> {
+    const templatePath = this.isIOS() ? this.templatePathiOS : this.templatePathAndroid;
+    await pfs.cpDir(templatePath, this.outputPath);
+  }
+
   public async runNoClient(): Promise<CommandResult> {
     if (!(this.isIOS() || this.isAndroid())) {
       throw new Error("Valid values of argument --platform are 'ios' and 'android'");
@@ -53,8 +58,7 @@ export abstract class GenerateCommand extends Command {
       }
     }
 
-    const templatePath = this.isIOS() ? this.templatePathiOS : this.templatePathAndroid;
-    await pfs.cpDir(templatePath, this.outputPath);
+    await this.copyTemplates();
     await this.processTemplate();
 
     return success();
