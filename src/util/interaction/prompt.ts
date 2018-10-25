@@ -37,7 +37,7 @@ export namespace prompt {
         default: !!defaultResponse
       });
 
-      const promptCompleted = confirmPrompt.then((answers) => {
+      const promptCompleted = confirmPrompt.then((answers: any) => {
         clearTimeout(timerId);
         return !!answers["confirm"];
       });
@@ -71,7 +71,7 @@ export namespace prompt {
         questions = [questions as inquirer.Question];
 
       }
-      const answers: any = questions.reduce((answers: any, q: inquirer.Question) => {
+      const answers: any = (questions as inquirer.Question[]).reduce((answers: any, q: inquirer.Question) => {
         if (answers instanceof Error) {
           return answers;
         }

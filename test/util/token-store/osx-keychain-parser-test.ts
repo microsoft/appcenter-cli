@@ -187,7 +187,7 @@ describe("storing complete data in keychain", function () {
   after(() => keychain.remove(testUser));
 
   it("should have at least one item", async function (): Promise<void> {
-    const c = await (keychain.list() as any).count().toPromise();
+    const c = await keychain.list().count().toPromise();
     expect(c).to.be.above(0);
   });
 
