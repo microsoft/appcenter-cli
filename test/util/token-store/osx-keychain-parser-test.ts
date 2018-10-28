@@ -2,7 +2,6 @@ import { expect } from "chai";
 import * as _ from "lodash";
 import * as es from "event-stream";
 import * as os from "os";
-import * as rx from "rx-lite";
 import { inspect } from "util";
 
 import { TokenEntry } from "../../../src/util/token-store";
