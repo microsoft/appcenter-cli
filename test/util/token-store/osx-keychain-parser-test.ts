@@ -187,8 +187,8 @@ describe("storing complete data in keychain", function () {
   after(() => keychain.remove(testUser));
 
   it("should have at least one item", async function (): Promise<void> {
-    const c = await keychain.list().toArray().toPromise();
-    expect(c.length).to.be.above(0);
+    const c = await keychain.list().count().toPromise();
+    expect(c).to.be.above(0);
   });
 
   it("should have expected entry", async function (): Promise<void> {
@@ -219,8 +219,8 @@ describe("storing data without a tokenId in keychain", function () {
   after(() => keychain.remove(testUser));
 
   it("should have at least one item", async function (): Promise<void> {
-    const c = await keychain.list().toArray().toPromise();
-    expect(c.length).to.be.above(0);
+    const c = await keychain.list().count().toPromise();
+    expect(c).to.be.above(0);
   });
 
   it("should have expected entry", async function (): Promise<void> {

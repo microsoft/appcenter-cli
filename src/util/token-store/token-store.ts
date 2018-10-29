@@ -1,7 +1,7 @@
 //
 // Definition of a token store
 //
-import { Observable } from "rx-lite";
+import { Observable } from "rxjs";
 
 //
 // Object used as token keys.

@@ -4,7 +4,7 @@
 // Access to the OSX keychain - list, add, get password, remove
 //
 import * as _ from "lodash";
-import * as rx from "rx-lite";
+import * as rx from "rxjs";
 import * as childProcess from "child_process";
 import * as es from "event-stream";
 import * as stream from "stream";
@@ -46,11 +46,11 @@ export class OsxTokenStore implements TokenStore {
           token: null
         };
         debug(`Outputting ${inspect({ key, accessToken })}`);
-        observer.onNext({ key, accessToken });
+        observer.next({ key, accessToken });
       });
       securityStream.on("end", (err: Error) => {
         debug(`output from security program complete`);
-        if (err) { observer.onError(err); } else { observer.onCompleted(); }
+        if (err) { observer.error(err); } else { observer.complete(); }
       });
     });
   }
