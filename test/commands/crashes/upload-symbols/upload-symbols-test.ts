@@ -298,7 +298,7 @@ describe("upload-symbols command", () => {
     createFolderWithSymbolsFile(dsymParentFolderPath, dSymFolder2Name, symbolsFile2Name, symbolsFileContent);
 
     // adding random file to the root which should not be added
-    Fs.writeFile(Path.join(dsymParentFolderPath, randomFileName), randomFileContent);
+    Fs.writeFileSync(Path.join(dsymParentFolderPath, randomFileName), randomFileContent);
 
     return dsymParentFolderPath;
   }
