@@ -8,7 +8,7 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import * as rx from "rx-lite";
+import * as rx from "rxjs";
 import { toPairs } from "lodash";
 
 const debug = require("debug")("appcenter-cli:util:token-store:file:file-token-store");

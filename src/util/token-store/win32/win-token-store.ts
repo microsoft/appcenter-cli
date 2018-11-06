@@ -4,7 +4,7 @@
 //
 
 import * as childProcess from "child_process";
-import { Observable, Observer } from "rx-lite";
+import { Observable, Observer } from "rxjs";
 import * as stream from "stream";
 import * as es from "event-stream";
 import * as path from "path";
@@ -78,7 +78,7 @@ export class WinTokenStore implements TokenStore {
  */
   list(): Observable<TokenEntry> {
     const prefixer = new Prefixer(false);
-    return Observable.create<TokenEntry>((observer: Observer<TokenEntry>) => {
+    return Observable.create((observer: Observer<TokenEntry>) => {
       const credsProcess = childProcess.spawn(credExePath, ["-s", "-g", "-t", `${targetNamePrefix}*`]);
 
       debug("Creds process started for list, monitoring output");
@@ -88,14 +88,14 @@ export class WinTokenStore implements TokenStore {
 
         credStream.on("data", (cred: any) => {
           debug(`Got data from creds: ${cred}`);
-          observer.onNext(credToTokenEntry(cred));
+          observer.next(credToTokenEntry(cred));
         });
         credStream.on("end", () => {
           debug(`output list completed`);
-          observer.onCompleted();
+          observer.complete();
         });
 
-        credStream.on("error", (err: Error) => observer.onError(err));
+        credStream.on("error", (err: Error) => observer.error(err));
     });
   }
 
