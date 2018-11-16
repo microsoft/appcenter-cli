@@ -43,7 +43,7 @@ export default class WizardTestCommand extends AppCommand {
   }
 
   private async selectedApp(client: AppCenterClient): Promise<DefaultApp> {
-    if (this._selectedApp == null) {
+    if (!this._selectedApp) {
       try {
         this._selectedApp = super.app;
       } catch (e) {
