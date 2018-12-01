@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import * as _ from "lodash";
 import * as es from "event-stream";
+import * as from from "from2";
 import * as os from "os";
 import { inspect } from "util";
 
@@ -80,15 +81,13 @@ describe("security tool output parsing", function () {
     let parsingResult: any[] = [];
 
     before(function (done: {(err?: Error): void}) {
-      const dataSource = es.through();
-      dataSource
+      from([entries.entry1])
         .pipe(keychainParser.createOsxSecurityParsingStream())
+        // TODO: I don't know how to replace this because concat-stream has poor typings
         .pipe(es.writeArray((err: Error, data: any[]) => {
           parsingResult = data;
           done(err);
         }));
-      dataSource.push(entries.entry1);
-      dataSource.push(null);
     });
 
     it("should have one result", function () {
@@ -116,17 +115,13 @@ describe("security tool output parsing", function () {
     let parsingResult: any[] = [];
 
     before(function (done: DoneFunc) {
-      const dataSource = es.through();
-      dataSource
+      from([entries.entry2, entries.entry1])
         .pipe(keychainParser.createOsxSecurityParsingStream())
+        // TODO: I don't know how to replace this because concat-stream has poor typings
         .pipe(es.writeArray((err: Error, data: any[]) => {
           parsingResult = data;
           done(err);
         }));
-
-      dataSource.push(entries.entry2);
-      dataSource.push(entries.entry1);
-      dataSource.push(null);
     });
 
     it("should have two results", function () {
@@ -143,19 +138,13 @@ describe("security tool output parsing", function () {
     let parsingResult: any[] = [];
 
     before(function (done: DoneFunc) {
-      const dataSource = es.through();
-      dataSource
+      from([entries.entry1, entries.badEntry, entries.superbadEntry, entries.entry2])
         .pipe(keychainParser.createOsxSecurityParsingStream())
+        // TODO: I don't know how to replace this because concat-stream has poor typings
         .pipe(es.writeArray((err: Error, data: any[]) => {
           parsingResult = data;
           done(err);
         }));
-
-      dataSource.push(entries.entry1);
-      dataSource.push(entries.badEntry);
-      dataSource.push(entries.superbadEntry);
-      dataSource.push(entries.entry2);
-      dataSource.push(null);
     });
 
     it("should not crash", function () {
