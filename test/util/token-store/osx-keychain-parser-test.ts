@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import * as _ from "lodash";
-import * as es from "event-stream";
 import * as from from "from2";
 import * as os from "os";
 import { inspect } from "util";

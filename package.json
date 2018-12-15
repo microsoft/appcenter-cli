@@ -98,7 +98,6 @@
     "cli-table3": "^0.5.1",
     "date-fns": "^1.29.0",
     "debug": "^2.2.0",
-    "event-stream": "3.3.4",
     "from2": "^2.3.0",
     "glob": "^7.1.1",
     "gradle-to-js": "^1.1.0",
