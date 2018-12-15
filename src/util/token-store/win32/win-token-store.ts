@@ -6,7 +6,8 @@
 import * as childProcess from "child_process";
 import { Observable, Observer } from "rxjs";
 import * as stream from "stream";
-import * as es from "event-stream";
+import * as split from "split2";
+import * as through from "through2";
 import * as path from "path";
 import * as parser from "./win-credstore-parser";
 
@@ -14,8 +15,6 @@ import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../token-s
 
 const debug = require("debug")("appcenter-cli:util:token-store:win32:win-token-store");
 import { inspect } from "util";
-
-type Duplex = stream.Duplex;
 
 const credExePath = path.join(__dirname, "../../../../bin/windows/creds.exe");
 
@@ -84,7 +83,9 @@ export class WinTokenStore implements TokenStore {
       debug("Creds process started for list, monitoring output");
       const credStream = credsProcess.stdout
         .pipe(parser.createParsingStream())
-        .pipe(es.mapSync(prefixer.removePrefixFromCred.bind(prefixer)) as any as Duplex);
+        .pipe(through(function (chunk: Buffer, enc: any, done: Function) {
+          done(null, prefixer.removePrefixFromCred(chunk.toString()));
+        }));
 
         credStream.on("data", (cred: any) => {
           debug(`Got data from creds: ${cred}`);
@@ -116,13 +117,15 @@ export class WinTokenStore implements TokenStore {
     debug(`Getting key with args ${inspect(args)}`);
     return new Promise<TokenEntry>((resolve, reject) => {
       credsProcess.stdout.pipe(parser.createParsingStream())
-        .pipe(es.mapSync(prefixer.removePrefixFromCred.bind(prefixer)) as any as Duplex)
+        .pipe(through(function (chunk: Buffer, enc: any, done: Function) {
+          done(null, prefixer.removePrefixFromCred(chunk.toString()));
+        }))
         .on("data", (credential: any) => {
           result = credential;
           result.targetName = prefixer.removePrefix(result.targetName);
         });
 
-      credsProcess.stderr.pipe(es.split() as any as Duplex)
+      credsProcess.stderr.pipe(split())
         .on("data", (line: string) => {
           errors.push(line);
         });

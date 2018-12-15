@@ -18,7 +18,8 @@
 //
 
 import * as _ from "lodash";
-import * as es from "event-stream";
+import * as Pumpify from "pumpify";
+import * as split from "split2";
 import * as stream from "stream";
 
 const debug = require("debug")("appcenter-cli:util:token-store:osx:osx-keychain-parser");
@@ -115,5 +116,5 @@ export class OsxSecurityParsingStream extends stream.Transform {
 }
 
 export function createOsxSecurityParsingStream(): NodeJS.ReadWriteStream {
-  return es.pipeline(es.split(), new OsxSecurityParsingStream());
+  return new Pumpify.obj(split(), new OsxSecurityParsingStream());
 }

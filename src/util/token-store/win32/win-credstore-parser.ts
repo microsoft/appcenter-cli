@@ -2,7 +2,8 @@
 // Parser for the output of the creds.exe helper program.
 //
 
-import { pipeline, split } from "event-stream";
+import * as Pumpify from "pumpify";
+import * as split from "split2";
 import { Transform } from "stream";
 
 //
@@ -63,7 +64,7 @@ class WinCredStoreParsingStream extends Transform {
 }
 
 function createParsingStream(): NodeJS.ReadWriteStream {
-  return pipeline(split(), new WinCredStoreParsingStream()) as NodeJS.ReadWriteStream;
+  return new Pumpify.obj(split(), new WinCredStoreParsingStream());
 }
 
 namespace createParsingStream {
