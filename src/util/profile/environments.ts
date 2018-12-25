@@ -31,8 +31,8 @@ const environmentsData: EnvironmentsFile = {
     },
     int: {
       endpoint: "https://bifrost-int.trafficmanager.net",
-      loginEndpoint: "https://asgard-int.trafficmanager.net/cli-login",
-      portalEndpoint: "https://asgard-int.trafficmanager.net",
+      loginEndpoint: "https://portal-server-core-integration.dev.avalanch.es/cli-login",
+      portalEndpoint: "https://portal-server-core-integration.dev.avalanch.es",
       description: "Integration"
     },
     staging: {

@@ -5,7 +5,7 @@ import { prompt, out } from "../../util/interaction";
 import { Questions } from "inquirer";
 import { help, CommandArgs, AppCommand, CommandResult } from "../../util/commandline";
 import { Messages } from "./lib/help-messages";
-import { AppCenterClient } from "../../util/apis";
+import { AppCenterClient, clientCall, models } from "../../util/apis";
 import { DeviceSet, DeviceConfiguration, AppResponse } from "../../util/apis/generated/models";
 import { DeviceConfigurationSort } from "./lib/deviceConfigurationSort";
 import RunEspressoWizardTestCommand from "./lib/wizard/espresso";
@@ -13,6 +13,7 @@ import RunAppiumWizardTestCommand from "./lib/wizard/appium";
 import RunUitestWizardTestCommand from "./lib/wizard/uitest";
 import RunXCUIWizardTestCommand from "./lib/wizard/xcuitest";
 import { fileExistsSync } from "../../util/misc";
+import { DefaultApp, toDefaultApp, getUser } from "../../util/profile";
 
 enum TestFramework {
   "Espresso" = 1,
@@ -34,21 +35,35 @@ export default class WizardTestCommand extends AppCommand {
   private interactiveArgs: string[] = [];
   private _args: CommandArgs;
   private isAndroidApp: boolean;
+  private _selectedApp: DefaultApp = null;
 
   constructor(args: CommandArgs) {
     super(args);
     this._args = args;
   }
 
+  private async selectedApp(client: AppCenterClient): Promise<DefaultApp> {
+    if (!this._selectedApp) {
+      try {
+        this._selectedApp = super.app;
+      } catch (e) {
+        // no app was provided/found, so we will prompt the user
+        this._selectedApp = await this.getApps(client);
+      }
+    }
+    return this._selectedApp;
+  }
+
   public async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
-    const getDeviceSets: Promise<DeviceSet[]> = client.test.listDeviceSetsOfOwner(this.app.ownerName, this.app.appName);
-    const getAppOS: Promise<AppResponse> = client.apps.get(this.app.ownerName, this.app.appName);
+    const app = await this.selectedApp(client);
+    const getDeviceSets: Promise<DeviceSet[]> = client.test.listDeviceSetsOfOwner(app.ownerName, app.appName);
+    const getAppOS: Promise<AppResponse> = client.apps.get(app.ownerName, app.appName);
     this.isAndroidApp = (await getAppOS).os.toLowerCase() === "android";
 
     const frameworkName: TestFramework = await this.promptFramework();
     const searchApps: Promise<AppFile[]> = this.scanFolder();
 
-    const devices: string = await this.promptDevices(await getDeviceSets, client);
+    const devices: string = await this.promptDevices(await getDeviceSets, app, client);
     this.interactiveArgs.push("--devices", devices);
 
     const async: boolean = await this.isAsync();
@@ -185,19 +200,41 @@ export default class WizardTestCommand extends AppCommand {
     return 0;
   }
 
-  private async getDevices(client: AppCenterClient): Promise<DeviceConfiguration[]> {
-    const configs: DeviceConfiguration[] = await client.test.getDeviceConfigurations(this.app.ownerName, this.app.appName);
+  private async getDevices(client: AppCenterClient, app: DefaultApp): Promise<DeviceConfiguration[]> {
+    const configs: DeviceConfiguration[] = await client.test.getDeviceConfigurations(app.ownerName, app.appName);
 
     // Sort devices list like it is done on AppCenter Portal
     return configs.sort(DeviceConfigurationSort.compare);
   }
 
-  private async promptDevices(deviceSets: DeviceSet[], client: AppCenterClient): Promise<string> {
+  private async getApps(client: AppCenterClient): Promise<DefaultApp> {
+    const apps = await out.progress("Getting list of apps...", clientCall<models.AppResponse[]>((cb) => client.apps.list(cb)));
+    const choices = apps.map((app: models.AppResponse) => {
+      return {
+        name: app.name,
+        value: `${app.owner.name}/${app.name}`
+      };
+    });
+
+    const question: Questions = [
+      {
+        type: "list",
+        name: "app",
+        message: "Pick an app to use",
+        choices: choices
+      }
+    ];
+
+    const answer: any = await prompt.question(question);
+    return toDefaultApp(answer.app);
+  }
+
+  private async promptDevices(deviceSets: DeviceSet[], app: DefaultApp, client: AppCenterClient): Promise<string> {
     let choices;
     const noDeviceSets: boolean = deviceSets.length === 0;
 
     if (noDeviceSets) {
-      const devices = await out.progress("Getting list of devices...", this.getDevices(client));
+      const devices = await out.progress("Getting list of devices...", this.getDevices(client, app));
       choices = devices.map((config: DeviceConfiguration) => {
         return {
           name: config.name,
@@ -228,13 +265,13 @@ export default class WizardTestCommand extends AppCommand {
     const answers: any = await prompt.question(questions);
     let deviceId: string;
     if (noDeviceSets) {
-      const deviceSelection: any = await client.test.createDeviceSelection(this.app.ownerName, this.app.appName, [answers.deviceSlug]);
+      const deviceSelection: any = await client.test.createDeviceSelection(app.ownerName, app.appName, [answers.deviceSlug]);
       deviceId = deviceSelection.shortId;
     } else {
       if (answers.deviceSlug === "manual") {
-        return await this.promptDevices([], client);
+        return await this.promptDevices([], app, client);
       } else {
-        deviceId = `${this.app.ownerName}/${answers.deviceSlug}`;
+        deviceId = `${app.ownerName}/${answers.deviceSlug}`;
       }
     }
     return deviceId;
