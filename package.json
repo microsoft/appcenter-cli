@@ -42,6 +42,7 @@
     "@types/chai-as-promised": "^7.1.0",
     "@types/chalk": "^0.4.31",
     "@types/debug": "0.0.30",
+    "@types/duplexify": "3.5.0",
     "@types/from2": "^2.3.0",
     "@types/glob": "^5.0.35",
     "@types/inquirer": "0.0.41",
@@ -91,7 +92,6 @@
     "typescript": "^2.9.2"
   },
   "dependencies": {
-    "@types/duplexify": "3.5.0",
     "azure-storage": "^2.10.1",
     "bplist": "0.0.4",
     "chalk": "^1.1.3",
