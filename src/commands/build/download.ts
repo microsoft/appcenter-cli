@@ -39,13 +39,13 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   @hasArg
   public type: string;
 
-  @help("Download destination path")
+  @help("Destination path. Optional parameter to override the default destination path of the downloaded build")
   @shortName("d")
   @longName("dest")
   @hasArg
   public directory: string;
 
-  @help("Download destination file")
+  @help("Destination file. Optional parameter to override the default auto-generated file name")
   @shortName("f")
   @longName("file")
   @hasArg
