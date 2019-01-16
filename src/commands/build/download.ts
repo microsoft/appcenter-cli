@@ -15,7 +15,7 @@ const debug = require("debug")("appcenter-cli:commands:build:download");
 
 @help("Download the binary, logs or symbols for a completed build")
 export default class DownloadBuildStatusCommand extends AppCommand {
-  private static readonly applicationPackagesExtensions: string[] = [".apk", ".ipa", ".xcarchive"];
+  private static readonly applicationPackagesExtensions: string[] = [".apk", ".aar", ".ipa", ".xcarchive"];
 
   private static readonly buildType = "build";
   private static readonly logsType = "logs";
