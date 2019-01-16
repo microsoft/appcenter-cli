@@ -45,6 +45,12 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   @hasArg
   public directory: string;
 
+  @help("Download destination file")
+  @shortName("f")
+  @longName("file")
+  @hasArg
+  public file: string;
+
   public async run(client: AppCenterClient): Promise<CommandResult> {
     this.type = this.getNormalizedTypeValue(this.type);
 
@@ -106,6 +112,10 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   }
 
   private async generateNameForOutputFile(branchName: string, extension: string): Promise<string> {
+    if (this.file) {
+      return this.file.includes(extension) ? this.file : `${this.file}.${extension}`;
+    }
+
     // file name should be unique for the directory
     const filesInDirectory = (await Pfs.readdir(this.directory)).map((name) => name.toLowerCase());
     let id = 1;
