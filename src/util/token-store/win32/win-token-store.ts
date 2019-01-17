@@ -83,8 +83,8 @@ export class WinTokenStore implements TokenStore {
       debug("Creds process started for list, monitoring output");
       const credStream = credsProcess.stdout
         .pipe(parser.createParsingStream())
-        .pipe(through(function (chunk: Buffer, enc: any, done: Function) {
-          done(null, prefixer.removePrefixFromCred(chunk.toString()));
+        .pipe(through.obj(function (chunk: Buffer, enc: any, done: Function) {
+          done(null, prefixer.removePrefixFromCred(chunk));
         }));
 
         credStream.on("data", (cred: any) => {
@@ -117,8 +117,8 @@ export class WinTokenStore implements TokenStore {
     debug(`Getting key with args ${inspect(args)}`);
     return new Promise<TokenEntry>((resolve, reject) => {
       credsProcess.stdout.pipe(parser.createParsingStream())
-        .pipe(through(function (chunk: Buffer, enc: any, done: Function) {
-          done(null, prefixer.removePrefixFromCred(chunk.toString()));
+        .pipe(through.obj(function (chunk: Buffer, enc: any, done: Function) {
+          done(null, prefixer.removePrefixFromCred(chunk));
         }))
         .on("data", (credential: any) => {
           result = credential;
@@ -178,6 +178,7 @@ export class WinTokenStore implements TokenStore {
   * @param {Function(err)} callback completion callback
   */
   remove(key: TokenKeyType): Promise<void> {
+    console.log("remove()");
     const prefixer = new Prefixer(false);
     const args = [ "-d", "-t", prefixer.ensurePrefix(key) ];
 
