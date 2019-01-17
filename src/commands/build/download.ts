@@ -15,7 +15,7 @@ const debug = require("debug")("appcenter-cli:commands:build:download");
 
 @help("Download the binary, logs or symbols for a completed build")
 export default class DownloadBuildStatusCommand extends AppCommand {
-  private static readonly applicationPackagesExtensions: string[] = [".apk", ".ipa", ".xcarchive"];
+  private static readonly applicationPackagesExtensions: string[] = [".apk", ".aar", ".ipa", ".xcarchive"];
 
   private static readonly buildType = "build";
   private static readonly logsType = "logs";
@@ -39,11 +39,17 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   @hasArg
   public type: string;
 
-  @help("Download destination path")
+  @help("Destination path. Optional parameter to override the default destination path of the downloaded build")
   @shortName("d")
   @longName("dest")
   @hasArg
   public directory: string;
+
+  @help("Destination file. Optional parameter to override the default auto-generated file name")
+  @shortName("f")
+  @longName("file")
+  @hasArg
+  public file: string;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
     this.type = this.getNormalizedTypeValue(this.type);
@@ -106,6 +112,10 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   }
 
   private async generateNameForOutputFile(branchName: string, extension: string): Promise<string> {
+    if (this.file) {
+      return this.file.includes(extension) ? this.file : `${this.file}.${extension}`;
+    }
+
     // file name should be unique for the directory
     const filesInDirectory = (await Pfs.readdir(this.directory)).map((name) => name.toLowerCase());
     let id = 1;
