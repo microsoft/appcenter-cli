@@ -178,7 +178,6 @@ export class WinTokenStore implements TokenStore {
   * @param {Function(err)} callback completion callback
   */
   remove(key: TokenKeyType): Promise<void> {
-    console.log("remove()");
     const prefixer = new Prefixer(false);
     const args = [ "-d", "-t", prefixer.ensurePrefix(key) ];
 
