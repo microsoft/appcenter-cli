@@ -8,6 +8,7 @@ import { DefaultApp } from "../../util/profile";
 import UploadSymbolsHelper from "./lib/symbols-uploading-helper";
 import { getSymbolsZipFromXcarchive, packDsymParentFolderContents, getChildrenDsymFolderPaths } from "./lib/subfolder-symbols-helper";
 import { createTempFileFromZip } from "./lib/temp-zip-file-helper";
+import { SymbolType } from "./lib/symbols-uploading-helper";
 
 import * as Fs from "fs";
 import * as Pfs from "../../util/misc/promisfied-fs";
@@ -47,18 +48,30 @@ export default class UploadSymbols extends AppCommand {
   @hasArg
   public sourceMapPath: string;
 
+  @help("Path to a breakpad symbols zip collection.")
+  @shortName("b")
+  @longName("breakpad")
+  @hasArg
+  public breakpadPath: string;
+
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
     this.validateParameters();
 
     let zip: JsZip | string; // it is either JsZip object or path to ZIP file
+    let symbolType: SymbolType;
     if (!_.isNil(this.symbolsPath)) {
       // processing -s switch value
       zip = await out.progress("Preparing ZIP with symbols...", this.prepareZipFromSymbols(this.symbolsPath));
+      symbolType = SymbolType.Apple;
+    } else if (!_.isNil(this.breakpadPath)) {
+      zip = await out.progress("Preparing ZIP with Breakpad symbols...", this.prepareZipFromSymbols(this.breakpadPath));
+      symbolType = SymbolType.Breakpad;
     } else {
       // process -x switch value
       zip = await out.progress("Preparing ZIP with symbols from xcarchive...", this.prepareZipFromXcArchive(this.xcarchivePath));
+      symbolType = SymbolType.Apple;
     }
 
     // process -m switch if specified
@@ -68,7 +81,7 @@ export default class UploadSymbols extends AppCommand {
     }
 
     let pathToZipToUpload: string;
-    if (typeof(zip) === "string") {
+    if (typeof (zip) === "string") {
       // path to zip can be passed as it is
       pathToZipToUpload = zip;
     } else {
@@ -77,7 +90,7 @@ export default class UploadSymbols extends AppCommand {
     }
 
     // upload symbols
-    await out.progress("Uploading symbols...", new UploadSymbolsHelper(client, app, debug).uploadSymbolsZip(pathToZipToUpload));
+    await out.progress("Uploading symbols...", new UploadSymbolsHelper(client, app, debug).uploadSymbolsZip(pathToZipToUpload, symbolType));
 
     return success();
   }
@@ -158,10 +171,16 @@ export default class UploadSymbols extends AppCommand {
 
   private validateParameters() {
     // check that user have selected either --symbol or --xcarchive
-    if (_.isNil(this.symbolsPath) && _.isNil(this.xcarchivePath)) {
-      throw failure(ErrorCodes.InvalidParameter, "specify either '--symbol' or '--xcarchive' switch");
+    if (_.isNil(this.symbolsPath) && _.isNil(this.xcarchivePath) && _.isNil(this.breakpadPath)) {
+      throw failure(ErrorCodes.InvalidParameter, "specify either '--symbol', '--xcarchive', or '--breakpad' switch");
     } else if (!_.isNil(this.symbolsPath) && !_.isNil(this.xcarchivePath)) {
       throw failure(ErrorCodes.InvalidParameter, "'--symbol' and '--xcarchive' switches are mutually exclusive");
+    } else if (!_.isNil(this.symbolsPath) && !_.isNil(this.breakpadPath)) {
+      throw failure(ErrorCodes.InvalidParameter, "'--symbol' and '--breakpad' switches are mutually exclusive");
+    } else if (!_.isNil(this.xcarchivePath) && !_.isNil(this.breakpadPath)) {
+      throw failure(ErrorCodes.InvalidParameter, "'--xcarchive' and '--breakpad' switches are mutually exclusive");
+    } else if (!_.isNil(this.breakpadPath) && !_.isNil(this.sourceMapPath)) {
+      throw failure(ErrorCodes.InvalidParameter, "'--breakpad' and '--sourcemap' switches are mutually exclusive");
     }
   }
 
@@ -182,7 +201,7 @@ export default class UploadSymbols extends AppCommand {
     }
 
     let zipToChange: JsZip;
-    if (typeof(zip) === "string") {
+    if (typeof (zip) === "string") {
       // loading ZIP to add file to it
       debug("Loading ZIP into the memory to add files");
       try {

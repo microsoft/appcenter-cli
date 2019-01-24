@@ -69,10 +69,28 @@ describe("upload-symbols command", () => {
     abortSymbolUploadSpy = Sinon.spy();
   });
 
-  describe("when network requests are successful", () => {
+  describe("when Breakpad network requests are successfu", () => {
     beforeEach(() => {
-      expectedRequestsScope = _.flow(setupSuccessfulPatchUploadResponse, setupSuccessfulPostUploadResponse)(Nock(fakeHost));
-      skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
+      expectedRequestsScope = _.flow(setupSuccessfulBreakpadPatchUploadResponse, setupSuccessfulBreakpadPostUploadResponse)(Nock(fakeHost));
+      skippedRequestsScope = setupSuccessfulBreakpadAbortUploadResponse(Nock(fakeHost));
+    });
+
+    it("uploads ZIP with symbols", async () => {
+      const zipPath = await createZipWithFile();
+
+      const result = await executeUploadCommand(["-b", zipPath]);
+
+      testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+      const [url, uploadedZipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
+      expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
+      expect(uploadedZipPath).to.eql(zipPath, "Zip file should be passed as it is");
+    });
+  });
+
+  describe("when Apple network requests are successful", () => {
+    beforeEach(() => {
+      expectedRequestsScope = _.flow(setupSuccessfulApplePatchUploadResponse, setupSuccessfulApplePostUploadResponse)(Nock(fakeHost));
+      skippedRequestsScope = setupSuccessfulAppleAbortUploadResponse(Nock(fakeHost));
     });
 
     it("uploads ZIP with symbols", async () => {
@@ -89,7 +107,7 @@ describe("upload-symbols command", () => {
       expect(uploadedZipPath).to.eql(zipPath, "Zip file should be passed as it is");
     });
 
-    it("uploads dSym folder", async () => {
+    it("uploads dSYM folder", async () => {
       // Arrange
       const dsymFolder = createFolderWithSymbolsFile(tmpFolderPath, dSymFolder1Name, symbolsFile1Name, symbolsFileContent);
 
@@ -189,14 +207,14 @@ describe("upload-symbols command", () => {
     });
   });
 
-  describe("when upload fails", () => {
+  describe("when Apple upload fails", () => {
     before(() => {
       AzureBlobUploadHelperMock.throwOnUpload = true;
     });
 
     beforeEach(() => {
-        expectedRequestsScope = _.flow(setupSuccessfulAbortUploadResponse, setupSuccessfulPostUploadResponse)(Nock(fakeHost));
-        skippedRequestsScope = setupSuccessfulPatchUploadResponse(Nock(fakeHost));
+        expectedRequestsScope = _.flow(setupSuccessfulAppleAbortUploadResponse, setupSuccessfulApplePostUploadResponse)(Nock(fakeHost));
+        skippedRequestsScope = setupSuccessfulApplePatchUploadResponse(Nock(fakeHost));
     });
 
     it("aborts the symbol uploading", async () => {
@@ -207,6 +225,29 @@ describe("upload-symbols command", () => {
       const result = await expect(executeUploadCommand(["-s", zipPath])).to.eventually.be.rejected;
 
       // Assert
+      testUploadFailure(result, expectedRequestsScope, skippedRequestsScope);
+    });
+
+    after(() => {
+      AzureBlobUploadHelperMock.throwOnUpload = false;
+    });
+  });
+
+  describe("when Breakpad upload fails", () => {
+    before(() => {
+      AzureBlobUploadHelperMock.throwOnUpload = true;
+    });
+
+    beforeEach(() => {
+        expectedRequestsScope = _.flow(setupSuccessfulBreakpadAbortUploadResponse, setupSuccessfulBreakpadPostUploadResponse)(Nock(fakeHost));
+        skippedRequestsScope = setupSuccessfulBreakpadPatchUploadResponse(Nock(fakeHost));
+    });
+
+    it("aborts the symbol uploading", async () => {
+      const zipPath = await createZipWithFile();
+
+      const result = await expect(executeUploadCommand(["-b", zipPath])).to.eventually.be.rejected;
+
       testUploadFailure(result, expectedRequestsScope, skippedRequestsScope);
     });
 
@@ -345,7 +386,7 @@ describe("upload-symbols command", () => {
     return mappingsFilePath;
   }
 
-  function setupSuccessfulPostUploadResponse(nockScope: Nock.Scope): Nock.Scope {
+  function setupSuccessfulApplePostUploadResponse(nockScope: Nock.Scope): Nock.Scope {
     return nockScope.post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads`, {
       symbol_type: "Apple"
     }).reply(200, ((uri: any, requestBody: any) => {
@@ -358,7 +399,20 @@ describe("upload-symbols command", () => {
     }));
   }
 
-  function setupSuccessfulPatchUploadResponse(nockScope: Nock.Scope): Nock.Scope {
+  function setupSuccessfulBreakpadPostUploadResponse(nockScope: Nock.Scope): Nock.Scope {
+    return nockScope.post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads`, {
+      symbol_type: "Breakpad"
+    }).reply(200, ((uri: any, requestBody: any) => {
+      postSymbolSpy(requestBody);
+      return {
+        expiration_date: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+        symbol_upload_id: fakeSymbolUploadingId,
+        upload_url: fakeHost + fakeUploadUrl
+      };
+    }));
+  }
+
+  function setupSuccessfulApplePatchUploadResponse(nockScope: Nock.Scope): Nock.Scope {
     return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
       status: "committed"
     }).reply(200, ((uri: any, requestBody: any) => {
@@ -373,7 +427,22 @@ describe("upload-symbols command", () => {
     }));
   }
 
-  function setupSuccessfulAbortUploadResponse(nockScope: Nock.Scope): Nock.Scope {
+  function setupSuccessfulBreakpadPatchUploadResponse(nockScope: Nock.Scope): Nock.Scope {
+    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
+      status: "committed"
+    }).reply(200, ((uri: any, requestBody: any) => {
+      patchSymbolSpy(requestBody);
+      return {
+        origin: "User",
+        status: "committed",
+        symbol_type: "Breakpad",
+        symbol_upload_id: fakeSymbolUploadingId,
+        symbols: new Array()
+      };
+    }));
+  }
+
+  function setupSuccessfulAppleAbortUploadResponse(nockScope: Nock.Scope): Nock.Scope {
     return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
       status: "aborted"
     }).reply(200, ((uri: any, requestBody: any) => {
@@ -382,6 +451,21 @@ describe("upload-symbols command", () => {
         origin: "User",
         status: "aborted",
         symbol_type: "Apple",
+        symbol_upload_id: fakeSymbolUploadingId,
+        symbols: new Array()
+      };
+    }));
+  }
+
+  function setupSuccessfulBreakpadAbortUploadResponse(nockScope: Nock.Scope): Nock.Scope {
+    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
+      status: "aborted"
+    }).reply(200, ((uri: any, requestBody: any) => {
+      abortSymbolUploadSpy(requestBody);
+      return {
+        origin: "User",
+        status: "aborted",
+        symbol_type: "Breakpad",
         symbol_upload_id: fakeSymbolUploadingId,
         symbols: new Array()
       };
