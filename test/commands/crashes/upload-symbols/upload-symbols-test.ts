@@ -69,7 +69,7 @@ describe("upload-symbols command", () => {
     abortSymbolUploadSpy = Sinon.spy();
   });
 
-  describe("when Breakpad network requests are successfu", () => {
+  describe("when Breakpad network requests are successful", () => {
     beforeEach(() => {
       expectedRequestsScope = _.flow(setupSuccessfulBreakpadPatchUploadResponse, setupSuccessfulBreakpadPostUploadResponse)(Nock(fakeHost));
       skippedRequestsScope = setupSuccessfulBreakpadAbortUploadResponse(Nock(fakeHost));

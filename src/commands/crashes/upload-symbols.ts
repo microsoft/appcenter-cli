@@ -48,7 +48,7 @@ export default class UploadSymbols extends AppCommand {
   @hasArg
   public sourceMapPath: string;
 
-  @help("Path to a breakpad symbols zip collection.")
+  @help("Path to a zip file containing Breakpad symbols.")
   @shortName("b")
   @longName("breakpad")
   @hasArg
@@ -81,7 +81,7 @@ export default class UploadSymbols extends AppCommand {
     }
 
     let pathToZipToUpload: string;
-    if (typeof (zip) === "string") {
+    if (typeof(zip) === "string") {
       // path to zip can be passed as it is
       pathToZipToUpload = zip;
     } else {
@@ -179,8 +179,6 @@ export default class UploadSymbols extends AppCommand {
       throw failure(ErrorCodes.InvalidParameter, "'--symbol' and '--breakpad' switches are mutually exclusive");
     } else if (!_.isNil(this.xcarchivePath) && !_.isNil(this.breakpadPath)) {
       throw failure(ErrorCodes.InvalidParameter, "'--xcarchive' and '--breakpad' switches are mutually exclusive");
-    } else if (!_.isNil(this.breakpadPath) && !_.isNil(this.sourceMapPath)) {
-      throw failure(ErrorCodes.InvalidParameter, "'--breakpad' and '--sourcemap' switches are mutually exclusive");
     }
   }
 
@@ -201,7 +199,7 @@ export default class UploadSymbols extends AppCommand {
     }
 
     let zipToChange: JsZip;
-    if (typeof (zip) === "string") {
+    if (typeof(zip) === "string") {
       // loading ZIP to add file to it
       debug("Loading ZIP into the memory to add files");
       try {
