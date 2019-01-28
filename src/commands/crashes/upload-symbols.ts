@@ -179,6 +179,8 @@ export default class UploadSymbols extends AppCommand {
       throw failure(ErrorCodes.InvalidParameter, "'--symbol' and '--breakpad' switches are mutually exclusive");
     } else if (!_.isNil(this.xcarchivePath) && !_.isNil(this.breakpadPath)) {
       throw failure(ErrorCodes.InvalidParameter, "'--xcarchive' and '--breakpad' switches are mutually exclusive");
+    } else if (!_.isNil(this.breakpadPath) && !_.isNil(this.sourceMapPath)) {
+      throw failure(ErrorCodes.InvalidParameter, "'--breakpad' and '--sourcemap' switches are mutually exclusive");
     }
   }
 
