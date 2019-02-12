@@ -60,6 +60,7 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 | `appcenter codepush promote` | Create a new release for the destination deployment, which includes the exact code and metadata from the latest release of the source deployment |
 | `appcenter codepush release-cordova` | Release a Cordova update to an app deployment |
 | `appcenter codepush release-react` | Release a React Native update to an app deployment |
+| `appcenter codepush release-electron` | Release an Electron update to an app deployment |
 | `appcenter codepush release` | Release an update to an app deployment |
 | `appcenter codepush rollback` | Rollback a deployment to a previous release |
 | `appcenter codepush deployment add` | Add a new deployment to an app |
