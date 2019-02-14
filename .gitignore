@@ -30,3 +30,11 @@ node_modules
 
 # Users Environment Variables
 .lock-wscript
+
+# Launch test template projects
+src/commands/test/lib/templates/uitest/android/.vs
+src/commands/test/lib/templates/uitest/android/AppCenter.UITest.Android/bin
+src/commands/test/lib/templates/uitest/android/AppCenter.UITest.Android/obj
+src/commands/test/lib/templates/uitest/ios/.vs
+src/commands/test/lib/templates/uitest/ios/AppCenter.UITest.iOS/bin
+src/commands/test/lib/templates/uitest/ios/AppCenter.UITest.iOS/obj
