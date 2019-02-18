@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import * as _ from "lodash";
-import * as es from "event-stream";
+import * as from from "from2";
 import * as os from "os";
 import { inspect } from "util";
 
@@ -73,100 +73,6 @@ const entries = {
   '    "acct"<blob>="super bad guy"' + "\n"  + "\n" +
   '    0x12321432 <uint32>="$@#%^^$^^&^&%^63X"'
 };
-
-describe("security tool output parsing", function () {
-
-  describe("one entry", function () {
-    let parsingResult: any[] = [];
-
-    before(function (done: {(err?: Error): void}) {
-      const dataSource = es.through();
-      dataSource
-        .pipe(keychainParser.createOsxSecurityParsingStream())
-        .pipe(es.writeArray((err: Error, data: any[]) => {
-          parsingResult = data;
-          done(err);
-        }));
-      dataSource.push(entries.entry1);
-      dataSource.push(null);
-    });
-
-    it("should have one result", function () {
-      expect(parsingResult).to.have.lengthOf(1);
-    });
-
-    it("should have expected account", function () {
-      expect(parsingResult[0].acct).to.equal("a:b:c:d");
-    });
-
-    it("should have expected service name", function () {
-      expect(parsingResult[0].svce).to.equal("azure");
-    });
-
-    it("should have expected description", function () {
-      expect(parsingResult[0].desc).to.equal("active directory token");
-    });
-
-    it("should not have a password", function () {
-      expect(parsingResult[0].password).to.not.exist;
-    });
-  });
-
-  describe("multiple entries", function () {
-    let parsingResult: any[] = [];
-
-    before(function (done: DoneFunc) {
-      const dataSource = es.through();
-      dataSource
-        .pipe(keychainParser.createOsxSecurityParsingStream())
-        .pipe(es.writeArray((err: Error, data: any[]) => {
-          parsingResult = data;
-          done(err);
-        }));
-
-      dataSource.push(entries.entry2);
-      dataSource.push(entries.entry1);
-      dataSource.push(null);
-    });
-
-    it("should have two results", function () {
-      expect(parsingResult).to.have.lengthOf(2);
-    });
-
-    it("should have expected accounts", function () {
-      expect(parsingResult[0].acct).to.equal("e:f:g:h");
-      expect(parsingResult[1].acct).to.equal("a:b:c:d");
-    });
-  });
-
-  describe("Load entries with bad attributes", function () {
-    let parsingResult: any[] = [];
-
-    before(function (done: DoneFunc) {
-      const dataSource = es.through();
-      dataSource
-        .pipe(keychainParser.createOsxSecurityParsingStream())
-        .pipe(es.writeArray((err: Error, data: any[]) => {
-          parsingResult = data;
-          done(err);
-        }));
-
-      dataSource.push(entries.entry1);
-      dataSource.push(entries.badEntry);
-      dataSource.push(entries.superbadEntry);
-      dataSource.push(entries.entry2);
-      dataSource.push(null);
-    });
-
-    it("should not crash", function () {
-      expect(parsingResult).to.have.lengthOf(4);
-      expect(parsingResult[0].acct).to.equal("a:b:c:d");
-      expect(parsingResult[1].acct).to.equal("bad guy");
-      expect(parsingResult[2].acct).to.equal("super bad guy");
-      expect(parsingResult[3].acct).to.equal("e:f:g:h");
-    });
-  });
-});
 
 describe("storing complete data in keychain", function () {
   if (os.platform() !== "darwin") {

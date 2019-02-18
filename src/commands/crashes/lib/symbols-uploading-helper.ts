@@ -4,12 +4,18 @@ import { DefaultApp } from "../../../util/profile";
 import { inspect } from "util";
 import AzureBlobUploadHelper from "./azure-blob-upload-helper";
 
+// eventually we may want to support AndroidProGuard or UWP here
+export enum SymbolType {
+  Apple = "Apple",
+  Breakpad = "Breakpad"
+}
+
 export default class SymbolsUploadingHelper {
   constructor(private client: AppCenterClient, private app: DefaultApp, private debug: Function) {}
 
-  public async uploadSymbolsZip(zip: string): Promise<void> {
+  public async uploadSymbolsZip(zip: string, symbolType: SymbolType): Promise<void> {
     // executing API request to get an upload URL
-    const uploadingBeginRequestResult = await this.executeSymbolsUploadingBeginRequest(this.client, this.app);
+    const uploadingBeginRequestResult = await this.executeSymbolsUploadingBeginRequest(this.client, this.app, symbolType);
 
     // uploading
     const symbolUploadId = uploadingBeginRequestResult.symbolUploadId;
@@ -28,10 +34,10 @@ export default class SymbolsUploadingHelper {
     }
   }
 
-  private async executeSymbolsUploadingBeginRequest(client: AppCenterClient, app: DefaultApp): Promise<models.SymbolUploadBeginResponse> {
+  private async executeSymbolsUploadingBeginRequest(client: AppCenterClient, app: DefaultApp, symbolType: SymbolType): Promise<models.SymbolUploadBeginResponse> {
     this.debug("Executing API request to get uploading URL");
     const uploadingBeginResponse = await clientRequest<models.SymbolUploadBeginResponse>((cb) => client.symbolUploads.create(
-      { symbolType: "Apple" }, // Temporary hard coding until type is threaded through the commands
+      { symbolType },
       app.ownerName,
       app.appName,
       cb)).catch((error: any) => {

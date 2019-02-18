@@ -128,10 +128,6 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
       }
     }
 
-    if (this.outputDir) {
-      this.sourcemapOutput = path.join(this.updateContentsPath, this.bundleName + ".map");
-    }
-
     this.targetBinaryVersion = this.specifiedTargetBinaryVersion;
 
     if (this.targetBinaryVersion && !isValidRange(this.targetBinaryVersion)) {

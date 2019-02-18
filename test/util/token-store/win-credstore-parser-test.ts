@@ -19,7 +19,7 @@
 //
 
 import * as _ from "lodash";
-import * as es from "event-stream";
+import * as from from "from2";
 import * as os from "os";
 import { expect } from "chai";
 import { createParsingStream } from "../../../src/util/token-store/win32/win-credstore-parser";
@@ -48,18 +48,14 @@ describe("credstore output parsing", function () {
 
   function parseEntries(entryString: string): Promise<void> {
     parsingResult = [];
-    const dataSource = es.through();
     return new Promise<void>((resolve, reject) => {
-      const parser = dataSource.pipe(createParsingStream());
+      const parser = from([entryString]).pipe(createParsingStream());
       parser.on("data", function (data: any): void {
         parsingResult.push(data);
       });
       parser.on("end", function (): void {
         resolve();
       });
-
-      dataSource.push(entryString);
-      dataSource.push(null);
     });
   }
 

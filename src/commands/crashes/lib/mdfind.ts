@@ -6,7 +6,8 @@
 
 const _ = require("lodash");
 import { spawn } from "child_process";
-import { map, split, through } from "event-stream";
+import * as split from "split2";
+import * as through from "through2";
 
 interface IMdfindParameters {
   query?: string;
@@ -35,25 +36,25 @@ export function mdfind({ query = null, attributes = [], names = [], directories 
   return {
     /* tslint:disable:no-octal-literal */
     output: child.stdout
-      .pipe(split("\0") as any)
-      .pipe(map(filterEmpty))
-      .pipe(through(function (data) {
+      .pipe(split("\0"))
+      .pipe(through(filterEmpty))
+      .pipe(through(function (data, enc, done) {
         times++;
         if (limit && times === limit) {
           child.kill();
         }
 
         if (limit && times > limit) {
-          return;
+          return done();
         }
-        this.queue(data);
+        done(null, data);
       }))
       .pipe(through(jsonify)),
     terminate: () => child.kill()
   };
 }
 
-function extractData(attrs: any, line: string) {
+function extractData(attrs: any, line: string, enc: any, done: Function) {
   const splitLine = [line];
   for (const attr of attrs) {
     const lastBit = splitLine[splitLine.length - 1];
@@ -61,7 +62,7 @@ function extractData(attrs: any, line: string) {
     const thisIndex = lastBit.indexOf(searchFor);
     if (thisIndex === -1) {
       console.log(`Something went wrong with Spotlight Source - line: ${line} - attr: ${attr}`);
-      return {};
+      return done(null, {});
     }
     const endIndex = thisIndex + searchFor.length;
 
@@ -72,7 +73,7 @@ function extractData(attrs: any, line: string) {
 
   const keys = ["kMDItemPath"].concat(attrs);
   const result = _.zipObject(keys, adjustedLine);
-  this.emit("data", result);
+  done(null, result);
 }
 
 function getItem(item: string) {
@@ -87,7 +88,7 @@ function getItem(item: string) {
   }
 }
 
-function filterEmpty(data: string, done: Function) {
+function filterEmpty(data: string, enc: any, done: Function) {
   if (data === "") {
     done();
   } else {

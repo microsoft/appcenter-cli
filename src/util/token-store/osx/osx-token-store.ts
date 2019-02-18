@@ -6,7 +6,9 @@
 import * as _ from "lodash";
 import * as rx from "rxjs";
 import * as childProcess from "child_process";
-import * as es from "event-stream";
+import * as from from "from2";
+import * as split from "split2";
+import * as through from "through2";
 import * as stream from "stream";
 
 import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../token-store";
@@ -26,10 +28,10 @@ export class OsxTokenStore implements TokenStore {
       const securityProcess = childProcess.spawn(securityPath, ["dump-keychain"]);
 
       const securityStream = securityProcess.stdout
-        .pipe(es.split() as any as stream.Duplex)
-        .pipe(es.mapSync(function (line: string) {
-          return line.replace(/\\134/g, "\\");
-        }) as any as stream.Duplex)
+        .pipe(split())
+        .pipe(through(function (line: Buffer, enc: any, done: Function) {
+          done(null, line.toString().replace(/\\134/g, "\\"));
+        }))
         .pipe(new OsxSecurityParsingStream());
 
       securityStream.on("data", (data: any) => {
@@ -76,8 +78,7 @@ export class OsxTokenStore implements TokenStore {
           debug(`stdout for security program = "${stdout}"`);
           debug(`parsing stdout`);
           // Parse the rest of the information from stdout to get user & token ID
-          const source = es.through();
-          const parsed = source
+          const parsed = from([stdout])
             .pipe(createOsxSecurityParsingStream());
           parsed.on("data", (data: any) => {
             debug(`got data on key lookup: ${inspect(data)}`);
@@ -93,9 +94,6 @@ export class OsxTokenStore implements TokenStore {
             debug(`parsed string failed`);
             reject(err);
           });
-          debug(`Pushing output into parsing stream`);
-          source.push(stdout);
-          source.push(null);
         } else {
           reject(new Error("Password in incorrect format"));
         }
