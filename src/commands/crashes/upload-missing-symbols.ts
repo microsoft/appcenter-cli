@@ -5,7 +5,7 @@ import { help, name, position } from "../../util/commandline";
 import { inspect } from "util";
 import { out } from "../../util/interaction";
 import { DefaultApp } from "../../util/profile";
-import UploadSymbolsHelper from "./lib/symbols-uploading-helper";
+import UploadSymbolsHelper, { SymbolType } from "./lib/symbols-uploading-helper";
 import { getSymbolsZipFromXcarchive } from "./lib/subfolder-symbols-helper";
 import { createTempFileFromZip } from "./lib/temp-zip-file-helper";
 import { mdfind } from "./lib/mdfind";
@@ -264,6 +264,6 @@ export default class UploadMissingSymbols extends AppCommand {
 
     const tempFilePath = await createTempFileFromZip(zip);
 
-    await helper.uploadSymbolsZip(tempFilePath);
+    await helper.uploadSymbolsZip(tempFilePath, SymbolType.Apple);
   }
 }
