@@ -132,7 +132,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
         return failure(ErrorCodes.NotFound, `Entry file "${this.entryFile}" does not exist.`);
       }
     }
-    
+
     if (this.sourcemapOutputDir && this.sourcemapOutput) {
       out.text(("\n\"sourcemap-output-dir\" argument will be ignored as \"sourcemap-output\" argument is provided.\n"));
     }
@@ -141,7 +141,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
       const sourcemapDir = this.sourcemapOutputDir || this.updateContentsPath;
       this.sourcemapOutput = path.join(sourcemapDir, this.bundleName + ".map");
     }
-    
+
     this.targetBinaryVersion = this.specifiedTargetBinaryVersion;
 
     if (this.targetBinaryVersion && !isValidRange(this.targetBinaryVersion)) {
