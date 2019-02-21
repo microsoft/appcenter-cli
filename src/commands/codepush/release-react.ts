@@ -138,7 +138,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
     }
 
     if ((this.outputDir || this.sourcemapOutputDir) && !this.sourcemapOutput) {
-      const sourcemapDir = this.sourcemapOutputDir ? this.sourcemapOutputDir : this.updateContentsPath;
+      const sourcemapDir = this.sourcemapOutputDir || this.updateContentsPath;
       this.sourcemapOutput = path.join(sourcemapDir, this.bundleName + ".map");
     }
     
