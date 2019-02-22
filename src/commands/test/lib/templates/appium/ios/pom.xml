@@ -25,7 +25,7 @@
       <artifactId>junit</artifactId>
       <version>4.12</version>
     </dependency>
-    <!-- See https://docs.microsoft.com/da-dk/appcenter/test-cloud/preparing-for-upload/appium -->
+    <!-- See https://docs.microsoft.com/appcenter/test-cloud/preparing-for-upload/appium -->
     <dependency>
       <groupId>com.microsoft.appcenter</groupId>
       <artifactId>appium-test-extension</artifactId>
