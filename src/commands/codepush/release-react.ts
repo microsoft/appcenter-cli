@@ -54,6 +54,11 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
   @hasArg
   public sourcemapOutput: string;
 
+  @help("Path to folder where the sourcemap for the resulting bundle should be written. Name of sourcemap file will be generated automatically. This argument will be ignored if \"sourcemap-output\" argument is provided. If omitted, a sourcemap will not be generated")
+  @longName("sourcemap-output-dir")
+  @hasArg
+  public sourcemapOutputDir: string;
+
   @help("Path to where the bundle and sourcemap should be written. If omitted, a bundle and sourcemap will not be written")
   @shortName("o")
   @longName("output-dir")
@@ -126,6 +131,15 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
       if (fileDoesNotExistOrIsDirectory(this.entryFile)) {
         return failure(ErrorCodes.NotFound, `Entry file "${this.entryFile}" does not exist.`);
       }
+    }
+
+    if (this.sourcemapOutputDir && this.sourcemapOutput) {
+      out.text(("\n\"sourcemap-output-dir\" argument will be ignored as \"sourcemap-output\" argument is provided.\n"));
+    }
+
+    if ((this.outputDir || this.sourcemapOutputDir) && !this.sourcemapOutput) {
+      const sourcemapDir = this.sourcemapOutputDir || this.updateContentsPath;
+      this.sourcemapOutput = path.join(sourcemapDir, this.bundleName + ".map");
     }
 
     this.targetBinaryVersion = this.specifiedTargetBinaryVersion;
