@@ -60,6 +60,22 @@ describe("CodePush release tests", () => {
         expect(lastFolderForSignPath).to.not.eql("CodePush", "Last folder in path shouldn't be 'CodePush'");
         nockedRequests.done();
       });
+
+      it("CodePush path generation for Electron with private key", async () => {
+        // Arrange
+        const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+        nockPlatformRequest("Electron", fakeParamsForRequests, nockedRequests);
+        const args: CommandArgs = getCommandArgsForReleaseCommand(["-c", releaseFilePath, "-k", "fakePrivateKey.pem"], fakeParamsForRequests);
+
+        // Act
+        const testRelaseSkeleton = new release(args);
+        await testRelaseSkeleton.execute();
+
+        // Assert
+        const lastFolderForSignPath = getLastFolderForSignPath(stubbedSign);
+        expect(lastFolderForSignPath).to.not.eql("CodePush", "LastFolder in path shouldn't be 'CodePush'");
+        nockedRequests.done();
+      });
     });
   });
 });
