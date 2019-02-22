@@ -1,7 +1,7 @@
 package com.azure.mobile.app.test;
 
-import com.xamarin.testcloud.appium.EnhancedIOSDriver;
-import com.xamarin.testcloud.appium.Factory;
+import com.microsoft.appcenter.appium.Factory;
+import com.microsoft.appcenter.appium.EnhancedIOSDriver;
 import org.junit.*;
 import org.junit.rules.TestWatcher;
 import io.appium.java_client.MobileElement;
