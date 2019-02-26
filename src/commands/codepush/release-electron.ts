@@ -13,9 +13,9 @@ import { getElectronProjectAppVersion, runWebPackBundleCommand, isValidOS, isVal
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-electron");
 
-@help("Release a Electron update to an deployment")
+@help("Release an Electron update to a deployment")
 export default class CodePushReleaseElectronCommand extends CodePushReleaseCommandSkeleton {
-  @help("Name of the generated JS bundle file. If unspecified, the standard bundle name will be used, depending on the specified platform: \"main.jsbundle\" (macOS), \"index.linux.bundle\" (Linux) or \"index.windows.bundle\" (Windows)")
+  @help("Name of the generated JS bundle file. If unspecified, the standard bundle name will be used 'index.electron.bundle'")
   @shortName("b")
   @longName("bundle-name")
   @hasArg
@@ -94,14 +94,8 @@ export default class CodePushReleaseElectronCommand extends CodePushReleaseComma
         return failure(ErrorCodes.InvalidParameter, `OS must be "linux", "macos" or "windows".`);
       }
 
-      if (!isValidPlatform(this.platform)) {
-        return failure(ErrorCodes.InvalidParameter, `Platform must be "Electron".`);
-      }
-
       if (!this.bundleName) {
-        this.bundleName = this.os === "macos"
-          ? `main.jsbundle`
-          : `index.${this.os}.bundle`;
+        this.bundleName = `index.electron.bundle`;
       }
 
       this.mode = this.development ? "development" : "production";
