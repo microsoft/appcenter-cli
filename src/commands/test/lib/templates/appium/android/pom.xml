@@ -4,6 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <repositories>
+    <repository>
+      <id>jcenter</id>
+      <url>https://jcenter.bintray.com/</url>
+    </repository>
+  </repositories>
 
   <groupId>com.xamarin.samples.appium</groupId>
   <artifactId>LaunchTest</artifactId>
@@ -12,18 +18,18 @@
     <dependency>
       <groupId>io.appium</groupId>
       <artifactId>java-client</artifactId>
-      <version>4.1.2</version>
+      <version>6.1.0</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
     </dependency>
-    <!-- See https://github.com/xamarinhq/test-cloud-appium-java-extensions -->
+    <!-- See https://docs.microsoft.com/appcenter/test-cloud/preparing-for-upload/appium -->
     <dependency>
-      <groupId>com.xamarin.testcloud</groupId>
-      <artifactId>appium</artifactId>
-      <version>1.0</version>
+      <groupId>com.microsoft.appcenter</groupId>
+      <artifactId>appium-test-extension</artifactId>
+      <version>1.5</version>
     </dependency>
   </dependencies>
 

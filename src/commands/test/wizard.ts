@@ -13,7 +13,7 @@ import RunAppiumWizardTestCommand from "./lib/wizard/appium";
 import RunUitestWizardTestCommand from "./lib/wizard/uitest";
 import RunXCUIWizardTestCommand from "./lib/wizard/xcuitest";
 import { fileExistsSync } from "../../util/misc";
-import { DefaultApp, toDefaultApp, getUser } from "../../util/profile";
+import { DefaultApp, toDefaultApp } from "../../util/profile";
 
 enum TestFramework {
   "Espresso" = 1,
@@ -42,20 +42,22 @@ export default class WizardTestCommand extends AppCommand {
     this._args = args;
   }
 
-  private async selectedApp(client: AppCenterClient): Promise<DefaultApp> {
+  private async selectApp(client: AppCenterClient): Promise<DefaultApp> {
     if (!this._selectedApp) {
       try {
         this._selectedApp = super.app;
       } catch (e) {
         // no app was provided/found, so we will prompt the user
         this._selectedApp = await this.getApps(client);
+        this.interactiveArgs.push("--app", this._selectedApp.identifier);
       }
     }
     return this._selectedApp;
   }
 
   public async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
-    const app = await this.selectedApp(client);
+    const app = await this.selectApp(client);
+
     const getDeviceSets: Promise<DeviceSet[]> = client.test.listDeviceSetsOfOwner(app.ownerName, app.appName);
     const getAppOS: Promise<AppResponse> = client.apps.get(app.ownerName, app.appName);
     this.isAndroidApp = (await getAppOS).os.toLowerCase() === "android";
