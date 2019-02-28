@@ -24,8 +24,7 @@
     "autorest:clean": "rimraf src/util/apis/generated",
     "autorest": "npm run autorest:clean && node scripts/autorest.js",
     "clean": "gulp clean",
-    "prepublishOnly": "npm run tslint && gulp prepublish",
-    "download-swagger": "gulp download-swagger"
+    "prepublishOnly": "npm run tslint && gulp prepublish"
   },
   "repository": {
     "type": "git",
