@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a AndroidProject.
  */
 class AndroidProject {
   /**
    * Create a AndroidProject.
-   * @member {array} androidModules Android Gradle modules
-   * @member {string} [gradleWrapperPath] The path of the Gradle wrapper
+   * @property {array} androidModules Android Gradle modules
+   * @property {string} [gradleWrapperPath] The path of the Gradle wrapper
    */
   constructor() {
   }

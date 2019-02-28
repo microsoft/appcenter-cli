@@ -12,16 +12,16 @@
 class AlertingCrashGroup {
   /**
    * Create a AlertingCrashGroup.
-   * @member {string} [url]
-   * @member {string} [appDisplayName]
-   * @member {string} [appPlatform] SDK/Platform this thread is beeing
+   * @property {string} [url]
+   * @property {string} [appDisplayName]
+   * @property {string} [appPlatform] SDK/Platform this thread is beeing
    * generated from. Possible values include: 'ios', 'android', 'xamarin',
    * 'react-native', 'ndk', 'unity', 'other'
-   * @member {string} [appVersion]
-   * @member {string} [id]
-   * @member {string} [name]
-   * @member {string} [reason]
-   * @member {array} [stackTrace]
+   * @property {string} [appVersion]
+   * @property {string} [id]
+   * @property {string} [name]
+   * @property {string} [reason]
+   * @property {array} [stackTrace]
    */
   constructor() {
   }

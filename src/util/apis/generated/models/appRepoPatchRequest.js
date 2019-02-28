@@ -12,7 +12,8 @@
 class AppRepoPatchRequest {
   /**
    * Create a AppRepoPatchRequest.
-   * @member {string} [repoUrl] The absolute URL of the repository
+   * @property {string} [repoUrl] The absolute URL of the repository
+   * @property {uuid} [userId] The unique id (UUID) of the user
    */
   constructor() {
   }
@@ -34,6 +35,13 @@ class AppRepoPatchRequest {
           repoUrl: {
             required: false,
             serializedName: 'repo_url',
+            type: {
+              name: 'String'
+            }
+          },
+          userId: {
+            required: false,
+            serializedName: 'user_id',
             type: {
               name: 'String'
             }

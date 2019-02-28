@@ -12,8 +12,8 @@
 class CrashGroupChange {
   /**
    * Create a CrashGroupChange.
-   * @member {object} [status]
-   * @member {string} [annotation]
+   * @property {object} [status]
+   * @property {string} [annotation]
    */
   constructor() {
   }

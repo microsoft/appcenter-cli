@@ -6,21 +6,21 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a XcodeSchemeContainer.
  */
 class XcodeSchemeContainer {
   /**
    * Create a XcodeSchemeContainer.
-   * @member {string} path Path to project
-   * @member {array} sharedSchemes Project schemes
-   * @member {string} [podfilePath] Path to CocoaPods file, if present
-   * @member {object} [cartfilePath] Path to Carthage file, if present
-   * @member {string} [xcodeProjectSha] repo object Id of the pbxproject
-   * @member {string} [workspaceProjectPaths] Related projects paths for
+   * @property {string} path Path to project
+   * @property {array} sharedSchemes Project schemes
+   * @property {string} [podfilePath] Path to CocoaPods file, if present
+   * @property {object} [cartfilePath] Path to Carthage file, if present
+   * @property {string} [xcodeProjectSha] repo object Id of the pbxproject
+   * @property {string} [workspaceProjectPaths] Related projects paths for
    * xcworkspace
+   * @property {array} [appExtensionTargets] Information regarding project app
+   * extensions, if present
    */
   constructor() {
   }
@@ -87,6 +87,21 @@ class XcodeSchemeContainer {
             serializedName: 'workspaceProjectPaths',
             type: {
               name: 'String'
+            }
+          },
+          appExtensionTargets: {
+            required: false,
+            serializedName: 'appExtensionTargets',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'IosAppExtensionInfoElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'IosAppExtensionInfo'
+                  }
+              }
             }
           }
         }

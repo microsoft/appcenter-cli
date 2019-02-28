@@ -13,10 +13,12 @@
 class AppleLoginRequest {
   /**
    * Create a AppleLoginRequest.
-   * @member {string} username The username for the Apple Developer account.
-   * @member {string} password The password for the Apple Developer account.
-   * @member {string} [teamIdentifier] Identifier of the team to use when
+   * @property {string} username The username for the Apple Developer account.
+   * @property {string} password The password for the Apple Developer account.
+   * @property {string} [teamIdentifier] Identifier of the team to use when
    * logged in.
+   * @property {string} [cookie] The 30-day session cookie for multi-factor
+   * authentication backed accounts.
    */
   constructor() {
   }
@@ -52,6 +54,13 @@ class AppleLoginRequest {
           teamIdentifier: {
             required: false,
             serializedName: 'team_identifier',
+            type: {
+              name: 'String'
+            }
+          },
+          cookie: {
+            required: false,
+            serializedName: 'cookie',
             type: {
               name: 'String'
             }

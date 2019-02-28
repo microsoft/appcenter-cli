@@ -13,10 +13,10 @@
 class UserInteractionMetricsResponse {
   /**
    * Create a UserInteractionMetricsResponse.
-   * @member {boolean} [lessThan100Apps] check if the user has less than 100
+   * @property {boolean} [lessThan100Apps] check if the user has less than 100
    * apps.
-   * @member {boolean} [hasMoreThan1Release] check if the user's whole apps has
-   * more than 1 releases.
+   * @property {boolean} [hasMoreThan1Release] check if the user's whole apps
+   * has more than 1 releases.
    */
   constructor() {
   }

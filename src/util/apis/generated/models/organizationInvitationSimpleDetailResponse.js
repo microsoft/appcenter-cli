@@ -12,9 +12,9 @@
 class OrganizationInvitationSimpleDetailResponse {
   /**
    * Create a OrganizationInvitationSimpleDetailResponse.
-   * @member {string} id The unique ID (UUID) of the invitation
-   * @member {string} email The email address of the invited user
-   * @member {object} role The role assigned to the invited user
+   * @property {uuid} id The unique ID (UUID) of the invitation
+   * @property {string} email The email address of the invited user
+   * @property {string} role The role assigned to the invited user
    */
   constructor() {
   }
@@ -51,7 +51,7 @@ class OrganizationInvitationSimpleDetailResponse {
             required: true,
             serializedName: 'role',
             type: {
-              name: 'Object'
+              name: 'String'
             }
           }
         }

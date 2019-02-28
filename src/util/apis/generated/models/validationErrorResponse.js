@@ -12,9 +12,9 @@
 class ValidationErrorResponse {
   /**
    * Create a ValidationErrorResponse.
-   * @member {string} id
-   * @member {string} code
-   * @member {string} message
+   * @property {string} id
+   * @property {string} code
+   * @property {string} message
    */
   constructor() {
   }

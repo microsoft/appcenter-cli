@@ -12,9 +12,9 @@
 class Language {
   /**
    * Create a Language.
-   * @member {string} [languageName] language's name
-   * @member {number} [count] count current of language
-   * @member {number} [previousCount] count of previous lanugage
+   * @property {string} [languageName] language's name
+   * @property {number} [count] count current of language
+   * @property {number} [previousCount] count of previous lanugage
    */
   constructor() {
   }

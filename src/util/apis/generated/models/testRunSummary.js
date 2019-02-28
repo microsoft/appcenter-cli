@@ -15,12 +15,12 @@
 class TestRunSummary {
   /**
    * Create a TestRunSummary.
-   * @member {string} [date] Date of the test run.
-   * @member {string} [statusDescription] Human-readable status of the test
+   * @property {string} [date] Date of the test run.
+   * @property {string} [statusDescription] Human-readable status of the test
    * run.
-   * @member {number} [failed] Number of failed tests
-   * @member {number} [passed] Number of passed tests
-   * @member {boolean} [completed] Tells whether the test run has completed
+   * @property {number} [failed] Number of failed tests
+   * @property {number} [passed] Number of passed tests
+   * @property {boolean} [completed] Tells whether the test run has completed
    */
   constructor() {
   }

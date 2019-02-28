@@ -14,7 +14,7 @@
 class ReleaseCreateResponse {
   /**
    * Create a ReleaseCreateResponse.
-   * @member {number} releaseDistinctId The distinct ID of the release.
+   * @property {number} releaseDistinctId The distinct ID of the release.
    */
   constructor() {
   }

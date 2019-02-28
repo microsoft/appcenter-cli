@@ -12,7 +12,7 @@
 class SuccessResponse {
   /**
    * Create a SuccessResponse.
-   * @member {string} message
+   * @property {string} message
    */
   constructor() {
   }

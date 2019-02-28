@@ -12,8 +12,8 @@
 class AvailableVersions {
   /**
    * Create a AvailableVersions.
-   * @member {array} [versions] List of available versions.
-   * @member {number} [totalCount] The full number of versions across all
+   * @property {array} [versions] List of available versions.
+   * @property {number} [totalCount] The full number of versions across all
    * pages.
    */
   constructor() {

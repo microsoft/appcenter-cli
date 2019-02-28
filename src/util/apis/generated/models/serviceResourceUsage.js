@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Resource usage for a single Mobile Center service
  *
@@ -15,13 +13,13 @@ const models = require('./index');
 class ServiceResourceUsage {
   /**
    * Create a ServiceResourceUsage.
-   * @member {object} [currentUsagePeriod]
-   * @member {string} [currentUsagePeriod.startTime] Inclusive start time of
+   * @property {object} [currentUsagePeriod]
+   * @property {string} [currentUsagePeriod.startTime] Inclusive start time of
    * the usage period
-   * @member {string} [currentUsagePeriod.endTime] Exclusive end time of the
+   * @property {string} [currentUsagePeriod.endTime] Exclusive end time of the
    * usage period.
-   * @member {object} [currentUsagePeriod.byAccount]
-   * @member {object} [currentUsagePeriod.byApp]
+   * @property {object} [currentUsagePeriod.byAccount]
+   * @property {object} [currentUsagePeriod.byApp]
    */
   constructor() {
   }

@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Usage section in the Billing Information
  *
@@ -15,30 +13,30 @@ const models = require('./index');
 class BillingResourceUsage {
   /**
    * Create a BillingResourceUsage.
-   * @member {object} [buildService]
-   * @member {object} [buildService.currentUsagePeriod]
-   * @member {string} [buildService.currentUsagePeriod.startTime] Inclusive
+   * @property {object} [buildService]
+   * @property {object} [buildService.currentUsagePeriod]
+   * @property {string} [buildService.currentUsagePeriod.startTime] Inclusive
    * start time of the usage period
-   * @member {string} [buildService.currentUsagePeriod.endTime] Exclusive end
+   * @property {string} [buildService.currentUsagePeriod.endTime] Exclusive end
    * time of the usage period.
-   * @member {object} [buildService.currentUsagePeriod.byAccount]
-   * @member {object} [buildService.currentUsagePeriod.byApp]
-   * @member {object} [pushService]
-   * @member {object} [pushService.currentUsagePeriod]
-   * @member {string} [pushService.currentUsagePeriod.startTime] Inclusive
+   * @property {object} [buildService.currentUsagePeriod.byAccount]
+   * @property {object} [buildService.currentUsagePeriod.byApp]
+   * @property {object} [pushService]
+   * @property {object} [pushService.currentUsagePeriod]
+   * @property {string} [pushService.currentUsagePeriod.startTime] Inclusive
    * start time of the usage period
-   * @member {string} [pushService.currentUsagePeriod.endTime] Exclusive end
+   * @property {string} [pushService.currentUsagePeriod.endTime] Exclusive end
    * time of the usage period.
-   * @member {object} [pushService.currentUsagePeriod.byAccount]
-   * @member {object} [pushService.currentUsagePeriod.byApp]
-   * @member {object} [testService]
-   * @member {object} [testService.currentUsagePeriod]
-   * @member {string} [testService.currentUsagePeriod.startTime] Inclusive
+   * @property {object} [pushService.currentUsagePeriod.byAccount]
+   * @property {object} [pushService.currentUsagePeriod.byApp]
+   * @property {object} [testService]
+   * @property {object} [testService.currentUsagePeriod]
+   * @property {string} [testService.currentUsagePeriod.startTime] Inclusive
    * start time of the usage period
-   * @member {string} [testService.currentUsagePeriod.endTime] Exclusive end
+   * @property {string} [testService.currentUsagePeriod.endTime] Exclusive end
    * time of the usage period.
-   * @member {object} [testService.currentUsagePeriod.byAccount]
-   * @member {object} [testService.currentUsagePeriod.byApp]
+   * @property {object} [testService.currentUsagePeriod.byAccount]
+   * @property {object} [testService.currentUsagePeriod.byApp]
    */
   constructor() {
   }

@@ -678,7 +678,8 @@ function _removeApp(orgName, teamName, appName, options, callback) {
  *
  * @param {string} teamName The team's name
  *
- * @param {string} name The name of the app to be added to the team
+ * @param {string} name The name of the app to be added to the distribution
+ * group
  *
  * @param {object} [options] Optional Parameters.
  *
@@ -725,7 +726,7 @@ function _addApp(orgName, teamName, name, options, callback) {
   }
   let app;
   if (name !== null && name !== undefined) {
-    app = new client.models['AppTeamAddRequest']();
+    app = new client.models['AppAddRequest']();
     app.name = name;
   }
 
@@ -754,7 +755,7 @@ function _addApp(orgName, teamName, name, options, callback) {
   let requestModel = null;
   try {
     if (app !== null && app !== undefined) {
-      let requestModelMapper = new client.models['AppTeamAddRequest']().mapper();
+      let requestModelMapper = new client.models['AppAddRequest']().mapper();
       requestModel = client.serialize(requestModelMapper, app, 'app');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1508,7 +1509,7 @@ function _listAll(orgName, options, callback) {
  *
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
- *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      {array} [result]   - The deserialized result object if an error did not occur.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1631,7 +1632,15 @@ function _createTeam(orgName, displayName, options, callback) {
             required: false,
             serializedName: 'parsedResponse',
             type: {
-              name: 'Object'
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'TeamResponseElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'TeamResponse'
+                  }
+              }
             }
           };
           result = client.deserialize(resultMapper, parsedResponse, 'result');
@@ -2128,7 +2137,8 @@ class Teams {
    *
    * @param {string} teamName The team's name
    *
-   * @param {string} name The name of the app to be added to the team
+   * @param {string} name The name of the app to be added to the distribution
+   * group
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -2162,7 +2172,8 @@ class Teams {
    *
    * @param {string} teamName The team's name
    *
-   * @param {string} name The name of the app to be added to the team
+   * @param {string} name The name of the app to be added to the distribution
+   * group
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -2665,7 +2676,7 @@ class Teams {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2706,7 +2717,7 @@ class Teams {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Object} - The deserialized result object.
+   *                      @resolve {Array} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2714,7 +2725,7 @@ class Teams {
    *
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
-   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      {array} [result]   - The deserialized result object if an error did not occur.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Notification definition object
  *
@@ -15,13 +13,13 @@ const models = require('./index');
 class NotificationDefinition {
   /**
    * Create a NotificationDefinition.
-   * @member {object} [notificationTarget]
-   * @member {string} [notificationTarget.type] Polymorphic Discriminator
-   * @member {object} notificationContent
-   * @member {string} [notificationContent.name] Notification name
-   * @member {string} [notificationContent.title] Notification title
-   * @member {string} [notificationContent.body] Notification body
-   * @member {object} [notificationContent.customData] Notification custom
+   * @property {object} [notificationTarget]
+   * @property {string} [notificationTarget.type] Polymorphic Discriminator
+   * @property {object} notificationContent
+   * @property {string} [notificationContent.name] Notification name
+   * @property {string} [notificationContent.title] Notification title
+   * @property {string} [notificationContent.body] Notification body
+   * @property {object} [notificationContent.customData] Notification custom
    * data(priority, expiration, etc.)
    */
   constructor() {

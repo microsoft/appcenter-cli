@@ -16,10 +16,10 @@ const models = require('./index');
 class NotificationConfigAppleTokenResult extends models['NotificationConfigResult'] {
   /**
    * Create a NotificationConfigAppleTokenResult.
-   * @member {string} keyId A 10-character key identifier (kid).
-   * @member {string} id Application ID.
-   * @member {string} prefix Application Prefix.
-   * @member {string} endpointType Possible values include: 'production',
+   * @property {string} keyId A 10-character key identifier (kid).
+   * @property {string} id Application ID.
+   * @property {string} prefix Application Prefix.
+   * @property {string} endpointType Possible values include: 'production',
    * 'sandbox'
    */
   constructor() {

@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a TestCloudToolset.
  */
 class TestCloudToolset {
   /**
    * Create a TestCloudToolset.
-   * @member {array} projects The TestCloud projects detected
+   * @property {array} projects The TestCloud projects detected
    */
   constructor() {
   }

@@ -12,10 +12,10 @@
 class PasswordUpdateRequest {
   /**
    * Create a PasswordUpdateRequest.
-   * @member {string} newPassword The new password that will be set for the
+   * @property {string} newPassword The new password that will be set for the
    * user. Needs to be at least 8 characters long and contain at least one
    * lower- and one uppercase letter.
-   * @member {string} [oldPassword] The old password, if needed.
+   * @property {string} [oldPassword] The old password, if needed.
    */
   constructor() {
   }

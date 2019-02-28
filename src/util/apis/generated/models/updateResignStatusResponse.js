@@ -14,7 +14,9 @@
 class UpdateResignStatusResponse {
   /**
    * Create a UpdateResignStatusResponse.
-   * @member {string} status The status.
+   * @property {string} status The status.
+   * @property {string} [profilesZipBase64] A zip of the updated provisioning
+   * profiles. Base64 encoded.
    */
   constructor() {
   }
@@ -36,6 +38,13 @@ class UpdateResignStatusResponse {
           status: {
             required: true,
             serializedName: 'status',
+            type: {
+              name: 'String'
+            }
+          },
+          profilesZipBase64: {
+            required: false,
+            serializedName: 'profiles_zip_base64',
             type: {
               name: 'String'
             }

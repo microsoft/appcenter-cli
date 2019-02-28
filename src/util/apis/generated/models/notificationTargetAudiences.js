@@ -16,7 +16,7 @@ const models = require('./index');
 class NotificationTargetAudiences extends models['NotificationTarget'] {
   /**
    * Create a NotificationTargetAudiences.
-   * @member {array} audiences List of target audiences.
+   * @property {array} audiences List of target audiences.
    */
   constructor() {
     super();

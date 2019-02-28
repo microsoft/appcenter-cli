@@ -12,7 +12,7 @@
 class AzureSubscriptionPatchRequest {
   /**
    * Create a AzureSubscriptionPatchRequest.
-   * @member {boolean} isBilling If the subscription is used for billing
+   * @property {boolean} isBilling If the subscription is used for billing
    */
   constructor() {
   }

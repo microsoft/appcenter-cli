@@ -13,9 +13,9 @@
 class DeviceResolution {
   /**
    * Create a DeviceResolution.
-   * @member {string} [height]
-   * @member {string} [width]
-   * @member {string} [ppi]
+   * @property {string} [height]
+   * @property {string} [width]
+   * @property {string} [ppi]
    */
   constructor() {
   }

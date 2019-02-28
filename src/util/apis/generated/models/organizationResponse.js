@@ -12,13 +12,14 @@
 class OrganizationResponse {
   /**
    * Create a OrganizationResponse.
-   * @member {string} id The internal unique id (UUID) of the organization.
-   * @member {string} displayName The display name of the organization
-   * @member {string} name The slug name of the organization
-   * @member {string} origin The creation origin of this organization. Possible
-   * values include: 'appcenter', 'hockeyapp'
-   * @member {string} createdAt The creation date of this organization
-   * @member {string} updatedAt The date the organization was last updated at
+   * @property {uuid} id The internal unique id (UUID) of the organization.
+   * @property {string} displayName The display name of the organization
+   * @property {string} name The slug name of the organization
+   * @property {string} [avatarUrl] The URL to a user-uploaded Avatar image
+   * @property {string} origin The creation origin of this organization.
+   * Possible values include: 'appcenter', 'hockeyapp'
+   * @property {string} createdAt The creation date of this organization
+   * @property {string} updatedAt The date the organization was last updated at
    */
   constructor() {
   }
@@ -54,6 +55,13 @@ class OrganizationResponse {
           name: {
             required: true,
             serializedName: 'name',
+            type: {
+              name: 'String'
+            }
+          },
+          avatarUrl: {
+            required: false,
+            serializedName: 'avatar_url',
             type: {
               name: 'String'
             }

@@ -6,21 +6,19 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a StepReportDeviceScreenshotsItemScreenshot.
  */
 class StepReportDeviceScreenshotsItemScreenshot {
   /**
    * Create a StepReportDeviceScreenshotsItemScreenshot.
-   * @member {object} urls
-   * @member {string} [urls.original]
-   * @member {string} [urls.small]
-   * @member {string} [urls.medium]
-   * @member {string} [urls.large]
-   * @member {number} rotation
-   * @member {boolean} landscape
+   * @property {object} urls
+   * @property {string} [urls.original]
+   * @property {string} [urls.small]
+   * @property {string} [urls.medium]
+   * @property {string} [urls.large]
+   * @property {number} rotation
+   * @property {boolean} landscape
    */
   constructor() {
   }

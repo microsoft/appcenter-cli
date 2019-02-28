@@ -6,16 +6,15 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a JavaScriptToolset.
  */
 class JavaScriptToolset {
   /**
    * Create a JavaScriptToolset.
-   * @member {array} packageJsonPaths Paths for detected package.json files
-   * @member {array} [javascriptSolutions] The React Native solutions detected
+   * @property {array} packageJsonPaths Paths for detected package.json files
+   * @property {array} [javascriptSolutions] The React Native solutions
+   * detected
    */
   constructor() {
   }

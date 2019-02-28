@@ -12,8 +12,8 @@
 class CrashOverall {
   /**
    * Create a CrashOverall.
-   * @member {number} [crashCount]
-   * @member {number} [deviceCount]
+   * @property {number} [crashCount]
+   * @property {number} [deviceCount]
    */
   constructor() {
   }

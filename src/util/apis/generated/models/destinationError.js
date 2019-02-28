@@ -12,7 +12,7 @@
 class DestinationError {
   /**
    * Create a DestinationError.
-   * @member {string} [code] Error Codes:<br>
+   * @property {string} [code] Error Codes:<br>
    * <b>invalid_store_secrets</b>: While distributing to store, secrets
    * provided for store are not valid.<br>
    * <b>store_release_bad_request</b>: Proper package release details for the
@@ -27,9 +27,9 @@ class DestinationError {
    * <b>store_release_not_available</b>: The release is not available.<br>
    * <b>internal_server_error</b>: Failed to distribute to a destination due to
    * an internal server error.
-   * @member {string} [message]
-   * @member {string} [id]
-   * @member {string} [name]
+   * @property {string} [message]
+   * @property {string} [id]
+   * @property {string} [name]
    */
   constructor() {
   }

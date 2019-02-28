@@ -6,24 +6,22 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a DeviceSetConfiguration.
  */
 class DeviceSetConfiguration {
   /**
    * Create a DeviceSetConfiguration.
-   * @member {uuid} [id] The unique id of the device configuration
-   * @member {object} [image]
-   * @member {string} [image.thumb]
-   * @member {object} [model]
-   * @member {string} [model.name]
-   * @member {string} [model.manufacturer]
-   * @member {string} [model.releaseDate]
-   * @member {string} [model.formFactor]
-   * @member {string} [os]
-   * @member {string} [osName]
+   * @property {uuid} [id] The unique id of the device configuration
+   * @property {object} [image]
+   * @property {string} [image.thumb]
+   * @property {object} [model]
+   * @property {string} [model.name]
+   * @property {string} [model.manufacturer]
+   * @property {string} [model.releaseDate]
+   * @property {string} [model.formFactor]
+   * @property {string} [os]
+   * @property {string} [osName]
    */
   constructor() {
   }

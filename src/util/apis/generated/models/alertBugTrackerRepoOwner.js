@@ -13,9 +13,9 @@
 class AlertBugTrackerRepoOwner {
   /**
    * Create a AlertBugTrackerRepoOwner.
-   * @member {string} [name]
-   * @member {string} [id]
-   * @member {string} [login]
+   * @property {string} [name]
+   * @property {string} [id]
+   * @property {string} [login]
    */
   constructor() {
   }

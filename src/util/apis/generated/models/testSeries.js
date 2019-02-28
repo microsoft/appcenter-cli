@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * @summary Test Series
   *
@@ -17,11 +15,12 @@ const models = require('./index');
 class TestSeries {
   /**
    * Create a TestSeries.
-   * @member {string} slug Unique, human-readable identifier of the test series
-   * @member {string} name Name of the test series
-   * @member {string} [mostRecentActivity] Date of the latest test run that
+   * @property {string} slug Unique, human-readable identifier of the test
+   * series
+   * @property {string} name Name of the test series
+   * @property {string} [mostRecentActivity] Date of the latest test run that
    * used this test series
-   * @member {array} [testRuns] Most recent test runs
+   * @property {array} [testRuns] Most recent test runs
    */
   constructor() {
   }

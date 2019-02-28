@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a HandledErrors.
  */
 class HandledErrors {
   /**
    * Create a HandledErrors.
-   * @member {string} [nextLink]
-   * @member {array} [errors] Errors list.
+   * @property {string} [nextLink]
+   * @property {array} [errors] Errors list.
    */
   constructor() {
   }

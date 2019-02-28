@@ -13,14 +13,14 @@
 class ProvisioningProfile {
   /**
    * Create a ProvisioningProfile.
-   * @member {string} name The name of the provisioning profile.
-   * @member {string} applicationIdentifier The application identifier.
-   * @member {string} teamIdentifier The team identifier.
-   * @member {string} profileType Possible values include: 'adhoc',
+   * @property {string} name The name of the provisioning profile.
+   * @property {string} applicationIdentifier The application identifier.
+   * @property {string} teamIdentifier The team identifier.
+   * @property {string} profileType Possible values include: 'adhoc',
    * 'enterprise', 'other'
-   * @member {date} expiredAt The profile's expiration date in RFC 3339 format,
-   * i.e. 2017-07-21T17:32:28Z
-   * @member {array} [udids]
+   * @property {date} expiredAt The profile's expiration date in RFC 3339
+   * format, i.e. 2017-07-21T17:32:28Z
+   * @property {array} [udids]
    */
   constructor() {
   }

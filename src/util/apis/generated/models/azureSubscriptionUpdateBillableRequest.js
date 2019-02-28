@@ -12,7 +12,7 @@
 class AzureSubscriptionUpdateBillableRequest {
   /**
    * Create a AzureSubscriptionUpdateBillableRequest.
-   * @member {boolean} isBillable Billable status of the subscription
+   * @property {boolean} isBillable Billable status of the subscription
    */
   constructor() {
   }

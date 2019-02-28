@@ -13,9 +13,12 @@
 class XamarinSDKBundle {
   /**
    * Create a XamarinSDKBundle.
-   * @member {string} [monoVersion] The Mono version
-   * @member {string} [sdkBundle] The Xamarin SDK version
-   * @member {boolean} [current] If the SDK is latest stable
+   * @property {string} [monoVersion] The Mono version
+   * @property {string} [sdkBundle] The Xamarin SDK version
+   * @property {boolean} [current] If the SDK is latest stable
+   * @property {boolean} [stable] If the SDK is stable
+   * @property {array} [xcodeVersions] Specific for iOS SDK. A list of Xcode
+   * versions supported by current SDK version
    */
   constructor() {
   }
@@ -53,6 +56,27 @@ class XamarinSDKBundle {
             serializedName: 'current',
             type: {
               name: 'Boolean'
+            }
+          },
+          stable: {
+            required: false,
+            serializedName: 'stable',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          xcodeVersions: {
+            required: false,
+            serializedName: 'xcodeVersions',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'StringElementType',
+                  type: {
+                    name: 'String'
+                  }
+              }
             }
           }
         }

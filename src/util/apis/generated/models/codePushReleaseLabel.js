@@ -12,7 +12,7 @@
 class CodePushReleaseLabel {
   /**
    * Create a CodePushReleaseLabel.
-   * @member {string} [label]
+   * @property {string} [label]
    */
   constructor() {
   }

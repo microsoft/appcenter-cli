@@ -6,19 +6,17 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ErrorResponse.
  */
 class ErrorResponse {
   /**
    * Create a ErrorResponse.
-   * @member {object} error
-   * @member {string} [error.code] Possible values include: 'BadRequest',
+   * @property {object} error
+   * @property {string} [error.code] Possible values include: 'BadRequest',
    * 'Conflict', 'NotAcceptable', 'NotFound', 'InternalServerError',
    * 'Unauthorized', 'TooManyRequests'
-   * @member {string} [error.message]
+   * @property {string} [error.message]
    */
   constructor() {
   }

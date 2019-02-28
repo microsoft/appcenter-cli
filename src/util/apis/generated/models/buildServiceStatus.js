@@ -12,12 +12,12 @@
 class BuildServiceStatus {
   /**
    * Create a BuildServiceStatus.
-   * @member {string} [status]
-   * @member {string} [service]
-   * @member {string} [message]
-   * @member {string} [url]
-   * @member {number} [validUntil]
-   * @member {string} [os]
+   * @property {string} [status]
+   * @property {string} [service]
+   * @property {string} [message]
+   * @property {string} [url]
+   * @property {number} [validUntil]
+   * @property {string} [os]
    */
   constructor() {
   }

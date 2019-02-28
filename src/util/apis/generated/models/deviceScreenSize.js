@@ -13,8 +13,8 @@
 class DeviceScreenSize {
   /**
    * Create a DeviceScreenSize.
-   * @member {string} [cm]
-   * @member {string} [inProperty]
+   * @property {string} [cm]
+   * @property {string} [inProperty]
    */
   constructor() {
   }

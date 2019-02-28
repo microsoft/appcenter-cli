@@ -12,9 +12,9 @@
 class UserNameAvailabilityResponse {
   /**
    * Create a UserNameAvailabilityResponse.
-   * @member {boolean} available The availability status of the requested user
-   * name
-   * @member {string} name The requested user name
+   * @property {boolean} available The availability status of the requested
+   * user name
+   * @property {string} name The requested user name
    */
   constructor() {
   }

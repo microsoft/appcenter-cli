@@ -13,7 +13,7 @@
 class AppleLoginResponse {
   /**
    * Create a AppleLoginResponse.
-   * @member {boolean} [successful] True when login was successful.
+   * @property {boolean} [successful] True when login was successful.
    */
   constructor() {
   }

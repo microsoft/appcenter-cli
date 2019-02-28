@@ -15,12 +15,12 @@ const models = require('./index');
 class CommitDetails extends models['Commit'] {
   /**
    * Create a CommitDetails.
-   * @member {object} [commit]
-   * @member {string} [commit.message] Commit message
-   * @member {object} [commit.author]
-   * @member {string} [commit.author.date] Date and time of the commit
-   * @member {string} [commit.author.name] Author name
-   * @member {string} [commit.author.email] Author's email
+   * @property {object} [commit]
+   * @property {string} [commit.message] Commit message
+   * @property {object} [commit.author]
+   * @property {string} [commit.author.date] Date and time of the commit
+   * @property {string} [commit.author.name] Author name
+   * @property {string} [commit.author.email] Author's email
    */
   constructor() {
     super();

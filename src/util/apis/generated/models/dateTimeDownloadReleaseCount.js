@@ -12,9 +12,9 @@
 class DateTimeDownloadReleaseCount {
   /**
    * Create a DateTimeDownloadReleaseCount.
-   * @member {string} [datetime] the ISO 8601 datetime
-   * @member {number} [total]
-   * @member {number} [unique]
+   * @property {string} [datetime] the ISO 8601 datetime
+   * @property {number} [total]
+   * @property {number} [unique]
    */
   constructor() {
   }

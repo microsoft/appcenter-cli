@@ -12,11 +12,11 @@
 class AppVersion {
   /**
    * Create a AppVersion.
-   * @member {string} appVersionId
-   * @member {string} appId
-   * @member {string} displayName
-   * @member {string} appVersion
-   * @member {string} [buildNumber]
+   * @property {string} appVersionId
+   * @property {string} appId
+   * @property {string} displayName
+   * @property {string} appVersion
+   * @property {string} [buildNumber]
    */
   constructor() {
   }

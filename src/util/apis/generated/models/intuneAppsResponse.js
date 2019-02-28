@@ -13,9 +13,9 @@
 class IntuneAppsResponse {
   /**
    * Create a IntuneAppsResponse.
-   * @member {string} [createdMonth] PartitionKey year-month
-   * @member {string} [appId] App id
-   * @member {string} [refreshStatus] Refresh Status
+   * @property {string} [createdMonth] PartitionKey year-month
+   * @property {string} [appId] App id
+   * @property {string} [refreshStatus] Refresh Status
    */
   constructor() {
   }

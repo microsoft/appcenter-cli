@@ -15,9 +15,13 @@ const models = require('./index');
 class HandledErrorDetails extends models['HandledError'] {
   /**
    * Create a HandledErrorDetails.
-   * @member {string} [name]
-   * @member {array} [reasonFrames]
-   * @member {object} [properties]
+   * @property {string} [name]
+   * @property {array} [reasonFrames]
+   * @property {date} [appLaunchTimestamp] Timestamp when the app was launched,
+   * example: '2017-03-13T18:05:42Z'.
+   * @property {string} [carrierName] Carrier name (for mobile devices).
+   * @property {boolean} [jailbreak] Flag indicating if device is jailbroken
+   * @property {object} [properties]
    */
   constructor() {
     super();
@@ -86,6 +90,13 @@ class HandledErrorDetails extends models['HandledError'] {
               name: 'String'
             }
           },
+          userId: {
+            required: false,
+            serializedName: 'userId',
+            type: {
+              name: 'String'
+            }
+          },
           name: {
             required: false,
             serializedName: 'name',
@@ -106,6 +117,27 @@ class HandledErrorDetails extends models['HandledError'] {
                     className: 'HandledErrorReasonFrame'
                   }
               }
+            }
+          },
+          appLaunchTimestamp: {
+            required: false,
+            serializedName: 'appLaunchTimestamp',
+            type: {
+              name: 'DateTime'
+            }
+          },
+          carrierName: {
+            required: false,
+            serializedName: 'carrierName',
+            type: {
+              name: 'String'
+            }
+          },
+          jailbreak: {
+            required: false,
+            serializedName: 'jailbreak',
+            type: {
+              name: 'Boolean'
             }
           },
           properties: {

@@ -12,9 +12,9 @@
 class IntuneCategoryValue {
   /**
    * Create a IntuneCategoryValue.
-   * @member {string} [id] the id of the category
-   * @member {string} [displayName] the display name for the category
-   * @member {string} [lastModifiedDateTime] modified date for category
+   * @property {string} [id] the id of the category
+   * @property {string} [displayName] the display name for the category
+   * @property {string} [lastModifiedDateTime] modified date for category
    */
   constructor() {
   }

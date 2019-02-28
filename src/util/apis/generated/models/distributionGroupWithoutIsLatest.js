@@ -12,8 +12,8 @@
 class DistributionGroupWithoutIsLatest {
   /**
    * Create a DistributionGroupWithoutIsLatest.
-   * @member {string} [id] ID identifying a unique distribution group.
-   * @member {string} [name] A name identifying a unique distribution group.
+   * @property {string} [id] ID identifying a unique distribution group.
+   * @property {string} [name] A name identifying a unique distribution group.
    */
   constructor() {
   }

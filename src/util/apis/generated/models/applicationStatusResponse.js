@@ -13,9 +13,9 @@
 class ApplicationStatusResponse {
   /**
    * Create a ApplicationStatusResponse.
-   * @member {string} versionType The type of version being returned
+   * @property {string} versionType The type of version being returned
    * (production/edit/test flight).
-   * @member {string} [version] The version of the application
+   * @property {string} [version] The version of the application
    */
   constructor() {
   }

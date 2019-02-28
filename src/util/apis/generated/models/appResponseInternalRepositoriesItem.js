@@ -12,8 +12,8 @@
 class AppResponseInternalRepositoriesItem {
   /**
    * Create a AppResponseInternalRepositoriesItem.
-   * @member {string} [repoProvider]
-   * @member {string} [repoUrl]
+   * @property {string} [repoProvider]
+   * @property {string} [repoUrl]
    */
   constructor() {
   }

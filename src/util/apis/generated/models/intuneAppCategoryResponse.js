@@ -12,8 +12,8 @@
 class IntuneAppCategoryResponse {
   /**
    * Create a IntuneAppCategoryResponse.
-   * @member {string} [name] display name for the app category
-   * @member {string} [id] ID for the category.
+   * @property {string} [name] display name for the app category
+   * @property {string} [id] ID for the category.
    */
   constructor() {
   }

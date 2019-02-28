@@ -12,7 +12,7 @@
 class HockeyAppCrashForwardingInfo {
   /**
    * Create a HockeyAppCrashForwardingInfo.
-   * @member {boolean} forwardingEnabled
+   * @property {boolean} forwardingEnabled
    */
   constructor() {
   }

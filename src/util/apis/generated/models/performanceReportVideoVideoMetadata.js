@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a PerformanceReportVideoVideoMetadata.
  */
 class PerformanceReportVideoVideoMetadata {
   /**
    * Create a PerformanceReportVideoVideoMetadata.
-   * @member {array} [events]
+   * @property {array} [events]
    */
   constructor() {
   }

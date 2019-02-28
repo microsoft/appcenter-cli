@@ -12,12 +12,12 @@
 class FileAsset {
   /**
    * Create a FileAsset.
-   * @member {string} [id]
-   * @member {string} [location]
-   * @member {string} [token]
-   * @member {string} [uploadDomain]
-   * @member {string} [uploadWindowLocation]
-   * @member {string} [urlEncodedToken]
+   * @property {string} [id]
+   * @property {string} [location]
+   * @property {string} [token]
+   * @property {string} [uploadDomain]
+   * @property {string} [uploadWindowLocation]
+   * @property {string} [urlEncodedToken]
    */
   constructor() {
   }

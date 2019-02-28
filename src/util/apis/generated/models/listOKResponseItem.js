@@ -12,10 +12,10 @@
 class ListOKResponseItem {
   /**
    * Create a ListOKResponseItem.
-   * @member {string} displayName The display name of the organization
-   * @member {string} name The slug name of the organization
-   * @member {string} origin The creation origin of this organization. Possible
-   * values include: 'appcenter', 'hockeyapp'
+   * @property {string} displayName The display name of the organization
+   * @property {string} name The slug name of the organization
+   * @property {string} origin The creation origin of this organization.
+   * Possible values include: 'appcenter', 'hockeyapp'
    */
   constructor() {
   }

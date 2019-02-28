@@ -5,9 +5,10 @@
  */
 
 import { ServiceClient, ServiceClientOptions, ServiceClientCredentials } from 'ms-rest';
+import * as models from "./models";
 import * as operations from "./operations";
 
-declare class AppCenterClient extends ServiceClient {
+export default class AppCenterClient extends ServiceClient {
   /**
    * @class
    * Initializes a new instance of the AppCenterClient class.
@@ -33,21 +34,29 @@ declare class AppCenterClient extends ServiceClient {
 
   // Operation groups
   devices: operations.Devices;
+  notifications: operations.Notifications;
   orgInvitations: operations.OrgInvitations;
   distributionGroupInvitations: operations.DistributionGroupInvitations;
   appInvitations: operations.AppInvitations;
+  sharedconnection: operations.Sharedconnection;
+  dataSubjectRight: operations.DataSubjectRight;
   users: operations.Users;
   releases: operations.Releases;
+  distributionGroups: operations.DistributionGroups;
   teams: operations.Teams;
   azureSubscription: operations.AzureSubscription;
+  organization: operations.Organization;
   apps: operations.Apps;
   organizations: operations.Organizations;
+  billingAggregatedInformation: operations.BillingAggregatedInformation;
+  invitations: operations.Invitations;
   builds: operations.Builds;
+  webhooks: operations.Webhooks;
   crashes: operations.Crashes;
   test: operations.Test;
   symbols: operations.Symbols;
   symbolUploads: operations.SymbolUploads;
-  missingSymbolGroups: operations.MissingSymbolGroups;
+  storeNotifications: operations.StoreNotifications;
   repositories: operations.Repositories;
   repositoryConfigurations: operations.RepositoryConfigurations;
   provisioning: operations.Provisioning;
@@ -55,9 +64,12 @@ declare class AppCenterClient extends ServiceClient {
   push: operations.Push;
   fileAssets: operations.FileAssets;
   exportConfigurations: operations.ExportConfigurations;
+  errors: operations.Errors;
   storeReleases: operations.StoreReleases;
+  storeReleasePublishLogs: operations.StoreReleasePublishLogs;
   stores: operations.Stores;
-  distributionGroups: operations.DistributionGroups;
+  missingSymbolGroups: operations.MissingSymbolGroups;
+  app: operations.App;
   codePushDeploymentRelease: operations.CodePushDeploymentRelease;
   deploymentReleases: operations.DeploymentReleases;
   codePushDeploymentReleases: operations.CodePushDeploymentReleases;
@@ -65,10 +77,11 @@ declare class AppCenterClient extends ServiceClient {
   codePushDeploymentMetrics: operations.CodePushDeploymentMetrics;
   crashGroups: operations.CrashGroups;
   commits: operations.Commits;
+  bugTracker: operations.BugTracker;
   branchConfigurations: operations.BranchConfigurations;
   appleMapping: operations.AppleMapping;
   analytics: operations.Analytics;
   apiTokens: operations.ApiTokens;
 }
 
-export = AppCenterClient;
+export { AppCenterClient, models as AppCenterModels };

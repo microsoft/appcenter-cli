@@ -15,8 +15,8 @@
 class DeviceSetUpdate {
   /**
    * Create a DeviceSetUpdate.
-   * @member {array} devices List of device IDs
-   * @member {string} name The name of the device set
+   * @property {array} devices List of device IDs
+   * @property {string} name The name of the device set
    */
   constructor() {
   }

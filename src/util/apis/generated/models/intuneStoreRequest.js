@@ -6,25 +6,23 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a IntuneStoreRequest.
  */
 class IntuneStoreRequest {
   /**
    * Create a IntuneStoreRequest.
-   * @member {object} [secretJson]
-   * @member {string} [secretJson.idToken] the id token of user
-   * @member {string} [secretJson.refreshToken] the refresh token for user
-   * @member {string} [secretJson.refreshTokenExpiry] the expiry of refresh
+   * @property {object} [secretJson]
+   * @property {string} [secretJson.idToken] the id token of user
+   * @property {string} [secretJson.refreshToken] the refresh token for user
+   * @property {string} [secretJson.refreshTokenExpiry] the expiry of refresh
    * token
-   * @member {object} [targetAudience]
-   * @member {string} [targetAudience.name] display name for the target
+   * @property {object} [targetAudience]
+   * @property {string} [targetAudience.name] display name for the target
    * audience/group
-   * @member {object} [appCategory]
-   * @member {string} [appCategory.name] display name for the app category
-   * @member {string} [tenantId] tenant id of the intune store
+   * @property {object} [appCategory]
+   * @property {string} [appCategory.name] display name for the app category
+   * @property {string} [tenantId] tenant id of the intune store
    */
   constructor() {
   }

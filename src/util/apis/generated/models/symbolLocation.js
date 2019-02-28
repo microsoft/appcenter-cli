@@ -13,7 +13,7 @@
 class SymbolLocation {
   /**
    * Create a SymbolLocation.
-   * @member {string} uri
+   * @property {string} uri
    */
   constructor() {
   }

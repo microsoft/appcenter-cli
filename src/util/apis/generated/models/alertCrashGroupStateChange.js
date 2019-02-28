@@ -13,7 +13,7 @@
 class AlertCrashGroupStateChange {
   /**
    * Create a AlertCrashGroupStateChange.
-   * @member {string} [state] Possible values include: 'Open', 'Closed',
+   * @property {string} [state] Possible values include: 'Open', 'Closed',
    * 'Ignored'
    */
   constructor() {

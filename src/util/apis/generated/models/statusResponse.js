@@ -12,7 +12,7 @@
 class StatusResponse {
   /**
    * Create a StatusResponse.
-   * @member {string} status
+   * @property {string} status
    */
   constructor() {
   }

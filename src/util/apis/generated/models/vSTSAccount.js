@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * VSTS account with projects list and user info
  *
@@ -15,17 +13,17 @@ const models = require('./index');
 class VSTSAccount {
   /**
    * Create a VSTSAccount.
-   * @member {string} [accountId] Account id
-   * @member {string} [accountUri] Account uri
-   * @member {string} [accountName] Account name
-   * @member {string} [accountType] Account type
-   * @member {string} [accountStatus] Account status
-   * @member {object} [user]
-   * @member {string} [user.id] Profile id
-   * @member {string} [user.displayName] Profile display name
-   * @member {string} [user.publicAlias] Profile alias
-   * @member {string} [user.emailAddress] Profile email
-   * @member {array} [projects] Account projects
+   * @property {string} [accountId] Account id
+   * @property {string} [accountUri] Account uri
+   * @property {string} [accountName] Account name
+   * @property {string} [accountType] Account type
+   * @property {string} [accountStatus] Account status
+   * @property {object} [user]
+   * @property {string} [user.id] Profile id
+   * @property {string} [user.displayName] Profile display name
+   * @property {string} [user.publicAlias] Profile alias
+   * @property {string} [user.emailAddress] Profile email
+   * @property {array} [projects] Account projects
    */
   constructor() {
   }

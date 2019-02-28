@@ -17,8 +17,8 @@ const models = require('./index');
 class ExportConfigurationAppInsightsLinkedSubscription extends models['ExportConfiguration'] {
   /**
    * Create a ExportConfigurationAppInsightsLinkedSubscription.
-   * @member {string} subscriptionId Id of customer subscription linked in App
-   * Center
+   * @property {string} subscriptionId Id of customer subscription linked in
+   * App Center
    */
   constructor() {
     super();
@@ -43,6 +43,21 @@ class ExportConfigurationAppInsightsLinkedSubscription extends models['ExportCon
         uberParent: 'ExportConfiguration',
         className: 'ExportConfigurationAppInsightsLinkedSubscription',
         modelProperties: {
+          exportEntities: {
+            required: false,
+            serializedName: 'export_entities',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'ExportEntityElementType',
+                  type: {
+                    name: 'Enum',
+                    allowedValues: [ 'crashes', 'errors', 'attachments' ]
+                  }
+              }
+            }
+          },
           resourceName: {
             required: false,
             serializedName: 'resource_name',

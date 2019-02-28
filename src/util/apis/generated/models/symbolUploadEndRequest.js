@@ -14,7 +14,7 @@
 class SymbolUploadEndRequest {
   /**
    * Create a SymbolUploadEndRequest.
-   * @member {string} status The desired operation for the symbol upload.
+   * @property {string} status The desired operation for the symbol upload.
    * Possible values include: 'committed', 'aborted'
    */
   constructor() {

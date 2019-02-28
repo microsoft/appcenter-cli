@@ -13,8 +13,8 @@
 class AgentQueueResponse {
   /**
    * Create a AgentQueueResponse.
-   * @member {number} [id]
-   * @member {string} [name]
+   * @property {number} [id]
+   * @property {string} [name]
    */
   constructor() {
   }

@@ -15,7 +15,8 @@ const models = require('./index');
 class AppWithTeamPermissionsResponse extends models['AppResponse'] {
   /**
    * Create a AppWithTeamPermissionsResponse.
-   * @member {array} [teamPermissions] The permissions the team has for the app
+   * @property {array} [teamPermissions] The permissions the team has for the
+   * app
    */
   constructor() {
     super();
@@ -59,6 +60,13 @@ class AppWithTeamPermissionsResponse extends models['AppResponse'] {
           iconUrl: {
             required: false,
             serializedName: 'icon_url',
+            type: {
+              name: 'String'
+            }
+          },
+          iconSource: {
+            required: false,
+            serializedName: 'icon_source',
             type: {
               name: 'String'
             }

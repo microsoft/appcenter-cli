@@ -13,7 +13,7 @@
 class SymbolUploadLocation {
   /**
    * Create a SymbolUploadLocation.
-   * @member {string} uri
+   * @property {string} uri
    */
   constructor() {
   }

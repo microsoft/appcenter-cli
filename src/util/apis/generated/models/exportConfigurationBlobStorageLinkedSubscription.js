@@ -11,13 +11,13 @@ const models = require('./index');
 /**
  * Configuration for export to Blob Storage with customer linked subscription.
  *
- * @extends models['ExportConfiguration']
+ * @extends models['ExportBlobConfiguration']
  */
-class ExportConfigurationBlobStorageLinkedSubscription extends models['ExportConfiguration'] {
+class ExportConfigurationBlobStorageLinkedSubscription extends models['ExportBlobConfiguration'] {
   /**
    * Create a ExportConfigurationBlobStorageLinkedSubscription.
-   * @member {string} subscriptionId Id of customer subscription linked in App
-   * Center
+   * @property {string} subscriptionId Id of customer subscription linked in
+   * App Center
    */
   constructor() {
     super();
@@ -42,6 +42,21 @@ class ExportConfigurationBlobStorageLinkedSubscription extends models['ExportCon
         uberParent: 'ExportConfiguration',
         className: 'ExportConfigurationBlobStorageLinkedSubscription',
         modelProperties: {
+          exportEntities: {
+            required: false,
+            serializedName: 'export_entities',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'ExportEntityElementType',
+                  type: {
+                    name: 'Enum',
+                    allowedValues: [ 'crashes', 'errors', 'attachments' ]
+                  }
+              }
+            }
+          },
           resourceName: {
             required: false,
             serializedName: 'resource_name',
@@ -62,6 +77,14 @@ class ExportConfigurationBlobStorageLinkedSubscription extends models['ExportCon
             isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
+            }
+          },
+          blobPathFormatKind: {
+            required: false,
+            serializedName: 'blob_path_format_kind',
+            type: {
+              name: 'Enum',
+              allowedValues: [ 'WithoutAppId', 'WithAppId' ]
             }
           },
           subscriptionId: {

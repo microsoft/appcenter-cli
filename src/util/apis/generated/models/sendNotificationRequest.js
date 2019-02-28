@@ -6,22 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a SendNotificationRequest.
  */
 class SendNotificationRequest {
   /**
    * Create a SendNotificationRequest.
-   * @member {array} userIds user list to send email notification
-   * @member {object} emailContents latest email content
-   * @member {string} [emailContents.releaseId]
-   * @member {string} [emailContents.appName]
-   * @member {string} [emailContents.platform]
-   * @member {string} [emailContents.build]
-   * @member {string} [emailContents.version]
-   * @member {string} [emailContents.installLink]
+   * @property {array} userIds user list to send email notification
    */
   constructor() {
   }
@@ -52,14 +43,6 @@ class SendNotificationRequest {
                     name: 'String'
                   }
               }
-            }
-          },
-          emailContents: {
-            required: true,
-            serializedName: 'emailContents',
-            type: {
-              name: 'Composite',
-              className: 'SendNotificationRequestEmailContents'
             }
           }
         }

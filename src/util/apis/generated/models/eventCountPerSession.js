@@ -6,17 +6,15 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a EventCountPerSession.
  */
 class EventCountPerSession {
   /**
    * Create a EventCountPerSession.
-   * @member {number} [avgCountPerSession]
-   * @member {number} [previousAvgCountPerSession]
-   * @member {array} [countPerSession]
+   * @property {number} [avgCountPerSession]
+   * @property {number} [previousAvgCountPerSession]
+   * @property {array} [countPerSession]
    */
   constructor() {
   }

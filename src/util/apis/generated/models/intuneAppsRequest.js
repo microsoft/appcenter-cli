@@ -13,7 +13,7 @@
 class IntuneAppsRequest {
   /**
    * Create a IntuneAppsRequest.
-   * @member {string} [createdMonth] PartitionKey year-month
+   * @property {string} [createdMonth] PartitionKey year-month
    */
   constructor() {
   }

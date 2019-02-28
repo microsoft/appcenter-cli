@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a CrashGroupContainer.
  */
 class CrashGroupContainer {
   /**
    * Create a CrashGroupContainer.
-   * @member {array} crashGroups
+   * @property {array} crashGroups
    */
   constructor() {
   }

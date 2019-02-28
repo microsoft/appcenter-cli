@@ -15,7 +15,7 @@ const models = require('./index');
 class TeamAppResponse extends models['TeamResponse'] {
   /**
    * Create a TeamAppResponse.
-   * @member {array} [permissions] The permissions the team has for the app
+   * @property {array} [permissions] The permissions the team has for the app
    */
   constructor() {
     super();

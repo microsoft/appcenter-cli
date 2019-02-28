@@ -12,11 +12,11 @@
 class TeamUserResponse {
   /**
    * Create a TeamUserResponse.
-   * @member {string} email The email address of the user
-   * @member {string} displayName The full name of the user. Might for example
-   * be first and last name
-   * @member {string} name The unique name that is used to identify the user.
-   * @member {object} role The role of the user has within the team
+   * @property {string} email The email address of the user
+   * @property {string} displayName The full name of the user. Might for
+   * example be first and last name
+   * @property {string} name The unique name that is used to identify the user.
+   * @property {object} role The role of the user has within the team
    */
   constructor() {
   }

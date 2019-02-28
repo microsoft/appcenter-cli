@@ -12,14 +12,14 @@
 class CrashAttachment {
   /**
    * Create a CrashAttachment.
-   * @member {string} appId
-   * @member {string} attachmentId
-   * @member {string} crashId
-   * @member {string} blobLocation
-   * @member {string} contentType
-   * @member {string} fileName
-   * @member {date} createdTime
-   * @member {number} size
+   * @property {string} appId
+   * @property {string} attachmentId
+   * @property {string} crashId
+   * @property {string} blobLocation
+   * @property {string} contentType
+   * @property {string} fileName
+   * @property {date} createdTime
+   * @property {number} size
    */
   constructor() {
   }

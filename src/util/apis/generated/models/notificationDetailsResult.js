@@ -16,13 +16,13 @@ const models = require('./index');
 class NotificationDetailsResult extends models['NotificationOverviewResult'] {
   /**
    * Create a NotificationDetailsResult.
-   * @member {object} notificationContent
-   * @member {string} [notificationContent.name] Notification name
-   * @member {string} [notificationContent.title] Notification title
-   * @member {string} [notificationContent.body] Notification body
-   * @member {object} [notificationContent.customData] Notification custom
+   * @property {object} notificationContent
+   * @property {string} [notificationContent.name] Notification name
+   * @property {string} [notificationContent.title] Notification title
+   * @property {string} [notificationContent.body] Notification body
+   * @property {object} [notificationContent.customData] Notification custom
    * data(priority, expiration, etc.)
-   * @member {array} [failureOutcomes] Failture outcome counts
+   * @property {array} [failureOutcomes] Failture outcome counts
    */
   constructor() {
     super();

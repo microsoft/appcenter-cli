@@ -12,10 +12,10 @@
 class DeviceFrameDefinition {
   /**
    * Create a DeviceFrameDefinition.
-   * @member {number} [width]
-   * @member {number} [height]
-   * @member {string} [frameUrl]
-   * @member {array} [screen]
+   * @property {number} [width]
+   * @property {number} [height]
+   * @property {string} [frameUrl]
+   * @property {array} [screen]
    */
   constructor() {
   }

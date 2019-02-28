@@ -16,7 +16,7 @@ const models = require('./index');
 class LogFlowBooleanProperty extends models['LogFlowCustomProperty'] {
   /**
    * Create a LogFlowBooleanProperty.
-   * @member {boolean} value Boolean property value.
+   * @property {boolean} value Boolean property value.
    */
   constructor() {
     super();
@@ -46,7 +46,7 @@ class LogFlowBooleanProperty extends models['LogFlowCustomProperty'] {
             serializedName: 'name',
             constraints: {
               MaxLength: 128,
-              Pattern: '^[a-zA-Z][a-zA-Z0-9\-_]*$'
+              Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
             type: {
               name: 'String'

@@ -12,8 +12,8 @@
 class AcquisitionStatusSuccessResponse {
   /**
    * Create a AcquisitionStatusSuccessResponse.
-   * @member {string} code The code indicating the status
-   * @member {string} message The message indicating the status
+   * @property {string} code The code indicating the status
+   * @property {string} message The message indicating the status
    */
   constructor() {
   }

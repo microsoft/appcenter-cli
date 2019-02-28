@@ -12,9 +12,9 @@
 class CommitDetailsCommitAuthor {
   /**
    * Create a CommitDetailsCommitAuthor.
-   * @member {string} [date] Date and time of the commit
-   * @member {string} [name] Author name
-   * @member {string} [email] Author's email
+   * @property {string} [date] Date and time of the commit
+   * @property {string} [name] Author name
+   * @property {string} [email] Author's email
    */
   constructor() {
   }

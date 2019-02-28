@@ -12,7 +12,7 @@
 class HockeyAppCrashForwardingChange {
   /**
    * Create a HockeyAppCrashForwardingChange.
-   * @member {boolean} [enableForwarding]
+   * @property {boolean} [enableForwarding]
    */
   constructor() {
   }

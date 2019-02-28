@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * The branch build core properties
  *
@@ -15,12 +13,12 @@ const models = require('./index');
 class BranchProperties {
   /**
    * Create a BranchProperties.
-   * @member {object} [branch]
-   * @member {string} [branch.name] The branch name
-   * @member {object} [branch.commit]
-   * @member {string} [branch.commit.sha] The commit SHA
-   * @member {string} [branch.commit.url] The URL to the commit
-   * @member {boolean} [enabled]
+   * @property {object} [branch]
+   * @property {string} [branch.name] The branch name
+   * @property {object} [branch.commit]
+   * @property {string} [branch.commit.sha] The commit SHA
+   * @property {string} [branch.commit.url] The URL to the commit
+   * @property {boolean} [enabled]
    */
   constructor() {
   }

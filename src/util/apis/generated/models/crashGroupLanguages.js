@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a CrashGroupLanguages.
  */
 class CrashGroupLanguages {
   /**
    * Create a CrashGroupLanguages.
-   * @member {number} [crashCount]
-   * @member {array} [languages]
+   * @property {number} [crashCount]
+   * @property {array} [languages]
    */
   constructor() {
   }

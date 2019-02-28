@@ -12,12 +12,12 @@ const models = require('./index');
  * Configuration for export to Blob Storage with customer provided connection
  * string
  *
- * @extends models['ExportConfiguration']
+ * @extends models['ExportBlobConfiguration']
  */
-class ExportConfigurationBlobStorageConnectionString extends models['ExportConfiguration'] {
+class ExportConfigurationBlobStorageConnectionString extends models['ExportBlobConfiguration'] {
   /**
    * Create a ExportConfigurationBlobStorageConnectionString.
-   * @member {string} connectionString Connection string for blob storage
+   * @property {string} connectionString Connection string for blob storage
    * account
    */
   constructor() {
@@ -43,6 +43,21 @@ class ExportConfigurationBlobStorageConnectionString extends models['ExportConfi
         uberParent: 'ExportConfiguration',
         className: 'ExportConfigurationBlobStorageConnectionString',
         modelProperties: {
+          exportEntities: {
+            required: false,
+            serializedName: 'export_entities',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'ExportEntityElementType',
+                  type: {
+                    name: 'Enum',
+                    allowedValues: [ 'crashes', 'errors', 'attachments' ]
+                  }
+              }
+            }
+          },
           resourceName: {
             required: false,
             serializedName: 'resource_name',
@@ -63,6 +78,14 @@ class ExportConfigurationBlobStorageConnectionString extends models['ExportConfi
             isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
+            }
+          },
+          blobPathFormatKind: {
+            required: false,
+            serializedName: 'blob_path_format_kind',
+            type: {
+              name: 'Enum',
+              allowedValues: [ 'WithoutAppId', 'WithAppId' ]
             }
           },
           connectionString: {

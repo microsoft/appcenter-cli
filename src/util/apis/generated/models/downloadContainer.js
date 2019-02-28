@@ -13,7 +13,7 @@
 class DownloadContainer {
   /**
    * Create a DownloadContainer.
-   * @member {string} uri Download URI
+   * @property {string} uri Download URI
    */
   constructor() {
   }

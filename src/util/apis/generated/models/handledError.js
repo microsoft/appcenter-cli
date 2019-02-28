@@ -12,13 +12,14 @@
 class HandledError {
   /**
    * Create a HandledError.
-   * @member {string} [errorId]
-   * @member {date} [timestamp]
-   * @member {string} [deviceName]
-   * @member {string} [osVersion]
-   * @member {string} [osType]
-   * @member {string} [country]
-   * @member {string} [language]
+   * @property {string} [errorId]
+   * @property {date} [timestamp]
+   * @property {string} [deviceName]
+   * @property {string} [osVersion]
+   * @property {string} [osType]
+   * @property {string} [country]
+   * @property {string} [language]
+   * @property {string} [userId]
    */
   constructor() {
   }
@@ -82,6 +83,13 @@ class HandledError {
           language: {
             required: false,
             serializedName: 'language',
+            type: {
+              name: 'String'
+            }
+          },
+          userId: {
+            required: false,
+            serializedName: 'userId',
             type: {
               name: 'String'
             }

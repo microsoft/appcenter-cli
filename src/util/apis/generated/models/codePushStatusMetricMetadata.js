@@ -12,13 +12,13 @@
 class CodePushStatusMetricMetadata {
   /**
    * Create a CodePushStatusMetricMetadata.
-   * @member {string} deploymentKey
-   * @member {string} [label]
-   * @member {string} [appVersion]
-   * @member {string} [previousDeploymentKey]
-   * @member {string} [previousLabelOrAppVersion]
-   * @member {string} [status]
-   * @member {string} [clientUniqueId]
+   * @property {string} deploymentKey
+   * @property {string} [label]
+   * @property {string} [appVersion]
+   * @property {string} [previousDeploymentKey]
+   * @property {string} [previousLabelOrAppVersion]
+   * @property {string} [status]
+   * @property {string} [clientUniqueId]
    */
   constructor() {
   }

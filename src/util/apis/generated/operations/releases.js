@@ -10,140 +10,6 @@ const msRest = require('ms-rest');
 const WebResource = msRest.WebResource;
 
 /**
- * Return a list of releases for a app a tester has access to.
- *
- * @param {string} ownerName The name of the owner
- *
- * @param {string} appName The name of the application
- *
- * @param {object} [options] Optional Parameters.
- *
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- *
- * @param {function} callback - The callback.
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {array} [result]   - The deserialized result object if an error did not occur.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-function _listTester(ownerName, appName, options, callback) {
-   /* jshint validthis: true */
-  let client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  // Validate
-  try {
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/tester/apps/{owner_name}/{app_name}/releases';
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  let httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.url = requestUrl;
-  httpRequest.headers = {};
-  // Set Headers
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  if(options) {
-    for(let headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, (err, response, responseBody) => {
-    if (err) {
-      return callback(err);
-    }
-    let statusCode = response.statusCode;
-    if (statusCode !== 200) {
-      let error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      let parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          let internalError = null;
-          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-          error.code = internalError ? internalError.code : parsedErrorResponse.code;
-          error.message = internalError ? internalError.message : parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                         `- "${responseBody}" for the default response.`;
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    let result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      let parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = {
-            required: false,
-            serializedName: 'parsedResponse',
-            type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'TesterAppReleaseElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'TesterAppRelease'
-                  }
-              }
-            }
-          };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-}
-
-/**
  * Return a list of applications that the user has tester permission to with
  * the latest release for each.
  *
@@ -164,7 +30,7 @@ function _listTester(ownerName, appName, options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _listLatest(options, callback) {
+function _listTesterApps(options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -640,6 +506,20 @@ function _getLatestByUser(releaseId, ownerName, appName, options, callback) {
  * @param {array} [body.destinations] Distribute this release under the
  * following list of destinations (store groups or distribution groups).
  *
+ * @param {object} [body.build]
+ *
+ * @param {string} [body.build.branch] The branch name of the build producing
+ * the release
+ *
+ * @param {string} [body.build.commitHash] The commit hash of the build
+ * producing the release
+ *
+ * @param {string} [body.build.commitMessage] The commit message of the build
+ * producing the release
+ *
+ * @param {boolean} [body.notifyTesters] A boolean which determines whether to
+ * notify testers of a new release, default to true.
+ *
  * @param {string} ownerName The name of the owner
  *
  * @param {string} appName The name of the application
@@ -763,7 +643,7 @@ function _update(releaseId, body, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ReleaseUpdateResponse']().mapper();
+          let resultMapper = new client.models['ReleaseDetailsUpdateResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1114,9 +994,12 @@ function _availableToTester(ownerName, appName, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
- * @param {boolean} [options.publishedOnly] when *true*, filters out releases
+ * @param {boolean} [options.publishedOnly] When *true*, filters out releases
  * that were uploaded but were never distributed. Releases that under deleted
  * distribution groups will not be filtered out.
+ *
+ * @param {string} [options.scope] When the scope is 'tester', only includes
+ * releases that have been distributed to groups that the user belongs to.
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1144,10 +1027,14 @@ function _list(ownerName, appName, options, callback) {
     throw new Error('callback cannot be null.');
   }
   let publishedOnly = (options && options.publishedOnly !== undefined) ? options.publishedOnly : undefined;
+  let scope = (options && options.scope !== undefined) ? options.scope : undefined;
   // Validate
   try {
     if (publishedOnly !== null && publishedOnly !== undefined && typeof publishedOnly !== 'boolean') {
       throw new Error('publishedOnly must be of type boolean.');
+    }
+    if (scope !== null && scope !== undefined && typeof scope.valueOf() !== 'string') {
+      throw new Error('scope must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -1167,6 +1054,9 @@ function _list(ownerName, appName, options, callback) {
   let queryParameters = [];
   if (publishedOnly !== null && publishedOnly !== undefined) {
     queryParameters.push('published_only=' + encodeURIComponent(publishedOnly.toString()));
+  }
+  if (scope !== null && scope !== undefined) {
+    queryParameters.push('scope=' + encodeURIComponent(scope));
   }
   if (queryParameters.length > 0) {
     requestUrl += '?' + queryParameters.join('&');
@@ -1279,7 +1169,7 @@ function _list(ownerName, appName, options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _listLatest1(ownerName, appName, options, callback) {
+function _listLatest(ownerName, appName, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -1857,106 +1747,20 @@ class Releases {
    */
   constructor(client) {
     this.client = client;
-    this._listTester = _listTester;
-    this._listLatest = _listLatest;
+    this._listTesterApps = _listTesterApps;
     this._getLatestByHash = _getLatestByHash;
     this._getLatestByUser = _getLatestByUser;
     this._update = _update;
     this._deleteMethod = _deleteMethod;
     this._availableToTester = _availableToTester;
     this._list = _list;
-    this._listLatest1 = _listLatest1;
+    this._listLatest = _listLatest;
     this._getLatestByDistributionGroup = _getLatestByDistributionGroup;
     this._deleteWithDistributionGroupId = _deleteWithDistributionGroupId;
     this._listByDistributionGroup = _listByDistributionGroup;
   }
 
   /**
-   * Return a list of releases for a app a tester has access to.
-   *
-   * @param {string} ownerName The name of the owner
-   *
-   * @param {string} appName The name of the application
-   *
-   * @param {object} [options] Optional Parameters.
-   *
-   * @param {object} [options.customHeaders] Headers that will be added to the
-   * request
-   *
-   * @returns {Promise} A promise is returned
-   *
-   * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
-   *
-   * @reject {Error} - The error object.
-   */
-  listTesterWithHttpOperationResponse(ownerName, appName, options) {
-    let client = this.client;
-    let self = this;
-    return new Promise((resolve, reject) => {
-      self._listTester(ownerName, appName, options, (err, result, request, response) => {
-        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
-        httpOperationResponse.body = result;
-        if (err) { reject(err); }
-        else { resolve(httpOperationResponse); }
-        return;
-      });
-    });
-  }
-
-  /**
-   * Return a list of releases for a app a tester has access to.
-   *
-   * @param {string} ownerName The name of the owner
-   *
-   * @param {string} appName The name of the application
-   *
-   * @param {object} [options] Optional Parameters.
-   *
-   * @param {object} [options.customHeaders] Headers that will be added to the
-   * request
-   *
-   * @param {function} [optionalCallback] - The optional callback.
-   *
-   * @returns {function|Promise} If a callback was passed as the last parameter
-   * then it returns the callback else returns a Promise.
-   *
-   * {Promise} A promise is returned
-   *
-   *                      @resolve {Array} - The deserialized result object.
-   *
-   *                      @reject {Error} - The error object.
-   *
-   * {function} optionalCallback(err, result, request, response)
-   *
-   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {array} [result]   - The deserialized result object if an error did not occur.
-   *
-   *                      {object} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
-   */
-  listTester(ownerName, appName, options, optionalCallback) {
-    let client = this.client;
-    let self = this;
-    if (!optionalCallback && typeof options === 'function') {
-      optionalCallback = options;
-      options = null;
-    }
-    if (!optionalCallback) {
-      return new Promise((resolve, reject) => {
-        self._listTester(ownerName, appName, options, (err, result, request, response) => {
-          if (err) { reject(err); }
-          else { resolve(result); }
-          return;
-        });
-      });
-    } else {
-      return self._listTester(ownerName, appName, options, optionalCallback);
-    }
-  }
-
-  /**
    * Return a list of applications that the user has tester permission to with
    * the latest release for each.
    *
@@ -1971,11 +1775,11 @@ class Releases {
    *
    * @reject {Error} - The error object.
    */
-  listLatestWithHttpOperationResponse(options) {
+  listTesterAppsWithHttpOperationResponse(options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._listLatest(options, (err, result, request, response) => {
+      self._listTesterApps(options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -2015,7 +1819,7 @@ class Releases {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  listLatest(options, optionalCallback) {
+  listTesterApps(options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -2024,14 +1828,14 @@ class Releases {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._listLatest(options, (err, result, request, response) => {
+        self._listTesterApps(options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._listLatest(options, optionalCallback);
+      return self._listTesterApps(options, optionalCallback);
     }
   }
 
@@ -2284,6 +2088,20 @@ class Releases {
    * @param {array} [body.destinations] Distribute this release under the
    * following list of destinations (store groups or distribution groups).
    *
+   * @param {object} [body.build]
+   *
+   * @param {string} [body.build.branch] The branch name of the build producing
+   * the release
+   *
+   * @param {string} [body.build.commitHash] The commit hash of the build
+   * producing the release
+   *
+   * @param {string} [body.build.commitMessage] The commit message of the build
+   * producing the release
+   *
+   * @param {boolean} [body.notifyTesters] A boolean which determines whether to
+   * notify testers of a new release, default to true.
+   *
    * @param {string} ownerName The name of the owner
    *
    * @param {string} appName The name of the application
@@ -2357,6 +2175,20 @@ class Releases {
    *
    * @param {array} [body.destinations] Distribute this release under the
    * following list of destinations (store groups or distribution groups).
+   *
+   * @param {object} [body.build]
+   *
+   * @param {string} [body.build.branch] The branch name of the build producing
+   * the release
+   *
+   * @param {string} [body.build.commitHash] The commit hash of the build
+   * producing the release
+   *
+   * @param {string} [body.build.commitMessage] The commit message of the build
+   * producing the release
+   *
+   * @param {boolean} [body.notifyTesters] A boolean which determines whether to
+   * notify testers of a new release, default to true.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -2600,9 +2432,12 @@ class Releases {
    *
    * @param {object} [options] Optional Parameters.
    *
-   * @param {boolean} [options.publishedOnly] when *true*, filters out releases
+   * @param {boolean} [options.publishedOnly] When *true*, filters out releases
    * that were uploaded but were never distributed. Releases that under deleted
    * distribution groups will not be filtered out.
+   *
+   * @param {string} [options.scope] When the scope is 'tester', only includes
+   * releases that have been distributed to groups that the user belongs to.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -2636,9 +2471,12 @@ class Releases {
    *
    * @param {object} [options] Optional Parameters.
    *
-   * @param {boolean} [options.publishedOnly] when *true*, filters out releases
+   * @param {boolean} [options.publishedOnly] When *true*, filters out releases
    * that were uploaded but were never distributed. Releases that under deleted
    * distribution groups will not be filtered out.
+   *
+   * @param {string} [options.scope] When the scope is 'tester', only includes
+   * releases that have been distributed to groups that the user belongs to.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -2703,11 +2541,11 @@ class Releases {
    *
    * @reject {Error} - The error object.
    */
-  listLatest1WithHttpOperationResponse(ownerName, appName, options) {
+  listLatestWithHttpOperationResponse(ownerName, appName, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._listLatest1(ownerName, appName, options, (err, result, request, response) => {
+      self._listLatest(ownerName, appName, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -2751,7 +2589,7 @@ class Releases {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  listLatest1(ownerName, appName, options, optionalCallback) {
+  listLatest(ownerName, appName, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -2760,14 +2598,14 @@ class Releases {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._listLatest1(ownerName, appName, options, (err, result, request, response) => {
+        self._listLatest(ownerName, appName, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._listLatest1(ownerName, appName, options, optionalCallback);
+      return self._listLatest(ownerName, appName, options, optionalCallback);
     }
   }
 

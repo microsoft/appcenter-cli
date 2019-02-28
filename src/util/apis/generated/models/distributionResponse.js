@@ -12,8 +12,8 @@
 class DistributionResponse {
   /**
    * Create a DistributionResponse.
-   * @member {string} [status] Status of the Request
-   * @member {string} [uploadId] A unique ID of the upload
+   * @property {string} [status] Status of the Request
+   * @property {string} [uploadId] A unique ID of the upload
    */
   constructor() {
   }

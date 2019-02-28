@@ -6,19 +6,17 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ActiveDeviceCounts.
  */
 class ActiveDeviceCounts {
   /**
    * Create a ActiveDeviceCounts.
-   * @member {array} [daily] the active device count for each interval
-   * @member {array} [weekly] the active device count for each interval with a
-   * week's retention
-   * @member {array} [monthly] the active device count for each interval with a
-   * month's retention
+   * @property {array} [daily] the active device count for each interval
+   * @property {array} [weekly] the active device count for each interval with
+   * a week's retention
+   * @property {array} [monthly] the active device count for each interval with
+   * a month's retention
    */
   constructor() {
   }

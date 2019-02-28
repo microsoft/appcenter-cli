@@ -16,7 +16,7 @@ const models = require('./index');
 class StringProperty extends models['CustomProperty'] {
   /**
    * Create a StringProperty.
-   * @member {string} value String property value.
+   * @property {string} value String property value.
    */
   constructor() {
     super();
@@ -46,7 +46,7 @@ class StringProperty extends models['CustomProperty'] {
             serializedName: 'name',
             constraints: {
               MaxLength: 128,
-              Pattern: '^[a-zA-Z][a-zA-Z0-9\-_]*$'
+              Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
             type: {
               name: 'String'

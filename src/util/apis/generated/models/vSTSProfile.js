@@ -13,10 +13,10 @@
 class VSTSProfile {
   /**
    * Create a VSTSProfile.
-   * @member {string} [id] Profile id
-   * @member {string} [displayName] Profile display name
-   * @member {string} [publicAlias] Profile alias
-   * @member {string} [emailAddress] Profile email
+   * @property {string} [id] Profile id
+   * @property {string} [displayName] Profile display name
+   * @property {string} [publicAlias] Profile alias
+   * @property {string} [emailAddress] Profile email
    */
   constructor() {
   }

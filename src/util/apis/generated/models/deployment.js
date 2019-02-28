@@ -6,30 +6,28 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a Deployment.
  */
 class Deployment {
   /**
    * Create a Deployment.
-   * @member {string} [key]
-   * @member {string} name
-   * @member {object} [latestRelease]
-   * @member {string} [latestRelease.label]
-   * @member {string} [latestRelease.packageHash]
-   * @member {string} [latestRelease.blobUrl]
-   * @member {object} [latestRelease.diffPackageMap]
-   * @member {string} [latestRelease.originalDeployment] Set on 'Promote'
-   * @member {string} [latestRelease.originalLabel] Set on 'Promote' and
+   * @property {string} [key]
+   * @property {string} name
+   * @property {object} [latestRelease]
+   * @property {string} [latestRelease.label]
+   * @property {string} [latestRelease.packageHash]
+   * @property {string} [latestRelease.blobUrl]
+   * @property {object} [latestRelease.diffPackageMap]
+   * @property {string} [latestRelease.originalDeployment] Set on 'Promote'
+   * @property {string} [latestRelease.originalLabel] Set on 'Promote' and
    * 'Rollback'
-   * @member {string} [latestRelease.releasedBy]
-   * @member {string} [latestRelease.releaseMethod] The release method is
+   * @property {string} [latestRelease.releasedBy]
+   * @property {string} [latestRelease.releaseMethod] The release method is
    * unknown if unspecified. Possible values include: 'Upload', 'Promote',
    * 'Rollback'
-   * @member {number} [latestRelease.size]
-   * @member {number} [latestRelease.uploadTime]
+   * @property {number} [latestRelease.size]
+   * @property {number} [latestRelease.uploadTime]
    */
   constructor() {
   }

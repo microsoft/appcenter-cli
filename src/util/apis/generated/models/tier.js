@@ -13,7 +13,7 @@
 class Tier {
   /**
    * Create a Tier.
-   * @member {string} [name] The name of the tier
+   * @property {string} [name] The name of the tier
    */
   constructor() {
   }

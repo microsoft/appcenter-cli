@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * A response containing information about an iOS provisioning profile.
  *
@@ -15,16 +13,16 @@ const models = require('./index');
 class ProvisioningProfileResponse {
   /**
    * Create a ProvisioningProfileResponse.
-   * @member {string} provisioningProfileType Possible values include: 'adhoc',
-   * 'enterprise', 'other'
-   * @member {array} [udids]
-   * @member {string} [provisioningProfileName] The name of the provisioning
+   * @property {string} provisioningProfileType Possible values include:
+   * 'adhoc', 'enterprise', 'other'
+   * @property {array} [udids]
+   * @property {string} [provisioningProfileName] The name of the provisioning
    * profile.
-   * @member {string} [teamIdentifier] The team identifier.
-   * @member {string} [provisioningBundleId] The bundle identifier associated
+   * @property {string} [teamIdentifier] The team identifier.
+   * @property {string} [provisioningBundleId] The bundle identifier associated
    * with the profile.
-   * @member {array} [appexProfiles] Array of provisioning profiles for any app
-   * extensions
+   * @property {array} [appexProfiles] Array of provisioning profiles for any
+   * app extensions
    */
   constructor() {
   }

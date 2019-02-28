@@ -12,17 +12,17 @@
 class CrashDetails {
   /**
    * Create a CrashDetails.
-   * @member {string} [carrierCountry] Carrier country code (for mobile
+   * @property {string} [carrierCountry] Carrier country code (for mobile
    * devices).
-   * @member {string} [carrierName] Carrier name (for mobile devices).
-   * @member {string} locale Language code (example: en_US).
-   * @member {string} [osBuild] OS build code (example: LMY47X).
-   * @member {boolean} rooted Whether the device where the crash occurred is
+   * @property {string} [carrierName] Carrier name (for mobile devices).
+   * @property {string} locale Language code (example: en_US).
+   * @property {string} [osBuild] OS build code (example: LMY47X).
+   * @property {boolean} rooted Whether the device where the crash occurred is
    * rooted or jailbroken
-   * @member {string} screenSize Screen size of the device in pixels (example:
-   * 640x480).
-   * @member {date} [appStartTimestamp] Application launch timestamp (example:
-   * 1985-04-12T23:20:50.52Z).
+   * @property {string} screenSize Screen size of the device in pixels
+   * (example: 640x480).
+   * @property {date} [appStartTimestamp] Application launch timestamp
+   * (example: 1985-04-12T23:20:50.52Z).
    */
   constructor() {
   }

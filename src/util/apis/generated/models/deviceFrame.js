@@ -6,24 +6,22 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a DeviceFrame.
  */
 class DeviceFrame {
   /**
    * Create a DeviceFrame.
-   * @member {object} [grid]
-   * @member {number} [grid.width]
-   * @member {number} [grid.height]
-   * @member {string} [grid.frameUrl]
-   * @member {array} [grid.screen]
-   * @member {object} [full]
-   * @member {number} [full.width]
-   * @member {number} [full.height]
-   * @member {string} [full.frameUrl]
-   * @member {array} [full.screen]
+   * @property {object} [grid]
+   * @property {number} [grid.width]
+   * @property {number} [grid.height]
+   * @property {string} [grid.frameUrl]
+   * @property {array} [grid.screen]
+   * @property {object} [full]
+   * @property {number} [full.width]
+   * @property {number} [full.height]
+   * @property {string} [full.frameUrl]
+   * @property {array} [full.screen]
    */
   constructor() {
   }

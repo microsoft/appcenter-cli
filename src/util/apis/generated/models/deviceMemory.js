@@ -13,7 +13,7 @@
 class DeviceMemory {
   /**
    * Create a DeviceMemory.
-   * @member {string} [formattedSize]
+   * @property {string} [formattedSize]
    */
   constructor() {
   }

@@ -13,17 +13,17 @@
 class UsageRecordStatus {
   /**
    * Create a UsageRecordStatus.
-   * @member {boolean} [expectedLatestBuildExists] Is the age of the most
+   * @property {boolean} [expectedLatestBuildExists] Is the age of the most
    * recent Build service usage record within expected limits
-   * @member {boolean} [expectedLatestPushExists] Is the age of the most recent
-   * Push service usage record within expected limits
-   * @member {boolean} [expectedLatestTestExists] Is the age of the most recent
-   * Test service usage record within expected limits
-   * @member {string} [latestBuildUsageRecordTime] The time of the most recent
-   * Build service usage record
-   * @member {string} [latestPushUsageRecordTime] The time of the most recent
+   * @property {boolean} [expectedLatestPushExists] Is the age of the most
+   * recent Push service usage record within expected limits
+   * @property {boolean} [expectedLatestTestExists] Is the age of the most
+   * recent Test service usage record within expected limits
+   * @property {string} [latestBuildUsageRecordTime] The time of the most
+   * recent Build service usage record
+   * @property {string} [latestPushUsageRecordTime] The time of the most recent
    * Push service usage record
-   * @member {string} [latestTestUsageRecordTime] The time of the most recent
+   * @property {string} [latestTestUsageRecordTime] The time of the most recent
    * Test service usage record
    */
   constructor() {

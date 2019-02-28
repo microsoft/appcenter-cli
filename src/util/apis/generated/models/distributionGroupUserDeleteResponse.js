@@ -12,10 +12,10 @@
 class DistributionGroupUserDeleteResponse {
   /**
    * Create a DistributionGroupUserDeleteResponse.
-   * @member {string} [code] The code of the result
-   * @member {number} [message] The message of the result
-   * @member {number} status The status code of the result
-   * @member {string} [userEmail] The email of the user
+   * @property {string} [code] The code of the result
+   * @property {number} [message] The message of the result
+   * @property {number} status The status code of the result
+   * @property {string} [userEmail] The email of the user
    */
   constructor() {
   }

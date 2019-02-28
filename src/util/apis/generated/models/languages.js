@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a Languages.
  */
 class Languages {
   /**
    * Create a Languages.
-   * @member {number} [total]
-   * @member {array} [languages]
+   * @property {number} [total]
+   * @property {array} [languages]
    */
   constructor() {
   }

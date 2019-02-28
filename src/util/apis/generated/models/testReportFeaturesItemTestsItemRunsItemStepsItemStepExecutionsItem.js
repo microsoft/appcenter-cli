@@ -12,9 +12,9 @@
 class TestReportFeaturesItemTestsItemRunsItemStepsItemStepExecutionsItem {
   /**
    * Create a TestReportFeaturesItemTestsItemRunsItemStepsItemStepExecutionsItem.
-   * @member {string} [deviceSnapshotId]
-   * @member {string} [status]
-   * @member {number} [timestamp]
+   * @property {string} [deviceSnapshotId]
+   * @property {string} [status]
+   * @property {number} [timestamp]
    */
   constructor() {
   }

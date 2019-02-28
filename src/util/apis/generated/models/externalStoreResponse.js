@@ -13,16 +13,17 @@
 class ExternalStoreResponse {
   /**
    * Create a ExternalStoreResponse.
-   * @member {string} [id] Store id
-   * @member {string} [name] Store Name
-   * @member {string} [type] Store Type
-   * @member {string} [track] Store track. Possible values include:
+   * @property {string} [id] Store id
+   * @property {string} [name] Store Name
+   * @property {string} [type] Store Type
+   * @property {string} [track] Store track. Possible values include:
    * 'production', 'alpha', 'beta', 'testflight-internal',
    * 'testflight-external'
-   * @member {object} [intuneDetails] store details for intune
-   * @member {string} [serviceConnectionId] Id for the shared service
-   * connection. In case of Apple AppStore, this connection will be used to
-   * create and connect to the Apple AppStore in Mobile Center.
+   * @property {object} [intuneDetails] store details for intune
+   * @property {string} [serviceConnectionId] Id for the shared service
+   * connection. In case of Apple / GooglePlay stores, this connection will be
+   * used to connect to the Apple / Google stores in App Center.
+   * @property {string} [createdBy] user id of the user who created the store.
    */
   constructor() {
   }
@@ -79,6 +80,13 @@ class ExternalStoreResponse {
           serviceConnectionId: {
             required: false,
             serializedName: 'service_connection_id',
+            type: {
+              name: 'String'
+            }
+          },
+          createdBy: {
+            required: false,
+            serializedName: 'created_by',
             type: {
               name: 'String'
             }

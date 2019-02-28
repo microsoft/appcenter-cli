@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Response for updating a release
  *
@@ -15,9 +13,11 @@ const models = require('./index');
 class ReleaseUpdateResponse {
   /**
    * Create a ReleaseUpdateResponse.
-   * @member {boolean} [mandatoryUpdate]
-   * @member {string} [releaseNotes]
-   * @member {array} [destinations]
+   * @property {boolean} [enabled]
+   * @property {boolean} [mandatoryUpdate]
+   * @property {string} [releaseNotes]
+   * @property {string} [provisioningStatusUrl]
+   * @property {array} [destinations]
    */
   constructor() {
   }
@@ -36,6 +36,13 @@ class ReleaseUpdateResponse {
         name: 'Composite',
         className: 'ReleaseUpdateResponse',
         modelProperties: {
+          enabled: {
+            required: false,
+            serializedName: 'enabled',
+            type: {
+              name: 'Boolean'
+            }
+          },
           mandatoryUpdate: {
             required: false,
             serializedName: 'mandatory_update',
@@ -46,6 +53,13 @@ class ReleaseUpdateResponse {
           releaseNotes: {
             required: false,
             serializedName: 'release_notes',
+            type: {
+              name: 'String'
+            }
+          },
+          provisioningStatusUrl: {
+            required: false,
+            serializedName: 'provisioning_status_url',
             type: {
               name: 'String'
             }

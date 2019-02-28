@@ -12,11 +12,13 @@
 class RepoConfig {
   /**
    * Create a RepoConfig.
-   * @member {string} type Type of repository
-   * @member {string} state State of the configuration. Possible values
+   * @property {string} type Type of repository
+   * @property {string} state State of the configuration. Possible values
    * include: 'unauthorized', 'inactive', 'active'
-   * @member {string} [repoUrl] URL of the repository
-   * @member {string} [id] Repository identifier
+   * @property {string} [repoUrl] URL of the repository
+   * @property {string} [id] Repository identifier
+   * @property {string} [userEmail] email of user, who linked repository
+   * @property {string} [installationId] The GitHub Installation id
    */
   constructor() {
   }
@@ -59,6 +61,20 @@ class RepoConfig {
           id: {
             required: false,
             serializedName: 'id',
+            type: {
+              name: 'String'
+            }
+          },
+          userEmail: {
+            required: false,
+            serializedName: 'user_email',
+            type: {
+              name: 'String'
+            }
+          },
+          installationId: {
+            required: false,
+            serializedName: 'installation_id',
             type: {
               name: 'String'
             }

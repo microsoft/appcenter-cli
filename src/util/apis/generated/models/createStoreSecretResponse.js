@@ -12,7 +12,7 @@
 class CreateStoreSecretResponse {
   /**
    * Create a CreateStoreSecretResponse.
-   * @member {string} [secretId] the secret id for store secret
+   * @property {string} [secretId] the secret id for store secret
    */
   constructor() {
   }

@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a IntuneCategories.
  */
 class IntuneCategories {
   /**
    * Create a IntuneCategories.
-   * @member {string} [odatacontext] context
-   * @member {array} [value] categories for intune app
+   * @property {string} [odatacontext] context
+   * @property {array} [value] categories for intune app
    */
   constructor() {
   }

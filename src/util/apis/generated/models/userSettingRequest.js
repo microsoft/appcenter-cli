@@ -12,7 +12,7 @@
 class UserSettingRequest {
   /**
    * Create a UserSettingRequest.
-   * @member {string} value The setting value
+   * @property {string} value The setting value
    */
   constructor() {
   }

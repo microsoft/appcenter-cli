@@ -13,22 +13,23 @@
 class DeviceInfoResponse {
   /**
    * Create a DeviceInfoResponse.
-   * @member {string} udid The Unique Device IDentifier of the device
-   * @member {string} model The model identifier of the device, in the format
+   * @property {string} udid The Unique Device IDentifier of the device
+   * @property {string} model The model identifier of the device, in the format
    * iDeviceM,N
-   * @member {string} deviceName The device description, in the format "iPhone
-   * 7 Plus (A1784)"
-   * @member {string} [fullDeviceName] A combination of the device model name
+   * @property {string} deviceName The device description, in the format
+   * "iPhone 7 Plus (A1784)"
+   * @property {string} [fullDeviceName] A combination of the device model name
    * and the owner name.
-   * @member {string} osBuild The last known OS version running on the device
-   * @member {string} osVersion The last known OS version running on the device
-   * @member {string} [serial] The device's serial number. Always empty or
+   * @property {string} osBuild The last known OS version running on the device
+   * @property {string} osVersion The last known OS version running on the
+   * device
+   * @property {string} [serial] The device's serial number. Always empty or
    * undefined at present.
-   * @member {string} [imei] The device's International Mobile Equipment
+   * @property {string} [imei] The device's International Mobile Equipment
    * Identity number. Always empty or undefined at present.
-   * @member {string} [ownerId] The user ID of the device owner.
-   * @member {string} status The provisioning status of the device.
-   * @member {string} [registeredAt] Timestamp of when the device was
+   * @property {string} [ownerId] The user ID of the device owner.
+   * @property {string} status The provisioning status of the device.
+   * @property {string} [registeredAt] Timestamp of when the device was
    * registered in ISO format.
    */
   constructor() {

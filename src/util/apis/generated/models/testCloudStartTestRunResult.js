@@ -15,8 +15,8 @@
 class TestCloudStartTestRunResult {
   /**
    * Create a TestCloudStartTestRunResult.
-   * @member {array} [acceptedDevices] List with names of accepted devices
-   * @member {array} [rejectedDevices] List with names and descriptions of
+   * @property {array} [acceptedDevices] List with names of accepted devices
+   * @property {array} [rejectedDevices] List with names and descriptions of
    * rejected devices
    */
   constructor() {

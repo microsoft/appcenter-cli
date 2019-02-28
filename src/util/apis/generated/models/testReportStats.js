@@ -12,20 +12,20 @@
 class TestReportStats {
   /**
    * Create a TestReportStats.
-   * @member {number} os
-   * @member {number} devices
-   * @member {number} filesize
-   * @member {number} totalDeviceMinutes
-   * @member {number} devicesNotRunned
-   * @member {number} failed
-   * @member {number} skipped
-   * @member {number} passed
-   * @member {number} total
-   * @member {number} devicesFinished
-   * @member {number} devicesFailed
-   * @member {number} devicesSkipped
-   * @member {number} stepCount
-   * @member {object} [artifacts]
+   * @property {number} os
+   * @property {number} devices
+   * @property {number} filesize
+   * @property {number} totalDeviceMinutes
+   * @property {number} devicesNotRunned
+   * @property {number} failed
+   * @property {number} skipped
+   * @property {number} passed
+   * @property {number} total
+   * @property {number} devicesFinished
+   * @property {number} devicesFailed
+   * @property {number} devicesSkipped
+   * @property {number} stepCount
+   * @property {object} [artifacts]
    */
   constructor() {
   }

@@ -286,6 +286,11 @@ export interface Devices {
      *
      * @param {object} [options] Optional Parameters.
      *
+     * @param {boolean} [options.includeProvisioningProfile] A boolean value that
+     * indicates if the provisioning profile should be return in addition to the
+     * status. When set to true, the provisioning profile will be returned only
+     * when status is 'complete' or 'preparing_for_testers'.
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -295,7 +300,7 @@ export interface Devices {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getReleaseUpdateDevicesStatusWithHttpOperationResponse(releaseId: string, resignId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    getReleaseUpdateDevicesStatusWithHttpOperationResponse(releaseId: string, resignId: string, ownerName: string, appName: string, options?: { includeProvisioningProfile? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
      * Returns the resign status to the caller
@@ -310,6 +315,11 @@ export interface Devices {
      *
      * @param {object} [options] Optional Parameters.
      *
+     * @param {boolean} [options.includeProvisioningProfile] A boolean value that
+     * indicates if the provisioning profile should be return in addition to the
+     * status. When set to true, the provisioning profile will be returned only
+     * when status is 'complete' or 'preparing_for_testers'.
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -334,75 +344,9 @@ export interface Devices {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getReleaseUpdateDevicesStatus(releaseId: string, resignId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    getReleaseUpdateDevicesStatus(releaseId: string, resignId: string, ownerName: string, appName: string, options?: { includeProvisioningProfile? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
     getReleaseUpdateDevicesStatus(releaseId: string, resignId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    getReleaseUpdateDevicesStatus(releaseId: string, resignId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
-
-
-    /**
-     * Returns the resign status to the caller
-     *
-     * @param {string} distributionGroupName The name of the distribution group.
-     *
-     * @param {string} resignId The ID of the resign operation
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    getUpdateDevicesStatusWithHttpOperationResponse(distributionGroupName: string, resignId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
-
-    /**
-     * Returns the resign status to the caller
-     *
-     * @param {string} distributionGroupName The name of the distribution group.
-     *
-     * @param {string} resignId The ID of the resign operation
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Object} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    getUpdateDevicesStatus(distributionGroupName: string, resignId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    getUpdateDevicesStatus(distributionGroupName: string, resignId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    getUpdateDevicesStatus(distributionGroupName: string, resignId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getReleaseUpdateDevicesStatus(releaseId: string, resignId: string, ownerName: string, appName: string, options: { includeProvisioningProfile? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 
 
     /**
@@ -547,6 +491,203 @@ export interface Devices {
     list(distributionGroupName: string, ownerName: string, appName: string, options?: { releaseId? : number, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
     list(distributionGroupName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
     list(distributionGroupName: string, ownerName: string, appName: string, options: { releaseId? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
+     * **Warning, this operation is not reversible.**
+     *
+     * A successful call to this API will permanently stop ingesting any logs
+     * received via SDK for the given installation ID, and cannot be restored. We
+     * advise caution when using this API, it is designed to permanently disable
+     * collection from a specific installation of the app on a device, usually
+     * following the request from a user.
+     *
+     *
+     * @param {string} installId The id of the device
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<String>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    blockLogsWithHttpOperationResponse(installId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<string>>;
+
+    /**
+     * **Warning, this operation is not reversible.**
+     *
+     * A successful call to this API will permanently stop ingesting any logs
+     * received via SDK for the given installation ID, and cannot be restored. We
+     * advise caution when using this API, it is designed to permanently disable
+     * collection from a specific installation of the app on a device, usually
+     * following the request from a user.
+     *
+     *
+     * @param {string} installId The id of the device
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {String} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {String} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    blockLogs(installId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<string>;
+    blockLogs(installId: string, ownerName: string, appName: string, callback: ServiceCallback<string>): void;
+    blockLogs(installId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<string>): void;
+}
+
+/**
+ * @class
+ * Notifications
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface Notifications {
+
+
+    /**
+     * Get Default email notification settings for the user
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AlertUserEmailSettingsResult>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getUserEmailSettingsWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AlertUserEmailSettingsResult>>;
+
+    /**
+     * Get Default email notification settings for the user
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AlertUserEmailSettingsResult} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AlertUserEmailSettingsResult} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AlertUserEmailSettingsResult} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getUserEmailSettings(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AlertUserEmailSettingsResult>;
+    getUserEmailSettings(callback: ServiceCallback<models.AlertUserEmailSettingsResult>): void;
+    getUserEmailSettings(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AlertUserEmailSettingsResult>): void;
+
+
+    /**
+     * Get Email notification settings of user for a particular app
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AlertUserAppEmailSettingsResult>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getAppEmailSettingsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AlertUserAppEmailSettingsResult>>;
+
+    /**
+     * Get Email notification settings of user for a particular app
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AlertUserAppEmailSettingsResult} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AlertUserAppEmailSettingsResult} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AlertUserAppEmailSettingsResult} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getAppEmailSettings(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AlertUserAppEmailSettingsResult>;
+    getAppEmailSettings(ownerName: string, appName: string, callback: ServiceCallback<models.AlertUserAppEmailSettingsResult>): void;
+    getAppEmailSettings(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AlertUserAppEmailSettingsResult>): void;
 }
 
 /**
@@ -671,11 +812,132 @@ export interface OrgInvitations {
 
 
     /**
+     * Removes a user's invitation to an organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} email The email address of the user to send the password
+     * reset mail to.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    unnamedMethodWithHttpOperationResponse(orgName: string, email: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Removes a user's invitation to an organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} email The email address of the user to send the password
+     * reset mail to.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    unnamedMethod(orgName: string, email: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    unnamedMethod(orgName: string, email: string, callback: ServiceCallback<void>): void;
+    unnamedMethod(orgName: string, email: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Cancels an existing organization invitation for the user and sends a new one
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} email The email address of the user to send the password
+     * reset mail to.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    sendNewInvitationWithHttpOperationResponse(orgName: string, email: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Cancels an existing organization invitation for the user and sends a new one
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} email The email address of the user to send the password
+     * reset mail to.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    sendNewInvitation(orgName: string, email: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    sendNewInvitation(orgName: string, email: string, callback: ServiceCallback<void>): void;
+    sendNewInvitation(orgName: string, email: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
      * Allows the role of an invited user to be changed
      *
      * @param {string} orgName The organization's name
      *
-     * @param {string} userEmail The user email of the user to update
+     * @param {string} email The email address of the user to send the password
+     * reset mail to.
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -691,14 +953,15 @@ export interface OrgInvitations {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateWithHttpOperationResponse(orgName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+    updateWithHttpOperationResponse(orgName: string, email: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * Allows the role of an invited user to be changed
      *
      * @param {string} orgName The organization's name
      *
-     * @param {string} userEmail The user email of the user to update
+     * @param {string} email The email address of the user to send the password
+     * reset mail to.
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -729,67 +992,9 @@ export interface OrgInvitations {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    update(orgName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<void>;
-    update(orgName: string, userEmail: string, callback: ServiceCallback<void>): void;
-    update(orgName: string, userEmail: string, options: { role? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-
-
-    /**
-     * Cancels an existing organization for the user and sends a new one
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {string} userEmail The user's email address'
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    sendNewInvitationWithHttpOperationResponse(orgName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
-
-    /**
-     * Cancels an existing organization for the user and sends a new one
-     *
-     * @param {string} orgName The organization's name
-     *
-     * @param {string} userEmail The user's email address'
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {null} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {null} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    sendNewInvitation(orgName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
-    sendNewInvitation(orgName: string, userEmail: string, callback: ServiceCallback<void>): void;
-    sendNewInvitation(orgName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    update(orgName: string, email: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    update(orgName: string, email: string, callback: ServiceCallback<void>): void;
+    update(orgName: string, email: string, options: { role? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -1460,6 +1665,384 @@ export interface AppInvitations {
 
 /**
  * @class
+ * Sharedconnection
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface Sharedconnection {
+
+
+    /**
+     * Gets all service connections of the service type for GDPR export.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    connectionsWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SharedConnectionResponse[]>>;
+
+    /**
+     * Gets all service connections of the service type for GDPR export.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    connections(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.SharedConnectionResponse[]>;
+    connections(callback: ServiceCallback<models.SharedConnectionResponse[]>): void;
+    connections(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SharedConnectionResponse[]>): void;
+}
+
+/**
+ * @class
+ * DataSubjectRight
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface DataSubjectRight {
+
+
+    /**
+     * @param {uuid} token Unique request ID (GUID)
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    cancelExportRequestWithHttpOperationResponse(token: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * @param {uuid} token Unique request ID (GUID)
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    cancelExportRequest(token: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    cancelExportRequest(token: string, callback: ServiceCallback<any>): void;
+    cancelExportRequest(token: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
+     * @param {uuid} token Unique request ID (GUID)
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<DataSubjectRightStatusResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    exportStatusRequestWithHttpOperationResponse(token: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DataSubjectRightStatusResponse>>;
+
+    /**
+     * @param {uuid} token Unique request ID (GUID)
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {DataSubjectRightStatusResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {DataSubjectRightStatusResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DataSubjectRightStatusResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    exportStatusRequest(token: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DataSubjectRightStatusResponse>;
+    exportStatusRequest(token: string, callback: ServiceCallback<models.DataSubjectRightStatusResponse>): void;
+    exportStatusRequest(token: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DataSubjectRightStatusResponse>): void;
+
+
+    /**
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<DataSubjectRightResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    exportRequestWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DataSubjectRightResponse>>;
+
+    /**
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {DataSubjectRightResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {DataSubjectRightResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DataSubjectRightResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    exportRequest(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DataSubjectRightResponse>;
+    exportRequest(callback: ServiceCallback<models.DataSubjectRightResponse>): void;
+    exportRequest(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DataSubjectRightResponse>): void;
+
+
+    /**
+     * @param {uuid} token Unique request ID (GUID)
+     *
+     * @param {string} email Email used for cancel delete with x-authz-bypass
+     * headers
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    cancelDeleteRequestWithHttpOperationResponse(token: string, email: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * @param {uuid} token Unique request ID (GUID)
+     *
+     * @param {string} email Email used for cancel delete with x-authz-bypass
+     * headers
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    cancelDeleteRequest(token: string, email: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    cancelDeleteRequest(token: string, email: string, callback: ServiceCallback<any>): void;
+    cancelDeleteRequest(token: string, email: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
+     * @param {uuid} token Unique request ID (GUID)
+     *
+     * @param {string} email Email used for delete with x-authz-bypass headers
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<DataSubjectRightStatusResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteStatusRequestWithHttpOperationResponse(token: string, email: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DataSubjectRightStatusResponse>>;
+
+    /**
+     * @param {uuid} token Unique request ID (GUID)
+     *
+     * @param {string} email Email used for delete with x-authz-bypass headers
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {DataSubjectRightStatusResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {DataSubjectRightStatusResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DataSubjectRightStatusResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteStatusRequest(token: string, email: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DataSubjectRightStatusResponse>;
+    deleteStatusRequest(token: string, email: string, callback: ServiceCallback<models.DataSubjectRightStatusResponse>): void;
+    deleteStatusRequest(token: string, email: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DataSubjectRightStatusResponse>): void;
+
+
+    /**
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<DataSubjectRightResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteRequestWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DataSubjectRightResponse>>;
+
+    /**
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {DataSubjectRightResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {DataSubjectRightResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DataSubjectRightResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteRequest(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DataSubjectRightResponse>;
+    deleteRequest(callback: ServiceCallback<models.DataSubjectRightResponse>): void;
+    deleteRequest(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DataSubjectRightResponse>): void;
+}
+
+/**
+ * @class
  * Users
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
@@ -1823,64 +2406,6 @@ export interface Releases {
 
 
     /**
-     * Return a list of releases for a app a tester has access to.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    listTesterWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TesterAppRelease[]>>;
-
-    /**
-     * Return a list of releases for a app a tester has access to.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Array} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    listTester(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TesterAppRelease[]>;
-    listTester(ownerName: string, appName: string, callback: ServiceCallback<models.TesterAppRelease[]>): void;
-    listTester(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TesterAppRelease[]>): void;
-
-
-    /**
      * Return a list of applications that the user has tester permission to with
      * the latest release for each.
      *
@@ -1895,7 +2420,7 @@ export interface Releases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listLatestWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TesterAppWithReleaseResponse[]>>;
+    listTesterAppsWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TesterAppWithReleaseResponse[]>>;
 
     /**
      * Return a list of applications that the user has tester permission to with
@@ -1927,9 +2452,9 @@ export interface Releases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listLatest(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TesterAppWithReleaseResponse[]>;
-    listLatest(callback: ServiceCallback<models.TesterAppWithReleaseResponse[]>): void;
-    listLatest(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TesterAppWithReleaseResponse[]>): void;
+    listTesterApps(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TesterAppWithReleaseResponse[]>;
+    listTesterApps(callback: ServiceCallback<models.TesterAppWithReleaseResponse[]>): void;
+    listTesterApps(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TesterAppWithReleaseResponse[]>): void;
 
 
     /**
@@ -2127,6 +2652,20 @@ export interface Releases {
      * @param {array} [body.destinations] Distribute this release under the
      * following list of destinations (store groups or distribution groups).
      *
+     * @param {object} [body.build]
+     *
+     * @param {string} [body.build.branch] The branch name of the build producing
+     * the release
+     *
+     * @param {string} [body.build.commitHash] The commit hash of the build
+     * producing the release
+     *
+     * @param {string} [body.build.commitMessage] The commit message of the build
+     * producing the release
+     *
+     * @param {boolean} [body.notifyTesters] A boolean which determines whether to
+     * notify testers of a new release, default to true.
+     *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
@@ -2188,6 +2727,20 @@ export interface Releases {
      *
      * @param {array} [body.destinations] Distribute this release under the
      * following list of destinations (store groups or distribution groups).
+     *
+     * @param {object} [body.build]
+     *
+     * @param {string} [body.build.branch] The branch name of the build producing
+     * the release
+     *
+     * @param {string} [body.build.commitHash] The commit hash of the build
+     * producing the release
+     *
+     * @param {string} [body.build.commitMessage] The commit message of the build
+     * producing the release
+     *
+     * @param {boolean} [body.notifyTesters] A boolean which determines whether to
+     * notify testers of a new release, default to true.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -2362,9 +2915,12 @@ export interface Releases {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {boolean} [options.publishedOnly] when *true*, filters out releases
+     * @param {boolean} [options.publishedOnly] When *true*, filters out releases
      * that were uploaded but were never distributed. Releases that under deleted
      * distribution groups will not be filtered out.
+     *
+     * @param {string} [options.scope] When the scope is 'tester', only includes
+     * releases that have been distributed to groups that the user belongs to.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -2375,7 +2931,7 @@ export interface Releases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { publishedOnly? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BasicReleaseDetailsResponse[]>>;
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { publishedOnly? : boolean, scope? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BasicReleaseDetailsResponse[]>>;
 
     /**
      * Return basic information about releases.
@@ -2386,9 +2942,12 @@ export interface Releases {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {boolean} [options.publishedOnly] when *true*, filters out releases
+     * @param {boolean} [options.publishedOnly] When *true*, filters out releases
      * that were uploaded but were never distributed. Releases that under deleted
      * distribution groups will not be filtered out.
+     *
+     * @param {string} [options.scope] When the scope is 'tester', only includes
+     * releases that have been distributed to groups that the user belongs to.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -2414,9 +2973,9 @@ export interface Releases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(ownerName: string, appName: string, options?: { publishedOnly? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.BasicReleaseDetailsResponse[]>;
+    list(ownerName: string, appName: string, options?: { publishedOnly? : boolean, scope? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.BasicReleaseDetailsResponse[]>;
     list(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
-    list(ownerName: string, appName: string, options: { publishedOnly? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
+    list(ownerName: string, appName: string, options: { publishedOnly? : boolean, scope? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
 
 
     /**
@@ -2438,7 +2997,7 @@ export interface Releases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listLatest1WithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BasicReleaseDetailsResponse[]>>;
+    listLatestWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BasicReleaseDetailsResponse[]>>;
 
     /**
      * Get the latest release from every distribution group associated with an
@@ -2474,9 +3033,9 @@ export interface Releases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listLatest1(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BasicReleaseDetailsResponse[]>;
-    listLatest1(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
-    listLatest1(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
+    listLatest(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BasicReleaseDetailsResponse[]>;
+    listLatest(ownerName: string, appName: string, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
+    listLatest(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BasicReleaseDetailsResponse[]>): void;
 
 
     /**
@@ -2680,6 +3239,1455 @@ export interface Releases {
     listByDistributionGroup(distributionGroupName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
     listByDistributionGroup(distributionGroupName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
     listByDistributionGroup(distributionGroupName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+}
+
+/**
+ * @class
+ * DistributionGroups
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface DistributionGroups {
+
+
+    /**
+     * Returns a unique list of users including the whole organization members plus
+     * testers in any shared group of that org
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listAllTestersForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupTesterGetResponse[]>>;
+
+    /**
+     * Returns a unique list of users including the whole organization members plus
+     * testers in any shared group of that org
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    listAllTestersForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupTesterGetResponse[]>;
+    listAllTestersForOrg(orgName: string, callback: ServiceCallback<models.DistributionGroupTesterGetResponse[]>): void;
+    listAllTestersForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupTesterGetResponse[]>): void;
+
+
+    /**
+     * Returns a list of distribution groups with details for an organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {number} [options.appsLimit] The max number of apps to include in the
+     * response
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    detailsForOrgWithHttpOperationResponse(orgName: string, options?: { appsLimit? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrgDistributionGroupDetailsResponse[]>>;
+
+    /**
+     * Returns a list of distribution groups with details for an organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {number} [options.appsLimit] The max number of apps to include in the
+     * response
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    detailsForOrg(orgName: string, options?: { appsLimit? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.OrgDistributionGroupDetailsResponse[]>;
+    detailsForOrg(orgName: string, callback: ServiceCallback<models.OrgDistributionGroupDetailsResponse[]>): void;
+    detailsForOrg(orgName: string, options: { appsLimit? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrgDistributionGroupDetailsResponse[]>): void;
+
+
+    /**
+     * Resend shared distribution group invite notification to previously invited
+     * testers
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.userEmails] The list of emails of the users
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    resendSharedInviteWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Resend shared distribution group invite notification to previously invited
+     * testers
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.userEmails] The list of emails of the users
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    resendSharedInvite(orgName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    resendSharedInvite(orgName: string, distributionGroupName: string, callback: ServiceCallback<void>): void;
+    resendSharedInvite(orgName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Delete apps from distribution group in an org
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.userEmails] The list of emails of the users
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    bulkDeleteUsersWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Delete apps from distribution group in an org
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.userEmails] The list of emails of the users
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    bulkDeleteUsers(orgName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    bulkDeleteUsers(orgName: string, distributionGroupName: string, callback: ServiceCallback<void>): void;
+    bulkDeleteUsers(orgName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Returns a list of member in the distribution group specified
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listUsersForOrgWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupUserGetResponse[]>>;
+
+    /**
+     * Returns a list of member in the distribution group specified
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    listUsersForOrg(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupUserGetResponse[]>;
+    listUsersForOrg(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupUserGetResponse[]>): void;
+    listUsersForOrg(orgName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupUserGetResponse[]>): void;
+
+
+    /**
+     * Accepts an array of user email addresses to get added to the specified group
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.userEmails] The list of emails of the users
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    addUsersForOrgWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupUserPostResponse[]>>;
+
+    /**
+     * Accepts an array of user email addresses to get added to the specified group
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.userEmails] The list of emails of the users
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    addUsersForOrg(orgName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupUserPostResponse[]>;
+    addUsersForOrg(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupUserPostResponse[]>): void;
+    addUsersForOrg(orgName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupUserPostResponse[]>): void;
+
+
+    /**
+     * Delete apps from distribution group in an org
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.apps] The list of apps to delete from the
+     * distribution group
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    bulkDeleteAppsWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { apps? : models.AppDeleteRequest[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Delete apps from distribution group in an org
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.apps] The list of apps to delete from the
+     * distribution group
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    bulkDeleteApps(orgName: string, distributionGroupName: string, options?: { apps? : models.AppDeleteRequest[], customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    bulkDeleteApps(orgName: string, distributionGroupName: string, callback: ServiceCallback<void>): void;
+    bulkDeleteApps(orgName: string, distributionGroupName: string, options: { apps? : models.AppDeleteRequest[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Get apps from a distribution group in an org
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getAppsWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrgDistributionGroupAppResponse[]>>;
+
+    /**
+     * Get apps from a distribution group in an org
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getApps(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.OrgDistributionGroupAppResponse[]>;
+    getApps(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.OrgDistributionGroupAppResponse[]>): void;
+    getApps(orgName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrgDistributionGroupAppResponse[]>): void;
+
+
+    /**
+     * Add apps to distribution group in an org
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.apps] The list of apps to add to distribution group
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    addAppsWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { apps? : models.AppAddRequest[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Add apps to distribution group in an org
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.apps] The list of apps to add to distribution group
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    addApps(orgName: string, distributionGroupName: string, options?: { apps? : models.AppAddRequest[], customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    addApps(orgName: string, distributionGroupName: string, callback: ServiceCallback<void>): void;
+    addApps(orgName: string, distributionGroupName: string, options: { apps? : models.AppAddRequest[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Returns a single distribution group in org for a given distribution group
+     * name
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getForOrgWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+
+    /**
+     * Returns a single distribution group in org for a given distribution group
+     * name
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DistributionGroupResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getForOrg(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
+    getForOrg(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    getForOrg(orgName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+
+
+    /**
+     * Update one given distribution group name in an org
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.name] The name of the distribution group
+     *
+     * @param {boolean} [options.isPublic] Whether the distribution group is public
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    patchForOrgWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+
+    /**
+     * Update one given distribution group name in an org
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.name] The name of the distribution group
+     *
+     * @param {boolean} [options.isPublic] Whether the distribution group is public
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DistributionGroupResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    patchForOrg(orgName: string, distributionGroupName: string, options?: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
+    patchForOrg(orgName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    patchForOrg(orgName: string, distributionGroupName: string, options: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+
+
+    /**
+     * Deletes a single distribution group from an org with a given distribution
+     * group name
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteForOrgWithHttpOperationResponse(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Deletes a single distribution group from an org with a given distribution
+     * group name
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteForOrg(orgName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteForOrg(orgName: string, distributionGroupName: string, callback: ServiceCallback<void>): void;
+    deleteForOrg(orgName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Creates a disribution goup which can be shared across apps under an
+     * organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} name The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    createForOrgWithHttpOperationResponse(orgName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+
+    /**
+     * Creates a disribution goup which can be shared across apps under an
+     * organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} name The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DistributionGroupResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    createForOrg(orgName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
+    createForOrg(orgName: string, name: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    createForOrg(orgName: string, name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+
+
+    /**
+     * Returns a list of distribution groups in the org specified
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse[]>>;
+
+    /**
+     * Returns a list of distribution groups in the org specified
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    listForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse[]>;
+    listForOrg(orgName: string, callback: ServiceCallback<models.DistributionGroupResponse[]>): void;
+    listForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse[]>): void;
+
+
+    /**
+     * Resend distribution group app invite notification to previously invited
+     * testers
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.userEmails] The list of emails of the users
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    resendInviteWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Resend distribution group app invite notification to previously invited
+     * testers
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.userEmails] The list of emails of the users
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    resendInvite(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    resendInvite(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<void>): void;
+    resendInvite(ownerName: string, appName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Remove the users from the distribution group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.userEmails] The list of emails of the users
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    removeUserWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupUserDeleteResponse[]>>;
+
+    /**
+     * Remove the users from the distribution group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.userEmails] The list of emails of the users
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    removeUser(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupUserDeleteResponse[]>;
+    removeUser(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupUserDeleteResponse[]>): void;
+    removeUser(ownerName: string, appName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupUserDeleteResponse[]>): void;
+
+
+    /**
+     * Returns a list of member details in the distribution group specified
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {boolean} [options.excludePendingInvitations] Whether to exclude
+     * pending invitations in the response
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listUsersWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { excludePendingInvitations? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupUserGetResponse[]>>;
+
+    /**
+     * Returns a list of member details in the distribution group specified
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {boolean} [options.excludePendingInvitations] Whether to exclude
+     * pending invitations in the response
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    listUsers(ownerName: string, appName: string, distributionGroupName: string, options?: { excludePendingInvitations? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupUserGetResponse[]>;
+    listUsers(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupUserGetResponse[]>): void;
+    listUsers(ownerName: string, appName: string, distributionGroupName: string, options: { excludePendingInvitations? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupUserGetResponse[]>): void;
+
+
+    /**
+     * Adds the members to the specified distribution group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.userEmails] The list of emails of the users
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    addUserWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupUserPostResponse[]>>;
+
+    /**
+     * Adds the members to the specified distribution group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {array} [options.userEmails] The list of emails of the users
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    addUser(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupUserPostResponse[]>;
+    addUser(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupUserPostResponse[]>): void;
+    addUser(ownerName: string, appName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupUserPostResponse[]>): void;
+
+
+    /**
+     * Returns a single distribution group for a given distribution group name
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+
+    /**
+     * Returns a single distribution group for a given distribution group name
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DistributionGroupResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    get(ownerName: string, appName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
+    get(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    get(ownerName: string, appName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+
+
+    /**
+     * Updates the attributes of distribution group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.name] The name of the distribution group
+     *
+     * @param {boolean} [options.isPublic] Whether the distribution group is public
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updateWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+
+    /**
+     * Updates the attributes of distribution group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.name] The name of the distribution group
+     *
+     * @param {boolean} [options.isPublic] Whether the distribution group is public
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DistributionGroupResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    update(ownerName: string, appName: string, distributionGroupName: string, options?: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
+    update(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    update(ownerName: string, appName: string, distributionGroupName: string, options: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+
+
+    /**
+     * Deletes a distribution group
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteMethodWithHttpOperationResponse(appName: string, ownerName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Deletes a distribution group
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} distributionGroupName The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteMethod(appName: string, ownerName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteMethod(appName: string, ownerName: string, distributionGroupName: string, callback: ServiceCallback<void>): void;
+    deleteMethod(appName: string, ownerName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Returns a list of distribution groups in the app specified
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse[]>>;
+
+    /**
+     * Returns a list of distribution groups in the app specified
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse[]>;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.DistributionGroupResponse[]>): void;
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse[]>): void;
+
+
+    /**
+     * Creates a new distribution group and returns it to the caller
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} name The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    createWithHttpOperationResponse(ownerName: string, appName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+
+    /**
+     * Creates a new distribution group and returns it to the caller
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} name The name of the distribution group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DistributionGroupResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    create(ownerName: string, appName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
+    create(ownerName: string, appName: string, name: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    create(ownerName: string, appName: string, name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
 }
 
 /**
@@ -3014,7 +5022,8 @@ export interface Teams {
      *
      * @param {string} teamName The team's name
      *
-     * @param {string} name The name of the app to be added to the team
+     * @param {string} name The name of the app to be added to the distribution
+     * group
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -3036,7 +5045,8 @@ export interface Teams {
      *
      * @param {string} teamName The team's name
      *
-     * @param {string} name The name of the app to be added to the team
+     * @param {string} name The name of the app to be added to the distribution
+     * group
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -3389,11 +5399,11 @@ export interface Teams {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createTeamWithHttpOperationResponse(orgName: string, displayName: string, options?: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    createTeamWithHttpOperationResponse(orgName: string, displayName: string, options?: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TeamResponse[]>>;
 
     /**
      * Creates a team and returns it
@@ -3418,7 +5428,7 @@ export interface Teams {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Object} - The deserialized result object.
+     *                      @resolve {Array} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -3426,15 +5436,15 @@ export interface Teams {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    createTeam(orgName: string, displayName: string, options?: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    createTeam(orgName: string, displayName: string, callback: ServiceCallback<any>): void;
-    createTeam(orgName: string, displayName: string, options: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    createTeam(orgName: string, displayName: string, options?: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.TeamResponse[]>;
+    createTeam(orgName: string, displayName: string, callback: ServiceCallback<models.TeamResponse[]>): void;
+    createTeam(orgName: string, displayName: string, options: { name? : string, description? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TeamResponse[]>): void;
 }
 
 /**
@@ -3553,7 +5563,7 @@ export interface AzureSubscription {
     /**
      * Delete the azure subscriptions for the app
      *
-     * @param {string} azureSubscriptionId The unique ID (UUID) of the azure
+     * @param {uuid} azureSubscriptionId The unique ID (UUID) of the azure
      * subscription
      *
      * @param {string} ownerName The name of the owner
@@ -3576,7 +5586,7 @@ export interface AzureSubscription {
     /**
      * Delete the azure subscriptions for the app
      *
-     * @param {string} azureSubscriptionId The unique ID (UUID) of the azure
+     * @param {uuid} azureSubscriptionId The unique ID (UUID) of the azure
      * subscription
      *
      * @param {string} ownerName The name of the owner
@@ -3679,7 +5689,7 @@ export interface AzureSubscription {
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} subscriptionId The azure subscription id
+     * @param {uuid} subscriptionId The azure subscription id
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -3701,7 +5711,7 @@ export interface AzureSubscription {
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} subscriptionId The azure subscription id
+     * @param {uuid} subscriptionId The azure subscription id
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -3736,6 +5746,131 @@ export interface AzureSubscription {
 
 /**
  * @class
+ * Organization
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface Organization {
+
+
+    /**
+     * Sets the organization avatar
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.avatar] The image for an Organization avatar to
+     * upload.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<OrganizationResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updateAvatarWithHttpOperationResponse(orgName: string, options?: { avatar? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationResponse>>;
+
+    /**
+     * Sets the organization avatar
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.avatar] The image for an Organization avatar to
+     * upload.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {OrganizationResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {OrganizationResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link OrganizationResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    updateAvatar(orgName: string, options?: { avatar? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationResponse>;
+    updateAvatar(orgName: string, callback: ServiceCallback<models.OrganizationResponse>): void;
+    updateAvatar(orgName: string, options: { avatar? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationResponse>): void;
+
+
+    /**
+     * Deletes the uploaded organization avatar
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<OrganizationResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteAvatarWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationResponse>>;
+
+    /**
+     * Deletes the uploaded organization avatar
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {OrganizationResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {OrganizationResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link OrganizationResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteAvatar(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationResponse>;
+    deleteAvatar(orgName: string, callback: ServiceCallback<models.OrganizationResponse>): void;
+    deleteAvatar(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationResponse>): void;
+}
+
+/**
+ * @class
  * Apps
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
@@ -3762,7 +5897,7 @@ export interface Apps {
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin'
+     * 'Xamarin', 'Unity'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -3796,7 +5931,7 @@ export interface Apps {
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin'
+     * 'Xamarin', 'Unity'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -4013,6 +6148,65 @@ export interface Apps {
 
 
     /**
+     * Transfers ownership of an app to a new organization
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<OrganizationResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    transferToOrgWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationResponse>>;
+
+    /**
+     * Transfers ownership of an app to a new organization
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {OrganizationResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {OrganizationResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link OrganizationResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    transferToOrg(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationResponse>;
+    transferToOrg(ownerName: string, appName: string, callback: ServiceCallback<models.OrganizationResponse>): void;
+    transferToOrg(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationResponse>): void;
+
+
+    /**
      * Transfers ownership of an app to a different user or organization
      *
      * @param {string} ownerName The name of the owner
@@ -4193,6 +6387,128 @@ export interface Apps {
     getTeams(appName: string, ownerName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TeamAppResponse[]>;
     getTeams(appName: string, ownerName: string, callback: ServiceCallback<models.TeamAppResponse[]>): void;
     getTeams(appName: string, ownerName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TeamAppResponse[]>): void;
+
+
+    /**
+     * Sets the app avatar
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.avatar] The image for an app avatar to upload.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updateAvatarWithHttpOperationResponse(ownerName: string, appName: string, options?: { avatar? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
+
+    /**
+     * Sets the app avatar
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.avatar] The image for an app avatar to upload.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AppResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AppResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    updateAvatar(ownerName: string, appName: string, options?: { avatar? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
+    updateAvatar(ownerName: string, appName: string, callback: ServiceCallback<models.AppResponse>): void;
+    updateAvatar(ownerName: string, appName: string, options: { avatar? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
+
+
+    /**
+     * Deletes the uploaded app avatar
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AppResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteAvatarWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppResponse>>;
+
+    /**
+     * Deletes the uploaded app avatar
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AppResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AppResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AppResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteAvatar(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse>;
+    deleteAvatar(ownerName: string, appName: string, callback: ServiceCallback<models.AppResponse>): void;
+    deleteAvatar(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse>): void;
 
 
     /**
@@ -4412,7 +6728,7 @@ export interface Apps {
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin'
+     * 'Xamarin', 'Unity'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -4444,7 +6760,7 @@ export interface Apps {
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin'
+     * 'Xamarin', 'Unity'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -4832,6 +7148,230 @@ export interface Organizations {
 
 /**
  * @class
+ * BillingAggregatedInformation
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface BillingAggregatedInformation {
+
+
+    /**
+     * Aggregated Billing Information for a given Organization.
+     *
+     * @param {string} orgName The name of the Organization
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.service] Type of service that should be included in
+     * the Billing Information. Possible values include: 'Test', 'Build', 'Push'
+     *
+     * @param {string} [options.period] Type of period that should be included in
+     * the Billing Information. Possible values include: 'Previous', 'Current',
+     * 'Next'
+     *
+     * @param {boolean} [options.showOriginalPlans] Controls whether the API should
+     * show the original plan when Azure Subscription is not enabled
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AggregatedBillingInformation>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getForOrgWithHttpOperationResponse(orgName: string, options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AggregatedBillingInformation>>;
+
+    /**
+     * Aggregated Billing Information for a given Organization.
+     *
+     * @param {string} orgName The name of the Organization
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.service] Type of service that should be included in
+     * the Billing Information. Possible values include: 'Test', 'Build', 'Push'
+     *
+     * @param {string} [options.period] Type of period that should be included in
+     * the Billing Information. Possible values include: 'Previous', 'Current',
+     * 'Next'
+     *
+     * @param {boolean} [options.showOriginalPlans] Controls whether the API should
+     * show the original plan when Azure Subscription is not enabled
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AggregatedBillingInformation} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AggregatedBillingInformation} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AggregatedBillingInformation} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getForOrg(orgName: string, options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.AggregatedBillingInformation>;
+    getForOrg(orgName: string, callback: ServiceCallback<models.AggregatedBillingInformation>): void;
+    getForOrg(orgName: string, options: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AggregatedBillingInformation>): void;
+
+
+    /**
+     * Aggregated Billing Information for owner of a given app.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.service] Type of service that should be included in
+     * the Billing Information. Possible values include: 'Test', 'Build', 'Push'
+     *
+     * @param {string} [options.period] Type of period that should be included in
+     * the Billing Information. Possible values include: 'Previous', 'Current',
+     * 'Next'
+     *
+     * @param {boolean} [options.showOriginalPlans] Controls whether the API should
+     * show the original plan when Azure Subscription is not enabled
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AggregatedBillingInformation>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getByAppWithHttpOperationResponse(ownerName: string, appName: string, options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AggregatedBillingInformation>>;
+
+    /**
+     * Aggregated Billing Information for owner of a given app.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.service] Type of service that should be included in
+     * the Billing Information. Possible values include: 'Test', 'Build', 'Push'
+     *
+     * @param {string} [options.period] Type of period that should be included in
+     * the Billing Information. Possible values include: 'Previous', 'Current',
+     * 'Next'
+     *
+     * @param {boolean} [options.showOriginalPlans] Controls whether the API should
+     * show the original plan when Azure Subscription is not enabled
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AggregatedBillingInformation} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AggregatedBillingInformation} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AggregatedBillingInformation} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getByApp(ownerName: string, appName: string, options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.AggregatedBillingInformation>;
+    getByApp(ownerName: string, appName: string, callback: ServiceCallback<models.AggregatedBillingInformation>): void;
+    getByApp(ownerName: string, appName: string, options: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AggregatedBillingInformation>): void;
+}
+
+/**
+ * @class
+ * Invitations
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface Invitations {
+
+
+    /**
+     * Returns all invitations sent by the caller
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    sentWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GDPRInvitationDetailResponse[]>>;
+
+    /**
+     * Returns all invitations sent by the caller
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    sent(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GDPRInvitationDetailResponse[]>;
+    sent(callback: ServiceCallback<models.GDPRInvitationDetailResponse[]>): void;
+    sent(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GDPRInvitationDetailResponse[]>): void;
+}
+
+/**
+ * @class
  * Builds
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
@@ -5150,16 +7690,24 @@ export interface Builds {
      *
      * @param {number} buildId The build ID
      *
+     * @param {object} distributeInfo The distribution details
+     *
+     * @param {string} [distributeInfo.distributionGroupId] DEPRECATED - A
+     * distribution group ID or a store group ID
+     *
+     * @param {array} [distributeInfo.destinations] Array of objects {id:string,
+     * type:string} with "id" being the distribution group ID, store ID, or tester
+     * email, and "type" being "group", "store", or "tester"
+     *
+     * @param {string} [distributeInfo.releaseNotes] The release notes
+     *
+     * @param {boolean} [distributeInfo.mandatoryUpdate]
+     *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} distributionGroupId A distribution group ID or a store group
-     * ID
-     *
      * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.releaseNotes] The release notes
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -5170,23 +7718,31 @@ export interface Builds {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    distributeWithHttpOperationResponse(buildId: number, ownerName: string, appName: string, distributionGroupId: string, options?: { releaseNotes? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionResponse>>;
+    distributeWithHttpOperationResponse(buildId: number, distributeInfo: models.DistributionRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionResponse>>;
 
     /**
      * Distribute a build
      *
      * @param {number} buildId The build ID
      *
+     * @param {object} distributeInfo The distribution details
+     *
+     * @param {string} [distributeInfo.distributionGroupId] DEPRECATED - A
+     * distribution group ID or a store group ID
+     *
+     * @param {array} [distributeInfo.destinations] Array of objects {id:string,
+     * type:string} with "id" being the distribution group ID, store ID, or tester
+     * email, and "type" being "group", "store", or "tester"
+     *
+     * @param {string} [distributeInfo.releaseNotes] The release notes
+     *
+     * @param {boolean} [distributeInfo.mandatoryUpdate]
+     *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} distributionGroupId A distribution group ID or a store group
-     * ID
-     *
      * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.releaseNotes] The release notes
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -5213,9 +7769,9 @@ export interface Builds {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    distribute(buildId: number, ownerName: string, appName: string, distributionGroupId: string, options?: { releaseNotes? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionResponse>;
-    distribute(buildId: number, ownerName: string, appName: string, distributionGroupId: string, callback: ServiceCallback<models.DistributionResponse>): void;
-    distribute(buildId: number, ownerName: string, appName: string, distributionGroupId: string, options: { releaseNotes? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionResponse>): void;
+    distribute(buildId: number, distributeInfo: models.DistributionRequest, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionResponse>;
+    distribute(buildId: number, distributeInfo: models.DistributionRequest, ownerName: string, appName: string, callback: ServiceCallback<models.DistributionResponse>): void;
+    distribute(buildId: number, distributeInfo: models.DistributionRequest, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionResponse>): void;
 
 
     /**
@@ -5681,6 +8237,75 @@ export interface Builds {
 
 /**
  * @class
+ * Webhooks
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface Webhooks {
+
+
+    /**
+     * Get web hooks configured for a particular app
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AlertWebhookListResult>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AlertWebhookListResult>>;
+
+    /**
+     * Get web hooks configured for a particular app
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AlertWebhookListResult} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AlertWebhookListResult} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AlertWebhookListResult} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AlertWebhookListResult>;
+    list(ownerName: string, appName: string, callback: ServiceCallback<models.AlertWebhookListResult>): void;
+    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AlertWebhookListResult>): void;
+}
+
+/**
+ * @class
  * Crashes
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
@@ -5689,9 +8314,9 @@ export interface Crashes {
 
 
     /**
-     * @summary Gets a list of application versions
+     * @summary Available for UWP apps only.
      *
-     * Gets a list of application versions
+     * Gets a list of application versions. Available for UWP apps only.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -5711,9 +8336,9 @@ export interface Crashes {
     getAppVersionsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppVersion[]>>;
 
     /**
-     * @summary Gets a list of application versions
+     * @summary Available for UWP apps only.
      *
-     * Gets a list of application versions
+     * Gets a list of application versions. Available for UWP apps only.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -5883,9 +8508,9 @@ export interface Crashes {
 
 
     /**
-     * @summary Gets whether the application has any crashes
+     * @summary Available for UWP apps only.
      *
-     * Gets whether the application has any crashes
+     * Gets whether the application has any crashes. Available for UWP apps only.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -5905,9 +8530,9 @@ export interface Crashes {
     getAppCrashesInfoWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AppCrashesInfo>>;
 
     /**
-     * @summary Gets whether the application has any crashes
+     * @summary Available for UWP apps only.
      *
-     * Gets whether the application has any crashes
+     * Gets whether the application has any crashes. Available for UWP apps only.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -5956,6 +8581,8 @@ export interface Crashes {
      *
      * @param {object} [options] Optional Parameters.
      *
+     * @param {date} [options.date] Date of data requested
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -5965,7 +8592,7 @@ export interface Crashes {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listSessionLogsWithHttpOperationResponse(crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GenericLogContainer>>;
+    listSessionLogsWithHttpOperationResponse(crashId: string, ownerName: string, appName: string, options?: { date? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GenericLogContainer>>;
 
     /**
      * Get session logs by crash ID
@@ -5977,6 +8604,8 @@ export interface Crashes {
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.date] Date of data requested
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -6003,13 +8632,15 @@ export interface Crashes {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listSessionLogs(crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.GenericLogContainer>;
+    listSessionLogs(crashId: string, ownerName: string, appName: string, options?: { date? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.GenericLogContainer>;
     listSessionLogs(crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GenericLogContainer>): void;
-    listSessionLogs(crashId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GenericLogContainer>): void;
+    listSessionLogs(crashId: string, ownerName: string, appName: string, options: { date? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GenericLogContainer>): void;
 
 
     /**
-     * Gets content of the text attachment
+     * @summary Available for UWP apps only.
+     *
+     * Gets content of the text attachment. Available for UWP apps only.
      *
      * @param {string} crashId id of a specific crash
      *
@@ -6033,7 +8664,9 @@ export interface Crashes {
     getCrashTextAttachmentContentWithHttpOperationResponse(crashId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<string>>;
 
     /**
-     * Gets content of the text attachment
+     * @summary Available for UWP apps only.
+     *
+     * Gets content of the text attachment. Available for UWP apps only.
      *
      * @param {string} crashId id of a specific crash
      *
@@ -6075,7 +8708,10 @@ export interface Crashes {
 
 
     /**
-     * Gets the URI location to download crash attachment
+     * @summary Available for UWP apps only.
+     *
+     * Gets the URI location to download crash attachment. Available for UWP apps
+     * only.
      *
      * @param {string} crashId id of a specific crash
      *
@@ -6099,7 +8735,10 @@ export interface Crashes {
     getCrashAttachmentLocationWithHttpOperationResponse(crashId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashAttachmentLocation>>;
 
     /**
-     * Gets the URI location to download crash attachment
+     * @summary Available for UWP apps only.
+     *
+     * Gets the URI location to download crash attachment. Available for UWP apps
+     * only.
      *
      * @param {string} crashId id of a specific crash
      *
@@ -6143,7 +8782,9 @@ export interface Crashes {
 
 
     /**
-     * Gets all attachments for a specific crash
+     * @summary Available for UWP apps only.
+     *
+     * Gets all attachments for a specific crash. Available for UWP apps only.
      *
      * @param {string} crashId id of a specific crash
      *
@@ -6165,7 +8806,9 @@ export interface Crashes {
     listAttachmentsWithHttpOperationResponse(crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashAttachment[]>>;
 
     /**
-     * Gets all attachments for a specific crash
+     * @summary Available for UWP apps only.
+     *
+     * Gets all attachments for a specific crash. Available for UWP apps only.
      *
      * @param {string} crashId id of a specific crash
      *
@@ -6205,7 +8848,9 @@ export interface Crashes {
 
 
     /**
-     * Gets a stacktrace for a specific crash
+     * @summary Available for UWP apps only.
+     *
+     * Gets a stacktrace for a specific crash. Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -6232,7 +8877,9 @@ export interface Crashes {
     getStacktraceWithHttpOperationResponse(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { groupingOnly? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Stacktrace>>;
 
     /**
-     * Gets a stacktrace for a specific crash
+     * @summary Available for UWP apps only.
+     *
+     * Gets a stacktrace for a specific crash. Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -6278,7 +8925,10 @@ export interface Crashes {
 
 
     /**
-     * Gets the URI location to download json of a specific crash
+     * @summary Available for UWP apps only.
+     *
+     * Gets the URI location to download json of a specific crash. Available for
+     * UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -6302,7 +8952,10 @@ export interface Crashes {
     getRawCrashLocationWithHttpOperationResponse(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashRawLocation>>;
 
     /**
-     * Gets the URI location to download json of a specific crash
+     * @summary Available for UWP apps only.
+     *
+     * Gets the URI location to download json of a specific crash. Available for
+     * UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -6345,9 +8998,10 @@ export interface Crashes {
 
 
     /**
-     * @summary Gets the native log of a specific crash as a text attachment
+     * @summary Available for UWP apps only.
      *
-     * Gets the native log of a specific crash as a text attachment
+     * Gets the native log of a specific crash as a text attachment. Available for
+     * UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -6371,9 +9025,10 @@ export interface Crashes {
     getNativeCrashDownloadWithHttpOperationResponse(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<string>>;
 
     /**
-     * @summary Gets the native log of a specific crash as a text attachment
+     * @summary Available for UWP apps only.
      *
-     * Gets the native log of a specific crash as a text attachment
+     * Gets the native log of a specific crash as a text attachment. Available for
+     * UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -6415,9 +9070,9 @@ export interface Crashes {
 
 
     /**
-     * @summary Gets the native log of a specific crash
+     * @summary Available for UWP apps only.
      *
-     * Gets the native log of a specific crash
+     * Gets the native log of a specific crash. Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -6441,9 +9096,9 @@ export interface Crashes {
     getNativeCrashWithHttpOperationResponse(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<string>>;
 
     /**
-     * @summary Gets the native log of a specific crash
+     * @summary Available for UWP apps only.
      *
-     * Gets the native log of a specific crash
+     * Gets the native log of a specific crash. Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -6485,7 +9140,9 @@ export interface Crashes {
 
 
     /**
-     * Gets a specific crash for an app
+     * @summary Available for UWP apps only.
+     *
+     * Gets a specific crash for an app. Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -6524,7 +9181,9 @@ export interface Crashes {
     getWithHttpOperationResponse(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { includeReport? : boolean, includeLog? : boolean, includeDetails? : boolean, includeStacktrace? : boolean, groupingOnly? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Crash>>;
 
     /**
-     * Gets a specific crash for an app
+     * @summary Available for UWP apps only.
+     *
+     * Gets a specific crash for an app. Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -6582,7 +9241,88 @@ export interface Crashes {
 
 
     /**
-     * Gets all crashes of a group
+     * @summary Available for UWP apps only.
+     *
+     * Delete a specific crash and related attachments and blobs for an app.
+     * Available for UWP apps only.
+     *
+     * @param {string} crashGroupId id of a specific group
+     *
+     * @param {string} crashId id of a specific crash
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {boolean} [options.retentionDelete] true in that case if the method
+     * should skip update counts
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<CrashDeleteCounter>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteMethodWithHttpOperationResponse(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { retentionDelete? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashDeleteCounter>>;
+
+    /**
+     * @summary Available for UWP apps only.
+     *
+     * Delete a specific crash and related attachments and blobs for an app.
+     * Available for UWP apps only.
+     *
+     * @param {string} crashGroupId id of a specific group
+     *
+     * @param {string} crashId id of a specific crash
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {boolean} [options.retentionDelete] true in that case if the method
+     * should skip update counts
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {CrashDeleteCounter} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {CrashDeleteCounter} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CrashDeleteCounter} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteMethod(crashGroupId: string, crashId: string, ownerName: string, appName: string, options?: { retentionDelete? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashDeleteCounter>;
+    deleteMethod(crashGroupId: string, crashId: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashDeleteCounter>): void;
+    deleteMethod(crashGroupId: string, crashId: string, ownerName: string, appName: string, options: { retentionDelete? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashDeleteCounter>): void;
+
+
+    /**
+     * @summary Available for UWP apps only.
+     *
+     * Gets all crashes of a group. Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -6619,7 +9359,9 @@ export interface Crashes {
     listWithHttpOperationResponse(crashGroupId: string, ownerName: string, appName: string, options?: { includeReport? : boolean, includeLog? : boolean, dateFrom? : Date, dateTo? : Date, appVersion? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Crash[]>>;
 
     /**
-     * Gets all crashes of a group
+     * @summary Available for UWP apps only.
+     *
+     * Gets all crashes of a group. Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -7201,6 +9943,8 @@ export interface Test {
      *
      * @param {object} [options] Optional Parameters.
      *
+     * @param {string} [options.query] A query string to filter test series
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -7210,7 +9954,7 @@ export interface Test {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getAllTestSeriesWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestSeries[]>>;
+    getAllTestSeriesWithHttpOperationResponse(ownerName: string, appName: string, options?: { query? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestSeries[]>>;
 
     /**
      * Returns list of all test series for an application
@@ -7220,6 +9964,8 @@ export interface Test {
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.query] A query string to filter test series
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -7245,9 +9991,9 @@ export interface Test {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getAllTestSeries(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestSeries[]>;
+    getAllTestSeries(ownerName: string, appName: string, options?: { query? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.TestSeries[]>;
     getAllTestSeries(ownerName: string, appName: string, callback: ServiceCallback<models.TestSeries[]>): void;
-    getAllTestSeries(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestSeries[]>): void;
+    getAllTestSeries(ownerName: string, appName: string, options: { query? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestSeries[]>): void;
 
 
     /**
@@ -8056,6 +10802,301 @@ export interface Test {
 
 
     /**
+     * Lists test run data
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<TestGDPRTestRun>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    gdprExportTestRunWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRTestRun>>;
+
+    /**
+     * Lists test run data
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {TestGDPRTestRun} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {TestGDPRTestRun} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link TestGDPRTestRun} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    gdprExportTestRun(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRTestRun>;
+    gdprExportTestRun(ownerName: string, appName: string, callback: ServiceCallback<models.TestGDPRTestRun>): void;
+    gdprExportTestRun(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRTestRun>): void;
+
+
+    /**
+     * Lists pipeline test data
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<TestGDPRPipelineTest>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    gdprExportPipelineTestWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRPipelineTest>>;
+
+    /**
+     * Lists pipeline test data
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {TestGDPRPipelineTest} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {TestGDPRPipelineTest} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link TestGDPRPipelineTest} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    gdprExportPipelineTest(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRPipelineTest>;
+    gdprExportPipelineTest(ownerName: string, appName: string, callback: ServiceCallback<models.TestGDPRPipelineTest>): void;
+    gdprExportPipelineTest(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRPipelineTest>): void;
+
+
+    /**
+     * Lists hash file data
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<TestGDPRHashFile>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    gdprExportHashFileWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRHashFile>>;
+
+    /**
+     * Lists hash file data
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {TestGDPRHashFile} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {TestGDPRHashFile} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link TestGDPRHashFile} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    gdprExportHashFile(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRHashFile>;
+    gdprExportHashFile(ownerName: string, appName: string, callback: ServiceCallback<models.TestGDPRHashFile>): void;
+    gdprExportHashFile(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRHashFile>): void;
+
+
+    /**
+     * Lists file set file data
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<TestGDPRFileSetFile>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    gdprExportFileSetFileWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRFileSetFile>>;
+
+    /**
+     * Lists file set file data
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {TestGDPRFileSetFile} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {TestGDPRFileSetFile} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link TestGDPRFileSetFile} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    gdprExportFileSetFile(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRFileSetFile>;
+    gdprExportFileSetFile(ownerName: string, appName: string, callback: ServiceCallback<models.TestGDPRFileSetFile>): void;
+    gdprExportFileSetFile(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRFileSetFile>): void;
+
+
+    /**
+     * Lists all the endpoints available for Test app data
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<TestGDPRResourceList>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    gdprExportAppWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRResourceList>>;
+
+    /**
+     * Lists all the endpoints available for Test app data
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {TestGDPRResourceList} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {TestGDPRResourceList} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link TestGDPRResourceList} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    gdprExportApp(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRResourceList>;
+    gdprExportApp(ownerName: string, appName: string, callback: ServiceCallback<models.TestGDPRResourceList>): void;
+    gdprExportApp(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRResourceList>): void;
+
+
+    /**
      * Get information about the currently active subscriptions, if any
      *
      * @param {string} ownerName The name of the owner
@@ -8614,6 +11655,210 @@ export interface Test {
     getDeviceConfigurations(ownerName: string, appName: string, options?: { appUploadId? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.DeviceConfiguration[]>;
     getDeviceConfigurations(ownerName: string, appName: string, callback: ServiceCallback<models.DeviceConfiguration[]>): void;
     getDeviceConfigurations(ownerName: string, appName: string, options: { appUploadId? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DeviceConfiguration[]>): void;
+
+
+    /**
+     * Lists user data
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<TestGDPRUser>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    gdprExportUserWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRUser>>;
+
+    /**
+     * Lists user data
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {TestGDPRUser} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {TestGDPRUser} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link TestGDPRUser} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    gdprExportUser(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRUser>;
+    gdprExportUser(callback: ServiceCallback<models.TestGDPRUser>): void;
+    gdprExportUser(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRUser>): void;
+
+
+    /**
+     * Lists feature flag data
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<TestGDPRFeatureFlag>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    gdprExportFeatureFlagWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRFeatureFlag>>;
+
+    /**
+     * Lists feature flag data
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {TestGDPRFeatureFlag} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {TestGDPRFeatureFlag} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link TestGDPRFeatureFlag} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    gdprExportFeatureFlag(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRFeatureFlag>;
+    gdprExportFeatureFlag(callback: ServiceCallback<models.TestGDPRFeatureFlag>): void;
+    gdprExportFeatureFlag(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRFeatureFlag>): void;
+
+
+    /**
+     * Lists account data
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<TestGDPRAccount>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    gdprExportAccountWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRAccount>>;
+
+    /**
+     * Lists account data
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {TestGDPRAccount} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {TestGDPRAccount} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link TestGDPRAccount} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    gdprExportAccount(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRAccount>;
+    gdprExportAccount(callback: ServiceCallback<models.TestGDPRAccount>): void;
+    gdprExportAccount(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRAccount>): void;
+
+
+    /**
+     * Lists all the endpoints available for Test account data
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<TestGDPRResourceList>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    gdprExportAccount1WithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRResourceList>>;
+
+    /**
+     * Lists all the endpoints available for Test account data
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {TestGDPRResourceList} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {TestGDPRResourceList} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link TestGDPRResourceList} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    gdprExportAccount1(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRResourceList>;
+    gdprExportAccount1(callback: ServiceCallback<models.TestGDPRResourceList>): void;
+    gdprExportAccount1(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRResourceList>): void;
 }
 
 /**
@@ -9370,17 +12615,15 @@ export interface SymbolUploads {
 
 /**
  * @class
- * MissingSymbolGroups
+ * StoreNotifications
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
  */
-export interface MissingSymbolGroups {
+export interface StoreNotifications {
 
 
     /**
-     * @summary Gets application level statistics for all missing symbol groups
-     *
-     * Gets application level statistics for all missing symbol groups
+     * Application specific store service status
      *
      * @param {string} ownerName The name of the owner
      *
@@ -9393,16 +12636,14 @@ export interface MissingSymbolGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<MissingSymbolCrashGroupsInfoResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<StoreNotification>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    infoWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.MissingSymbolCrashGroupsInfoResponse>>;
+    getNotificationByAppIdWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.StoreNotification>>;
 
     /**
-     * @summary Gets application level statistics for all missing symbol groups
-     *
-     * Gets application level statistics for all missing symbol groups
+     * Application specific store service status
      *
      * @param {string} ownerName The name of the owner
      *
@@ -9420,7 +12661,7 @@ export interface MissingSymbolGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {MissingSymbolCrashGroupsInfoResponse} - The deserialized result object.
+     *                      @resolve {StoreNotification} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -9428,159 +12669,16 @@ export interface MissingSymbolGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {MissingSymbolCrashGroupsInfoResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link MissingSymbolCrashGroupsInfoResponse} for
-     *                      more information.
+     *                      {StoreNotification} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link StoreNotification} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    info(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.MissingSymbolCrashGroupsInfoResponse>;
-    info(ownerName: string, appName: string, callback: ServiceCallback<models.MissingSymbolCrashGroupsInfoResponse>): void;
-    info(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.MissingSymbolCrashGroupsInfoResponse>): void;
-
-
-    /**
-     * @summary Gets missing symbol crash group by its id
-     *
-     * Gets missing symbol crash group by its id
-     *
-     * @param {string} symbolGroupId missing symbol crash group id
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<MissingSymbolCrashGroupsResponse>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    getWithHttpOperationResponse(symbolGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.MissingSymbolCrashGroupsResponse>>;
-
-    /**
-     * @summary Gets missing symbol crash group by its id
-     *
-     * Gets missing symbol crash group by its id
-     *
-     * @param {string} symbolGroupId missing symbol crash group id
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {MissingSymbolCrashGroupsResponse} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {MissingSymbolCrashGroupsResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link MissingSymbolCrashGroupsResponse} for more
-     *                      information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    get(symbolGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.MissingSymbolCrashGroupsResponse>;
-    get(symbolGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.MissingSymbolCrashGroupsResponse>): void;
-    get(symbolGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.MissingSymbolCrashGroupsResponse>): void;
-
-
-    /**
-     * @summary Gets top N (ordered by crash count) of crash groups by missing
-     * symbol
-     *
-     * Gets top N (ordered by crash count) of crash groups by missing symbol
-     *
-     * @param {number} top top N elements
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.filter] query filter
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<MissingSymbolCrashGroupsResponse>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    listWithHttpOperationResponse(top: number, ownerName: string, appName: string, options?: { filter? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.MissingSymbolCrashGroupsResponse>>;
-
-    /**
-     * @summary Gets top N (ordered by crash count) of crash groups by missing
-     * symbol
-     *
-     * Gets top N (ordered by crash count) of crash groups by missing symbol
-     *
-     * @param {number} top top N elements
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.filter] query filter
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {MissingSymbolCrashGroupsResponse} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {MissingSymbolCrashGroupsResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link MissingSymbolCrashGroupsResponse} for more
-     *                      information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    list(top: number, ownerName: string, appName: string, options?: { filter? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.MissingSymbolCrashGroupsResponse>;
-    list(top: number, ownerName: string, appName: string, callback: ServiceCallback<models.MissingSymbolCrashGroupsResponse>): void;
-    list(top: number, ownerName: string, appName: string, options: { filter? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.MissingSymbolCrashGroupsResponse>): void;
+    getNotificationByAppId(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.StoreNotification>;
+    getNotificationByAppId(ownerName: string, appName: string, callback: ServiceCallback<models.StoreNotification>): void;
+    getNotificationByAppId(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.StoreNotification>): void;
 }
 
 /**
@@ -10030,6 +13128,8 @@ export interface ReleaseUploads {
      *
      * @param {object} [options] Optional Parameters.
      *
+     * @param {number} [options.releaseId] The ID of the release.
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -10039,7 +13139,7 @@ export interface ReleaseUploads {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ReleaseUploadBeginResponse>>;
+    createWithHttpOperationResponse(ownerName: string, appName: string, options?: { releaseId? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ReleaseUploadBeginResponse>>;
 
     /**
      * Begins the upload process for a new release for the specified application.
@@ -10049,6 +13149,8 @@ export interface ReleaseUploads {
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {number} [options.releaseId] The ID of the release.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -10076,9 +13178,9 @@ export interface ReleaseUploads {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ReleaseUploadBeginResponse>;
+    create(ownerName: string, appName: string, options?: { releaseId? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ReleaseUploadBeginResponse>;
     create(ownerName: string, appName: string, callback: ServiceCallback<models.ReleaseUploadBeginResponse>): void;
-    create(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseUploadBeginResponse>): void;
+    create(ownerName: string, appName: string, options: { releaseId? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseUploadBeginResponse>): void;
 }
 
 /**
@@ -10091,7 +13193,7 @@ export interface Push {
 
 
     /**
-     * Returns whether push config exists.
+     * Returns whether a push configuration exists for the selected app.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -10111,7 +13213,7 @@ export interface Push {
     configExistsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
-     * Returns whether push config exists.
+     * Returns whether a push configuration exists for the selected app.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -10149,7 +13251,7 @@ export interface Push {
 
 
     /**
-     * Get configuration.
+     * Get the push configuration for the selected app.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -10169,7 +13271,7 @@ export interface Push {
     getConfigWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.NotificationConfigResult>>;
 
     /**
-     * Get configuration.
+     * Get the push configuration for the selected app.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -10209,7 +13311,7 @@ export interface Push {
 
 
     /**
-     * Set notification configuration.
+     * Set the push configuration for the selected app.
      *
      * @param {object} properties Notification configurations.
      *
@@ -10233,7 +13335,7 @@ export interface Push {
     setConfigWithHttpOperationResponse(properties: models.NotificationConfig, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.NotificationConfigResult>>;
 
     /**
-     * Set notification configuration.
+     * Set the push configuration for the selected app.
      *
      * @param {object} properties Notification configurations.
      *
@@ -10277,7 +13379,7 @@ export interface Push {
 
 
     /**
-     * Delete notification configuration.
+     * Delete the push configuration for the selected app.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -10297,7 +13399,7 @@ export interface Push {
     deleteConfigWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
-     * Delete notification configuration.
+     * Delete the push configuration for the selected app.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -10335,7 +13437,7 @@ export interface Push {
 
 
     /**
-     * Get notification details.
+     * Get details about a specific notification.
      *
      * @param {string} notificationId The id of the notification.
      *
@@ -10357,7 +13459,7 @@ export interface Push {
     getWithHttpOperationResponse(notificationId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.NotificationDetailsResult>>;
 
     /**
-     * Get notification details.
+     * Get details about a specific notification.
      *
      * @param {string} notificationId The id of the notification.
      *
@@ -10399,69 +13501,7 @@ export interface Push {
 
 
     /**
-     * Archive push campaign(s)
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {array} values List of notification Ids.
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    notificationArchiveWithHttpOperationResponse(ownerName: string, appName: string, values: string[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
-
-    /**
-     * Archive push campaign(s)
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {array} values List of notification Ids.
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {null} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {null} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    notificationArchive(ownerName: string, appName: string, values: string[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
-    notificationArchive(ownerName: string, appName: string, values: string[], callback: ServiceCallback<void>): void;
-    notificationArchive(ownerName: string, appName: string, values: string[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-
-
-    /**
-     * Get list of notifications
+     * Get a list of notifications from the service.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -10498,7 +13538,7 @@ export interface Push {
     listWithHttpOperationResponse(ownerName: string, appName: string, options?: { top? : number, skiptoken? : string, orderby? : string, inlinecount? : string, includeArchived? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.NotificationsListResult>>;
 
     /**
-     * Get list of notifications
+     * Get a list of notifications from the service.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -10555,7 +13595,7 @@ export interface Push {
 
 
     /**
-     * Send notification.
+     * Send a notification to one or more devices.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -10590,7 +13630,7 @@ export interface Push {
     sendWithHttpOperationResponse(ownerName: string, appName: string, notificationContent: models.NotificationContent, options?: { notificationTarget? : models.NotificationTarget, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.NotificationSendSucceededResult>>;
 
     /**
-     * Send notification.
+     * Send a notification to one or more devices.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -10642,6 +13682,258 @@ export interface Push {
     send(ownerName: string, appName: string, notificationContent: models.NotificationContent, options?: { notificationTarget? : models.NotificationTarget, customHeaders? : { [headerName: string]: string; } }): Promise<models.NotificationSendSucceededResult>;
     send(ownerName: string, appName: string, notificationContent: models.NotificationContent, callback: ServiceCallback<models.NotificationSendSucceededResult>): void;
     send(ownerName: string, appName: string, notificationContent: models.NotificationContent, options: { notificationTarget? : models.NotificationTarget, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.NotificationSendSucceededResult>): void;
+
+
+    /**
+     * Delete a notification.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {array} values List of notification Ids.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteMethodWithHttpOperationResponse(ownerName: string, appName: string, values: string[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Delete a notification.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {array} values List of notification Ids.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteMethod(ownerName: string, appName: string, values: string[], options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteMethod(ownerName: string, appName: string, values: string[], callback: ServiceCallback<void>): void;
+    deleteMethod(ownerName: string, appName: string, values: string[], options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Delete a device with the selected installId.
+     *
+     * @param {string} installId device install id
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteInstallIdWithHttpOperationResponse(installId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Delete a device with the selected installId.
+     *
+     * @param {string} installId device install id
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteInstallId(installId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteInstallId(installId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+    deleteInstallId(installId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Get the status of an export operation.
+     *
+     * @param {string} exportId The id of the export.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ExportStatusResult>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    exportDevicesStatusWithHttpOperationResponse(exportId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExportStatusResult>>;
+
+    /**
+     * Get the status of an export operation.
+     *
+     * @param {string} exportId The id of the export.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ExportStatusResult} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ExportStatusResult} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ExportStatusResult} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    exportDevicesStatus(exportId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExportStatusResult>;
+    exportDevicesStatus(exportId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ExportStatusResult>): void;
+    exportDevicesStatus(exportId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportStatusResult>): void;
+
+
+    /**
+     * Exports information for all devices using Push to Azure Blob Storage
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} blobContainerSasUri A shared access signature (SAS) URI with
+     * Read, Write and Delete permissions on a container.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ExportStartedResult>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    exportDevicesWithHttpOperationResponse(ownerName: string, appName: string, blobContainerSasUri: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ExportStartedResult>>;
+
+    /**
+     * Exports information for all devices using Push to Azure Blob Storage
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} blobContainerSasUri A shared access signature (SAS) URI with
+     * Read, Write and Delete permissions on a container.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ExportStartedResult} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ExportStartedResult} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ExportStartedResult} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    exportDevices(ownerName: string, appName: string, blobContainerSasUri: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExportStartedResult>;
+    exportDevices(ownerName: string, appName: string, blobContainerSasUri: string, callback: ServiceCallback<models.ExportStartedResult>): void;
+    exportDevices(ownerName: string, appName: string, blobContainerSasUri: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportStartedResult>): void;
 }
 
 /**
@@ -10916,6 +14208,8 @@ export interface ExportConfigurations {
      *
      * @param {object} properties Export configurations.
      *
+     * @param {array} [properties.exportEntities]
+     *
      * @param {string} [properties.resourceName] The resource name on azure
      *
      * @param {string} [properties.resourceGroup] The resource group name on azure
@@ -10945,6 +14239,8 @@ export interface ExportConfigurations {
      * @param {string} exportConfigurationId The id of the export configuration.
      *
      * @param {object} properties Export configurations.
+     *
+     * @param {array} [properties.exportEntities]
      *
      * @param {string} [properties.resourceName] The resource name on azure
      *
@@ -11116,6 +14412,8 @@ export interface ExportConfigurations {
      *
      * @param {object} properties Export configurations.
      *
+     * @param {array} [properties.exportEntities]
+     *
      * @param {string} [properties.resourceName] The resource name on azure
      *
      * @param {string} [properties.resourceGroup] The resource group name on azure
@@ -11143,6 +14441,8 @@ export interface ExportConfigurations {
      * Create new export configuration
      *
      * @param {object} properties Export configurations.
+     *
+     * @param {array} [properties.exportEntities]
      *
      * @param {string} [properties.resourceName] The resource name on azure
      *
@@ -11185,6 +14485,1942 @@ export interface ExportConfigurations {
     create(properties: models.ExportConfiguration, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ExportConfigurationResult>;
     create(properties: models.ExportConfiguration, ownerName: string, appName: string, callback: ServiceCallback<models.ExportConfigurationResult>): void;
     create(properties: models.ExportConfiguration, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ExportConfigurationResult>): void;
+}
+
+/**
+ * @class
+ * Errors
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface Errors {
+
+
+    /**
+     * Get session logs by error ID
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.date] Date of data requested
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<GenericLogContainerDiagnostics>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listSessionLogsWithHttpOperationResponse(errorId: string, ownerName: string, appName: string, options?: { date? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.GenericLogContainerDiagnostics>>;
+
+    /**
+     * Get session logs by error ID
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.date] Date of data requested
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {GenericLogContainerDiagnostics} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {GenericLogContainerDiagnostics} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link GenericLogContainerDiagnostics} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    listSessionLogs(errorId: string, ownerName: string, appName: string, options?: { date? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.GenericLogContainerDiagnostics>;
+    listSessionLogs(errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.GenericLogContainerDiagnostics>): void;
+    listSessionLogs(errorId: string, ownerName: string, appName: string, options: { date? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.GenericLogContainerDiagnostics>): void;
+
+
+    /**
+     * Error attachment text.
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} attachmentId Error attachment id.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorAttachmentText>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    errorAttachmentTextMethodWithHttpOperationResponse(errorId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorAttachmentText>>;
+
+    /**
+     * Error attachment text.
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} attachmentId Error attachment id.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorAttachmentText} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorAttachmentText} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorAttachmentText} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    errorAttachmentTextMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorAttachmentText>;
+    errorAttachmentTextMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorAttachmentText>): void;
+    errorAttachmentTextMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorAttachmentText>): void;
+
+
+    /**
+     * Error attachment location.
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} attachmentId Error attachment id.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorAttachmentLocation>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    errorAttachmentLocationMethodWithHttpOperationResponse(errorId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorAttachmentLocation>>;
+
+    /**
+     * Error attachment location.
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} attachmentId Error attachment id.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorAttachmentLocation} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorAttachmentLocation} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorAttachmentLocation} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    errorAttachmentLocationMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorAttachmentLocation>;
+    errorAttachmentLocationMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorAttachmentLocation>): void;
+    errorAttachmentLocationMethod(errorId: string, attachmentId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorAttachmentLocation>): void;
+
+
+    /**
+     * List error attachments.
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    errorAttachmentsWithHttpOperationResponse(errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorAttachment[]>>;
+
+    /**
+     * List error attachments.
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    errorAttachments(errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorAttachment[]>;
+    errorAttachments(errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorAttachment[]>): void;
+    errorAttachments(errorId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorAttachment[]>): void;
+
+
+    /**
+     * Errors list based on search parameters
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.filter] A filter as specified in OData notation
+     *
+     * @param {string} [options.q] A query string
+     *
+     * @param {string} [options.order] It controls the order of sorting. Possible
+     * values include: 'desc', 'asc'
+     *
+     * @param {string} [options.sort] It controls the sort based on specified
+     * field. Possible values include: 'timestamp', 'errorGroupId',
+     * 'exceptionClassName', 'exceptionFile', 'exceptionLine', 'exceptionMessage',
+     * 'exceptionMethod', 'deviceName', 'osVersion', 'userId'
+     *
+     * @param {number} [options.top] The maximum number of results to return
+     *
+     * @param {number} [options.skip] The offset (starting at 0) of the first
+     * result to return. This parameter along with limit is used to perform
+     * pagination.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorsSearchResult>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    groupListWithHttpOperationResponse(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorsSearchResult>>;
+
+    /**
+     * Errors list based on search parameters
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.filter] A filter as specified in OData notation
+     *
+     * @param {string} [options.q] A query string
+     *
+     * @param {string} [options.order] It controls the order of sorting. Possible
+     * values include: 'desc', 'asc'
+     *
+     * @param {string} [options.sort] It controls the sort based on specified
+     * field. Possible values include: 'timestamp', 'errorGroupId',
+     * 'exceptionClassName', 'exceptionFile', 'exceptionLine', 'exceptionMessage',
+     * 'exceptionMethod', 'deviceName', 'osVersion', 'userId'
+     *
+     * @param {number} [options.top] The maximum number of results to return
+     *
+     * @param {number} [options.skip] The offset (starting at 0) of the first
+     * result to return. This parameter along with limit is used to perform
+     * pagination.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorsSearchResult} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorsSearchResult} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorsSearchResult} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    groupList(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorsSearchResult>;
+    groupList(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorsSearchResult>): void;
+    groupList(ownerName: string, appName: string, options: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorsSearchResult>): void;
+
+
+    /**
+     * @summary Creates and updates the retention settings in days
+     *
+     * Creates and updates the retention settings in days
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {number} retentionInDays
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorRetentionSettings>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    putRetentionSettingsWithHttpOperationResponse(ownerName: string, appName: string, retentionInDays: number, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorRetentionSettings>>;
+
+    /**
+     * @summary Creates and updates the retention settings in days
+     *
+     * Creates and updates the retention settings in days
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {number} retentionInDays
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorRetentionSettings} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorRetentionSettings} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorRetentionSettings} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    putRetentionSettings(ownerName: string, appName: string, retentionInDays: number, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorRetentionSettings>;
+    putRetentionSettings(ownerName: string, appName: string, retentionInDays: number, callback: ServiceCallback<models.ErrorRetentionSettings>): void;
+    putRetentionSettings(ownerName: string, appName: string, retentionInDays: number, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorRetentionSettings>): void;
+
+
+    /**
+     * @summary gets the retention settings in days
+     *
+     * gets the retention settings in days
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorRetentionSettings>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getRetentionSettingsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorRetentionSettings>>;
+
+    /**
+     * @summary gets the retention settings in days
+     *
+     * gets the retention settings in days
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorRetentionSettings} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorRetentionSettings} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorRetentionSettings} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getRetentionSettings(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorRetentionSettings>;
+    getRetentionSettings(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorRetentionSettings>): void;
+    getRetentionSettings(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorRetentionSettings>): void;
+
+
+    /**
+     * Percentage of error-free devices by day in the time range based on the
+     * selected versions. Api will return -1 if crash devices is greater than
+     * active devices
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {array} [options.versions]
+     *
+     * @param {string} [options.errorType] Type of error. Possible values include:
+     * 'all', 'unhandledError', 'handledError'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorFreeDevicePercentages>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    errorFreeDevicePercentagesMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorFreeDevicePercentages>>;
+
+    /**
+     * Percentage of error-free devices by day in the time range based on the
+     * selected versions. Api will return -1 if crash devices is greater than
+     * active devices
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {array} [options.versions]
+     *
+     * @param {string} [options.errorType] Type of error. Possible values include:
+     * 'all', 'unhandledError', 'handledError'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorFreeDevicePercentages} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorFreeDevicePercentages} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorFreeDevicePercentages} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    errorFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorFreeDevicePercentages>;
+    errorFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorFreeDevicePercentages>): void;
+    errorFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorFreeDevicePercentages>): void;
+
+
+    /**
+     * Gets the stack trace for the error group.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<DiagnosticsStackTrace>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    groupErrorStackTraceWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DiagnosticsStackTrace>>;
+
+    /**
+     * Gets the stack trace for the error group.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {DiagnosticsStackTrace} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {DiagnosticsStackTrace} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DiagnosticsStackTrace} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    groupErrorStackTrace(errorGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DiagnosticsStackTrace>;
+    groupErrorStackTrace(errorGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.DiagnosticsStackTrace>): void;
+    groupErrorStackTrace(errorGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DiagnosticsStackTrace>): void;
+
+
+    /**
+     * Top OSes of the selected error group.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorGroupOperatingSystems>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    groupOperatingSystemCountsWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroupOperatingSystems>>;
+
+    /**
+     * Top OSes of the selected error group.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorGroupOperatingSystems} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorGroupOperatingSystems} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorGroupOperatingSystems} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    groupOperatingSystemCounts(errorGroupId: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroupOperatingSystems>;
+    groupOperatingSystemCounts(errorGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorGroupOperatingSystems>): void;
+    groupOperatingSystemCounts(errorGroupId: string, ownerName: string, appName: string, options: { top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroupOperatingSystems>): void;
+
+
+    /**
+     * Top models of the selected error group.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorGroupModels>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    groupModelCountsWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroupModels>>;
+
+    /**
+     * Top models of the selected error group.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorGroupModels} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorGroupModels} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorGroupModels} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    groupModelCounts(errorGroupId: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroupModels>;
+    groupModelCounts(errorGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorGroupModels>): void;
+    groupModelCounts(errorGroupId: string, ownerName: string, appName: string, options: { top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroupModels>): void;
+
+
+    /**
+     * Error Stacktrace details.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<DiagnosticsStackTrace>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    errorStackTraceWithHttpOperationResponse(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DiagnosticsStackTrace>>;
+
+    /**
+     * Error Stacktrace details.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {DiagnosticsStackTrace} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {DiagnosticsStackTrace} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link DiagnosticsStackTrace} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    errorStackTrace(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DiagnosticsStackTrace>;
+    errorStackTrace(errorGroupId: string, errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.DiagnosticsStackTrace>): void;
+    errorStackTrace(errorGroupId: string, errorId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DiagnosticsStackTrace>): void;
+
+
+    /**
+     * Error location.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorLocation>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    errorLocationMethodWithHttpOperationResponse(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorLocation>>;
+
+    /**
+     * Error location.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorLocation} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorLocation} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorLocation} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    errorLocationMethod(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorLocation>;
+    errorLocationMethod(errorGroupId: string, errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorLocation>): void;
+    errorLocationMethod(errorGroupId: string, errorId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorLocation>): void;
+
+
+    /**
+     * Download details for a specific error.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.format] the format of the crash log. Possible
+     * values include: 'json', 'txt'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    errorDownloadWithHttpOperationResponse(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { format? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<stream.Readable>>;
+
+    /**
+     * Download details for a specific error.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.format] the format of the crash log. Possible
+     * values include: 'json', 'txt'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    errorDownload(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { format? : string, customHeaders? : { [headerName: string]: string; } }): Promise<stream.Readable>;
+    errorDownload(errorGroupId: string, errorId: string, ownerName: string, appName: string, callback: ServiceCallback<stream.Readable>): void;
+    errorDownload(errorGroupId: string, errorId: string, ownerName: string, appName: string, options: { format? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<stream.Readable>): void;
+
+
+    /**
+     * Error details.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<HandledErrorDetails>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getErrorDetailsWithHttpOperationResponse(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.HandledErrorDetails>>;
+
+    /**
+     * Error details.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {HandledErrorDetails} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {HandledErrorDetails} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link HandledErrorDetails} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getErrorDetails(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.HandledErrorDetails>;
+    getErrorDetails(errorGroupId: string, errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.HandledErrorDetails>): void;
+    getErrorDetails(errorGroupId: string, errorId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.HandledErrorDetails>): void;
+
+
+    /**
+     * Delete a specific error and related attachments and blobs for an app.
+     * Searchable data will not be deleted immediately and may take up to 30 days.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorDeleteCounter>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteErrorWithHttpOperationResponse(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDeleteCounter>>;
+
+    /**
+     * Delete a specific error and related attachments and blobs for an app.
+     * Searchable data will not be deleted immediately and may take up to 30 days.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} errorId The id of the error
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorDeleteCounter} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorDeleteCounter} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorDeleteCounter} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteError(errorGroupId: string, errorId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDeleteCounter>;
+    deleteError(errorGroupId: string, errorId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDeleteCounter>): void;
+    deleteError(errorGroupId: string, errorId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDeleteCounter>): void;
+
+
+    /**
+     * Latest error details.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<HandledErrorDetails>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    latestErrorDetailsWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.HandledErrorDetails>>;
+
+    /**
+     * Latest error details.
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {HandledErrorDetails} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {HandledErrorDetails} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link HandledErrorDetails} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    latestErrorDetails(errorGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.HandledErrorDetails>;
+    latestErrorDetails(errorGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.HandledErrorDetails>): void;
+    latestErrorDetails(errorGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.HandledErrorDetails>): void;
+
+
+    /**
+     * Get all errors for group
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} model
+     *
+     * @param {string} os
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<HandledErrors>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listForGroupWithHttpOperationResponse(errorGroupId: string, start: Date|string, model: string, os: string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.HandledErrors>>;
+
+    /**
+     * Get all errors for group
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} model
+     *
+     * @param {string} os
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {HandledErrors} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {HandledErrors} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link HandledErrors} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    listForGroup(errorGroupId: string, start: Date|string, model: string, os: string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.HandledErrors>;
+    listForGroup(errorGroupId: string, start: Date|string, model: string, os: string, ownerName: string, appName: string, callback: ServiceCallback<models.HandledErrors>): void;
+    listForGroup(errorGroupId: string, start: Date|string, model: string, os: string, ownerName: string, appName: string, options: { end? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.HandledErrors>): void;
+
+
+    /**
+     * Percentage of error-free devices by day in the time range. Api will return
+     * -1 if crash devices is greater than active devices
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorFreeDevicePercentages>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    groupErrorFreeDevicePercentagesWithHttpOperationResponse(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorFreeDevicePercentages>>;
+
+    /**
+     * Percentage of error-free devices by day in the time range. Api will return
+     * -1 if crash devices is greater than active devices
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorFreeDevicePercentages} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorFreeDevicePercentages} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorFreeDevicePercentages} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    groupErrorFreeDevicePercentages(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorFreeDevicePercentages>;
+    groupErrorFreeDevicePercentages(errorGroupId: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorFreeDevicePercentages>): void;
+    groupErrorFreeDevicePercentages(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorFreeDevicePercentages>): void;
+
+
+    /**
+     * Count of errors by day in the time range of the selected error group with
+     * selected version
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.version]
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorCounts>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    groupCountsPerDayWithHttpOperationResponse(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorCounts>>;
+
+    /**
+     * Count of errors by day in the time range of the selected error group with
+     * selected version
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.version]
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorCounts} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorCounts} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorCounts} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    groupCountsPerDay(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorCounts>;
+    groupCountsPerDay(errorGroupId: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorCounts>): void;
+    groupCountsPerDay(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options: { version? : string, end? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorCounts>): void;
+
+
+    /**
+     * Error group details
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorGroup>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    groupDetailsWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroup>>;
+
+    /**
+     * Error group details
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorGroup} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorGroup} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorGroup} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    groupDetails(errorGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroup>;
+    groupDetails(errorGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorGroup>): void;
+    groupDetails(errorGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroup>): void;
+
+
+    /**
+     * Update error group state
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} state Possible values include: 'open', 'closed', 'ignored'
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.annotation]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorGroup>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updateStateWithHttpOperationResponse(errorGroupId: string, ownerName: string, appName: string, state: string, options?: { annotation? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroup>>;
+
+    /**
+     * Update error group state
+     *
+     * @param {string} errorGroupId The id of the error group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} state Possible values include: 'open', 'closed', 'ignored'
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.annotation]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorGroup} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorGroup} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorGroup} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    updateState(errorGroupId: string, ownerName: string, appName: string, state: string, options?: { annotation? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroup>;
+    updateState(errorGroupId: string, ownerName: string, appName: string, state: string, callback: ServiceCallback<models.ErrorGroup>): void;
+    updateState(errorGroupId: string, ownerName: string, appName: string, state: string, options: { annotation? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroup>): void;
+
+
+    /**
+     * Error groups list based on search parameters
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.filter] A filter as specified in OData notation
+     *
+     * @param {string} [options.q] A query string
+     *
+     * @param {string} [options.order] It controls the order of sorting. Possible
+     * values include: 'desc', 'asc'
+     *
+     * @param {string} [options.sort] It controls the sort based on specified
+     * field. Possible values include: 'matchingReportsCount',
+     * 'exceptionClassName', 'exceptionMessage', 'exceptionMethod',
+     * 'lastOccurrence'
+     *
+     * @param {number} [options.top] The maximum number of results to return
+     *
+     * @param {number} [options.skip] The offset (starting at 0) of the first
+     * result to return. This parameter along with limit is used to perform
+     * pagination.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorGroupsSearchResult>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    errorGroupsSearchWithHttpOperationResponse(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroupsSearchResult>>;
+
+    /**
+     * Error groups list based on search parameters
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.filter] A filter as specified in OData notation
+     *
+     * @param {string} [options.q] A query string
+     *
+     * @param {string} [options.order] It controls the order of sorting. Possible
+     * values include: 'desc', 'asc'
+     *
+     * @param {string} [options.sort] It controls the sort based on specified
+     * field. Possible values include: 'matchingReportsCount',
+     * 'exceptionClassName', 'exceptionMessage', 'exceptionMethod',
+     * 'lastOccurrence'
+     *
+     * @param {number} [options.top] The maximum number of results to return
+     *
+     * @param {number} [options.skip] The offset (starting at 0) of the first
+     * result to return. This parameter along with limit is used to perform
+     * pagination.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorGroupsSearchResult} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorGroupsSearchResult} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorGroupsSearchResult} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    errorGroupsSearch(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroupsSearchResult>;
+    errorGroupsSearch(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorGroupsSearchResult>): void;
+    errorGroupsSearch(ownerName: string, appName: string, options: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroupsSearchResult>): void;
+
+
+    /**
+     * List of error groups
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.version]
+     *
+     * @param {string} [options.groupState]
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {string} [options.orderby] controls the sorting order and sorting
+     * based on which column
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     *
+     * @param {string} [options.errorType] Type of error. Possible values include:
+     * 'all', 'unhandledError', 'handledError'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorGroups>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    groupList1WithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { version? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroups>>;
+
+    /**
+     * List of error groups
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.version]
+     *
+     * @param {string} [options.groupState]
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {string} [options.orderby] controls the sorting order and sorting
+     * based on which column
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     *
+     * @param {string} [options.errorType] Type of error. Possible values include:
+     * 'all', 'unhandledError', 'handledError'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorGroups} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorGroups} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorGroups} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    groupList1(start: Date|string, ownerName: string, appName: string, options?: { version? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroups>;
+    groupList1(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorGroups>): void;
+    groupList1(start: Date|string, ownerName: string, appName: string, options: { version? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroups>): void;
+
+
+    /**
+     * Count of errors by day in the time range based the selected versions.
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.version]
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {string} [options.errorType] Type of error. Possible values include:
+     * 'all', 'unhandledError', 'handledError'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorCounts>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    countsPerDayWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorCounts>>;
+
+    /**
+     * Count of errors by day in the time range based the selected versions.
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.version]
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {string} [options.errorType] Type of error. Possible values include:
+     * 'all', 'unhandledError', 'handledError'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorCounts} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorCounts} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorCounts} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    countsPerDay(start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorCounts>;
+    countsPerDay(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorCounts>): void;
+    countsPerDay(start: Date|string, ownerName: string, appName: string, options: { version? : string, end? : Date, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorCounts>): void;
+
+
+    /**
+     * Get all available versions in the time range.
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     *
+     * @param {number} [options.skip] The offset (starting at 0) of the first
+     * result to return. This parameter along with limit is used to perform
+     * pagination.
+     *
+     * @param {string} [options.filter] A filter as specified in
+     * https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.
+     *
+     * @param {string} [options.inlinecount] Controls whether or not to include a
+     * count of all the items across all pages. Possible values include:
+     * 'allpages', 'none'
+     *
+     * @param {string} [options.errorType] Type of error. Possible values include:
+     * 'all', 'unhandledError', 'handledError'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AvailableVersionsDiagnostics>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    availableVersionsMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, skip? : number, filter? : string, inlinecount? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AvailableVersionsDiagnostics>>;
+
+    /**
+     * Get all available versions in the time range.
+     *
+     * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {date} [options.end] Last date time in data in ISO 8601 date time
+     * format
+     *
+     * @param {number} [options.top] The maximum number of results to return. (0
+     * will fetch all results)
+     *
+     * @param {number} [options.skip] The offset (starting at 0) of the first
+     * result to return. This parameter along with limit is used to perform
+     * pagination.
+     *
+     * @param {string} [options.filter] A filter as specified in
+     * https://github.com/Microsoft/api-guidelines/blob/master/Guidelines.md#97-filtering.
+     *
+     * @param {string} [options.inlinecount] Controls whether or not to include a
+     * count of all the items across all pages. Possible values include:
+     * 'allpages', 'none'
+     *
+     * @param {string} [options.errorType] Type of error. Possible values include:
+     * 'all', 'unhandledError', 'handledError'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AvailableVersionsDiagnostics} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AvailableVersionsDiagnostics} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AvailableVersionsDiagnostics} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    availableVersionsMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, skip? : number, filter? : string, inlinecount? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.AvailableVersionsDiagnostics>;
+    availableVersionsMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.AvailableVersionsDiagnostics>): void;
+    availableVersionsMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, top? : number, skip? : number, filter? : string, inlinecount? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AvailableVersionsDiagnostics>): void;
 }
 
 /**
@@ -11590,6 +16826,83 @@ export interface StoreReleases {
 
 /**
  * @class
+ * StoreReleasePublishLogs
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface StoreReleasePublishLogs {
+
+
+    /**
+     * Returns publish logs for a particular release published to a particular
+     * store
+     *
+     * @param {string} storeName The name of the store
+     *
+     * @param {string} releaseId The ID of the realease
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getWithHttpOperationResponse(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Returns publish logs for a particular release published to a particular
+     * store
+     *
+     * @param {string} storeName The name of the store
+     *
+     * @param {string} releaseId The ID of the realease
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    get(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    get(storeName: string, releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
+    get(storeName: string, releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+}
+
+/**
+ * @class
  * Stores
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
@@ -11661,6 +16974,72 @@ export interface Stores {
 
 
     /**
+     * Update the store.
+     *
+     * @param {string} storeName The name of the store
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} serviceConnectionId Service connection id to updated.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    patchWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, serviceConnectionId: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Update the store.
+     *
+     * @param {string} storeName The name of the store
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} serviceConnectionId Service connection id to updated.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    patch(storeName: string, ownerName: string, appName: string, serviceConnectionId: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    patch(storeName: string, ownerName: string, appName: string, serviceConnectionId: string, callback: ServiceCallback<void>): void;
+    patch(storeName: string, ownerName: string, appName: string, serviceConnectionId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
      * delete the store based on specific store name.
      *
      * @param {string} storeName The name of the store
@@ -11728,16 +17107,15 @@ export interface Stores {
      * @param {object} body The store request
      *
      * @param {string} [body.type] store Type. Possible values include:
-     * 'googleplay', 'intune', 'windows', 'apple'
+     * 'googleplay', 'intune', 'apple'
      *
-     * @param {string} [body.name] name of the store. In case of googleplay,
-     * windows and Apple store this is fixed to Production.
+     * @param {string} [body.name] name of the store. In case of googleplay, and
+     * Apple store this is fixed to Production.
      *
      * @param {string} [body.track] track of the store. Can be production, alpha &
      * beta for googleplay. Can be production, testflight-internal &
-     * testflight-external for Apple Store. Can be production for Windows Store.
-     * Possible values include: 'production', 'alpha', 'beta',
-     * 'testflight-internal', 'testflight-external'
+     * testflight-external for Apple Store. Possible values include: 'production',
+     * 'alpha', 'beta', 'testflight-internal', 'testflight-external'
      *
      * @param {object} [body.intuneDetails]
      *
@@ -11762,22 +17140,6 @@ export interface Stores {
      * app category
      *
      * @param {string} [body.intuneDetails.tenantId] tenant id of the intune store
-     *
-     * @param {object} [body.windowsDetails]
-     *
-     * @param {object} [body.windowsDetails.secretJson]
-     *
-     * @param {string} [body.windowsDetails.secretJson.idToken] the id token of
-     * user
-     *
-     * @param {string} [body.windowsDetails.secretJson.refreshToken] the refresh
-     * token for user
-     *
-     * @param {string} [body.windowsDetails.secretJson.refreshTokenExpiry] the
-     * expiry of refresh token
-     *
-     * @param {string} [body.windowsDetails.tenantId] tenant id the user account
-     * belongs to
      *
      * @param {string} [body.serviceConnectionId] Id for the shared service
      * connection. In case of Apple AppStore, this connection will be used to
@@ -11806,16 +17168,15 @@ export interface Stores {
      * @param {object} body The store request
      *
      * @param {string} [body.type] store Type. Possible values include:
-     * 'googleplay', 'intune', 'windows', 'apple'
+     * 'googleplay', 'intune', 'apple'
      *
-     * @param {string} [body.name] name of the store. In case of googleplay,
-     * windows and Apple store this is fixed to Production.
+     * @param {string} [body.name] name of the store. In case of googleplay, and
+     * Apple store this is fixed to Production.
      *
      * @param {string} [body.track] track of the store. Can be production, alpha &
      * beta for googleplay. Can be production, testflight-internal &
-     * testflight-external for Apple Store. Can be production for Windows Store.
-     * Possible values include: 'production', 'alpha', 'beta',
-     * 'testflight-internal', 'testflight-external'
+     * testflight-external for Apple Store. Possible values include: 'production',
+     * 'alpha', 'beta', 'testflight-internal', 'testflight-external'
      *
      * @param {object} [body.intuneDetails]
      *
@@ -11840,22 +17201,6 @@ export interface Stores {
      * app category
      *
      * @param {string} [body.intuneDetails.tenantId] tenant id of the intune store
-     *
-     * @param {object} [body.windowsDetails]
-     *
-     * @param {object} [body.windowsDetails.secretJson]
-     *
-     * @param {string} [body.windowsDetails.secretJson.idToken] the id token of
-     * user
-     *
-     * @param {string} [body.windowsDetails.secretJson.refreshToken] the refresh
-     * token for user
-     *
-     * @param {string} [body.windowsDetails.secretJson.refreshTokenExpiry] the
-     * expiry of refresh token
-     *
-     * @param {string} [body.windowsDetails.tenantId] tenant id the user account
-     * belongs to
      *
      * @param {string} [body.serviceConnectionId] Id for the shared service
      * connection. In case of Apple AppStore, this connection will be used to
@@ -11959,51 +17304,45 @@ export interface Stores {
 
 /**
  * @class
- * DistributionGroups
+ * MissingSymbolGroups
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
  */
-export interface DistributionGroups {
+export interface MissingSymbolGroups {
 
 
     /**
-     * Resend distribution group app invite notification to previously invited
-     * testers
+     * @summary Gets application level statistics for all missing symbol groups
+     *
+     * Gets application level statistics for all missing symbol groups
      *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} distributionGroupName The name of the distribution group
-     *
      * @param {object} [options] Optional Parameters.
-     *
-     * @param {array} [options.userEmails] The list of emails of the users
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<V2MissingSymbolCrashGroupsInfoResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    resendInviteWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+    infoWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.V2MissingSymbolCrashGroupsInfoResponse>>;
 
     /**
-     * Resend distribution group app invite notification to previously invited
-     * testers
+     * @summary Gets application level statistics for all missing symbol groups
+     *
+     * Gets application level statistics for all missing symbol groups
      *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} distributionGroupName The name of the distribution group
-     *
      * @param {object} [options] Optional Parameters.
-     *
-     * @param {array} [options.userEmails] The list of emails of the users
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -12015,7 +17354,7 @@ export interface DistributionGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {null} - The deserialized result object.
+     *                      @resolve {V2MissingSymbolCrashGroupsInfoResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -12023,225 +17362,29 @@ export interface DistributionGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *                      {V2MissingSymbolCrashGroupsInfoResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link V2MissingSymbolCrashGroupsInfoResponse} for
+     *                      more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    resendInvite(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<void>;
-    resendInvite(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<void>): void;
-    resendInvite(ownerName: string, appName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    info(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.V2MissingSymbolCrashGroupsInfoResponse>;
+    info(ownerName: string, appName: string, callback: ServiceCallback<models.V2MissingSymbolCrashGroupsInfoResponse>): void;
+    info(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.V2MissingSymbolCrashGroupsInfoResponse>): void;
 
 
     /**
-     * Remove the users from the distribution group
+     * @summary Gets missing symbol crash group by its id
+     *
+     * Gets missing symbol crash group by its id
+     *
+     * @param {string} symbolGroupId missing symbol crash group id
      *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
-     *
-     * @param {string} distributionGroupName The name of the distribution group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {array} [options.userEmails] The list of emails of the users
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    removeUserWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupUserDeleteResponse[]>>;
-
-    /**
-     * Remove the users from the distribution group
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} distributionGroupName The name of the distribution group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {array} [options.userEmails] The list of emails of the users
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Array} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    removeUser(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupUserDeleteResponse[]>;
-    removeUser(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupUserDeleteResponse[]>): void;
-    removeUser(ownerName: string, appName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupUserDeleteResponse[]>): void;
-
-
-    /**
-     * Returns a list of member details in the distribution group specified
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} distributionGroupName The name of the distribution group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {boolean} [options.excludePendingInvitations] Whether to exclude
-     * pending invitations in the response
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    listUsersWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { excludePendingInvitations? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupUserGetResponse[]>>;
-
-    /**
-     * Returns a list of member details in the distribution group specified
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} distributionGroupName The name of the distribution group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {boolean} [options.excludePendingInvitations] Whether to exclude
-     * pending invitations in the response
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Array} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    listUsers(ownerName: string, appName: string, distributionGroupName: string, options?: { excludePendingInvitations? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupUserGetResponse[]>;
-    listUsers(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupUserGetResponse[]>): void;
-    listUsers(ownerName: string, appName: string, distributionGroupName: string, options: { excludePendingInvitations? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupUserGetResponse[]>): void;
-
-
-    /**
-     * Adds the members to the specified distribution group
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} distributionGroupName The name of the distribution group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {array} [options.userEmails] The list of emails of the users
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    addUserWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupUserPostResponse[]>>;
-
-    /**
-     * Adds the members to the specified distribution group
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} distributionGroupName The name of the distribution group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {array} [options.userEmails] The list of emails of the users
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Array} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    addUser(ownerName: string, appName: string, distributionGroupName: string, options?: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupUserPostResponse[]>;
-    addUser(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupUserPostResponse[]>): void;
-    addUser(ownerName: string, appName: string, distributionGroupName: string, options: { userEmails? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupUserPostResponse[]>): void;
-
-
-    /**
-     * Returns a single distribution group for a given distribution group name
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} distributionGroupName The name of the distribution group
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -12250,20 +17393,22 @@ export interface DistributionGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<V2MissingSymbolCrashGroupsResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+    getWithHttpOperationResponse(symbolGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.V2MissingSymbolCrashGroupsResponse>>;
 
     /**
-     * Returns a single distribution group for a given distribution group name
+     * @summary Gets missing symbol crash group by its id
+     *
+     * Gets missing symbol crash group by its id
+     *
+     * @param {string} symbolGroupId missing symbol crash group id
      *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
-     *
-     * @param {string} distributionGroupName The name of the distribution group
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -12277,7 +17422,7 @@ export interface DistributionGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+     *                      @resolve {V2MissingSymbolCrashGroupsResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -12285,59 +17430,61 @@ export interface DistributionGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DistributionGroupResponse} for more
+     *                      {V2MissingSymbolCrashGroupsResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link V2MissingSymbolCrashGroupsResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(ownerName: string, appName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
-    get(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
-    get(ownerName: string, appName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    get(symbolGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.V2MissingSymbolCrashGroupsResponse>;
+    get(symbolGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.V2MissingSymbolCrashGroupsResponse>): void;
+    get(symbolGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.V2MissingSymbolCrashGroupsResponse>): void;
 
 
     /**
-     * Updates the attributes of distribution group
+     * @summary Gets top N (ordered by crash count) of crash groups by missing
+     * symbol
+     *
+     * Gets top N (ordered by crash count) of crash groups by missing symbol
+     *
+     * @param {number} top top N elements
      *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} distributionGroupName The name of the distribution group
-     *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.name] The name of the distribution group
-     *
-     * @param {boolean} [options.isPublic] Whether the distribution group is public
+     * @param {string} [options.filter] query filter
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<V2MissingSymbolCrashGroupsResponse>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateWithHttpOperationResponse(ownerName: string, appName: string, distributionGroupName: string, options?: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+    listWithHttpOperationResponse(top: number, ownerName: string, appName: string, options?: { filter? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.V2MissingSymbolCrashGroupsResponse>>;
 
     /**
-     * Updates the attributes of distribution group
+     * @summary Gets top N (ordered by crash count) of crash groups by missing
+     * symbol
+     *
+     * Gets top N (ordered by crash count) of crash groups by missing symbol
+     *
+     * @param {number} top top N elements
      *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} distributionGroupName The name of the distribution group
-     *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.name] The name of the distribution group
-     *
-     * @param {boolean} [options.isPublic] Whether the distribution group is public
+     * @param {string} [options.filter] query filter
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -12349,7 +17496,7 @@ export interface DistributionGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+     *                      @resolve {V2MissingSymbolCrashGroupsResponse} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -12357,83 +17504,35 @@ export interface DistributionGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DistributionGroupResponse} for more
+     *                      {V2MissingSymbolCrashGroupsResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link V2MissingSymbolCrashGroupsResponse} for more
      *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    update(ownerName: string, appName: string, distributionGroupName: string, options?: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
-    update(ownerName: string, appName: string, distributionGroupName: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
-    update(ownerName: string, appName: string, distributionGroupName: string, options: { name? : string, isPublic? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    list(top: number, ownerName: string, appName: string, options?: { filter? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.V2MissingSymbolCrashGroupsResponse>;
+    list(top: number, ownerName: string, appName: string, callback: ServiceCallback<models.V2MissingSymbolCrashGroupsResponse>): void;
+    list(top: number, ownerName: string, appName: string, options: { filter? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.V2MissingSymbolCrashGroupsResponse>): void;
+}
+
+/**
+ * @class
+ * App
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface App {
 
 
     /**
-     * Deletes a distribution group
+     * **Warning, this operation is not reversible.**
      *
-     * @param {string} appName The name of the application
+     * A successful call to this API will permanently stop ingesting any logs
+     * received via SDK by app_id, and cannot be restored. We advise caution when
+     * using this API, it is designed to permanently disable an app_id.
      *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} distributionGroupName The name of the distribution group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    deleteMethodWithHttpOperationResponse(appName: string, ownerName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
-
-    /**
-     * Deletes a distribution group
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} distributionGroupName The name of the distribution group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {null} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {null} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    deleteMethod(appName: string, ownerName: string, distributionGroupName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
-    deleteMethod(appName: string, ownerName: string, distributionGroupName: string, callback: ServiceCallback<void>): void;
-    deleteMethod(appName: string, ownerName: string, distributionGroupName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
-
-
-    /**
-     * Returns a list of distribution groups in the app specified
      *
      * @param {string} ownerName The name of the owner
      *
@@ -12446,14 +17545,19 @@ export interface DistributionGroups {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<String>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse[]>>;
+    blockLogsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<string>>;
 
     /**
-     * Returns a list of distribution groups in the app specified
+     * **Warning, this operation is not reversible.**
+     *
+     * A successful call to this API will permanently stop ingesting any logs
+     * received via SDK by app_id, and cannot be restored. We advise caution when
+     * using this API, it is designed to permanently disable an app_id.
+     *
      *
      * @param {string} ownerName The name of the owner
      *
@@ -12471,7 +17575,7 @@ export interface DistributionGroups {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Array} - The deserialized result object.
+     *                      @resolve {String} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -12479,79 +17583,15 @@ export interface DistributionGroups {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *                      {String} [result]   - The deserialized result object if an error did not occur.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    list(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse[]>;
-    list(ownerName: string, appName: string, callback: ServiceCallback<models.DistributionGroupResponse[]>): void;
-    list(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse[]>): void;
-
-
-    /**
-     * Creates a new distribution group and returns it to the caller
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} name The name of the distribution group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    createWithHttpOperationResponse(ownerName: string, appName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
-
-    /**
-     * Creates a new distribution group and returns it to the caller
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {string} name The name of the distribution group
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {DistributionGroupResponse} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {DistributionGroupResponse} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link DistributionGroupResponse} for more
-     *                      information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    create(ownerName: string, appName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
-    create(ownerName: string, appName: string, name: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
-    create(ownerName: string, appName: string, name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    blockLogs(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<string>;
+    blockLogs(ownerName: string, appName: string, callback: ServiceCallback<string>): void;
+    blockLogs(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<string>): void;
 }
 
 /**
@@ -13553,7 +18593,9 @@ export interface CrashGroups {
 
 
     /**
-     * Gets a stacktrace for a specific crash
+     * @summary Available for UWP apps only.
+     *
+     * Gets a stacktrace for a specific crash. Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -13578,7 +18620,9 @@ export interface CrashGroups {
     getStacktraceWithHttpOperationResponse(crashGroupId: string, ownerName: string, appName: string, options?: { groupingOnly? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Stacktrace>>;
 
     /**
-     * Gets a stacktrace for a specific crash
+     * @summary Available for UWP apps only.
+     *
+     * Gets a stacktrace for a specific crash. Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -13622,7 +18666,9 @@ export interface CrashGroups {
 
 
     /**
-     * Gets a specific group
+     * @summary Available for UWP apps only.
+     *
+     * Gets a specific group. Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -13644,7 +18690,9 @@ export interface CrashGroups {
     getWithHttpOperationResponse(crashGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroup>>;
 
     /**
-     * Gets a specific group
+     * @summary Available for UWP apps only.
+     *
+     * Gets a specific group. Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -13685,7 +18733,9 @@ export interface CrashGroups {
 
 
     /**
-     * Updates a group
+     * @summary Available for UWP apps only.
+     *
+     * Updates a group. Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -13711,7 +18761,9 @@ export interface CrashGroups {
     updateWithHttpOperationResponse(crashGroupId: string, ownerName: string, appName: string, options?: { status? : any, annotation? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroup>>;
 
     /**
-     * Updates a group
+     * @summary Available for UWP apps only.
+     *
+     * Updates a group. Available for UWP apps only.
      *
      * @param {string} crashGroupId id of a specific group
      *
@@ -13756,11 +18808,10 @@ export interface CrashGroups {
 
 
     /**
-     * @summary Gets a list of crash groups and whether the list contains all
-     * available groups.
+     * @summary Available for UWP apps only.
      *
      * Gets a list of crash groups and whether the list contains all available
-     * groups.
+     * groups. Available for UWP apps only.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -13805,11 +18856,10 @@ export interface CrashGroups {
     listWithHttpOperationResponse(ownerName: string, appName: string, options?: { lastOccurrenceFrom? : Date, lastOccurrenceTo? : Date, appVersion? : string, groupType? : string, groupStatus? : string, groupTextSearch? : string, orderby? : string, continuationToken? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroupsContainer>>;
 
     /**
-     * @summary Gets a list of crash groups and whether the list contains all
-     * available groups.
+     * @summary Available for UWP apps only.
      *
      * Gets a list of crash groups and whether the list contains all available
-     * groups.
+     * groups. Available for UWP apps only.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -13941,6 +18991,137 @@ export interface Commits {
     listByShaList(hashes: string[], ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CommitDetails[]>;
     listByShaList(hashes: string[], ownerName: string, appName: string, callback: ServiceCallback<models.CommitDetails[]>): void;
     listByShaList(hashes: string[], ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CommitDetails[]>): void;
+}
+
+/**
+ * @class
+ * BugTracker
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface BugTracker {
+
+
+    /**
+     * Get project issue related to a crash group
+     *
+     * @param {string} crashGroupId CrashGroup Id
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<BugTrackerIssueResult>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getRepoIssueFromCrashWithHttpOperationResponse(crashGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BugTrackerIssueResult>>;
+
+    /**
+     * Get project issue related to a crash group
+     *
+     * @param {string} crashGroupId CrashGroup Id
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {BugTrackerIssueResult} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {BugTrackerIssueResult} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link BugTrackerIssueResult} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getRepoIssueFromCrash(crashGroupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BugTrackerIssueResult>;
+    getRepoIssueFromCrash(crashGroupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.BugTrackerIssueResult>): void;
+    getRepoIssueFromCrash(crashGroupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BugTrackerIssueResult>): void;
+
+
+    /**
+     * Get bug tracker settings for a particular app
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AlertingBugtracker>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getSettingsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AlertingBugtracker>>;
+
+    /**
+     * Get bug tracker settings for a particular app
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AlertingBugtracker} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AlertingBugtracker} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AlertingBugtracker} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getSettings(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AlertingBugtracker>;
+    getSettings(ownerName: string, appName: string, callback: ServiceCallback<models.AlertingBugtracker>): void;
+    getSettings(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AlertingBugtracker>): void;
 }
 
 /**
@@ -15278,7 +20459,7 @@ export interface Analytics {
      *
      * @param {array} [options.versions]
      *
-     * @param {number} [options.count] The number of property values to return
+     * @param {number} [options.top] The number of property values to return
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -15289,7 +20470,7 @@ export interface Analytics {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    eventPropertyCountsWithHttpOperationResponse(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], count? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventPropertyValues>>;
+    eventPropertyCountsWithHttpOperationResponse(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventPropertyValues>>;
 
     /**
      * Event properties value counts during the time range in descending order.
@@ -15312,7 +20493,7 @@ export interface Analytics {
      *
      * @param {array} [options.versions]
      *
-     * @param {number} [options.count] The number of property values to return
+     * @param {number} [options.top] The number of property values to return
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -15339,9 +20520,9 @@ export interface Analytics {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    eventPropertyCounts(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], count? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.EventPropertyValues>;
+    eventPropertyCounts(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.EventPropertyValues>;
     eventPropertyCounts(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.EventPropertyValues>): void;
-    eventPropertyCounts(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], count? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventPropertyValues>): void;
+    eventPropertyCounts(eventName: string, eventPropertyName: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], top? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.EventPropertyValues>): void;
 
 
     /**
@@ -16010,9 +21191,11 @@ export interface Analytics {
     /**
      * Percentage of crash-free device by day in the time range based on the
      * selected versions. Api will return -1 if crash devices is greater than
-     * active devices
+     * active devices.
      *
      * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} version
      *
      * @param {string} ownerName The name of the owner
      *
@@ -16022,8 +21205,6 @@ export interface Analytics {
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
      * format
-     *
-     * @param {array} [options.versions]
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -16034,14 +21215,16 @@ export interface Analytics {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    crashFreeDevicePercentagesMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashFreeDevicePercentages>>;
+    crashFreeDevicePercentagesMethodWithHttpOperationResponse(start: Date|string, version: string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashFreeDevicePercentages>>;
 
     /**
      * Percentage of crash-free device by day in the time range based on the
      * selected versions. Api will return -1 if crash devices is greater than
-     * active devices
+     * active devices.
      *
      * @param {date} start Start date time in data in ISO 8601 date time format
+     *
+     * @param {string} version
      *
      * @param {string} ownerName The name of the owner
      *
@@ -16051,8 +21234,6 @@ export interface Analytics {
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
      * format
-     *
-     * @param {array} [options.versions]
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -16080,14 +21261,16 @@ export interface Analytics {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    crashFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashFreeDevicePercentages>;
-    crashFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashFreeDevicePercentages>): void;
-    crashFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashFreeDevicePercentages>): void;
+    crashFreeDevicePercentagesMethod(start: Date|string, version: string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.CrashFreeDevicePercentages>;
+    crashFreeDevicePercentagesMethod(start: Date|string, version: string, ownerName: string, appName: string, callback: ServiceCallback<models.CrashFreeDevicePercentages>): void;
+    crashFreeDevicePercentagesMethod(start: Date|string, version: string, ownerName: string, appName: string, options: { end? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CrashFreeDevicePercentages>): void;
 
 
     /**
+     * @summary Available for UWP apps only.
+     *
      * Overall crashes and affected users count of the selected crash group with
-     * selected version
+     * selected version. Available for UWP apps only.
      *
      * @param {string} crashGroupId The id of the crash group
      *
@@ -16111,8 +21294,10 @@ export interface Analytics {
     crashGroupTotalsWithHttpOperationResponse(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashOverall>>;
 
     /**
+     * @summary Available for UWP apps only.
+     *
      * Overall crashes and affected users count of the selected crash group with
-     * selected version
+     * selected version. Available for UWP apps only.
      *
      * @param {string} crashGroupId The id of the crash group
      *
@@ -16155,7 +21340,10 @@ export interface Analytics {
 
 
     /**
-     * top OSes of the selected crash group with selected version
+     * @summary Available for UWP apps only.
+     *
+     * top OSes of the selected crash group with selected version. Available for
+     * UWP apps only.
      *
      * @param {string} crashGroupId The id of the crash group
      *
@@ -16182,7 +21370,10 @@ export interface Analytics {
     crashGroupOperatingSystemCountsWithHttpOperationResponse(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroupOperatingSystems>>;
 
     /**
-     * top OSes of the selected crash group with selected version
+     * @summary Available for UWP apps only.
+     *
+     * top OSes of the selected crash group with selected version. Available for
+     * UWP apps only.
      *
      * @param {string} crashGroupId The id of the crash group
      *
@@ -16229,7 +21420,10 @@ export interface Analytics {
 
 
     /**
-     * top models of the selected crash group with selected version
+     * @summary Available for UWP apps only.
+     *
+     * top models of the selected crash group with selected version. Available for
+     * UWP apps only.
      *
      * @param {string} crashGroupId The id of the crash group
      *
@@ -16256,7 +21450,10 @@ export interface Analytics {
     crashGroupModelCountsWithHttpOperationResponse(crashGroupId: string, version: string, ownerName: string, appName: string, options?: { top? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashGroupModels>>;
 
     /**
-     * top models of the selected crash group with selected version
+     * @summary Available for UWP apps only.
+     *
+     * top models of the selected crash group with selected version. Available for
+     * UWP apps only.
      *
      * @param {string} crashGroupId The id of the crash group
      *
@@ -16302,8 +21499,10 @@ export interface Analytics {
 
 
     /**
+     * @summary Available for UWP apps only.
+     *
      * Count of crashes by day in the time range of the selected crash group with
-     * selected version
+     * selected version. Available for UWP apps only.
      *
      * @param {string} crashGroupId The id of the crash group
      *
@@ -16332,8 +21531,10 @@ export interface Analytics {
     crashGroupCountsWithHttpOperationResponse(crashGroupId: string, version: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashCounts>>;
 
     /**
+     * @summary Available for UWP apps only.
+     *
      * Count of crashes by day in the time range of the selected crash group with
-     * selected version
+     * selected version. Available for UWP apps only.
      *
      * @param {string} crashGroupId The id of the crash group
      *
@@ -16445,7 +21646,10 @@ export interface Analytics {
 
 
     /**
+     * @summary Available for UWP apps only.
+     *
      * Count of crashes by day in the time range based the selected versions.
+     * Available for UWP apps only.
      *
      * @param {date} start Start date time in data in ISO 8601 date time format
      *
@@ -16472,7 +21676,10 @@ export interface Analytics {
     crashCountsMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CrashCounts>>;
 
     /**
+     * @summary Available for UWP apps only.
+     *
      * Count of crashes by day in the time range based the selected versions.
+     * Available for UWP apps only.
      *
      * @param {date} start Start date time in data in ISO 8601 date time format
      *

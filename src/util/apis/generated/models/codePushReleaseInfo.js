@@ -12,11 +12,11 @@
 class CodePushReleaseInfo {
   /**
    * Create a CodePushReleaseInfo.
-   * @member {string} [targetBinaryRange]
-   * @member {string} [description]
-   * @member {boolean} [isDisabled]
-   * @member {boolean} [isMandatory]
-   * @member {number} [rollout]
+   * @property {string} [targetBinaryRange]
+   * @property {string} [description]
+   * @property {boolean} [isDisabled]
+   * @property {boolean} [isMandatory]
+   * @property {number} [rollout]
    */
   constructor() {
   }

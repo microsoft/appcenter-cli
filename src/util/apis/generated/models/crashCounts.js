@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a CrashCounts.
  */
 class CrashCounts {
   /**
    * Create a CrashCounts.
-   * @member {number} [count] total crash count
-   * @member {array} [crashes] the total crash count for day
+   * @property {number} [count] total crash count
+   * @property {array} [crashes] the total crash count for day
    */
   constructor() {
   }

@@ -12,8 +12,8 @@
 class IntuneGroupValue {
   /**
    * Create a IntuneGroupValue.
-   * @member {string} [id] the id of the Group
-   * @member {string} [displayName] the display name of the group
+   * @property {string} [id] the id of the Group
+   * @property {string} [displayName] the display name of the group
    */
   constructor() {
   }

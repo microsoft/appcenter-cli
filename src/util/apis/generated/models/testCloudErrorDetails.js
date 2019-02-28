@@ -15,8 +15,8 @@
 class TestCloudErrorDetails {
   /**
    * Create a TestCloudErrorDetails.
-   * @member {string} status Status of the operation
-   * @member {string} message Human-readable message that describes the error
+   * @property {string} status Status of the operation
+   * @property {string} message Human-readable message that describes the error
    */
   constructor() {
   }

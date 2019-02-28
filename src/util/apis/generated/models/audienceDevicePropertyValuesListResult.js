@@ -13,7 +13,7 @@
 class AudienceDevicePropertyValuesListResult {
   /**
    * Create a AudienceDevicePropertyValuesListResult.
-   * @member {array} values List of device property values.
+   * @property {array} values List of device property values.
    */
   constructor() {
   }

@@ -12,10 +12,10 @@
 class ErrorDetails {
   /**
    * Create a ErrorDetails.
-   * @member {string} code Possible values include: 'BadRequest', 'Conflict',
+   * @property {string} code Possible values include: 'BadRequest', 'Conflict',
    * 'NotAcceptable', 'NotFound', 'InternalServerError', 'Unauthorized',
    * 'TooManyRequests'
-   * @member {string} message
+   * @property {string} message
    */
   constructor() {
   }

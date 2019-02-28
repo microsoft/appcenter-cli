@@ -6,18 +6,16 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a EventDeviceCount.
  */
 class EventDeviceCount {
   /**
    * Create a EventDeviceCount.
-   * @member {number} [totalDevices]
-   * @member {number} [totalDevicesWithEvent]
-   * @member {number} [previousTotalDevicesWithEvent]
-   * @member {array} [devicesCount]
+   * @property {number} [totalDevices]
+   * @property {number} [totalDevicesWithEvent]
+   * @property {number} [previousTotalDevicesWithEvent]
+   * @property {array} [devicesCount]
    */
   constructor() {
   }

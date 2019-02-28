@@ -13,8 +13,8 @@
 class XcodeVersion {
   /**
    * Create a XcodeVersion.
-   * @member {string} [name] The version name
-   * @member {boolean} [current] If the Xcode is latest stable
+   * @property {string} [name] The version name
+   * @property {boolean} [current] If the Xcode is latest stable
    */
   constructor() {
   }

@@ -6,17 +6,15 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a DateTimeDownloadReleaseCounts.
  */
 class DateTimeDownloadReleaseCounts {
   /**
    * Create a DateTimeDownloadReleaseCounts.
-   * @member {number} [total]
-   * @member {number} [unique]
-   * @member {array} [counts] Release Counts per day
+   * @property {number} [total]
+   * @property {number} [unique]
+   * @property {array} [counts] Release Counts per day
    */
   constructor() {
   }

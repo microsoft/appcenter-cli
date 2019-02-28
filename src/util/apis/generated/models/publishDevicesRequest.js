@@ -13,17 +13,17 @@
 class PublishDevicesRequest {
   /**
    * Create a PublishDevicesRequest.
-   * @member {string} [username] The username for the Apple Developer account
+   * @property {string} [username] The username for the Apple Developer account
    * to publish the devices to.
-   * @member {string} [password] The password for the Apple Developer account
+   * @property {string} [password] The password for the Apple Developer account
    * to publish the devices to.
-   * @member {string} [accountServiceConnectionId] The service_connection_id of
-   * the stored Apple credentials instead of username, password.
-   * @member {boolean} [publishAllDevices] When set to true, all unprovisioned
-   * devices will be published to the Apple Developer account.  When false,
-   * only the provided devices will be published to the Apple Developer
-   * account.
-   * @member {array} [devices] Array of device UDID's to be published to the
+   * @property {string} [accountServiceConnectionId] The service_connection_id
+   * of the stored Apple credentials instead of username, password.
+   * @property {boolean} [publishAllDevices] When set to true, all
+   * unprovisioned devices will be published to the Apple Developer account.
+   * When false, only the provided devices will be published to the Apple
+   * Developer account.
+   * @property {array} [devices] Array of device UDID's to be published to the
    * Apple Developer account.
    */
   constructor() {

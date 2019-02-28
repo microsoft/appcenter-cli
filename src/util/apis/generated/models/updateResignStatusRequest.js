@@ -13,10 +13,10 @@
 class UpdateResignStatusRequest {
   /**
    * Create a UpdateResignStatusRequest.
-   * @member {string} status The updated status for the resigning request.
-   * @member {string} [errorCode] Error code if an error occured in the
+   * @property {string} status The updated status for the resigning request.
+   * @property {string} [errorCode] Error code if an error occured in the
    * resigning operation.
-   * @member {string} [errorMessage] Error message if an error occured in the
+   * @property {string} [errorMessage] Error message if an error occured in the
    * resigning operation.
    */
   constructor() {

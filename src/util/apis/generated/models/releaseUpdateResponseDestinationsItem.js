@@ -12,8 +12,8 @@
 class ReleaseUpdateResponseDestinationsItem {
   /**
    * Create a ReleaseUpdateResponseDestinationsItem.
-   * @member {string} [id]
-   * @member {string} [name]
+   * @property {string} [id]
+   * @property {string} [name]
    */
   constructor() {
   }

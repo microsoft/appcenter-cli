@@ -13,8 +13,8 @@
 class BuildAgentQueueResponse {
   /**
    * Create a BuildAgentQueueResponse.
-   * @member {string} [buildDefinition] Name of the build definition
-   * @member {string} [name] Name of the queue
+   * @property {string} [buildDefinition] Name of the build definition
+   * @property {string} [name] Name of the queue
    */
   constructor() {
   }

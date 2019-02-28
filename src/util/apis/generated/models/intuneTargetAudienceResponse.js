@@ -12,8 +12,8 @@
 class IntuneTargetAudienceResponse {
   /**
    * Create a IntuneTargetAudienceResponse.
-   * @member {string} [name] display name for the target audience/group
-   * @member {string} [id] ID for the target audience/group.
+   * @property {string} [name] display name for the target audience/group
+   * @property {string} [id] ID for the target audience/group.
    */
   constructor() {
   }

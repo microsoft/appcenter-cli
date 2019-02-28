@@ -12,7 +12,7 @@
 class TestCloudProjectFrameworkProperties {
   /**
    * Create a TestCloudProjectFrameworkProperties.
-   * @member {array} [configurations]
+   * @property {array} [configurations]
    */
   constructor() {
   }

@@ -701,16 +701,24 @@ function _getDownloadUri(buildId, downloadType, ownerName, appName, options, cal
  *
  * @param {number} buildId The build ID
  *
+ * @param {object} distributeInfo The distribution details
+ *
+ * @param {string} [distributeInfo.distributionGroupId] DEPRECATED - A
+ * distribution group ID or a store group ID
+ *
+ * @param {array} [distributeInfo.destinations] Array of objects {id:string,
+ * type:string} with "id" being the distribution group ID, store ID, or tester
+ * email, and "type" being "group", "store", or "tester"
+ *
+ * @param {string} [distributeInfo.releaseNotes] The release notes
+ *
+ * @param {boolean} [distributeInfo.mandatoryUpdate]
+ *
  * @param {string} ownerName The name of the owner
  *
  * @param {string} appName The name of the application
  *
- * @param {string} distributionGroupId A distribution group ID or a store group
- * ID
- *
  * @param {object} [options] Optional Parameters.
- *
- * @param {string} [options.releaseNotes] The release notes
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -728,7 +736,7 @@ function _getDownloadUri(buildId, downloadType, ownerName, appName, options, cal
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _distribute(buildId, ownerName, appName, distributionGroupId, options, callback) {
+function _distribute(buildId, distributeInfo, ownerName, appName, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -738,7 +746,6 @@ function _distribute(buildId, ownerName, appName, distributionGroupId, options, 
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  let releaseNotes = (options && options.releaseNotes !== undefined) ? options.releaseNotes : undefined;
   // Validate
   try {
     if (buildId === null || buildId === undefined || typeof buildId !== 'number') {
@@ -750,26 +757,17 @@ function _distribute(buildId, ownerName, appName, distributionGroupId, options, 
         throw new Error('"buildId" should satisfy the constraint - "ExclusiveMinimum": 0');
       }
     }
+    if (distributeInfo === null || distributeInfo === undefined) {
+      throw new Error('distributeInfo cannot be null or undefined.');
+    }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
-    if (distributionGroupId === null || distributionGroupId === undefined || typeof distributionGroupId.valueOf() !== 'string') {
-      throw new Error('distributionGroupId cannot be null or undefined and it must be of type string.');
-    }
-    if (releaseNotes !== null && releaseNotes !== undefined && typeof releaseNotes.valueOf() !== 'string') {
-      throw new Error('releaseNotes must be of type string.');
-    }
   } catch (error) {
     return callback(error);
-  }
-  let distributeInfo;
-  if ((distributionGroupId !== null && distributionGroupId !== undefined) || (releaseNotes !== null && releaseNotes !== undefined)) {
-    distributeInfo = new client.models['DistributionRequest']();
-    distributeInfo.distributionGroupId = distributionGroupId;
-    distributeInfo.releaseNotes = releaseNotes;
   }
 
   // Construct URL
@@ -2340,16 +2338,24 @@ class Builds {
    *
    * @param {number} buildId The build ID
    *
+   * @param {object} distributeInfo The distribution details
+   *
+   * @param {string} [distributeInfo.distributionGroupId] DEPRECATED - A
+   * distribution group ID or a store group ID
+   *
+   * @param {array} [distributeInfo.destinations] Array of objects {id:string,
+   * type:string} with "id" being the distribution group ID, store ID, or tester
+   * email, and "type" being "group", "store", or "tester"
+   *
+   * @param {string} [distributeInfo.releaseNotes] The release notes
+   *
+   * @param {boolean} [distributeInfo.mandatoryUpdate]
+   *
    * @param {string} ownerName The name of the owner
    *
    * @param {string} appName The name of the application
    *
-   * @param {string} distributionGroupId A distribution group ID or a store group
-   * ID
-   *
    * @param {object} [options] Optional Parameters.
-   *
-   * @param {string} [options.releaseNotes] The release notes
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -2360,11 +2366,11 @@ class Builds {
    *
    * @reject {Error} - The error object.
    */
-  distributeWithHttpOperationResponse(buildId, ownerName, appName, distributionGroupId, options) {
+  distributeWithHttpOperationResponse(buildId, distributeInfo, ownerName, appName, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._distribute(buildId, ownerName, appName, distributionGroupId, options, (err, result, request, response) => {
+      self._distribute(buildId, distributeInfo, ownerName, appName, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -2379,16 +2385,24 @@ class Builds {
    *
    * @param {number} buildId The build ID
    *
+   * @param {object} distributeInfo The distribution details
+   *
+   * @param {string} [distributeInfo.distributionGroupId] DEPRECATED - A
+   * distribution group ID or a store group ID
+   *
+   * @param {array} [distributeInfo.destinations] Array of objects {id:string,
+   * type:string} with "id" being the distribution group ID, store ID, or tester
+   * email, and "type" being "group", "store", or "tester"
+   *
+   * @param {string} [distributeInfo.releaseNotes] The release notes
+   *
+   * @param {boolean} [distributeInfo.mandatoryUpdate]
+   *
    * @param {string} ownerName The name of the owner
    *
    * @param {string} appName The name of the application
    *
-   * @param {string} distributionGroupId A distribution group ID or a store group
-   * ID
-   *
    * @param {object} [options] Optional Parameters.
-   *
-   * @param {string} [options.releaseNotes] The release notes
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -2415,7 +2429,7 @@ class Builds {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  distribute(buildId, ownerName, appName, distributionGroupId, options, optionalCallback) {
+  distribute(buildId, distributeInfo, ownerName, appName, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -2424,14 +2438,14 @@ class Builds {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._distribute(buildId, ownerName, appName, distributionGroupId, options, (err, result, request, response) => {
+        self._distribute(buildId, distributeInfo, ownerName, appName, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._distribute(buildId, ownerName, appName, distributionGroupId, options, optionalCallback);
+      return self._distribute(buildId, distributeInfo, ownerName, appName, options, optionalCallback);
     }
   }
 

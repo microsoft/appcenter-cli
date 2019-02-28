@@ -12,8 +12,8 @@
 class BlobInfo {
   /**
    * Create a BlobInfo.
-   * @member {number} size
-   * @member {string} url
+   * @property {number} size
+   * @property {string} url
    */
   constructor() {
   }

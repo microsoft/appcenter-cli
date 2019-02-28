@@ -14,8 +14,8 @@
 class DeviceRegistrationUrl {
   /**
    * Create a DeviceRegistrationUrl.
-   * @member {string} registrationUrl The url that can be navigated to in order
-   * to start the device registration process.
+   * @property {string} registrationUrl The url that can be navigated to in
+   * order to start the device registration process.
    */
   constructor() {
   }

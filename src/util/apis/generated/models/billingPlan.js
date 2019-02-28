@@ -13,14 +13,17 @@
 class BillingPlan {
   /**
    * Create a BillingPlan.
-   * @member {string} [id] The Billing Plan ID
-   * @member {string} [version] Version of the Billing Plan schema
-   * @member {number} [priceBucket] Price bucket of the billing plan. Free
-   * plans start with 0, paid plans have higher price buckets
-   * @member {string} [service] Name of the service that the plan applies to.
+   * @property {string} [id] The Billing Plan ID
+   * @property {string} [version] Version of the Billing Plan schema
+   * @property {number} [price] Price of the Billing Plan
+   * @property {string} [paymentSource] Service that receives payments for this
+   * billing plan. Possible values include: 'None', 'AppCenter', 'GitHub',
+   * 'Xtc'
+   * @property {string} [service] Name of the service that the plan applies to.
    * Possible values include: 'Build', 'Push', 'Test'
-   * @member {object} [limits]
-   * @member {object} [attributes]
+   * @property {object} [limits]
+   * @property {object} [attributes]
+   * @property {string} [parentId]
    */
   constructor() {
   }
@@ -53,11 +56,18 @@ class BillingPlan {
               name: 'String'
             }
           },
-          priceBucket: {
+          price: {
             required: false,
-            serializedName: 'priceBucket',
+            serializedName: 'price',
             type: {
               name: 'Number'
+            }
+          },
+          paymentSource: {
+            required: false,
+            serializedName: 'paymentSource',
+            type: {
+              name: 'String'
             }
           },
           service: {
@@ -93,6 +103,13 @@ class BillingPlan {
                     name: 'Object'
                   }
               }
+            }
+          },
+          parentId: {
+            required: false,
+            serializedName: 'parentId',
+            type: {
+              name: 'String'
             }
           }
         }

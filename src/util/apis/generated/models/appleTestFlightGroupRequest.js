@@ -15,14 +15,20 @@
 class AppleTestFlightGroupRequest {
   /**
    * Create a AppleTestFlightGroupRequest.
-   * @member {string} username The username for the Apple Developer account.
-   * @member {string} password The password for the Apple Developer account.
-   * @member {string} [appleId] apple_id of the app for which test flight
+   * @property {string} [username] The username for the Apple Developer
+   * account.
+   * @property {string} [password] The password for the Apple Developer
+   * account.
+   * @property {string} [appleId] apple_id of the app for which test flight
    * groups need to be fetched.
-   * @member {string} [bundleIdentifier] apple_id of the app for which test
+   * @property {string} [bundleIdentifier] apple_id of the app for which test
    * flight groups need to be fetched.
-   * @member {string} [teamIdentifier] Identifier of the team to use when
+   * @property {string} [teamIdentifier] Identifier of the team to use when
    * logged in.
+   * @property {string} [cookie] The 30-day session cookie for multi-factor
+   * authentication backed accounts.
+   * @property {string} [serviceConnectionId] The service_connection_id of the
+   * stored Apple credentials instead of username, password.
    */
   constructor() {
   }
@@ -42,14 +48,14 @@ class AppleTestFlightGroupRequest {
         className: 'AppleTestFlightGroupRequest',
         modelProperties: {
           username: {
-            required: true,
+            required: false,
             serializedName: 'username',
             type: {
               name: 'String'
             }
           },
           password: {
-            required: true,
+            required: false,
             serializedName: 'password',
             type: {
               name: 'String'
@@ -72,6 +78,20 @@ class AppleTestFlightGroupRequest {
           teamIdentifier: {
             required: false,
             serializedName: 'team_identifier',
+            type: {
+              name: 'String'
+            }
+          },
+          cookie: {
+            required: false,
+            serializedName: 'cookie',
+            type: {
+              name: 'String'
+            }
+          },
+          serviceConnectionId: {
+            required: false,
+            serializedName: 'service_connection_id',
             type: {
               name: 'String'
             }

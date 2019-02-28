@@ -16,9 +16,9 @@ const models = require('./index');
 class AlertUserAppEmailSettingsResult extends models['AlertUserEmailSettingsResult'] {
   /**
    * Create a AlertUserAppEmailSettingsResult.
-   * @member {string} appId Application ID
-   * @member {boolean} userEnabled A flag indicating if settings are enabled at
-   * user/global level
+   * @property {string} [appId] Application ID
+   * @property {boolean} userEnabled A flag indicating if settings are enabled
+   * at user/global level
    */
   constructor() {
     super();
@@ -46,7 +46,7 @@ class AlertUserAppEmailSettingsResult extends models['AlertUserEmailSettingsResu
             }
           },
           eTag: {
-            required: true,
+            required: false,
             serializedName: 'eTag',
             type: {
               name: 'String'
@@ -60,7 +60,7 @@ class AlertUserAppEmailSettingsResult extends models['AlertUserEmailSettingsResu
             }
           },
           userId: {
-            required: true,
+            required: false,
             serializedName: 'userId',
             type: {
               name: 'String'
@@ -82,7 +82,7 @@ class AlertUserAppEmailSettingsResult extends models['AlertUserEmailSettingsResu
             }
           },
           appId: {
-            required: true,
+            required: false,
             serializedName: 'appId',
             type: {
               name: 'String'

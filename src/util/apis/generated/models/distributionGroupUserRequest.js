@@ -12,7 +12,7 @@
 class DistributionGroupUserRequest {
   /**
    * Create a DistributionGroupUserRequest.
-   * @member {array} [userEmails] The list of emails of the users
+   * @property {array} [userEmails] The list of emails of the users
    */
   constructor() {
   }
@@ -34,6 +34,9 @@ class DistributionGroupUserRequest {
           userEmails: {
             required: false,
             serializedName: 'user_emails',
+            constraints: {
+              MinItems: 1
+            },
             type: {
               name: 'Sequence',
               element: {

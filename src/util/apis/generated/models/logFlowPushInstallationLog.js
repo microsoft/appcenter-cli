@@ -16,7 +16,7 @@ const models = require('./index');
 class LogFlowPushInstallationLog extends models['LogFlowLog'] {
   /**
    * Create a LogFlowPushInstallationLog.
-   * @member {string} pushToken The PNS handle for this installation.
+   * @property {string} pushToken The PNS handle for this installation.
    */
   constructor() {
     super();

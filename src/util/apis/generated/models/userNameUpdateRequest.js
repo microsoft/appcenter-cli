@@ -12,7 +12,7 @@
 class UserNameUpdateRequest {
   /**
    * Create a UserNameUpdateRequest.
-   * @member {string} [name] The new, unique name that is used to identify.
+   * @property {string} [name] The new, unique name that is used to identify.
    */
   constructor() {
   }

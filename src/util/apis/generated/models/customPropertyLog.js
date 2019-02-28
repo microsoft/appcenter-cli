@@ -16,7 +16,7 @@ const models = require('./index');
 class CustomPropertyLog extends models['Log'] {
   /**
    * Create a CustomPropertyLog.
-   * @member {array} [properties] Custom property changes.
+   * @property {array} [properties] Custom property changes.
    */
   constructor() {
     super();

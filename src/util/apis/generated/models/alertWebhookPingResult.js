@@ -16,10 +16,10 @@ const models = require('./index');
 class AlertWebhookPingResult extends models['AlertOperationResult'] {
   /**
    * Create a AlertWebhookPingResult.
-   * @member {number} responseStatusCode HTTP status code returned in response
-   * from calling webhook
-   * @member {string} [responseReason] Reason returned in response from calling
-   * webhook
+   * @property {number} responseStatusCode HTTP status code returned in
+   * response from calling webhook
+   * @property {string} [responseReason] Reason returned in response from
+   * calling webhook
    */
   constructor() {
     super();

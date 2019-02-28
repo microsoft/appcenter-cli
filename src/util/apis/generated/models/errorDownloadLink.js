@@ -12,7 +12,7 @@
 class ErrorDownloadLink {
   /**
    * Create a ErrorDownloadLink.
-   * @member {string} link
+   * @property {string} link
    */
   constructor() {
   }

@@ -12,9 +12,9 @@
 class AnalyticsReleasesParameter {
   /**
    * Create a AnalyticsReleasesParameter.
-   * @member {number} releaseId release id
-   * @member {string} distributionGroupId distribution group id
-   * @member {uuid} userId user id
+   * @property {number} releaseId release id
+   * @property {string} distributionGroupId distribution group id
+   * @property {uuid} userId user id
    */
   constructor() {
   }

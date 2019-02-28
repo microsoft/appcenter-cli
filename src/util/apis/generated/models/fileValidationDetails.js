@@ -13,8 +13,8 @@
 class FileValidationDetails {
   /**
    * Create a FileValidationDetails.
-   * @member {string} p12password
-   * @member {string} [certificateUploadId]
+   * @property {string} p12password
+   * @property {string} [certificateUploadId]
    */
   constructor() {
   }

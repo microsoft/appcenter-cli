@@ -12,7 +12,7 @@
 class EmailVerificationRequest {
   /**
    * Create a EmailVerificationRequest.
-   * @member {string} token The verification token that was sent to the user
+   * @property {string} token The verification token that was sent to the user
    */
   constructor() {
   }

@@ -12,8 +12,8 @@
 class Commit {
   /**
    * Create a Commit.
-   * @member {string} [sha] The commit SHA
-   * @member {string} [url] The URL to the commit
+   * @property {string} [sha] The commit SHA
+   * @property {string} [url] The URL to the commit
    */
   constructor() {
   }

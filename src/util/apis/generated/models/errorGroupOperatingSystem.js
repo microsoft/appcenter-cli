@@ -12,8 +12,8 @@
 class ErrorGroupOperatingSystem {
   /**
    * Create a ErrorGroupOperatingSystem.
-   * @member {string} [operatingSystemName] OS name
-   * @member {number} [errorCount] count of OS
+   * @property {string} [operatingSystemName] OS name
+   * @property {number} [errorCount] count of OS
    */
   constructor() {
   }

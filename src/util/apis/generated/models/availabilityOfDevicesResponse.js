@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * The current device availability (registered, available and maxmimum) for
  * iPhones, iPads, iPods and Watches from Apple Developer Portal
@@ -16,22 +14,22 @@ const models = require('./index');
 class AvailabilityOfDevicesResponse {
   /**
    * Create a AvailabilityOfDevicesResponse.
-   * @member {object} iphones
-   * @member {number} [iphones.registered]
-   * @member {number} [iphones.available]
-   * @member {number} [iphones.maximum]
-   * @member {object} ipads
-   * @member {number} [ipads.registered]
-   * @member {number} [ipads.available]
-   * @member {number} [ipads.maximum]
-   * @member {object} ipods
-   * @member {number} [ipods.registered]
-   * @member {number} [ipods.available]
-   * @member {number} [ipods.maximum]
-   * @member {object} watches
-   * @member {number} [watches.registered]
-   * @member {number} [watches.available]
-   * @member {number} [watches.maximum]
+   * @property {object} iphones
+   * @property {number} [iphones.registered]
+   * @property {number} [iphones.available]
+   * @property {number} [iphones.maximum]
+   * @property {object} ipads
+   * @property {number} [ipads.registered]
+   * @property {number} [ipads.available]
+   * @property {number} [ipads.maximum]
+   * @property {object} ipods
+   * @property {number} [ipods.registered]
+   * @property {number} [ipods.available]
+   * @property {number} [ipods.maximum]
+   * @property {object} watches
+   * @property {number} [watches.registered]
+   * @property {number} [watches.available]
+   * @property {number} [watches.maximum]
    */
   constructor() {
   }

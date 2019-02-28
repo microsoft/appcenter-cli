@@ -12,7 +12,8 @@
 class ResendVerificationRequest {
   /**
    * Create a ResendVerificationRequest.
-   * @member {string} name The email or name of the user to resend verification
+   * @property {string} name The email or name of the user to resend
+   * verification
    */
   constructor() {
   }

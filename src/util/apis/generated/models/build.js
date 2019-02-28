@@ -12,17 +12,17 @@
 class Build {
   /**
    * Create a Build.
-   * @member {number} id The build ID
-   * @member {string} buildNumber The build number
-   * @member {string} queueTime The time the build was queued
-   * @member {string} [startTime] The time the build was started
-   * @member {string} [finishTime] The time the build was finished
-   * @member {string} [lastChangedDate] The time the build status was last
+   * @property {number} id The build ID
+   * @property {string} buildNumber The build number
+   * @property {string} queueTime The time the build was queued
+   * @property {string} [startTime] The time the build was started
+   * @property {string} [finishTime] The time the build was finished
+   * @property {string} [lastChangedDate] The time the build status was last
    * changed
-   * @member {string} status The build status
-   * @member {string} result The build result
-   * @member {string} sourceBranch The source branch name
-   * @member {string} sourceVersion The source SHA
+   * @property {string} status The build status
+   * @property {string} result The build result
+   * @property {string} sourceBranch The source branch name
+   * @property {string} sourceVersion The source SHA
    */
   constructor() {
   }

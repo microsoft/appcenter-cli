@@ -16,7 +16,7 @@ const models = require('./index');
 class LogFlowCustomPropertyLog extends models['LogFlowLog'] {
   /**
    * Create a LogFlowCustomPropertyLog.
-   * @member {array} [properties] Custom property changes.
+   * @property {array} [properties] Custom property changes.
    */
   constructor() {
     super();

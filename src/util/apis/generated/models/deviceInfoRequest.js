@@ -13,18 +13,18 @@
 class DeviceInfoRequest {
   /**
    * Create a DeviceInfoRequest.
-   * @member {string} udid The Unique Device IDentifier of the device
-   * @member {string} model The model identifier of the device, in the format
+   * @property {string} udid The Unique Device IDentifier of the device
+   * @property {string} model The model identifier of the device, in the format
    * iDeviceM,N
-   * @member {string} [osBuild] The build number of the last known OS version
+   * @property {string} [osBuild] The build number of the last known OS version
    * running on the device
-   * @member {string} [osVersion] The last known OS version running on the
+   * @property {string} [osVersion] The last known OS version running on the
    * device
-   * @member {string} [serial] The device's serial number. Always empty or
+   * @property {string} [serial] The device's serial number. Always empty or
    * undefined at present.
-   * @member {string} [imei] The device's International Mobile Equipment
+   * @property {string} [imei] The device's International Mobile Equipment
    * Identity number. Always empty or undefined at present.
-   * @member {string} [ownerId] The user ID of the device owner.
+   * @property {string} [ownerId] The user ID of the device owner.
    */
   constructor() {
   }

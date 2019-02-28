@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * List of export configurations
  *
@@ -15,9 +13,9 @@ const models = require('./index');
 class ExportConfigurationListResult {
   /**
    * Create a ExportConfigurationListResult.
-   * @member {array} values
-   * @member {number} [total] the total count of exports
-   * @member {string} [nextLink]
+   * @property {array} values
+   * @property {number} [total] the total count of exports
+   * @property {string} [nextLink]
    */
   constructor() {
   }

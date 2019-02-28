@@ -12,8 +12,8 @@
 class OrganizationRequest {
   /**
    * Create a OrganizationRequest.
-   * @member {string} [displayName] The display name of the organization
-   * @member {string} [name] The name of the organization used in URLs
+   * @property {string} [displayName] The display name of the organization
+   * @property {string} [name] The name of the organization used in URLs
    */
   constructor() {
   }

@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a AnalyticsReleasesResponse.
  */
 class AnalyticsReleasesResponse {
   /**
    * Create a AnalyticsReleasesResponse.
-   * @member {array} [releases]
+   * @property {array} [releases]
    */
   constructor() {
   }

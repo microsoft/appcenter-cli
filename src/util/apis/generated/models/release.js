@@ -12,7 +12,7 @@
 class Release {
   /**
    * Create a Release.
-   * @member {string} release Release Id.
+   * @property {string} release Release Id.
    */
   constructor() {
   }

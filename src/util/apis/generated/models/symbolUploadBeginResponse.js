@@ -14,10 +14,10 @@
 class SymbolUploadBeginResponse {
   /**
    * Create a SymbolUploadBeginResponse.
-   * @member {string} symbolUploadId The id for the current upload
-   * @member {string} uploadUrl The URL where the client needs to upload the
+   * @property {string} symbolUploadId The id for the current upload
+   * @property {string} uploadUrl The URL where the client needs to upload the
    * symbol blob to
-   * @member {date} expirationDate Describes how long the upload_url is valid
+   * @property {date} expirationDate Describes how long the upload_url is valid
    */
   constructor() {
   }

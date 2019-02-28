@@ -13,7 +13,7 @@
 class BranchConfigurationArtifactVersioning {
   /**
    * Create a BranchConfigurationArtifactVersioning.
-   * @member {string} [buildNumberFormat] Possible values include: 'buildId',
+   * @property {string} [buildNumberFormat] Possible values include: 'buildId',
    * 'timestamp'
    */
   constructor() {

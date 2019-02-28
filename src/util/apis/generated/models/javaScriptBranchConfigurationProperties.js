@@ -14,11 +14,11 @@
 class JavaScriptBranchConfigurationProperties {
   /**
    * Create a JavaScriptBranchConfigurationProperties.
-   * @member {string} packageJsonPath Path to package.json file for the main
+   * @property {string} packageJsonPath Path to package.json file for the main
    * project, e.g. "package.json" or "myapp/package.json"
-   * @member {boolean} [runTests] Whether to run Jest unit tests, via npm test,
-   * during the build. Default value: true .
-   * @member {string} [reactNativeVersion] Version of React Native from
+   * @property {boolean} [runTests] Whether to run Jest unit tests, via npm
+   * test, during the build. Default value: true .
+   * @property {string} [reactNativeVersion] Version of React Native from
    * package.json files
    */
   constructor() {

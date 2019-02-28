@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Returns a list of all issues associated with a repo
  *
@@ -15,7 +13,7 @@ const models = require('./index');
 class BugTrackerIssuesResult {
   /**
    * Create a BugTrackerIssuesResult.
-   * @member {array} [issues]
+   * @property {array} [issues]
    */
   constructor() {
   }

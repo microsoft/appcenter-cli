@@ -13,9 +13,9 @@
 class EventSetting {
   /**
    * Create a EventSetting.
-   * @member {string} value Frequency of event. Possible values include:
+   * @property {string} value Frequency of event. Possible values include:
    * 'Disabled', 'Individual', 'Daily', 'DailyAndIndividual', 'Default'
-   * @member {string} [defaultValue] Default frequency of event. Possible
+   * @property {string} [defaultValue] Default frequency of event. Possible
    * values include: 'Disabled', 'Individual', 'Daily', 'DailyAndIndividual'
    */
   constructor() {

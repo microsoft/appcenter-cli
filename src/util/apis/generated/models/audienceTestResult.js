@@ -13,11 +13,11 @@
 class AudienceTestResult {
   /**
    * Create a AudienceTestResult.
-   * @member {string} [definition] Audience definition in OData format.
-   * @member {object} [customProperties] Custom properties used in the
+   * @property {string} [definition] Audience definition in OData format.
+   * @property {object} [customProperties] Custom properties used in the
    * definition.
-   * @member {number} [estimatedCount] Estimated audience size.
-   * @member {number} [estimatedTotalCount] Estimated total audience size.
+   * @property {number} [estimatedCount] Estimated audience size.
+   * @property {number} [estimatedTotalCount] Estimated total audience size.
    */
   constructor() {
   }

@@ -6,20 +6,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a PrivateIntuneStoreRequest.
  */
 class PrivateIntuneStoreRequest {
   /**
    * Create a PrivateIntuneStoreRequest.
-   * @member {object} [targetAudience]
-   * @member {string} [targetAudience.name] display name for the target
+   * @property {object} [targetAudience]
+   * @property {string} [targetAudience.name] display name for the target
    * audience/group
-   * @member {object} [appCategory]
-   * @member {string} [appCategory.name] display name for the app category
-   * @member {string} [tenantId] tenant id of the intune store
+   * @property {object} [appCategory]
+   * @property {string} [appCategory.name] display name for the app category
+   * @property {string} [tenantId] tenant id of the intune store
    */
   constructor() {
   }

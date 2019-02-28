@@ -6,22 +6,23 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a DistributionGroupWithUsersResponse.
  */
 class DistributionGroupWithUsersResponse {
   /**
    * Create a DistributionGroupWithUsersResponse.
-   * @member {string} id The unique ID of the distribution group
-   * @member {string} name The name of the distribution group used in URLs
-   * @member {number} totalUserCount The count of users in the distribution
+   * @property {uuid} id The unique ID of the distribution group
+   * @property {string} name The name of the distribution group used in URLs
+   * @property {number} totalUserCount The count of users in the distribution
    * group
-   * @member {number} notifiedUserCount The count of non-pending users in the
+   * @property {number} [totalGroupsCount] The count of aad groups in the
+   * distribution group
+   * @property {number} notifiedUserCount The count of non-pending users in the
    * distribution group who will be notified by new releases
-   * @member {boolean} [isPublic] Whether the distribution group is public
-   * @member {array} users The distribution group users
+   * @property {boolean} [isPublic] Whether the distribution group is public
+   * @property {array} users The distribution group users
+   * @property {array} [aadGroups] The distribution group aad groups
    */
   constructor() {
   }
@@ -61,6 +62,13 @@ class DistributionGroupWithUsersResponse {
               name: 'Number'
             }
           },
+          totalGroupsCount: {
+            required: false,
+            serializedName: 'total_groups_count',
+            type: {
+              name: 'Number'
+            }
+          },
           notifiedUserCount: {
             required: true,
             serializedName: 'notified_user_count',
@@ -86,6 +94,21 @@ class DistributionGroupWithUsersResponse {
                   type: {
                     name: 'Composite',
                     className: 'DistributionGroupUserGetResponse'
+                  }
+              }
+            }
+          },
+          aadGroups: {
+            required: false,
+            serializedName: 'aad_groups',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'DistributionGroupAADGroupPostResponseElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'DistributionGroupAADGroupPostResponse'
                   }
               }
             }

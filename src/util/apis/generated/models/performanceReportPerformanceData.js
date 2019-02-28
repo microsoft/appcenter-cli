@@ -6,19 +6,17 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a PerformanceReportPerformanceData.
  */
 class PerformanceReportPerformanceData {
   /**
    * Create a PerformanceReportPerformanceData.
-   * @member {array} steps
-   * @member {number} elapsedSecsEnd
-   * @member {number} elapsedSecsStart
-   * @member {number} elapsedSecs
-   * @member {string} id
+   * @property {array} steps
+   * @property {number} elapsedSecsEnd
+   * @property {number} elapsedSecsStart
+   * @property {number} elapsedSecs
+   * @property {string} id
    */
   constructor() {
   }

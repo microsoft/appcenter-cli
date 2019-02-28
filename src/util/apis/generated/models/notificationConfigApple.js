@@ -16,11 +16,11 @@ const models = require('./index');
 class NotificationConfigApple extends models['NotificationConfig'] {
   /**
    * Create a NotificationConfigApple.
-   * @member {string} endpointType Possible values include: 'production',
+   * @property {string} endpointType Possible values include: 'production',
    * 'sandbox'
-   * @member {string} certEncoded Base64 encoded certificate string.
-   * @member {string} certFilename Certificate file name
-   * @member {string} certKey Certificate password
+   * @property {string} certEncoded Base64 encoded certificate string.
+   * @property {string} certFilename Certificate file name
+   * @property {string} certKey Certificate password
    */
   constructor() {
     super();

@@ -12,19 +12,19 @@
 class ExternalUserRequest {
   /**
    * Create a ExternalUserRequest.
-   * @member {string} [appInvitation] The token of the app invitation which
+   * @property {string} [appInvitation] The token of the app invitation which
    * lead to signup
-   * @member {string} [testerInvitation] The token of the test invitation which
-   * lead to signup
-   * @member {string} [organizationInvitation] The token of the organization
+   * @property {string} [testerInvitation] The token of the test invitation
+   * which lead to signup
+   * @property {string} [organizationInvitation] The token of the organization
    * invitation which lead to signup
-   * @member {string} [avatarUrl] The avatar URL of the user
-   * @member {string} [displayName] The full name of the user. Might for
+   * @property {string} [avatarUrl] The avatar URL of the user
+   * @property {string} [displayName] The full name of the user. Might for
    * example be first and last name
-   * @member {string} email The email address of the user
-   * @member {string} [name] The unique name that is used to identify the user.
-   * If no explicit value is given, a default will be auto-generated from the
-   * `display_name` value
+   * @property {string} email The email address of the user
+   * @property {string} [name] The unique name that is used to identify the
+   * user. If no explicit value is given, a default will be auto-generated from
+   * the `display_name` value
    */
   constructor() {
   }

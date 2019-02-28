@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ErrorGroupOperatingSystems.
  */
 class ErrorGroupOperatingSystems {
   /**
    * Create a ErrorGroupOperatingSystems.
-   * @member {number} [errorCount]
-   * @member {array} [operatingSystems]
+   * @property {number} [errorCount]
+   * @property {array} [operatingSystems]
    */
   constructor() {
   }

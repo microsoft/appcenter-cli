@@ -13,12 +13,12 @@
 class AppleMappingResponse {
   /**
    * Create a AppleMappingResponse.
-   * @member {string} [appId] ID of the apple application in Mobile Center
-   * @member {string} [serviceConnectionId] Id for the shared service
+   * @property {string} [appId] ID of the apple application in Mobile Center
+   * @property {string} [serviceConnectionId] Id for the shared service
    * connection. In case of Apple AppStore, this connection will be used to
    * create and connect to the Apple AppStore in Mobile Center.
-   * @member {string} [appleId] ID of the apple application in apple store
-   * @member {string} [teamIdentifier] ID of the Team associated with the app
+   * @property {string} [appleId] ID of the apple application in apple store
+   * @property {string} [teamIdentifier] ID of the Team associated with the app
    * in apple store
    */
   constructor() {

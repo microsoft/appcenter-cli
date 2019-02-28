@@ -13,8 +13,8 @@
 class AppBuildFeature {
   /**
    * Create a AppBuildFeature.
-   * @member {string} [name]
-   * @member {boolean} [value]
+   * @property {string} [name]
+   * @property {boolean} [value]
    */
   constructor() {
   }

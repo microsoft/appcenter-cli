@@ -12,10 +12,10 @@
 class DeviceSetModel {
   /**
    * Create a DeviceSetModel.
-   * @member {string} [name]
-   * @member {string} [manufacturer]
-   * @member {string} [releaseDate]
-   * @member {string} [formFactor]
+   * @property {string} [name]
+   * @property {string} [manufacturer]
+   * @property {string} [releaseDate]
+   * @property {string} [formFactor]
    */
   constructor() {
   }

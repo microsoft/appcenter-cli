@@ -12,8 +12,8 @@
 class SessionsPerDeviceSessionsPerUserItem {
   /**
    * Create a SessionsPerDeviceSessionsPerUserItem.
-   * @member {string} [datetime] the ISO 8601 datetime
-   * @member {number} [count] count
+   * @property {string} [datetime] the ISO 8601 datetime
+   * @property {number} [count] count
    */
   constructor() {
   }

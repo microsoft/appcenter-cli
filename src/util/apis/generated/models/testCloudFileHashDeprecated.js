@@ -15,11 +15,11 @@
 class TestCloudFileHashDeprecated {
   /**
    * Create a TestCloudFileHashDeprecated.
-   * @member {string} fileType Type of the file. Possible values include:
+   * @property {string} fileType Type of the file. Possible values include:
    * 'dsym-file', 'app-file', 'test-file'
-   * @member {string} checksum SHA256 hash of the file
-   * @member {string} relativePath Relative path of the file
-   * @member {string} [byteRange] Range of bytes required to verify ownership
+   * @property {string} checksum SHA256 hash of the file
+   * @property {string} relativePath Relative path of the file
+   * @property {string} [byteRange] Range of bytes required to verify ownership
    * of the file
    */
   constructor() {

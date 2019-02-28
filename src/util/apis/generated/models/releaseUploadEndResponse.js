@@ -13,8 +13,8 @@
 class ReleaseUploadEndResponse {
   /**
    * Create a ReleaseUploadEndResponse.
-   * @member {number} [releaseId] The ID of the release.
-   * @member {string} [releaseUrl] A URL to the new release. If upload was
+   * @property {number} [releaseId] The ID of the release.
+   * @property {string} [releaseUrl] A URL to the new release. If upload was
    * aborted will be null.
    */
   constructor() {

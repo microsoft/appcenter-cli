@@ -12,16 +12,17 @@
 class AppFeatures {
   /**
    * Create a AppFeatures.
-   * @member {boolean} [crashgroupModifyStatus] App supports modification of
+   * @property {boolean} [crashgroupModifyStatus] App supports modification of
    * crashgroup status
-   * @member {boolean} [crashgroupModifyAnnotation] App supports modification
+   * @property {boolean} [crashgroupModifyAnnotation] App supports modification
    * of crashgroup annotation
-   * @member {boolean} [search] App supports search API
-   * @member {boolean} [crashgroupAnalyticsCrashfreeusers] App supports the
+   * @property {boolean} [search] App supports search API
+   * @property {boolean} [crashgroupAnalyticsCrashfreeusers] App supports the
    * 'crash free user' metric
-   * @member {boolean} [crashgroupAnalyticsImpactedusers] App supports the
+   * @property {boolean} [crashgroupAnalyticsImpactedusers] App supports the
    * 'impacted users' metric
-   * @member {boolean} [crashDownloadRaw] App supports download of raw crashes
+   * @property {boolean} [crashDownloadRaw] App supports download of raw
+   * crashes
    */
   constructor() {
   }

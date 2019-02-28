@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a AnalyticsModels.
  */
 class AnalyticsModels {
   /**
    * Create a AnalyticsModels.
-   * @member {number} [total]
-   * @member {array} [modelsProperty]
+   * @property {number} [total]
+   * @property {array} [modelsProperty]
    */
   constructor() {
   }

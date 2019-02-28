@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Event property value counts during the time range in descending order
  *
@@ -15,8 +13,8 @@ const models = require('./index');
 class EventPropertyValues {
   /**
    * Create a EventPropertyValues.
-   * @member {number} [total] The total property value counts
-   * @member {array} [values] The event property values
+   * @property {number} [total] The total property value counts
+   * @property {array} [values] The event property values
    */
   constructor() {
   }

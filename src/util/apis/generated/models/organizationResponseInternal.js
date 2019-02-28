@@ -15,8 +15,8 @@ const models = require('./index');
 class OrganizationResponseInternal extends models['OrganizationResponse'] {
   /**
    * Create a OrganizationResponseInternal.
-   * @member {array} [featureFlags] The feature flags that are enabled for this
-   * organization
+   * @property {array} [featureFlags] The feature flags that are enabled for
+   * this organization
    */
   constructor() {
     super();
@@ -53,6 +53,13 @@ class OrganizationResponseInternal extends models['OrganizationResponse'] {
           name: {
             required: true,
             serializedName: 'name',
+            type: {
+              name: 'String'
+            }
+          },
+          avatarUrl: {
+            required: false,
+            serializedName: 'avatar_url',
             type: {
               name: 'String'
             }
