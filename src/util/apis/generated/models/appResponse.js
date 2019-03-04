@@ -19,9 +19,9 @@ class AppResponse extends models['BasicAppResponse'] {
    * app in communication with the ingestion endpoint for crash reporting and
    * analytics
    * @member {object} [azureSubscription]
-   * @member {string} [azureSubscription.subscriptionId] The azure subscription
+   * @member {uuid} [azureSubscription.subscriptionId] The azure subscription
    * id
-   * @member {string} [azureSubscription.tenantId] The tenant id of the azure
+   * @member {uuid} [azureSubscription.tenantId] The tenant id of the azure
    * subscription belongs to
    * @member {string} [azureSubscription.subscriptionName] The name of the
    * azure subscription
@@ -29,6 +29,8 @@ class AppResponse extends models['BasicAppResponse'] {
    * used for billing
    * @member {boolean} [azureSubscription.isBillable] If the subscription can
    * be used for billing
+   * @member {boolean} [azureSubscription.isMicrosoftInternal] If the
+   * subscription is internal Microsoft subscription
    * @member {string} platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
    * 'Unity', 'Xamarin', 'Unknown'
@@ -80,6 +82,13 @@ class AppResponse extends models['BasicAppResponse'] {
           iconUrl: {
             required: false,
             serializedName: 'icon_url',
+            type: {
+              name: 'String'
+            }
+          },
+          iconSource: {
+            required: false,
+            serializedName: 'icon_source',
             type: {
               name: 'String'
             }

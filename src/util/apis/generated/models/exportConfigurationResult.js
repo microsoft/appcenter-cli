@@ -21,6 +21,7 @@ class ExportConfigurationResult {
    * @member {string} creationTime Creation time in ISO 8601 format
    * @member {string} [lastRunTime] Latest time in ISO 8601 format when export
    * completed successfully
+   * @member {array} [exportEntities]
    * @member {string} state State of the export job. Possible values include:
    * 'Enabled', 'Disabled', 'Pending', 'Deleted', 'Invalid'
    * @member {string} [stateInfo] Additional information about export
@@ -30,6 +31,7 @@ class ExportConfigurationResult {
    * @member {string} [resourceName] Storage accout or Appinsights resource
    * name
    * @member {object} [exportConfiguration]
+   * @member {array} [exportConfiguration.exportEntities]
    * @member {string} [exportConfiguration.resourceName] The resource name on
    * azure
    * @member {string} [exportConfiguration.resourceGroup] The resource group
@@ -80,6 +82,21 @@ class ExportConfigurationResult {
             serializedName: 'last_run_time',
             type: {
               name: 'String'
+            }
+          },
+          exportEntities: {
+            required: false,
+            serializedName: 'export_entities',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'ExportEntityElementType',
+                  type: {
+                    name: 'Enum',
+                    allowedValues: [ 'crashes', 'errors', 'attachments' ]
+                  }
+              }
             }
           },
           state: {

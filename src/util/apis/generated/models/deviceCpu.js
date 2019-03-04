@@ -15,6 +15,7 @@ class DeviceCpu {
    * Create a DeviceCpu.
    * @member {string} [frequency]
    * @member {string} [core]
+   * @member {string} [text]
    */
   constructor() {
   }
@@ -43,6 +44,13 @@ class DeviceCpu {
           core: {
             required: false,
             serializedName: 'core',
+            type: {
+              name: 'String'
+            }
+          },
+          text: {
+            required: false,
+            serializedName: 'text',
             type: {
               name: 'String'
             }

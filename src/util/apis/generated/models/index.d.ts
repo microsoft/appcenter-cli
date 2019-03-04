@@ -127,9 +127,9 @@ export interface SuccessResponse {
  * @class
  * Initializes a new instance of the AADTenantAddRequest class.
  * @constructor
- * @member {string} userId The user wanting to add this tenant to the
+ * @member {uuid} userId The user wanting to add this tenant to the
  * organization, must be an admin of the organization
- * @member {string} aadTenantId The AAD tenant id
+ * @member {uuid} aadTenantId The AAD tenant id
  * @member {string} displayName The name of the AAD Tenant
  */
 export interface AADTenantAddRequest {
@@ -142,12 +142,36 @@ export interface AADTenantAddRequest {
  * @class
  * Initializes a new instance of the AADTenantResponse class.
  * @constructor
- * @member {string} aadTenantId The AAD tenant id
+ * @member {uuid} aadTenantId The AAD tenant id
  * @member {string} displayName The name of the AAD Tenant
  */
 export interface AADTenantResponse {
   aadTenantId: string;
   displayName: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AddAppTesterRequest class.
+ * @constructor
+ * @member {uuid} userId The user ID of the tester that needs to be added
+ * @member {number} releaseId The ID of the release the user was added to
+ */
+export interface AddAppTesterRequest {
+  userId: string;
+  releaseId: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AddAppTesterResponse class.
+ * @constructor
+ * @member {uuid} userId The user ID of the tester that needs to be added
+ * @member {number} releaseId The ID of the release the user was added to
+ */
+export interface AddAppTesterResponse {
+  userId: string;
+  releaseId: number;
 }
 
 /**
@@ -195,9 +219,11 @@ export interface AppPatchRequest {
  * Initializes a new instance of the AppRepoPatchRequest class.
  * @constructor
  * @member {string} [repoUrl] The absolute URL of the repository
+ * @member {uuid} [userId] The unique id (UUID) of the user
  */
 export interface AppRepoPatchRequest {
   repoUrl?: string;
+  userId?: string;
 }
 
 /**
@@ -207,13 +233,17 @@ export interface AppRepoPatchRequest {
  * @member {string} repoUrl The absolute URL of the repository
  * @member {string} [repoProvider] The provider of the repository. Possible
  * values include: 'github', 'bitbucket', 'vsts'
- * @member {string} userId The unique id (UUID) of the user who configured the
+ * @member {uuid} userId The unique id (UUID) of the user who configured the
  * repository
+ * @member {string} [installationId] Installation id from the provider
+ * @member {string} [repoId] Repository id from the provider
  */
 export interface AppRepoPostRequest {
   repoUrl: string;
   repoProvider?: string;
   userId: string;
+  installationId?: string;
+  repoId?: string;
 }
 
 /**
@@ -227,7 +257,8 @@ export interface AppRepoPostRequest {
  * @member {string} os The OS the app will be running on. Possible values
  * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
  * @member {string} platform The platform of the app. Possible values include:
- * 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native', 'Xamarin'
+ * 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native', 'Xamarin',
+ * 'Unity'
  */
 export interface AppRequest {
   description?: string;
@@ -239,11 +270,23 @@ export interface AppRequest {
 
 /**
  * @class
- * Initializes a new instance of the AppTeamAddRequest class.
+ * Initializes a new instance of the AppAddRequest class.
  * @constructor
- * @member {string} name The name of the app to be added to the team
+ * @member {string} name The name of the app to be added to the distribution
+ * group
  */
-export interface AppTeamAddRequest {
+export interface AppAddRequest {
+  name: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppDeleteRequest class.
+ * @constructor
+ * @member {string} name The name of the app to be deleted from the
+ * distribution group
+ */
+export interface AppDeleteRequest {
   name: string;
 }
 
@@ -251,8 +294,8 @@ export interface AppTeamAddRequest {
  * @class
  * Initializes a new instance of the AzureSubscriptionAddRequest class.
  * @constructor
- * @member {string} subscriptionId The azure subscription id
- * @member {string} tenantId The tenant id of the azure subscription belongs to
+ * @member {uuid} subscriptionId The azure subscription id
+ * @member {uuid} tenantId The tenant id of the azure subscription belongs to
  * @member {string} subscriptionName The name of the azure subscription
  * @member {boolean} [isBilling] If the subscription is used for billing
  */
@@ -287,7 +330,7 @@ export interface AzureSubscriptionPatchRequest {
  * @class
  * Initializes a new instance of the AzureSubscriptionAddToAppRequest class.
  * @constructor
- * @member {string} subscriptionId The azure subscription id
+ * @member {uuid} subscriptionId The azure subscription id
  */
 export interface AzureSubscriptionAddToAppRequest {
   subscriptionId: string;
@@ -327,6 +370,89 @@ export interface DistributionGroupUserRequest {
 
 /**
  * @class
+ * Initializes a new instance of the DistributionGroupAppAddRequest class.
+ * @constructor
+ * @member {array} [apps] The list of apps to add to distribution group
+ */
+export interface DistributionGroupAppAddRequest {
+  apps?: AppAddRequest[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupAppsDeleteRequest class.
+ * @constructor
+ * @member {array} [apps] The list of apps to delete from the distribution
+ * group
+ */
+export interface DistributionGroupAppsDeleteRequest {
+  apps?: AppDeleteRequest[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupAADGroupsDeleteRequest class.
+ * @constructor
+ * @member {array} [aadGroupIds] The list of aad group ids
+ */
+export interface DistributionGroupAADGroupsDeleteRequest {
+  aadGroupIds?: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DataDeletionRequest class.
+ * @constructor
+ * @member {string} [dataDeletionType] Type of data to delete
+ */
+export interface DataDeletionRequest {
+  dataDeletionType?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupAADGroupBase class.
+ * @constructor
+ * @member {uuid} [aadGroupId] The id of the aad group
+ * @member {string} [displayName] The display name of the aad group
+ */
+export interface DistributionGroupAADGroupBase {
+  aadGroupId?: string;
+  displayName?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupAADGroupRequest class.
+ * @constructor
+ * @member {array} [aadGroups] The list of aad group ids and names to add
+ */
+export interface DistributionGroupAADGroupRequest {
+  aadGroups?: DistributionGroupAADGroupBase[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupIdRequest class.
+ * @constructor
+ * @member {uuid} id The id of the distribution group
+ */
+export interface DistributionGroupIdRequest {
+  id: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupsUserVerifyRequest class.
+ * @constructor
+ * @member {array} distributionGroupIds An array of distribution group ids
+ */
+export interface DistributionGroupsUserVerifyRequest {
+  distributionGroupIds: DistributionGroupIdRequest[];
+}
+
+/**
+ * @class
  * Initializes a new instance of the EmailVerificationRequest class.
  * @constructor
  * @member {string} token The verification token that was sent to the user
@@ -361,6 +487,17 @@ export interface ExternalUserRequest {
   displayName?: string;
   email: string;
   name?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExternalAppId class.
+ * @constructor
+ * @member {string} [externalId] The identifier for external apps that map to
+ * an App Center app
+ */
+export interface ExternalAppId {
+  externalId?: string;
 }
 
 /**
@@ -418,6 +555,67 @@ export interface InternalBulkAppResponse {
 
 /**
  * @class
+ * Initializes a new instance of the InternalHockeyAppCompatibilityResponse class.
+ * @constructor
+ * @member {string} [ownerType] The owner type of the app. Possible values
+ * include: 'user', 'organization'
+ * @member {string} [os] The OS of the app. Possible values include: 'Android',
+ * 'iOS', 'macOS', 'Windows', 'Custom'
+ * @member {string} [platform] The OS of the app. Possible values include:
+ * 'Java', 'Objective-C-Swift', 'Cordova', 'React-Native', 'Unity', 'Xamarin',
+ * 'Unknown'
+ * @member {boolean} [hasCrashes] Does the HockeyApp app have crashes from
+ * within the last 90 days?
+ * @member {boolean} [hasFeedback] Does the HockeyApp app have feedback from
+ * within the last 90 days?
+ * @member {boolean} [hasMetrics] Does the HockeyApp app have metrics from
+ * within the last 30 days?
+ * @member {boolean} [hasExternalBuilds] Does the HockeyApp app have any
+ * external builds?
+ * @member {boolean} [hasSpecifiedBuildServerUrl] Does the HockeyApp app have
+ * any build server URLs specified?
+ * @member {boolean} [hasDistributionGroupsOutsideOfOwnership] Does the
+ * HockeyApp app have an associated Distribution Group that is owned by a
+ * different owner?
+ * @member {boolean} [ownerHasDistributionGroups] Does the HockeyApp app's
+ * owner own any Distribution Groups?
+ * @member {string} [bugtrackerType] Does the HockeyApp app have any bugtracker
+ * configured? Which type?. Possible values include: 'none', 'vso', 'jira5',
+ * 'github', 'other'
+ * @member {array} [webhookTypes] Does the HockeyApp app have any webhooks
+ * configured? Which types?
+ */
+export interface InternalHockeyAppCompatibilityResponse {
+  ownerType?: string;
+  os?: string;
+  platform?: string;
+  hasCrashes?: boolean;
+  hasFeedback?: boolean;
+  hasMetrics?: boolean;
+  hasExternalBuilds?: boolean;
+  hasSpecifiedBuildServerUrl?: boolean;
+  hasDistributionGroupsOutsideOfOwnership?: boolean;
+  ownerHasDistributionGroups?: boolean;
+  bugtrackerType?: string;
+  webhookTypes?: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the InternalHockeyAppCutoverStatusResponse class.
+ * @constructor
+ * @member {string} id The ID of the app
+ * @member {string} [status] Does the HockeyApp app have crashes from within
+ * the last 90 days?. Possible values include: 'not_requested', 'requested',
+ * 'in_progress', 'completed'
+ */
+export interface InternalHockeyAppCutoverStatusResponse {
+  id: string;
+  status?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the InternalUserRequest class.
  * @constructor
  * @member {string} [appInvitation] The token of the app invitation which lead
@@ -433,6 +631,9 @@ export interface InternalBulkAppResponse {
  * @member {string} name The unique name that is used to identify the user.
  * @member {string} password The password of the user. Needs to be at least 8
  * characters long and contain at least one lower- and one uppercase letter.
+ * @member {string} [portalSubdomain] The sub-domain of the portal from which
+ * this request was made. Will be used to build the invitation link. Possible
+ * values include: 'install.'
  */
 export interface InternalUserRequest {
   appInvitation?: string;
@@ -443,6 +644,7 @@ export interface InternalUserRequest {
   email: string;
   name: string;
   password: string;
+  portalSubdomain?: string;
 }
 
 /**
@@ -492,6 +694,32 @@ export interface OrganizationUserPatchRequest {
 export interface PasswordUpdateRequest {
   newPassword: string;
   oldPassword?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the PostRepositoryProviderMappingRequest class.
+ * @constructor
+ * @member {string} externalAccountId Id of user in the external provider
+ * service
+ * @member {uuid} accountId App Center account id to link to this provider and
+ * external id
+ */
+export interface PostRepositoryProviderMappingRequest {
+  externalAccountId: string;
+  accountId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GetOrCreateRepositoryProviderMappingRequest class.
+ * @constructor
+ * @member {string} [externalAccountName] The account name given by the
+ * external provider. If provided, create an organization and the mapping. If
+ * not, create mapping with user.
+ */
+export interface GetOrCreateRepositoryProviderMappingRequest {
+  externalAccountName?: string;
 }
 
 /**
@@ -601,9 +829,11 @@ export interface UserSettingRequest {
  * @class
  * Initializes a new instance of the AccountResponse class.
  * @constructor
- * @member {string} id The internal unique id (UUID) of the account.
+ * @member {uuid} id The internal unique id (UUID) of the account.
  * @member {string} displayName The display name of the account
  * @member {string} name The slug name of the account
+ * @member {string} [email] The account's email. For org that value might be
+ * empty.
  * @member {string} origin The creation origin of this account. Possible values
  * include: 'appcenter', 'hockeyapp'
  * @member {string} type The type of this account. Possible values include:
@@ -613,6 +843,7 @@ export interface AccountResponse {
   id: string;
   displayName: string;
   name: string;
+  email?: string;
   origin: string;
   type: string;
 }
@@ -621,7 +852,7 @@ export interface AccountResponse {
  * @class
  * Initializes a new instance of the ApiTokenDeleteResponse class.
  * @constructor
- * @member {string} id The unique id (UUID) of the api token
+ * @member {uuid} id The unique id (UUID) of the api token
  * @member {string} tokenHash The hashed value of api token
  */
 export interface ApiTokenDeleteResponse {
@@ -633,10 +864,10 @@ export interface ApiTokenDeleteResponse {
  * @class
  * Initializes a new instance of the ApiTokenGetUserResponse class.
  * @constructor
- * @member {string} tokenId The token's unique id (UUID)
+ * @member {uuid} tokenId The token's unique id (UUID)
  * @member {array} tokenScope The token's scope. A list of allowed roles.
  * @member {string} userEmail The user email
- * @member {string} userId The unique id (UUID) of the user
+ * @member {uuid} userId The unique id (UUID) of the user
  * @member {string} userOrigin The creation origin of the user who created this
  * api token. Possible values include: 'appcenter', 'hockeyapp', 'codepush'
  */
@@ -652,10 +883,10 @@ export interface ApiTokenGetUserResponse {
  * @class
  * Initializes a new instance of the ApiTokenResponse class.
  * @constructor
- * @member {string} id The unique id (UUID) of the api token
+ * @member {uuid} id The unique id (UUID) of the api token
  * @member {string} createdAt The creation time
  * @member {array} [scope] The token's scope. A list of allowed roles.
- * @member {object} [encryptedToken] The encrypted value of a token. This value
+ * @member {string} [encryptedToken] The encrypted value of a token. This value
  * will only be returned for token of type in_app_update.
  * @member {string} [description] The description of the token
  */
@@ -663,7 +894,7 @@ export interface ApiTokenResponse {
   id: string;
   createdAt: string;
   scope?: string[];
-  encryptedToken?: any;
+  encryptedToken?: string;
   description?: string;
 }
 
@@ -671,8 +902,8 @@ export interface ApiTokenResponse {
  * @class
  * Initializes a new instance of the AppGroupResponse class.
  * @constructor
- * @member {string} id The unique ID (UUID) of the app
- * @member {string} groupId The unique ID (UUID) of the group that the app
+ * @member {uuid} id The unique ID (UUID) of the app
+ * @member {uuid} groupId The unique ID (UUID) of the group that the app
  * belongs to
  * @member {string} [displayName] The display name of the app
  * @member {string} name The name of the app used in URLs
@@ -695,11 +926,13 @@ export interface AppGroupResponse {
  * @class
  * Initializes a new instance of the AzureSubscriptionResponse class.
  * @constructor
- * @member {string} subscriptionId The azure subscription id
- * @member {string} tenantId The tenant id of the azure subscription belongs to
+ * @member {uuid} subscriptionId The azure subscription id
+ * @member {uuid} tenantId The tenant id of the azure subscription belongs to
  * @member {string} subscriptionName The name of the azure subscription
  * @member {boolean} [isBilling] If the subscription is used for billing
  * @member {boolean} [isBillable] If the subscription can be used for billing
+ * @member {boolean} [isMicrosoftInternal] If the subscription is internal
+ * Microsoft subscription
  */
 export interface AzureSubscriptionResponse {
   subscriptionId: string;
@@ -707,22 +940,25 @@ export interface AzureSubscriptionResponse {
   subscriptionName: string;
   isBilling?: boolean;
   isBillable?: boolean;
+  isMicrosoftInternal?: boolean;
 }
 
 /**
  * @class
  * Initializes a new instance of the BasicAppResponse class.
  * @constructor
- * @member {string} id The unique ID (UUID) of the app
+ * @member {uuid} id The unique ID (UUID) of the app
  * @member {string} [description] The description of the app
  * @member {string} displayName The display name of the app
  * @member {string} [iconUrl] The string representation of the URL pointing to
  * the app's icon
+ * @member {string} [iconSource] The string representation of the source of the
+ * app's icon
  * @member {string} name The name of the app used in URLs
  * @member {string} os The OS the app will be running on. Possible values
  * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Custom'
  * @member {object} owner
- * @member {string} [owner.id] The unique id (UUID) of the owner
+ * @member {uuid} [owner.id] The unique id (UUID) of the owner
  * @member {string} [owner.avatarUrl] The avatar URL of the owner
  * @member {string} [owner.displayName] The owner's display name
  * @member {string} [owner.email] The owner's email address
@@ -736,6 +972,7 @@ export interface BasicAppResponse {
   description?: string;
   displayName: string;
   iconUrl?: string;
+  iconSource?: string;
   name: string;
   os: string;
   owner: Owner;
@@ -749,9 +986,8 @@ export interface BasicAppResponse {
  * in communication with the ingestion endpoint for crash reporting and
  * analytics
  * @member {object} [azureSubscription]
- * @member {string} [azureSubscription.subscriptionId] The azure subscription
- * id
- * @member {string} [azureSubscription.tenantId] The tenant id of the azure
+ * @member {uuid} [azureSubscription.subscriptionId] The azure subscription id
+ * @member {uuid} [azureSubscription.tenantId] The tenant id of the azure
  * subscription belongs to
  * @member {string} [azureSubscription.subscriptionName] The name of the azure
  * subscription
@@ -759,6 +995,8 @@ export interface BasicAppResponse {
  * for billing
  * @member {boolean} [azureSubscription.isBillable] If the subscription can be
  * used for billing
+ * @member {boolean} [azureSubscription.isMicrosoftInternal] If the
+ * subscription is internal Microsoft subscription
  * @member {string} platform The platform of the app. Possible values include:
  * 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native', 'Unity',
  * 'Xamarin', 'Unknown'
@@ -782,7 +1020,7 @@ export interface AppResponse extends BasicAppResponse {
  * @class
  * Initializes a new instance of the UserProfileResponse class.
  * @constructor
- * @member {string} id The unique id (UUID) of the user
+ * @member {uuid} id The unique id (UUID) of the user
  * @member {string} [avatarUrl] The avatar URL of the user
  * @member {boolean} [canChangePassword] User is required to send an old
  * password in order to change the password.
@@ -807,91 +1045,11 @@ export interface UserProfileResponse {
 
 /**
  * @class
- * Initializes a new instance of the AppInvitationDetailResponse class.
- * @constructor
- * @member {string} id The unique ID (UUID) of the invitation
- * @member {object} app
- * @member {string} [app.appSecret] A unique and secret key used to identify
- * the app in communication with the ingestion endpoint for crash reporting and
- * analytics
- * @member {object} [app.azureSubscription]
- * @member {string} [app.azureSubscription.subscriptionId] The azure
- * subscription id
- * @member {string} [app.azureSubscription.tenantId] The tenant id of the azure
- * subscription belongs to
- * @member {string} [app.azureSubscription.subscriptionName] The name of the
- * azure subscription
- * @member {boolean} [app.azureSubscription.isBilling] If the subscription is
- * used for billing
- * @member {boolean} [app.azureSubscription.isBillable] If the subscription can
- * be used for billing
- * @member {string} [app.platform] The platform of the app. Possible values
- * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
- * 'Unity', 'Xamarin', 'Unknown'
- * @member {string} [app.origin] The creation origin of this app. Possible
- * values include: 'appcenter', 'hockeyapp', 'codepush'
- * @member {string} [app.createdAt] The created date of this app
- * @member {string} [app.updatedAt] The last updated date of this app
- * @member {array} [app.memberPermissions] The permissions of the calling user
- * @member {string} email The email address of the invited user
- * @member {string} inviteType The invitation type. Possible values include:
- * 'developer', 'tester'
- * @member {object} invitedBy
- * @member {string} [invitedBy.id] The unique id (UUID) of the user
- * @member {string} [invitedBy.avatarUrl] The avatar URL of the user
- * @member {boolean} [invitedBy.canChangePassword] User is required to send an
- * old password in order to change the password.
- * @member {string} [invitedBy.displayName] The full name of the user. Might
- * for example be first and last name
- * @member {string} [invitedBy.email] The email address of the user
- * @member {string} [invitedBy.name] The unique name that is used to identify
- * the user.
- * @member {array} [invitedBy.permissions] The permissions the user has for the
- * app
- * @member {string} [invitedBy.origin] The creation origin of this user.
- * Possible values include: 'appcenter', 'hockeyapp', 'codepush'
- * @member {boolean} isExistingUser Indicates whether the invited user already
- * exists
- * @member {array} [permissions] The permissions the user has for the app
- */
-export interface AppInvitationDetailResponse {
-  id: string;
-  app: AppResponse;
-  email: string;
-  inviteType: string;
-  invitedBy: UserProfileResponse;
-  isExistingUser: boolean;
-  permissions?: string[];
-}
-
-/**
- * @class
- * Initializes a new instance of the AppRepoResponse class.
- * @constructor
- * @member {string} id The unique id (UUID) of the repository integration
- * @member {string} appId The unique id (UUID) of the app that this repository
- * integration belongs to
- * @member {string} repoUrl The absolute URL of the repository
- * @member {string} [repoProvider] The provider of the repository. Possible
- * values include: 'github', 'bitbucket', 'vsts'
- * @member {string} userId The unique id (UUID) of the user who configured the
- * repository
- */
-export interface AppRepoResponse {
-  id: string;
-  appId: string;
-  repoUrl: string;
-  repoProvider?: string;
-  userId: string;
-}
-
-/**
- * @class
  * Initializes a new instance of the Owner class.
  * @constructor
  * The information about the app's owner
  *
- * @member {string} id The unique id (UUID) of the owner
+ * @member {uuid} id The unique id (UUID) of the owner
  * @member {string} [avatarUrl] The avatar URL of the owner
  * @member {string} displayName The owner's display name
  * @member {string} [email] The owner's email address
@@ -910,30 +1068,150 @@ export interface Owner {
 
 /**
  * @class
- * Initializes a new instance of the DistributionGroupResponse class.
+ * Initializes a new instance of the AppInvitationDetailResponseDistributionGroup class.
  * @constructor
- * @member {string} id The unique ID of the distribution group
- * @member {string} name The name of the distribution group used in URLs
- * @member {string} origin The creation origin of this distribution group.
- * Possible values include: 'appcenter', 'hockeyapp'
- * @member {boolean} isPublic Whether the distribution group is public
+ * The organization that owns the distribution group, if it exists
+ *
+ * @member {object} [owner]
+ * @member {uuid} [owner.id] The unique id (UUID) of the owner
+ * @member {string} [owner.avatarUrl] The avatar URL of the owner
+ * @member {string} [owner.displayName] The owner's display name
+ * @member {string} [owner.email] The owner's email address
+ * @member {string} [owner.name] The unique name that used to identify the
+ * owner
+ * @member {string} [owner.type] The owner type. Can either be 'org' or 'user'.
+ * Possible values include: 'org', 'user'
  */
-export interface DistributionGroupResponse {
+export interface AppInvitationDetailResponseDistributionGroup {
+  owner?: Owner;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppInvitationDetailResponse class.
+ * @constructor
+ * @member {uuid} id The unique ID (UUID) of the invitation
+ * @member {object} app
+ * @member {string} [app.appSecret] A unique and secret key used to identify
+ * the app in communication with the ingestion endpoint for crash reporting and
+ * analytics
+ * @member {object} [app.azureSubscription]
+ * @member {uuid} [app.azureSubscription.subscriptionId] The azure subscription
+ * id
+ * @member {uuid} [app.azureSubscription.tenantId] The tenant id of the azure
+ * subscription belongs to
+ * @member {string} [app.azureSubscription.subscriptionName] The name of the
+ * azure subscription
+ * @member {boolean} [app.azureSubscription.isBilling] If the subscription is
+ * used for billing
+ * @member {boolean} [app.azureSubscription.isBillable] If the subscription can
+ * be used for billing
+ * @member {boolean} [app.azureSubscription.isMicrosoftInternal] If the
+ * subscription is internal Microsoft subscription
+ * @member {string} [app.platform] The platform of the app. Possible values
+ * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
+ * 'Unity', 'Xamarin', 'Unknown'
+ * @member {string} [app.origin] The creation origin of this app. Possible
+ * values include: 'appcenter', 'hockeyapp', 'codepush'
+ * @member {string} [app.createdAt] The created date of this app
+ * @member {string} [app.updatedAt] The last updated date of this app
+ * @member {array} [app.memberPermissions] The permissions of the calling user
+ * @member {string} email The email address of the invited user
+ * @member {string} inviteType The invitation type. Possible values include:
+ * 'developer', 'tester'
+ * @member {object} invitedBy
+ * @member {uuid} [invitedBy.id] The unique id (UUID) of the user
+ * @member {string} [invitedBy.avatarUrl] The avatar URL of the user
+ * @member {boolean} [invitedBy.canChangePassword] User is required to send an
+ * old password in order to change the password.
+ * @member {string} [invitedBy.displayName] The full name of the user. Might
+ * for example be first and last name
+ * @member {string} [invitedBy.email] The email address of the user
+ * @member {string} [invitedBy.name] The unique name that is used to identify
+ * the user.
+ * @member {array} [invitedBy.permissions] The permissions the user has for the
+ * app
+ * @member {string} [invitedBy.origin] The creation origin of this user.
+ * Possible values include: 'appcenter', 'hockeyapp', 'codepush'
+ * @member {boolean} isExistingUser Indicates whether the invited user already
+ * exists
+ * @member {array} [permissions] The permissions the user has for the app
+ * @member {number} [appCount] The number of apps in the group
+ * @member {object} [distributionGroup] The organization that owns the
+ * distribution group, if it exists
+ * @member {object} [distributionGroup.owner]
+ * @member {uuid} [distributionGroup.owner.id] The unique id (UUID) of the
+ * owner
+ * @member {string} [distributionGroup.owner.avatarUrl] The avatar URL of the
+ * owner
+ * @member {string} [distributionGroup.owner.displayName] The owner's display
+ * name
+ * @member {string} [distributionGroup.owner.email] The owner's email address
+ * @member {string} [distributionGroup.owner.name] The unique name that used to
+ * identify the owner
+ * @member {string} [distributionGroup.owner.type] The owner type. Can either
+ * be 'org' or 'user'. Possible values include: 'org', 'user'
+ */
+export interface AppInvitationDetailResponse {
   id: string;
-  name: string;
-  origin: string;
-  isPublic: boolean;
+  app: AppResponse;
+  email: string;
+  inviteType: string;
+  invitedBy: UserProfileResponse;
+  isExistingUser: boolean;
+  permissions?: string[];
+  appCount?: number;
+  distributionGroup?: AppInvitationDetailResponseDistributionGroup;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppRepoResponse class.
+ * @constructor
+ * @member {uuid} id The unique id (UUID) of the repository integration
+ * @member {uuid} appId The unique id (UUID) of the app that this repository
+ * integration belongs to
+ * @member {string} repoUrl The absolute URL of the repository
+ * @member {string} [repoProvider] The provider of the repository. Possible
+ * values include: 'github', 'bitbucket', 'vsts'
+ * @member {uuid} userId The unique id (UUID) of the user who configured the
+ * repository
+ * @member {string} [installationId] Installation id from the provider
+ * @member {string} [repoId] Repository id from the provider
+ */
+export interface AppRepoResponse {
+  id: string;
+  appId: string;
+  repoUrl: string;
+  repoProvider?: string;
+  userId: string;
+  installationId?: string;
+  repoId?: string;
 }
 
 /**
  * @class
  * Initializes a new instance of the TesterAppResponse class.
  * @constructor
- * @member {array} distributionGroups The IDs of the distribution groups the
- * current user is member of.
+ * @member {boolean} [microsoftInternal] it indicates if the app is microsoft
+ * internal
+ * @member {array} [permissions] The permissions associated with the app
  */
 export interface TesterAppResponse extends BasicAppResponse {
-  distributionGroups: DistributionGroupResponse[];
+  microsoftInternal?: boolean;
+  permissions?: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the OrgDistributionGroupAppResponse class.
+ * @constructor
+ * @member {string} [platform] The platform of the app
+ * @member {string} [origin] The creation origin of this app
+ */
+export interface OrgDistributionGroupAppResponse extends BasicAppResponse {
+  platform?: string;
+  origin?: string;
 }
 
 /**
@@ -965,10 +1243,10 @@ export interface AppResponseInternal extends AppResponse {
  * @class
  * Initializes a new instance of the AppUserPermissionResponse class.
  * @constructor
- * @member {string} appId The unique id (UUID) of the app
+ * @member {uuid} appId The unique id (UUID) of the app
  * @member {array} permissions The permissions the user has for the app
  * @member {string} userEmail The email of the user
- * @member {string} userId The unique id (UUID) of the user
+ * @member {uuid} userId The unique id (UUID) of the user
  * @member {string} appOrigin The creation origin of this app. Possible values
  * include: 'appcenter', 'hockeyapp', 'codepush'
  * @member {string} appSecret A unique and secret key used to identify the app
@@ -998,13 +1276,92 @@ export interface AppWithTeamPermissionsResponse extends AppResponse {
  * @class
  * Initializes a new instance of the OrgUserPermissionResponse class.
  * @constructor
- * @member {string} orgId The unique id (UUID) of the org
+ * @member {uuid} orgId The unique id (UUID) of the org
  * @member {string} userRole The user role for the org. Possible values
  * include: 'admin', 'collaborator'
  */
 export interface OrgUserPermissionResponse {
   orgId: string;
   userRole: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupResponse class.
+ * @constructor
+ * @member {uuid} id The unique ID of the distribution group
+ * @member {string} name The name of the distribution group used in URLs
+ * @member {string} origin The creation origin of this distribution group.
+ * Possible values include: 'appcenter', 'hockeyapp'
+ * @member {boolean} isPublic Whether the distribution group is public
+ */
+export interface DistributionGroupResponse {
+  id: string;
+  name: string;
+  origin: string;
+  isPublic: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupUserGetResponse class.
+ * @constructor
+ * @member {uuid} [id] The unique id (UUID) of the user
+ * @member {string} [avatarUrl] The avatar URL of the user
+ * @member {boolean} [canChangePassword] User is required to send an old
+ * password in order to change the password.
+ * @member {string} [displayName] The full name of the user. Might for example
+ * be first and last name
+ * @member {string} email The email address of the user
+ * @member {boolean} [invitePending] Whether the has accepted the invite.
+ * Available when an invite is pending, and the value will be "true".
+ * @member {string} [name] The unique name that is used to identify the user.
+ */
+export interface DistributionGroupUserGetResponse {
+  id?: string;
+  avatarUrl?: string;
+  canChangePassword?: boolean;
+  displayName?: string;
+  email: string;
+  invitePending?: boolean;
+  name?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupDetailsResponse class.
+ * @constructor
+ * @member {boolean} isShared Whether the distribution group is shared group or
+ * not
+ * @member {number} totalAppsCount The count of apps associated with this
+ * distribution group
+ * @member {number} totalUserCount The count of users in the distribution group
+ * @member {number} notifiedUserCount The count of non-pending users in the
+ * distribution group who will be notified by new releases
+ * @member {array} users The distribution group users
+ */
+export interface DistributionGroupDetailsResponse extends DistributionGroupResponse {
+  isShared: boolean;
+  totalAppsCount: number;
+  totalUserCount: number;
+  notifiedUserCount: number;
+  users: DistributionGroupUserGetResponse[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the OrgDistributionGroupDetailsResponse class.
+ * @constructor
+ * @member {number} totalAppsCount The count of apps associated with this
+ * distribution group
+ * @member {number} totalUsersCount The count of users in the distribution
+ * group
+ * @member {array} apps The apps associated with the distribution group
+ */
+export interface OrgDistributionGroupDetailsResponse extends DistributionGroupResponse {
+  totalAppsCount: number;
+  totalUsersCount: number;
+  apps: AppResponse[];
 }
 
 /**
@@ -1025,27 +1382,36 @@ export interface DistributionGroupUserDeleteResponse {
 
 /**
  * @class
- * Initializes a new instance of the DistributionGroupUserGetResponse class.
+ * Initializes a new instance of the OrganizationResponse class.
  * @constructor
- * @member {string} [id] The unique id (UUID) of the user
- * @member {string} [avatarUrl] The avatar URL of the user
- * @member {boolean} [canChangePassword] User is required to send an old
- * password in order to change the password.
- * @member {string} [displayName] The full name of the user. Might for example
- * be first and last name
- * @member {string} email The email address of the user
- * @member {boolean} [invitePending] Whether the has accepted the invite.
- * Available when an invite is pending, and the value will be "true".
- * @member {string} [name] The unique name that is used to identify the user.
+ * @member {uuid} id The internal unique id (UUID) of the organization.
+ * @member {string} displayName The display name of the organization
+ * @member {string} name The slug name of the organization
+ * @member {string} [avatarUrl] The URL to a user-uploaded Avatar image
+ * @member {string} origin The creation origin of this organization. Possible
+ * values include: 'appcenter', 'hockeyapp'
+ * @member {string} createdAt The creation date of this organization
+ * @member {string} updatedAt The date the organization was last updated at
  */
-export interface DistributionGroupUserGetResponse {
-  id?: string;
+export interface OrganizationResponse {
+  id: string;
+  displayName: string;
+  name: string;
   avatarUrl?: string;
-  canChangePassword?: boolean;
-  displayName?: string;
-  email: string;
-  invitePending?: boolean;
-  name?: string;
+  origin: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CloseAccountOrganizationResponse class.
+ * @constructor
+ * @member {number} collaboratorsCount The number of collaborators from the
+ * organization
+ */
+export interface CloseAccountOrganizationResponse extends OrganizationResponse {
+  collaboratorsCount: number;
 }
 
 /**
@@ -1069,23 +1435,73 @@ export interface DistributionGroupUserPostResponse {
 
 /**
  * @class
+ * Initializes a new instance of the DistributionGroupTesterGetResponse class.
+ * @constructor
+ * @member {string} [displayName] The full name of the tester. Might for
+ * example be first and last name
+ * @member {string} name The unique name that is used to identify the tester.
+ * @member {string} email The email address of the tester
+ */
+export interface DistributionGroupTesterGetResponse {
+  displayName?: string;
+  name: string;
+  email: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupAADGroupPostResponse class.
+ * @constructor
+ * @member {uuid} [id] The internal unique id (UUID) of the AAD group.
+ * @member {uuid} [aadGroupId] The AAD unique id (UUID) of the AAD group.
+ * @member {string} [displayName] The display name of the AAD group
+ */
+export interface DistributionGroupAADGroupPostResponse {
+  id?: string;
+  aadGroupId?: string;
+  displayName?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DistributionGroupAadGroupsDeleteResponse class.
+ * @constructor
+ * @member {string} [code] The code of the result
+ * @member {number} [message] The message of the result
+ * @member {number} status The status code of the result
+ * @member {uuid} [aadGroupId] The aad id of the group
+ */
+export interface DistributionGroupAadGroupsDeleteResponse {
+  code?: string;
+  message?: number;
+  status: number;
+  aadGroupId?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the DistributionGroupWithUsersResponse class.
  * @constructor
- * @member {string} id The unique ID of the distribution group
+ * @member {uuid} id The unique ID of the distribution group
  * @member {string} name The name of the distribution group used in URLs
  * @member {number} totalUserCount The count of users in the distribution group
+ * @member {number} [totalGroupsCount] The count of aad groups in the
+ * distribution group
  * @member {number} notifiedUserCount The count of non-pending users in the
  * distribution group who will be notified by new releases
  * @member {boolean} [isPublic] Whether the distribution group is public
  * @member {array} users The distribution group users
+ * @member {array} [aadGroups] The distribution group aad groups
  */
 export interface DistributionGroupWithUsersResponse {
   id: string;
   name: string;
   totalUserCount: number;
+  totalGroupsCount?: number;
   notifiedUserCount: number;
   isPublic?: boolean;
   users: DistributionGroupUserGetResponse[];
+  aadGroups?: DistributionGroupAADGroupPostResponse[];
 }
 
 /**
@@ -1118,7 +1534,7 @@ export interface FeatureResponse {
  * @class
  * Initializes a new instance of the InternalUserSignupResponse class.
  * @constructor
- * @member {string} id The unique id (UUID) of the user
+ * @member {uuid} id The unique id (UUID) of the user
  * @member {string} displayName The full name of the user. Might for example be
  * first and last name
  * @member {string} email The email address of the user
@@ -1140,32 +1556,11 @@ export interface InternalUserSignupResponse {
 
 /**
  * @class
- * Initializes a new instance of the OrganizationResponse class.
- * @constructor
- * @member {string} id The internal unique id (UUID) of the organization.
- * @member {string} displayName The display name of the organization
- * @member {string} name The slug name of the organization
- * @member {string} origin The creation origin of this organization. Possible
- * values include: 'appcenter', 'hockeyapp'
- * @member {string} createdAt The creation date of this organization
- * @member {string} updatedAt The date the organization was last updated at
- */
-export interface OrganizationResponse {
-  id: string;
-  displayName: string;
-  name: string;
-  origin: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-/**
- * @class
  * Initializes a new instance of the InvitationDetailResponse class.
  * @constructor
- * @member {string} invitationId The id of the invitation
+ * @member {uuid} invitationId The id of the invitation
  * @member {object} invitedBy
- * @member {string} [invitedBy.id] The unique id (UUID) of the user
+ * @member {uuid} [invitedBy.id] The unique id (UUID) of the user
  * @member {string} [invitedBy.avatarUrl] The avatar URL of the user
  * @member {boolean} [invitedBy.canChangePassword] User is required to send an
  * old password in order to change the password.
@@ -1179,11 +1574,13 @@ export interface OrganizationResponse {
  * @member {string} [invitedBy.origin] The creation origin of this user.
  * Possible values include: 'appcenter', 'hockeyapp', 'codepush'
  * @member {object} [organization]
- * @member {string} [organization.id] The internal unique id (UUID) of the
+ * @member {uuid} [organization.id] The internal unique id (UUID) of the
  * organization.
  * @member {string} [organization.displayName] The display name of the
  * organization
  * @member {string} [organization.name] The slug name of the organization
+ * @member {string} [organization.avatarUrl] The URL to a user-uploaded Avatar
+ * image
  * @member {string} [organization.origin] The creation origin of this
  * organization. Possible values include: 'appcenter', 'hockeyapp'
  * @member {string} [organization.createdAt] The creation date of this
@@ -1195,9 +1592,9 @@ export interface OrganizationResponse {
  * the app in communication with the ingestion endpoint for crash reporting and
  * analytics
  * @member {object} [app.azureSubscription]
- * @member {string} [app.azureSubscription.subscriptionId] The azure
- * subscription id
- * @member {string} [app.azureSubscription.tenantId] The tenant id of the azure
+ * @member {uuid} [app.azureSubscription.subscriptionId] The azure subscription
+ * id
+ * @member {uuid} [app.azureSubscription.tenantId] The tenant id of the azure
  * subscription belongs to
  * @member {string} [app.azureSubscription.subscriptionName] The name of the
  * azure subscription
@@ -1205,6 +1602,8 @@ export interface OrganizationResponse {
  * used for billing
  * @member {boolean} [app.azureSubscription.isBillable] If the subscription can
  * be used for billing
+ * @member {boolean} [app.azureSubscription.isMicrosoftInternal] If the
+ * subscription is internal Microsoft subscription
  * @member {string} [app.platform] The platform of the app. Possible values
  * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
  * 'Unity', 'Xamarin', 'Unknown'
@@ -1217,6 +1616,57 @@ export interface OrganizationResponse {
 export interface InvitationDetailResponse {
   invitationId: string;
   invitedBy: UserProfileResponse;
+  organization?: OrganizationResponse;
+  app?: AppResponse;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GDPRInvitationDetailResponse class.
+ * @constructor
+ * @member {uuid} invitationId The id of the invitation
+ * @member {object} [organization]
+ * @member {uuid} [organization.id] The internal unique id (UUID) of the
+ * organization.
+ * @member {string} [organization.displayName] The display name of the
+ * organization
+ * @member {string} [organization.name] The slug name of the organization
+ * @member {string} [organization.avatarUrl] The URL to a user-uploaded Avatar
+ * image
+ * @member {string} [organization.origin] The creation origin of this
+ * organization. Possible values include: 'appcenter', 'hockeyapp'
+ * @member {string} [organization.createdAt] The creation date of this
+ * organization
+ * @member {string} [organization.updatedAt] The date the organization was last
+ * updated at
+ * @member {object} [app]
+ * @member {string} [app.appSecret] A unique and secret key used to identify
+ * the app in communication with the ingestion endpoint for crash reporting and
+ * analytics
+ * @member {object} [app.azureSubscription]
+ * @member {uuid} [app.azureSubscription.subscriptionId] The azure subscription
+ * id
+ * @member {uuid} [app.azureSubscription.tenantId] The tenant id of the azure
+ * subscription belongs to
+ * @member {string} [app.azureSubscription.subscriptionName] The name of the
+ * azure subscription
+ * @member {boolean} [app.azureSubscription.isBilling] If the subscription is
+ * used for billing
+ * @member {boolean} [app.azureSubscription.isBillable] If the subscription can
+ * be used for billing
+ * @member {boolean} [app.azureSubscription.isMicrosoftInternal] If the
+ * subscription is internal Microsoft subscription
+ * @member {string} [app.platform] The platform of the app. Possible values
+ * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
+ * 'Unity', 'Xamarin', 'Unknown'
+ * @member {string} [app.origin] The creation origin of this app. Possible
+ * values include: 'appcenter', 'hockeyapp', 'codepush'
+ * @member {string} [app.createdAt] The created date of this app
+ * @member {string} [app.updatedAt] The last updated date of this app
+ * @member {array} [app.memberPermissions] The permissions of the calling user
+ */
+export interface GDPRInvitationDetailResponse {
+  invitationId: string;
   organization?: OrganizationResponse;
   app?: AppResponse;
 }
@@ -1238,13 +1688,15 @@ export interface OrgNameAvailabilityResponse {
  * @class
  * Initializes a new instance of the OrganizationInvitationDetailResponse class.
  * @constructor
- * @member {string} id The unique ID (UUID) of the invitation
+ * @member {uuid} id The unique ID (UUID) of the invitation
  * @member {object} organization
- * @member {string} [organization.id] The internal unique id (UUID) of the
+ * @member {uuid} [organization.id] The internal unique id (UUID) of the
  * organization.
  * @member {string} [organization.displayName] The display name of the
  * organization
  * @member {string} [organization.name] The slug name of the organization
+ * @member {string} [organization.avatarUrl] The URL to a user-uploaded Avatar
+ * image
  * @member {string} [organization.origin] The creation origin of this
  * organization. Possible values include: 'appcenter', 'hockeyapp'
  * @member {string} [organization.createdAt] The creation date of this
@@ -1253,7 +1705,7 @@ export interface OrgNameAvailabilityResponse {
  * updated at
  * @member {string} email The email address of the invited user
  * @member {object} invitedBy
- * @member {string} [invitedBy.id] The unique id (UUID) of the user
+ * @member {uuid} [invitedBy.id] The unique id (UUID) of the user
  * @member {string} [invitedBy.avatarUrl] The avatar URL of the user
  * @member {boolean} [invitedBy.canChangePassword] User is required to send an
  * old password in order to change the password.
@@ -1283,14 +1735,14 @@ export interface OrganizationInvitationDetailResponse {
  * @class
  * Initializes a new instance of the OrganizationInvitationSimpleDetailResponse class.
  * @constructor
- * @member {string} id The unique ID (UUID) of the invitation
+ * @member {uuid} id The unique ID (UUID) of the invitation
  * @member {string} email The email address of the invited user
- * @member {object} role The role assigned to the invited user
+ * @member {string} role The role assigned to the invited user
  */
 export interface OrganizationInvitationSimpleDetailResponse {
   id: string;
   email: string;
-  role: any;
+  role: string;
 }
 
 /**
@@ -1363,7 +1815,7 @@ export interface TeamRequest {
  * @class
  * Initializes a new instance of the TeamResponse class.
  * @constructor
- * @member {string} id The internal unique id (UUID) of the team.
+ * @member {uuid} id The internal unique id (UUID) of the team.
  * @member {string} name The name of the team
  * @member {string} displayName The display name of the team
  * @member {string} [description] The description of the team
@@ -1392,6 +1844,16 @@ export interface TeamAppResponse extends TeamResponse {
  * @member {string} status
  */
 export interface StatusResponse {
+  status: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the PurgeResponse class.
+ * @constructor
+ * @member {string} status
+ */
+export interface PurgeResponse {
   status: string;
 }
 
@@ -1441,7 +1903,7 @@ export interface TeamUserResponse {
  * @class
  * Initializes a new instance of the UserAuthResponse class.
  * @constructor
- * @member {string} id The unique id (UUID) of the user
+ * @member {uuid} id The unique id (UUID) of the user
  * @member {string} displayName The full name of the user. Might for example be
  * first and last name
  * @member {string} email The email address of the user
@@ -1463,6 +1925,21 @@ export interface UserAuthResponse {
 
 /**
  * @class
+ * Initializes a new instance of the UserLiteProfileResponse class.
+ * @constructor
+ * @member {uuid} id The unique id (UUID) of the user
+ * @member {string} displayName The full name of the user. Might for example be
+ * first and last name
+ * @member {string} email The email address of the user
+ */
+export interface UserLiteProfileResponse {
+  id: string;
+  displayName: string;
+  email: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the UserNameAvailabilityResponse class.
  * @constructor
  * @member {boolean} available The availability status of the requested user
@@ -1472,6 +1949,60 @@ export interface UserAuthResponse {
 export interface UserNameAvailabilityResponse {
   available: boolean;
   name: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppIntegration class.
+ * @constructor
+ * @member {uuid} appId app id
+ * @member {string} state integration state
+ * @member {string} provider provider type
+ */
+export interface AppIntegration {
+  appId: string;
+  state: string;
+  provider: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppIntegrationResponse class.
+ * @constructor
+ * @member {uuid} appId app id
+ */
+export interface AppIntegrationResponse {
+  appId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppMembershipsResponseMembershipsItem class.
+ * @constructor
+ * @member {string} [appId]
+ * @member {string} [userId]
+ * @member {array} [permissions]
+ * @member {string} [origin] Possible values include: 'appcenter', 'hockeyapp',
+ * 'codepush', 'testcloud', 'hockeyapp-dogfood'
+ */
+export interface AppMembershipsResponseMembershipsItem {
+  appId?: string;
+  userId?: string;
+  permissions?: string[];
+  origin?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppMembershipsResponse class.
+ * @constructor
+ * @member {string} [appOrigin] The app's origin
+ * @member {array} [memberships] An array of all ways a user has access to the
+ * app, based on the app_memberships table.
+ */
+export interface AppMembershipsResponse {
+  appOrigin?: string;
+  memberships?: AppMembershipsResponseMembershipsItem[];
 }
 
 /**
@@ -1530,6 +2061,606 @@ export interface UserSettingResponse {
 
 /**
  * @class
+ * Initializes a new instance of the AADUser class.
+ * @constructor
+ * an AAD user's id and tenant id
+ *
+ * @member {uuid} objectId the aad user's id
+ * @member {uuid} tenantId the aad user's tenant id
+ */
+export interface AADUser {
+  objectId: string;
+  tenantId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the MSAUser class.
+ * @constructor
+ * an MSA user's hex CID
+ *
+ * @member {string} hexcid the user's CID
+ */
+export interface MSAUser {
+  hexcid: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SharedConnectionPatchRequest class.
+ * @constructor
+ * Shared connection patch request
+ *
+ * @member {string} [displayName] Display name of the shared connection
+ * @member {object} data Represents the data for connecting to service
+ */
+export interface SharedConnectionPatchRequest {
+  displayName?: string;
+  data: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SharedConnectionRequest class.
+ * @constructor
+ * SharedConnectionRequest
+ *
+ * @member {string} [displayName] display name of shared connection
+ * @member {string} [credentialType] credential type of the shared connection.
+ * Values can be credentials|certificate. Possible values include:
+ * 'credentials', 'certificate'. Default value: 'credentials' .
+ * @member {string} serviceType Polymorphic Discriminator
+ */
+export interface SharedConnectionRequest {
+  displayName?: string;
+  credentialType?: string;
+  serviceType: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SharedConnectionResponse class.
+ * @constructor
+ * SharedConnectionResponse
+ *
+ * @member {string} id id of the shared connection
+ * @member {string} [displayName] display name of shared connection
+ * @member {string} credentialType the type of the credential. Possible values
+ * include: 'credentials', 'certificate'
+ * @member {boolean} [isValid] whether the credentials are valid or not
+ * @member {boolean} [is2FA] if the account is a 2FA account or not
+ * @member {string} serviceType Polymorphic Discriminator
+ */
+export interface SharedConnectionResponse {
+  id: string;
+  displayName?: string;
+  credentialType: string;
+  isValid?: boolean;
+  is2FA?: boolean;
+  serviceType: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the PrivateSharedConnectionResponse class.
+ * @constructor
+ * PrivateSharedConnectionResponse
+ *
+ * @member {string} id id of the shared connection
+ * @member {string} [displayName] display name of shared connection
+ * @member {boolean} [isValid] whether the credentials are valid or not
+ * @member {boolean} [is2FA] if the account is a 2FA account or not
+ * @member {string} serviceType Polymorphic Discriminator
+ */
+export interface PrivateSharedConnectionResponse {
+  id: string;
+  displayName?: string;
+  isValid?: boolean;
+  is2FA?: boolean;
+  serviceType: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleConnectionSecretRequest class.
+ * @constructor
+ * Apple connection secrets
+ *
+ */
+export interface AppleConnectionSecretRequest extends SharedConnectionRequest {
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleMultifactorSecretDetails class.
+ * @constructor
+ * Apple secret details
+ *
+ * @member {string} username username to connect to apple store.
+ * @member {string} password password to connect to apple store.
+ * @member {string} authCode The 6 digit Apple OTP for Multifactor accounts
+ * @member {string} [appSpecificPassword] The app specific password required
+ * for app publishing for 2FA accounts
+ */
+export interface AppleMultifactorSecretDetails {
+  username: string;
+  password: string;
+  authCode: string;
+  appSpecificPassword?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleCredentialsMultifactorSecretRequest class.
+ * @constructor
+ * Apple connection secrets
+ *
+ * @member {object} data apple secret details
+ * @member {string} [data.username] username to connect to apple store.
+ * @member {string} [data.password] password to connect to apple store.
+ * @member {string} [data.authCode] The 6 digit Apple OTP for Multifactor
+ * accounts
+ * @member {string} [data.appSpecificPassword] The app specific password
+ * required for app publishing for 2FA accounts
+ */
+export interface AppleCredentialsMultifactorSecretRequest extends AppleConnectionSecretRequest {
+  data: AppleMultifactorSecretDetails;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleSecretDetails class.
+ * @constructor
+ * Apple secret details
+ *
+ * @member {string} [username] username to connect to apple store.
+ * @member {string} [authCode] 6 digit auth code
+ * @member {string} [password] password to connect to apple store.
+ */
+export interface AppleSecretDetails {
+  username?: string;
+  authCode?: string;
+  password?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleCredentialsSecretRequest class.
+ * @constructor
+ * Apple connection secrets
+ *
+ * @member {object} data apple secret details
+ * @member {string} [data.username] username to connect to apple store.
+ * @member {string} [data.authCode] 6 digit auth code
+ * @member {string} [data.password] password to connect to apple store.
+ */
+export interface AppleCredentialsSecretRequest extends AppleConnectionSecretRequest {
+  data: AppleSecretDetails;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleCertificateDetails class.
+ * @constructor
+ * Apple Certificate Details
+ *
+ * @member {string} base64Certificate The certificate contents in base 64
+ * encoded string
+ * @member {string} password The password for the certificate
+ */
+export interface AppleCertificateDetails {
+  base64Certificate: string;
+  password: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleCertificateSecretRequest class.
+ * @constructor
+ * Apple certificate secrets
+ *
+ * @member {object} data apple secret details
+ * @member {string} [data.base64Certificate] The certificate contents in base
+ * 64 encoded string
+ * @member {string} [data.password] The password for the certificate
+ */
+export interface AppleCertificateSecretRequest extends AppleConnectionSecretRequest {
+  data: AppleCertificateDetails;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the PrivateAppleSecretResponse class.
+ * @constructor
+ * private Apple connection secrets response
+ *
+ */
+export interface PrivateAppleSecretResponse extends PrivateSharedConnectionResponse {
+}
+
+/**
+ * @class
+ * Initializes a new instance of the PrivateAppleCredentialsSecretResponse class.
+ * @constructor
+ * private Apple connection secrets response
+ *
+ * @member {object} data apple secret details
+ * @member {string} [data.username] username to connect to apple store.
+ * @member {string} [data.authCode] 6 digit auth code
+ * @member {string} [data.password] password to connect to apple store.
+ */
+export interface PrivateAppleCredentialsSecretResponse extends PrivateAppleSecretResponse {
+  data: AppleSecretDetails;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleCertificateSecretDetails class.
+ * @constructor
+ * Apple Certificate Secret Details
+ *
+ * @member {string} base64Certificate The certificate contents in base 64
+ * encoded string
+ * @member {string} password The password for the certificate
+ * @member {string} displayName The display name (CN) of the certificate
+ * @member {string} certificateValidityStartDate The date-time from which the
+ * certificate is valid
+ * @member {string} certificateValidityEndDate The date-time till which the
+ * certificate is valid
+ */
+export interface AppleCertificateSecretDetails {
+  base64Certificate: string;
+  password: string;
+  displayName: string;
+  certificateValidityStartDate: string;
+  certificateValidityEndDate: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the PrivateAppleCertificateSecretResponse class.
+ * @constructor
+ * private Apple connection secrets response
+ *
+ * @member {object} data apple secret details
+ * @member {string} [data.base64Certificate] The certificate contents in base
+ * 64 encoded string
+ * @member {string} [data.password] The password for the certificate
+ * @member {string} [data.displayName] The display name (CN) of the certificate
+ * @member {string} [data.certificateValidityStartDate] The date-time from
+ * which the certificate is valid
+ * @member {string} [data.certificateValidityEndDate] The date-time till which
+ * the certificate is valid
+ */
+export interface PrivateAppleCertificateSecretResponse extends PrivateAppleSecretResponse {
+  data: AppleCertificateSecretDetails;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleSecretDetailsResponse class.
+ * @constructor
+ * Apple secret details
+ *
+ * @member {string} username username to connect to apple store
+ */
+export interface AppleSecretDetailsResponse {
+  username: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleConnectionSecretResponse class.
+ * @constructor
+ * Apple connection secrets
+ *
+ * @member {object} data apple secret details
+ * @member {string} [data.username] username to connect to apple store
+ */
+export interface AppleConnectionSecretResponse extends SharedConnectionResponse {
+  data: AppleSecretDetailsResponse;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleConnectionNonSecretResponse class.
+ * @constructor
+ * Apple connection secrets
+ *
+ */
+export interface AppleConnectionNonSecretResponse extends SharedConnectionResponse {
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleCredentialNonSecretDetailsResponse class.
+ * @constructor
+ * Apple credentials non-secret details
+ *
+ * @member {object} data Apple credentials non-secret data
+ * @member {string} [data.username] username to connect to apple store
+ */
+export interface AppleCredentialNonSecretDetailsResponse extends AppleConnectionNonSecretResponse {
+  data: AppleSecretDetailsResponse;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleCertificateNonSecretDetails class.
+ * @constructor
+ * Apple Certificate Secret Details
+ *
+ * @member {string} displayName The display name (CN) of the certificate
+ * @member {string} certificateValidityStartDate The date-time from which the
+ * certificate is valid
+ * @member {string} certificateValidityEndDate The date-time till which the
+ * certificate is valid
+ */
+export interface AppleCertificateNonSecretDetails {
+  displayName: string;
+  certificateValidityStartDate: string;
+  certificateValidityEndDate: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleCertificateNonSecretDetailsResponse class.
+ * @constructor
+ * Apple certificate non-secret details
+ *
+ * @member {object} data apple certificate non-secret details
+ * @member {string} [data.displayName] The display name (CN) of the certificate
+ * @member {string} [data.certificateValidityStartDate] The date-time from
+ * which the certificate is valid
+ * @member {string} [data.certificateValidityEndDate] The date-time till which
+ * the certificate is valid
+ */
+export interface AppleCertificateNonSecretDetailsResponse extends AppleConnectionNonSecretResponse {
+  data: AppleCertificateNonSecretDetails;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleCertificateSecretDetailsResponse class.
+ * @constructor
+ * Apple connection secrets
+ *
+ * @member {object} data apple certificate secret details.
+ * @member {string} [data.base64Certificate] The certificate contents in base
+ * 64 encoded string
+ * @member {string} [data.password] The password for the certificate
+ * @member {string} [data.displayName] The display name (CN) of the certificate
+ * @member {string} [data.certificateValidityStartDate] The date-time from
+ * which the certificate is valid
+ * @member {string} [data.certificateValidityEndDate] The date-time till which
+ * the certificate is valid
+ */
+export interface AppleCertificateSecretDetailsResponse extends SharedConnectionResponse {
+  data: AppleCertificateSecretDetails;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the JiraSecretDetails class.
+ * @constructor
+ * Jira secret details
+ *
+ * @member {string} baseUrl baseUrl to connect to jira instance
+ * @member {string} username username to connect to jira instance
+ * @member {string} password password to connect to jira instance
+ */
+export interface JiraSecretDetails {
+  baseUrl: string;
+  username: string;
+  password: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the JiraConnectionSecretRequest class.
+ * @constructor
+ * Jira connection secrets
+ *
+ * @member {object} data jira secret details
+ * @member {string} [data.baseUrl] baseUrl to connect to jira instance
+ * @member {string} [data.username] username to connect to jira instance
+ * @member {string} [data.password] password to connect to jira instance
+ */
+export interface JiraConnectionSecretRequest extends SharedConnectionRequest {
+  data: JiraSecretDetails;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the JiraSecretDetailsResponse class.
+ * @constructor
+ * Jira secret details
+ *
+ * @member {string} baseUrl baseUrl to connect to jira instance
+ * @member {string} username username to connect to jira instance
+ */
+export interface JiraSecretDetailsResponse {
+  baseUrl: string;
+  username: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the JiraConnectionSecretResponse class.
+ * @constructor
+ * Jira connection secrets
+ *
+ * @member {object} data jira secret details
+ * @member {string} [data.baseUrl] baseUrl to connect to jira instance
+ * @member {string} [data.username] username to connect to jira instance
+ */
+export interface JiraConnectionSecretResponse extends SharedConnectionResponse {
+  data: JiraSecretDetailsResponse;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the PrivateJiraConnectionSecretResponse class.
+ * @constructor
+ * private Jira connection secrets response
+ *
+ * @member {object} data jira secret details
+ * @member {string} [data.baseUrl] baseUrl to connect to jira instance
+ * @member {string} [data.username] username to connect to jira instance
+ * @member {string} [data.password] password to connect to jira instance
+ */
+export interface PrivateJiraConnectionSecretResponse extends PrivateSharedConnectionResponse {
+  data: JiraSecretDetails;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GooglePlayConnectionSecretRequest class.
+ * @constructor
+ * Google Play connection secrets this should be the JSON file data which is
+ * provided by google play
+ *
+ * @member {object} data google secret details
+ */
+export interface GooglePlayConnectionSecretRequest extends SharedConnectionRequest {
+  data: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GooglePlayConnectionSecretResponse class.
+ * @constructor
+ * Google Play connection secrets
+ *
+ * @member {object} data google play secret details
+ */
+export interface GooglePlayConnectionSecretResponse extends SharedConnectionResponse {
+  data: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the PrivateGooglePlayConnectionSecretResponse class.
+ * @constructor
+ * private google connection secrets response
+ *
+ * @member {object} data google secret details
+ */
+export interface PrivateGooglePlayConnectionSecretResponse extends PrivateSharedConnectionResponse {
+  data: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GooglePlayConnectionNonSecretResponse class.
+ * @constructor
+ * Google Play non-secret data
+ *
+ */
+export interface GooglePlayConnectionNonSecretResponse extends SharedConnectionResponse {
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GooglePlayCredentialNonSecretDetailsResponse class.
+ * @constructor
+ * Google Play credentials non-secret details
+ *
+ * @member {object} data Google Play credentials non-secret details
+ */
+export interface GooglePlayCredentialNonSecretDetailsResponse extends GooglePlayConnectionNonSecretResponse {
+  data: any;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the JiraConnectionNonSecretResponse class.
+ * @constructor
+ * Jira non-secret data
+ *
+ */
+export interface JiraConnectionNonSecretResponse extends SharedConnectionResponse {
+}
+
+/**
+ * @class
+ * Initializes a new instance of the JiraCredentialNonSecretDetailsResponse class.
+ * @constructor
+ * Jira credentials non-secret details
+ *
+ * @member {object} data Jira credentials non-secret details
+ * @member {string} [data.baseUrl] baseUrl to connect to jira instance
+ * @member {string} [data.username] username to connect to jira instance
+ */
+export interface JiraCredentialNonSecretDetailsResponse extends GooglePlayConnectionNonSecretResponse {
+  data: JiraSecretDetailsResponse;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ApiTokenResponsev2 class.
+ * @constructor
+ * @member {uuid} id The unique id (UUID) of the api token
+ * @member {string} createdAt The creation time
+ * @member {array} [scope] The token's scope. A list of allowed roles.
+ * @member {string} [encryptedToken] The encrypted value of a token. This value
+ * will only be returned for token of type in_app_update.
+ * @member {string} [description] The description of the token
+ */
+export interface ApiTokenResponsev2 {
+  id: string;
+  createdAt: string;
+  scope?: string[];
+  encryptedToken?: string;
+  description?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the UserDataResponse class.
+ * @constructor
+ * @member {uuid} [id] The unique id (UUID) of the user
+ * @member {string} [displayName] The display name of the user
+ * @member {string} [name] The name of the user
+ * @member {string} [avatarUrl] The url at which the user's avatar can be
+ * reached
+ */
+export interface UserDataResponse {
+  id?: string;
+  displayName?: string;
+  name?: string;
+  avatarUrl?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorDetailsv2 class.
+ * @constructor
+ * @member {string} code Possible values include: 'BadRequest', 'Conflict',
+ * 'NotAcceptable', 'NotFound', 'InternalServerError', 'Unauthorized'
+ * @member {string} message
+ */
+export interface ErrorDetailsv2 {
+  code: string;
+  message: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorResponsev2 class.
+ * @constructor
+ * @member {object} error
+ * @member {string} [error.code] Possible values include: 'BadRequest',
+ * 'Conflict', 'NotAcceptable', 'NotFound', 'InternalServerError',
+ * 'Unauthorized'
+ * @member {string} [error.message]
+ */
+export interface ErrorResponsev2 {
+  error: ErrorDetailsv2;
+}
+
+/**
+ * @class
  * Initializes a new instance of the FileAsset class.
  * @constructor
  * @member {string} [id]
@@ -1555,11 +2686,176 @@ export interface FileAsset {
  * The source repository
  *
  * @member {string} [name] The repository name
- * @member {object} [cloneUrl] URL used to clone the repository
+ * @member {string} [cloneUrl] URL used to clone the repository
  */
 export interface SourceRepository {
   name?: string;
-  cloneUrl?: any;
+  cloneUrl?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GitHubAccountLite class.
+ * @constructor
+ * The GitHub Installation
+ *
+ * @member {string} [id] GitHub Account Id
+ * @member {string} [login] GitHub Account Login Name
+ * @member {string} [type] GitHub Account Type
+ * @member {string} [url] GitHub Account Url
+ */
+export interface GitHubAccountLite {
+  id?: string;
+  login?: string;
+  type?: string;
+  url?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GitHubInstallationLite class.
+ * @constructor
+ * The GitHub Installation
+ *
+ * @member {number} [id] GitHub Installation Id
+ * @member {object} [account]
+ * @member {string} [account.id] GitHub Account Id
+ * @member {string} [account.login] GitHub Account Login Name
+ * @member {string} [account.type] GitHub Account Type
+ * @member {string} [account.url] GitHub Account Url
+ * @member {number} [appId] GitHub Installation App Id
+ */
+export interface GitHubInstallationLite {
+  id?: number;
+  account?: GitHubAccountLite;
+  appId?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GitHubInstallationRepository class.
+ * @constructor
+ * The repository which is accessiable by GitHub App Installation
+ *
+ * @member {string} [name] The repository name
+ * @member {string} [description] The discription of repository
+ * @member {string} [cloneUrl] URL used to clone the repository
+ * @member {string} [defaultBranch] The default branch for the repo
+ * @member {string} [language] The language in the repository
+ * @member {string} [updatedAt] The repository updated time
+ * @member {boolean} [fork] Whether the repository is a fork
+ */
+export interface GitHubInstallationRepository {
+  name?: string;
+  description?: string;
+  cloneUrl?: string;
+  defaultBranch?: string;
+  language?: string;
+  updatedAt?: string;
+  fork?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GitHubBillingAccount class.
+ * @constructor
+ * App Center account details from GitHub billing
+ *
+ * @member {string} id The unique id (UUID) of the account
+ * @member {string} displayName The account's display name
+ * @member {string} name The unique name that used to identify the owner
+ * @member {string} type The owner type. Can either be 'org' or 'user'.
+ * Possible values include: 'org', 'user'
+ */
+export interface GitHubBillingAccount {
+  id: string;
+  displayName: string;
+  name: string;
+  type: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GitHubRepositoryLite class.
+ * @constructor
+ * The lite version of GitHub repository
+ *
+ * @member {number} [id] The repository id
+ */
+export interface GitHubRepositoryLite {
+  id?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GitHubBranchLite class.
+ * @constructor
+ * The lite version of GitHub branch
+ *
+ * @member {string} [ref] The repository name
+ * @member {string} [sha] The discription of repository
+ * @member {object} [repo]
+ * @member {number} [repo.id] The repository id
+ */
+export interface GitHubBranchLite {
+  ref?: string;
+  sha?: string;
+  repo?: GitHubRepositoryLite;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GitHubPullRequestLite class.
+ * @constructor
+ * The lite version of GitHub pull request
+ *
+ * @member {object} [head]
+ * @member {string} [head.ref] The repository name
+ * @member {string} [head.sha] The discription of repository
+ * @member {object} [head.repo]
+ * @member {number} [head.repo.id] The repository id
+ * @member {object} [base]
+ * @member {string} [base.ref] The repository name
+ * @member {string} [base.sha] The discription of repository
+ * @member {object} [base.repo]
+ * @member {number} [base.repo.id] The repository id
+ */
+export interface GitHubPullRequestLite {
+  head?: GitHubBranchLite;
+  base?: GitHubBranchLite;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the IosAppExtensionInfo class.
+ * @constructor
+ * App extension information
+ *
+ * @member {string} name App extension name
+ * @member {string} targetBundleIdentifier App extension bundle identifier
+ */
+export interface IosAppExtensionInfo {
+  name: string;
+  targetBundleIdentifier: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ProvisioningProfileFile class.
+ * @constructor
+ * Provisioning profile fetch and store information
+ *
+ * @member {string} [fileName] Name of uploaded provisioning profile
+ * @member {string} [fileId] File id from secure file storage
+ * @member {string} [uploadId] Upload id to App Center File Upload Store
+ * @member {string} [targetBundleIdentifier] Target the provisioning profile is
+ * used to sign
+ */
+export interface ProvisioningProfileFile {
+  fileName?: string;
+  fileId?: string;
+  uploadId?: string;
+  targetBundleIdentifier?: string;
 }
 
 /**
@@ -1698,18 +2994,21 @@ export interface XcodeScheme {
  * @member {string} path Path to project
  * @member {array} sharedSchemes Project schemes
  * @member {string} [podfilePath] Path to CocoaPods file, if present
- * @member {object} [cartfilePath] Path to Carthage file, if present
+ * @member {string} [cartfilePath] Path to Carthage file, if present
  * @member {string} [xcodeProjectSha] repo object Id of the pbxproject
  * @member {string} [workspaceProjectPaths] Related projects paths for
  * xcworkspace
+ * @member {array} [appExtensionTargets] Information regarding project app
+ * extensions, if present
  */
 export interface XcodeSchemeContainer {
   path: string;
   sharedSchemes: XcodeScheme[];
   podfilePath?: string;
-  cartfilePath?: any;
+  cartfilePath?: string;
   xcodeProjectSha?: string;
   workspaceProjectPaths?: string;
+  appExtensionTargets?: IosAppExtensionInfo[];
 }
 
 /**
@@ -2030,6 +3329,7 @@ export interface BranchStatus {
  * @member {string} [provisioningProfileFileId]
  * @member {string} [certificateFileId]
  * @member {string} [provisioningProfileUploadId]
+ * @member {array} [appExtensionProvisioningProfileFiles]
  * @member {string} [certificateUploadId]
  * @member {string} [certificatePassword]
  * @member {string} scheme
@@ -2054,6 +3354,7 @@ export interface XcodeBranchConfigurationProperties {
   provisioningProfileFileId?: string;
   certificateFileId?: string;
   provisioningProfileUploadId?: string;
+  appExtensionProvisioningProfileFiles?: ProvisioningProfileFile[];
   certificateUploadId?: string;
   certificatePassword?: string;
   scheme: string;
@@ -2102,6 +3403,11 @@ export interface JavaScriptBranchConfigurationProperties {
  * @member {string} provProfile
  * @member {string} [monoVersion]
  * @member {string} [sdkBundle]
+ * @member {string} [symlink] Symlink of the SDK Bundle and Mono installation.
+ * The build will use the associated Mono bundled with related Xamarin SDK. If
+ * both symlink and monoVersion or sdkBundle are passed, the symlink is taking
+ * precedence. If non-existing symlink is passed, the current stable Mono
+ * version will be configured for building.
  */
 export interface XamarinBranchConfigurationProperties {
   slnPath: string;
@@ -2113,6 +3419,7 @@ export interface XamarinBranchConfigurationProperties {
   provProfile: string;
   monoVersion?: string;
   sdkBundle?: string;
+  symlink?: string;
 }
 
 /**
@@ -2123,18 +3430,34 @@ export interface XamarinBranchConfigurationProperties {
  *
  * @member {string} [gradleWrapperPath] Path to the Gradle wrapper script
  * @member {string} module The Gradle module to build
- * @member {string} variant The Android build variant to build
+ * @member {string} buildVariant The Android build variant to build
  * @member {boolean} [runTests] Whether to run unit tests during the build
  * (default). Default value: true .
  * @member {boolean} [runLint] Whether to run lint checks during the build
  * (default). Default value: true .
+ * @member {boolean} [isRoot] Whether it is the root module or not. Default
+ * value: true .
+ * @member {boolean} [automaticSigning] Whether to apply automatic signing or
+ * not. Default value: true .
+ * @member {string} [keystorePassword] The password of the keystore
+ * @member {string} [keyAlias] The key alias
+ * @member {string} [keyPassword] The key password
+ * @member {string} [keystoreFilename] The name of the keystore file
+ * @member {string} [keystoreEncoded] The keystore encoded value
  */
 export interface AndroidBranchConfigurationProperties {
   gradleWrapperPath?: string;
   module: string;
-  variant: string;
+  buildVariant: string;
   runTests?: boolean;
   runLint?: boolean;
+  isRoot?: boolean;
+  automaticSigning?: boolean;
+  keystorePassword?: string;
+  keyAlias?: string;
+  keyPassword?: string;
+  keystoreFilename?: string;
+  keystoreEncoded?: string;
 }
 
 /**
@@ -2152,6 +3475,7 @@ export interface AndroidBranchConfigurationProperties {
  * @member {string} [xcode.provisioningProfileFileId]
  * @member {string} [xcode.certificateFileId]
  * @member {string} [xcode.provisioningProfileUploadId]
+ * @member {array} [xcode.appExtensionProvisioningProfileFiles]
  * @member {string} [xcode.certificateUploadId]
  * @member {string} [xcode.certificatePassword]
  * @member {string} [xcode.scheme]
@@ -2183,15 +3507,29 @@ export interface AndroidBranchConfigurationProperties {
  * @member {string} [xamarin.provProfile]
  * @member {string} [xamarin.monoVersion]
  * @member {string} [xamarin.sdkBundle]
+ * @member {string} [xamarin.symlink] Symlink of the SDK Bundle and Mono
+ * installation.
+ * The build will use the associated Mono bundled with related Xamarin SDK. If
+ * both symlink and monoVersion or sdkBundle are passed, the symlink is taking
+ * precedence. If non-existing symlink is passed, the current stable Mono
+ * version will be configured for building.
  * @member {object} [android]
  * @member {string} [android.gradleWrapperPath] Path to the Gradle wrapper
  * script
  * @member {string} [android.module] The Gradle module to build
- * @member {string} [android.variant] The Android build variant to build
+ * @member {string} [android.buildVariant] The Android build variant to build
  * @member {boolean} [android.runTests] Whether to run unit tests during the
  * build (default)
  * @member {boolean} [android.runLint] Whether to run lint checks during the
  * build (default)
+ * @member {boolean} [android.isRoot] Whether it is the root module or not
+ * @member {boolean} [android.automaticSigning] Whether to apply automatic
+ * signing or not
+ * @member {string} [android.keystorePassword] The password of the keystore
+ * @member {string} [android.keyAlias] The key alias
+ * @member {string} [android.keyPassword] The key password
+ * @member {string} [android.keystoreFilename] The name of the keystore file
+ * @member {string} [android.keystoreEncoded] The keystore encoded value
  */
 export interface BranchConfigurationToolsets {
   xcode?: XcodeBranchConfigurationProperties;
@@ -2238,6 +3576,7 @@ export interface BranchConfigurationArtifactVersioning {
  * @member {string} [toolsets.xcode.provisioningProfileFileId]
  * @member {string} [toolsets.xcode.certificateFileId]
  * @member {string} [toolsets.xcode.provisioningProfileUploadId]
+ * @member {array} [toolsets.xcode.appExtensionProvisioningProfileFiles]
  * @member {string} [toolsets.xcode.certificateUploadId]
  * @member {string} [toolsets.xcode.certificatePassword]
  * @member {string} [toolsets.xcode.scheme]
@@ -2269,16 +3608,34 @@ export interface BranchConfigurationArtifactVersioning {
  * @member {string} [toolsets.xamarin.provProfile]
  * @member {string} [toolsets.xamarin.monoVersion]
  * @member {string} [toolsets.xamarin.sdkBundle]
+ * @member {string} [toolsets.xamarin.symlink] Symlink of the SDK Bundle and
+ * Mono installation.
+ * The build will use the associated Mono bundled with related Xamarin SDK. If
+ * both symlink and monoVersion or sdkBundle are passed, the symlink is taking
+ * precedence. If non-existing symlink is passed, the current stable Mono
+ * version will be configured for building.
  * @member {object} [toolsets.android]
  * @member {string} [toolsets.android.gradleWrapperPath] Path to the Gradle
  * wrapper script
  * @member {string} [toolsets.android.module] The Gradle module to build
- * @member {string} [toolsets.android.variant] The Android build variant to
- * build
+ * @member {string} [toolsets.android.buildVariant] The Android build variant
+ * to build
  * @member {boolean} [toolsets.android.runTests] Whether to run unit tests
  * during the build (default)
  * @member {boolean} [toolsets.android.runLint] Whether to run lint checks
  * during the build (default)
+ * @member {boolean} [toolsets.android.isRoot] Whether it is the root module or
+ * not
+ * @member {boolean} [toolsets.android.automaticSigning] Whether to apply
+ * automatic signing or not
+ * @member {string} [toolsets.android.keystorePassword] The password of the
+ * keystore
+ * @member {string} [toolsets.android.keyAlias] The key alias
+ * @member {string} [toolsets.android.keyPassword] The key password
+ * @member {string} [toolsets.android.keystoreFilename] The name of the
+ * keystore file
+ * @member {string} [toolsets.android.keystoreEncoded] The keystore encoded
+ * value
  * @member {object} [artifactVersioning]
  * @member {string} [artifactVersioning.buildNumberFormat] Possible values
  * include: 'buildId', 'timestamp'
@@ -2352,12 +3709,16 @@ export interface CommitDetails extends Commit {
  * 'unauthorized', 'inactive', 'active'
  * @member {string} [repoUrl] URL of the repository
  * @member {string} [id] Repository identifier
+ * @member {string} [userEmail] email of user, who linked repository
+ * @member {string} [installationId] The GitHub Installation id
  */
 export interface RepoConfig {
   type: string;
   state: string;
   repoUrl?: string;
   id?: string;
+  userEmail?: string;
+  installationId?: string;
 }
 
 /**
@@ -2407,11 +3768,16 @@ export interface MonoVersion {
  * @member {string} [monoVersion] The Mono version
  * @member {string} [sdkBundle] The Xamarin SDK version
  * @member {boolean} [current] If the SDK is latest stable
+ * @member {boolean} [stable] If the SDK is stable
+ * @member {array} [xcodeVersions] Specific for iOS SDK. A list of Xcode
+ * versions supported by current SDK version
  */
 export interface XamarinSDKBundle {
   monoVersion?: string;
   sdkBundle?: string;
   current?: boolean;
+  stable?: boolean;
+  xcodeVersions?: string[];
 }
 
 /**
@@ -2452,13 +3818,21 @@ export interface BuildLog {
  * @class
  * Initializes a new instance of the DistributionRequest class.
  * @constructor
- * @member {string} distributionGroupId A distribution group ID or a store
- * group ID
+ * @member {string} [distributionGroupId] DEPRECATED - A distribution group ID
+ * or a store group ID
+ * @member {array} [destinations] Array of objects {id:string, type:string}
+ * with "id" being the distribution group ID, store ID, or tester email, and
+ * "type" being "group", "store", or "tester"
  * @member {string} [releaseNotes] The release notes
+ * @member {boolean} [mandatoryUpdate]
+ * @member {boolean} [notifyTesters] Default value: true .
  */
 export interface DistributionRequest {
-  distributionGroupId: string;
+  distributionGroupId?: string;
+  destinations?: any[];
   releaseNotes?: string;
+  mandatoryUpdate?: boolean;
+  notifyTesters?: boolean;
 }
 
 /**
@@ -2601,14 +3975,20 @@ export interface BuildConcurrencyResponse {
  * @member {string} [shortVersion] The release's short version.<br>
  * For iOS: CFBundleShortVersionString from info.plist.<br>
  * For Android: android:versionName from AppManifest.xml.
+ * @member {boolean} [mandatoryUpdate] A boolean which determines whether the
+ * release is a mandatory update or not.
  * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
  * time.
+ * @member {boolean} [enabled] This value determines the whether a release
+ * currently is enabled or disabled.
  */
 export interface DistributionGroupRelease {
   id?: number;
   version?: string;
   shortVersion?: string;
+  mandatoryUpdate?: boolean;
   uploadedAt?: string;
+  enabled?: boolean;
 }
 
 /**
@@ -2689,42 +4069,12 @@ export interface TesterAppWithReleaseResponse {
 
 /**
  * @class
- * Initializes a new instance of the SendNotificationRequestEmailContents class.
- * @constructor
- * latest email content
- *
- * @member {string} [releaseId]
- * @member {string} [appName]
- * @member {string} [platform]
- * @member {string} [build]
- * @member {string} [version]
- * @member {string} installLink
- */
-export interface SendNotificationRequestEmailContents {
-  releaseId?: string;
-  appName?: string;
-  platform?: string;
-  build?: string;
-  version?: string;
-  installLink: string;
-}
-
-/**
- * @class
  * Initializes a new instance of the SendNotificationRequest class.
  * @constructor
  * @member {array} userIds user list to send email notification
- * @member {object} emailContents latest email content
- * @member {string} [emailContents.releaseId]
- * @member {string} [emailContents.appName]
- * @member {string} [emailContents.platform]
- * @member {string} [emailContents.build]
- * @member {string} [emailContents.version]
- * @member {string} [emailContents.installLink]
  */
 export interface SendNotificationRequest {
   userIds: string[];
-  emailContents: SendNotificationRequestEmailContents;
 }
 
 /**
@@ -2761,14 +4111,42 @@ export interface ReleaseUpdateResponseDestinationsItem {
  * @constructor
  * Response for updating a release
  *
+ * @member {boolean} [enabled]
  * @member {boolean} [mandatoryUpdate]
  * @member {string} [releaseNotes]
+ * @member {string} [provisioningStatusUrl]
  * @member {array} [destinations]
  */
 export interface ReleaseUpdateResponse {
+  enabled?: boolean;
   mandatoryUpdate?: boolean;
   releaseNotes?: string;
+  provisioningStatusUrl?: string;
   destinations?: ReleaseUpdateResponseDestinationsItem[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseDetailsUpdateResponse class.
+ * @constructor
+ * Response for updating release details
+ *
+ * @member {string} [releaseNotes]
+ */
+export interface ReleaseDetailsUpdateResponse {
+  releaseNotes?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseProvisionResponse class.
+ * @constructor
+ * Response for provisioning a release
+ *
+ * @member {string} [statusUrl] The url to check provisioning status.
+ */
+export interface ReleaseProvisionResponse {
+  statusUrl?: string;
 }
 
 /**
@@ -2820,7 +4198,7 @@ export interface ReleaseUpdateResponse {
  * `itms-services://?action=download-manifest&url=`
  * @member {string} [distributionGroupId] the destination where release is
  * distributed
- * @member {string} [publishingStatus] the publishing status of distributed
+ * @member {string} [publishingStatus] the publishing status of the distributed
  * release
  * @member {string} [destinationType] The destination type.<br>
  * <b>group</b>: The release distributed to internal groups and
@@ -2880,6 +4258,10 @@ export interface PrivateReleaseDetailsResponse {
  * . Possible values include: 'group', 'store'
  * @member {boolean} [isLatest] Indicates if this is the latest release in the
  * group.
+ * @member {boolean} [mandatoryUpdate] A boolean which determines whether the
+ * release is a mandatory update or not.
+ * @member {string} [publishingStatus] the publishing status of the distributed
+ * release
  */
 export interface PrivateBasicReleaseDetailsResponse {
   id?: number;
@@ -2889,6 +4271,8 @@ export interface PrivateBasicReleaseDetailsResponse {
   distributionGroupId?: string;
   destinationType?: string;
   isLatest?: boolean;
+  mandatoryUpdate?: boolean;
+  publishingStatus?: string;
 }
 
 /**
@@ -2955,13 +4339,31 @@ export interface DistributionStore extends DestinationId {
  * @member {string} [publishingStatus] publishing status of the release in the
  * store.
  * @member {string} [destinationType] Destination can be either store or group.
- * Possible values include: 'group', 'store'
+ * Possible values include: 'group', 'store', 'tester'
  */
 export interface Destination {
   isLatest?: boolean;
   type?: string;
   publishingStatus?: string;
   destinationType?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the BuildInfo class.
+ * @constructor
+ * Contains metadata about the build that produced the release being uploaded
+ *
+ * @member {string} [branch] The branch name of the build producing the release
+ * @member {string} [commitHash] The commit hash of the build producing the
+ * release
+ * @member {string} [commitMessage] The commit message of the build producing
+ * the release
+ */
+export interface BuildInfo {
+  branch?: string;
+  commitHash?: string;
+  commitMessage?: string;
 }
 
 /**
@@ -2977,6 +4379,8 @@ export interface Destination {
  * @member {string} [shortVersion] The release's short version.<br>
  * For iOS: CFBundleShortVersionString from info.plist.<br>
  * For Android: android:versionName from AppManifest.xml.
+ * @member {boolean} [enabled] This value determines the whether a release
+ * currently is enabled or disabled.
  * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
  * time.
  * @member {string} [destinationType] OBSOLETE. Will be removed in next
@@ -2993,16 +4397,25 @@ export interface Destination {
  * version. A list of distribution stores that are associated with this
  * release.
  * @member {array} [destinations] A list of distribution groups or stores.
+ * @member {object} [build]
+ * @member {string} [build.branch] The branch name of the build producing the
+ * release
+ * @member {string} [build.commitHash] The commit hash of the build producing
+ * the release
+ * @member {string} [build.commitMessage] The commit message of the build
+ * producing the release
  */
 export interface BasicReleaseDetailsResponse {
   id?: number;
   version?: string;
   shortVersion?: string;
+  enabled?: boolean;
   uploadedAt?: string;
   destinationType?: string;
   distributionGroups?: DistributionGroup[];
   distributionStores?: DistributionStore[];
   destinations?: Destination[];
+  build?: BuildInfo;
 }
 
 /**
@@ -3058,6 +4471,8 @@ export interface DistributionStoreWithoutIsLatest {
  * @member {string} [provisioningProfileType] The type of the provisioning
  * profile for the requested app version. Possible values include: 'adhoc',
  * 'enterprise', 'other'
+ * @member {string} [provisioningProfileExpiryDate] expiration date of
+ * provisioning profile in UTC format.
  * @member {boolean} [isProvisioningProfileSyncing] A flag that determines
  * whether the release's provisioning profile is still extracted or not.
  * @member {number} [size] The release's size in bytes.
@@ -3092,6 +4507,19 @@ export interface DistributionStoreWithoutIsLatest {
  * @member {boolean} [isUdidProvisioned] In calls that allow passing `udid` in
  * the query string, this value will hold the provisioning status of that UDID
  * in this release. Will be ignored for non-iOS platforms.
+ * @member {boolean} [canResign] In calls that allow passing `udid` in the
+ * query string, this value determines if a release can be re-signed. When
+ * true, after a re-sign, the tester will be able to install the release from
+ * his registered devices. Will not be returned for non-iOS platforms.
+ * @member {object} [build]
+ * @member {string} [build.branch] The branch name of the build producing the
+ * release
+ * @member {string} [build.commitHash] The commit hash of the build producing
+ * the release
+ * @member {string} [build.commitMessage] The commit message of the build
+ * producing the release
+ * @member {boolean} [enabled] This value determines the whether a release
+ * currently is enabled or disabled.
  */
 export interface ReleaseDetailsResponse {
   id?: number;
@@ -3102,6 +4530,7 @@ export interface ReleaseDetailsResponse {
   releaseNotes?: string;
   provisioningProfileName?: string;
   provisioningProfileType?: string;
+  provisioningProfileExpiryDate?: string;
   isProvisioningProfileSyncing?: boolean;
   size?: number;
   minOs?: string;
@@ -3118,6 +4547,9 @@ export interface ReleaseDetailsResponse {
   distributionStores?: DistributionStoreWithoutIsLatest[];
   destinations?: Destination[];
   isUdidProvisioned?: boolean;
+  canResign?: boolean;
+  build?: BuildInfo;
+  enabled?: boolean;
 }
 
 /**
@@ -3130,9 +4562,12 @@ export interface ReleaseDetailsResponse {
  * @member {string} uploadId The ID for the current upload
  * @member {string} uploadUrl The URL where the client needs to upload the
  * release to
- * @member {string} [assetId] In preview, the ID for the current upload
- * @member {string} [assetDomain] In preview, the URL for the current upload
- * @member {string} [assetToken] In preview, the token for the current upload
+ * @member {string} [assetId] The ID for the current upload, reserved for
+ * future use
+ * @member {string} [assetDomain] The URL for the current upload, reserved for
+ * future use
+ * @member {string} [assetToken] The token for the current upload, reserved for
+ * future use
  */
 export interface ReleaseUploadBeginResponse {
   uploadId: string;
@@ -3140,6 +4575,31 @@ export interface ReleaseUploadBeginResponse {
   assetId?: string;
   assetDomain?: string;
   assetToken?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GDPRValidationRequest class.
+ * @constructor
+ * A request containing a set of release ids to validate
+ *
+ * @member {array} releaseIds a list of release ids to validate
+ */
+export interface GDPRValidationRequest {
+  releaseIds: number[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseUploadBeginRequest class.
+ * @constructor
+ * A request containing information pertaining to begin a release upload
+ * process
+ *
+ * @member {number} [releaseId] The ID of the release.
+ */
+export interface ReleaseUploadBeginRequest {
+  releaseId?: number;
 }
 
 /**
@@ -3310,6 +4770,15 @@ export interface ReleaseCreateResponse {
  * version should be a mandatory update or not.
  * @member {array} [destinations] Distribute this release under the following
  * list of destinations (store groups or distribution groups).
+ * @member {object} [build]
+ * @member {string} [build.branch] The branch name of the build producing the
+ * release
+ * @member {string} [build.commitHash] The commit hash of the build producing
+ * the release
+ * @member {string} [build.commitMessage] The commit message of the build
+ * producing the release
+ * @member {boolean} [notifyTesters] A boolean which determines whether to
+ * notify testers of a new release, default to true. Default value: true .
  */
 export interface ReleaseUpdateRequest {
   distributionGroupName?: string;
@@ -3320,6 +4789,96 @@ export interface ReleaseUpdateRequest {
   releaseNotes?: string;
   mandatoryUpdate?: boolean;
   destinations?: DestinationId[];
+  build?: BuildInfo;
+  notifyTesters?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseDetailsUpdateRequest class.
+ * @constructor
+ * A request containing information for updating details of a release
+ *
+ * @member {boolean} [enabled] Toggle this release to be enable
+ * distribute/download or not.
+ * @member {string} [releaseNotes] Release notes for this release.
+ * @member {object} [build]
+ * @member {string} [build.branch] The branch name of the build producing the
+ * release
+ * @member {string} [build.commitHash] The commit hash of the build producing
+ * the release
+ * @member {string} [build.commitMessage] The commit message of the build
+ * producing the release
+ */
+export interface ReleaseDetailsUpdateRequest {
+  enabled?: boolean;
+  releaseNotes?: string;
+  build?: BuildInfo;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseStoreDestinationRequest class.
+ * @constructor
+ * @member {uuid} id Unique id of the release destination
+ */
+export interface ReleaseStoreDestinationRequest {
+  id: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseDestinationRequest class.
+ * @constructor
+ * @member {boolean} [mandatory] OBSOLETE! Use mandatory_update instead.
+ * @member {boolean} [mandatoryUpdate] Flag to mark the release for the
+ * provided destinations as mandatory
+ * @member {boolean} [notifyTesters] Flag to enable or disable notifications to
+ * testers. Default value: true .
+ */
+export interface ReleaseDestinationRequest extends ReleaseStoreDestinationRequest {
+  mandatory?: boolean;
+  mandatoryUpdate?: boolean;
+  notifyTesters?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseTesterDestinationRequest class.
+ * @constructor
+ * @member {boolean} [mandatory] DEPRECATED! Use mandatory_update instead.
+ * @member {boolean} [mandatoryUpdate] Flag to mark the release for the
+ * provided destinations as mandatory
+ * @member {string} email Tester's email address
+ * @member {boolean} [notifyTesters] Flag to enable or disable notifications to
+ * testers. Default value: true .
+ */
+export interface ReleaseTesterDestinationRequest {
+  mandatory?: boolean;
+  mandatoryUpdate?: boolean;
+  email: string;
+  notifyTesters?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseStoreDestinationResponse class.
+ * @constructor
+ * @member {string} id Unique id for the release destination
+ */
+export interface ReleaseStoreDestinationResponse {
+  id: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ReleaseDestinationResponse class.
+ * @constructor
+ * @member {boolean} mandatoryUpdate Flag to mark the release for the provided
+ * destinations as mandatory
+ */
+export interface ReleaseDestinationResponse extends ReleaseStoreDestinationResponse {
+  mandatoryUpdate: boolean;
 }
 
 /**
@@ -3411,20 +4970,20 @@ export interface ReleaseUpdateError extends ErrorDetails {
  * @constructor
  * A request containing information for creating a Auto Provisioning Config.
  *
- * @member {string} appleDeveloperAccountKey A key to a secret in
+ * @member {string} [appleDeveloperAccountKey] A key to a secret in
  * customer-credential-store. apple_developer_account refers to the user's
  * developer account that is used to log into https://developer.apple.com.
  * Normally the user's email.
- * @member {string} appleDistributionCertificateKey A key to a secret in
- * customer-credential-store. distribution_certificate refers to the cusomer's
+ * @member {string} [appleDistributionCertificateKey] A key to a secret in
+ * customer-credential-store. distribution_certificate refers to the customer's
  * certificate (that holds the private key) that will be used to sign the app.
- * @member {boolean} allowAutoProvisioning When *true* enables auto
+ * @member {boolean} [allowAutoProvisioning] When *true* enables auto
  * provisioning
  */
 export interface AutoProvisioningConfigRequest {
-  appleDeveloperAccountKey: string;
-  appleDistributionCertificateKey: string;
-  allowAutoProvisioning: boolean;
+  appleDeveloperAccountKey?: string;
+  appleDistributionCertificateKey?: string;
+  allowAutoProvisioning?: boolean;
 }
 
 /**
@@ -3477,6 +5036,34 @@ export interface AnalyticsReleasesParameter {
  */
 export interface AnalyticsReleasesResponse {
   releases?: AnalyticsReleasesParameter[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the HockeyAppCompatibilityReleaseResponse class.
+ * @constructor
+ * @member {number} [id]
+ * @member {string} [shortversion]
+ * @member {string} [version]
+ * @member {date} [uploadedAt]
+ * @member {number} [appsize]
+ * @member {string} [notes]
+ * @member {boolean} [mandatory]
+ * @member {boolean} [external]
+ * @member {string} [deviceFamily]
+ * @member {string} [minimumOsVersion]
+ */
+export interface HockeyAppCompatibilityReleaseResponse {
+  id?: number;
+  shortversion?: string;
+  version?: string;
+  uploadedAt?: Date;
+  appsize?: number;
+  notes?: string;
+  mandatory?: boolean;
+  external?: boolean;
+  deviceFamily?: string;
+  minimumOsVersion?: string;
 }
 
 /**
@@ -3627,11 +5214,14 @@ export interface PublishDevicesResponse {
  * @member {string} password The password for the Apple Developer account.
  * @member {string} [teamIdentifier] Identifier of the team to use when logged
  * in.
+ * @member {string} [cookie] The 30-day session cookie for multi-factor
+ * authentication backed accounts.
  */
 export interface AppleLoginRequest {
   username: string;
   password: string;
   teamIdentifier?: string;
+  cookie?: string;
 }
 
 /**
@@ -3644,6 +5234,39 @@ export interface AppleLoginRequest {
  */
 export interface AppleLoginResponse {
   successful?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleMutifactorLoginRequest class.
+ * @constructor
+ * Apple credentials needed to log into the Apple Developer Portal
+ *
+ * @member {string} username The username for the Apple Developer account.
+ * @member {string} authcode This is the six digit OTP used for completing the
+ * multi-factor authentication
+ */
+export interface AppleMutifactorLoginRequest {
+  username: string;
+  authcode: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AppleMultifactorLoginResponse class.
+ * @constructor
+ * The response of Multifactor login. This is a 30 day session token generated
+ * by apple.
+ *
+ * @member {string} [username] the apple developer account.
+ * @member {string} [cookie] The 30-day session Token generated by apple after
+ * successfully logging in with Multifactor authentication.
+ * @member {string} [expires] The expiry date of the cookie generated by apple
+ */
+export interface AppleMultifactorLoginResponse {
+  username?: string;
+  cookie?: string;
+  expires?: string;
 }
 
 /**
@@ -3703,12 +5326,15 @@ export interface ApplicationStatusResponse {
  * stored Apple credentials instead of username, password.
  * @member {string} [teamIdentifier] Identifier of the team to use when logged
  * in.
+ * @member {string} [cookie] The 30-day session cookie for multi-factor
+ * authentication backed accounts.
  */
 export interface ItunesAppsRequest {
   username?: string;
   password?: string;
   serviceConnectionId?: string;
   teamIdentifier?: string;
+  cookie?: string;
 }
 
 /**
@@ -3722,11 +5348,14 @@ export interface ItunesAppsRequest {
  * @member {string} [password] The password for the Apple Developer account.
  * @member {string} [serviceConnectionId] The service_connection_id of the
  * stored Apple credentials instead of username, password.
+ * @member {string} [cookie] The 30-day session cookie for multi-factor
+ * authentication backed accounts.
  */
 export interface ItunesTeamsRequest {
   username?: string;
   password?: string;
   serviceConnectionId?: string;
+  cookie?: string;
 }
 
 /**
@@ -3769,21 +5398,27 @@ export interface AllItunesAppsResponse {
  * pass either apple_id or bundle_identifier to get the test flight groups. if
  * both are passed than apple_id will take preference
  *
- * @member {string} username The username for the Apple Developer account.
- * @member {string} password The password for the Apple Developer account.
+ * @member {string} [username] The username for the Apple Developer account.
+ * @member {string} [password] The password for the Apple Developer account.
  * @member {string} [appleId] apple_id of the app for which test flight groups
  * need to be fetched.
  * @member {string} [bundleIdentifier] apple_id of the app for which test
  * flight groups need to be fetched.
  * @member {string} [teamIdentifier] Identifier of the team to use when logged
  * in.
+ * @member {string} [cookie] The 30-day session cookie for multi-factor
+ * authentication backed accounts.
+ * @member {string} [serviceConnectionId] The service_connection_id of the
+ * stored Apple credentials instead of username, password.
  */
 export interface AppleTestFlightGroupRequest {
-  username: string;
-  password: string;
+  username?: string;
+  password?: string;
   appleId?: string;
   bundleIdentifier?: string;
   teamIdentifier?: string;
+  cookie?: string;
+  serviceConnectionId?: string;
 }
 
 /**
@@ -3892,7 +5527,8 @@ export interface UpdateDevicesRequestDestinationsItem {
  *
  * @member {number} [releaseId] When provided, will update the provided release
  * with the new set of devices. By default the latest release of the
- * distribution group is used when this property is omitted.
+ * distribution group is used when this property is omitted. If `release_id` is
+ * passed in the path, there is no need to pass in the body as well.
  * @member {string} [username] The username for the Apple Developer account to
  * publish the devices to.
  * @member {string} [password] The password for the Apple Developer account to
@@ -3932,13 +5568,10 @@ export interface UpdateDevicesRequest {
  * URL that can be used to check the status of the update devices operation and
  * the updated profiles.
  *
- * @member {string} profilesZipBase64 The updated provisioning profiles base64
- * encoded.
  * @member {string} statusUrl URL that can be used to check the status of the
  * update devices operation.
  */
 export interface UpdateDevicesResponse {
-  profilesZipBase64: string;
   statusUrl: string;
 }
 
@@ -3968,9 +5601,12 @@ export interface UpdateResignStatusRequest {
  * the updated profiles.
  *
  * @member {string} status The status.
+ * @member {string} [profilesZipBase64] A zip of the updated provisioning
+ * profiles. Base64 encoded.
  */
 export interface UpdateResignStatusResponse {
   status: string;
+  profilesZipBase64?: string;
 }
 
 /**
@@ -4050,6 +5686,16 @@ export interface StoresReleaseDetails {
 
 /**
  * @class
+ * Initializes a new instance of the StorePatchRequest class.
+ * @constructor
+ * @member {string} serviceConnectionId Service connection id to updated.
+ */
+export interface StorePatchRequest {
+  serviceConnectionId: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the IntuneSecretDetails class.
  * @constructor
  * @member {string} [idToken] the id token of user
@@ -4106,48 +5752,18 @@ export interface IntuneStoreRequest {
 
 /**
  * @class
- * Initializes a new instance of the WindowsSecretDetails class.
- * @constructor
- * @member {string} [idToken] the id token of user
- * @member {string} [refreshToken] the refresh token for user
- * @member {string} [refreshTokenExpiry] the expiry of refresh token
- */
-export interface WindowsSecretDetails {
-  idToken?: string;
-  refreshToken?: string;
-  refreshTokenExpiry?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the WindowsStoreRequest class.
- * @constructor
- * @member {object} [secretJson]
- * @member {string} [secretJson.idToken] the id token of user
- * @member {string} [secretJson.refreshToken] the refresh token for user
- * @member {string} [secretJson.refreshTokenExpiry] the expiry of refresh token
- * @member {string} [tenantId] tenant id the user account belongs to
- */
-export interface WindowsStoreRequest {
-  secretJson?: WindowsSecretDetails;
-  tenantId?: string;
-}
-
-/**
- * @class
  * Initializes a new instance of the ExternalStoreRequest class.
  * @constructor
  * ExternalStoreRequest
  *
  * @member {string} [type] store Type. Possible values include: 'googleplay',
- * 'intune', 'windows', 'apple'
- * @member {string} [name] name of the store. In case of googleplay, windows
- * and Apple store this is fixed to Production.
+ * 'intune', 'apple'
+ * @member {string} [name] name of the store. In case of googleplay, and Apple
+ * store this is fixed to Production.
  * @member {string} [track] track of the store. Can be production, alpha & beta
  * for googleplay. Can be production, testflight-internal & testflight-external
- * for Apple Store. Can be production for Windows Store. Possible values
- * include: 'production', 'alpha', 'beta', 'testflight-internal',
- * 'testflight-external'
+ * for Apple Store. Possible values include: 'production', 'alpha', 'beta',
+ * 'testflight-internal', 'testflight-external'
  * @member {object} [intuneDetails]
  * @member {object} [intuneDetails.secretJson]
  * @member {string} [intuneDetails.secretJson.idToken] the id token of user
@@ -4162,15 +5778,6 @@ export interface WindowsStoreRequest {
  * @member {string} [intuneDetails.appCategory.name] display name for the app
  * category
  * @member {string} [intuneDetails.tenantId] tenant id of the intune store
- * @member {object} [windowsDetails]
- * @member {object} [windowsDetails.secretJson]
- * @member {string} [windowsDetails.secretJson.idToken] the id token of user
- * @member {string} [windowsDetails.secretJson.refreshToken] the refresh token
- * for user
- * @member {string} [windowsDetails.secretJson.refreshTokenExpiry] the expiry
- * of refresh token
- * @member {string} [windowsDetails.tenantId] tenant id the user account
- * belongs to
  * @member {string} [serviceConnectionId] Id for the shared service connection.
  * In case of Apple AppStore, this connection will be used to create and
  * connect to the Apple AppStore in Mobile Center.
@@ -4180,7 +5787,6 @@ export interface ExternalStoreRequest {
   name?: string;
   track?: string;
   intuneDetails?: IntuneStoreRequest;
-  windowsDetails?: WindowsStoreRequest;
   serviceConnectionId?: string;
 }
 
@@ -4268,8 +5874,7 @@ export interface PrivateIntuneStoreRequest {
  * @constructor
  * create the store through private API. Used by UI.
  *
- * @member {string} [type] store Type. Possible values include: 'intune',
- * 'windows'
+ * @member {string} [type] store Type. Possible values include: 'intune'
  * @member {string} [name] name of the store.
  * @member {object} [intuneDetails]
  * @member {object} [intuneDetails.targetAudience]
@@ -4314,28 +5919,6 @@ export interface IntuneCategories {
 
 /**
  * @class
- * Initializes a new instance of the UserInfo class.
- * @constructor
- * @member {string} [odatacontext] context
- * @member {string} [id] the display name for the category
- * @member {string} [displayName] the display name for the category
- * @member {string} [givenName] the display name for the category
- * @member {string} [jobTitle] the display name for the category
- * @member {string} [mail] the display name for the category
- * @member {string} [userPrincipalName] modified date for category
- */
-export interface UserInfo {
-  odatacontext?: string;
-  id?: string;
-  displayName?: string;
-  givenName?: string;
-  jobTitle?: string;
-  mail?: string;
-  userPrincipalName?: string;
-}
-
-/**
- * @class
  * Initializes a new instance of the IntuneGroupValue class.
  * @constructor
  * @member {string} [id] the id of the Group
@@ -4356,6 +5939,20 @@ export interface IntuneGroupValue {
 export interface IntuneGroups {
   odatacontext?: string;
   value?: IntuneGroupValue[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the IntuneGroup class.
+ * @constructor
+ * @member {string} [id] the id of the Group
+ * @member {string} [displayName] the display name of the group
+ * @member {boolean} [securityEnabled] species if it is a security group
+ */
+export interface IntuneGroup {
+  id?: string;
+  displayName?: string;
+  securityEnabled?: boolean;
 }
 
 /**
@@ -4404,9 +6001,12 @@ export interface CreateStoreSecretResponse {
  * ReleasePublishErrorResponse
  *
  * @member {string} [message] error Details
+ * @member {boolean} [isLogsAvailable] boolean property to tell if logs are
+ * available for download
  */
 export interface ReleasePublishErrorResponse {
   message?: string;
+  isLogsAvailable?: boolean;
 }
 
 /**
@@ -4449,6 +6049,51 @@ export interface ReleaseRealTimeStatusResponse {
 
 /**
  * @class
+ * Initializes a new instance of the ValidationResponse class.
+ * @constructor
+ * The response which contains the validation data that the connection is
+ * valid.
+ *
+ * @member {string} [appId] app id
+ * @member {object} [status]
+ * @member {string} [status.status] status from store
+ * @member {string} [status.storetype] store type
+ * @member {string} [status.track] track information from store
+ * @member {string} [status.version] version of the app from store
+ */
+export interface ValidationResponse {
+  appId?: string;
+  status?: StatusData;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the HasBuildUploadedResponse class.
+ * @constructor
+ * The response for the build uploaded check.
+ *
+ * @member {boolean} [hasBuildUploaded] true if a build has been uploaded,
+ * false otherwise
+ */
+export interface HasBuildUploadedResponse {
+  hasBuildUploaded?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the HasTestflightMetadataResponse class.
+ * @constructor
+ * The response for the testflight metadata check.
+ *
+ * @member {boolean} [hasTestflightMetadata] true if the app has the testflight
+ * metadata, false otherwise
+ */
+export interface HasTestflightMetadataResponse {
+  hasTestflightMetadata?: boolean;
+}
+
+/**
+ * @class
  * Initializes a new instance of the ExternalStoreResponse class.
  * @constructor
  * ExternalStoreResponse
@@ -4460,8 +6105,9 @@ export interface ReleaseRealTimeStatusResponse {
  * 'alpha', 'beta', 'testflight-internal', 'testflight-external'
  * @member {object} [intuneDetails] store details for intune
  * @member {string} [serviceConnectionId] Id for the shared service connection.
- * In case of Apple AppStore, this connection will be used to create and
- * connect to the Apple AppStore in Mobile Center.
+ * In case of Apple / GooglePlay stores, this connection will be used to
+ * connect to the Apple / Google stores in App Center.
+ * @member {string} [createdBy] user id of the user who created the store.
  */
 export interface ExternalStoreResponse {
   id?: string;
@@ -4470,22 +6116,7 @@ export interface ExternalStoreResponse {
   track?: string;
   intuneDetails?: any;
   serviceConnectionId?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the GooglePlayTestersResponse class.
- * @constructor
- * GooglePlayTestersResponse
- *
- * @member {string} [tester] email id of Google Groups or URL of the Google+
- * Communities
- * @member {string} [type] type of testers i.e Google Groups or Google+
- * Communities. Possible values include: 'Google Group', 'Google+ Community'
- */
-export interface GooglePlayTestersResponse {
-  tester?: string;
-  type?: string;
+  createdBy?: string;
 }
 
 /**
@@ -4557,12 +6188,16 @@ export interface IntuneStoreResponse {
  * @member {string} [destPublishId] Destination Publish Id
  * @member {string} [errorDetails] failure error details from store
  * @member {string} [errorContextId] contextId for failed error message
+ * @member {string} [wrapPackageUrl] package url for wrapping request
+ * @member {boolean} [isWrapperRequest] request is for wrapping or not
  */
 export interface PatchReleaseRequest {
   status?: string;
   destPublishId?: string;
   errorDetails?: string;
   errorContextId?: string;
+  wrapPackageUrl?: string;
+  isWrapperRequest?: boolean;
 }
 
 /**
@@ -4572,7 +6207,7 @@ export interface PatchReleaseRequest {
  * @member {string} [id] ID identifying a unique distribution store.
  * @member {string} [name] A name identifying a unique distribution store.
  * @member {string} [type] A type identifying the type of distribution store.
- * Possible values include: 'googleplay', 'intune', 'windows', 'apple'
+ * Possible values include: 'googleplay', 'intune', 'apple'
  * @member {string} [publishingStatus] A status identifying the status of
  * release in the distribution store.
  * @member {boolean} [isLatest] Is the containing release the latest one in
@@ -4619,7 +6254,7 @@ export interface StoresBasicReleaseDetails {
  * @member {string} [destPublishId] destination ID identifying a unique id in
  * distribution store.
  * @member {string} [storeType] type of store. Possible values include:
- * 'intune', 'windows'
+ * 'intune'
  * @member {string} [appId] app id of application.
  */
 export interface StoreDestinationDetails {
@@ -4635,8 +6270,7 @@ export interface StoreDestinationDetails {
  * @member {string} [id] ID identifying a unique distribution store.
  * @member {string} [name] A name identifying a unique distribution store.
  * @member {string} [type] type of the distribution store currently stores type
- * can be intune or googleplay. Possible values include: 'intune',
- * 'googleplay', 'windows'
+ * can be intune or googleplay. Possible values include: 'intune', 'googleplay'
  * @member {string} [publishingStatus] publishing status of the release in the
  * store.
  */
@@ -4677,6 +6311,66 @@ export interface IntuneAppsResponse {
 
 /**
  * @class
+ * Initializes a new instance of the OrgComplianceSettingsRequest class.
+ * @constructor
+ * org settings Request
+ *
+ * @member {string} certificateConnectionId certificate connection id to wrap
+ * and resign the app after wrapping
+ */
+export interface OrgComplianceSettingsRequest {
+  certificateConnectionId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the OrgComplianceSettingsResponse class.
+ * @constructor
+ * org settings response
+ *
+ * @member {string} id The internal unique id (UUID) of the organization
+ * compliance setting
+ * @member {string} orgId The internal unique id (UUID) of the organization.
+ * @member {string} certificateConnectionId certificate connection id to wrap
+ * and resign the app after wrapping
+ * @member {boolean} [isMamEnabled] flag to tell if mam warpping is enabled on
+ * the Org
+ */
+export interface OrgComplianceSettingsResponse {
+  id: string;
+  orgId: string;
+  certificateConnectionId: string;
+  isMamEnabled?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the StoreNotification class.
+ * @constructor
+ * @member {string} [service]
+ * @member {string} [status]
+ * @member {number} [validUntil]
+ */
+export interface StoreNotification {
+  service?: string;
+  status?: string;
+  validUntil?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DiagnosticIdResponse class.
+ * @constructor
+ * The diagnostic id for the given publish action
+ *
+ * @member {string} [diagnosticId] diagnostic id
+ */
+export interface DiagnosticIdResponse {
+  diagnosticId?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the Symbol class.
  * @constructor
  * @member {string} symbolId The unique id for this symbol (uuid)
@@ -4685,8 +6379,7 @@ export interface IntuneAppsResponse {
  * 'AndroidProguard', 'UWP'
  * @member {string} appId The application that this symbol belongs to
  * @member {string} platform The platform that this symbol is associated with
- * @member {string} url The URL at which the client may download the symbol
- * file
+ * @member {string} url The path name of the symbol file in blob storage
  * @member {string} origin The origin of the symbol file. Possible values
  * include: 'System', 'User'
  * @member {array} alternateSymbolIds The other symbols in the same file
@@ -4696,6 +6389,8 @@ export interface IntuneAppsResponse {
  * for Android.
  * @member {string} [build] The build number. Optional for Apple. Required for
  * Android.
+ * @member {string} symbolUploadId The id of the symbol upload this symbol
+ * belongs to.
  */
 export interface Symbol {
   symbolId: string;
@@ -4708,6 +6403,7 @@ export interface Symbol {
   status: string;
   version?: string;
   build?: string;
+  symbolUploadId: string;
 }
 
 /**
@@ -4872,6 +6568,20 @@ export interface SymbolUploadBeginResponse {
  */
 export interface SymbolUploadEndRequest {
   status: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SystemVersionNameGroup class.
+ * @constructor
+ * A response represents information about symbol name group
+ *
+ * @member {string} [name] Name of version group
+ * @member {array} [versions]
+ */
+export interface SystemVersionNameGroup {
+  name?: string;
+  versions?: string[];
 }
 
 /**
@@ -5104,6 +6814,16 @@ export interface ReasonStackFrame {
 
 /**
  * @class
+ * Initializes a new instance of the RetentionSettings class.
+ * @constructor
+ * @member {number} retentionInDays
+ */
+export interface RetentionSettings {
+  retentionInDays: number;
+}
+
+/**
+ * @class
  * Initializes a new instance of the CrashAttachment class.
  * @constructor
  * @member {string} appId
@@ -5155,6 +6875,7 @@ export interface CrashAttachmentLocation {
  * Initializes a new instance of the CrashGroup class.
  * @constructor
  * @member {string} crashGroupId
+ * @member {string} newCrashGroupId
  * @member {string} displayId
  * @member {string} appVersion
  * @member {string} build
@@ -5187,6 +6908,7 @@ export interface CrashAttachmentLocation {
  */
 export interface CrashGroup {
   crashGroupId: string;
+  newCrashGroupId: string;
   displayId: string;
   appVersion: string;
   build: string;
@@ -5270,7 +6992,9 @@ export interface CrashDetails {
  * (example: 640x480).
  * @member {date} [details.appStartTimestamp] Application launch timestamp
  * (example: 1985-04-12T23:20:50.52Z).
+ * @member {string} newCrashGroupId
  * @member {string} crashId
+ * @member {string} newCrashId
  * @member {string} [displayId]
  * @member {date} timestamp
  * @member {string} version
@@ -5299,7 +7023,9 @@ export interface CrashDetails {
  */
 export interface Crash {
   details?: CrashDetails;
+  newCrashGroupId: string;
   crashId: string;
+  newCrashId: string;
   displayId?: string;
   timestamp: Date;
   version: string;
@@ -5361,7 +7087,29 @@ export interface AlertingCrashGroup {
 
 /**
  * @class
- * Initializes a new instance of the MissingSymbol class.
+ * Initializes a new instance of the CrashDeleteCounter class.
+ * @constructor
+ * @member {string} [appId]
+ * @member {string} [crashGroupId]
+ * @member {string} [crashId]
+ * @member {number} [crashesDeleted]
+ * @member {number} [attachmentsDeleted]
+ * @member {number} [blobsSucceeded]
+ * @member {number} [blobsFailed]
+ */
+export interface CrashDeleteCounter {
+  appId?: string;
+  crashGroupId?: string;
+  crashId?: string;
+  crashesDeleted?: number;
+  attachmentsDeleted?: number;
+  blobsSucceeded?: number;
+  blobsFailed?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the V2MissingSymbol class.
  * @constructor
  * missing symbol
  *
@@ -5371,7 +7119,7 @@ export interface AlertingCrashGroup {
  * @member {string} status symbol status. Possible values include: 'missing',
  * 'ignored', 'available'
  */
-export interface MissingSymbol {
+export interface V2MissingSymbol {
   symbolId: string;
   name: string;
   platform?: string;
@@ -5380,52 +7128,7 @@ export interface MissingSymbol {
 
 /**
  * @class
- * Initializes a new instance of the CrashLocation class.
- * @constructor
- * crash location information
- *
- * @member {string} account azure account
- * @member {string} container blob container
- * @member {string} blob blob name
- */
-export interface CrashLocation {
-  account: string;
-  container: string;
-  blob: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ParkedCrash class.
- * @constructor
- * parked crash
- *
- * @member {string} appId application id
- * @member {string} appVer application version
- * @member {string} appBuild application build
- * @member {array} missingSymbols list of missing symbols
- * @member {string} crashId id of the crash
- * @member {string} sdkPlatform platform of the sdk that sent crash
- * @member {string} [sdkWrapper] name of the sdk wrapper that sent crash
- * @member {object} location crash location
- * @member {string} [location.account] azure account
- * @member {string} [location.container] blob container
- * @member {string} [location.blob] blob name
- */
-export interface ParkedCrash {
-  appId: string;
-  appVer: string;
-  appBuild: string;
-  missingSymbols: MissingSymbol[];
-  crashId: string;
-  sdkPlatform: string;
-  sdkWrapper?: string;
-  location: CrashLocation;
-}
-
-/**
- * @class
- * Initializes a new instance of the SymbolUpdateInfo class.
+ * Initializes a new instance of the V2SymbolUpdateInfo class.
  * @constructor
  * symbol update message
  *
@@ -5434,7 +7137,7 @@ export interface ParkedCrash {
  * @member {string} status symbol upload status. Possible values include:
  * 'missing', 'ignored', 'available'
  */
-export interface SymbolUpdateInfo {
+export interface V2SymbolUpdateInfo {
   symbolId: string;
   appId: string;
   status: string;
@@ -5442,7 +7145,7 @@ export interface SymbolUpdateInfo {
 
 /**
  * @class
- * Initializes a new instance of the MissingSymbolCrashGroup class.
+ * Initializes a new instance of the V2MissingSymbolCrashGroup class.
  * @constructor
  * missing symbol crash group object
  *
@@ -5456,20 +7159,20 @@ export interface SymbolUpdateInfo {
  * @member {string} status group status. Possible values include: 'active',
  * 'pending', 'closed'
  */
-export interface MissingSymbolCrashGroup {
+export interface V2MissingSymbolCrashGroup {
   symbolGroupId: string;
   crashCount?: number;
   appId: string;
   appVer: string;
   appBuild: string;
   lastModified: Date;
-  missingSymbols: MissingSymbol[];
+  missingSymbols: V2MissingSymbol[];
   status: string;
 }
 
 /**
  * @class
- * Initializes a new instance of the MissingSymbolCrashGroupsResponse class.
+ * Initializes a new instance of the V2MissingSymbolCrashGroupsResponse class.
  * @constructor
  * grouped by missing symbols crashes response object
  *
@@ -5477,34 +7180,46 @@ export interface MissingSymbolCrashGroup {
  * @member {array} groups list of crash groups formed by missing symbols
  * combination
  */
-export interface MissingSymbolCrashGroupsResponse {
+export interface V2MissingSymbolCrashGroupsResponse {
   totalCrashCount: number;
-  groups: MissingSymbolCrashGroup[];
+  groups: V2MissingSymbolCrashGroup[];
 }
 
 /**
  * @class
- * Initializes a new instance of the MissingSymbolCrashGroupsInfoResponse class.
+ * Initializes a new instance of the V2MissingSymbolCrashGroupsInfoResponse class.
  * @constructor
  * missing symbol groups
  *
  * @member {number} totalCrashCount total number of crashes for all missing
  * symbol groups
  */
-export interface MissingSymbolCrashGroupsInfoResponse {
+export interface V2MissingSymbolCrashGroupsInfoResponse {
   totalCrashCount: number;
 }
 
 /**
  * @class
- * Initializes a new instance of the FailureResponse class.
+ * Initializes a new instance of the V2StatusResponse class.
+ * @constructor
+ * status response object
+ *
+ * @member {string} status
+ */
+export interface V2StatusResponse {
+  status: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the V2FailureResponse class.
  * @constructor
  * failure response object
  *
  * @member {string} code
  * @member {string} message
  */
-export interface FailureResponse {
+export interface V2FailureResponse {
   code: string;
   message: string;
 }
@@ -5824,13 +7539,25 @@ export interface StartSessionLog extends Log {
 
 /**
  * @class
- * Initializes a new instance of the HanledErrorLog class.
+ * Initializes a new instance of the HandledErrorLog class.
  * @constructor
  * Required explicit begin session log (a marker event for analytics service).
  *
  * @member {uuid} errorId Error ID.
  */
-export interface HanledErrorLog extends Log {
+export interface HandledErrorLog extends Log {
+  errorId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the UnhandledErrorLog class.
+ * @constructor
+ * Required explicit begin session log (a marker event for analytics service).
+ *
+ * @member {uuid} errorId Error ID.
+ */
+export interface UnhandledErrorLog extends Log {
   errorId: string;
 }
 
@@ -6064,6 +7791,18 @@ export interface AudienceTestResult {
 
 /**
  * @class
+ * Initializes a new instance of the TokenQueryResult class.
+ * @constructor
+ * Token query result.
+ *
+ * @member {array} [tokens] List of tokens.
+ */
+export interface TokenQueryResult {
+  tokens?: string[];
+}
+
+/**
+ * @class
  * Initializes a new instance of the AudienceDefinition class.
  * @constructor
  * Audience definition.
@@ -6079,6 +7818,21 @@ export interface AudienceDefinition {
   definition: string;
   enabled?: boolean;
   customProperties?: { [propertyName: string]: string };
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AudienceQueryDefinition class.
+ * @constructor
+ * Audience Query definition.
+ *
+ * @member {string} queryType Audience Query Type. Possible values include:
+ * 'broadcast', 'user_ids', 'account_ids', 'install_ids'
+ * @member {array} [identifiers] List of identifiers.
+ */
+export interface AudienceQueryDefinition {
+  queryType: string;
+  identifiers?: string[];
 }
 
 /**
@@ -6139,18 +7893,6 @@ export interface DateTimeCounts {
 export interface CrashCounts {
   count?: number;
   crashes?: DateTimeCounts[];
-}
-
-/**
- * @class
- * Initializes a new instance of the ErrorCounts class.
- * @constructor
- * @member {number} [count] total error count
- * @member {array} [errors] the total error count for day
- */
-export interface ErrorCounts {
-  count?: number;
-  errors?: DateTimeCounts[];
 }
 
 /**
@@ -6501,236 +8243,6 @@ export interface CrashGroupModel {
 export interface CrashGroupModels {
   crashCount?: number;
   modelsProperty?: CrashGroupModel[];
-}
-
-/**
- * @class
- * Initializes a new instance of the ErrorGroupState class.
- * @constructor
- * @member {string} state Possible values include: 'open', 'closed', 'ignored'
- */
-export interface ErrorGroupState {
-  state: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ErrorGroupListItem class.
- * @constructor
- * @member {string} errorGroupId
- * @member {string} appVersion
- * @member {number} count
- * @member {number} deviceCount
- * @member {date} lastOccurrence
- * @member {string} [exceptionType]
- * @member {string} [exceptionMessage]
- */
-export interface ErrorGroupListItem extends ErrorGroupState {
-  errorGroupId: string;
-  appVersion: string;
-  count: number;
-  deviceCount: number;
-  lastOccurrence: Date;
-  exceptionType?: string;
-  exceptionMessage?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ErrorGroups class.
- * @constructor
- * @member {string} [nextLink]
- * @member {array} [errorGroups]
- */
-export interface ErrorGroups {
-  nextLink?: string;
-  errorGroups?: ErrorGroupListItem[];
-}
-
-/**
- * @class
- * Initializes a new instance of the HandledErrorReasonFrame class.
- * @constructor
- * @member {string} [className] name of the class
- * @member {string} [method] name of the method
- * @member {boolean} [classMethod] is a class method
- * @member {string} [file] name of the file
- * @member {number} [line] line number
- * @member {boolean} [appCode] this line isn't from any framework
- * @member {string} [frameworkName] Name of the framework
- * @member {string} [codeFormatted] Formatted frame string
- * @member {string} [codeRaw] Unformatted Frame string
- * @member {string} [language] programming language of the frame. Possible
- * values include: 'JavaScript', 'CSharp', 'Objective-C', 'Objective-Cpp',
- * 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
- * @member {string} [methodParams] parameters of the frames method
- * @member {string} [exceptionType] Exception type.
- * @member {string} [osExceptionType] OS exception type. (aka. SIGNAL)
- */
-export interface HandledErrorReasonFrame {
-  className?: string;
-  method?: string;
-  classMethod?: boolean;
-  file?: string;
-  line?: number;
-  appCode?: boolean;
-  frameworkName?: string;
-  codeFormatted?: string;
-  codeRaw?: string;
-  language?: string;
-  methodParams?: string;
-  exceptionType?: string;
-  osExceptionType?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ErrorGroup class.
- * @constructor
- * @member {string} errorGroupId
- * @member {string} appVersion
- * @member {number} count
- * @member {number} deviceCount
- * @member {date} firstOccurrence
- * @member {date} lastOccurrence
- * @member {string} [exceptionType]
- * @member {string} [exceptionMessage]
- * @member {string} [exceptionFile]
- * @member {string} [exceptionLine]
- * @member {array} [reasonFrames]
- */
-export interface ErrorGroup extends ErrorGroupState {
-  errorGroupId: string;
-  appVersion: string;
-  count: number;
-  deviceCount: number;
-  firstOccurrence: Date;
-  lastOccurrence: Date;
-  exceptionType?: string;
-  exceptionMessage?: string;
-  exceptionFile?: string;
-  exceptionLine?: string;
-  reasonFrames?: HandledErrorReasonFrame[];
-}
-
-/**
- * @class
- * Initializes a new instance of the ErrorDownloadLink class.
- * @constructor
- * @member {string} link
- */
-export interface ErrorDownloadLink {
-  link: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ErrorFreeDevicePercentages class.
- * @constructor
- * @member {number} [averagePercentage] Average percentage
- * @member {array} [dailyPercentages] The error-free percentage per day.
- */
-export interface ErrorFreeDevicePercentages {
-  averagePercentage?: number;
-  dailyPercentages?: DateTimePercentages[];
-}
-
-/**
- * @class
- * Initializes a new instance of the HandledError class.
- * @constructor
- * @member {string} [errorId]
- * @member {date} [timestamp]
- * @member {string} [deviceName]
- * @member {string} [osVersion]
- * @member {string} [osType]
- * @member {string} [country]
- * @member {string} [language]
- */
-export interface HandledError {
-  errorId?: string;
-  timestamp?: Date;
-  deviceName?: string;
-  osVersion?: string;
-  osType?: string;
-  country?: string;
-  language?: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the HandledErrors class.
- * @constructor
- * @member {string} [nextLink]
- * @member {array} [errors] Errors list.
- */
-export interface HandledErrors {
-  nextLink?: string;
-  errors?: HandledError[];
-}
-
-/**
- * @class
- * Initializes a new instance of the HandledErrorDetails class.
- * @constructor
- * @member {string} [name]
- * @member {array} [reasonFrames]
- * @member {object} [properties]
- */
-export interface HandledErrorDetails extends HandledError {
-  name?: string;
-  reasonFrames?: HandledErrorReasonFrame[];
-  properties?: { [propertyName: string]: string };
-}
-
-/**
- * @class
- * Initializes a new instance of the ErrorGroupModel class.
- * @constructor
- * @member {string} [modelName] model name
- * @member {string} [modelCode] model code
- * @member {number} [errorCount] count of errors in a model
- */
-export interface ErrorGroupModel {
-  modelName?: string;
-  modelCode?: string;
-  errorCount?: number;
-}
-
-/**
- * @class
- * Initializes a new instance of the ErrorGroupModels class.
- * @constructor
- * @member {number} [errorCount]
- * @member {array} [modelsProperty]
- */
-export interface ErrorGroupModels {
-  errorCount?: number;
-  modelsProperty?: ErrorGroupModel[];
-}
-
-/**
- * @class
- * Initializes a new instance of the ErrorGroupOperatingSystem class.
- * @constructor
- * @member {string} [operatingSystemName] OS name
- * @member {number} [errorCount] count of OS
- */
-export interface ErrorGroupOperatingSystem {
-  operatingSystemName?: string;
-  errorCount?: number;
-}
-
-/**
- * @class
- * Initializes a new instance of the ErrorGroupOperatingSystems class.
- * @constructor
- * @member {number} [errorCount]
- * @member {array} [operatingSystems]
- */
-export interface ErrorGroupOperatingSystems {
-  errorCount?: number;
-  operatingSystems?: ErrorGroupOperatingSystem[];
 }
 
 /**
@@ -7597,6 +9109,1122 @@ export interface LogFlowErrorLog extends LogFlowLog {
 
 /**
  * @class
+ * Initializes a new instance of the ErrorGroupState class.
+ * @constructor
+ * @member {string} state Possible values include: 'open', 'closed', 'ignored'
+ * @member {string} [annotation]
+ */
+export interface ErrorGroupState {
+  state: string;
+  annotation?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorGroup class.
+ * @constructor
+ * @member {string} errorGroupId
+ * @member {string} appVersion
+ * @member {string} [appBuild]
+ * @member {number} count
+ * @member {number} deviceCount
+ * @member {date} firstOccurrence
+ * @member {date} lastOccurrence
+ * @member {string} [exceptionType]
+ * @member {string} [exceptionMessage]
+ * @member {string} [exceptionClassName]
+ * @member {boolean} [exceptionClassMethod]
+ * @member {string} [exceptionMethod]
+ * @member {boolean} [exceptionAppCode]
+ * @member {string} [exceptionFile]
+ * @member {string} [exceptionLine]
+ * @member {string} [codeRaw]
+ * @member {array} [reasonFrames]
+ */
+export interface ErrorGroup extends ErrorGroupState {
+  errorGroupId: string;
+  appVersion: string;
+  appBuild?: string;
+  count: number;
+  deviceCount: number;
+  firstOccurrence: Date;
+  lastOccurrence: Date;
+  exceptionType?: string;
+  exceptionMessage?: string;
+  exceptionClassName?: string;
+  exceptionClassMethod?: boolean;
+  exceptionMethod?: string;
+  exceptionAppCode?: boolean;
+  exceptionFile?: string;
+  exceptionLine?: string;
+  codeRaw?: string;
+  reasonFrames?: HandledErrorReasonFrame[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorGroupListItem class.
+ * @constructor
+ */
+export interface ErrorGroupListItem extends ErrorGroup {
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorGroups class.
+ * @constructor
+ * @member {string} [nextLink]
+ * @member {array} [errorGroups]
+ */
+export interface ErrorGroups {
+  nextLink?: string;
+  errorGroups?: ErrorGroupListItem[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorGroupsSearchResult class.
+ * @constructor
+ * @member {boolean} [hasMoreResults]
+ * @member {array} [errorGroups]
+ */
+export interface ErrorGroupsSearchResult {
+  hasMoreResults?: boolean;
+  errorGroups?: ErrorGroupListItem[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorDateTimeCounts class.
+ * @constructor
+ * @member {string} [datetime] the ISO 8601 datetime
+ * @member {number} [count] count of the object
+ */
+export interface ErrorDateTimeCounts {
+  datetime?: string;
+  count?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorCounts class.
+ * @constructor
+ * @member {number} [count] total error count
+ * @member {array} [errors] the total error count for day
+ */
+export interface ErrorCounts {
+  count?: number;
+  errors?: ErrorDateTimeCounts[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the HandledErrorReasonFrame class.
+ * @constructor
+ * @member {string} [className] name of the class
+ * @member {string} [method] name of the method
+ * @member {boolean} [classMethod] is a class method
+ * @member {string} [file] name of the file
+ * @member {number} [line] line number
+ * @member {boolean} [appCode] this line isn't from any framework
+ * @member {string} [frameworkName] Name of the framework
+ * @member {string} [codeFormatted] Formatted frame string
+ * @member {string} [codeRaw] Unformatted Frame string
+ * @member {string} [language] programming language of the frame. Possible
+ * values include: 'JavaScript', 'CSharp', 'Objective-C', 'Objective-Cpp',
+ * 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+ * @member {string} [methodParams] parameters of the frames method
+ * @member {string} [exceptionType] Exception type.
+ * @member {string} [osExceptionType] OS exception type. (aka. SIGNAL)
+ */
+export interface HandledErrorReasonFrame {
+  className?: string;
+  method?: string;
+  classMethod?: boolean;
+  file?: string;
+  line?: number;
+  appCode?: boolean;
+  frameworkName?: string;
+  codeFormatted?: string;
+  codeRaw?: string;
+  language?: string;
+  methodParams?: string;
+  exceptionType?: string;
+  osExceptionType?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorDateTimePercentages class.
+ * @constructor
+ * @member {string} [datetime] the ISO 8601 datetime
+ * @member {number} [percentage] percentage of the object
+ */
+export interface ErrorDateTimePercentages {
+  datetime?: string;
+  percentage?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorDownloadLink class.
+ * @constructor
+ * @member {string} link
+ */
+export interface ErrorDownloadLink {
+  link: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DiagnosticsStackFrame class.
+ * @constructor
+ * a single frame of a stack trace
+ *
+ * @member {string} [address] address of the frame
+ * @member {string} [className] name of the class
+ * @member {string} [method] name of the method
+ * @member {boolean} [classMethod] is a class method
+ * @member {string} [file] name of the file
+ * @member {number} [line] line number
+ * @member {boolean} appCode this line isn't from any framework
+ * @member {string} [frameworkName] Name of the framework
+ * @member {string} codeRaw Raw frame string
+ * @member {string} codeFormatted Formatted frame string
+ * @member {string} [language] programming language of the frame. Possible
+ * values include: 'JavaScript', 'CSharp', 'Objective-C', 'Objective-Cpp',
+ * 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
+ * @member {boolean} [relevant] frame should be shown always
+ * @member {string} [methodParams] parameters of the frames method
+ */
+export interface DiagnosticsStackFrame {
+  address?: string;
+  className?: string;
+  method?: string;
+  classMethod?: boolean;
+  file?: string;
+  line?: number;
+  appCode: boolean;
+  frameworkName?: string;
+  codeRaw: string;
+  codeFormatted: string;
+  language?: string;
+  relevant?: boolean;
+  methodParams?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DiagnosticsException class.
+ * @constructor
+ * a exception
+ *
+ * @member {string} [reason] Reason of the exception
+ * @member {string} [type] Type of the exception (NSSomethingException,
+ * NullPointerException)
+ * @member {array} frames frames of the excetpion
+ * @member {boolean} [relevant] relevant exception (crashed)
+ * @member {array} [innerExceptions]
+ * @member {string} [platform] SDK/Platform this thread is beeing generated
+ * from. Possible values include: 'ios', 'android', 'xamarin', 'react-native',
+ * 'ndk', 'unity', 'other'
+ */
+export interface DiagnosticsException {
+  reason?: string;
+  type?: string;
+  frames: DiagnosticsStackFrame[];
+  relevant?: boolean;
+  innerExceptions?: DiagnosticsException[];
+  platform?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DiagnosticsThread class.
+ * @constructor
+ * a thread representation
+ *
+ * @member {string} title name of the thread
+ * @member {array} frames frames of that thread
+ * @member {object} [exception] potential additional exception happened in that
+ * thread (Last Exception Backtrace)
+ * @member {string} [exception.reason] Reason of the exception
+ * @member {string} [exception.type] Type of the exception
+ * (NSSomethingException, NullPointerException)
+ * @member {array} [exception.frames] frames of the excetpion
+ * @member {boolean} [exception.relevant] relevant exception (crashed)
+ * @member {array} [exception.innerExceptions]
+ * @member {string} [exception.platform] SDK/Platform this thread is beeing
+ * generated from. Possible values include: 'ios', 'android', 'xamarin',
+ * 'react-native', 'ndk', 'unity', 'other'
+ * @member {boolean} [relevant] Shows if a thread is relevant or not. Is false
+ * if all frames are non relevant, otherwise true
+ * @member {string} [platform] SDK/Platform this thread is beeing generated
+ * from. Possible values include: 'ios', 'android', 'xamarin', 'react-native',
+ * 'ndk', 'unity', 'other'
+ * @member {boolean} [crashed] True if this thread crashed
+ */
+export interface DiagnosticsThread {
+  title: string;
+  frames: DiagnosticsStackFrame[];
+  exception?: DiagnosticsException;
+  relevant?: boolean;
+  platform?: string;
+  crashed?: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DiagnosticsStackTrace class.
+ * @constructor
+ * a stacktrace in a processed and prettyfied way
+ *
+ * @member {string} [title]
+ * @member {string} [reason]
+ * @member {array} [threads]
+ * @member {object} [exception]
+ * @member {string} [exception.reason] Reason of the exception
+ * @member {string} [exception.type] Type of the exception
+ * (NSSomethingException, NullPointerException)
+ * @member {array} [exception.frames] frames of the excetpion
+ * @member {boolean} [exception.relevant] relevant exception (crashed)
+ * @member {array} [exception.innerExceptions]
+ * @member {string} [exception.platform] SDK/Platform this thread is beeing
+ * generated from. Possible values include: 'ios', 'android', 'xamarin',
+ * 'react-native', 'ndk', 'unity', 'other'
+ */
+export interface DiagnosticsStackTrace {
+  title?: string;
+  reason?: string;
+  threads?: DiagnosticsThread[];
+  exception?: DiagnosticsException;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorFreeDevicePercentages class.
+ * @constructor
+ * @member {number} [averagePercentage] Average percentage
+ * @member {array} [dailyPercentages] The error-free percentage per day.
+ */
+export interface ErrorFreeDevicePercentages {
+  averagePercentage?: number;
+  dailyPercentages?: ErrorDateTimePercentages[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the HandledError class.
+ * @constructor
+ * @member {string} [errorId]
+ * @member {date} [timestamp]
+ * @member {string} [deviceName]
+ * @member {string} [osVersion]
+ * @member {string} [osType]
+ * @member {string} [country]
+ * @member {string} [language]
+ * @member {string} [userId]
+ */
+export interface HandledError {
+  errorId?: string;
+  timestamp?: Date;
+  deviceName?: string;
+  osVersion?: string;
+  osType?: string;
+  country?: string;
+  language?: string;
+  userId?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the HandledErrors class.
+ * @constructor
+ * @member {string} [nextLink]
+ * @member {array} [errors] Errors list.
+ */
+export interface HandledErrors {
+  nextLink?: string;
+  errors?: HandledError[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorsSearchResult class.
+ * @constructor
+ * @member {boolean} [hasMoreResults]
+ * @member {array} [errors]
+ */
+export interface ErrorsSearchResult {
+  hasMoreResults?: boolean;
+  errors?: HandledError[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the HandledErrorDetails class.
+ * @constructor
+ * @member {string} [name]
+ * @member {array} [reasonFrames]
+ * @member {date} [appLaunchTimestamp] Timestamp when the app was launched,
+ * example: '2017-03-13T18:05:42Z'.
+ * @member {string} [carrierName] Carrier name (for mobile devices).
+ * @member {boolean} [jailbreak] Flag indicating if device is jailbroken
+ * @member {object} [properties]
+ */
+export interface HandledErrorDetails extends HandledError {
+  name?: string;
+  reasonFrames?: HandledErrorReasonFrame[];
+  appLaunchTimestamp?: Date;
+  carrierName?: string;
+  jailbreak?: boolean;
+  properties?: { [propertyName: string]: string };
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorDeleteCounter class.
+ * @constructor
+ * @member {string} [appId]
+ * @member {string} [errorGroupId]
+ * @member {string} [errorId]
+ * @member {number} [errorsDeleted]
+ * @member {number} [attachmentsDeleted]
+ * @member {number} [blobsSucceeded]
+ * @member {number} [blobsFailed]
+ */
+export interface ErrorDeleteCounter {
+  appId?: string;
+  errorGroupId?: string;
+  errorId?: string;
+  errorsDeleted?: number;
+  attachmentsDeleted?: number;
+  blobsSucceeded?: number;
+  blobsFailed?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorLocation class.
+ * @constructor
+ * @member {string} [uri]
+ */
+export interface ErrorLocation {
+  uri?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorAttachment class.
+ * @constructor
+ * @member {string} [appId]
+ * @member {string} [attachmentId]
+ * @member {string} [crashId]
+ * @member {string} [blobLocation]
+ * @member {string} [contentType]
+ * @member {string} [fileName]
+ * @member {date} [createdTime]
+ * @member {number} [size]
+ */
+export interface ErrorAttachment {
+  appId?: string;
+  attachmentId?: string;
+  crashId?: string;
+  blobLocation?: string;
+  contentType?: string;
+  fileName?: string;
+  createdTime?: Date;
+  size?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorAttachmentText class.
+ * @constructor
+ * @member {string} [content]
+ */
+export interface ErrorAttachmentText {
+  content?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorAttachmentLocation class.
+ * @constructor
+ * @member {string} [uri]
+ */
+export interface ErrorAttachmentLocation {
+  uri?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorGroupModel class.
+ * @constructor
+ * @member {string} [modelName] model name
+ * @member {string} [modelCode] model code
+ * @member {number} [errorCount] count of errors in a model
+ */
+export interface ErrorGroupModel {
+  modelName?: string;
+  modelCode?: string;
+  errorCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorGroupModels class.
+ * @constructor
+ * @member {number} [errorCount]
+ * @member {array} [modelsProperty]
+ */
+export interface ErrorGroupModels {
+  errorCount?: number;
+  modelsProperty?: ErrorGroupModel[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorGroupOperatingSystem class.
+ * @constructor
+ * @member {string} [operatingSystemName] OS name
+ * @member {number} [errorCount] count of OS
+ */
+export interface ErrorGroupOperatingSystem {
+  operatingSystemName?: string;
+  errorCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorGroupOperatingSystems class.
+ * @constructor
+ * @member {number} [errorCount]
+ * @member {array} [operatingSystems]
+ */
+export interface ErrorGroupOperatingSystems {
+  errorCount?: number;
+  operatingSystems?: ErrorGroupOperatingSystem[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DeviceDiagnostics class.
+ * @constructor
+ * Device characteristics.
+ *
+ * @member {string} sdkName Name of the SDK. Consists of the name of the SDK
+ * and the platform, e.g. "appcenter.ios", "hockeysdk.android".
+ * @member {string} sdkVersion Version of the SDK in semver format, e.g.
+ * "1.2.0" or "0.12.3-alpha.1".
+ * @member {string} [wrapperSdkVersion] Version of the wrapper SDK in semver
+ * format. When the SDK is embedding another base SDK (for example
+ * Xamarin.Android wraps Android), the Xamarin specific version is populated
+ * into this field while sdkVersion refers to the original Android SDK.
+ * @member {string} [wrapperSdkName] Name of the wrapper SDK. Consists of the
+ * name of the SDK and the wrapper platform, e.g. "appcenter.xamarin",
+ * "hockeysdk.cordova".
+ * @member {string} [model] Device model (example: iPad2,3).
+ * @member {string} [oemName] Device manufacturer (example: HTC).
+ * @member {string} osName OS name (example: iOS). The following OS names are
+ * standardized (non-exclusive): Android, iOS, macOS, tvOS, Windows.
+ * @member {string} osVersion OS version (example: 9.3.0).
+ * @member {string} [osBuild] OS build code (example: LMY47X).
+ * @member {number} [osApiLevel] API level when applicable like in Android
+ * (example: 15).
+ * @member {string} locale Language code (example: en_US).
+ * @member {number} timeZoneOffset The offset in minutes from UTC for the
+ * device time zone, including daylight savings time.
+ * @member {string} [screenSize] Screen size of the device in pixels (example:
+ * 640x480).
+ * @member {string} appVersion Application version name, e.g. 1.1.0
+ * @member {string} [carrierName] Carrier name (for mobile devices).
+ * @member {string} [carrierCode] Carrier country code (for mobile devices).
+ * @member {string} [carrierCountry] Carrier country.
+ * @member {string} appBuild The app's build number, e.g. 42.
+ * @member {string} [appNamespace] The bundle identifier, package identifier,
+ * or namespace, depending on what the individual plattforms use,  .e.g
+ * com.microsoft.example.
+ * @member {string} [liveUpdateReleaseLabel] Label that is used to identify
+ * application code 'version' released via Live Update beacon running on device
+ * @member {string} [liveUpdateDeploymentKey] Identifier of environment that
+ * current application release belongs to, deployment key then maps to
+ * environment like Production, Staging.
+ * @member {string} [liveUpdatePackageHash] Hash of all files (ReactNative or
+ * Cordova) deployed to device via LiveUpdate beacon. Helps identify the
+ * Release version on device or need to download updates in future.
+ * @member {string} [wrapperRuntimeVersion] Version of the wrapper technology
+ * framework (Xamarin runtime version or ReactNative or Cordova etc...). See
+ * wrapper_sdk_name to see if this version refers to Xamarin or ReactNative or
+ * other.
+ */
+export interface DeviceDiagnostics {
+  sdkName: string;
+  sdkVersion: string;
+  wrapperSdkVersion?: string;
+  wrapperSdkName?: string;
+  model?: string;
+  oemName?: string;
+  osName: string;
+  osVersion: string;
+  osBuild?: string;
+  osApiLevel?: number;
+  locale: string;
+  timeZoneOffset: number;
+  screenSize?: string;
+  appVersion: string;
+  carrierName?: string;
+  carrierCode?: string;
+  carrierCountry?: string;
+  appBuild: string;
+  appNamespace?: string;
+  liveUpdateReleaseLabel?: string;
+  liveUpdateDeploymentKey?: string;
+  liveUpdatePackageHash?: string;
+  wrapperRuntimeVersion?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GenericLogDiagnostics class.
+ * @constructor
+ * Generic log.
+ *
+ * @member {string} type Log type.
+ * . Possible values include: 'event', 'page', 'start_session', 'error',
+ * 'push_installation', 'start_service', 'custom_properties'
+ * @member {date} timestamp Log creation timestamp.
+ * @member {uuid} installId Install ID.
+ * @member {uuid} [sessionId] Session ID.
+ * @member {string} [eventId] Event ID.
+ * @member {string} [eventName] Event name.
+ * @member {string} [messageId] Message ID.
+ * @member {object} [properties] event specific properties.
+ * @member {object} device
+ * @member {string} [device.sdkName] Name of the SDK. Consists of the name of
+ * the SDK and the platform, e.g. "appcenter.ios", "hockeysdk.android".
+ * @member {string} [device.sdkVersion] Version of the SDK in semver format,
+ * e.g. "1.2.0" or "0.12.3-alpha.1".
+ * @member {string} [device.wrapperSdkVersion] Version of the wrapper SDK in
+ * semver format. When the SDK is embedding another base SDK (for example
+ * Xamarin.Android wraps Android), the Xamarin specific version is populated
+ * into this field while sdkVersion refers to the original Android SDK.
+ * @member {string} [device.wrapperSdkName] Name of the wrapper SDK. Consists
+ * of the name of the SDK and the wrapper platform, e.g. "appcenter.xamarin",
+ * "hockeysdk.cordova".
+ * @member {string} [device.model] Device model (example: iPad2,3).
+ * @member {string} [device.oemName] Device manufacturer (example: HTC).
+ * @member {string} [device.osName] OS name (example: iOS). The following OS
+ * names are standardized (non-exclusive): Android, iOS, macOS, tvOS, Windows.
+ * @member {string} [device.osVersion] OS version (example: 9.3.0).
+ * @member {string} [device.osBuild] OS build code (example: LMY47X).
+ * @member {number} [device.osApiLevel] API level when applicable like in
+ * Android (example: 15).
+ * @member {string} [device.locale] Language code (example: en_US).
+ * @member {number} [device.timeZoneOffset] The offset in minutes from UTC for
+ * the device time zone, including daylight savings time.
+ * @member {string} [device.screenSize] Screen size of the device in pixels
+ * (example: 640x480).
+ * @member {string} [device.appVersion] Application version name, e.g. 1.1.0
+ * @member {string} [device.carrierName] Carrier name (for mobile devices).
+ * @member {string} [device.carrierCode] Carrier country code (for mobile
+ * devices).
+ * @member {string} [device.carrierCountry] Carrier country.
+ * @member {string} [device.appBuild] The app's build number, e.g. 42.
+ * @member {string} [device.appNamespace] The bundle identifier, package
+ * identifier, or namespace, depending on what the individual plattforms use,
+ * .e.g com.microsoft.example.
+ * @member {string} [device.liveUpdateReleaseLabel] Label that is used to
+ * identify application code 'version' released via Live Update beacon running
+ * on device
+ * @member {string} [device.liveUpdateDeploymentKey] Identifier of environment
+ * that current application release belongs to, deployment key then maps to
+ * environment like Production, Staging.
+ * @member {string} [device.liveUpdatePackageHash] Hash of all files
+ * (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+ * identify the Release version on device or need to download updates in
+ * future.
+ * @member {string} [device.wrapperRuntimeVersion] Version of the wrapper
+ * technology framework (Xamarin runtime version or ReactNative or Cordova
+ * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or
+ * ReactNative or other.
+ */
+export interface GenericLogDiagnostics {
+  type: string;
+  timestamp: Date;
+  installId: string;
+  sessionId?: string;
+  eventId?: string;
+  eventName?: string;
+  messageId?: string;
+  properties?: { [propertyName: string]: string };
+  device: DeviceDiagnostics;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GenericLogContainerDiagnostics class.
+ * @constructor
+ * @member {boolean} [exceededMaxLimit] indicates if the number of available
+ * logs are more than the max allowed return limit(100).
+ * @member {date} [lastReceivedLogTimestamp] the timestamp of the last log
+ * received. This value can be used as the start time parameter in the
+ * consecutive API call.
+ * @member {array} logs the list of logs
+ */
+export interface GenericLogContainerDiagnostics {
+  exceededMaxLimit?: boolean;
+  lastReceivedLogTimestamp?: Date;
+  logs: GenericLogDiagnostics[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the LogDiagnostics class.
+ * @constructor
+ * @member {date} timestamp Log creation timestamp.
+ * @member {uuid} installId Install ID.
+ * @member {object} device
+ * @member {string} [device.sdkName] Name of the SDK. Consists of the name of
+ * the SDK and the platform, e.g. "appcenter.ios", "hockeysdk.android".
+ * @member {string} [device.sdkVersion] Version of the SDK in semver format,
+ * e.g. "1.2.0" or "0.12.3-alpha.1".
+ * @member {string} [device.wrapperSdkVersion] Version of the wrapper SDK in
+ * semver format. When the SDK is embedding another base SDK (for example
+ * Xamarin.Android wraps Android), the Xamarin specific version is populated
+ * into this field while sdkVersion refers to the original Android SDK.
+ * @member {string} [device.wrapperSdkName] Name of the wrapper SDK. Consists
+ * of the name of the SDK and the wrapper platform, e.g. "appcenter.xamarin",
+ * "hockeysdk.cordova".
+ * @member {string} [device.model] Device model (example: iPad2,3).
+ * @member {string} [device.oemName] Device manufacturer (example: HTC).
+ * @member {string} [device.osName] OS name (example: iOS). The following OS
+ * names are standardized (non-exclusive): Android, iOS, macOS, tvOS, Windows.
+ * @member {string} [device.osVersion] OS version (example: 9.3.0).
+ * @member {string} [device.osBuild] OS build code (example: LMY47X).
+ * @member {number} [device.osApiLevel] API level when applicable like in
+ * Android (example: 15).
+ * @member {string} [device.locale] Language code (example: en_US).
+ * @member {number} [device.timeZoneOffset] The offset in minutes from UTC for
+ * the device time zone, including daylight savings time.
+ * @member {string} [device.screenSize] Screen size of the device in pixels
+ * (example: 640x480).
+ * @member {string} [device.appVersion] Application version name, e.g. 1.1.0
+ * @member {string} [device.carrierName] Carrier name (for mobile devices).
+ * @member {string} [device.carrierCode] Carrier country code (for mobile
+ * devices).
+ * @member {string} [device.carrierCountry] Carrier country.
+ * @member {string} [device.appBuild] The app's build number, e.g. 42.
+ * @member {string} [device.appNamespace] The bundle identifier, package
+ * identifier, or namespace, depending on what the individual plattforms use,
+ * .e.g com.microsoft.example.
+ * @member {string} [device.liveUpdateReleaseLabel] Label that is used to
+ * identify application code 'version' released via Live Update beacon running
+ * on device
+ * @member {string} [device.liveUpdateDeploymentKey] Identifier of environment
+ * that current application release belongs to, deployment key then maps to
+ * environment like Production, Staging.
+ * @member {string} [device.liveUpdatePackageHash] Hash of all files
+ * (ReactNative or Cordova) deployed to device via LiveUpdate beacon. Helps
+ * identify the Release version on device or need to download updates in
+ * future.
+ * @member {string} [device.wrapperRuntimeVersion] Version of the wrapper
+ * technology framework (Xamarin runtime version or ReactNative or Cordova
+ * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or
+ * ReactNative or other.
+ * @member {string} type Polymorphic Discriminator
+ */
+export interface LogDiagnostics {
+  timestamp: Date;
+  installId: string;
+  device: DeviceDiagnostics;
+  type: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the LogWithPropertiesDiagnostics class.
+ * @constructor
+ * @member {object} [properties] Additional key/value pair parameters.
+ */
+export interface LogWithPropertiesDiagnostics extends LogDiagnostics {
+  properties?: { [propertyName: string]: string };
+}
+
+/**
+ * @class
+ * Initializes a new instance of the StartSessionLogDiagnostics class.
+ * @constructor
+ * Required explicit begin session log (a marker event for analytics service).
+ *
+ * @member {uuid} sessionId Session ID.
+ */
+export interface StartSessionLogDiagnostics extends LogDiagnostics {
+  sessionId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the HanledErrorLogDiagnostics class.
+ * @constructor
+ * Required explicit begin session log (a marker event for analytics service).
+ *
+ * @member {uuid} errorId Error ID.
+ */
+export interface HanledErrorLogDiagnostics extends LogDiagnostics {
+  errorId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the StartServiceLogDiagnostics class.
+ * @constructor
+ * Describe a AppCenter.Start API call from the SDK.
+ *
+ * @member {array} [services] The list of services of the AppCenter Start API
+ * call.
+ */
+export interface StartServiceLogDiagnostics extends LogDiagnostics {
+  services?: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CustomPropertyDiagnostics class.
+ * @constructor
+ * @member {string} name
+ * @member {string} type Polymorphic Discriminator
+ */
+export interface CustomPropertyDiagnostics {
+  name: string;
+  type: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CustomPropertyLogDiagnostics class.
+ * @constructor
+ * Set or remove custom properties.
+ *
+ * @member {array} [properties] Custom property changes.
+ */
+export interface CustomPropertyLogDiagnostics extends LogDiagnostics {
+  properties?: CustomPropertyDiagnostics[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the StringPropertyDiagnostics class.
+ * @constructor
+ * String property.
+ *
+ * @member {string} value String property value.
+ */
+export interface StringPropertyDiagnostics extends CustomPropertyDiagnostics {
+  value: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NumberPropertyDiagnostics class.
+ * @constructor
+ * Number property.
+ *
+ * @member {number} value Number property value.
+ */
+export interface NumberPropertyDiagnostics extends CustomPropertyDiagnostics {
+  value: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the BooleanPropertyDiagnostics class.
+ * @constructor
+ * Boolean property.
+ *
+ * @member {boolean} value Boolean property value.
+ */
+export interface BooleanPropertyDiagnostics extends CustomPropertyDiagnostics {
+  value: boolean;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DateTimePropertyDiagnostics class.
+ * @constructor
+ * Date and time property.
+ *
+ * @member {date} value Date time property value.
+ */
+export interface DateTimePropertyDiagnostics extends CustomPropertyDiagnostics {
+  value: Date;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ClearPropertyDiagnostics class.
+ * @constructor
+ * Clear an existing property.
+ *
+ */
+export interface ClearPropertyDiagnostics extends CustomPropertyDiagnostics {
+}
+
+/**
+ * @class
+ * Initializes a new instance of the PageLogDiagnostics class.
+ * @constructor
+ * Page view log (as in screens or activities).
+ *
+ * @member {uuid} sessionId Session ID.
+ * @member {string} name Name of the page.
+ */
+export interface PageLogDiagnostics extends LogWithPropertiesDiagnostics {
+  sessionId: string;
+  name: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the EventLogDiagnostics class.
+ * @constructor
+ * Event log.
+ *
+ * @member {uuid} sessionId Session ID.
+ * @member {uuid} id Unique identifier for this event.
+ * @member {string} name Name of the event.
+ */
+export interface EventLogDiagnostics extends LogWithPropertiesDiagnostics {
+  sessionId: string;
+  id: string;
+  name: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the PushInstallationLogDiagnostics class.
+ * @constructor
+ * Push installation Information.
+ *
+ * @member {string} pushToken The PNS handle for this installation.
+ */
+export interface PushInstallationLogDiagnostics extends LogDiagnostics {
+  pushToken: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorLogDiagnostics class.
+ * @constructor
+ * Error log.
+ *
+ * @member {uuid} sessionId Session ID.
+ * @member {uuid} id Error identifier.
+ * @member {number} [appLaunchToffset] Corresponds to the number of
+ * milliseconds elapsed between the time the error occurred and the app was
+ * launched.
+ */
+export interface ErrorLogDiagnostics extends LogDiagnostics {
+  sessionId: string;
+  id: string;
+  appLaunchToffset?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the VersionDiagnostics class.
+ * @constructor
+ * @member {string} [version] version
+ * @member {number} [count] version count
+ * @member {number} [previousCount] the count of previous time range of the
+ * version
+ */
+export interface VersionDiagnostics {
+  version?: string;
+  count?: number;
+  previousCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the VersionsDiagnostics class.
+ * @constructor
+ * @member {array} [versions] list of version count
+ * @member {number} [total] the total count of versions
+ */
+export interface VersionsDiagnostics {
+  versions?: VersionDiagnostics[];
+  total?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the AvailableVersionsDiagnostics class.
+ * @constructor
+ * @member {array} [versions] List of available versions.
+ * @member {number} [totalCount] The full number of versions across all pages.
+ */
+export interface AvailableVersionsDiagnostics {
+  versions?: string[];
+  totalCount?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ErrorRetentionSettings class.
+ * @constructor
+ * @member {number} retentionInDays
+ */
+export interface ErrorRetentionSettings {
+  retentionInDays: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfiguration class.
+ * @constructor
+ * Export configuration
+ *
+ * @member {array} [exportEntities]
+ * @member {string} [resourceName] The resource name on azure
+ * @member {string} [resourceGroup] The resource group name on azure
+ * @member {string} type Polymorphic Discriminator
+ */
+export interface ExportConfiguration {
+  exportEntities?: string[];
+  resourceName?: string;
+  resourceGroup?: string;
+  type: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportBlobConfiguration class.
+ * @constructor
+ * Configuration for export to Blob Storage with blob format
+ *
+ * @member {string} [blobPathFormatKind] The path to the blob when enum set to
+ * 'WithoutAppId' is 'year/month/day/hour/minute' and when set to 'WithAppId'
+ * is 'appId/year/month/day/hour/minute'. Possible values include:
+ * 'WithoutAppId', 'WithAppId'
+ */
+export interface ExportBlobConfiguration extends ExportConfiguration {
+  blobPathFormatKind?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfigurationBlobStorageConnectionString class.
+ * @constructor
+ * Configuration for export to Blob Storage with customer provided connection
+ * string
+ *
+ * @member {string} connectionString Connection string for blob storage account
+ */
+export interface ExportConfigurationBlobStorageConnectionString extends ExportBlobConfiguration {
+  connectionString: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfigurationAppInsightsKey class.
+ * @constructor
+ * Configuration for export to Application Insights resource with customer
+ * provided intrumentation key
+ *
+ * @member {string} instrumentationKey Instrumentation key for Application
+ * Insights resource
+ */
+export interface ExportConfigurationAppInsightsKey extends ExportConfiguration {
+  instrumentationKey: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfigurationBlobStorageLinkedSubscription class.
+ * @constructor
+ * Configuration for export to Blob Storage with customer linked subscription.
+ *
+ * @member {string} subscriptionId Id of customer subscription linked in App
+ * Center
+ */
+export interface ExportConfigurationBlobStorageLinkedSubscription extends ExportBlobConfiguration {
+  subscriptionId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfigurationAppInsightsLinkedSubscription class.
+ * @constructor
+ * Configuration for export to Application Insights resource with customer
+ * linked subscription.
+ *
+ * @member {string} subscriptionId Id of customer subscription linked in App
+ * Center
+ */
+export interface ExportConfigurationAppInsightsLinkedSubscription extends ExportConfiguration {
+  subscriptionId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfigurationResult class.
+ * @constructor
+ * Export configuration result
+ *
+ * @member {string} id Export configuration id
+ * @member {string} exportType Target resource type of export configuration.
+ * Possible values include: 'BlobStorage', 'AppInsights'
+ * @member {string} creationTime Creation time in ISO 8601 format
+ * @member {string} [lastRunTime] Latest time in ISO 8601 format when export
+ * completed successfully
+ * @member {array} [exportEntities]
+ * @member {string} state State of the export job. Possible values include:
+ * 'Enabled', 'Disabled', 'Pending', 'Deleted', 'Invalid'
+ * @member {string} [stateInfo] Additional information about export
+ * configuration state
+ * @member {string} [resourceGroup] resource group for the storage account/App
+ * Insights resource
+ * @member {string} [resourceName] Storage accout or Appinsights resource name
+ * @member {object} [exportConfiguration]
+ * @member {array} [exportConfiguration.exportEntities]
+ * @member {string} [exportConfiguration.resourceName] The resource name on
+ * azure
+ * @member {string} [exportConfiguration.resourceGroup] The resource group name
+ * on azure
+ * @member {string} [exportConfiguration.type] Polymorphic Discriminator
+ */
+export interface ExportConfigurationResult {
+  id: string;
+  exportType: string;
+  creationTime: string;
+  lastRunTime?: string;
+  exportEntities?: string[];
+  state: string;
+  stateInfo?: string;
+  resourceGroup?: string;
+  resourceName?: string;
+  exportConfiguration?: ExportConfiguration;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the ExportConfigurationListResult class.
+ * @constructor
+ * List of export configurations
+ *
+ * @member {array} values
+ * @member {number} [total] the total count of exports
+ * @member {string} [nextLink]
+ */
+export interface ExportConfigurationListResult {
+  values: ExportConfigurationResult[];
+  total?: number;
+  nextLink?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the NotificationTarget class.
  * @constructor
  * Generic notification target.
@@ -7623,7 +10251,7 @@ export interface NotificationTarget {
  * @member {number} [pnsSendSuccess] Number of the notifications successfully
  * sent to push the provider.
  * @member {string} state State of the notification. Possible values include:
- * 'Cancelled', 'Completed', 'Enqueued', 'Processing', 'Unknown'
+ * 'Queued', 'Sending', 'Completed', 'Failed', 'NoTargetFound'
  */
 export interface NotificationOverviewResult {
   notificationId: string;
@@ -7745,6 +10373,30 @@ export interface NotificationDefinition {
  */
 export interface NotificationSendSucceededResult {
   notificationId: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationTargetUserIds class.
+ * @constructor
+ * Notification per User IDs
+ *
+ * @member {array} userIds List of user IDs to target
+ */
+export interface NotificationTargetUserIds extends NotificationTarget {
+  userIds: string[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the NotificationTargetAccountIds class.
+ * @constructor
+ * Notification per Account IDs
+ *
+ * @member {array} accountIds List of account IDs to target
+ */
+export interface NotificationTargetAccountIds extends NotificationTarget {
+  accountIds: string[];
 }
 
 /**
@@ -7926,126 +10578,52 @@ export interface NotificationConfigWindowsResult extends NotificationConfigResul
 
 /**
  * @class
- * Initializes a new instance of the ExportConfiguration class.
+ * Initializes a new instance of the ExportConfig class.
  * @constructor
- * Export configuration
+ * Generic export configuration.
  *
- * @member {string} [resourceName] The resource name on azure
- * @member {string} [resourceGroup] The resource group name on azure
- * @member {string} type Polymorphic Discriminator
+ * @member {string} blobContainerSasUri A shared access signature (SAS) URI
+ * with Read, Write and Delete permissions on a container.
  */
-export interface ExportConfiguration {
-  resourceName?: string;
-  resourceGroup?: string;
-  type: string;
+export interface ExportConfig {
+  blobContainerSasUri: string;
 }
 
 /**
  * @class
- * Initializes a new instance of the ExportConfigurationBlobStorageConnectionString class.
+ * Initializes a new instance of the ExportStartedResult class.
  * @constructor
- * Configuration for export to Blob Storage with customer provided connection
- * string
+ * Export started.
  *
- * @member {string} connectionString Connection string for blob storage account
+ * @member {string} exportId The unique export identifier.
  */
-export interface ExportConfigurationBlobStorageConnectionString extends ExportConfiguration {
-  connectionString: string;
+export interface ExportStartedResult {
+  exportId: string;
 }
 
 /**
  * @class
- * Initializes a new instance of the ExportConfigurationAppInsightsKey class.
+ * Initializes a new instance of the ExportStatusResult class.
  * @constructor
- * Configuration for export to Application Insights resource with customer
- * provided intrumentation key
+ * Export status
  *
- * @member {string} instrumentationKey Instrumentation key for Application
- * Insights resource
+ * @member {string} exportId The unique export identifier.
+ * @member {string} status Status of the export. Possible values include:
+ * 'InProgress', 'Completed', 'Failed'
  */
-export interface ExportConfigurationAppInsightsKey extends ExportConfiguration {
-  instrumentationKey: string;
+export interface ExportStatusResult {
+  exportId: string;
+  status: string;
 }
 
 /**
  * @class
- * Initializes a new instance of the ExportConfigurationBlobStorageLinkedSubscription class.
+ * Initializes a new instance of the AppId class.
  * @constructor
- * Configuration for export to Blob Storage with customer linked subscription.
- *
- * @member {string} subscriptionId Id of customer subscription linked in App
- * Center
+ * @member {string} [id] the id of the app
  */
-export interface ExportConfigurationBlobStorageLinkedSubscription extends ExportConfiguration {
-  subscriptionId: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ExportConfigurationAppInsightsLinkedSubscription class.
- * @constructor
- * Configuration for export to Application Insights resource with customer
- * linked subscription.
- *
- * @member {string} subscriptionId Id of customer subscription linked in App
- * Center
- */
-export interface ExportConfigurationAppInsightsLinkedSubscription extends ExportConfiguration {
-  subscriptionId: string;
-}
-
-/**
- * @class
- * Initializes a new instance of the ExportConfigurationResult class.
- * @constructor
- * Export configuration result
- *
- * @member {string} id Export configuration id
- * @member {string} exportType Target resource type of export configuration.
- * Possible values include: 'BlobStorage', 'AppInsights'
- * @member {string} creationTime Creation time in ISO 8601 format
- * @member {string} [lastRunTime] Latest time in ISO 8601 format when export
- * completed successfully
- * @member {string} state State of the export job. Possible values include:
- * 'Enabled', 'Disabled', 'Pending', 'Deleted', 'Invalid'
- * @member {string} [stateInfo] Additional information about export
- * configuration state
- * @member {string} [resourceGroup] resource group for the storage account/App
- * Insights resource
- * @member {string} [resourceName] Storage accout or Appinsights resource name
- * @member {object} [exportConfiguration]
- * @member {string} [exportConfiguration.resourceName] The resource name on
- * azure
- * @member {string} [exportConfiguration.resourceGroup] The resource group name
- * on azure
- * @member {string} [exportConfiguration.type] Polymorphic Discriminator
- */
-export interface ExportConfigurationResult {
-  id: string;
-  exportType: string;
-  creationTime: string;
-  lastRunTime?: string;
-  state: string;
-  stateInfo?: string;
-  resourceGroup?: string;
-  resourceName?: string;
-  exportConfiguration?: ExportConfiguration;
-}
-
-/**
- * @class
- * Initializes a new instance of the ExportConfigurationListResult class.
- * @constructor
- * List of export configurations
- *
- * @member {array} values
- * @member {number} [total] the total count of exports
- * @member {string} [nextLink]
- */
-export interface ExportConfigurationListResult {
-  values: ExportConfigurationResult[];
-  total?: number;
-  nextLink?: string;
+export interface AppId {
+  id?: string;
 }
 
 /**
@@ -8114,10 +10692,12 @@ export interface DeviceScreenSize {
  *
  * @member {string} [frequency]
  * @member {string} [core]
+ * @member {string} [text]
  */
 export interface DeviceCpu {
   frequency?: string;
   core?: string;
+  text?: string;
 }
 
 /**
@@ -8192,6 +10772,7 @@ export interface DeviceFrame {
  * @member {object} [cpu]
  * @member {string} [cpu.frequency]
  * @member {string} [cpu.core]
+ * @member {string} [cpu.text]
  * @member {object} [memory]
  * @member {string} [memory.formattedSize]
  * @member {number} [screenRotation]
@@ -8256,6 +10837,7 @@ export interface DeviceModel {
  * @member {object} [model.cpu]
  * @member {string} [model.cpu.frequency]
  * @member {string} [model.cpu.core]
+ * @member {string} [model.cpu.text]
  * @member {object} [model.memory]
  * @member {string} [model.memory.formattedSize]
  * @member {number} [model.screenRotation]
@@ -8402,7 +10984,6 @@ export interface TestRunStatistics {
  * time the test has been runnign
  * @member {string} [testType] The name of the test framework used to run this
  * test
- * @member {string} [uploadedBy] The name of the user who uploaded the test
  */
 export interface TestRun {
   id?: string;
@@ -8417,7 +10998,6 @@ export interface TestRun {
   description?: string;
   stats?: TestRunStatistics;
   testType?: string;
-  uploadedBy?: string;
 }
 
 /**
@@ -8752,6 +11332,20 @@ export interface TestReportDeviceLogsItem {
 
 /**
  * @class
+ * Initializes a new instance of the TestReportSnapshotFatalErrorsItem class.
+ * @constructor
+ * @member {string} [deviceSnapshotId]
+ * @member {string} [errorMessage]
+ * @member {string} [errorTitle]
+ */
+export interface TestReportSnapshotFatalErrorsItem {
+  deviceSnapshotId?: string;
+  errorMessage?: string;
+  errorTitle?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the TestReport class.
  * @constructor
  * @member {string} appUploadId
@@ -8781,6 +11375,7 @@ export interface TestReportDeviceLogsItem {
  * @member {array} deviceLogs
  * @member {string} dateFinished
  * @member {string} [errorMessage]
+ * @member {array} [snapshotFatalErrors]
  */
 export interface TestReport {
   appUploadId: string;
@@ -8796,6 +11391,7 @@ export interface TestReport {
   deviceLogs: TestReportDeviceLogsItem[];
   dateFinished: string;
   errorMessage?: string;
+  snapshotFatalErrors?: TestReportSnapshotFatalErrorsItem[];
 }
 
 /**
@@ -8852,6 +11448,7 @@ export interface StepReportDeviceScreenshotsItemScreenshot {
  * @member {boolean} [screenshot.landscape]
  * @member {string} [logFile]
  * @member {string} [appiumLogFile]
+ * @member {array} [rawCrashData]
  */
 export interface StepReportDeviceScreenshotsItem {
   id?: string;
@@ -8863,6 +11460,7 @@ export interface StepReportDeviceScreenshotsItem {
   screenshot?: StepReportDeviceScreenshotsItemScreenshot;
   logFile?: string;
   appiumLogFile?: string;
+  rawCrashData?: string[];
 }
 
 /**
@@ -9166,6 +11764,172 @@ export interface PerformanceReport {
 
 /**
  * @class
+ * Initializes a new instance of the SubmitDsrOperationRequest class.
+ * @constructor
+ * @member {string} [request] Possible values include: 'Delete', 'Purge',
+ * 'UndoDelete', 'Export'
+ * @member {string} [accountId]
+ * @member {string} [appId]
+ * @member {string} [operationId] The DSR operation ID provided by the GDPR
+ * coordinator. Used for tracking only.
+ * @member {string} [requestId] Request ID provided by the GDPR coordinator.
+ * Used for tracking.
+ */
+export interface SubmitDsrOperationRequest {
+  request?: string;
+  accountId?: string;
+  appId?: string;
+  operationId?: string;
+  requestId?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the SubmitDsrOperationResponse class.
+ * @constructor
+ * @member {string} [status] The status of the DSR operation. Possible values
+ * include: 'NotStarted', 'InProgress', 'Completed', 'Failure'
+ */
+export interface SubmitDsrOperationResponse {
+  status?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the CreateGdprTestData class.
+ * @constructor
+ * @member {uuid} [appId]
+ * @member {uuid} [accountId]
+ * @member {string} [userName]
+ * @member {string} [userEmail]
+ * @member {string} [appName]
+ */
+export interface CreateGdprTestData {
+  appId?: string;
+  accountId?: string;
+  userName?: string;
+  userEmail?: string;
+  appName?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestGDPRUser class.
+ * @constructor
+ * @member {uuid} [id]
+ */
+export interface TestGDPRUser {
+  id?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestGDPRAccount class.
+ * @constructor
+ * @member {uuid} [id]
+ */
+export interface TestGDPRAccount {
+  id?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestGDPRFeatureFlag class.
+ * @constructor
+ * @member {string} [name]
+ * @member {uuid} [targetId]
+ */
+export interface TestGDPRFeatureFlag {
+  name?: string;
+  targetId?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestGDPRResourceListResourcesItem class.
+ * @constructor
+ * @member {string} [rel]
+ * @member {string} [path]
+ */
+export interface TestGDPRResourceListResourcesItem {
+  rel?: string;
+  path?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestGDPRResourceList class.
+ * @constructor
+ * @member {array} [resources]
+ */
+export interface TestGDPRResourceList {
+  resources?: TestGDPRResourceListResourcesItem[];
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestGDPRHashFile class.
+ * @constructor
+ * @member {uuid} [id]
+ * @member {string} [filename]
+ */
+export interface TestGDPRHashFile {
+  id?: string;
+  filename?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestGDPRTestRun class.
+ * @constructor
+ * @member {uuid} [id]
+ * @member {uuid} [appHashFileId]
+ * @member {string} [locale]
+ * @member {uuid} [dsymHashFileId]
+ * @member {string} [appHashFileUrl]
+ * @member {string} [dsymHashFileUrl]
+ * @member {string} [appIconUrl]
+ */
+export interface TestGDPRTestRun {
+  id?: string;
+  appHashFileId?: string;
+  locale?: string;
+  dsymHashFileId?: string;
+  appHashFileUrl?: string;
+  dsymHashFileUrl?: string;
+  appIconUrl?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestGDPRFileSetFile class.
+ * @constructor
+ * @member {string} [path]
+ * @member {uuid} [hashFileId]
+ * @member {uuid} [appUploadId]
+ * @member {string} [hashFileUrl]
+ */
+export interface TestGDPRFileSetFile {
+  path?: string;
+  hashFileId?: string;
+  appUploadId?: string;
+  hashFileUrl?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the TestGDPRPipelineTest class.
+ * @constructor
+ * @member {uuid} [appUploadId]
+ * @member {object} [testParameters]
+ */
+export interface TestGDPRPipelineTest {
+  appUploadId?: string;
+  testParameters?: any;
+}
+
+/**
+ * @class
  * Initializes a new instance of the BlobInfo class.
  * @constructor
  * @member {number} size
@@ -9247,6 +12011,16 @@ export interface Deployment {
   key?: string;
   name: string;
   latestRelease?: CodePushRelease;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the DeploymentInternal class.
+ * @constructor
+ * @member {string} [id]
+ */
+export interface DeploymentInternal extends Deployment {
+  id?: string;
 }
 
 /**
@@ -9363,6 +12137,29 @@ export interface AcquisitionStatusSuccessResponse {
 
 /**
  * @class
+ * Initializes a new instance of the GDPRPurgeVerifyRequest class.
+ * @constructor
+ * @member {string} id deployment id
+ * @member {string} key deployment key
+ */
+export interface GDPRPurgeVerifyRequest {
+  id: string;
+  key: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GDPRPurgeVerifyResponse class.
+ * @constructor
+ * @member {boolean} success indicate whether GDPR purge operation succeeds or
+ * not
+ */
+export interface GDPRPurgeVerifyResponse {
+  success: boolean;
+}
+
+/**
+ * @class
  * Initializes a new instance of the AlertOperationResult class.
  * @constructor
  * Generic result for any alerting API operation
@@ -9455,16 +12252,16 @@ export interface AlertEmailSettings {
  * @constructor
  * Alerting Default Email Settings of the user
  *
- * @member {string} eTag The ETag of the entity
+ * @member {string} [eTag] The ETag of the entity
  * @member {boolean} enabled Allows to forcefully disable emails on app or user
  * level
- * @member {string} userId The unique id (UUID) of the user
+ * @member {string} [userId] The unique id (UUID) of the user
  * @member {array} settings The settings the user has for the app
  */
 export interface AlertUserEmailSettingsResult extends AlertOperationResult {
-  eTag: string;
+  eTag?: string;
   enabled: boolean;
-  userId: string;
+  userId?: string;
   settings: EventSetting[];
 }
 
@@ -9474,12 +12271,12 @@ export interface AlertUserEmailSettingsResult extends AlertOperationResult {
  * @constructor
  * Alerting Email Settings of the user for a particular app
  *
- * @member {string} appId Application ID
+ * @member {string} [appId] Application ID
  * @member {boolean} userEnabled A flag indicating if settings are enabled at
  * user/global level
  */
 export interface AlertUserAppEmailSettingsResult extends AlertUserEmailSettingsResult {
-  appId: string;
+  appId?: string;
   userEnabled: boolean;
 }
 
@@ -9756,6 +12553,7 @@ export interface NewCrashGroupAlertingEvent extends AlertingEvent {
  * @member {string} installLink
  * @member {string} [iconLink]
  * @member {string} [distributionGroupId]
+ * @member {boolean} [installable]
  */
 export interface NewAppReleaseAlertingEventAppReleaseProperties {
   appName: string;
@@ -9776,6 +12574,7 @@ export interface NewAppReleaseAlertingEventAppReleaseProperties {
   installLink: string;
   iconLink?: string;
   distributionGroupId?: string;
+  installable?: boolean;
 }
 
 /**
@@ -9788,6 +12587,8 @@ export interface NewAppReleaseAlertingEventAppReleaseProperties {
  * notification. If this is not null, then only sending emails will be
  * triggered even if the event requires calling webhooks or doing other
  * actions.
+ * @member {boolean} [disableWebhook] indicate whether notify via webhook or
+ * not
  * @member {object} [appReleaseProperties] Properties of new application
  * release
  * @member {string} [appReleaseProperties.appName]
@@ -9809,9 +12610,11 @@ export interface NewAppReleaseAlertingEventAppReleaseProperties {
  * @member {string} [appReleaseProperties.installLink]
  * @member {string} [appReleaseProperties.iconLink]
  * @member {string} [appReleaseProperties.distributionGroupId]
+ * @member {boolean} [appReleaseProperties.installable]
  */
 export interface NewAppReleaseAlertingEvent extends AlertingEvent {
   userIds?: string[];
+  disableWebhook?: boolean;
   appReleaseProperties?: NewAppReleaseAlertingEventAppReleaseProperties;
 }
 
@@ -9886,20 +12689,24 @@ export interface AlertingError extends AlertOperationResult {
  *
  * @member {string} [id] The Billing Plan ID
  * @member {string} [version] Version of the Billing Plan schema
- * @member {number} [priceBucket] Price bucket of the billing plan. Free plans
- * start with 0, paid plans have higher price buckets
+ * @member {number} [price] Price of the Billing Plan
+ * @member {string} [paymentSource] Service that receives payments for this
+ * billing plan. Possible values include: 'None', 'AppCenter', 'GitHub', 'Xtc'
  * @member {string} [service] Name of the service that the plan applies to.
  * Possible values include: 'Build', 'Push', 'Test'
  * @member {object} [limits]
  * @member {object} [attributes]
+ * @member {string} [parentId]
  */
 export interface BillingPlan {
   id?: string;
   version?: string;
-  priceBucket?: number;
+  price?: number;
+  paymentSource?: string;
   service?: string;
   limits?: { [propertyName: string]: number };
   attributes?: { [propertyName: string]: any };
+  parentId?: string;
 }
 
 /**
@@ -9912,12 +12719,15 @@ export interface BillingPlan {
  * @member {object} [plan]
  * @member {string} [plan.id] The Billing Plan ID
  * @member {string} [plan.version] Version of the Billing Plan schema
- * @member {number} [plan.priceBucket] Price bucket of the billing plan. Free
- * plans start with 0, paid plans have higher price buckets
+ * @member {number} [plan.price] Price of the Billing Plan
+ * @member {string} [plan.paymentSource] Service that receives payments for
+ * this billing plan. Possible values include: 'None', 'AppCenter', 'GitHub',
+ * 'Xtc'
  * @member {string} [plan.service] Name of the service that the plan applies
  * to. Possible values include: 'Build', 'Push', 'Test'
  * @member {object} [plan.limits]
  * @member {object} [plan.attributes]
+ * @member {string} [plan.parentId]
  */
 export interface BillingPlanSelection {
   count?: number;
@@ -9937,12 +12747,15 @@ export interface BillingPlanSelection {
  * @member {object} [byAccount.plan]
  * @member {string} [byAccount.plan.id] The Billing Plan ID
  * @member {string} [byAccount.plan.version] Version of the Billing Plan schema
- * @member {number} [byAccount.plan.priceBucket] Price bucket of the billing
- * plan. Free plans start with 0, paid plans have higher price buckets
+ * @member {number} [byAccount.plan.price] Price of the Billing Plan
+ * @member {string} [byAccount.plan.paymentSource] Service that receives
+ * payments for this billing plan. Possible values include: 'None',
+ * 'AppCenter', 'GitHub', 'Xtc'
  * @member {string} [byAccount.plan.service] Name of the service that the plan
  * applies to. Possible values include: 'Build', 'Push', 'Test'
  * @member {object} [byAccount.plan.limits]
  * @member {object} [byAccount.plan.attributes]
+ * @member {string} [byAccount.plan.parentId]
  */
 export interface BillingPeriod {
   startTime?: string;
@@ -9972,14 +12785,17 @@ export interface BillingPeriod {
  * ID
  * @member {string} [currentBillingPeriod.byAccount.plan.version] Version of
  * the Billing Plan schema
- * @member {number} [currentBillingPeriod.byAccount.plan.priceBucket] Price
- * bucket of the billing plan. Free plans start with 0, paid plans have higher
- * price buckets
+ * @member {number} [currentBillingPeriod.byAccount.plan.price] Price of the
+ * Billing Plan
+ * @member {string} [currentBillingPeriod.byAccount.plan.paymentSource] Service
+ * that receives payments for this billing plan. Possible values include:
+ * 'None', 'AppCenter', 'GitHub', 'Xtc'
  * @member {string} [currentBillingPeriod.byAccount.plan.service] Name of the
  * service that the plan applies to. Possible values include: 'Build', 'Push',
  * 'Test'
  * @member {object} [currentBillingPeriod.byAccount.plan.limits]
  * @member {object} [currentBillingPeriod.byAccount.plan.attributes]
+ * @member {string} [currentBillingPeriod.byAccount.plan.parentId]
  */
 export interface ServiceBillingPlans {
   canSelectTrialPlan?: boolean;
@@ -10011,16 +12827,19 @@ export interface ServiceBillingPlans {
  * Billing Plan ID
  * @member {string} [buildService.currentBillingPeriod.byAccount.plan.version]
  * Version of the Billing Plan schema
- * @member {number}
- * [buildService.currentBillingPeriod.byAccount.plan.priceBucket] Price bucket
- * of the billing plan. Free plans start with 0, paid plans have higher price
- * buckets
+ * @member {number} [buildService.currentBillingPeriod.byAccount.plan.price]
+ * Price of the Billing Plan
+ * @member {string}
+ * [buildService.currentBillingPeriod.byAccount.plan.paymentSource] Service
+ * that receives payments for this billing plan. Possible values include:
+ * 'None', 'AppCenter', 'GitHub', 'Xtc'
  * @member {string} [buildService.currentBillingPeriod.byAccount.plan.service]
  * Name of the service that the plan applies to. Possible values include:
  * 'Build', 'Push', 'Test'
  * @member {object} [buildService.currentBillingPeriod.byAccount.plan.limits]
  * @member {object}
  * [buildService.currentBillingPeriod.byAccount.plan.attributes]
+ * @member {string} [buildService.currentBillingPeriod.byAccount.plan.parentId]
  * @member {object} [pushService]
  * @member {boolean} [pushService.canSelectTrialPlan] Can customer select trial
  * plan for that service (if it exists)?
@@ -10039,16 +12858,19 @@ export interface ServiceBillingPlans {
  * Billing Plan ID
  * @member {string} [pushService.currentBillingPeriod.byAccount.plan.version]
  * Version of the Billing Plan schema
- * @member {number}
- * [pushService.currentBillingPeriod.byAccount.plan.priceBucket] Price bucket
- * of the billing plan. Free plans start with 0, paid plans have higher price
- * buckets
+ * @member {number} [pushService.currentBillingPeriod.byAccount.plan.price]
+ * Price of the Billing Plan
+ * @member {string}
+ * [pushService.currentBillingPeriod.byAccount.plan.paymentSource] Service that
+ * receives payments for this billing plan. Possible values include: 'None',
+ * 'AppCenter', 'GitHub', 'Xtc'
  * @member {string} [pushService.currentBillingPeriod.byAccount.plan.service]
  * Name of the service that the plan applies to. Possible values include:
  * 'Build', 'Push', 'Test'
  * @member {object} [pushService.currentBillingPeriod.byAccount.plan.limits]
  * @member {object}
  * [pushService.currentBillingPeriod.byAccount.plan.attributes]
+ * @member {string} [pushService.currentBillingPeriod.byAccount.plan.parentId]
  * @member {object} [testService]
  * @member {boolean} [testService.canSelectTrialPlan] Can customer select trial
  * plan for that service (if it exists)?
@@ -10067,16 +12889,19 @@ export interface ServiceBillingPlans {
  * Billing Plan ID
  * @member {string} [testService.currentBillingPeriod.byAccount.plan.version]
  * Version of the Billing Plan schema
- * @member {number}
- * [testService.currentBillingPeriod.byAccount.plan.priceBucket] Price bucket
- * of the billing plan. Free plans start with 0, paid plans have higher price
- * buckets
+ * @member {number} [testService.currentBillingPeriod.byAccount.plan.price]
+ * Price of the Billing Plan
+ * @member {string}
+ * [testService.currentBillingPeriod.byAccount.plan.paymentSource] Service that
+ * receives payments for this billing plan. Possible values include: 'None',
+ * 'AppCenter', 'GitHub', 'Xtc'
  * @member {string} [testService.currentBillingPeriod.byAccount.plan.service]
  * Name of the service that the plan applies to. Possible values include:
  * 'Build', 'Push', 'Test'
  * @member {object} [testService.currentBillingPeriod.byAccount.plan.limits]
  * @member {object}
  * [testService.currentBillingPeriod.byAccount.plan.attributes]
+ * @member {string} [testService.currentBillingPeriod.byAccount.plan.parentId]
  */
 export interface BillingInformationPlans {
   buildService?: ServiceBillingPlans;
@@ -10191,9 +13016,12 @@ export interface BillingResourceUsage {
  * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.version]
  * Version of the Billing Plan schema
  * @member {number}
- * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.priceBucket]
- * Price bucket of the billing plan. Free plans start with 0, paid plans have
- * higher price buckets
+ * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.price] Price
+ * of the Billing Plan
+ * @member {string}
+ * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.paymentSource]
+ * Service that receives payments for this billing plan. Possible values
+ * include: 'None', 'AppCenter', 'GitHub', 'Xtc'
  * @member {string}
  * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.service] Name
  * of the service that the plan applies to. Possible values include: 'Build',
@@ -10202,6 +13030,8 @@ export interface BillingResourceUsage {
  * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.limits]
  * @member {object}
  * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.attributes]
+ * @member {string}
+ * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.parentId]
  * @member {object} [billingPlans.pushService]
  * @member {boolean} [billingPlans.pushService.canSelectTrialPlan] Can customer
  * select trial plan for that service (if it exists)?
@@ -10226,9 +13056,12 @@ export interface BillingResourceUsage {
  * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.version]
  * Version of the Billing Plan schema
  * @member {number}
- * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.priceBucket]
- * Price bucket of the billing plan. Free plans start with 0, paid plans have
- * higher price buckets
+ * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.price] Price
+ * of the Billing Plan
+ * @member {string}
+ * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.paymentSource]
+ * Service that receives payments for this billing plan. Possible values
+ * include: 'None', 'AppCenter', 'GitHub', 'Xtc'
  * @member {string}
  * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.service] Name
  * of the service that the plan applies to. Possible values include: 'Build',
@@ -10237,6 +13070,8 @@ export interface BillingResourceUsage {
  * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.limits]
  * @member {object}
  * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.attributes]
+ * @member {string}
+ * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.parentId]
  * @member {object} [billingPlans.testService]
  * @member {boolean} [billingPlans.testService.canSelectTrialPlan] Can customer
  * select trial plan for that service (if it exists)?
@@ -10261,9 +13096,12 @@ export interface BillingResourceUsage {
  * [billingPlans.testService.currentBillingPeriod.byAccount.plan.version]
  * Version of the Billing Plan schema
  * @member {number}
- * [billingPlans.testService.currentBillingPeriod.byAccount.plan.priceBucket]
- * Price bucket of the billing plan. Free plans start with 0, paid plans have
- * higher price buckets
+ * [billingPlans.testService.currentBillingPeriod.byAccount.plan.price] Price
+ * of the Billing Plan
+ * @member {string}
+ * [billingPlans.testService.currentBillingPeriod.byAccount.plan.paymentSource]
+ * Service that receives payments for this billing plan. Possible values
+ * include: 'None', 'AppCenter', 'GitHub', 'Xtc'
  * @member {string}
  * [billingPlans.testService.currentBillingPeriod.byAccount.plan.service] Name
  * of the service that the plan applies to. Possible values include: 'Build',
@@ -10272,6 +13110,8 @@ export interface BillingResourceUsage {
  * [billingPlans.testService.currentBillingPeriod.byAccount.plan.limits]
  * @member {object}
  * [billingPlans.testService.currentBillingPeriod.byAccount.plan.attributes]
+ * @member {string}
+ * [billingPlans.testService.currentBillingPeriod.byAccount.plan.parentId]
  * @member {object} [usage]
  * @member {object} [usage.buildService]
  * @member {object} [usage.buildService.currentUsagePeriod]
@@ -10297,6 +13137,10 @@ export interface BillingResourceUsage {
  * end time of the usage period.
  * @member {object} [usage.testService.currentUsagePeriod.byAccount]
  * @member {object} [usage.testService.currentUsagePeriod.byApp]
+ * @member {string} [azureSubscriptionId] Unique identifier for the Azure
+ * subscription used for billing
+ * @member {string} [azureSubscriptionState] State of the Azure subscription
+ * used for billing. Possible values include: 'Enabled', 'Disabled', 'NotSet'
  */
 export interface AggregatedBillingInformation {
   version?: string;
@@ -10304,6 +13148,8 @@ export interface AggregatedBillingInformation {
   id?: string;
   billingPlans?: BillingInformationPlans;
   usage?: BillingResourceUsage;
+  azureSubscriptionId?: string;
+  azureSubscriptionState?: string;
 }
 
 /**
@@ -10336,6 +13182,26 @@ export interface BillingError {
 
 /**
  * @class
+ * Initializes a new instance of the BillingInformationSearchResultsItem class.
+ * @constructor
+ * @member {string} [accountId] The Account ID
+ * @member {string} [accountName] The Account Name
+ * @member {string} [billingInternalAccountId] The Billing Internal Account ID
+ * @member {string} [buildPlan] The ID of the Build Billing Plan
+ * @member {string} [pushPlan] The ID of the Push Billing Plan
+ * @member {string} [testPlan] The ID of the Test Billing Plan
+ */
+export interface BillingInformationSearchResultsItem {
+  accountId?: string;
+  accountName?: string;
+  billingInternalAccountId?: string;
+  buildPlan?: string;
+  pushPlan?: string;
+  testPlan?: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the BillingPlansChangeTypeResponse class.
  * @constructor
  * Responses for requests that detect billing plans change type
@@ -10360,12 +13226,15 @@ export interface BillingPlansChangeTypeResponse {
  * @member {string} [buildService.plan.id] The Billing Plan ID
  * @member {string} [buildService.plan.version] Version of the Billing Plan
  * schema
- * @member {number} [buildService.plan.priceBucket] Price bucket of the billing
- * plan. Free plans start with 0, paid plans have higher price buckets
+ * @member {number} [buildService.plan.price] Price of the Billing Plan
+ * @member {string} [buildService.plan.paymentSource] Service that receives
+ * payments for this billing plan. Possible values include: 'None',
+ * 'AppCenter', 'GitHub', 'Xtc'
  * @member {string} [buildService.plan.service] Name of the service that the
  * plan applies to. Possible values include: 'Build', 'Push', 'Test'
  * @member {object} [buildService.plan.limits]
  * @member {object} [buildService.plan.attributes]
+ * @member {string} [buildService.plan.parentId]
  * @member {object} [pushService]
  * @member {number} [pushService.count] Number of instances of the billing
  * plan.
@@ -10373,12 +13242,15 @@ export interface BillingPlansChangeTypeResponse {
  * @member {string} [pushService.plan.id] The Billing Plan ID
  * @member {string} [pushService.plan.version] Version of the Billing Plan
  * schema
- * @member {number} [pushService.plan.priceBucket] Price bucket of the billing
- * plan. Free plans start with 0, paid plans have higher price buckets
+ * @member {number} [pushService.plan.price] Price of the Billing Plan
+ * @member {string} [pushService.plan.paymentSource] Service that receives
+ * payments for this billing plan. Possible values include: 'None',
+ * 'AppCenter', 'GitHub', 'Xtc'
  * @member {string} [pushService.plan.service] Name of the service that the
  * plan applies to. Possible values include: 'Build', 'Push', 'Test'
  * @member {object} [pushService.plan.limits]
  * @member {object} [pushService.plan.attributes]
+ * @member {string} [pushService.plan.parentId]
  * @member {object} [testService]
  * @member {number} [testService.count] Number of instances of the billing
  * plan.
@@ -10386,17 +13258,81 @@ export interface BillingPlansChangeTypeResponse {
  * @member {string} [testService.plan.id] The Billing Plan ID
  * @member {string} [testService.plan.version] Version of the Billing Plan
  * schema
- * @member {number} [testService.plan.priceBucket] Price bucket of the billing
- * plan. Free plans start with 0, paid plans have higher price buckets
+ * @member {number} [testService.plan.price] Price of the Billing Plan
+ * @member {string} [testService.plan.paymentSource] Service that receives
+ * payments for this billing plan. Possible values include: 'None',
+ * 'AppCenter', 'GitHub', 'Xtc'
  * @member {string} [testService.plan.service] Name of the service that the
  * plan applies to. Possible values include: 'Build', 'Push', 'Test'
  * @member {object} [testService.plan.limits]
  * @member {object} [testService.plan.attributes]
+ * @member {string} [testService.plan.parentId]
  */
 export interface BillingPlansSelection {
   buildService?: BillingPlanSelection;
   pushService?: BillingPlanSelection;
   testService?: BillingPlanSelection;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GdprVerificationResult class.
+ * @constructor
+ * GDPR tests verification result
+ *
+ * @member {boolean} [status] Verification status. True means that the
+ * verification was successfull.
+ * @member {string} [message] Optional error message if the verification
+ * failed.
+ */
+export interface GdprVerificationResult {
+  status?: boolean;
+  message?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GitHubAccount class.
+ * @constructor
+ * GitHub account information
+ *
+ * @member {number} [id] Id of GitHub account
+ * @member {string} [accountType] Type of GitHub account. Possible values
+ * include: 'User', 'Organization'
+ */
+export interface GitHubAccount {
+  id?: number;
+  accountType?: string;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GitHubMarketplacePlan class.
+ * @constructor
+ * GitHub Marketplace plan
+ *
+ * @member {number} [id] Id of the GitHub plan
+ */
+export interface GitHubMarketplacePlan {
+  id?: number;
+}
+
+/**
+ * @class
+ * Initializes a new instance of the GitHubMarketplacePurchase class.
+ * @constructor
+ * GitHub Marketplace purchase
+ *
+ * @member {object} [account]
+ * @member {number} [account.id] Id of GitHub account
+ * @member {string} [account.accountType] Type of GitHub account. Possible
+ * values include: 'User', 'Organization'
+ * @member {object} [plan]
+ * @member {number} [plan.id] Id of the GitHub plan
+ */
+export interface GitHubMarketplacePurchase {
+  account?: GitHubAccount;
+  plan?: GitHubMarketplacePlan;
 }
 
 /**
@@ -10436,12 +13372,15 @@ export interface UsageRecordStatus {
  * @member {object} [document]
  * @member {string} [document.id] The Billing Plan ID
  * @member {string} [document.version] Version of the Billing Plan schema
- * @member {number} [document.priceBucket] Price bucket of the billing plan.
- * Free plans start with 0, paid plans have higher price buckets
+ * @member {number} [document.price] Price of the Billing Plan
+ * @member {string} [document.paymentSource] Service that receives payments for
+ * this billing plan. Possible values include: 'None', 'AppCenter', 'GitHub',
+ * 'Xtc'
  * @member {string} [document.service] Name of the service that the plan
  * applies to. Possible values include: 'Build', 'Push', 'Test'
  * @member {object} [document.limits]
  * @member {object} [document.attributes]
+ * @member {string} [document.parentId]
  * @member {string} [etag] The version of the object
  */
 export interface VersionedBillingPlan {
@@ -10467,15 +13406,26 @@ export interface MessageEnvelope {
 
 /**
  * @class
+ * Initializes a new instance of the DataSubjectRightEmailRequest class.
+ * @constructor
+ * @member {string} email Email used for cancel delete with x-authz-bypass
+ * headers
+ */
+export interface DataSubjectRightEmailRequest {
+  email: string;
+}
+
+/**
+ * @class
  * Initializes a new instance of the DataSubjectRightResponse class.
  * @constructor
- * @member {string} token Unique request identifier
- * @member {string} createdAt ISO 8601 format timestamp of when request was
+ * @member {uuid} token Unique request identifier
+ * @member {date} createdAt ISO 8601 format timestamp of when request was
  * created.
  */
 export interface DataSubjectRightResponse {
   token: string;
-  createdAt: string;
+  createdAt: Date;
 }
 
 /**

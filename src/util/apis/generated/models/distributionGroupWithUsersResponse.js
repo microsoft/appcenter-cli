@@ -14,14 +14,17 @@ const models = require('./index');
 class DistributionGroupWithUsersResponse {
   /**
    * Create a DistributionGroupWithUsersResponse.
-   * @member {string} id The unique ID of the distribution group
+   * @member {uuid} id The unique ID of the distribution group
    * @member {string} name The name of the distribution group used in URLs
    * @member {number} totalUserCount The count of users in the distribution
    * group
+   * @member {number} [totalGroupsCount] The count of aad groups in the
+   * distribution group
    * @member {number} notifiedUserCount The count of non-pending users in the
    * distribution group who will be notified by new releases
    * @member {boolean} [isPublic] Whether the distribution group is public
    * @member {array} users The distribution group users
+   * @member {array} [aadGroups] The distribution group aad groups
    */
   constructor() {
   }
@@ -61,6 +64,13 @@ class DistributionGroupWithUsersResponse {
               name: 'Number'
             }
           },
+          totalGroupsCount: {
+            required: false,
+            serializedName: 'total_groups_count',
+            type: {
+              name: 'Number'
+            }
+          },
           notifiedUserCount: {
             required: true,
             serializedName: 'notified_user_count',
@@ -86,6 +96,21 @@ class DistributionGroupWithUsersResponse {
                   type: {
                     name: 'Composite',
                     className: 'DistributionGroupUserGetResponse'
+                  }
+              }
+            }
+          },
+          aadGroups: {
+            required: false,
+            serializedName: 'aad_groups',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'DistributionGroupAADGroupPostResponseElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'DistributionGroupAADGroupPostResponse'
                   }
               }
             }

@@ -21,8 +21,9 @@ class ExternalStoreResponse {
    * 'testflight-external'
    * @member {object} [intuneDetails] store details for intune
    * @member {string} [serviceConnectionId] Id for the shared service
-   * connection. In case of Apple AppStore, this connection will be used to
-   * create and connect to the Apple AppStore in Mobile Center.
+   * connection. In case of Apple / GooglePlay stores, this connection will be
+   * used to connect to the Apple / Google stores in App Center.
+   * @member {string} [createdBy] user id of the user who created the store.
    */
   constructor() {
   }
@@ -79,6 +80,13 @@ class ExternalStoreResponse {
           serviceConnectionId: {
             required: false,
             serializedName: 'service_connection_id',
+            type: {
+              name: 'String'
+            }
+          },
+          createdBy: {
+            required: false,
+            serializedName: 'created_by',
             type: {
               name: 'String'
             }

@@ -18,7 +18,8 @@ class UpdateDevicesRequest {
    * Create a UpdateDevicesRequest.
    * @member {number} [releaseId] When provided, will update the provided
    * release with the new set of devices. By default the latest release of the
-   * distribution group is used when this property is omitted.
+   * distribution group is used when this property is omitted. If `release_id`
+   * is passed in the path, there is no need to pass in the body as well.
    * @member {string} [username] The username for the Apple Developer account
    * to publish the devices to.
    * @member {string} [password] The password for the Apple Developer account

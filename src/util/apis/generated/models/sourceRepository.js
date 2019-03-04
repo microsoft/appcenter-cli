@@ -14,7 +14,7 @@ class SourceRepository {
   /**
    * Create a SourceRepository.
    * @member {string} [name] The repository name
-   * @member {object} [cloneUrl] URL used to clone the repository
+   * @member {string} [cloneUrl] URL used to clone the repository
    */
   constructor() {
   }
@@ -44,7 +44,7 @@ class SourceRepository {
             required: false,
             serializedName: 'clone_url',
             type: {
-              name: 'Object'
+              name: 'String'
             }
           }
         }

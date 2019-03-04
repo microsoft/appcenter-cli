@@ -10,7 +10,7 @@ const msRest = require('ms-rest');
 const WebResource = msRest.WebResource;
 
 /**
- * Returns whether push config exists.
+ * Returns whether a push configuration exists for the selected app.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -117,7 +117,7 @@ function _configExists(ownerName, appName, options, callback) {
 }
 
 /**
- * Get configuration.
+ * Get the push configuration for the selected app.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -243,7 +243,7 @@ function _getConfig(ownerName, appName, options, callback) {
 }
 
 /**
- * Set notification configuration.
+ * Set the push configuration for the selected app.
  *
  * @param {object} properties Notification configurations.
  *
@@ -390,7 +390,7 @@ function _setConfig(properties, ownerName, appName, options, callback) {
 }
 
 /**
- * Delete notification configuration.
+ * Delete the push configuration for the selected app.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -497,7 +497,7 @@ function _deleteConfig(ownerName, appName, options, callback) {
 }
 
 /**
- * Get notification details.
+ * Get details about a specific notification.
  *
  * @param {string} notificationId The id of the notification.
  *
@@ -629,143 +629,7 @@ function _get(notificationId, ownerName, appName, options, callback) {
 }
 
 /**
- * Archive push campaign(s)
- *
- * @param {string} ownerName The name of the owner
- *
- * @param {string} appName The name of the application
- *
- * @param {array} values List of notification Ids.
- *
- * @param {object} [options] Optional Parameters.
- *
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- *
- * @param {function} callback - The callback.
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {null} [result]   - The deserialized result object if an error did not occur.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-function _notificationArchive(ownerName, appName, values, options, callback) {
-   /* jshint validthis: true */
-  let client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  // Validate
-  try {
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-    if (!Array.isArray(values)) {
-      throw new Error('values cannot be null or undefined and it must be of type array.');
-    }
-    for (let i = 0; i < values.length; i++) {
-      if (values[i] !== null && values[i] !== undefined && typeof values[i].valueOf() !== 'string') {
-        throw new Error('values[i] must be of type string.');
-      }
-    }
-  } catch (error) {
-    return callback(error);
-  }
-  let notificationIds;
-  if (values !== null && values !== undefined) {
-    notificationIds = new client.models['NotificationIdList']();
-    notificationIds.values = values;
-  }
-
-  // Construct URL
-  let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/push/notifications/campaign/archive';
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  let httpRequest = new WebResource();
-  httpRequest.method = 'POST';
-  httpRequest.url = requestUrl;
-  httpRequest.headers = {};
-  // Set Headers
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  if(options) {
-    for(let headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  // Serialize Request
-  let requestContent = null;
-  let requestModel = null;
-  try {
-    if (notificationIds !== null && notificationIds !== undefined) {
-      let requestModelMapper = new client.models['NotificationIdList']().mapper();
-      requestModel = client.serialize(requestModelMapper, notificationIds, 'notificationIds');
-      requestContent = JSON.stringify(requestModel);
-    }
-  } catch (error) {
-    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-        `payload - ${JSON.stringify(notificationIds, null, 2)}.`);
-    return callback(serializationError);
-  }
-  httpRequest.body = requestContent;
-  // Send Request
-  return client.pipeline(httpRequest, (err, response, responseBody) => {
-    if (err) {
-      return callback(err);
-    }
-    let statusCode = response.statusCode;
-    if (statusCode !== 200) {
-      let error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      let parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          let internalError = null;
-          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-          error.code = internalError ? internalError.code : parsedErrorResponse.code;
-          error.message = internalError ? internalError.message : parsedErrorResponse.message;
-        }
-        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
-          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-        }
-      } catch (defaultError) {
-        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                         `- "${responseBody}" for the default response.`;
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    let result = null;
-    if (responseBody === '') responseBody = null;
-
-    return callback(null, result, httpRequest, response);
-  });
-}
-
-/**
- * Get list of notifications
+ * Get a list of notifications from the service.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -957,7 +821,7 @@ function _list(ownerName, appName, options, callback) {
 }
 
 /**
- * Send notification.
+ * Send a notification to one or more devices.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -1121,6 +985,536 @@ function _send(ownerName, appName, notificationContent, options, callback) {
   });
 }
 
+/**
+ * Delete a notification.
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {array} values List of notification Ids.
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {null} [result]   - The deserialized result object if an error did not occur.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _deleteMethod(ownerName, appName, values, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (!Array.isArray(values)) {
+      throw new Error('values cannot be null or undefined and it must be of type array.');
+    }
+    for (let i = 0; i < values.length; i++) {
+      if (values[i] !== null && values[i] !== undefined && typeof values[i].valueOf() !== 'string') {
+        throw new Error('values[i] must be of type string.');
+      }
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  let notificationIds;
+  if (values !== null && values !== undefined) {
+    notificationIds = new client.models['NotificationIdList']();
+    notificationIds.values = values;
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/push/notifications';
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'DELETE';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (notificationIds !== null && notificationIds !== undefined) {
+      let requestModelMapper = new client.models['NotificationIdList']().mapper();
+      requestModel = client.serialize(requestModelMapper, notificationIds, 'notificationIds');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(notificationIds, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          let resultMapper = new client.models['ErrorResponse']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Delete a device with the selected installId.
+ *
+ * @param {string} installId device install id
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {null} [result]   - The deserialized result object if an error did not occur.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _deleteInstallId(installId, ownerName, appName, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (installId === null || installId === undefined || typeof installId.valueOf() !== 'string') {
+      throw new Error('installId cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/push/devices/{install_id}';
+  requestUrl = requestUrl.replace('{install_id}', encodeURIComponent(installId));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'DELETE';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          let resultMapper = new client.models['ErrorResponse']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Get the status of an export operation.
+ *
+ * @param {string} exportId The id of the export.
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      See {@link ExportStatusResult} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _exportDevicesStatus(exportId, ownerName, appName, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (exportId === null || exportId === undefined || typeof exportId.valueOf() !== 'string') {
+      throw new Error('exportId cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/push/device_exports/{export_id}';
+  requestUrl = requestUrl.replace('{export_id}', encodeURIComponent(exportId));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          let resultMapper = new client.models['ErrorResponse']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ExportStatusResult']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Exports information for all devices using Push to Azure Blob Storage
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {string} blobContainerSasUri A shared access signature (SAS) URI with
+ * Read, Write and Delete permissions on a container.
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      See {@link ExportStartedResult} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _exportDevices(ownerName, appName, blobContainerSasUri, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (blobContainerSasUri === null || blobContainerSasUri === undefined || typeof blobContainerSasUri.valueOf() !== 'string') {
+      throw new Error('blobContainerSasUri cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  let properties;
+  if (blobContainerSasUri !== null && blobContainerSasUri !== undefined) {
+    properties = new client.models['ExportConfig']();
+    properties.blobContainerSasUri = blobContainerSasUri;
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/push/device_exports';
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'POST';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (properties !== null && properties !== undefined) {
+      let requestModelMapper = new client.models['ExportConfig']().mapper();
+      requestModel = client.serialize(requestModelMapper, properties, 'properties');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(properties, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 202) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          let resultMapper = new client.models['ErrorResponse']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 202) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ExportStartedResult']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
 /** Class representing a Push. */
 class Push {
   /**
@@ -1134,13 +1528,16 @@ class Push {
     this._setConfig = _setConfig;
     this._deleteConfig = _deleteConfig;
     this._get = _get;
-    this._notificationArchive = _notificationArchive;
     this._list = _list;
     this._send = _send;
+    this._deleteMethod = _deleteMethod;
+    this._deleteInstallId = _deleteInstallId;
+    this._exportDevicesStatus = _exportDevicesStatus;
+    this._exportDevices = _exportDevices;
   }
 
   /**
-   * Returns whether push config exists.
+   * Returns whether a push configuration exists for the selected app.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -1172,7 +1569,7 @@ class Push {
   }
 
   /**
-   * Returns whether push config exists.
+   * Returns whether a push configuration exists for the selected app.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -1225,7 +1622,7 @@ class Push {
   }
 
   /**
-   * Get configuration.
+   * Get the push configuration for the selected app.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -1257,7 +1654,7 @@ class Push {
   }
 
   /**
-   * Get configuration.
+   * Get the push configuration for the selected app.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -1312,7 +1709,7 @@ class Push {
   }
 
   /**
-   * Set notification configuration.
+   * Set the push configuration for the selected app.
    *
    * @param {object} properties Notification configurations.
    *
@@ -1348,7 +1745,7 @@ class Push {
   }
 
   /**
-   * Set notification configuration.
+   * Set the push configuration for the selected app.
    *
    * @param {object} properties Notification configurations.
    *
@@ -1407,7 +1804,7 @@ class Push {
   }
 
   /**
-   * Delete notification configuration.
+   * Delete the push configuration for the selected app.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -1439,7 +1836,7 @@ class Push {
   }
 
   /**
-   * Delete notification configuration.
+   * Delete the push configuration for the selected app.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -1492,7 +1889,7 @@ class Push {
   }
 
   /**
-   * Get notification details.
+   * Get details about a specific notification.
    *
    * @param {string} notificationId The id of the notification.
    *
@@ -1526,7 +1923,7 @@ class Push {
   }
 
   /**
-   * Get notification details.
+   * Get details about a specific notification.
    *
    * @param {string} notificationId The id of the notification.
    *
@@ -1583,96 +1980,7 @@ class Push {
   }
 
   /**
-   * Archive push campaign(s)
-   *
-   * @param {string} ownerName The name of the owner
-   *
-   * @param {string} appName The name of the application
-   *
-   * @param {array} values List of notification Ids.
-   *
-   * @param {object} [options] Optional Parameters.
-   *
-   * @param {object} [options.customHeaders] Headers that will be added to the
-   * request
-   *
-   * @returns {Promise} A promise is returned
-   *
-   * @resolve {HttpOperationResponse<null>} - The deserialized result object.
-   *
-   * @reject {Error} - The error object.
-   */
-  notificationArchiveWithHttpOperationResponse(ownerName, appName, values, options) {
-    let client = this.client;
-    let self = this;
-    return new Promise((resolve, reject) => {
-      self._notificationArchive(ownerName, appName, values, options, (err, result, request, response) => {
-        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
-        httpOperationResponse.body = result;
-        if (err) { reject(err); }
-        else { resolve(httpOperationResponse); }
-        return;
-      });
-    });
-  }
-
-  /**
-   * Archive push campaign(s)
-   *
-   * @param {string} ownerName The name of the owner
-   *
-   * @param {string} appName The name of the application
-   *
-   * @param {array} values List of notification Ids.
-   *
-   * @param {object} [options] Optional Parameters.
-   *
-   * @param {object} [options.customHeaders] Headers that will be added to the
-   * request
-   *
-   * @param {function} [optionalCallback] - The optional callback.
-   *
-   * @returns {function|Promise} If a callback was passed as the last parameter
-   * then it returns the callback else returns a Promise.
-   *
-   * {Promise} A promise is returned
-   *
-   *                      @resolve {null} - The deserialized result object.
-   *
-   *                      @reject {Error} - The error object.
-   *
-   * {function} optionalCallback(err, result, request, response)
-   *
-   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {null} [result]   - The deserialized result object if an error did not occur.
-   *
-   *                      {object} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
-   */
-  notificationArchive(ownerName, appName, values, options, optionalCallback) {
-    let client = this.client;
-    let self = this;
-    if (!optionalCallback && typeof options === 'function') {
-      optionalCallback = options;
-      options = null;
-    }
-    if (!optionalCallback) {
-      return new Promise((resolve, reject) => {
-        self._notificationArchive(ownerName, appName, values, options, (err, result, request, response) => {
-          if (err) { reject(err); }
-          else { resolve(result); }
-          return;
-        });
-      });
-    } else {
-      return self._notificationArchive(ownerName, appName, values, options, optionalCallback);
-    }
-  }
-
-  /**
-   * Get list of notifications
+   * Get a list of notifications from the service.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -1721,7 +2029,7 @@ class Push {
   }
 
   /**
-   * Get list of notifications
+   * Get a list of notifications from the service.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -1793,7 +2101,7 @@ class Push {
   }
 
   /**
-   * Send notification.
+   * Send a notification to one or more devices.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -1840,7 +2148,7 @@ class Push {
   }
 
   /**
-   * Send notification.
+   * Send a notification to one or more devices.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -1906,6 +2214,366 @@ class Push {
       });
     } else {
       return self._send(ownerName, appName, notificationContent, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Delete a notification.
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {array} values List of notification Ids.
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  deleteMethodWithHttpOperationResponse(ownerName, appName, values, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._deleteMethod(ownerName, appName, values, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Delete a notification.
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {array} values List of notification Ids.
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {null} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {null} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  deleteMethod(ownerName, appName, values, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._deleteMethod(ownerName, appName, values, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._deleteMethod(ownerName, appName, values, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Delete a device with the selected installId.
+   *
+   * @param {string} installId device install id
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  deleteInstallIdWithHttpOperationResponse(installId, ownerName, appName, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._deleteInstallId(installId, ownerName, appName, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Delete a device with the selected installId.
+   *
+   * @param {string} installId device install id
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {null} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {null} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  deleteInstallId(installId, ownerName, appName, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._deleteInstallId(installId, ownerName, appName, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._deleteInstallId(installId, ownerName, appName, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Get the status of an export operation.
+   *
+   * @param {string} exportId The id of the export.
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<ExportStatusResult>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  exportDevicesStatusWithHttpOperationResponse(exportId, ownerName, appName, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._exportDevicesStatus(exportId, ownerName, appName, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Get the status of an export operation.
+   *
+   * @param {string} exportId The id of the export.
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {ExportStatusResult} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      See {@link ExportStatusResult} for more information.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  exportDevicesStatus(exportId, ownerName, appName, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._exportDevicesStatus(exportId, ownerName, appName, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._exportDevicesStatus(exportId, ownerName, appName, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Exports information for all devices using Push to Azure Blob Storage
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {string} blobContainerSasUri A shared access signature (SAS) URI with
+   * Read, Write and Delete permissions on a container.
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<ExportStartedResult>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  exportDevicesWithHttpOperationResponse(ownerName, appName, blobContainerSasUri, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._exportDevices(ownerName, appName, blobContainerSasUri, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Exports information for all devices using Push to Azure Blob Storage
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {string} blobContainerSasUri A shared access signature (SAS) URI with
+   * Read, Write and Delete permissions on a container.
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {ExportStartedResult} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      See {@link ExportStartedResult} for more information.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  exportDevices(ownerName, appName, blobContainerSasUri, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._exportDevices(ownerName, appName, blobContainerSasUri, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._exportDevices(ownerName, appName, blobContainerSasUri, options, optionalCallback);
     }
   }
 

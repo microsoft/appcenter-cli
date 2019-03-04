@@ -12,10 +12,10 @@
 class AppUserPermissionResponse {
   /**
    * Create a AppUserPermissionResponse.
-   * @member {string} appId The unique id (UUID) of the app
+   * @member {uuid} appId The unique id (UUID) of the app
    * @member {array} permissions The permissions the user has for the app
    * @member {string} userEmail The email of the user
-   * @member {string} userId The unique id (UUID) of the user
+   * @member {uuid} userId The unique id (UUID) of the user
    * @member {string} appOrigin The creation origin of this app. Possible
    * values include: 'appcenter', 'hockeyapp', 'codepush'
    * @member {string} appSecret A unique and secret key used to identify the

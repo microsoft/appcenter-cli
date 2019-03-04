@@ -15,6 +15,7 @@ class CrashGroup {
   /**
    * Create a CrashGroup.
    * @member {string} crashGroupId
+   * @member {string} newCrashGroupId
    * @member {string} displayId
    * @member {string} appVersion
    * @member {string} build
@@ -67,6 +68,13 @@ class CrashGroup {
           crashGroupId: {
             required: true,
             serializedName: 'crash_group_id',
+            type: {
+              name: 'String'
+            }
+          },
+          newCrashGroupId: {
+            required: true,
+            serializedName: 'new_crash_group_id',
             type: {
               name: 'String'
             }

@@ -17,10 +17,12 @@ class XcodeSchemeContainer {
    * @member {string} path Path to project
    * @member {array} sharedSchemes Project schemes
    * @member {string} [podfilePath] Path to CocoaPods file, if present
-   * @member {object} [cartfilePath] Path to Carthage file, if present
+   * @member {string} [cartfilePath] Path to Carthage file, if present
    * @member {string} [xcodeProjectSha] repo object Id of the pbxproject
    * @member {string} [workspaceProjectPaths] Related projects paths for
    * xcworkspace
+   * @member {array} [appExtensionTargets] Information regarding project app
+   * extensions, if present
    */
   constructor() {
   }
@@ -72,7 +74,7 @@ class XcodeSchemeContainer {
             required: false,
             serializedName: 'cartfilePath',
             type: {
-              name: 'Object'
+              name: 'String'
             }
           },
           xcodeProjectSha: {
@@ -87,6 +89,21 @@ class XcodeSchemeContainer {
             serializedName: 'workspaceProjectPaths',
             type: {
               name: 'String'
+            }
+          },
+          appExtensionTargets: {
+            required: false,
+            serializedName: 'appExtensionTargets',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'IosAppExtensionInfoElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'IosAppExtensionInfo'
+                  }
+              }
             }
           }
         }

@@ -15,8 +15,7 @@ const models = require('./index');
 class PrivateCreateStoreRequest {
   /**
    * Create a PrivateCreateStoreRequest.
-   * @member {string} [type] store Type. Possible values include: 'intune',
-   * 'windows'
+   * @member {string} [type] store Type. Possible values include: 'intune'
    * @member {string} [name] name of the store.
    * @member {object} [intuneDetails]
    * @member {object} [intuneDetails.targetAudience]

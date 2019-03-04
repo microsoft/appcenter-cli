@@ -19,12 +19,15 @@ class BillingPlanSelection {
    * @member {object} [plan]
    * @member {string} [plan.id] The Billing Plan ID
    * @member {string} [plan.version] Version of the Billing Plan schema
-   * @member {number} [plan.priceBucket] Price bucket of the billing plan. Free
-   * plans start with 0, paid plans have higher price buckets
+   * @member {number} [plan.price] Price of the Billing Plan
+   * @member {string} [plan.paymentSource] Service that receives payments for
+   * this billing plan. Possible values include: 'None', 'AppCenter', 'GitHub',
+   * 'Xtc'
    * @member {string} [plan.service] Name of the service that the plan applies
    * to. Possible values include: 'Build', 'Push', 'Test'
    * @member {object} [plan.limits]
    * @member {object} [plan.attributes]
+   * @member {string} [plan.parentId]
    */
   constructor() {
   }

@@ -30,7 +30,7 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link MissingSymbolCrashGroupsInfoResponse} for
+ *                      See {@link V2MissingSymbolCrashGroupsInfoResponse} for
  *                      more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -61,7 +61,7 @@ function _info(ownerName, appName, options, callback) {
 
   // Construct URL
   let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/symbol_groups_info';
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/diagnostics/symbol_groups_info';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -102,7 +102,7 @@ function _info(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['FailureResponse']().mapper();
+          let resultMapper = new client.models['V2FailureResponse']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -122,7 +122,7 @@ function _info(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['MissingSymbolCrashGroupsInfoResponse']().mapper();
+          let resultMapper = new client.models['V2MissingSymbolCrashGroupsInfoResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -160,7 +160,7 @@ function _info(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link MissingSymbolCrashGroupsResponse} for more
+ *                      See {@link V2MissingSymbolCrashGroupsResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -194,7 +194,7 @@ function _get(symbolGroupId, ownerName, appName, options, callback) {
 
   // Construct URL
   let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/symbol_groups/{symbol_group_id}';
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/diagnostics/symbol_groups/{symbol_group_id}';
   requestUrl = requestUrl.replace('{symbol_group_id}', encodeURIComponent(symbolGroupId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
@@ -236,7 +236,7 @@ function _get(symbolGroupId, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['FailureResponse']().mapper();
+          let resultMapper = new client.models['V2FailureResponse']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -256,7 +256,7 @@ function _get(symbolGroupId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['MissingSymbolCrashGroupsResponse']().mapper();
+          let resultMapper = new client.models['V2MissingSymbolCrashGroupsResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -297,7 +297,7 @@ function _get(symbolGroupId, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link MissingSymbolCrashGroupsResponse} for more
+ *                      See {@link V2MissingSymbolCrashGroupsResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -335,7 +335,7 @@ function _list(top, ownerName, appName, options, callback) {
 
   // Construct URL
   let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/symbol_groups';
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/diagnostics/symbol_groups';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
   let queryParameters = [];
@@ -384,7 +384,7 @@ function _list(top, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['FailureResponse']().mapper();
+          let resultMapper = new client.models['V2FailureResponse']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -404,7 +404,7 @@ function _list(top, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['MissingSymbolCrashGroupsResponse']().mapper();
+          let resultMapper = new client.models['V2MissingSymbolCrashGroupsResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -448,7 +448,7 @@ class MissingSymbolGroups {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<MissingSymbolCrashGroupsInfoResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<V2MissingSymbolCrashGroupsInfoResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -487,7 +487,7 @@ class MissingSymbolGroups {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {MissingSymbolCrashGroupsInfoResponse} - The deserialized result object.
+   *                      @resolve {V2MissingSymbolCrashGroupsInfoResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -496,7 +496,7 @@ class MissingSymbolGroups {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link MissingSymbolCrashGroupsInfoResponse} for
+   *                      See {@link V2MissingSymbolCrashGroupsInfoResponse} for
    *                      more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -541,7 +541,7 @@ class MissingSymbolGroups {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<MissingSymbolCrashGroupsResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<V2MissingSymbolCrashGroupsResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -582,7 +582,7 @@ class MissingSymbolGroups {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {MissingSymbolCrashGroupsResponse} - The deserialized result object.
+   *                      @resolve {V2MissingSymbolCrashGroupsResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -591,7 +591,7 @@ class MissingSymbolGroups {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link MissingSymbolCrashGroupsResponse} for more
+   *                      See {@link V2MissingSymbolCrashGroupsResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -639,7 +639,7 @@ class MissingSymbolGroups {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<MissingSymbolCrashGroupsResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<V2MissingSymbolCrashGroupsResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -683,7 +683,7 @@ class MissingSymbolGroups {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {MissingSymbolCrashGroupsResponse} - The deserialized result object.
+   *                      @resolve {V2MissingSymbolCrashGroupsResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -692,7 +692,7 @@ class MissingSymbolGroups {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link MissingSymbolCrashGroupsResponse} for more
+   *                      See {@link V2MissingSymbolCrashGroupsResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.

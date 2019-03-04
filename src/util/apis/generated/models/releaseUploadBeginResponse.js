@@ -17,9 +17,12 @@ class ReleaseUploadBeginResponse {
    * @member {string} uploadId The ID for the current upload
    * @member {string} uploadUrl The URL where the client needs to upload the
    * release to
-   * @member {string} [assetId] In preview, the ID for the current upload
-   * @member {string} [assetDomain] In preview, the URL for the current upload
-   * @member {string} [assetToken] In preview, the token for the current upload
+   * @member {string} [assetId] The ID for the current upload, reserved for
+   * future use
+   * @member {string} [assetDomain] The URL for the current upload, reserved
+   * for future use
+   * @member {string} [assetToken] The token for the current upload, reserved
+   * for future use
    */
   constructor() {
   }

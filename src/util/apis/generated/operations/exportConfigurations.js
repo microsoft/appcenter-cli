@@ -374,6 +374,8 @@ function _get(exportConfigurationId, ownerName, appName, options, callback) {
  *
  * @param {object} properties Export configurations.
  *
+ * @param {array} [properties.exportEntities]
+ *
  * @param {string} [properties.resourceName] The resource name on azure
  *
  * @param {string} [properties.resourceGroup] The resource group name on azure
@@ -767,6 +769,8 @@ function _list(ownerName, appName, options, callback) {
  * Create new export configuration
  *
  * @param {object} properties Export configurations.
+ *
+ * @param {array} [properties.exportEntities]
  *
  * @param {string} [properties.resourceName] The resource name on azure
  *
@@ -1207,6 +1211,8 @@ class ExportConfigurations {
    *
    * @param {object} properties Export configurations.
    *
+   * @param {array} [properties.exportEntities]
+   *
    * @param {string} [properties.resourceName] The resource name on azure
    *
    * @param {string} [properties.resourceGroup] The resource group name on azure
@@ -1248,6 +1254,8 @@ class ExportConfigurations {
    * @param {string} exportConfigurationId The id of the export configuration.
    *
    * @param {object} properties Export configurations.
+   *
+   * @param {array} [properties.exportEntities]
    *
    * @param {string} [properties.resourceName] The resource name on azure
    *
@@ -1488,6 +1496,8 @@ class ExportConfigurations {
    *
    * @param {object} properties Export configurations.
    *
+   * @param {array} [properties.exportEntities]
+   *
    * @param {string} [properties.resourceName] The resource name on azure
    *
    * @param {string} [properties.resourceGroup] The resource group name on azure
@@ -1527,6 +1537,8 @@ class ExportConfigurations {
    * Create new export configuration
    *
    * @param {object} properties Export configurations.
+   *
+   * @param {array} [properties.exportEntities]
    *
    * @param {string} [properties.resourceName] The resource name on azure
    *

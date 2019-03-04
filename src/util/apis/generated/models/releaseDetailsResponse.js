@@ -31,6 +31,8 @@ class ReleaseDetailsResponse {
    * @member {string} [provisioningProfileType] The type of the provisioning
    * profile for the requested app version. Possible values include: 'adhoc',
    * 'enterprise', 'other'
+   * @member {string} [provisioningProfileExpiryDate] expiration date of
+   * provisioning profile in UTC format.
    * @member {boolean} [isProvisioningProfileSyncing] A flag that determines
    * whether the release's provisioning profile is still extracted or not.
    * @member {number} [size] The release's size in bytes.
@@ -65,6 +67,19 @@ class ReleaseDetailsResponse {
    * @member {boolean} [isUdidProvisioned] In calls that allow passing `udid`
    * in the query string, this value will hold the provisioning status of that
    * UDID in this release. Will be ignored for non-iOS platforms.
+   * @member {boolean} [canResign] In calls that allow passing `udid` in the
+   * query string, this value determines if a release can be re-signed. When
+   * true, after a re-sign, the tester will be able to install the release from
+   * his registered devices. Will not be returned for non-iOS platforms.
+   * @member {object} [build]
+   * @member {string} [build.branch] The branch name of the build producing the
+   * release
+   * @member {string} [build.commitHash] The commit hash of the build producing
+   * the release
+   * @member {string} [build.commitMessage] The commit message of the build
+   * producing the release
+   * @member {boolean} [enabled] This value determines the whether a release
+   * currently is enabled or disabled.
    */
   constructor() {
   }
@@ -135,6 +150,13 @@ class ReleaseDetailsResponse {
           provisioningProfileType: {
             required: false,
             serializedName: 'provisioning_profile_type',
+            type: {
+              name: 'String'
+            }
+          },
+          provisioningProfileExpiryDate: {
+            required: false,
+            serializedName: 'provisioning_profile_expiry_date',
             type: {
               name: 'String'
             }
@@ -271,6 +293,28 @@ class ReleaseDetailsResponse {
           isUdidProvisioned: {
             required: false,
             serializedName: 'is_udid_provisioned',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          canResign: {
+            required: false,
+            serializedName: 'can_resign',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          build: {
+            required: false,
+            serializedName: 'build',
+            type: {
+              name: 'Composite',
+              className: 'BuildInfo'
+            }
+          },
+          enabled: {
+            required: false,
+            serializedName: 'enabled',
             type: {
               name: 'Boolean'
             }

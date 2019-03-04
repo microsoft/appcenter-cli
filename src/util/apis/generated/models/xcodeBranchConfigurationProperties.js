@@ -6,6 +6,8 @@
 
 'use strict';
 
+const models = require('./index');
+
 /**
  * Build configuration when Xcode is part of the build steps
  *
@@ -21,6 +23,7 @@ class XcodeBranchConfigurationProperties {
    * @member {string} [provisioningProfileFileId]
    * @member {string} [certificateFileId]
    * @member {string} [provisioningProfileUploadId]
+   * @member {array} [appExtensionProvisioningProfileFiles]
    * @member {string} [certificateUploadId]
    * @member {string} [certificatePassword]
    * @member {string} scheme
@@ -107,6 +110,21 @@ class XcodeBranchConfigurationProperties {
             serializedName: 'provisioningProfileUploadId',
             type: {
               name: 'String'
+            }
+          },
+          appExtensionProvisioningProfileFiles: {
+            required: false,
+            serializedName: 'appExtensionProvisioningProfileFiles',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'ProvisioningProfileFileElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'ProvisioningProfileFile'
+                  }
+              }
             }
           },
           certificateUploadId: {

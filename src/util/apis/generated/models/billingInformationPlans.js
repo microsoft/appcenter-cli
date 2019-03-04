@@ -35,10 +35,12 @@ class BillingInformationPlans {
    * @member {string}
    * [buildService.currentBillingPeriod.byAccount.plan.version] Version of the
    * Billing Plan schema
-   * @member {number}
-   * [buildService.currentBillingPeriod.byAccount.plan.priceBucket] Price
-   * bucket of the billing plan. Free plans start with 0, paid plans have
-   * higher price buckets
+   * @member {number} [buildService.currentBillingPeriod.byAccount.plan.price]
+   * Price of the Billing Plan
+   * @member {string}
+   * [buildService.currentBillingPeriod.byAccount.plan.paymentSource] Service
+   * that receives payments for this billing plan. Possible values include:
+   * 'None', 'AppCenter', 'GitHub', 'Xtc'
    * @member {string}
    * [buildService.currentBillingPeriod.byAccount.plan.service] Name of the
    * service that the plan applies to. Possible values include: 'Build',
@@ -46,6 +48,8 @@ class BillingInformationPlans {
    * @member {object} [buildService.currentBillingPeriod.byAccount.plan.limits]
    * @member {object}
    * [buildService.currentBillingPeriod.byAccount.plan.attributes]
+   * @member {string}
+   * [buildService.currentBillingPeriod.byAccount.plan.parentId]
    * @member {object} [pushService]
    * @member {boolean} [pushService.canSelectTrialPlan] Can customer select
    * trial plan for that service (if it exists)?
@@ -64,16 +68,20 @@ class BillingInformationPlans {
    * Billing Plan ID
    * @member {string} [pushService.currentBillingPeriod.byAccount.plan.version]
    * Version of the Billing Plan schema
-   * @member {number}
-   * [pushService.currentBillingPeriod.byAccount.plan.priceBucket] Price bucket
-   * of the billing plan. Free plans start with 0, paid plans have higher price
-   * buckets
+   * @member {number} [pushService.currentBillingPeriod.byAccount.plan.price]
+   * Price of the Billing Plan
+   * @member {string}
+   * [pushService.currentBillingPeriod.byAccount.plan.paymentSource] Service
+   * that receives payments for this billing plan. Possible values include:
+   * 'None', 'AppCenter', 'GitHub', 'Xtc'
    * @member {string} [pushService.currentBillingPeriod.byAccount.plan.service]
    * Name of the service that the plan applies to. Possible values include:
    * 'Build', 'Push', 'Test'
    * @member {object} [pushService.currentBillingPeriod.byAccount.plan.limits]
    * @member {object}
    * [pushService.currentBillingPeriod.byAccount.plan.attributes]
+   * @member {string}
+   * [pushService.currentBillingPeriod.byAccount.plan.parentId]
    * @member {object} [testService]
    * @member {boolean} [testService.canSelectTrialPlan] Can customer select
    * trial plan for that service (if it exists)?
@@ -92,16 +100,20 @@ class BillingInformationPlans {
    * Billing Plan ID
    * @member {string} [testService.currentBillingPeriod.byAccount.plan.version]
    * Version of the Billing Plan schema
-   * @member {number}
-   * [testService.currentBillingPeriod.byAccount.plan.priceBucket] Price bucket
-   * of the billing plan. Free plans start with 0, paid plans have higher price
-   * buckets
+   * @member {number} [testService.currentBillingPeriod.byAccount.plan.price]
+   * Price of the Billing Plan
+   * @member {string}
+   * [testService.currentBillingPeriod.byAccount.plan.paymentSource] Service
+   * that receives payments for this billing plan. Possible values include:
+   * 'None', 'AppCenter', 'GitHub', 'Xtc'
    * @member {string} [testService.currentBillingPeriod.byAccount.plan.service]
    * Name of the service that the plan applies to. Possible values include:
    * 'Build', 'Push', 'Test'
    * @member {object} [testService.currentBillingPeriod.byAccount.plan.limits]
    * @member {object}
    * [testService.currentBillingPeriod.byAccount.plan.attributes]
+   * @member {string}
+   * [testService.currentBillingPeriod.byAccount.plan.parentId]
    */
   constructor() {
   }

@@ -20,7 +20,7 @@ class AppRequest {
    * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
    * @member {string} platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Xamarin'
+   * 'Xamarin', 'Unity'
    */
   constructor() {
   }

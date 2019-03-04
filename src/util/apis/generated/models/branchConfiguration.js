@@ -34,6 +34,7 @@ class BranchConfiguration {
    * @member {string} [toolsets.xcode.provisioningProfileFileId]
    * @member {string} [toolsets.xcode.certificateFileId]
    * @member {string} [toolsets.xcode.provisioningProfileUploadId]
+   * @member {array} [toolsets.xcode.appExtensionProvisioningProfileFiles]
    * @member {string} [toolsets.xcode.certificateUploadId]
    * @member {string} [toolsets.xcode.certificatePassword]
    * @member {string} [toolsets.xcode.scheme]
@@ -66,16 +67,34 @@ class BranchConfiguration {
    * @member {string} [toolsets.xamarin.provProfile]
    * @member {string} [toolsets.xamarin.monoVersion]
    * @member {string} [toolsets.xamarin.sdkBundle]
+   * @member {string} [toolsets.xamarin.symlink] Symlink of the SDK Bundle and
+   * Mono installation.
+   * The build will use the associated Mono bundled with related Xamarin SDK.
+   * If both symlink and monoVersion or sdkBundle are passed, the symlink is
+   * taking precedence. If non-existing symlink is passed, the current stable
+   * Mono version will be configured for building.
    * @member {object} [toolsets.android]
    * @member {string} [toolsets.android.gradleWrapperPath] Path to the Gradle
    * wrapper script
    * @member {string} [toolsets.android.module] The Gradle module to build
-   * @member {string} [toolsets.android.variant] The Android build variant to
-   * build
+   * @member {string} [toolsets.android.buildVariant] The Android build variant
+   * to build
    * @member {boolean} [toolsets.android.runTests] Whether to run unit tests
    * during the build (default)
    * @member {boolean} [toolsets.android.runLint] Whether to run lint checks
    * during the build (default)
+   * @member {boolean} [toolsets.android.isRoot] Whether it is the root module
+   * or not
+   * @member {boolean} [toolsets.android.automaticSigning] Whether to apply
+   * automatic signing or not
+   * @member {string} [toolsets.android.keystorePassword] The password of the
+   * keystore
+   * @member {string} [toolsets.android.keyAlias] The key alias
+   * @member {string} [toolsets.android.keyPassword] The key password
+   * @member {string} [toolsets.android.keystoreFilename] The name of the
+   * keystore file
+   * @member {string} [toolsets.android.keystoreEncoded] The keystore encoded
+   * value
    * @member {object} [artifactVersioning]
    * @member {string} [artifactVersioning.buildNumberFormat] Possible values
    * include: 'buildId', 'timestamp'
