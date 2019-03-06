@@ -32,6 +32,10 @@ class PrivateBasicReleaseDetailsResponse {
    * . Possible values include: 'group', 'store'
    * @member {boolean} [isLatest] Indicates if this is the latest release in
    * the group.
+   * @member {boolean} [mandatoryUpdate] A boolean which determines whether the
+   * release is a mandatory update or not.
+   * @member {string} [publishingStatus] the publishing status of the
+   * distributed release
    */
   constructor() {
   }
@@ -97,6 +101,20 @@ class PrivateBasicReleaseDetailsResponse {
             serializedName: 'is_latest',
             type: {
               name: 'Boolean'
+            }
+          },
+          mandatoryUpdate: {
+            required: false,
+            serializedName: 'mandatory_update',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          publishingStatus: {
+            required: false,
+            serializedName: 'publishing_status',
+            type: {
+              name: 'String'
             }
           }
         }

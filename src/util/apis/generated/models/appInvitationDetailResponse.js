@@ -14,22 +14,24 @@ const models = require('./index');
 class AppInvitationDetailResponse {
   /**
    * Create a AppInvitationDetailResponse.
-   * @member {string} id The unique ID (UUID) of the invitation
+   * @member {uuid} id The unique ID (UUID) of the invitation
    * @member {object} app
    * @member {string} [app.appSecret] A unique and secret key used to identify
    * the app in communication with the ingestion endpoint for crash reporting
    * and analytics
    * @member {object} [app.azureSubscription]
-   * @member {string} [app.azureSubscription.subscriptionId] The azure
+   * @member {uuid} [app.azureSubscription.subscriptionId] The azure
    * subscription id
-   * @member {string} [app.azureSubscription.tenantId] The tenant id of the
-   * azure subscription belongs to
+   * @member {uuid} [app.azureSubscription.tenantId] The tenant id of the azure
+   * subscription belongs to
    * @member {string} [app.azureSubscription.subscriptionName] The name of the
    * azure subscription
    * @member {boolean} [app.azureSubscription.isBilling] If the subscription is
    * used for billing
    * @member {boolean} [app.azureSubscription.isBillable] If the subscription
    * can be used for billing
+   * @member {boolean} [app.azureSubscription.isMicrosoftInternal] If the
+   * subscription is internal Microsoft subscription
    * @member {string} [app.platform] The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
    * 'Unity', 'Xamarin', 'Unknown'
@@ -43,7 +45,7 @@ class AppInvitationDetailResponse {
    * @member {string} inviteType The invitation type. Possible values include:
    * 'developer', 'tester'
    * @member {object} invitedBy
-   * @member {string} [invitedBy.id] The unique id (UUID) of the user
+   * @member {uuid} [invitedBy.id] The unique id (UUID) of the user
    * @member {string} [invitedBy.avatarUrl] The avatar URL of the user
    * @member {boolean} [invitedBy.canChangePassword] User is required to send
    * an old password in order to change the password.
@@ -59,6 +61,21 @@ class AppInvitationDetailResponse {
    * @member {boolean} isExistingUser Indicates whether the invited user
    * already exists
    * @member {array} [permissions] The permissions the user has for the app
+   * @member {number} [appCount] The number of apps in the group
+   * @member {object} [distributionGroup] The organization that owns the
+   * distribution group, if it exists
+   * @member {object} [distributionGroup.owner]
+   * @member {uuid} [distributionGroup.owner.id] The unique id (UUID) of the
+   * owner
+   * @member {string} [distributionGroup.owner.avatarUrl] The avatar URL of the
+   * owner
+   * @member {string} [distributionGroup.owner.displayName] The owner's display
+   * name
+   * @member {string} [distributionGroup.owner.email] The owner's email address
+   * @member {string} [distributionGroup.owner.name] The unique name that used
+   * to identify the owner
+   * @member {string} [distributionGroup.owner.type] The owner type. Can either
+   * be 'org' or 'user'. Possible values include: 'org', 'user'
    */
   constructor() {
   }
@@ -133,6 +150,21 @@ class AppInvitationDetailResponse {
                     name: 'String'
                   }
               }
+            }
+          },
+          appCount: {
+            required: false,
+            serializedName: 'app_count',
+            type: {
+              name: 'Number'
+            }
+          },
+          distributionGroup: {
+            required: false,
+            serializedName: 'distribution_group',
+            type: {
+              name: 'Composite',
+              className: 'AppInvitationDetailResponseDistributionGroup'
             }
           }
         }

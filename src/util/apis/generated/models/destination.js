@@ -20,7 +20,7 @@ class Destination {
    * @member {string} [publishingStatus] publishing status of the release in
    * the store.
    * @member {string} [destinationType] Destination can be either store or
-   * group. Possible values include: 'group', 'store'
+   * group. Possible values include: 'group', 'store', 'tester'
    */
   constructor() {
   }

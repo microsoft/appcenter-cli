@@ -12,8 +12,8 @@
 class AppGroupResponse {
   /**
    * Create a AppGroupResponse.
-   * @member {string} id The unique ID (UUID) of the app
-   * @member {string} groupId The unique ID (UUID) of the group that the app
+   * @member {uuid} id The unique ID (UUID) of the app
+   * @member {uuid} groupId The unique ID (UUID) of the group that the app
    * belongs to
    * @member {string} [displayName] The display name of the app
    * @member {string} name The name of the app used in URLs

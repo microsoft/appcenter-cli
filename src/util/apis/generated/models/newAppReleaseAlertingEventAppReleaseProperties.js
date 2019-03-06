@@ -31,6 +31,7 @@ class NewAppReleaseAlertingEventAppReleaseProperties {
    * @member {string} installLink
    * @member {string} [iconLink]
    * @member {string} [distributionGroupId]
+   * @member {boolean} [installable]
    */
   constructor() {
   }
@@ -173,6 +174,13 @@ class NewAppReleaseAlertingEventAppReleaseProperties {
             serializedName: 'distribution_group_id',
             type: {
               name: 'String'
+            }
+          },
+          installable: {
+            required: false,
+            serializedName: 'installable',
+            type: {
+              name: 'Boolean'
             }
           }
         }

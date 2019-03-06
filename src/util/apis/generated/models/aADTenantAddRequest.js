@@ -12,9 +12,9 @@
 class AADTenantAddRequest {
   /**
    * Create a AADTenantAddRequest.
-   * @member {string} userId The user wanting to add this tenant to the
+   * @member {uuid} userId The user wanting to add this tenant to the
    * organization, must be an admin of the organization
-   * @member {string} aadTenantId The AAD tenant id
+   * @member {uuid} aadTenantId The AAD tenant id
    * @member {string} displayName The name of the AAD Tenant
    */
   constructor() {

@@ -22,6 +22,12 @@ class XamarinBranchConfigurationProperties {
    * @member {string} provProfile
    * @member {string} [monoVersion]
    * @member {string} [sdkBundle]
+   * @member {string} [symlink] Symlink of the SDK Bundle and Mono
+   * installation.
+   * The build will use the associated Mono bundled with related Xamarin SDK.
+   * If both symlink and monoVersion or sdkBundle are passed, the symlink is
+   * taking precedence. If non-existing symlink is passed, the current stable
+   * Mono version will be configured for building.
    */
   constructor() {
   }
@@ -99,6 +105,13 @@ class XamarinBranchConfigurationProperties {
           sdkBundle: {
             required: false,
             serializedName: 'sdkBundle',
+            type: {
+              name: 'String'
+            }
+          },
+          symlink: {
+            required: false,
+            serializedName: 'symlink',
             type: {
               name: 'String'
             }

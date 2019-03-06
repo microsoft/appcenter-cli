@@ -60,11 +60,25 @@ class TesterAppRelease extends models['DistributionGroupRelease'] {
               name: 'String'
             }
           },
+          mandatoryUpdate: {
+            required: false,
+            serializedName: 'mandatory_update',
+            type: {
+              name: 'Boolean'
+            }
+          },
           uploadedAt: {
             required: false,
             serializedName: 'uploaded_at',
             type: {
               name: 'String'
+            }
+          },
+          enabled: {
+            required: false,
+            serializedName: 'enabled',
+            type: {
+              name: 'Boolean'
             }
           },
           size: {

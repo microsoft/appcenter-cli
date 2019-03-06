@@ -48,10 +48,10 @@ class ErrorCounts {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DateTimeCountsElementType',
+                  serializedName: 'ErrorDateTimeCountsElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DateTimeCounts'
+                    className: 'ErrorDateTimeCounts'
                   }
               }
             }

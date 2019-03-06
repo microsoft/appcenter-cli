@@ -43,6 +43,21 @@ class ExportConfigurationAppInsightsKey extends models['ExportConfiguration'] {
         uberParent: 'ExportConfiguration',
         className: 'ExportConfigurationAppInsightsKey',
         modelProperties: {
+          exportEntities: {
+            required: false,
+            serializedName: 'export_entities',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'ExportEntityElementType',
+                  type: {
+                    name: 'Enum',
+                    allowedValues: [ 'crashes', 'errors', 'attachments' ]
+                  }
+              }
+            }
+          },
           resourceName: {
             required: false,
             serializedName: 'resource_name',

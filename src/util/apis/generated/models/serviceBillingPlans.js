@@ -32,14 +32,17 @@ class ServiceBillingPlans {
    * ID
    * @member {string} [currentBillingPeriod.byAccount.plan.version] Version of
    * the Billing Plan schema
-   * @member {number} [currentBillingPeriod.byAccount.plan.priceBucket] Price
-   * bucket of the billing plan. Free plans start with 0, paid plans have
-   * higher price buckets
+   * @member {number} [currentBillingPeriod.byAccount.plan.price] Price of the
+   * Billing Plan
+   * @member {string} [currentBillingPeriod.byAccount.plan.paymentSource]
+   * Service that receives payments for this billing plan. Possible values
+   * include: 'None', 'AppCenter', 'GitHub', 'Xtc'
    * @member {string} [currentBillingPeriod.byAccount.plan.service] Name of the
    * service that the plan applies to. Possible values include: 'Build',
    * 'Push', 'Test'
    * @member {object} [currentBillingPeriod.byAccount.plan.limits]
    * @member {object} [currentBillingPeriod.byAccount.plan.attributes]
+   * @member {string} [currentBillingPeriod.byAccount.plan.parentId]
    */
   constructor() {
   }

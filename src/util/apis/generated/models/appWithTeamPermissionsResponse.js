@@ -63,6 +63,13 @@ class AppWithTeamPermissionsResponse extends models['AppResponse'] {
               name: 'String'
             }
           },
+          iconSource: {
+            required: false,
+            serializedName: 'icon_source',
+            type: {
+              name: 'String'
+            }
+          },
           name: {
             required: true,
             serializedName: 'name',

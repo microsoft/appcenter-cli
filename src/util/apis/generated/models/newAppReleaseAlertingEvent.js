@@ -20,6 +20,8 @@ class NewAppReleaseAlertingEvent extends models['AlertingEvent'] {
    * notification. If this is not null, then only sending emails will be
    * triggered even if the event requires calling webhooks or doing other
    * actions.
+   * @member {boolean} [disableWebhook] indicate whether notify via webhook or
+   * not
    * @member {object} [appReleaseProperties] Properties of new application
    * release
    * @member {string} [appReleaseProperties.appName]
@@ -41,6 +43,7 @@ class NewAppReleaseAlertingEvent extends models['AlertingEvent'] {
    * @member {string} [appReleaseProperties.installLink]
    * @member {string} [appReleaseProperties.iconLink]
    * @member {string} [appReleaseProperties.distributionGroupId]
+   * @member {boolean} [appReleaseProperties.installable]
    */
   constructor() {
     super();
@@ -93,6 +96,13 @@ class NewAppReleaseAlertingEvent extends models['AlertingEvent'] {
                     name: 'String'
                   }
               }
+            }
+          },
+          disableWebhook: {
+            required: false,
+            serializedName: 'disable_webhook',
+            type: {
+              name: 'Boolean'
             }
           },
           appReleaseProperties: {

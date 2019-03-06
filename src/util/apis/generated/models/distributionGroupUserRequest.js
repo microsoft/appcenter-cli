@@ -34,6 +34,9 @@ class DistributionGroupUserRequest {
           userEmails: {
             required: false,
             serializedName: 'user_emails',
+            constraints: {
+              MinItems: 1
+            },
             type: {
               name: 'Sequence',
               element: {

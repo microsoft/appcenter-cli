@@ -15,8 +15,10 @@ class AppRepoPostRequest {
    * @member {string} repoUrl The absolute URL of the repository
    * @member {string} [repoProvider] The provider of the repository. Possible
    * values include: 'github', 'bitbucket', 'vsts'
-   * @member {string} userId The unique id (UUID) of the user who configured
-   * the repository
+   * @member {uuid} userId The unique id (UUID) of the user who configured the
+   * repository
+   * @member {string} [installationId] Installation id from the provider
+   * @member {string} [repoId] Repository id from the provider
    */
   constructor() {
   }
@@ -52,6 +54,20 @@ class AppRepoPostRequest {
           userId: {
             required: true,
             serializedName: 'user_id',
+            type: {
+              name: 'String'
+            }
+          },
+          installationId: {
+            required: false,
+            serializedName: 'installation_id',
+            type: {
+              name: 'String'
+            }
+          },
+          repoId: {
+            required: false,
+            serializedName: 'repo_id',
             type: {
               name: 'String'
             }

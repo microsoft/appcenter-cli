@@ -10,9 +10,9 @@ const msRest = require('ms-rest');
 const WebResource = msRest.WebResource;
 
 /**
- * @summary Gets a list of application versions
+ * @summary Available for UWP apps only.
  *
- * Gets a list of application versions
+ * Gets a list of application versions. Available for UWP apps only.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -431,9 +431,9 @@ function _updateHockeyAppCrashForwarding(ownerName, appName, options, callback) 
 }
 
 /**
- * @summary Gets whether the application has any crashes
+ * @summary Available for UWP apps only.
  *
- * Gets whether the application has any crashes
+ * Gets whether the application has any crashes. Available for UWP apps only.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -568,6 +568,8 @@ function _getAppCrashesInfo(ownerName, appName, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {date} [options.date] Date of data requested
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -594,11 +596,16 @@ function _listSessionLogs(crashId, ownerName, appName, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let date = (options && options.date !== undefined) ? options.date : undefined;
   // Validate
   try {
     if (crashId === null || crashId === undefined || typeof crashId.valueOf() !== 'string') {
       throw new Error('crashId cannot be null or undefined and it must be of type string.');
     }
+    if (dateParameter && !(dateParameter instanceof Date ||
+        (typeof dateParameter.valueOf() === 'string' && !isNaN(Date.parse(dateParameter))))) {
+          throw new Error('dateParameter must be of type date.');
+        }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
@@ -615,6 +622,13 @@ function _listSessionLogs(crashId, ownerName, appName, options, callback) {
   requestUrl = requestUrl.replace('{crash_id}', encodeURIComponent(crashId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  let queryParameters = [];
+  if (dateParameter !== null && dateParameter !== undefined) {
+    queryParameters.push('date=' + encodeURIComponent(client.serializeObject(dateParameter)));
+  }
+  if (queryParameters.length > 0) {
+    requestUrl += '?' + queryParameters.join('&');
+  }
 
   // Create HTTP transport objects
   let httpRequest = new WebResource();
@@ -689,7 +703,9 @@ function _listSessionLogs(crashId, ownerName, appName, options, callback) {
 }
 
 /**
- * Gets content of the text attachment
+ * @summary Available for UWP apps only.
+ *
+ * Gets content of the text attachment. Available for UWP apps only.
  *
  * @param {string} crashId id of a specific crash
  *
@@ -831,7 +847,10 @@ function _getCrashTextAttachmentContent(crashId, attachmentId, ownerName, appNam
 }
 
 /**
- * Gets the URI location to download crash attachment
+ * @summary Available for UWP apps only.
+ *
+ * Gets the URI location to download crash attachment. Available for UWP apps
+ * only.
  *
  * @param {string} crashId id of a specific crash
  *
@@ -969,7 +988,9 @@ function _getCrashAttachmentLocation(crashId, attachmentId, ownerName, appName, 
 }
 
 /**
- * Gets all attachments for a specific crash
+ * @summary Available for UWP apps only.
+ *
+ * Gets all attachments for a specific crash. Available for UWP apps only.
  *
  * @param {string} crashId id of a specific crash
  *
@@ -1113,7 +1134,9 @@ function _listAttachments(crashId, ownerName, appName, options, callback) {
 }
 
 /**
- * Gets a stacktrace for a specific crash
+ * @summary Available for UWP apps only.
+ *
+ * Gets a stacktrace for a specific crash. Available for UWP apps only.
  *
  * @param {string} crashGroupId id of a specific group
  *
@@ -1264,7 +1287,10 @@ function _getStacktrace(crashGroupId, crashId, ownerName, appName, options, call
 }
 
 /**
- * Gets the URI location to download json of a specific crash
+ * @summary Available for UWP apps only.
+ *
+ * Gets the URI location to download json of a specific crash. Available for
+ * UWP apps only.
  *
  * @param {string} crashGroupId id of a specific group
  *
@@ -1401,9 +1427,10 @@ function _getRawCrashLocation(crashGroupId, crashId, ownerName, appName, options
 }
 
 /**
- * @summary Gets the native log of a specific crash as a text attachment
+ * @summary Available for UWP apps only.
  *
- * Gets the native log of a specific crash as a text attachment
+ * Gets the native log of a specific crash as a text attachment. Available for
+ * UWP apps only.
  *
  * @param {string} crashGroupId id of a specific group
  *
@@ -1545,9 +1572,9 @@ function _getNativeCrashDownload(crashGroupId, crashId, ownerName, appName, opti
 }
 
 /**
- * @summary Gets the native log of a specific crash
+ * @summary Available for UWP apps only.
  *
- * Gets the native log of a specific crash
+ * Gets the native log of a specific crash. Available for UWP apps only.
  *
  * @param {string} crashGroupId id of a specific group
  *
@@ -1689,7 +1716,9 @@ function _getNativeCrash(crashGroupId, crashId, ownerName, appName, options, cal
 }
 
 /**
- * Gets a specific crash for an app
+ * @summary Available for UWP apps only.
+ *
+ * Gets a specific crash for an app. Available for UWP apps only.
  *
  * @param {string} crashGroupId id of a specific group
  *
@@ -1880,7 +1909,163 @@ function _get(crashGroupId, crashId, ownerName, appName, options, callback) {
 }
 
 /**
- * Gets all crashes of a group
+ * @summary Available for UWP apps only.
+ *
+ * Delete a specific crash and related attachments and blobs for an app.
+ * Available for UWP apps only.
+ *
+ * @param {string} crashGroupId id of a specific group
+ *
+ * @param {string} crashId id of a specific crash
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {boolean} [options.retentionDelete] true in that case if the method
+ * should skip update counts
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      See {@link CrashDeleteCounter} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _deleteMethod(crashGroupId, crashId, ownerName, appName, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  let retentionDelete = (options && options.retentionDelete !== undefined) ? options.retentionDelete : false;
+  // Validate
+  try {
+    if (crashGroupId === null || crashGroupId === undefined || typeof crashGroupId.valueOf() !== 'string') {
+      throw new Error('crashGroupId cannot be null or undefined and it must be of type string.');
+    }
+    if (crashId === null || crashId === undefined || typeof crashId.valueOf() !== 'string') {
+      throw new Error('crashId cannot be null or undefined and it must be of type string.');
+    }
+    if (retentionDelete !== null && retentionDelete !== undefined && typeof retentionDelete !== 'boolean') {
+      throw new Error('retentionDelete must be of type boolean.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/crash_groups/{crash_group_id}/crashes/{crash_id}';
+  requestUrl = requestUrl.replace('{crash_group_id}', encodeURIComponent(crashGroupId));
+  requestUrl = requestUrl.replace('{crash_id}', encodeURIComponent(crashId));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+  let queryParameters = [];
+  if (retentionDelete !== null && retentionDelete !== undefined) {
+    queryParameters.push('retention_delete=' + encodeURIComponent(retentionDelete.toString()));
+  }
+  if (queryParameters.length > 0) {
+    requestUrl += '?' + queryParameters.join('&');
+  }
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'DELETE';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          let resultMapper = new client.models['Failure']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['CrashDeleteCounter']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * @summary Available for UWP apps only.
+ *
+ * Gets all crashes of a group. Available for UWP apps only.
  *
  * @param {string} crashGroupId id of a specific group
  *
@@ -2107,13 +2292,14 @@ class Crashes {
     this._getNativeCrashDownload = _getNativeCrashDownload;
     this._getNativeCrash = _getNativeCrash;
     this._get = _get;
+    this._deleteMethod = _deleteMethod;
     this._list = _list;
   }
 
   /**
-   * @summary Gets a list of application versions
+   * @summary Available for UWP apps only.
    *
-   * Gets a list of application versions
+   * Gets a list of application versions. Available for UWP apps only.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -2145,9 +2331,9 @@ class Crashes {
   }
 
   /**
-   * @summary Gets a list of application versions
+   * @summary Available for UWP apps only.
    *
-   * Gets a list of application versions
+   * Gets a list of application versions. Available for UWP apps only.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -2386,9 +2572,9 @@ class Crashes {
   }
 
   /**
-   * @summary Gets whether the application has any crashes
+   * @summary Available for UWP apps only.
    *
-   * Gets whether the application has any crashes
+   * Gets whether the application has any crashes. Available for UWP apps only.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -2420,9 +2606,9 @@ class Crashes {
   }
 
   /**
-   * @summary Gets whether the application has any crashes
+   * @summary Available for UWP apps only.
    *
-   * Gets whether the application has any crashes
+   * Gets whether the application has any crashes. Available for UWP apps only.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -2486,6 +2672,8 @@ class Crashes {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {date} [options.date] Date of data requested
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -2519,6 +2707,8 @@ class Crashes {
    * @param {string} appName The name of the application
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {date} [options.date] Date of data requested
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -2566,7 +2756,9 @@ class Crashes {
   }
 
   /**
-   * Gets content of the text attachment
+   * @summary Available for UWP apps only.
+   *
+   * Gets content of the text attachment. Available for UWP apps only.
    *
    * @param {string} crashId id of a specific crash
    *
@@ -2602,7 +2794,9 @@ class Crashes {
   }
 
   /**
-   * Gets content of the text attachment
+   * @summary Available for UWP apps only.
+   *
+   * Gets content of the text attachment. Available for UWP apps only.
    *
    * @param {string} crashId id of a specific crash
    *
@@ -2659,7 +2853,10 @@ class Crashes {
   }
 
   /**
-   * Gets the URI location to download crash attachment
+   * @summary Available for UWP apps only.
+   *
+   * Gets the URI location to download crash attachment. Available for UWP apps
+   * only.
    *
    * @param {string} crashId id of a specific crash
    *
@@ -2695,7 +2892,10 @@ class Crashes {
   }
 
   /**
-   * Gets the URI location to download crash attachment
+   * @summary Available for UWP apps only.
+   *
+   * Gets the URI location to download crash attachment. Available for UWP apps
+   * only.
    *
    * @param {string} crashId id of a specific crash
    *
@@ -2754,7 +2954,9 @@ class Crashes {
   }
 
   /**
-   * Gets all attachments for a specific crash
+   * @summary Available for UWP apps only.
+   *
+   * Gets all attachments for a specific crash. Available for UWP apps only.
    *
    * @param {string} crashId id of a specific crash
    *
@@ -2788,7 +2990,9 @@ class Crashes {
   }
 
   /**
-   * Gets all attachments for a specific crash
+   * @summary Available for UWP apps only.
+   *
+   * Gets all attachments for a specific crash. Available for UWP apps only.
    *
    * @param {string} crashId id of a specific crash
    *
@@ -2843,7 +3047,9 @@ class Crashes {
   }
 
   /**
-   * Gets a stacktrace for a specific crash
+   * @summary Available for UWP apps only.
+   *
+   * Gets a stacktrace for a specific crash. Available for UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -2882,7 +3088,9 @@ class Crashes {
   }
 
   /**
-   * Gets a stacktrace for a specific crash
+   * @summary Available for UWP apps only.
+   *
+   * Gets a stacktrace for a specific crash. Available for UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -2943,7 +3151,10 @@ class Crashes {
   }
 
   /**
-   * Gets the URI location to download json of a specific crash
+   * @summary Available for UWP apps only.
+   *
+   * Gets the URI location to download json of a specific crash. Available for
+   * UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -2979,7 +3190,10 @@ class Crashes {
   }
 
   /**
-   * Gets the URI location to download json of a specific crash
+   * @summary Available for UWP apps only.
+   *
+   * Gets the URI location to download json of a specific crash. Available for
+   * UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -3037,9 +3251,10 @@ class Crashes {
   }
 
   /**
-   * @summary Gets the native log of a specific crash as a text attachment
+   * @summary Available for UWP apps only.
    *
-   * Gets the native log of a specific crash as a text attachment
+   * Gets the native log of a specific crash as a text attachment. Available for
+   * UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -3075,9 +3290,10 @@ class Crashes {
   }
 
   /**
-   * @summary Gets the native log of a specific crash as a text attachment
+   * @summary Available for UWP apps only.
    *
-   * Gets the native log of a specific crash as a text attachment
+   * Gets the native log of a specific crash as a text attachment. Available for
+   * UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -3134,9 +3350,9 @@ class Crashes {
   }
 
   /**
-   * @summary Gets the native log of a specific crash
+   * @summary Available for UWP apps only.
    *
-   * Gets the native log of a specific crash
+   * Gets the native log of a specific crash. Available for UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -3172,9 +3388,9 @@ class Crashes {
   }
 
   /**
-   * @summary Gets the native log of a specific crash
+   * @summary Available for UWP apps only.
    *
-   * Gets the native log of a specific crash
+   * Gets the native log of a specific crash. Available for UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -3231,7 +3447,9 @@ class Crashes {
   }
 
   /**
-   * Gets a specific crash for an app
+   * @summary Available for UWP apps only.
+   *
+   * Gets a specific crash for an app. Available for UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -3282,7 +3500,9 @@ class Crashes {
   }
 
   /**
-   * Gets a specific crash for an app
+   * @summary Available for UWP apps only.
+   *
+   * Gets a specific crash for an app. Available for UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -3355,7 +3575,115 @@ class Crashes {
   }
 
   /**
-   * Gets all crashes of a group
+   * @summary Available for UWP apps only.
+   *
+   * Delete a specific crash and related attachments and blobs for an app.
+   * Available for UWP apps only.
+   *
+   * @param {string} crashGroupId id of a specific group
+   *
+   * @param {string} crashId id of a specific crash
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {boolean} [options.retentionDelete] true in that case if the method
+   * should skip update counts
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<CrashDeleteCounter>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  deleteMethodWithHttpOperationResponse(crashGroupId, crashId, ownerName, appName, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._deleteMethod(crashGroupId, crashId, ownerName, appName, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * @summary Available for UWP apps only.
+   *
+   * Delete a specific crash and related attachments and blobs for an app.
+   * Available for UWP apps only.
+   *
+   * @param {string} crashGroupId id of a specific group
+   *
+   * @param {string} crashId id of a specific crash
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {boolean} [options.retentionDelete] true in that case if the method
+   * should skip update counts
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {CrashDeleteCounter} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      See {@link CrashDeleteCounter} for more information.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  deleteMethod(crashGroupId, crashId, ownerName, appName, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._deleteMethod(crashGroupId, crashId, ownerName, appName, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._deleteMethod(crashGroupId, crashId, ownerName, appName, options, optionalCallback);
+    }
+  }
+
+  /**
+   * @summary Available for UWP apps only.
+   *
+   * Gets all crashes of a group. Available for UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -3404,7 +3732,9 @@ class Crashes {
   }
 
   /**
-   * Gets all crashes of a group
+   * @summary Available for UWP apps only.
+   *
+   * Gets all crashes of a group. Available for UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *

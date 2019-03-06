@@ -45,9 +45,12 @@ class AggregatedBillingInformation {
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.version]
    * Version of the Billing Plan schema
    * @member {number}
-   * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.priceBucket]
-   * Price bucket of the billing plan. Free plans start with 0, paid plans have
-   * higher price buckets
+   * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.price]
+   * Price of the Billing Plan
+   * @member {string}
+   * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.paymentSource]
+   * Service that receives payments for this billing plan. Possible values
+   * include: 'None', 'AppCenter', 'GitHub', 'Xtc'
    * @member {string}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.service]
    * Name of the service that the plan applies to. Possible values include:
@@ -56,6 +59,8 @@ class AggregatedBillingInformation {
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.limits]
    * @member {object}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.attributes]
+   * @member {string}
+   * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.parentId]
    * @member {object} [billingPlans.pushService]
    * @member {boolean} [billingPlans.pushService.canSelectTrialPlan] Can
    * customer select trial plan for that service (if it exists)?
@@ -80,9 +85,12 @@ class AggregatedBillingInformation {
    * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.version]
    * Version of the Billing Plan schema
    * @member {number}
-   * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.priceBucket]
-   * Price bucket of the billing plan. Free plans start with 0, paid plans have
-   * higher price buckets
+   * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.price] Price
+   * of the Billing Plan
+   * @member {string}
+   * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.paymentSource]
+   * Service that receives payments for this billing plan. Possible values
+   * include: 'None', 'AppCenter', 'GitHub', 'Xtc'
    * @member {string}
    * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.service]
    * Name of the service that the plan applies to. Possible values include:
@@ -91,6 +99,8 @@ class AggregatedBillingInformation {
    * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.limits]
    * @member {object}
    * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.attributes]
+   * @member {string}
+   * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.parentId]
    * @member {object} [billingPlans.testService]
    * @member {boolean} [billingPlans.testService.canSelectTrialPlan] Can
    * customer select trial plan for that service (if it exists)?
@@ -115,9 +125,12 @@ class AggregatedBillingInformation {
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.version]
    * Version of the Billing Plan schema
    * @member {number}
-   * [billingPlans.testService.currentBillingPeriod.byAccount.plan.priceBucket]
-   * Price bucket of the billing plan. Free plans start with 0, paid plans have
-   * higher price buckets
+   * [billingPlans.testService.currentBillingPeriod.byAccount.plan.price] Price
+   * of the Billing Plan
+   * @member {string}
+   * [billingPlans.testService.currentBillingPeriod.byAccount.plan.paymentSource]
+   * Service that receives payments for this billing plan. Possible values
+   * include: 'None', 'AppCenter', 'GitHub', 'Xtc'
    * @member {string}
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.service]
    * Name of the service that the plan applies to. Possible values include:
@@ -126,6 +139,8 @@ class AggregatedBillingInformation {
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.limits]
    * @member {object}
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.attributes]
+   * @member {string}
+   * [billingPlans.testService.currentBillingPeriod.byAccount.plan.parentId]
    * @member {object} [usage]
    * @member {object} [usage.buildService]
    * @member {object} [usage.buildService.currentUsagePeriod]
@@ -151,6 +166,10 @@ class AggregatedBillingInformation {
    * end time of the usage period.
    * @member {object} [usage.testService.currentUsagePeriod.byAccount]
    * @member {object} [usage.testService.currentUsagePeriod.byApp]
+   * @member {string} [azureSubscriptionId] Unique identifier for the Azure
+   * subscription used for billing
+   * @member {string} [azureSubscriptionState] State of the Azure subscription
+   * used for billing. Possible values include: 'Enabled', 'Disabled', 'NotSet'
    */
   constructor() {
   }
@@ -204,6 +223,20 @@ class AggregatedBillingInformation {
             type: {
               name: 'Composite',
               className: 'BillingResourceUsage'
+            }
+          },
+          azureSubscriptionId: {
+            required: false,
+            serializedName: 'azureSubscriptionId',
+            type: {
+              name: 'String'
+            }
+          },
+          azureSubscriptionState: {
+            required: false,
+            serializedName: 'azureSubscriptionState',
+            type: {
+              name: 'String'
             }
           }
         }

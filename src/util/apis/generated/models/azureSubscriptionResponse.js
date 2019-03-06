@@ -12,12 +12,13 @@
 class AzureSubscriptionResponse {
   /**
    * Create a AzureSubscriptionResponse.
-   * @member {string} subscriptionId The azure subscription id
-   * @member {string} tenantId The tenant id of the azure subscription belongs
-   * to
+   * @member {uuid} subscriptionId The azure subscription id
+   * @member {uuid} tenantId The tenant id of the azure subscription belongs to
    * @member {string} subscriptionName The name of the azure subscription
    * @member {boolean} [isBilling] If the subscription is used for billing
    * @member {boolean} [isBillable] If the subscription can be used for billing
+   * @member {boolean} [isMicrosoftInternal] If the subscription is internal
+   * Microsoft subscription
    */
   constructor() {
   }
@@ -67,6 +68,13 @@ class AzureSubscriptionResponse {
           isBillable: {
             required: false,
             serializedName: 'is_billable',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          isMicrosoftInternal: {
+            required: false,
+            serializedName: 'is_microsoft_internal',
             type: {
               name: 'Boolean'
             }

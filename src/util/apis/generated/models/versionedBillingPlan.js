@@ -18,12 +18,15 @@ class VersionedBillingPlan {
    * @member {object} [document]
    * @member {string} [document.id] The Billing Plan ID
    * @member {string} [document.version] Version of the Billing Plan schema
-   * @member {number} [document.priceBucket] Price bucket of the billing plan.
-   * Free plans start with 0, paid plans have higher price buckets
+   * @member {number} [document.price] Price of the Billing Plan
+   * @member {string} [document.paymentSource] Service that receives payments
+   * for this billing plan. Possible values include: 'None', 'AppCenter',
+   * 'GitHub', 'Xtc'
    * @member {string} [document.service] Name of the service that the plan
    * applies to. Possible values include: 'Build', 'Push', 'Test'
    * @member {object} [document.limits]
    * @member {object} [document.attributes]
+   * @member {string} [document.parentId]
    * @member {string} [etag] The version of the object
    */
   constructor() {

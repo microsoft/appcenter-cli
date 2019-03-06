@@ -25,6 +25,9 @@ class InternalUserRequest {
    * @member {string} name The unique name that is used to identify the user.
    * @member {string} password The password of the user. Needs to be at least 8
    * characters long and contain at least one lower- and one uppercase letter.
+   * @member {string} [portalSubdomain] The sub-domain of the portal from which
+   * this request was made. Will be used to build the invitation link. Possible
+   * values include: 'install.'
    */
   constructor() {
   }
@@ -95,6 +98,13 @@ class InternalUserRequest {
           password: {
             required: true,
             serializedName: 'password',
+            type: {
+              name: 'String'
+            }
+          },
+          portalSubdomain: {
+            required: false,
+            serializedName: 'portal_subdomain',
             type: {
               name: 'String'
             }

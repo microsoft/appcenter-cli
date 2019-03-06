@@ -220,7 +220,8 @@ describe("release command", () => {
   function setupSuccessfulDistributeReleaseResponse(nockScope: Nock.Scope): Nock.Scope {
     return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`, {
       distribution_group_name: fakeDistributionGroupName,
-      release_notes: releaseNotes
+      release_notes: releaseNotes,
+      notify_testers: true
     }).reply(200, ((uri: any, requestBody: any) => {
       distributeSpy(requestBody);
       return {

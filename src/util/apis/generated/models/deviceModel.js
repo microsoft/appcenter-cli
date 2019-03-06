@@ -34,6 +34,7 @@ class DeviceModel {
    * @member {object} [cpu]
    * @member {string} [cpu.frequency]
    * @member {string} [cpu.core]
+   * @member {string} [cpu.text]
    * @member {object} [memory]
    * @member {string} [memory.formattedSize]
    * @member {number} [screenRotation]

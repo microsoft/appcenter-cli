@@ -17,14 +17,20 @@ class ErrorGroup extends models['ErrorGroupState'] {
    * Create a ErrorGroup.
    * @member {string} errorGroupId
    * @member {string} appVersion
+   * @member {string} [appBuild]
    * @member {number} count
    * @member {number} deviceCount
    * @member {date} firstOccurrence
    * @member {date} lastOccurrence
    * @member {string} [exceptionType]
    * @member {string} [exceptionMessage]
+   * @member {string} [exceptionClassName]
+   * @member {boolean} [exceptionClassMethod]
+   * @member {string} [exceptionMethod]
+   * @member {boolean} [exceptionAppCode]
    * @member {string} [exceptionFile]
    * @member {string} [exceptionLine]
+   * @member {string} [codeRaw]
    * @member {array} [reasonFrames]
    */
   constructor() {
@@ -52,6 +58,13 @@ class ErrorGroup extends models['ErrorGroupState'] {
               name: 'String'
             }
           },
+          annotation: {
+            required: false,
+            serializedName: 'annotation',
+            type: {
+              name: 'String'
+            }
+          },
           errorGroupId: {
             required: true,
             serializedName: 'errorGroupId',
@@ -62,6 +75,13 @@ class ErrorGroup extends models['ErrorGroupState'] {
           appVersion: {
             required: true,
             serializedName: 'appVersion',
+            type: {
+              name: 'String'
+            }
+          },
+          appBuild: {
+            required: false,
+            serializedName: 'appBuild',
             type: {
               name: 'String'
             }
@@ -108,6 +128,34 @@ class ErrorGroup extends models['ErrorGroupState'] {
               name: 'String'
             }
           },
+          exceptionClassName: {
+            required: false,
+            serializedName: 'exceptionClassName',
+            type: {
+              name: 'String'
+            }
+          },
+          exceptionClassMethod: {
+            required: false,
+            serializedName: 'exceptionClassMethod',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          exceptionMethod: {
+            required: false,
+            serializedName: 'exceptionMethod',
+            type: {
+              name: 'String'
+            }
+          },
+          exceptionAppCode: {
+            required: false,
+            serializedName: 'exceptionAppCode',
+            type: {
+              name: 'Boolean'
+            }
+          },
           exceptionFile: {
             required: false,
             serializedName: 'exceptionFile',
@@ -118,6 +166,13 @@ class ErrorGroup extends models['ErrorGroupState'] {
           exceptionLine: {
             required: false,
             serializedName: 'exceptionLine',
+            type: {
+              name: 'String'
+            }
+          },
+          codeRaw: {
+            required: false,
+            serializedName: 'codeRaw',
             type: {
               name: 'String'
             }

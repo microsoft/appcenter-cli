@@ -22,13 +22,15 @@ class BillingPlansSelection {
    * @member {string} [buildService.plan.id] The Billing Plan ID
    * @member {string} [buildService.plan.version] Version of the Billing Plan
    * schema
-   * @member {number} [buildService.plan.priceBucket] Price bucket of the
-   * billing plan. Free plans start with 0, paid plans have higher price
-   * buckets
+   * @member {number} [buildService.plan.price] Price of the Billing Plan
+   * @member {string} [buildService.plan.paymentSource] Service that receives
+   * payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
    * @member {string} [buildService.plan.service] Name of the service that the
    * plan applies to. Possible values include: 'Build', 'Push', 'Test'
    * @member {object} [buildService.plan.limits]
    * @member {object} [buildService.plan.attributes]
+   * @member {string} [buildService.plan.parentId]
    * @member {object} [pushService]
    * @member {number} [pushService.count] Number of instances of the billing
    * plan.
@@ -36,13 +38,15 @@ class BillingPlansSelection {
    * @member {string} [pushService.plan.id] The Billing Plan ID
    * @member {string} [pushService.plan.version] Version of the Billing Plan
    * schema
-   * @member {number} [pushService.plan.priceBucket] Price bucket of the
-   * billing plan. Free plans start with 0, paid plans have higher price
-   * buckets
+   * @member {number} [pushService.plan.price] Price of the Billing Plan
+   * @member {string} [pushService.plan.paymentSource] Service that receives
+   * payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
    * @member {string} [pushService.plan.service] Name of the service that the
    * plan applies to. Possible values include: 'Build', 'Push', 'Test'
    * @member {object} [pushService.plan.limits]
    * @member {object} [pushService.plan.attributes]
+   * @member {string} [pushService.plan.parentId]
    * @member {object} [testService]
    * @member {number} [testService.count] Number of instances of the billing
    * plan.
@@ -50,13 +54,15 @@ class BillingPlansSelection {
    * @member {string} [testService.plan.id] The Billing Plan ID
    * @member {string} [testService.plan.version] Version of the Billing Plan
    * schema
-   * @member {number} [testService.plan.priceBucket] Price bucket of the
-   * billing plan. Free plans start with 0, paid plans have higher price
-   * buckets
+   * @member {number} [testService.plan.price] Price of the Billing Plan
+   * @member {string} [testService.plan.paymentSource] Service that receives
+   * payments for this billing plan. Possible values include: 'None',
+   * 'AppCenter', 'GitHub', 'Xtc'
    * @member {string} [testService.plan.service] Name of the service that the
    * plan applies to. Possible values include: 'Build', 'Push', 'Test'
    * @member {object} [testService.plan.limits]
    * @member {object} [testService.plan.attributes]
+   * @member {string} [testService.plan.parentId]
    */
   constructor() {
   }

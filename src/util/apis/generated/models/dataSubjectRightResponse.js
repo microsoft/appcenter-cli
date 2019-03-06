@@ -12,8 +12,8 @@
 class DataSubjectRightResponse {
   /**
    * Create a DataSubjectRightResponse.
-   * @member {string} token Unique request identifier
-   * @member {string} createdAt ISO 8601 format timestamp of when request was
+   * @member {uuid} token Unique request identifier
+   * @member {date} createdAt ISO 8601 format timestamp of when request was
    * created.
    */
   constructor() {
@@ -44,7 +44,7 @@ class DataSubjectRightResponse {
             required: true,
             serializedName: 'createdAt',
             type: {
-              name: 'String'
+              name: 'DateTime'
             }
           }
         }

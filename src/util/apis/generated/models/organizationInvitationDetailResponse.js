@@ -14,13 +14,15 @@ const models = require('./index');
 class OrganizationInvitationDetailResponse {
   /**
    * Create a OrganizationInvitationDetailResponse.
-   * @member {string} id The unique ID (UUID) of the invitation
+   * @member {uuid} id The unique ID (UUID) of the invitation
    * @member {object} organization
-   * @member {string} [organization.id] The internal unique id (UUID) of the
+   * @member {uuid} [organization.id] The internal unique id (UUID) of the
    * organization.
    * @member {string} [organization.displayName] The display name of the
    * organization
    * @member {string} [organization.name] The slug name of the organization
+   * @member {string} [organization.avatarUrl] The URL to a user-uploaded
+   * Avatar image
    * @member {string} [organization.origin] The creation origin of this
    * organization. Possible values include: 'appcenter', 'hockeyapp'
    * @member {string} [organization.createdAt] The creation date of this
@@ -29,7 +31,7 @@ class OrganizationInvitationDetailResponse {
    * last updated at
    * @member {string} email The email address of the invited user
    * @member {object} invitedBy
-   * @member {string} [invitedBy.id] The unique id (UUID) of the user
+   * @member {uuid} [invitedBy.id] The unique id (UUID) of the user
    * @member {string} [invitedBy.avatarUrl] The avatar URL of the user
    * @member {boolean} [invitedBy.canChangePassword] User is required to send
    * an old password in order to change the password.

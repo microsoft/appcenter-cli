@@ -265,7 +265,7 @@ function _listForUser(options, callback) {
 /**
  * Delete the azure subscriptions for the app
  *
- * @param {string} azureSubscriptionId The unique ID (UUID) of the azure
+ * @param {uuid} azureSubscriptionId The unique ID (UUID) of the azure
  * subscription
  *
  * @param {string} ownerName The name of the owner
@@ -301,8 +301,8 @@ function _deleteForApp(azureSubscriptionId, ownerName, appName, options, callbac
   }
   // Validate
   try {
-    if (azureSubscriptionId === null || azureSubscriptionId === undefined || typeof azureSubscriptionId.valueOf() !== 'string') {
-      throw new Error('azureSubscriptionId cannot be null or undefined and it must be of type string.');
+    if (azureSubscriptionId === null || azureSubscriptionId === undefined || typeof azureSubscriptionId.valueOf() !== 'string' || !msRest.isValidUuid(azureSubscriptionId)) {
+      throw new Error('azureSubscriptionId cannot be null or undefined and it must be of type string and must be a valid uuid.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -317,7 +317,7 @@ function _deleteForApp(azureSubscriptionId, ownerName, appName, options, callbac
   // Construct URL
   let baseUrl = this.client.baseUri;
   let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/azure_subscriptions/{azure_subscription_id}';
-  requestUrl = requestUrl.replace('{azure_subscription_id}', encodeURIComponent(azureSubscriptionId));
+  requestUrl = requestUrl.replace('{azure_subscription_id}', encodeURIComponent(azureSubscriptionId.toString()));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
@@ -521,7 +521,7 @@ function _listForApp(ownerName, appName, options, callback) {
  *
  * @param {string} appName The name of the application
  *
- * @param {string} subscriptionId The azure subscription id
+ * @param {uuid} subscriptionId The azure subscription id
  *
  * @param {object} [options] Optional Parameters.
  *
@@ -558,8 +558,8 @@ function _linkForApp(ownerName, appName, subscriptionId, options, callback) {
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
-    if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string') {
-      throw new Error('subscriptionId cannot be null or undefined and it must be of type string.');
+    if (subscriptionId === null || subscriptionId === undefined || typeof subscriptionId.valueOf() !== 'string' || !msRest.isValidUuid(subscriptionId)) {
+      throw new Error('subscriptionId cannot be null or undefined and it must be of type string and must be a valid uuid.');
     }
   } catch (error) {
     return callback(error);
@@ -821,7 +821,7 @@ class AzureSubscription {
   /**
    * Delete the azure subscriptions for the app
    *
-   * @param {string} azureSubscriptionId The unique ID (UUID) of the azure
+   * @param {uuid} azureSubscriptionId The unique ID (UUID) of the azure
    * subscription
    *
    * @param {string} ownerName The name of the owner
@@ -856,7 +856,7 @@ class AzureSubscription {
   /**
    * Delete the azure subscriptions for the app
    *
-   * @param {string} azureSubscriptionId The unique ID (UUID) of the azure
+   * @param {uuid} azureSubscriptionId The unique ID (UUID) of the azure
    * subscription
    *
    * @param {string} ownerName The name of the owner
@@ -1001,7 +1001,7 @@ class AzureSubscription {
    *
    * @param {string} appName The name of the application
    *
-   * @param {string} subscriptionId The azure subscription id
+   * @param {uuid} subscriptionId The azure subscription id
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -1035,7 +1035,7 @@ class AzureSubscription {
    *
    * @param {string} appName The name of the application
    *
-   * @param {string} subscriptionId The azure subscription id
+   * @param {uuid} subscriptionId The azure subscription id
    *
    * @param {object} [options] Optional Parameters.
    *

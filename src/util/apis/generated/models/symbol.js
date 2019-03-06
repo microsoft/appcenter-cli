@@ -18,8 +18,7 @@ class Symbol {
    * 'AndroidProguard', 'UWP'
    * @member {string} appId The application that this symbol belongs to
    * @member {string} platform The platform that this symbol is associated with
-   * @member {string} url The URL at which the client may download the symbol
-   * file
+   * @member {string} url The path name of the symbol file in blob storage
    * @member {string} origin The origin of the symbol file. Possible values
    * include: 'System', 'User'
    * @member {array} alternateSymbolIds The other symbols in the same file
@@ -29,6 +28,8 @@ class Symbol {
    * Required for Android.
    * @member {string} [build] The build number. Optional for Apple. Required
    * for Android.
+   * @member {string} symbolUploadId The id of the symbol upload this symbol
+   * belongs to.
    */
   constructor() {
   }
@@ -120,6 +121,13 @@ class Symbol {
           build: {
             required: false,
             serializedName: 'build',
+            type: {
+              name: 'String'
+            }
+          },
+          symbolUploadId: {
+            required: true,
+            serializedName: 'symbol_upload_id',
             type: {
               name: 'String'
             }

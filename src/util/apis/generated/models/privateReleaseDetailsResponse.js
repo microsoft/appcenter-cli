@@ -56,8 +56,8 @@ class PrivateReleaseDetailsResponse {
    * `itms-services://?action=download-manifest&url=`
    * @member {string} [distributionGroupId] the destination where release is
    * distributed
-   * @member {string} [publishingStatus] the publishing status of distributed
-   * release
+   * @member {string} [publishingStatus] the publishing status of the
+   * distributed release
    * @member {string} [destinationType] The destination type.<br>
    * <b>group</b>: The release distributed to internal groups and
    * distribution_groups details will be returned.<br>

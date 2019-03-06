@@ -12,7 +12,7 @@
 class OrgUserPermissionResponse {
   /**
    * Create a OrgUserPermissionResponse.
-   * @member {string} orgId The unique id (UUID) of the org
+   * @member {uuid} orgId The unique id (UUID) of the org
    * @member {string} userRole The user role for the org. Possible values
    * include: 'admin', 'collaborator'
    */

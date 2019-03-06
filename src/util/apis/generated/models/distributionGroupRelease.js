@@ -20,8 +20,12 @@ class DistributionGroupRelease {
    * @member {string} [shortVersion] The release's short version.<br>
    * For iOS: CFBundleShortVersionString from info.plist.<br>
    * For Android: android:versionName from AppManifest.xml.
+   * @member {boolean} [mandatoryUpdate] A boolean which determines whether the
+   * release is a mandatory update or not.
    * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
    * time.
+   * @member {boolean} [enabled] This value determines the whether a release
+   * currently is enabled or disabled.
    */
   constructor() {
   }
@@ -61,11 +65,25 @@ class DistributionGroupRelease {
               name: 'String'
             }
           },
+          mandatoryUpdate: {
+            required: false,
+            serializedName: 'mandatory_update',
+            type: {
+              name: 'Boolean'
+            }
+          },
           uploadedAt: {
             required: false,
             serializedName: 'uploaded_at',
             type: {
               name: 'String'
+            }
+          },
+          enabled: {
+            required: false,
+            serializedName: 'enabled',
+            type: {
+              name: 'Boolean'
             }
           }
         }

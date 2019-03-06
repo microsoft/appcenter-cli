@@ -15,8 +15,9 @@ const models = require('./index');
 class TesterAppResponse extends models['BasicAppResponse'] {
   /**
    * Create a TesterAppResponse.
-   * @member {array} distributionGroups The IDs of the distribution groups the
-   * current user is member of.
+   * @member {boolean} [microsoftInternal] it indicates if the app is microsoft
+   * internal
+   * @member {array} [permissions] The permissions associated with the app
    */
   constructor() {
     super();
@@ -64,6 +65,13 @@ class TesterAppResponse extends models['BasicAppResponse'] {
               name: 'String'
             }
           },
+          iconSource: {
+            required: false,
+            serializedName: 'icon_source',
+            type: {
+              name: 'String'
+            }
+          },
           name: {
             required: true,
             serializedName: 'name',
@@ -86,17 +94,23 @@ class TesterAppResponse extends models['BasicAppResponse'] {
               className: 'Owner'
             }
           },
-          distributionGroups: {
-            required: true,
-            serializedName: 'distribution_groups',
+          microsoftInternal: {
+            required: false,
+            serializedName: 'microsoft_internal',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          permissions: {
+            required: false,
+            serializedName: 'permissions',
             type: {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupResponseElementType',
+                  serializedName: 'StringElementType',
                   type: {
-                    name: 'Composite',
-                    className: 'DistributionGroupResponse'
+                    name: 'String'
                   }
               }
             }

@@ -41,6 +41,15 @@ class ReleaseUpdateRequest {
    * this version should be a mandatory update or not.
    * @member {array} [destinations] Distribute this release under the following
    * list of destinations (store groups or distribution groups).
+   * @member {object} [build]
+   * @member {string} [build.branch] The branch name of the build producing the
+   * release
+   * @member {string} [build.commitHash] The commit hash of the build producing
+   * the release
+   * @member {string} [build.commitMessage] The commit message of the build
+   * producing the release
+   * @member {boolean} [notifyTesters] A boolean which determines whether to
+   * notify testers of a new release, default to true. Default value: true .
    */
   constructor() {
   }
@@ -121,6 +130,22 @@ class ReleaseUpdateRequest {
                     className: 'DestinationId'
                   }
               }
+            }
+          },
+          build: {
+            required: false,
+            serializedName: 'build',
+            type: {
+              name: 'Composite',
+              className: 'BuildInfo'
+            }
+          },
+          notifyTesters: {
+            required: false,
+            serializedName: 'notify_testers',
+            defaultValue: true,
+            type: {
+              name: 'Boolean'
             }
           }
         }

@@ -19,6 +19,7 @@ class HandledError {
    * @member {string} [osType]
    * @member {string} [country]
    * @member {string} [language]
+   * @member {string} [userId]
    */
   constructor() {
   }
@@ -82,6 +83,13 @@ class HandledError {
           language: {
             required: false,
             serializedName: 'language',
+            type: {
+              name: 'String'
+            }
+          },
+          userId: {
+            required: false,
+            serializedName: 'userId',
             type: {
               name: 'String'
             }

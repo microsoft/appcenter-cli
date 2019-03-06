@@ -214,16 +214,14 @@ function _accept(invitationToken, options, callback) {
 }
 
 /**
- * Allows the role of an invited user to be changed
+ * Removes a user's invitation to an organization
  *
  * @param {string} orgName The organization's name
  *
- * @param {string} userEmail The user email of the user to update
+ * @param {string} email The email address of the user to send the password
+ * reset mail to.
  *
  * @param {object} [options] Optional Parameters.
- *
- * @param {string} [options.role] The user's role in the organizatiion.
- * Possible values include: 'admin', 'collaborator'
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -240,7 +238,7 @@ function _accept(invitationToken, options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _update(orgName, userEmail, options, callback) {
+function _unnamedMethod(orgName, email, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -250,36 +248,27 @@ function _update(orgName, userEmail, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  let role = (options && options.role !== undefined) ? options.role : undefined;
   // Validate
   try {
     if (orgName === null || orgName === undefined || typeof orgName.valueOf() !== 'string') {
       throw new Error('orgName cannot be null or undefined and it must be of type string.');
     }
-    if (userEmail === null || userEmail === undefined || typeof userEmail.valueOf() !== 'string') {
-      throw new Error('userEmail cannot be null or undefined and it must be of type string.');
-    }
-    if (role !== null && role !== undefined && typeof role.valueOf() !== 'string') {
-      throw new Error('role must be of type string.');
+    if (email === null || email === undefined || typeof email.valueOf() !== 'string') {
+      throw new Error('email cannot be null or undefined and it must be of type string.');
     }
   } catch (error) {
     return callback(error);
   }
-  let userRole;
-  if (role !== null && role !== undefined) {
-    userRole = new client.models['OrganizationUserPatchRequest']();
-    userRole.role = role;
-  }
 
   // Construct URL
   let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/orgs/{org_name}/invitations/{user_email}';
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/orgs/{org_name}/invitations/{email}/revoke';
   requestUrl = requestUrl.replace('{org_name}', encodeURIComponent(orgName));
-  requestUrl = requestUrl.replace('{user_email}', encodeURIComponent(userEmail));
+  requestUrl = requestUrl.replace('{email}', encodeURIComponent(email));
 
   // Create HTTP transport objects
   let httpRequest = new WebResource();
-  httpRequest.method = 'PATCH';
+  httpRequest.method = 'POST';
   httpRequest.url = requestUrl;
   httpRequest.headers = {};
   // Set Headers
@@ -291,21 +280,7 @@ function _update(orgName, userEmail, options, callback) {
       }
     }
   }
-  // Serialize Request
-  let requestContent = null;
-  let requestModel = null;
-  try {
-    if (userRole !== null && userRole !== undefined) {
-      let requestModelMapper = new client.models['OrganizationUserPatchRequest']().mapper();
-      requestModel = client.serialize(requestModelMapper, userRole, 'userRole');
-      requestContent = JSON.stringify(requestModel);
-    }
-  } catch (error) {
-    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-        `payload - ${JSON.stringify(userRole, null, 2)}.`);
-    return callback(serializationError);
-  }
-  httpRequest.body = requestContent;
+  httpRequest.body = null;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -347,11 +322,12 @@ function _update(orgName, userEmail, options, callback) {
 }
 
 /**
- * Cancels an existing organization for the user and sends a new one
+ * Cancels an existing organization invitation for the user and sends a new one
  *
  * @param {string} orgName The organization's name
  *
- * @param {string} userEmail The user's email address'
+ * @param {string} email The email address of the user to send the password
+ * reset mail to.
  *
  * @param {object} [options] Optional Parameters.
  *
@@ -370,7 +346,7 @@ function _update(orgName, userEmail, options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _sendNewInvitation(orgName, userEmail, options, callback) {
+function _sendNewInvitation(orgName, email, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -385,22 +361,18 @@ function _sendNewInvitation(orgName, userEmail, options, callback) {
     if (orgName === null || orgName === undefined || typeof orgName.valueOf() !== 'string') {
       throw new Error('orgName cannot be null or undefined and it must be of type string.');
     }
-    if (userEmail === null || userEmail === undefined || typeof userEmail.valueOf() !== 'string') {
-      throw new Error('userEmail cannot be null or undefined and it must be of type string.');
+    if (email === null || email === undefined || typeof email.valueOf() !== 'string') {
+      throw new Error('email cannot be null or undefined and it must be of type string.');
     }
   } catch (error) {
     return callback(error);
   }
-  let userEmail1;
-  if (userEmail !== null && userEmail !== undefined) {
-    userEmail1 = new client.models['UserEmailRequest']();
-    userEmail1.userEmail = userEmail;
-  }
 
   // Construct URL
   let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/orgs/{org_name}/invitations/resend';
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/orgs/{org_name}/invitations/{email}/resend';
   requestUrl = requestUrl.replace('{org_name}', encodeURIComponent(orgName));
+  requestUrl = requestUrl.replace('{email}', encodeURIComponent(email));
 
   // Create HTTP transport objects
   let httpRequest = new WebResource();
@@ -416,18 +388,138 @@ function _sendNewInvitation(orgName, userEmail, options, callback) {
       }
     }
   }
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 204) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
+          let resultMapper = new client.models['ErrorResponse']().mapper();
+          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Allows the role of an invited user to be changed
+ *
+ * @param {string} orgName The organization's name
+ *
+ * @param {string} email The email address of the user to send the password
+ * reset mail to.
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {string} [options.role] The user's role in the organizatiion.
+ * Possible values include: 'admin', 'collaborator'
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {null} [result]   - The deserialized result object if an error did not occur.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _update(orgName, email, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  let role = (options && options.role !== undefined) ? options.role : undefined;
+  // Validate
+  try {
+    if (orgName === null || orgName === undefined || typeof orgName.valueOf() !== 'string') {
+      throw new Error('orgName cannot be null or undefined and it must be of type string.');
+    }
+    if (email === null || email === undefined || typeof email.valueOf() !== 'string') {
+      throw new Error('email cannot be null or undefined and it must be of type string.');
+    }
+    if (role !== null && role !== undefined && typeof role.valueOf() !== 'string') {
+      throw new Error('role must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  let userRole;
+  if (role !== null && role !== undefined) {
+    userRole = new client.models['OrganizationUserPatchRequest']();
+    userRole.role = role;
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/orgs/{org_name}/invitations/{email}';
+  requestUrl = requestUrl.replace('{org_name}', encodeURIComponent(orgName));
+  requestUrl = requestUrl.replace('{email}', encodeURIComponent(email));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'PATCH';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
   // Serialize Request
   let requestContent = null;
   let requestModel = null;
   try {
-    if (userEmail1 !== null && userEmail1 !== undefined) {
-      let requestModelMapper = new client.models['UserEmailRequest']().mapper();
-      requestModel = client.serialize(requestModelMapper, userEmail1, 'userEmail1');
+    if (userRole !== null && userRole !== undefined) {
+      let requestModelMapper = new client.models['OrganizationUserPatchRequest']().mapper();
+      requestModel = client.serialize(requestModelMapper, userRole, 'userRole');
       requestContent = JSON.stringify(requestModel);
     }
   } catch (error) {
     let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-        `payload - ${JSON.stringify(userEmail1, null, 2)}.`);
+        `payload - ${JSON.stringify(userRole, null, 2)}.`);
     return callback(serializationError);
   }
   httpRequest.body = requestContent;
@@ -863,8 +955,9 @@ class OrgInvitations {
     this.client = client;
     this._reject = _reject;
     this._accept = _accept;
-    this._update = _update;
+    this._unnamedMethod = _unnamedMethod;
     this._sendNewInvitation = _sendNewInvitation;
+    this._update = _update;
     this._create = _create;
     this._deleteMethod = _deleteMethod;
     this._listPending = _listPending;
@@ -1037,11 +1130,186 @@ class OrgInvitations {
   }
 
   /**
+   * Removes a user's invitation to an organization
+   *
+   * @param {string} orgName The organization's name
+   *
+   * @param {string} email The email address of the user to send the password
+   * reset mail to.
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  unnamedMethodWithHttpOperationResponse(orgName, email, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._unnamedMethod(orgName, email, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Removes a user's invitation to an organization
+   *
+   * @param {string} orgName The organization's name
+   *
+   * @param {string} email The email address of the user to send the password
+   * reset mail to.
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {null} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {null} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  unnamedMethod(orgName, email, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._unnamedMethod(orgName, email, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._unnamedMethod(orgName, email, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Cancels an existing organization invitation for the user and sends a new one
+   *
+   * @param {string} orgName The organization's name
+   *
+   * @param {string} email The email address of the user to send the password
+   * reset mail to.
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  sendNewInvitationWithHttpOperationResponse(orgName, email, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._sendNewInvitation(orgName, email, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Cancels an existing organization invitation for the user and sends a new one
+   *
+   * @param {string} orgName The organization's name
+   *
+   * @param {string} email The email address of the user to send the password
+   * reset mail to.
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {null} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {null} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  sendNewInvitation(orgName, email, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._sendNewInvitation(orgName, email, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._sendNewInvitation(orgName, email, options, optionalCallback);
+    }
+  }
+
+  /**
    * Allows the role of an invited user to be changed
    *
    * @param {string} orgName The organization's name
    *
-   * @param {string} userEmail The user email of the user to update
+   * @param {string} email The email address of the user to send the password
+   * reset mail to.
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -1057,11 +1325,11 @@ class OrgInvitations {
    *
    * @reject {Error} - The error object.
    */
-  updateWithHttpOperationResponse(orgName, userEmail, options) {
+  updateWithHttpOperationResponse(orgName, email, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._update(orgName, userEmail, options, (err, result, request, response) => {
+      self._update(orgName, email, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -1076,7 +1344,8 @@ class OrgInvitations {
    *
    * @param {string} orgName The organization's name
    *
-   * @param {string} userEmail The user email of the user to update
+   * @param {string} email The email address of the user to send the password
+   * reset mail to.
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -1107,7 +1376,7 @@ class OrgInvitations {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  update(orgName, userEmail, options, optionalCallback) {
+  update(orgName, email, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -1116,99 +1385,14 @@ class OrgInvitations {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._update(orgName, userEmail, options, (err, result, request, response) => {
+        self._update(orgName, email, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._update(orgName, userEmail, options, optionalCallback);
-    }
-  }
-
-  /**
-   * Cancels an existing organization for the user and sends a new one
-   *
-   * @param {string} orgName The organization's name
-   *
-   * @param {string} userEmail The user's email address'
-   *
-   * @param {object} [options] Optional Parameters.
-   *
-   * @param {object} [options.customHeaders] Headers that will be added to the
-   * request
-   *
-   * @returns {Promise} A promise is returned
-   *
-   * @resolve {HttpOperationResponse<null>} - The deserialized result object.
-   *
-   * @reject {Error} - The error object.
-   */
-  sendNewInvitationWithHttpOperationResponse(orgName, userEmail, options) {
-    let client = this.client;
-    let self = this;
-    return new Promise((resolve, reject) => {
-      self._sendNewInvitation(orgName, userEmail, options, (err, result, request, response) => {
-        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
-        httpOperationResponse.body = result;
-        if (err) { reject(err); }
-        else { resolve(httpOperationResponse); }
-        return;
-      });
-    });
-  }
-
-  /**
-   * Cancels an existing organization for the user and sends a new one
-   *
-   * @param {string} orgName The organization's name
-   *
-   * @param {string} userEmail The user's email address'
-   *
-   * @param {object} [options] Optional Parameters.
-   *
-   * @param {object} [options.customHeaders] Headers that will be added to the
-   * request
-   *
-   * @param {function} [optionalCallback] - The optional callback.
-   *
-   * @returns {function|Promise} If a callback was passed as the last parameter
-   * then it returns the callback else returns a Promise.
-   *
-   * {Promise} A promise is returned
-   *
-   *                      @resolve {null} - The deserialized result object.
-   *
-   *                      @reject {Error} - The error object.
-   *
-   * {function} optionalCallback(err, result, request, response)
-   *
-   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {null} [result]   - The deserialized result object if an error did not occur.
-   *
-   *                      {object} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
-   */
-  sendNewInvitation(orgName, userEmail, options, optionalCallback) {
-    let client = this.client;
-    let self = this;
-    if (!optionalCallback && typeof options === 'function') {
-      optionalCallback = options;
-      options = null;
-    }
-    if (!optionalCallback) {
-      return new Promise((resolve, reject) => {
-        self._sendNewInvitation(orgName, userEmail, options, (err, result, request, response) => {
-          if (err) { reject(err); }
-          else { resolve(result); }
-          return;
-        });
-      });
-    } else {
-      return self._sendNewInvitation(orgName, userEmail, options, optionalCallback);
+      return self._update(orgName, email, options, optionalCallback);
     }
   }
 
