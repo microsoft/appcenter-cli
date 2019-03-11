@@ -12,7 +12,7 @@
 class InternalUserSignupResponse {
   /**
    * Create a InternalUserSignupResponse.
-   * @member {string} id The unique id (UUID) of the user
+   * @member {uuid} id The unique id (UUID) of the user
    * @member {string} displayName The full name of the user. Might for example
    * be first and last name
    * @member {string} email The email address of the user

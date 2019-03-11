@@ -45,7 +45,6 @@ class TestRun {
    * device time the test has been runnign
    * @member {string} [testType] The name of the test framework used to run
    * this test
-   * @member {string} [uploadedBy] The name of the user who uploaded the test
    */
   constructor() {
   }
@@ -145,13 +144,6 @@ class TestRun {
           testType: {
             required: false,
             serializedName: 'testType',
-            type: {
-              name: 'String'
-            }
-          },
-          uploadedBy: {
-            required: false,
-            serializedName: 'uploadedBy',
             type: {
               name: 'String'
             }

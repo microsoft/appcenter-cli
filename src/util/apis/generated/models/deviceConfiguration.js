@@ -41,6 +41,7 @@ class DeviceConfiguration {
    * @member {object} [model.cpu]
    * @member {string} [model.cpu.frequency]
    * @member {string} [model.cpu.core]
+   * @member {string} [model.cpu.text]
    * @member {object} [model.memory]
    * @member {string} [model.memory.formattedSize]
    * @member {number} [model.screenRotation]

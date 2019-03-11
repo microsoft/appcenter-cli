@@ -30,6 +30,7 @@ class StepReportDeviceScreenshotsItem {
    * @member {boolean} [screenshot.landscape]
    * @member {string} [logFile]
    * @member {string} [appiumLogFile]
+   * @member {array} [rawCrashData]
    */
   constructor() {
   }
@@ -124,6 +125,20 @@ class StepReportDeviceScreenshotsItem {
             serializedName: 'appium_log_file',
             type: {
               name: 'String'
+            }
+          },
+          rawCrashData: {
+            required: false,
+            serializedName: 'raw_crash_data',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'StringElementType',
+                  type: {
+                    name: 'String'
+                  }
+              }
             }
           }
         }

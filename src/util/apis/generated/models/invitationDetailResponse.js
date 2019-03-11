@@ -14,9 +14,9 @@ const models = require('./index');
 class InvitationDetailResponse {
   /**
    * Create a InvitationDetailResponse.
-   * @member {string} invitationId The id of the invitation
+   * @member {uuid} invitationId The id of the invitation
    * @member {object} invitedBy
-   * @member {string} [invitedBy.id] The unique id (UUID) of the user
+   * @member {uuid} [invitedBy.id] The unique id (UUID) of the user
    * @member {string} [invitedBy.avatarUrl] The avatar URL of the user
    * @member {boolean} [invitedBy.canChangePassword] User is required to send
    * an old password in order to change the password.
@@ -30,11 +30,13 @@ class InvitationDetailResponse {
    * @member {string} [invitedBy.origin] The creation origin of this user.
    * Possible values include: 'appcenter', 'hockeyapp', 'codepush'
    * @member {object} [organization]
-   * @member {string} [organization.id] The internal unique id (UUID) of the
+   * @member {uuid} [organization.id] The internal unique id (UUID) of the
    * organization.
    * @member {string} [organization.displayName] The display name of the
    * organization
    * @member {string} [organization.name] The slug name of the organization
+   * @member {string} [organization.avatarUrl] The URL to a user-uploaded
+   * Avatar image
    * @member {string} [organization.origin] The creation origin of this
    * organization. Possible values include: 'appcenter', 'hockeyapp'
    * @member {string} [organization.createdAt] The creation date of this
@@ -46,16 +48,18 @@ class InvitationDetailResponse {
    * the app in communication with the ingestion endpoint for crash reporting
    * and analytics
    * @member {object} [app.azureSubscription]
-   * @member {string} [app.azureSubscription.subscriptionId] The azure
+   * @member {uuid} [app.azureSubscription.subscriptionId] The azure
    * subscription id
-   * @member {string} [app.azureSubscription.tenantId] The tenant id of the
-   * azure subscription belongs to
+   * @member {uuid} [app.azureSubscription.tenantId] The tenant id of the azure
+   * subscription belongs to
    * @member {string} [app.azureSubscription.subscriptionName] The name of the
    * azure subscription
    * @member {boolean} [app.azureSubscription.isBilling] If the subscription is
    * used for billing
    * @member {boolean} [app.azureSubscription.isBillable] If the subscription
    * can be used for billing
+   * @member {boolean} [app.azureSubscription.isMicrosoftInternal] If the
+   * subscription is internal Microsoft subscription
    * @member {string} [app.platform] The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
    * 'Unity', 'Xamarin', 'Unknown'

@@ -16,6 +16,8 @@ class PatchReleaseRequest {
    * @member {string} [destPublishId] Destination Publish Id
    * @member {string} [errorDetails] failure error details from store
    * @member {string} [errorContextId] contextId for failed error message
+   * @member {string} [wrapPackageUrl] package url for wrapping request
+   * @member {boolean} [isWrapperRequest] request is for wrapping or not
    */
   constructor() {
   }
@@ -60,6 +62,20 @@ class PatchReleaseRequest {
             serializedName: 'error_contextId',
             type: {
               name: 'String'
+            }
+          },
+          wrapPackageUrl: {
+            required: false,
+            serializedName: 'wrap_package_url',
+            type: {
+              name: 'String'
+            }
+          },
+          isWrapperRequest: {
+            required: false,
+            serializedName: 'is_wrapper_request',
+            type: {
+              name: 'Boolean'
             }
           }
         }

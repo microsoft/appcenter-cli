@@ -22,6 +22,8 @@ class BasicReleaseDetailsResponse {
    * @member {string} [shortVersion] The release's short version.<br>
    * For iOS: CFBundleShortVersionString from info.plist.<br>
    * For Android: android:versionName from AppManifest.xml.
+   * @member {boolean} [enabled] This value determines the whether a release
+   * currently is enabled or disabled.
    * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
    * time.
    * @member {string} [destinationType] OBSOLETE. Will be removed in next
@@ -38,6 +40,13 @@ class BasicReleaseDetailsResponse {
    * version. A list of distribution stores that are associated with this
    * release.
    * @member {array} [destinations] A list of distribution groups or stores.
+   * @member {object} [build]
+   * @member {string} [build.branch] The branch name of the build producing the
+   * release
+   * @member {string} [build.commitHash] The commit hash of the build producing
+   * the release
+   * @member {string} [build.commitMessage] The commit message of the build
+   * producing the release
    */
   constructor() {
   }
@@ -75,6 +84,13 @@ class BasicReleaseDetailsResponse {
             serializedName: 'short_version',
             type: {
               name: 'String'
+            }
+          },
+          enabled: {
+            required: false,
+            serializedName: 'enabled',
+            type: {
+              name: 'Boolean'
             }
           },
           uploadedAt: {
@@ -134,6 +150,14 @@ class BasicReleaseDetailsResponse {
                     className: 'Destination'
                   }
               }
+            }
+          },
+          build: {
+            required: false,
+            serializedName: 'build',
+            type: {
+              name: 'Composite',
+              className: 'BuildInfo'
             }
           }
         }

@@ -25,6 +25,7 @@ class BranchConfigurationToolsets {
    * @member {string} [xcode.provisioningProfileFileId]
    * @member {string} [xcode.certificateFileId]
    * @member {string} [xcode.provisioningProfileUploadId]
+   * @member {array} [xcode.appExtensionProvisioningProfileFiles]
    * @member {string} [xcode.certificateUploadId]
    * @member {string} [xcode.certificatePassword]
    * @member {string} [xcode.scheme]
@@ -56,15 +57,29 @@ class BranchConfigurationToolsets {
    * @member {string} [xamarin.provProfile]
    * @member {string} [xamarin.monoVersion]
    * @member {string} [xamarin.sdkBundle]
+   * @member {string} [xamarin.symlink] Symlink of the SDK Bundle and Mono
+   * installation.
+   * The build will use the associated Mono bundled with related Xamarin SDK.
+   * If both symlink and monoVersion or sdkBundle are passed, the symlink is
+   * taking precedence. If non-existing symlink is passed, the current stable
+   * Mono version will be configured for building.
    * @member {object} [android]
    * @member {string} [android.gradleWrapperPath] Path to the Gradle wrapper
    * script
    * @member {string} [android.module] The Gradle module to build
-   * @member {string} [android.variant] The Android build variant to build
+   * @member {string} [android.buildVariant] The Android build variant to build
    * @member {boolean} [android.runTests] Whether to run unit tests during the
    * build (default)
    * @member {boolean} [android.runLint] Whether to run lint checks during the
    * build (default)
+   * @member {boolean} [android.isRoot] Whether it is the root module or not
+   * @member {boolean} [android.automaticSigning] Whether to apply automatic
+   * signing or not
+   * @member {string} [android.keystorePassword] The password of the keystore
+   * @member {string} [android.keyAlias] The key alias
+   * @member {string} [android.keyPassword] The key password
+   * @member {string} [android.keystoreFilename] The name of the keystore file
+   * @member {string} [android.keystoreEncoded] The keystore encoded value
    */
   constructor() {
   }

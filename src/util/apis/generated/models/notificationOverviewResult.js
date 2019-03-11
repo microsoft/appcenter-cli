@@ -25,7 +25,7 @@ class NotificationOverviewResult {
    * @member {number} [pnsSendSuccess] Number of the notifications successfully
    * sent to push the provider.
    * @member {string} state State of the notification. Possible values include:
-   * 'Cancelled', 'Completed', 'Enqueued', 'Processing', 'Unknown'
+   * 'Queued', 'Sending', 'Completed', 'Failed', 'NoTargetFound'
    */
   constructor() {
   }

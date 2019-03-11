@@ -14,6 +14,7 @@ class ErrorGroupState {
    * Create a ErrorGroupState.
    * @member {string} state Possible values include: 'open', 'closed',
    * 'ignored'
+   * @member {string} [annotation]
    */
   constructor() {
   }
@@ -35,6 +36,13 @@ class ErrorGroupState {
           state: {
             required: true,
             serializedName: 'state',
+            type: {
+              name: 'String'
+            }
+          },
+          annotation: {
+            required: false,
+            serializedName: 'annotation',
             type: {
               name: 'String'
             }

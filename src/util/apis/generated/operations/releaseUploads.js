@@ -172,6 +172,8 @@ function _complete(uploadId, ownerName, appName, status, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {number} [options.releaseId] The ID of the release.
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -199,6 +201,7 @@ function _create(ownerName, appName, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let releaseId = (options && options.releaseId !== undefined) ? options.releaseId : undefined;
   // Validate
   try {
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
@@ -207,8 +210,16 @@ function _create(ownerName, appName, options, callback) {
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
+    if (releaseId !== null && releaseId !== undefined && typeof releaseId !== 'number') {
+      throw new Error('releaseId must be of type number.');
+    }
   } catch (error) {
     return callback(error);
+  }
+  let body;
+  if (releaseId !== null && releaseId !== undefined) {
+    body = new client.models['ReleaseUploadBeginRequest']();
+    body.releaseId = releaseId;
   }
 
   // Construct URL
@@ -231,7 +242,21 @@ function _create(ownerName, appName, options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (body !== null && body !== undefined) {
+      let requestModelMapper = new client.models['ReleaseUploadBeginRequest']().mapper();
+      requestModel = client.serialize(requestModelMapper, body, 'body');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(body, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -405,6 +430,8 @@ class ReleaseUploads {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {number} [options.releaseId] The ID of the release.
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -436,6 +463,8 @@ class ReleaseUploads {
    * @param {string} appName The name of the application
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {number} [options.releaseId] The ID of the release.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

@@ -18,6 +18,8 @@ class ItunesTeamsRequest {
    * @member {string} [password] The password for the Apple Developer account.
    * @member {string} [serviceConnectionId] The service_connection_id of the
    * stored Apple credentials instead of username, password.
+   * @member {string} [cookie] The 30-day session cookie for multi-factor
+   * authentication backed accounts.
    */
   constructor() {
   }
@@ -53,6 +55,13 @@ class ItunesTeamsRequest {
           serviceConnectionId: {
             required: false,
             serializedName: 'service_connection_id',
+            type: {
+              name: 'String'
+            }
+          },
+          cookie: {
+            required: false,
+            serializedName: 'cookie',
             type: {
               name: 'String'
             }

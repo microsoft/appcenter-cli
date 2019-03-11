@@ -12,7 +12,7 @@
 class DistributionGroupUserGetResponse {
   /**
    * Create a DistributionGroupUserGetResponse.
-   * @member {string} [id] The unique id (UUID) of the user
+   * @member {uuid} [id] The unique id (UUID) of the user
    * @member {string} [avatarUrl] The avatar URL of the user
    * @member {boolean} [canChangePassword] User is required to send an old
    * password in order to change the password.

@@ -13,7 +13,7 @@
 class Owner {
   /**
    * Create a Owner.
-   * @member {string} id The unique id (UUID) of the owner
+   * @member {uuid} id The unique id (UUID) of the owner
    * @member {string} [avatarUrl] The avatar URL of the owner
    * @member {string} displayName The owner's display name
    * @member {string} [email] The owner's email address

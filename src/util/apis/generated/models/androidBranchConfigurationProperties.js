@@ -15,11 +15,20 @@ class AndroidBranchConfigurationProperties {
    * Create a AndroidBranchConfigurationProperties.
    * @member {string} [gradleWrapperPath] Path to the Gradle wrapper script
    * @member {string} module The Gradle module to build
-   * @member {string} variant The Android build variant to build
+   * @member {string} buildVariant The Android build variant to build
    * @member {boolean} [runTests] Whether to run unit tests during the build
    * (default). Default value: true .
    * @member {boolean} [runLint] Whether to run lint checks during the build
    * (default). Default value: true .
+   * @member {boolean} [isRoot] Whether it is the root module or not. Default
+   * value: true .
+   * @member {boolean} [automaticSigning] Whether to apply automatic signing or
+   * not. Default value: true .
+   * @member {string} [keystorePassword] The password of the keystore
+   * @member {string} [keyAlias] The key alias
+   * @member {string} [keyPassword] The key password
+   * @member {string} [keystoreFilename] The name of the keystore file
+   * @member {string} [keystoreEncoded] The keystore encoded value
    */
   constructor() {
   }
@@ -52,9 +61,9 @@ class AndroidBranchConfigurationProperties {
               name: 'String'
             }
           },
-          variant: {
+          buildVariant: {
             required: true,
-            serializedName: 'variant',
+            serializedName: 'buildVariant',
             type: {
               name: 'String'
             }
@@ -73,6 +82,57 @@ class AndroidBranchConfigurationProperties {
             defaultValue: true,
             type: {
               name: 'Boolean'
+            }
+          },
+          isRoot: {
+            required: false,
+            serializedName: 'isRoot',
+            defaultValue: true,
+            type: {
+              name: 'Boolean'
+            }
+          },
+          automaticSigning: {
+            required: false,
+            serializedName: 'automaticSigning',
+            defaultValue: true,
+            type: {
+              name: 'Boolean'
+            }
+          },
+          keystorePassword: {
+            required: false,
+            serializedName: 'keystorePassword',
+            type: {
+              name: 'String'
+            }
+          },
+          keyAlias: {
+            required: false,
+            serializedName: 'keyAlias',
+            type: {
+              name: 'String'
+            }
+          },
+          keyPassword: {
+            required: false,
+            serializedName: 'keyPassword',
+            type: {
+              name: 'String'
+            }
+          },
+          keystoreFilename: {
+            required: false,
+            serializedName: 'keystoreFilename',
+            type: {
+              name: 'String'
+            }
+          },
+          keystoreEncoded: {
+            required: false,
+            serializedName: 'keystoreEncoded',
+            type: {
+              name: 'String'
             }
           }
         }

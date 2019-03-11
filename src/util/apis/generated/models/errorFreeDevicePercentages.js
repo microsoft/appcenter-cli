@@ -48,10 +48,10 @@ class ErrorFreeDevicePercentages {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DateTimePercentagesElementType',
+                  serializedName: 'ErrorDateTimePercentagesElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DateTimePercentages'
+                    className: 'ErrorDateTimePercentages'
                   }
               }
             }

@@ -26,7 +26,9 @@ class Crash {
    * (example: 640x480).
    * @member {date} [details.appStartTimestamp] Application launch timestamp
    * (example: 1985-04-12T23:20:50.52Z).
+   * @member {string} newCrashGroupId
    * @member {string} crashId
+   * @member {string} newCrashId
    * @member {string} [displayId]
    * @member {date} timestamp
    * @member {string} version
@@ -78,9 +80,23 @@ class Crash {
               className: 'CrashDetails'
             }
           },
+          newCrashGroupId: {
+            required: true,
+            serializedName: 'new_crash_group_id',
+            type: {
+              name: 'String'
+            }
+          },
           crashId: {
             required: true,
             serializedName: 'crash_id',
+            type: {
+              name: 'String'
+            }
+          },
+          newCrashId: {
+            required: true,
+            serializedName: 'new_crash_id',
             type: {
               name: 'String'
             }

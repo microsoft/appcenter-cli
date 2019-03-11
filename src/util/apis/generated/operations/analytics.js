@@ -1725,7 +1725,7 @@ function _genericLogFlow(ownerName, appName, options, callback) {
  *
  * @param {array} [options.versions]
  *
- * @param {number} [options.count] The number of property values to return
+ * @param {number} [options.top] The number of property values to return
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1755,7 +1755,7 @@ function _eventPropertyCounts(eventName, eventPropertyName, start, ownerName, ap
   }
   let end = (options && options.end !== undefined) ? options.end : undefined;
   let versions = (options && options.versions !== undefined) ? options.versions : undefined;
-  let count = (options && options.count !== undefined) ? options.count : 5;
+  let top = (options && options.top !== undefined) ? options.top : 5;
   // Validate
   try {
     if (eventName === null || eventName === undefined || typeof eventName.valueOf() !== 'string') {
@@ -1779,17 +1779,17 @@ function _eventPropertyCounts(eventName, eventPropertyName, start, ownerName, ap
         }
       }
     }
-    if (count !== null && count !== undefined && typeof count !== 'number') {
-      throw new Error('count must be of type number.');
+    if (top !== null && top !== undefined && typeof top !== 'number') {
+      throw new Error('top must be of type number.');
     }
-    if (count !== null && count !== undefined) {
-      if (count > 10)
+    if (top !== null && top !== undefined) {
+      if (top > 10)
       {
-        throw new Error('"count" should satisfy the constraint - "InclusiveMaximum": 10');
+        throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 10');
       }
-      if (count < 1)
+      if (top < 1)
       {
-        throw new Error('"count" should satisfy the constraint - "InclusiveMinimum": 1');
+        throw new Error('"top" should satisfy the constraint - "InclusiveMinimum": 1');
       }
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
@@ -1817,8 +1817,8 @@ function _eventPropertyCounts(eventName, eventPropertyName, start, ownerName, ap
   if (versions !== null && versions !== undefined) {
     queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
   }
-  if (count !== null && count !== undefined) {
-    queryParameters.push('count=' + encodeURIComponent(count.toString()));
+  if (top !== null && top !== undefined) {
+    queryParameters.push('$top=' + encodeURIComponent(top.toString()));
   }
   if (queryParameters.length > 0) {
     requestUrl += '?' + queryParameters.join('&');
@@ -3303,9 +3303,11 @@ function _distributionReleaseCounts(ownerName, appName, releases, options, callb
 /**
  * Percentage of crash-free device by day in the time range based on the
  * selected versions. Api will return -1 if crash devices is greater than
- * active devices
+ * active devices.
  *
  * @param {date} start Start date time in data in ISO 8601 date time format
+ *
+ * @param {string} version
  *
  * @param {string} ownerName The name of the owner
  *
@@ -3315,8 +3317,6 @@ function _distributionReleaseCounts(ownerName, appName, releases, options, callb
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
  * format
- *
- * @param {array} [options.versions]
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -3335,7 +3335,7 @@ function _distributionReleaseCounts(ownerName, appName, releases, options, callb
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _crashFreeDevicePercentagesMethod(start, ownerName, appName, options, callback) {
+function _crashFreeDevicePercentagesMethod(start, version, ownerName, appName, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -3346,7 +3346,6 @@ function _crashFreeDevicePercentagesMethod(start, ownerName, appName, options, c
     throw new Error('callback cannot be null.');
   }
   let end = (options && options.end !== undefined) ? options.end : undefined;
-  let versions = (options && options.versions !== undefined) ? options.versions : undefined;
   // Validate
   try {
     if(!start || !(start instanceof Date ||
@@ -3357,12 +3356,8 @@ function _crashFreeDevicePercentagesMethod(start, ownerName, appName, options, c
         (typeof end.valueOf() === 'string' && !isNaN(Date.parse(end))))) {
           throw new Error('end must be of type date.');
         }
-    if (Array.isArray(versions)) {
-      for (let i = 0; i < versions.length; i++) {
-        if (versions[i] !== null && versions[i] !== undefined && typeof versions[i].valueOf() !== 'string') {
-          throw new Error('versions[i] must be of type string.');
-        }
-      }
+    if (version === null || version === undefined || typeof version.valueOf() !== 'string') {
+      throw new Error('version cannot be null or undefined and it must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -3384,9 +3379,7 @@ function _crashFreeDevicePercentagesMethod(start, ownerName, appName, options, c
   if (end !== null && end !== undefined) {
     queryParameters.push('end=' + encodeURIComponent(client.serializeObject(end)));
   }
-  if (versions !== null && versions !== undefined) {
-    queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
-  }
+  queryParameters.push('version=' + encodeURIComponent(version));
   if (queryParameters.length > 0) {
     requestUrl += '?' + queryParameters.join('&');
   }
@@ -3464,8 +3457,10 @@ function _crashFreeDevicePercentagesMethod(start, ownerName, appName, options, c
 }
 
 /**
+ * @summary Available for UWP apps only.
+ *
  * Overall crashes and affected users count of the selected crash group with
- * selected version
+ * selected version. Available for UWP apps only.
  *
  * @param {string} crashGroupId The id of the crash group
  *
@@ -3606,7 +3601,10 @@ function _crashGroupTotals(crashGroupId, version, ownerName, appName, options, c
 }
 
 /**
- * top OSes of the selected crash group with selected version
+ * @summary Available for UWP apps only.
+ *
+ * top OSes of the selected crash group with selected version. Available for
+ * UWP apps only.
  *
  * @param {string} crashGroupId The id of the crash group
  *
@@ -3768,7 +3766,10 @@ function _crashGroupOperatingSystemCounts(crashGroupId, version, ownerName, appN
 }
 
 /**
- * top models of the selected crash group with selected version
+ * @summary Available for UWP apps only.
+ *
+ * top models of the selected crash group with selected version. Available for
+ * UWP apps only.
  *
  * @param {string} crashGroupId The id of the crash group
  *
@@ -3929,8 +3930,10 @@ function _crashGroupModelCounts(crashGroupId, version, ownerName, appName, optio
 }
 
 /**
+ * @summary Available for UWP apps only.
+ *
  * Count of crashes by day in the time range of the selected crash group with
- * selected version
+ * selected version. Available for UWP apps only.
  *
  * @param {string} crashGroupId The id of the crash group
  *
@@ -4255,7 +4258,10 @@ function _crashGroupsTotals(ownerName, appName, crashGroups, options, callback) 
 }
 
 /**
+ * @summary Available for UWP apps only.
+ *
  * Count of crashes by day in the time range based the selected versions.
+ * Available for UWP apps only.
  *
  * @param {date} start Start date time in data in ISO 8601 date time format
  *
@@ -6926,7 +6932,7 @@ class Analytics {
    *
    * @param {array} [options.versions]
    *
-   * @param {number} [options.count] The number of property values to return
+   * @param {number} [options.top] The number of property values to return
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -6972,7 +6978,7 @@ class Analytics {
    *
    * @param {array} [options.versions]
    *
-   * @param {number} [options.count] The number of property values to return
+   * @param {number} [options.top] The number of property values to return
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -7928,9 +7934,11 @@ class Analytics {
   /**
    * Percentage of crash-free device by day in the time range based on the
    * selected versions. Api will return -1 if crash devices is greater than
-   * active devices
+   * active devices.
    *
    * @param {date} start Start date time in data in ISO 8601 date time format
+   *
+   * @param {string} version
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7941,8 +7949,6 @@ class Analytics {
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
    * format
    *
-   * @param {array} [options.versions]
-   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -7952,11 +7958,11 @@ class Analytics {
    *
    * @reject {Error} - The error object.
    */
-  crashFreeDevicePercentagesMethodWithHttpOperationResponse(start, ownerName, appName, options) {
+  crashFreeDevicePercentagesMethodWithHttpOperationResponse(start, version, ownerName, appName, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._crashFreeDevicePercentagesMethod(start, ownerName, appName, options, (err, result, request, response) => {
+      self._crashFreeDevicePercentagesMethod(start, version, ownerName, appName, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -7969,9 +7975,11 @@ class Analytics {
   /**
    * Percentage of crash-free device by day in the time range based on the
    * selected versions. Api will return -1 if crash devices is greater than
-   * active devices
+   * active devices.
    *
    * @param {date} start Start date time in data in ISO 8601 date time format
+   *
+   * @param {string} version
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7981,8 +7989,6 @@ class Analytics {
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
    * format
-   *
-   * @param {array} [options.versions]
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -8010,7 +8016,7 @@ class Analytics {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  crashFreeDevicePercentagesMethod(start, ownerName, appName, options, optionalCallback) {
+  crashFreeDevicePercentagesMethod(start, version, ownerName, appName, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -8019,20 +8025,22 @@ class Analytics {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._crashFreeDevicePercentagesMethod(start, ownerName, appName, options, (err, result, request, response) => {
+        self._crashFreeDevicePercentagesMethod(start, version, ownerName, appName, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._crashFreeDevicePercentagesMethod(start, ownerName, appName, options, optionalCallback);
+      return self._crashFreeDevicePercentagesMethod(start, version, ownerName, appName, options, optionalCallback);
     }
   }
 
   /**
+   * @summary Available for UWP apps only.
+   *
    * Overall crashes and affected users count of the selected crash group with
-   * selected version
+   * selected version. Available for UWP apps only.
    *
    * @param {string} crashGroupId The id of the crash group
    *
@@ -8068,8 +8076,10 @@ class Analytics {
   }
 
   /**
+   * @summary Available for UWP apps only.
+   *
    * Overall crashes and affected users count of the selected crash group with
-   * selected version
+   * selected version. Available for UWP apps only.
    *
    * @param {string} crashGroupId The id of the crash group
    *
@@ -8127,7 +8137,10 @@ class Analytics {
   }
 
   /**
-   * top OSes of the selected crash group with selected version
+   * @summary Available for UWP apps only.
+   *
+   * top OSes of the selected crash group with selected version. Available for
+   * UWP apps only.
    *
    * @param {string} crashGroupId The id of the crash group
    *
@@ -8166,7 +8179,10 @@ class Analytics {
   }
 
   /**
-   * top OSes of the selected crash group with selected version
+   * @summary Available for UWP apps only.
+   *
+   * top OSes of the selected crash group with selected version. Available for
+   * UWP apps only.
    *
    * @param {string} crashGroupId The id of the crash group
    *
@@ -8228,7 +8244,10 @@ class Analytics {
   }
 
   /**
-   * top models of the selected crash group with selected version
+   * @summary Available for UWP apps only.
+   *
+   * top models of the selected crash group with selected version. Available for
+   * UWP apps only.
    *
    * @param {string} crashGroupId The id of the crash group
    *
@@ -8267,7 +8286,10 @@ class Analytics {
   }
 
   /**
-   * top models of the selected crash group with selected version
+   * @summary Available for UWP apps only.
+   *
+   * top models of the selected crash group with selected version. Available for
+   * UWP apps only.
    *
    * @param {string} crashGroupId The id of the crash group
    *
@@ -8328,8 +8350,10 @@ class Analytics {
   }
 
   /**
+   * @summary Available for UWP apps only.
+   *
    * Count of crashes by day in the time range of the selected crash group with
-   * selected version
+   * selected version. Available for UWP apps only.
    *
    * @param {string} crashGroupId The id of the crash group
    *
@@ -8370,8 +8394,10 @@ class Analytics {
   }
 
   /**
+   * @summary Available for UWP apps only.
+   *
    * Count of crashes by day in the time range of the selected crash group with
-   * selected version
+   * selected version. Available for UWP apps only.
    *
    * @param {string} crashGroupId The id of the crash group
    *
@@ -8525,7 +8551,10 @@ class Analytics {
   }
 
   /**
+   * @summary Available for UWP apps only.
+   *
    * Count of crashes by day in the time range based the selected versions.
+   * Available for UWP apps only.
    *
    * @param {date} start Start date time in data in ISO 8601 date time format
    *
@@ -8564,7 +8593,10 @@ class Analytics {
   }
 
   /**
+   * @summary Available for UWP apps only.
+   *
    * Count of crashes by day in the time range based the selected versions.
+   * Available for UWP apps only.
    *
    * @param {date} start Start date time in data in ISO 8601 date time format
    *

@@ -12,9 +12,10 @@
 class OrganizationResponse {
   /**
    * Create a OrganizationResponse.
-   * @member {string} id The internal unique id (UUID) of the organization.
+   * @member {uuid} id The internal unique id (UUID) of the organization.
    * @member {string} displayName The display name of the organization
    * @member {string} name The slug name of the organization
+   * @member {string} [avatarUrl] The URL to a user-uploaded Avatar image
    * @member {string} origin The creation origin of this organization. Possible
    * values include: 'appcenter', 'hockeyapp'
    * @member {string} createdAt The creation date of this organization
@@ -54,6 +55,13 @@ class OrganizationResponse {
           name: {
             required: true,
             serializedName: 'name',
+            type: {
+              name: 'String'
+            }
+          },
+          avatarUrl: {
+            required: false,
+            serializedName: 'avatar_url',
             type: {
               name: 'String'
             }

@@ -12,9 +12,14 @@
 class DistributionRequest {
   /**
    * Create a DistributionRequest.
-   * @member {string} distributionGroupId A distribution group ID or a store
-   * group ID
+   * @member {string} [distributionGroupId] DEPRECATED - A distribution group
+   * ID or a store group ID
+   * @member {array} [destinations] Array of objects {id:string, type:string}
+   * with "id" being the distribution group ID, store ID, or tester email, and
+   * "type" being "group", "store", or "tester"
    * @member {string} [releaseNotes] The release notes
+   * @member {boolean} [mandatoryUpdate]
+   * @member {boolean} [notifyTesters] Default value: true .
    */
   constructor() {
   }
@@ -34,10 +39,24 @@ class DistributionRequest {
         className: 'DistributionRequest',
         modelProperties: {
           distributionGroupId: {
-            required: true,
+            required: false,
             serializedName: 'distributionGroupId',
             type: {
               name: 'String'
+            }
+          },
+          destinations: {
+            required: false,
+            serializedName: 'destinations',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'ObjectElementType',
+                  type: {
+                    name: 'Object'
+                  }
+              }
             }
           },
           releaseNotes: {
@@ -45,6 +64,21 @@ class DistributionRequest {
             serializedName: 'releaseNotes',
             type: {
               name: 'String'
+            }
+          },
+          mandatoryUpdate: {
+            required: false,
+            serializedName: 'mandatoryUpdate',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          notifyTesters: {
+            required: false,
+            serializedName: 'notifyTesters',
+            defaultValue: true,
+            type: {
+              name: 'Boolean'
             }
           }
         }

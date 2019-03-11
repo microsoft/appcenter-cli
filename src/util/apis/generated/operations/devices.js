@@ -656,6 +656,11 @@ function _userDevicesList(options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {boolean} [options.includeProvisioningProfile] A boolean value that
+ * indicates if the provisioning profile should be return in addition to the
+ * status. When set to true, the provisioning profile will be returned only
+ * when status is 'complete' or 'preparing_for_testers'.
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -681,6 +686,7 @@ function _getReleaseUpdateDevicesStatus(releaseId, resignId, ownerName, appName,
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let includeProvisioningProfile = (options && options.includeProvisioningProfile !== undefined) ? options.includeProvisioningProfile : undefined;
   // Validate
   try {
     if (releaseId === null || releaseId === undefined || typeof releaseId.valueOf() !== 'string') {
@@ -688,6 +694,9 @@ function _getReleaseUpdateDevicesStatus(releaseId, resignId, ownerName, appName,
     }
     if (resignId === null || resignId === undefined || typeof resignId.valueOf() !== 'string') {
       throw new Error('resignId cannot be null or undefined and it must be of type string.');
+    }
+    if (includeProvisioningProfile !== null && includeProvisioningProfile !== undefined && typeof includeProvisioningProfile !== 'boolean') {
+      throw new Error('includeProvisioningProfile must be of type boolean.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -706,172 +715,13 @@ function _getReleaseUpdateDevicesStatus(releaseId, resignId, ownerName, appName,
   requestUrl = requestUrl.replace('{resign_id}', encodeURIComponent(resignId));
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  let httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.url = requestUrl;
-  httpRequest.headers = {};
-  // Set Headers
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  if(options) {
-    for(let headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
+  let queryParameters = [];
+  if (includeProvisioningProfile !== null && includeProvisioningProfile !== undefined) {
+    queryParameters.push('include_provisioning_profile=' + encodeURIComponent(includeProvisioningProfile.toString()));
   }
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, (err, response, responseBody) => {
-    if (err) {
-      return callback(err);
-    }
-    let statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 404) {
-      let error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      let parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          let internalError = null;
-          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-          error.code = internalError ? internalError.code : parsedErrorResponse.code;
-          error.message = internalError ? internalError.message : parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                         `- "${responseBody}" for the default response.`;
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    let result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      let parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ResignStatus']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 400) {
-      let parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        let deserializationError1 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
-        deserializationError1.request = msRest.stripRequest(httpRequest);
-        deserializationError1.response = msRest.stripResponse(response);
-        return callback(deserializationError1);
-      }
-    }
-    // Deserialize Response
-    if (statusCode === 404) {
-      let parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        let deserializationError2 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
-        deserializationError2.request = msRest.stripRequest(httpRequest);
-        deserializationError2.response = msRest.stripResponse(response);
-        return callback(deserializationError2);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-}
-
-/**
- * Returns the resign status to the caller
- *
- * @param {string} distributionGroupName The name of the distribution group.
- *
- * @param {string} resignId The ID of the resign operation
- *
- * @param {string} ownerName The name of the owner
- *
- * @param {string} appName The name of the application
- *
- * @param {object} [options] Optional Parameters.
- *
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- *
- * @param {function} callback - The callback.
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {object} [result]   - The deserialized result object if an error did not occur.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-function _getUpdateDevicesStatus(distributionGroupName, resignId, ownerName, appName, options, callback) {
-   /* jshint validthis: true */
-  let client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
+  if (queryParameters.length > 0) {
+    requestUrl += '?' + queryParameters.join('&');
   }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  // Validate
-  try {
-    if (distributionGroupName === null || distributionGroupName === undefined || typeof distributionGroupName.valueOf() !== 'string') {
-      throw new Error('distributionGroupName cannot be null or undefined and it must be of type string.');
-    }
-    if (resignId === null || resignId === undefined || typeof resignId.valueOf() !== 'string') {
-      throw new Error('resignId cannot be null or undefined and it must be of type string.');
-    }
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/distribution_groups/{distribution_group_name}/update_devices/{resign_id}';
-  requestUrl = requestUrl.replace('{distribution_group_name}', encodeURIComponent(distributionGroupName));
-  requestUrl = requestUrl.replace('{resign_id}', encodeURIComponent(resignId));
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
 
   // Create HTTP transport objects
   let httpRequest = new WebResource();
@@ -1302,6 +1152,145 @@ function _list(distributionGroupName, ownerName, appName, options, callback) {
   });
 }
 
+/**
+ * **Warning, this operation is not reversible.**
+ *
+ * A successful call to this API will permanently stop ingesting any logs
+ * received via SDK for the given installation ID, and cannot be restored. We
+ * advise caution when using this API, it is designed to permanently disable
+ * collection from a specific installation of the app on a device, usually
+ * following the request from a user.
+ *
+ *
+ * @param {string} installId The id of the device
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {string} [result]   - The deserialized result object if an error did not occur.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _blockLogs(installId, ownerName, appName, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (installId === null || installId === undefined || typeof installId.valueOf() !== 'string') {
+      throw new Error('installId cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/devices/block_logs/{install_id}';
+  requestUrl = requestUrl.replace('{install_id}', encodeURIComponent(installId));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'PUT';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'String'
+            }
+          };
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
 /** Class representing a Devices. */
 class Devices {
   /**
@@ -1315,9 +1304,9 @@ class Devices {
     this._removeUserDevice = _removeUserDevice;
     this._userDevicesList = _userDevicesList;
     this._getReleaseUpdateDevicesStatus = _getReleaseUpdateDevicesStatus;
-    this._getUpdateDevicesStatus = _getUpdateDevicesStatus;
     this._listCsvFormat = _listCsvFormat;
     this._list = _list;
+    this._blockLogs = _blockLogs;
   }
 
   /**
@@ -1696,6 +1685,11 @@ class Devices {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {boolean} [options.includeProvisioningProfile] A boolean value that
+   * indicates if the provisioning profile should be return in addition to the
+   * status. When set to true, the provisioning profile will be returned only
+   * when status is 'complete' or 'preparing_for_testers'.
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -1731,6 +1725,11 @@ class Devices {
    * @param {string} appName The name of the application
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {boolean} [options.includeProvisioningProfile] A boolean value that
+   * indicates if the provisioning profile should be return in addition to the
+   * status. When set to true, the provisioning profile will be returned only
+   * when status is 'complete' or 'preparing_for_testers'.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -1773,99 +1772,6 @@ class Devices {
       });
     } else {
       return self._getReleaseUpdateDevicesStatus(releaseId, resignId, ownerName, appName, options, optionalCallback);
-    }
-  }
-
-  /**
-   * Returns the resign status to the caller
-   *
-   * @param {string} distributionGroupName The name of the distribution group.
-   *
-   * @param {string} resignId The ID of the resign operation
-   *
-   * @param {string} ownerName The name of the owner
-   *
-   * @param {string} appName The name of the application
-   *
-   * @param {object} [options] Optional Parameters.
-   *
-   * @param {object} [options.customHeaders] Headers that will be added to the
-   * request
-   *
-   * @returns {Promise} A promise is returned
-   *
-   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
-   *
-   * @reject {Error} - The error object.
-   */
-  getUpdateDevicesStatusWithHttpOperationResponse(distributionGroupName, resignId, ownerName, appName, options) {
-    let client = this.client;
-    let self = this;
-    return new Promise((resolve, reject) => {
-      self._getUpdateDevicesStatus(distributionGroupName, resignId, ownerName, appName, options, (err, result, request, response) => {
-        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
-        httpOperationResponse.body = result;
-        if (err) { reject(err); }
-        else { resolve(httpOperationResponse); }
-        return;
-      });
-    });
-  }
-
-  /**
-   * Returns the resign status to the caller
-   *
-   * @param {string} distributionGroupName The name of the distribution group.
-   *
-   * @param {string} resignId The ID of the resign operation
-   *
-   * @param {string} ownerName The name of the owner
-   *
-   * @param {string} appName The name of the application
-   *
-   * @param {object} [options] Optional Parameters.
-   *
-   * @param {object} [options.customHeaders] Headers that will be added to the
-   * request
-   *
-   * @param {function} [optionalCallback] - The optional callback.
-   *
-   * @returns {function|Promise} If a callback was passed as the last parameter
-   * then it returns the callback else returns a Promise.
-   *
-   * {Promise} A promise is returned
-   *
-   *                      @resolve {Object} - The deserialized result object.
-   *
-   *                      @reject {Error} - The error object.
-   *
-   * {function} optionalCallback(err, result, request, response)
-   *
-   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *
-   *                      {object} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
-   */
-  getUpdateDevicesStatus(distributionGroupName, resignId, ownerName, appName, options, optionalCallback) {
-    let client = this.client;
-    let self = this;
-    if (!optionalCallback && typeof options === 'function') {
-      optionalCallback = options;
-      options = null;
-    }
-    if (!optionalCallback) {
-      return new Promise((resolve, reject) => {
-        self._getUpdateDevicesStatus(distributionGroupName, resignId, ownerName, appName, options, (err, result, request, response) => {
-          if (err) { reject(err); }
-          else { resolve(result); }
-          return;
-        });
-      });
-    } else {
-      return self._getUpdateDevicesStatus(distributionGroupName, resignId, ownerName, appName, options, optionalCallback);
     }
   }
 
@@ -2064,6 +1970,109 @@ class Devices {
       });
     } else {
       return self._list(distributionGroupName, ownerName, appName, options, optionalCallback);
+    }
+  }
+
+  /**
+   * **Warning, this operation is not reversible.**
+   *
+   * A successful call to this API will permanently stop ingesting any logs
+   * received via SDK for the given installation ID, and cannot be restored. We
+   * advise caution when using this API, it is designed to permanently disable
+   * collection from a specific installation of the app on a device, usually
+   * following the request from a user.
+   *
+   *
+   * @param {string} installId The id of the device
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<String>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  blockLogsWithHttpOperationResponse(installId, ownerName, appName, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._blockLogs(installId, ownerName, appName, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * **Warning, this operation is not reversible.**
+   *
+   * A successful call to this API will permanently stop ingesting any logs
+   * received via SDK for the given installation ID, and cannot be restored. We
+   * advise caution when using this API, it is designed to permanently disable
+   * collection from a specific installation of the app on a device, usually
+   * following the request from a user.
+   *
+   *
+   * @param {string} installId The id of the device
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {String} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {string} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  blockLogs(installId, ownerName, appName, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._blockLogs(installId, ownerName, appName, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._blockLogs(installId, ownerName, appName, options, optionalCallback);
     }
   }
 

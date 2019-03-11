@@ -57,6 +57,13 @@ class OrganizationResponseInternal extends models['OrganizationResponse'] {
               name: 'String'
             }
           },
+          avatarUrl: {
+            required: false,
+            serializedName: 'avatar_url',
+            type: {
+              name: 'String'
+            }
+          },
           origin: {
             required: true,
             serializedName: 'origin',

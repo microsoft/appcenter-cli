@@ -41,6 +41,7 @@ class TestReport {
    * @member {array} deviceLogs
    * @member {string} dateFinished
    * @member {string} [errorMessage]
+   * @member {array} [snapshotFatalErrors]
    */
   constructor() {
   }
@@ -172,6 +173,21 @@ class TestReport {
             serializedName: 'errorMessage',
             type: {
               name: 'String'
+            }
+          },
+          snapshotFatalErrors: {
+            required: false,
+            serializedName: 'snapshot_fatal_errors',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'TestReportSnapshotFatalErrorsItemElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'TestReportSnapshotFatalErrorsItem'
+                  }
+              }
             }
           }
         }

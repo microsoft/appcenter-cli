@@ -10,18 +10,11 @@ const models = require('./index');
 
 /**
  * Class representing a ErrorGroupListItem.
- * @extends models['ErrorGroupState']
+ * @extends models['ErrorGroup']
  */
-class ErrorGroupListItem extends models['ErrorGroupState'] {
+class ErrorGroupListItem extends models['ErrorGroup'] {
   /**
    * Create a ErrorGroupListItem.
-   * @member {string} errorGroupId
-   * @member {string} appVersion
-   * @member {number} count
-   * @member {number} deviceCount
-   * @member {date} lastOccurrence
-   * @member {string} [exceptionType]
-   * @member {string} [exceptionMessage]
    */
   constructor() {
     super();
@@ -48,6 +41,13 @@ class ErrorGroupListItem extends models['ErrorGroupState'] {
               name: 'String'
             }
           },
+          annotation: {
+            required: false,
+            serializedName: 'annotation',
+            type: {
+              name: 'String'
+            }
+          },
           errorGroupId: {
             required: true,
             serializedName: 'errorGroupId',
@@ -58,6 +58,13 @@ class ErrorGroupListItem extends models['ErrorGroupState'] {
           appVersion: {
             required: true,
             serializedName: 'appVersion',
+            type: {
+              name: 'String'
+            }
+          },
+          appBuild: {
+            required: false,
+            serializedName: 'appBuild',
             type: {
               name: 'String'
             }
@@ -74,6 +81,13 @@ class ErrorGroupListItem extends models['ErrorGroupState'] {
             serializedName: 'deviceCount',
             type: {
               name: 'Number'
+            }
+          },
+          firstOccurrence: {
+            required: true,
+            serializedName: 'firstOccurrence',
+            type: {
+              name: 'DateTime'
             }
           },
           lastOccurrence: {
@@ -95,6 +109,70 @@ class ErrorGroupListItem extends models['ErrorGroupState'] {
             serializedName: 'exceptionMessage',
             type: {
               name: 'String'
+            }
+          },
+          exceptionClassName: {
+            required: false,
+            serializedName: 'exceptionClassName',
+            type: {
+              name: 'String'
+            }
+          },
+          exceptionClassMethod: {
+            required: false,
+            serializedName: 'exceptionClassMethod',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          exceptionMethod: {
+            required: false,
+            serializedName: 'exceptionMethod',
+            type: {
+              name: 'String'
+            }
+          },
+          exceptionAppCode: {
+            required: false,
+            serializedName: 'exceptionAppCode',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          exceptionFile: {
+            required: false,
+            serializedName: 'exceptionFile',
+            type: {
+              name: 'String'
+            }
+          },
+          exceptionLine: {
+            required: false,
+            serializedName: 'exceptionLine',
+            type: {
+              name: 'String'
+            }
+          },
+          codeRaw: {
+            required: false,
+            serializedName: 'codeRaw',
+            type: {
+              name: 'String'
+            }
+          },
+          reasonFrames: {
+            required: false,
+            serializedName: 'reasonFrames',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'HandledErrorReasonFrameElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'HandledErrorReasonFrame'
+                  }
+              }
             }
           }
         }

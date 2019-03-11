@@ -15,7 +15,7 @@ class StoresDetails {
    * @member {string} [id] ID identifying a unique distribution store.
    * @member {string} [name] A name identifying a unique distribution store.
    * @member {string} [type] A type identifying the type of distribution store.
-   * Possible values include: 'googleplay', 'intune', 'windows', 'apple'
+   * Possible values include: 'googleplay', 'intune', 'apple'
    * @member {string} [publishingStatus] A status identifying the status of
    * release in the distribution store.
    * @member {boolean} [isLatest] Is the containing release the latest one in

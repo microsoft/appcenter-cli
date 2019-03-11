@@ -10,7 +10,9 @@ const msRest = require('ms-rest');
 const WebResource = msRest.WebResource;
 
 /**
- * Gets a stacktrace for a specific crash
+ * @summary Available for UWP apps only.
+ *
+ * Gets a stacktrace for a specific crash. Available for UWP apps only.
  *
  * @param {string} crashGroupId id of a specific group
  *
@@ -155,7 +157,9 @@ function _getStacktrace(crashGroupId, ownerName, appName, options, callback) {
 }
 
 /**
- * Gets a specific group
+ * @summary Available for UWP apps only.
+ *
+ * Gets a specific group. Available for UWP apps only.
  *
  * @param {string} crashGroupId id of a specific group
  *
@@ -286,7 +290,9 @@ function _get(crashGroupId, ownerName, appName, options, callback) {
 }
 
 /**
- * Updates a group
+ * @summary Available for UWP apps only.
+ *
+ * Updates a group. Available for UWP apps only.
  *
  * @param {string} crashGroupId id of a specific group
  *
@@ -449,11 +455,10 @@ function _update(crashGroupId, ownerName, appName, options, callback) {
 }
 
 /**
- * @summary Gets a list of crash groups and whether the list contains all
- * available groups.
+ * @summary Available for UWP apps only.
  *
  * Gets a list of crash groups and whether the list contains all available
- * groups.
+ * groups. Available for UWP apps only.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -679,7 +684,9 @@ class CrashGroups {
   }
 
   /**
-   * Gets a stacktrace for a specific crash
+   * @summary Available for UWP apps only.
+   *
+   * Gets a stacktrace for a specific crash. Available for UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -716,7 +723,9 @@ class CrashGroups {
   }
 
   /**
-   * Gets a stacktrace for a specific crash
+   * @summary Available for UWP apps only.
+   *
+   * Gets a stacktrace for a specific crash. Available for UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -775,7 +784,9 @@ class CrashGroups {
   }
 
   /**
-   * Gets a specific group
+   * @summary Available for UWP apps only.
+   *
+   * Gets a specific group. Available for UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -809,7 +820,9 @@ class CrashGroups {
   }
 
   /**
-   * Gets a specific group
+   * @summary Available for UWP apps only.
+   *
+   * Gets a specific group. Available for UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -865,7 +878,9 @@ class CrashGroups {
   }
 
   /**
-   * Updates a group
+   * @summary Available for UWP apps only.
+   *
+   * Updates a group. Available for UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -903,7 +918,9 @@ class CrashGroups {
   }
 
   /**
-   * Updates a group
+   * @summary Available for UWP apps only.
+   *
+   * Updates a group. Available for UWP apps only.
    *
    * @param {string} crashGroupId id of a specific group
    *
@@ -963,11 +980,10 @@ class CrashGroups {
   }
 
   /**
-   * @summary Gets a list of crash groups and whether the list contains all
-   * available groups.
+   * @summary Available for UWP apps only.
    *
    * Gets a list of crash groups and whether the list contains all available
-   * groups.
+   * groups. Available for UWP apps only.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -1024,11 +1040,10 @@ class CrashGroups {
   }
 
   /**
-   * @summary Gets a list of crash groups and whether the list contains all
-   * available groups.
+   * @summary Available for UWP apps only.
    *
    * Gets a list of crash groups and whether the list contains all available
-   * groups.
+   * groups. Available for UWP apps only.
    *
    * @param {string} ownerName The name of the owner
    *
