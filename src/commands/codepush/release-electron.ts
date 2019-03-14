@@ -37,13 +37,13 @@ export default class CodePushReleaseElectronCommand extends CodePushReleaseComma
   @hasArg
   public entryFile: string;
 
-  @help("Path to where the sourcemap for the resulting bundle should be written. If omitted, a sourcemap will not be generated")
+  @help("Filename (including path) for the sourcemap of the resulting bundle. If 'sourcemap-output' and 'sourcemap-output-dir' are omitted, a sourcemap will not be generated")
   @shortName("s")
   @longName("sourcemap-output")
   @hasArg
   public sourcemapOutput: string;
 
-  @help("Path to folder where the sourcemap for the resulting bundle should be written. Name of sourcemap file will be generated automatically. This argument will be ignored if \"sourcemap-output\" argument is provided. If omitted, a sourcemap will not be generated")
+  @help("Path to directory where the sourcemap for the resulting bundle should be written. Name of sourcemap file will be generated automatically. This argument will be ignored if 'sourcemap-output' argument is provided. If 'sourcemap-output' and 'sourcemap-output-dir' are omitted, a sourcemap will not be generated")
   @longName("sourcemap-output-dir")
   @hasArg
   public sourcemapOutputDir: string;

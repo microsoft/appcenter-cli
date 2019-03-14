@@ -79,7 +79,7 @@
     "gulp": "^4.0.0",
     "gulp-clean": "^0.3.2",
     "gulp-sourcemaps": "^2.6.4",
-    "gulp-typescript": "^5.0.1",
+    "gulp-typescript": "^3.2.4",
     "libxmljs": "^0.18.8",
     "mocha": "^5.2.0",
     "mock-require": "^2.0.2",
