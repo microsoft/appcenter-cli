@@ -45,13 +45,11 @@ export default class AddDestinationCommand extends AppCommand {
       return failure(ErrorCodes.InvalidParameter, `${this.destinationType} is not a valid destination type. Available types are: ${ValidDestinationTypes.join(", ")}`);
     }
     debug("Distributing the release");
-    if (this.destinationType == "group") {
+    if (this.destinationType === "group") {
       await this.reDistributeGroup(client, app, releaseId, );
 
-
-
-    } else if (this.destinationType == "tester") {
-
+    } else if (this.destinationType === "tester") {
+      return;
     }
 
     // TODO: Actually call client to add destination ; this is blocked on https://msmobilecenter.visualstudio.com/Mobile-Center/_git/appcenter/pullrequest/24972
