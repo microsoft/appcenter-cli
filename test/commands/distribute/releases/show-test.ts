@@ -10,7 +10,7 @@ import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../../src/ut
 import { out } from "../../../../src/util/interaction";
 import { ReleaseDetailsResponse } from "../../../../src/util/apis/generated/models";
 
-describe.only("releases show command", () => {
+describe("releases show command", () => {
   const fakeAppOwner = "fakeAppOwner";
   const fakeAppName = "fakeAppName";
   const fakeAppIdentifier = `${fakeAppOwner}/${fakeAppName}`;
