@@ -37,11 +37,16 @@ export default class CodePushReleaseElectronCommand extends CodePushReleaseComma
   @hasArg
   public entryFile: string;
 
-  @help("Sourcemap filename of the resulting bundle. If omitted, a sourcemap will not be generated")
+  @help("Path to where the sourcemap for the resulting bundle should be written. If omitted, a sourcemap will not be generated")
   @shortName("s")
-  @longName("sourcemap-filename")
+  @longName("sourcemap-output")
   @hasArg
-  public sourcemapFileName: string;
+  public sourcemapOutput: string;
+
+  @help("Path to folder where the sourcemap for the resulting bundle should be written. Name of sourcemap file will be generated automatically. This argument will be ignored if \"sourcemap-output\" argument is provided. If omitted, a sourcemap will not be generated")
+  @longName("sourcemap-output-dir")
+  @hasArg
+  public sourcemapOutputDir: string;
 
   @help("Output path for the bundle and sourcemap. If omitted, a bundle and sourcemap will not be generated")
   @shortName("o")
@@ -125,6 +130,15 @@ export default class CodePushReleaseElectronCommand extends CodePushReleaseComma
         }
       }
 
+      if (this.sourcemapOutputDir && this.sourcemapOutput) {
+        out.text(("\n\"sourcemap-output-dir\" argument will be ignored as \"sourcemap-output\" argument is provided.\n"));
+      }
+
+      if ((this.outputDir || this.sourcemapOutputDir) && !this.sourcemapOutput) {
+        const sourcemapDir = this.sourcemapOutputDir || this.updateContentsPath;
+        this.sourcemapOutput = path.join(sourcemapDir, this.bundleName + ".map");
+      }
+
       this.targetBinaryVersion = this.specifiedTargetBinaryVersion;
 
       if (this.targetBinaryVersion && !isValidRange(this.targetBinaryVersion)) {
@@ -139,7 +153,7 @@ export default class CodePushReleaseElectronCommand extends CodePushReleaseComma
 
       try {
           createEmptyTmpReleaseFolder(this.updateContentsPath);
-          await runWebPackBundleCommand(this.bundleName, this.mode, this.config, this.entryFile, this.updateContentsPath, this.sourcemapFileName, this.extraBundlerOptions);
+          await runWebPackBundleCommand(this.bundleName, this.mode, this.config, this.entryFile, this.updateContentsPath, this.sourcemapOutput, this.extraBundlerOptions);
 
           out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));
 
