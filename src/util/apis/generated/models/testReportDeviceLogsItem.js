@@ -12,10 +12,10 @@
 class TestReportDeviceLogsItem {
   /**
    * Create a TestReportDeviceLogsItem.
-   * @member {string} [deviceSnapshotId]
-   * @member {string} [deviceLog]
-   * @member {string} [testLog]
-   * @member {string} [appiumLog]
+   * @property {string} [deviceSnapshotId]
+   * @property {string} [deviceLog]
+   * @property {string} [testLog]
+   * @property {string} [appiumLog]
    */
   constructor() {
   }

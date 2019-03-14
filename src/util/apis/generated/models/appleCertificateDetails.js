@@ -13,9 +13,9 @@
 class AppleCertificateDetails {
   /**
    * Create a AppleCertificateDetails.
-   * @member {string} base64Certificate The certificate contents in base 64
+   * @property {string} base64Certificate The certificate contents in base 64
    * encoded string
-   * @member {string} password The password for the certificate
+   * @property {string} password The password for the certificate
    */
   constructor() {
   }

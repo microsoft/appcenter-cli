@@ -13,7 +13,7 @@
 class ExportConfig {
   /**
    * Create a ExportConfig.
-   * @member {string} blobContainerSasUri A shared access signature (SAS) URI
+   * @property {string} blobContainerSasUri A shared access signature (SAS) URI
    * with Read, Write and Delete permissions on a container.
    */
   constructor() {

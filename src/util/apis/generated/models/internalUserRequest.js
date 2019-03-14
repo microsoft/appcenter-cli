@@ -12,22 +12,23 @@
 class InternalUserRequest {
   /**
    * Create a InternalUserRequest.
-   * @member {string} [appInvitation] The token of the app invitation which
+   * @property {string} [appInvitation] The token of the app invitation which
    * lead to signup
-   * @member {string} [testerInvitation] The token of the test invitation which
-   * lead to signup
-   * @member {string} [organizationInvitation] The token of the organization
+   * @property {string} [testerInvitation] The token of the test invitation
+   * which lead to signup
+   * @property {string} [organizationInvitation] The token of the organization
    * invitation which lead to signup
-   * @member {string} [avatarUrl] The avatar URL of the user
-   * @member {string} [displayName] The full name of the user. Might for
+   * @property {string} [avatarUrl] The avatar URL of the user
+   * @property {string} [displayName] The full name of the user. Might for
    * example be first and last name
-   * @member {string} email The email address of the user
-   * @member {string} name The unique name that is used to identify the user.
-   * @member {string} password The password of the user. Needs to be at least 8
-   * characters long and contain at least one lower- and one uppercase letter.
-   * @member {string} [portalSubdomain] The sub-domain of the portal from which
-   * this request was made. Will be used to build the invitation link. Possible
-   * values include: 'install.'
+   * @property {string} email The email address of the user
+   * @property {string} name The unique name that is used to identify the user.
+   * @property {string} password The password of the user. Needs to be at least
+   * 8 characters long and contain at least one lower- and one uppercase
+   * letter.
+   * @property {string} [portalSubdomain] The sub-domain of the portal from
+   * which this request was made. Will be used to build the invitation link.
+   * Possible values include: 'install.'
    */
   constructor() {
   }

@@ -12,7 +12,7 @@
 class UserEmailRequest {
   /**
    * Create a UserEmailRequest.
-   * @member {string} userEmail The user's email address'
+   * @property {string} userEmail The user's email address'
    */
   constructor() {
   }

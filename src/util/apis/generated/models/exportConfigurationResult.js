@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Export configuration result
  *
@@ -15,28 +13,28 @@ const models = require('./index');
 class ExportConfigurationResult {
   /**
    * Create a ExportConfigurationResult.
-   * @member {string} id Export configuration id
-   * @member {string} exportType Target resource type of export configuration.
-   * Possible values include: 'BlobStorage', 'AppInsights'
-   * @member {string} creationTime Creation time in ISO 8601 format
-   * @member {string} [lastRunTime] Latest time in ISO 8601 format when export
-   * completed successfully
-   * @member {array} [exportEntities]
-   * @member {string} state State of the export job. Possible values include:
+   * @property {string} id Export configuration id
+   * @property {string} exportType Target resource type of export
+   * configuration. Possible values include: 'BlobStorage', 'AppInsights'
+   * @property {string} creationTime Creation time in ISO 8601 format
+   * @property {string} [lastRunTime] Latest time in ISO 8601 format when
+   * export completed successfully
+   * @property {array} [exportEntities]
+   * @property {string} state State of the export job. Possible values include:
    * 'Enabled', 'Disabled', 'Pending', 'Deleted', 'Invalid'
-   * @member {string} [stateInfo] Additional information about export
+   * @property {string} [stateInfo] Additional information about export
    * configuration state
-   * @member {string} [resourceGroup] resource group for the storage
+   * @property {string} [resourceGroup] resource group for the storage
    * account/App Insights resource
-   * @member {string} [resourceName] Storage accout or Appinsights resource
+   * @property {string} [resourceName] Storage accout or Appinsights resource
    * name
-   * @member {object} [exportConfiguration]
-   * @member {array} [exportConfiguration.exportEntities]
-   * @member {string} [exportConfiguration.resourceName] The resource name on
+   * @property {object} [exportConfiguration]
+   * @property {array} [exportConfiguration.exportEntities]
+   * @property {string} [exportConfiguration.resourceName] The resource name on
    * azure
-   * @member {string} [exportConfiguration.resourceGroup] The resource group
+   * @property {string} [exportConfiguration.resourceGroup] The resource group
    * name on azure
-   * @member {string} [exportConfiguration.type] Polymorphic Discriminator
+   * @property {string} [exportConfiguration.type] Polymorphic Discriminator
    */
   constructor() {
   }

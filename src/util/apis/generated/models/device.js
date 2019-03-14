@@ -13,51 +13,52 @@
 class Device {
   /**
    * Create a Device.
-   * @member {string} sdkName Name of the SDK. Consists of the name of the SDK
-   * and the platform, e.g. "appcenter.ios", "hockeysdk.android".
-   * @member {string} sdkVersion Version of the SDK in semver format, e.g.
+   * @property {string} sdkName Name of the SDK. Consists of the name of the
+   * SDK and the platform, e.g. "appcenter.ios", "hockeysdk.android".
+   * @property {string} sdkVersion Version of the SDK in semver format, e.g.
    * "1.2.0" or "0.12.3-alpha.1".
-   * @member {string} [wrapperSdkVersion] Version of the wrapper SDK in semver
-   * format. When the SDK is embedding another base SDK (for example
+   * @property {string} [wrapperSdkVersion] Version of the wrapper SDK in
+   * semver format. When the SDK is embedding another base SDK (for example
    * Xamarin.Android wraps Android), the Xamarin specific version is populated
    * into this field while sdkVersion refers to the original Android SDK.
-   * @member {string} [wrapperSdkName] Name of the wrapper SDK. Consists of the
-   * name of the SDK and the wrapper platform, e.g. "appcenter.xamarin",
+   * @property {string} [wrapperSdkName] Name of the wrapper SDK. Consists of
+   * the name of the SDK and the wrapper platform, e.g. "appcenter.xamarin",
    * "hockeysdk.cordova".
-   * @member {string} [model] Device model (example: iPad2,3).
-   * @member {string} [oemName] Device manufacturer (example: HTC).
-   * @member {string} osName OS name (example: iOS). The following OS names are
-   * standardized (non-exclusive): Android, iOS, macOS, tvOS, Windows.
-   * @member {string} osVersion OS version (example: 9.3.0).
-   * @member {string} [osBuild] OS build code (example: LMY47X).
-   * @member {number} [osApiLevel] API level when applicable like in Android
+   * @property {string} [model] Device model (example: iPad2,3).
+   * @property {string} [oemName] Device manufacturer (example: HTC).
+   * @property {string} osName OS name (example: iOS). The following OS names
+   * are standardized (non-exclusive): Android, iOS, macOS, tvOS, Windows.
+   * @property {string} osVersion OS version (example: 9.3.0).
+   * @property {string} [osBuild] OS build code (example: LMY47X).
+   * @property {number} [osApiLevel] API level when applicable like in Android
    * (example: 15).
-   * @member {string} locale Language code (example: en_US).
-   * @member {number} timeZoneOffset The offset in minutes from UTC for the
+   * @property {string} locale Language code (example: en_US).
+   * @property {number} timeZoneOffset The offset in minutes from UTC for the
    * device time zone, including daylight savings time.
-   * @member {string} [screenSize] Screen size of the device in pixels
+   * @property {string} [screenSize] Screen size of the device in pixels
    * (example: 640x480).
-   * @member {string} appVersion Application version name, e.g. 1.1.0
-   * @member {string} [carrierName] Carrier name (for mobile devices).
-   * @member {string} [carrierCode] Carrier country code (for mobile devices).
-   * @member {string} [carrierCountry] Carrier country.
-   * @member {string} appBuild The app's build number, e.g. 42.
-   * @member {string} [appNamespace] The bundle identifier, package identifier,
-   * or namespace, depending on what the individual plattforms use,  .e.g
-   * com.microsoft.example.
-   * @member {string} [liveUpdateReleaseLabel] Label that is used to identify
+   * @property {string} appVersion Application version name, e.g. 1.1.0
+   * @property {string} [carrierName] Carrier name (for mobile devices).
+   * @property {string} [carrierCode] Carrier country code (for mobile
+   * devices).
+   * @property {string} [carrierCountry] Carrier country.
+   * @property {string} appBuild The app's build number, e.g. 42.
+   * @property {string} [appNamespace] The bundle identifier, package
+   * identifier, or namespace, depending on what the individual plattforms use,
+   * .e.g com.microsoft.example.
+   * @property {string} [liveUpdateReleaseLabel] Label that is used to identify
    * application code 'version' released via Live Update beacon running on
    * device
-   * @member {string} [liveUpdateDeploymentKey] Identifier of environment that
-   * current application release belongs to, deployment key then maps to
+   * @property {string} [liveUpdateDeploymentKey] Identifier of environment
+   * that current application release belongs to, deployment key then maps to
    * environment like Production, Staging.
-   * @member {string} [liveUpdatePackageHash] Hash of all files (ReactNative or
-   * Cordova) deployed to device via LiveUpdate beacon. Helps identify the
+   * @property {string} [liveUpdatePackageHash] Hash of all files (ReactNative
+   * or Cordova) deployed to device via LiveUpdate beacon. Helps identify the
    * Release version on device or need to download updates in future.
-   * @member {string} [wrapperRuntimeVersion] Version of the wrapper technology
-   * framework (Xamarin runtime version or ReactNative or Cordova etc...). See
-   * wrapper_sdk_name to see if this version refers to Xamarin or ReactNative
-   * or other.
+   * @property {string} [wrapperRuntimeVersion] Version of the wrapper
+   * technology framework (Xamarin runtime version or ReactNative or Cordova
+   * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or
+   * ReactNative or other.
    */
   constructor() {
   }

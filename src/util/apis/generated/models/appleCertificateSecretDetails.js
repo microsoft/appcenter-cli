@@ -13,13 +13,13 @@
 class AppleCertificateSecretDetails {
   /**
    * Create a AppleCertificateSecretDetails.
-   * @member {string} base64Certificate The certificate contents in base 64
+   * @property {string} base64Certificate The certificate contents in base 64
    * encoded string
-   * @member {string} password The password for the certificate
-   * @member {string} displayName The display name (CN) of the certificate
-   * @member {string} certificateValidityStartDate The date-time from which the
-   * certificate is valid
-   * @member {string} certificateValidityEndDate The date-time till which the
+   * @property {string} password The password for the certificate
+   * @property {string} displayName The display name (CN) of the certificate
+   * @property {string} certificateValidityStartDate The date-time from which
+   * the certificate is valid
+   * @property {string} certificateValidityEndDate The date-time till which the
    * certificate is valid
    */
   constructor() {

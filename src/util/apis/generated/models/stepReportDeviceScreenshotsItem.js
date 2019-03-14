@@ -6,31 +6,29 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a StepReportDeviceScreenshotsItem.
  */
 class StepReportDeviceScreenshotsItem {
   /**
    * Create a StepReportDeviceScreenshotsItem.
-   * @member {string} [id]
-   * @member {string} [deviceSnapshotId]
-   * @member {array} [stacktrace]
-   * @member {array} [crashData]
-   * @member {string} [status]
-   * @member {string} [title]
-   * @member {object} [screenshot]
-   * @member {object} [screenshot.urls]
-   * @member {string} [screenshot.urls.original]
-   * @member {string} [screenshot.urls.small]
-   * @member {string} [screenshot.urls.medium]
-   * @member {string} [screenshot.urls.large]
-   * @member {number} [screenshot.rotation]
-   * @member {boolean} [screenshot.landscape]
-   * @member {string} [logFile]
-   * @member {string} [appiumLogFile]
-   * @member {array} [rawCrashData]
+   * @property {string} [id]
+   * @property {string} [deviceSnapshotId]
+   * @property {array} [stacktrace]
+   * @property {array} [crashData]
+   * @property {string} [status]
+   * @property {string} [title]
+   * @property {object} [screenshot]
+   * @property {object} [screenshot.urls]
+   * @property {string} [screenshot.urls.original]
+   * @property {string} [screenshot.urls.small]
+   * @property {string} [screenshot.urls.medium]
+   * @property {string} [screenshot.urls.large]
+   * @property {number} [screenshot.rotation]
+   * @property {boolean} [screenshot.landscape]
+   * @property {string} [logFile]
+   * @property {string} [appiumLogFile]
+   * @property {array} [rawCrashData]
    */
   constructor() {
   }

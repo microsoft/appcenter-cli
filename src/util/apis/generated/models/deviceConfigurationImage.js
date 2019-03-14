@@ -12,8 +12,8 @@
 class DeviceConfigurationImage {
   /**
    * Create a DeviceConfigurationImage.
-   * @member {string} [full]
-   * @member {string} [thumb]
+   * @property {string} [full]
+   * @property {string} [thumb]
    */
   constructor() {
   }

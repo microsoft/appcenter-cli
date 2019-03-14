@@ -12,10 +12,10 @@
 class PerformanceReportVideoVideoMetadataEventsItem {
   /**
    * Create a PerformanceReportVideoVideoMetadataEventsItem.
-   * @member {string} [id]
-   * @member {number} [millis]
-   * @member {string} [name]
-   * @member {string} [type]
+   * @property {string} [id]
+   * @property {number} [millis]
+   * @property {string} [name]
+   * @property {string} [type]
    */
   constructor() {
   }

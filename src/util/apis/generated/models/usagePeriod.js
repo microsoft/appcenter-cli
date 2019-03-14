@@ -13,10 +13,10 @@
 class UsagePeriod {
   /**
    * Create a UsagePeriod.
-   * @member {string} [startTime] Inclusive start time of the usage period
-   * @member {string} [endTime] Exclusive end time of the usage period.
-   * @member {object} [byAccount]
-   * @member {object} [byApp]
+   * @property {string} [startTime] Inclusive start time of the usage period
+   * @property {string} [endTime] Exclusive end time of the usage period.
+   * @property {object} [byAccount]
+   * @property {object} [byApp]
    */
   constructor() {
   }

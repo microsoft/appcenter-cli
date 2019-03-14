@@ -12,9 +12,9 @@
 class OrganizationInvitationSimpleDetailResponse {
   /**
    * Create a OrganizationInvitationSimpleDetailResponse.
-   * @member {uuid} id The unique ID (UUID) of the invitation
-   * @member {string} email The email address of the invited user
-   * @member {string} role The role assigned to the invited user
+   * @property {uuid} id The unique ID (UUID) of the invitation
+   * @property {string} email The email address of the invited user
+   * @property {string} role The role assigned to the invited user
    */
   constructor() {
   }

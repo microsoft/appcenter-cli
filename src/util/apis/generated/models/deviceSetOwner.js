@@ -15,10 +15,10 @@
 class DeviceSetOwner {
   /**
    * Create a DeviceSetOwner.
-   * @member {string} type Type of account
-   * @member {string} id Account ID
-   * @member {string} [displayName] Display name of the account
-   * @member {string} name Name of the account
+   * @property {string} type Type of account
+   * @property {string} id Account ID
+   * @property {string} [displayName] Display name of the account
+   * @property {string} name Name of the account
    */
   constructor() {
   }

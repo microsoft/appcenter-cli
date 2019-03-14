@@ -16,7 +16,7 @@ const models = require('./index');
 class PushInstallationLogDiagnostics extends models['LogDiagnostics'] {
   /**
    * Create a PushInstallationLogDiagnostics.
-   * @member {string} pushToken The PNS handle for this installation.
+   * @property {string} pushToken The PNS handle for this installation.
    */
   constructor() {
     super();

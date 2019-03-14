@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a TestGDPRResourceList.
  */
 class TestGDPRResourceList {
   /**
    * Create a TestGDPRResourceList.
-   * @member {array} [resources]
+   * @property {array} [resources]
    */
   constructor() {
   }

@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * GitHub Marketplace purchase
  *
@@ -15,12 +13,12 @@ const models = require('./index');
 class GitHubMarketplacePurchase {
   /**
    * Create a GitHubMarketplacePurchase.
-   * @member {object} [account]
-   * @member {number} [account.id] Id of GitHub account
-   * @member {string} [account.accountType] Type of GitHub account. Possible
+   * @property {object} [account]
+   * @property {number} [account.id] Id of GitHub account
+   * @property {string} [account.accountType] Type of GitHub account. Possible
    * values include: 'User', 'Organization'
-   * @member {object} [plan]
-   * @member {number} [plan.id] Id of the GitHub plan
+   * @property {object} [plan]
+   * @property {number} [plan.id] Id of the GitHub plan
    */
   constructor() {
   }

@@ -15,23 +15,23 @@ const models = require('./index');
 class ErrorGroup extends models['ErrorGroupState'] {
   /**
    * Create a ErrorGroup.
-   * @member {string} errorGroupId
-   * @member {string} appVersion
-   * @member {string} [appBuild]
-   * @member {number} count
-   * @member {number} deviceCount
-   * @member {date} firstOccurrence
-   * @member {date} lastOccurrence
-   * @member {string} [exceptionType]
-   * @member {string} [exceptionMessage]
-   * @member {string} [exceptionClassName]
-   * @member {boolean} [exceptionClassMethod]
-   * @member {string} [exceptionMethod]
-   * @member {boolean} [exceptionAppCode]
-   * @member {string} [exceptionFile]
-   * @member {string} [exceptionLine]
-   * @member {string} [codeRaw]
-   * @member {array} [reasonFrames]
+   * @property {string} errorGroupId
+   * @property {string} appVersion
+   * @property {string} [appBuild]
+   * @property {number} count
+   * @property {number} deviceCount
+   * @property {date} firstOccurrence
+   * @property {date} lastOccurrence
+   * @property {string} [exceptionType]
+   * @property {string} [exceptionMessage]
+   * @property {string} [exceptionClassName]
+   * @property {boolean} [exceptionClassMethod]
+   * @property {string} [exceptionMethod]
+   * @property {boolean} [exceptionAppCode]
+   * @property {string} [exceptionFile]
+   * @property {string} [exceptionLine]
+   * @property {string} [codeRaw]
+   * @property {array} [reasonFrames]
    */
   constructor() {
     super();

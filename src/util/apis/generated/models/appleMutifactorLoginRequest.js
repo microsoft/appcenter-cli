@@ -13,8 +13,8 @@
 class AppleMutifactorLoginRequest {
   /**
    * Create a AppleMutifactorLoginRequest.
-   * @member {string} username The username for the Apple Developer account.
-   * @member {string} authcode This is the six digit OTP used for completing
+   * @property {string} username The username for the Apple Developer account.
+   * @property {string} authcode This is the six digit OTP used for completing
    * the multi-factor authentication
    */
   constructor() {

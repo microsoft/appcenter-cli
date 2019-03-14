@@ -12,7 +12,7 @@
 class AppIntegrationResponse {
   /**
    * Create a AppIntegrationResponse.
-   * @member {uuid} appId app id
+   * @property {uuid} appId app id
    */
   constructor() {
   }

@@ -12,7 +12,7 @@
 class DeviceSetConfigurationImage {
   /**
    * Create a DeviceSetConfigurationImage.
-   * @member {string} [thumb]
+   * @property {string} [thumb]
    */
   constructor() {
   }

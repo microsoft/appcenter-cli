@@ -12,9 +12,9 @@
 class ErrorDetailsv2 {
   /**
    * Create a ErrorDetailsv2.
-   * @member {string} code Possible values include: 'BadRequest', 'Conflict',
+   * @property {string} code Possible values include: 'BadRequest', 'Conflict',
    * 'NotAcceptable', 'NotFound', 'InternalServerError', 'Unauthorized'
-   * @member {string} message
+   * @property {string} message
    */
   constructor() {
   }

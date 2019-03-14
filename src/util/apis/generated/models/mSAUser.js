@@ -13,7 +13,7 @@
 class MSAUser {
   /**
    * Create a MSAUser.
-   * @member {string} hexcid the user's CID
+   * @property {string} hexcid the user's CID
    */
   constructor() {
   }

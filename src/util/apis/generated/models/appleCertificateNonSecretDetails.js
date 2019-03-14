@@ -13,10 +13,10 @@
 class AppleCertificateNonSecretDetails {
   /**
    * Create a AppleCertificateNonSecretDetails.
-   * @member {string} displayName The display name (CN) of the certificate
-   * @member {string} certificateValidityStartDate The date-time from which the
-   * certificate is valid
-   * @member {string} certificateValidityEndDate The date-time till which the
+   * @property {string} displayName The display name (CN) of the certificate
+   * @property {string} certificateValidityStartDate The date-time from which
+   * the certificate is valid
+   * @property {string} certificateValidityEndDate The date-time till which the
    * certificate is valid
    */
   constructor() {

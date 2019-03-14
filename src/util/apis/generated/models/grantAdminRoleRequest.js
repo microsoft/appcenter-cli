@@ -12,7 +12,7 @@
 class GrantAdminRoleRequest {
   /**
    * Create a GrantAdminRoleRequest.
-   * @member {string} adminRole The new admin_role. Possible values include:
+   * @property {string} adminRole The new admin_role. Possible values include:
    * 'superAdmin', 'admin', 'devOps', 'customerSupport', 'notAdmin'
    */
   constructor() {

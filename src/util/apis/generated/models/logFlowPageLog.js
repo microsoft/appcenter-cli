@@ -16,8 +16,8 @@ const models = require('./index');
 class LogFlowPageLog extends models['LogFlowLogWithProperties'] {
   /**
    * Create a LogFlowPageLog.
-   * @member {uuid} sessionId Session ID.
-   * @member {string} name Name of the page.
+   * @property {uuid} sessionId Session ID.
+   * @property {string} name Name of the page.
    */
   constructor() {
     super();

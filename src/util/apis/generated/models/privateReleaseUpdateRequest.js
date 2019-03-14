@@ -13,8 +13,8 @@
 class PrivateReleaseUpdateRequest {
   /**
    * Create a PrivateReleaseUpdateRequest.
-   * @member {string} [publishingStatus] The store publishing status. Possible
-   * values include: 'failed', 'processing', 'submitted'
+   * @property {string} [publishingStatus] The store publishing status.
+   * Possible values include: 'failed', 'processing', 'submitted'
    */
   constructor() {
   }

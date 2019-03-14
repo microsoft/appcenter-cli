@@ -6,20 +6,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a GenericLogContainer.
  */
 class GenericLogContainer {
   /**
    * Create a GenericLogContainer.
-   * @member {boolean} [exceededMaxLimit] indicates if the number of available
-   * logs are more than the max allowed return limit(100).
-   * @member {date} [lastReceivedLogTimestamp] the timestamp of the last log
+   * @property {boolean} [exceededMaxLimit] indicates if the number of
+   * available logs are more than the max allowed return limit(100).
+   * @property {date} [lastReceivedLogTimestamp] the timestamp of the last log
    * received. This value can be used as the start time parameter in the
    * consecutive API call.
-   * @member {array} logs the list of logs
+   * @property {array} logs the list of logs
    */
   constructor() {
   }

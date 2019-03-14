@@ -12,9 +12,9 @@
 class LogTraceDefinition {
   /**
    * Create a LogTraceDefinition.
-   * @member {string} appSecret
-   * @member {string} [installId]
-   * @member {date} [expiration]
+   * @property {string} appSecret
+   * @property {string} [installId]
+   * @property {date} [expiration]
    */
   constructor() {
   }

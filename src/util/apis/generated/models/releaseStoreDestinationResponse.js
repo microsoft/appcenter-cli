@@ -12,7 +12,7 @@
 class ReleaseStoreDestinationResponse {
   /**
    * Create a ReleaseStoreDestinationResponse.
-   * @member {string} id Unique id for the release destination
+   * @property {string} id Unique id for the release destination
    */
   constructor() {
   }

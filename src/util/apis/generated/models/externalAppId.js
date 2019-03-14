@@ -12,8 +12,8 @@
 class ExternalAppId {
   /**
    * Create a ExternalAppId.
-   * @member {string} [externalId] The identifier for external apps that map to
-   * an App Center app
+   * @property {string} [externalId] The identifier for external apps that map
+   * to an App Center app
    */
   constructor() {
   }

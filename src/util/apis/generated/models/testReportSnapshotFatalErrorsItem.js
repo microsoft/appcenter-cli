@@ -12,9 +12,9 @@
 class TestReportSnapshotFatalErrorsItem {
   /**
    * Create a TestReportSnapshotFatalErrorsItem.
-   * @member {string} [deviceSnapshotId]
-   * @member {string} [errorMessage]
-   * @member {string} [errorTitle]
+   * @property {string} [deviceSnapshotId]
+   * @property {string} [errorMessage]
+   * @property {string} [errorTitle]
    */
   constructor() {
   }

@@ -13,7 +13,7 @@
 class AppleSecretDetailsResponse {
   /**
    * Create a AppleSecretDetailsResponse.
-   * @member {string} username username to connect to apple store
+   * @property {string} username username to connect to apple store
    */
   constructor() {
   }

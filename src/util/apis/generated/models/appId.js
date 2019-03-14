@@ -12,7 +12,7 @@
 class AppId {
   /**
    * Create a AppId.
-   * @member {string} [id] the id of the app
+   * @property {string} [id] the id of the app
    */
   constructor() {
   }

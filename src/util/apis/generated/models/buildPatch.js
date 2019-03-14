@@ -12,7 +12,7 @@
 class BuildPatch {
   /**
    * Create a BuildPatch.
-   * @member {string} [status] The build status; used to cancel builds.
+   * @property {string} [status] The build status; used to cancel builds.
    * Possible values include: 'cancelling'
    */
   constructor() {

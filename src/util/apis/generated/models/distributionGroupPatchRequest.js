@@ -12,8 +12,8 @@
 class DistributionGroupPatchRequest {
   /**
    * Create a DistributionGroupPatchRequest.
-   * @member {string} [name] The name of the distribution group
-   * @member {boolean} [isPublic] Whether the distribution group is public
+   * @property {string} [name] The name of the distribution group
+   * @property {boolean} [isPublic] Whether the distribution group is public
    */
   constructor() {
   }

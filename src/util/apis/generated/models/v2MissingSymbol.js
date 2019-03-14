@@ -13,11 +13,11 @@
 class V2MissingSymbol {
   /**
    * Create a V2MissingSymbol.
-   * @member {string} symbolId symbol id
-   * @member {string} name symbol name
-   * @member {string} [platform] symbol plarform
-   * @member {string} status symbol status. Possible values include: 'missing',
-   * 'ignored', 'available'
+   * @property {string} symbolId symbol id
+   * @property {string} name symbol name
+   * @property {string} [platform] symbol plarform
+   * @property {string} status symbol status. Possible values include:
+   * 'missing', 'ignored', 'available'
    */
   constructor() {
   }

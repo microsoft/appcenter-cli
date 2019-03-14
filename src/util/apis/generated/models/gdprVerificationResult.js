@@ -13,9 +13,9 @@
 class GdprVerificationResult {
   /**
    * Create a GdprVerificationResult.
-   * @member {boolean} [status] Verification status. True means that the
+   * @property {boolean} [status] Verification status. True means that the
    * verification was successfull.
-   * @member {string} [message] Optional error message if the verification
+   * @property {string} [message] Optional error message if the verification
    * failed.
    */
   constructor() {

@@ -6,54 +6,53 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a Crash.
  */
 class Crash {
   /**
    * Create a Crash.
-   * @member {object} [details]
-   * @member {string} [details.carrierCountry] Carrier country code (for mobile
+   * @property {object} [details]
+   * @property {string} [details.carrierCountry] Carrier country code (for
+   * mobile devices).
+   * @property {string} [details.carrierName] Carrier name (for mobile
    * devices).
-   * @member {string} [details.carrierName] Carrier name (for mobile devices).
-   * @member {string} [details.locale] Language code (example: en_US).
-   * @member {string} [details.osBuild] OS build code (example: LMY47X).
-   * @member {boolean} [details.rooted] Whether the device where the crash
+   * @property {string} [details.locale] Language code (example: en_US).
+   * @property {string} [details.osBuild] OS build code (example: LMY47X).
+   * @property {boolean} [details.rooted] Whether the device where the crash
    * occurred is rooted or jailbroken
-   * @member {string} [details.screenSize] Screen size of the device in pixels
-   * (example: 640x480).
-   * @member {date} [details.appStartTimestamp] Application launch timestamp
+   * @property {string} [details.screenSize] Screen size of the device in
+   * pixels (example: 640x480).
+   * @property {date} [details.appStartTimestamp] Application launch timestamp
    * (example: 1985-04-12T23:20:50.52Z).
-   * @member {string} newCrashGroupId
-   * @member {string} crashId
-   * @member {string} newCrashId
-   * @member {string} [displayId]
-   * @member {date} timestamp
-   * @member {string} version
-   * @member {string} build
-   * @member {string} device
-   * @member {string} [deviceName]
-   * @member {string} osVersion
-   * @member {string} [osType]
-   * @member {object} [stacktrace]
-   * @member {string} [stacktrace.title]
-   * @member {string} [stacktrace.reason]
-   * @member {array} [stacktrace.threads]
-   * @member {object} [stacktrace.exception]
-   * @member {string} [stacktrace.exception.reason] Reason of the exception
-   * @member {string} [stacktrace.exception.type] Type of the exception
+   * @property {string} newCrashGroupId
+   * @property {string} crashId
+   * @property {string} newCrashId
+   * @property {string} [displayId]
+   * @property {date} timestamp
+   * @property {string} version
+   * @property {string} build
+   * @property {string} device
+   * @property {string} [deviceName]
+   * @property {string} osVersion
+   * @property {string} [osType]
+   * @property {object} [stacktrace]
+   * @property {string} [stacktrace.title]
+   * @property {string} [stacktrace.reason]
+   * @property {array} [stacktrace.threads]
+   * @property {object} [stacktrace.exception]
+   * @property {string} [stacktrace.exception.reason] Reason of the exception
+   * @property {string} [stacktrace.exception.type] Type of the exception
    * (NSSomethingException, NullPointerException)
-   * @member {array} [stacktrace.exception.frames] frames of the excetpion
-   * @member {boolean} [stacktrace.exception.relevant] relevant exception
+   * @property {array} [stacktrace.exception.frames] frames of the excetpion
+   * @property {boolean} [stacktrace.exception.relevant] relevant exception
    * (crashed)
-   * @member {array} [stacktrace.exception.innerExceptions]
-   * @member {string} [stacktrace.exception.platform] SDK/Platform this thread
-   * is beeing generated from. Possible values include: 'ios', 'android',
-   * 'xamarin', 'react-native', 'ndk', 'unity', 'other'
-   * @member {string} userName
-   * @member {string} [userEmail]
+   * @property {array} [stacktrace.exception.innerExceptions]
+   * @property {string} [stacktrace.exception.platform] SDK/Platform this
+   * thread is beeing generated from. Possible values include: 'ios',
+   * 'android', 'xamarin', 'react-native', 'ndk', 'unity', 'other'
+   * @property {string} userName
+   * @property {string} [userEmail]
    */
   constructor() {
   }

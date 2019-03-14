@@ -13,8 +13,8 @@
 class OrgComplianceSettingsRequest {
   /**
    * Create a OrgComplianceSettingsRequest.
-   * @member {string} certificateConnectionId certificate connection id to wrap
-   * and resign the app after wrapping
+   * @property {string} certificateConnectionId certificate connection id to
+   * wrap and resign the app after wrapping
    */
   constructor() {
   }

@@ -12,12 +12,12 @@
 class ApiTokensCreateResponse {
   /**
    * Create a ApiTokensCreateResponse.
-   * @member {string} id The unique id (UUID) of the api token
-   * @member {string} apiToken The api token generated will not be accessible
+   * @property {string} id The unique id (UUID) of the api token
+   * @property {string} apiToken The api token generated will not be accessible
    * again
-   * @member {string} [description] The description of the token
-   * @member {array} [scope] The scope for this token.
-   * @member {string} createdAt The creation time
+   * @property {string} [description] The description of the token
+   * @property {array} [scope] The scope for this token.
+   * @property {string} createdAt The creation time
    */
   constructor() {
   }

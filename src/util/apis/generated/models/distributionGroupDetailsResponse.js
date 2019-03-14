@@ -15,15 +15,15 @@ const models = require('./index');
 class DistributionGroupDetailsResponse extends models['DistributionGroupResponse'] {
   /**
    * Create a DistributionGroupDetailsResponse.
-   * @member {boolean} isShared Whether the distribution group is shared group
-   * or not
-   * @member {number} totalAppsCount The count of apps associated with this
+   * @property {boolean} isShared Whether the distribution group is shared
+   * group or not
+   * @property {number} totalAppsCount The count of apps associated with this
    * distribution group
-   * @member {number} totalUserCount The count of users in the distribution
+   * @property {number} totalUserCount The count of users in the distribution
    * group
-   * @member {number} notifiedUserCount The count of non-pending users in the
+   * @property {number} notifiedUserCount The count of non-pending users in the
    * distribution group who will be notified by new releases
-   * @member {array} users The distribution group users
+   * @property {array} users The distribution group users
    */
   constructor() {
     super();
@@ -53,6 +53,13 @@ class DistributionGroupDetailsResponse extends models['DistributionGroupResponse
           name: {
             required: true,
             serializedName: 'name',
+            type: {
+              name: 'String'
+            }
+          },
+          displayName: {
+            required: false,
+            serializedName: 'display_name',
             type: {
               name: 'String'
             }

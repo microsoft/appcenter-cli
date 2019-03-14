@@ -13,8 +13,8 @@
 class GitHubAccount {
   /**
    * Create a GitHubAccount.
-   * @member {number} [id] Id of GitHub account
-   * @member {string} [accountType] Type of GitHub account. Possible values
+   * @property {number} [id] Id of GitHub account
+   * @property {string} [accountType] Type of GitHub account. Possible values
    * include: 'User', 'Organization'
    */
   constructor() {

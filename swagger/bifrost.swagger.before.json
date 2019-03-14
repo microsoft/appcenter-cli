@@ -5239,8 +5239,278 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/testers/{tester_id}": {},
-    "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/stores/{store_id}": {},
+    "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/testers/{tester_id}": {
+      "put": {
+        "operationId": "releases_putDistributionTester",
+        "description": "Update details about the specified tester associated with the release",
+        "parameters": [
+          {
+            "name": "release_id",
+            "type": "integer",
+            "in": "path",
+            "description": "The ID of the release",
+            "required": true
+          },
+          {
+            "name": "tester_id",
+            "type": "string",
+            "format": "uuid",
+            "in": "path",
+            "description": "The id of the tester",
+            "required": true
+          },
+          {
+            "name": "destination_tester_update_details",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "required": [
+                "mandatory_update"
+              ],
+              "properties": {
+                "mandatory_update": {
+                  "type": "boolean",
+                  "description": "Whether a release is mandatory for the given destination"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "A destination can't be found.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      },
+      "delete": {
+        "operationId": "releases_deleteDistributionTester",
+        "description": "Delete the given tester from the release",
+        "parameters": [
+          {
+            "name": "release_id",
+            "type": "integer",
+            "in": "path",
+            "description": "The ID of the release",
+            "required": true
+          },
+          {
+            "name": "tester_id",
+            "type": "string",
+            "in": "path",
+            "description": "The id of the tester",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Tester can't be found\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/testers": {
+      "post": {
+        "operationId": "releases_addTesters",
+        "description": "Distributes a release to a user",
+        "parameters": [
+          {
+            "name": "release_id",
+            "type": "integer",
+            "in": "path",
+            "description": "The ID of the release",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The release information.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReleaseTesterDestinationRequest"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ReleaseDestinationResponse"
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          },
+          "404": {
+            "description": "Release not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/stores/{store_id}": {
+      "delete": {
+        "operationId": "releases_deleteDistributionStore",
+        "description": "Delete the given distribution store from the release",
+        "parameters": [
+          {
+            "name": "release_id",
+            "type": "integer",
+            "in": "path",
+            "description": "The ID of the release",
+            "required": true
+          },
+          {
+            "name": "store_id",
+            "type": "string",
+            "in": "path",
+            "description": "The id of the distribution store",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Distribution store destination can't be found.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/stores": {
+      "post": {
+        "operationId": "releases_addStore",
+        "description": "Distributes a release to a store",
+        "parameters": [
+          {
+            "name": "release_id",
+            "type": "integer",
+            "in": "path",
+            "description": "The ID of the release",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The release information.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReleaseStoreDestinationRequest"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ReleaseStoreDestinationResponse"
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          },
+          "404": {
+            "description": "Release not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/provisioning_profile": {
       "get": {
         "description": "Return information about the provisioning profile. Only available for iOS.",
@@ -5284,7 +5554,173 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/groups/{group_id}": {},
+    "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/groups/{group_id}": {
+      "put": {
+        "operationId": "releases_putDistributionGroup",
+        "description": "Update details about the specified distribution group associated with the release",
+        "parameters": [
+          {
+            "name": "release_id",
+            "type": "integer",
+            "in": "path",
+            "description": "The ID of the release",
+            "required": true
+          },
+          {
+            "name": "group_id",
+            "type": "string",
+            "format": "uuid",
+            "in": "path",
+            "description": "The id of the releases destination",
+            "required": true
+          },
+          {
+            "name": "destination_group_update_details",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "required": [
+                "mandatory_update"
+              ],
+              "properties": {
+                "mandatory_update": {
+                  "type": "boolean",
+                  "description": "Whether a release is mandatory for the given destination"
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "A destination can't be found.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      },
+      "delete": {
+        "operationId": "releases_deleteDistributionGroup",
+        "description": "Delete the given distribution group from the release",
+        "parameters": [
+          {
+            "name": "release_id",
+            "type": "integer",
+            "in": "path",
+            "description": "The ID of the release",
+            "required": true
+          },
+          {
+            "name": "group_id",
+            "type": "string",
+            "in": "path",
+            "description": "The id of the distribution group",
+            "required": true
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Distribution group destination can't be found.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/groups": {
+      "post": {
+        "operationId": "releases_addDistributionGroup",
+        "description": "Distributes a release to a group",
+        "parameters": [
+          {
+            "name": "release_id",
+            "type": "integer",
+            "in": "path",
+            "description": "The ID of the release",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The release information.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReleaseDestinationRequest"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/ReleaseDestinationResponse"
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          },
+          "404": {
+            "description": "Release not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/releases/{release_id}": {
       "get": {
         "description": "Get a release with id `release_id`. If `release_id` is `latest`, return the latest release that was distributed to the current user (from all the distribution groups).",
@@ -5326,6 +5762,62 @@
           },
           "404": {
             "description": "Error codes:\n- `not_found` - A release or an app can't be found.\n- `no_releases_for_user` - No releases available for that user (will only be returned when `release_id` is `latest`)\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "distribute"
+        ]
+      },
+      "put": {
+        "operationId": "releases_updateDetails",
+        "description": "Update details of a release.",
+        "parameters": [
+          {
+            "name": "release_id",
+            "type": "integer",
+            "in": "path",
+            "description": "The ID of the release",
+            "required": true
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "The release information.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReleaseDetailsUpdateRequest"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ReleaseUpdateResponse"
+            }
+          },
+          "400": {
+            "description": "Failure",
+            "schema": {
+              "$ref": "#/definitions/ReleaseUpdateError"
+            }
+          },
+          "404": {
+            "description": "Release not found",
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
@@ -8255,6 +8747,7 @@
           "200": {
             "description": "Success",
             "schema": {
+              "type": "array",
               "items": {
                 "$ref": "#/definitions/StoresReleaseDetails"
               }
@@ -8391,6 +8884,7 @@
           "200": {
             "description": "Success",
             "schema": {
+              "type": "array",
               "items": {
                 "$ref": "#/definitions/StoresReleaseDetails"
               }
@@ -15658,6 +16152,10 @@
           "description": "The name of the distribution group used in URLs",
           "type": "string"
         },
+        "display_name": {
+          "description": "The name of the distribution group",
+          "type": "string"
+        },
         "origin": {
           "description": "The creation origin of this distribution group",
           "type": "string",
@@ -15748,6 +16246,34 @@
         "apps",
         "total_users_count",
         "total_apps_count"
+      ]
+    },
+    "GeneralDistributionGroupDetailsResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/DistributionGroupResponse"
+        },
+        {
+          "properties": {
+            "is_shared": {
+              "description": "Whether the distribution group is shared group or not",
+              "type": "boolean"
+            },
+            "owner_app_id": {
+              "description": "If distribution group is owned by an app, this is the unique app ID",
+              "type": "string",
+              "format": "uuid"
+            },
+            "owner_org_id": {
+              "description": "If distribution group is owned by an org, this is the unique org ID",
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      ],
+      "required": [
+        "is_shared"
       ]
     },
     "DistributionGroupUserDeleteResponse": {
@@ -18846,14 +19372,12 @@
     },
     "DistributionRequest": {
       "properties": {
-        "distributionGroupId": {
-          "type": "string",
-          "description": "DEPRECATED - A distribution group ID or a store group ID"
-        },
         "destinations": {
           "description": "Array of objects {id:string, type:string} with \"id\" being the distribution group ID, store ID, or tester email, and \"type\" being \"group\", \"store\", or \"tester\"",
           "type": "array",
-          "items": {}
+          "items": {
+            "$ref": "#/definitions/DestinationDetails"
+          }
         },
         "releaseNotes": {
           "type": "string",
@@ -18985,6 +19509,26 @@
           "type": "boolean"
         }
       }
+    },
+    "DestinationDetails": {
+      "description": "Destination details for distributing build releases",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "store",
+            "group",
+            "tester"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "type"
+      ]
     },
     "FileValidationDetails": {
       "description": "Additional details required for file validation",
@@ -19846,10 +20390,6 @@
         {
           "type": "object",
           "properties": {
-            "mandatory": {
-              "description": "OBSOLETE! Use mandatory_update instead.",
-              "type": "boolean"
-            },
             "mandatory_update": {
               "description": "Flag to mark the release for the provided destinations as mandatory",
               "type": "boolean"
@@ -19879,10 +20419,6 @@
     "ReleaseTesterDestinationRequest": {
       "type": "object",
       "properties": {
-        "mandatory": {
-          "description": "DEPRECATED! Use mandatory_update instead.",
-          "type": "boolean"
-        },
         "mandatory_update": {
           "description": "Flag to mark the release for the provided destinations as mandatory",
           "type": "boolean"
@@ -20998,6 +21534,7 @@
         },
         "distribution_stores": {
           "description": "a list of distribution stores that are associated with this release.",
+          "type": "array",
           "items": {
             "$ref": "#/definitions/StoresBasicDetails"
           }
@@ -21370,6 +21907,7 @@
         },
         "intune_details": {
           "description": "store details for intune",
+          "type": "array",
           "items": {
             "$ref": "#/definitions/IntuneStoreResponse"
           }
@@ -29650,6 +30188,15 @@
         }
       }
     },
+    "BugTrackerTokenId": {
+      "description": "Contains the token ID for a bug tracker",
+      "type": "object",
+      "properties": {
+        "token_id": {
+          "type": "string"
+        }
+      }
+    },
     "AlertBugTrackerReposResult": {
       "description": "List of bug tracker repositories",
       "type": "object",
@@ -29753,7 +30300,8 @@
           "type": "string"
         },
         "external_account_name": {
-          "description": "The account name of external user that used to authenticate against the external oauth provider or basic auth"
+          "description": "The account name of external user that used to authenticate against the external oauth provider or basic auth",
+          "type": "string"
         }
       },
       "required": [
@@ -30017,6 +30565,20 @@
         },
         "event_type": {
           "type": "string"
+        }
+      }
+    },
+    "BugTrackerStateResult": {
+      "description": "Object returned in response to getting or updating the state of a bugtracker",
+      "properties": {
+        "state": {
+          "type": "string",
+          "description": "bugtracker state",
+          "enum": [
+            "enabled",
+            "disabled",
+            "unauthorized"
+          ]
         }
       }
     },
@@ -31981,6 +32543,16 @@
       "required": true,
       "schema": {
         "$ref": "#/definitions/AlertingBugtracker"
+      },
+      "x-ms-parameter-location": "method"
+    },
+    "BugTrackerTokenIdParameter": {
+      "name": "bugTrackerTokenIdParameter",
+      "in": "body",
+      "description": "Contains a Token ID for a bugtracker",
+      "required": true,
+      "schema": {
+        "$ref": "#/definitions/BugTrackerTokenId"
       },
       "x-ms-parameter-location": "method"
     },

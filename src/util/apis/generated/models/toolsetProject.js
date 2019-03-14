@@ -13,8 +13,8 @@
 class ToolsetProject {
   /**
    * Create a ToolsetProject.
-   * @member {string} [name]
-   * @member {string} [path]
+   * @property {string} [name]
+   * @property {string} [path]
    */
   constructor() {
   }

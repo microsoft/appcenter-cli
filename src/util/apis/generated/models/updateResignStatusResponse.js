@@ -14,8 +14,8 @@
 class UpdateResignStatusResponse {
   /**
    * Create a UpdateResignStatusResponse.
-   * @member {string} status The status.
-   * @member {string} [profilesZipBase64] A zip of the updated provisioning
+   * @property {string} status The status.
+   * @property {string} [profilesZipBase64] A zip of the updated provisioning
    * profiles. Base64 encoded.
    */
   constructor() {

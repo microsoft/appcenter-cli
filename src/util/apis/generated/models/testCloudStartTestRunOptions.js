@@ -15,12 +15,12 @@
 class TestCloudStartTestRunOptions {
   /**
    * Create a TestCloudStartTestRunOptions.
-   * @member {string} testFramework Test framework used by tests.
-   * @member {string} deviceSelection Device selection string.
-   * @member {string} [language] Language that should be used to run tests.
-   * @member {string} [locale] Locale that should be used to run tests.
-   * @member {string} [testSeries] Name of the test series.
-   * @member {object} [testParameters] A JSON dictionary with additional test
+   * @property {string} testFramework Test framework used by tests.
+   * @property {string} deviceSelection Device selection string.
+   * @property {string} [language] Language that should be used to run tests.
+   * @property {string} [locale] Locale that should be used to run tests.
+   * @property {string} [testSeries] Name of the test series.
+   * @property {object} [testParameters] A JSON dictionary with additional test
    * parameters
    */
   constructor() {

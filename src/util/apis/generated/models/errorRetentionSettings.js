@@ -12,7 +12,7 @@
 class ErrorRetentionSettings {
   /**
    * Create a ErrorRetentionSettings.
-   * @member {number} retentionInDays
+   * @property {number} retentionInDays
    */
   constructor() {
   }

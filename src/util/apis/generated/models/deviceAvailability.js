@@ -13,9 +13,9 @@
 class DeviceAvailability {
   /**
    * Create a DeviceAvailability.
-   * @member {number} registered
-   * @member {number} available
-   * @member {number} maximum
+   * @property {number} registered
+   * @property {number} available
+   * @property {number} maximum
    */
   constructor() {
   }

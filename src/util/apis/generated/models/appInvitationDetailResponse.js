@@ -6,76 +6,75 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a AppInvitationDetailResponse.
  */
 class AppInvitationDetailResponse {
   /**
    * Create a AppInvitationDetailResponse.
-   * @member {uuid} id The unique ID (UUID) of the invitation
-   * @member {object} app
-   * @member {string} [app.appSecret] A unique and secret key used to identify
-   * the app in communication with the ingestion endpoint for crash reporting
-   * and analytics
-   * @member {object} [app.azureSubscription]
-   * @member {uuid} [app.azureSubscription.subscriptionId] The azure
+   * @property {uuid} id The unique ID (UUID) of the invitation
+   * @property {object} app
+   * @property {string} [app.appSecret] A unique and secret key used to
+   * identify the app in communication with the ingestion endpoint for crash
+   * reporting and analytics
+   * @property {object} [app.azureSubscription]
+   * @property {uuid} [app.azureSubscription.subscriptionId] The azure
    * subscription id
-   * @member {uuid} [app.azureSubscription.tenantId] The tenant id of the azure
-   * subscription belongs to
-   * @member {string} [app.azureSubscription.subscriptionName] The name of the
-   * azure subscription
-   * @member {boolean} [app.azureSubscription.isBilling] If the subscription is
-   * used for billing
-   * @member {boolean} [app.azureSubscription.isBillable] If the subscription
+   * @property {uuid} [app.azureSubscription.tenantId] The tenant id of the
+   * azure subscription belongs to
+   * @property {string} [app.azureSubscription.subscriptionName] The name of
+   * the azure subscription
+   * @property {boolean} [app.azureSubscription.isBilling] If the subscription
+   * is used for billing
+   * @property {boolean} [app.azureSubscription.isBillable] If the subscription
    * can be used for billing
-   * @member {boolean} [app.azureSubscription.isMicrosoftInternal] If the
+   * @property {boolean} [app.azureSubscription.isMicrosoftInternal] If the
    * subscription is internal Microsoft subscription
-   * @member {string} [app.platform] The platform of the app. Possible values
+   * @property {string} [app.platform] The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
    * 'Unity', 'Xamarin', 'Unknown'
-   * @member {string} [app.origin] The creation origin of this app. Possible
+   * @property {string} [app.origin] The creation origin of this app. Possible
    * values include: 'appcenter', 'hockeyapp', 'codepush'
-   * @member {string} [app.createdAt] The created date of this app
-   * @member {string} [app.updatedAt] The last updated date of this app
-   * @member {array} [app.memberPermissions] The permissions of the calling
+   * @property {string} [app.createdAt] The created date of this app
+   * @property {string} [app.updatedAt] The last updated date of this app
+   * @property {array} [app.memberPermissions] The permissions of the calling
    * user
-   * @member {string} email The email address of the invited user
-   * @member {string} inviteType The invitation type. Possible values include:
-   * 'developer', 'tester'
-   * @member {object} invitedBy
-   * @member {uuid} [invitedBy.id] The unique id (UUID) of the user
-   * @member {string} [invitedBy.avatarUrl] The avatar URL of the user
-   * @member {boolean} [invitedBy.canChangePassword] User is required to send
+   * @property {string} email The email address of the invited user
+   * @property {string} inviteType The invitation type. Possible values
+   * include: 'developer', 'tester'
+   * @property {object} invitedBy
+   * @property {uuid} [invitedBy.id] The unique id (UUID) of the user
+   * @property {string} [invitedBy.avatarUrl] The avatar URL of the user
+   * @property {boolean} [invitedBy.canChangePassword] User is required to send
    * an old password in order to change the password.
-   * @member {string} [invitedBy.displayName] The full name of the user. Might
-   * for example be first and last name
-   * @member {string} [invitedBy.email] The email address of the user
-   * @member {string} [invitedBy.name] The unique name that is used to identify
-   * the user.
-   * @member {array} [invitedBy.permissions] The permissions the user has for
+   * @property {string} [invitedBy.displayName] The full name of the user.
+   * Might for example be first and last name
+   * @property {string} [invitedBy.email] The email address of the user
+   * @property {string} [invitedBy.name] The unique name that is used to
+   * identify the user.
+   * @property {array} [invitedBy.permissions] The permissions the user has for
    * the app
-   * @member {string} [invitedBy.origin] The creation origin of this user.
+   * @property {string} [invitedBy.origin] The creation origin of this user.
    * Possible values include: 'appcenter', 'hockeyapp', 'codepush'
-   * @member {boolean} isExistingUser Indicates whether the invited user
+   * @property {boolean} isExistingUser Indicates whether the invited user
    * already exists
-   * @member {array} [permissions] The permissions the user has for the app
-   * @member {number} [appCount] The number of apps in the group
-   * @member {object} [distributionGroup] The organization that owns the
+   * @property {array} [permissions] The permissions the user has for the app
+   * @property {number} [appCount] The number of apps in the group
+   * @property {object} [distributionGroup] The organization that owns the
    * distribution group, if it exists
-   * @member {object} [distributionGroup.owner]
-   * @member {uuid} [distributionGroup.owner.id] The unique id (UUID) of the
+   * @property {object} [distributionGroup.owner]
+   * @property {uuid} [distributionGroup.owner.id] The unique id (UUID) of the
    * owner
-   * @member {string} [distributionGroup.owner.avatarUrl] The avatar URL of the
-   * owner
-   * @member {string} [distributionGroup.owner.displayName] The owner's display
-   * name
-   * @member {string} [distributionGroup.owner.email] The owner's email address
-   * @member {string} [distributionGroup.owner.name] The unique name that used
-   * to identify the owner
-   * @member {string} [distributionGroup.owner.type] The owner type. Can either
-   * be 'org' or 'user'. Possible values include: 'org', 'user'
+   * @property {string} [distributionGroup.owner.avatarUrl] The avatar URL of
+   * the owner
+   * @property {string} [distributionGroup.owner.displayName] The owner's
+   * display name
+   * @property {string} [distributionGroup.owner.email] The owner's email
+   * address
+   * @property {string} [distributionGroup.owner.name] The unique name that
+   * used to identify the owner
+   * @property {string} [distributionGroup.owner.type] The owner type. Can
+   * either be 'org' or 'user'. Possible values include: 'org', 'user'
    */
   constructor() {
   }

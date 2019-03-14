@@ -12,7 +12,7 @@
 class FeatureFlagsResponse {
   /**
    * Create a FeatureFlagsResponse.
-   * @member {array} featureFlags
+   * @property {array} featureFlags
    */
   constructor() {
   }

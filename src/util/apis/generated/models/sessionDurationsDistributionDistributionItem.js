@@ -12,8 +12,8 @@
 class SessionDurationsDistributionDistributionItem {
   /**
    * Create a SessionDurationsDistributionDistributionItem.
-   * @member {string} [bucket] the bucket name
-   * @member {number} [count] the count of sessions in current bucket
+   * @property {string} [bucket] the bucket name
+   * @property {number} [count] the count of sessions in current bucket
    */
   constructor() {
   }

@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * List of audiences.
  *
@@ -15,8 +13,8 @@ const models = require('./index');
 class AudienceListResult {
   /**
    * Create a AudienceListResult.
-   * @member {array} values List of audiences.
-   * @member {string} [nextLink]
+   * @property {array} values List of audiences.
+   * @property {string} [nextLink]
    */
   constructor() {
   }

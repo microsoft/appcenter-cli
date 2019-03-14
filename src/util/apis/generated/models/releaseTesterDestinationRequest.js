@@ -12,12 +12,11 @@
 class ReleaseTesterDestinationRequest {
   /**
    * Create a ReleaseTesterDestinationRequest.
-   * @member {boolean} [mandatory] DEPRECATED! Use mandatory_update instead.
-   * @member {boolean} [mandatoryUpdate] Flag to mark the release for the
+   * @property {boolean} [mandatoryUpdate] Flag to mark the release for the
    * provided destinations as mandatory
-   * @member {string} email Tester's email address
-   * @member {boolean} [notifyTesters] Flag to enable or disable notifications
-   * to testers. Default value: true .
+   * @property {string} email Tester's email address
+   * @property {boolean} [notifyTesters] Flag to enable or disable
+   * notifications to testers. Default value: true .
    */
   constructor() {
   }
@@ -36,13 +35,6 @@ class ReleaseTesterDestinationRequest {
         name: 'Composite',
         className: 'ReleaseTesterDestinationRequest',
         modelProperties: {
-          mandatory: {
-            required: false,
-            serializedName: 'mandatory',
-            type: {
-              name: 'Boolean'
-            }
-          },
           mandatoryUpdate: {
             required: false,
             serializedName: 'mandatory_update',

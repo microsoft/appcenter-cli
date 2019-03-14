@@ -13,7 +13,7 @@
 class ReleaseProvisionResponse {
   /**
    * Create a ReleaseProvisionResponse.
-   * @member {string} [statusUrl] The url to check provisioning status.
+   * @property {string} [statusUrl] The url to check provisioning status.
    */
   constructor() {
   }

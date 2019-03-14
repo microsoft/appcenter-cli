@@ -13,7 +13,7 @@
 class DiagnosticIdResponse {
   /**
    * Create a DiagnosticIdResponse.
-   * @member {string} [diagnosticId] diagnostic id
+   * @property {string} [diagnosticId] diagnostic id
    */
   constructor() {
   }

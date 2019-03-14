@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Selection of a billing plan for one or more services
  *
@@ -15,54 +13,54 @@ const models = require('./index');
 class BillingPlansSelection {
   /**
    * Create a BillingPlansSelection.
-   * @member {object} [buildService]
-   * @member {number} [buildService.count] Number of instances of the billing
+   * @property {object} [buildService]
+   * @property {number} [buildService.count] Number of instances of the billing
    * plan.
-   * @member {object} [buildService.plan]
-   * @member {string} [buildService.plan.id] The Billing Plan ID
-   * @member {string} [buildService.plan.version] Version of the Billing Plan
+   * @property {object} [buildService.plan]
+   * @property {string} [buildService.plan.id] The Billing Plan ID
+   * @property {string} [buildService.plan.version] Version of the Billing Plan
    * schema
-   * @member {number} [buildService.plan.price] Price of the Billing Plan
-   * @member {string} [buildService.plan.paymentSource] Service that receives
+   * @property {number} [buildService.plan.price] Price of the Billing Plan
+   * @property {string} [buildService.plan.paymentSource] Service that receives
    * payments for this billing plan. Possible values include: 'None',
    * 'AppCenter', 'GitHub', 'Xtc'
-   * @member {string} [buildService.plan.service] Name of the service that the
-   * plan applies to. Possible values include: 'Build', 'Push', 'Test'
-   * @member {object} [buildService.plan.limits]
-   * @member {object} [buildService.plan.attributes]
-   * @member {string} [buildService.plan.parentId]
-   * @member {object} [pushService]
-   * @member {number} [pushService.count] Number of instances of the billing
+   * @property {string} [buildService.plan.service] Name of the service that
+   * the plan applies to. Possible values include: 'Build', 'Push', 'Test'
+   * @property {object} [buildService.plan.limits]
+   * @property {object} [buildService.plan.attributes]
+   * @property {string} [buildService.plan.parentId]
+   * @property {object} [pushService]
+   * @property {number} [pushService.count] Number of instances of the billing
    * plan.
-   * @member {object} [pushService.plan]
-   * @member {string} [pushService.plan.id] The Billing Plan ID
-   * @member {string} [pushService.plan.version] Version of the Billing Plan
+   * @property {object} [pushService.plan]
+   * @property {string} [pushService.plan.id] The Billing Plan ID
+   * @property {string} [pushService.plan.version] Version of the Billing Plan
    * schema
-   * @member {number} [pushService.plan.price] Price of the Billing Plan
-   * @member {string} [pushService.plan.paymentSource] Service that receives
+   * @property {number} [pushService.plan.price] Price of the Billing Plan
+   * @property {string} [pushService.plan.paymentSource] Service that receives
    * payments for this billing plan. Possible values include: 'None',
    * 'AppCenter', 'GitHub', 'Xtc'
-   * @member {string} [pushService.plan.service] Name of the service that the
+   * @property {string} [pushService.plan.service] Name of the service that the
    * plan applies to. Possible values include: 'Build', 'Push', 'Test'
-   * @member {object} [pushService.plan.limits]
-   * @member {object} [pushService.plan.attributes]
-   * @member {string} [pushService.plan.parentId]
-   * @member {object} [testService]
-   * @member {number} [testService.count] Number of instances of the billing
+   * @property {object} [pushService.plan.limits]
+   * @property {object} [pushService.plan.attributes]
+   * @property {string} [pushService.plan.parentId]
+   * @property {object} [testService]
+   * @property {number} [testService.count] Number of instances of the billing
    * plan.
-   * @member {object} [testService.plan]
-   * @member {string} [testService.plan.id] The Billing Plan ID
-   * @member {string} [testService.plan.version] Version of the Billing Plan
+   * @property {object} [testService.plan]
+   * @property {string} [testService.plan.id] The Billing Plan ID
+   * @property {string} [testService.plan.version] Version of the Billing Plan
    * schema
-   * @member {number} [testService.plan.price] Price of the Billing Plan
-   * @member {string} [testService.plan.paymentSource] Service that receives
+   * @property {number} [testService.plan.price] Price of the Billing Plan
+   * @property {string} [testService.plan.paymentSource] Service that receives
    * payments for this billing plan. Possible values include: 'None',
    * 'AppCenter', 'GitHub', 'Xtc'
-   * @member {string} [testService.plan.service] Name of the service that the
+   * @property {string} [testService.plan.service] Name of the service that the
    * plan applies to. Possible values include: 'Build', 'Push', 'Test'
-   * @member {object} [testService.plan.limits]
-   * @member {object} [testService.plan.attributes]
-   * @member {string} [testService.plan.parentId]
+   * @property {object} [testService.plan.limits]
+   * @property {object} [testService.plan.attributes]
+   * @property {string} [testService.plan.parentId]
    */
   constructor() {
   }

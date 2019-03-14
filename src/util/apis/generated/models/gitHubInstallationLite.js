@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * The GitHub Installation
  *
@@ -15,13 +13,13 @@ const models = require('./index');
 class GitHubInstallationLite {
   /**
    * Create a GitHubInstallationLite.
-   * @member {number} [id] GitHub Installation Id
-   * @member {object} [account]
-   * @member {string} [account.id] GitHub Account Id
-   * @member {string} [account.login] GitHub Account Login Name
-   * @member {string} [account.type] GitHub Account Type
-   * @member {string} [account.url] GitHub Account Url
-   * @member {number} [appId] GitHub Installation App Id
+   * @property {number} [id] GitHub Installation Id
+   * @property {object} [account]
+   * @property {string} [account.id] GitHub Account Id
+   * @property {string} [account.login] GitHub Account Login Name
+   * @property {string} [account.type] GitHub Account Type
+   * @property {string} [account.url] GitHub Account Url
+   * @property {number} [appId] GitHub Installation App Id
    */
   constructor() {
   }

@@ -12,7 +12,7 @@
 class GDPRPurgeVerifyResponse {
   /**
    * Create a GDPRPurgeVerifyResponse.
-   * @member {boolean} success indicate whether GDPR purge operation succeeds
+   * @property {boolean} success indicate whether GDPR purge operation succeeds
    * or not
    */
   constructor() {

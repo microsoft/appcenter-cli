@@ -13,7 +13,7 @@
 class NotificationSendSucceededResult {
   /**
    * Create a NotificationSendSucceededResult.
-   * @member {string} notificationId The unique notification identifier.
+   * @property {string} notificationId The unique notification identifier.
    */
   constructor() {
   }

@@ -13,9 +13,9 @@
 class AudienceQueryDefinition {
   /**
    * Create a AudienceQueryDefinition.
-   * @member {string} queryType Audience Query Type. Possible values include:
+   * @property {string} queryType Audience Query Type. Possible values include:
    * 'broadcast', 'user_ids', 'account_ids', 'install_ids'
-   * @member {array} [identifiers] List of identifiers.
+   * @property {array} [identifiers] List of identifiers.
    */
   constructor() {
   }

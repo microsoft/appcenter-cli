@@ -12,7 +12,7 @@
 class RetentionSettings {
   /**
    * Create a RetentionSettings.
-   * @member {number} retentionInDays
+   * @property {number} retentionInDays
    */
   constructor() {
   }

@@ -13,8 +13,8 @@
 class StoresReleaseDetails {
   /**
    * Create a StoresReleaseDetails.
-   * @member {number} [id] ID identifying this unique release.
-   * @member {string} [status] OBSOLETE. Will be removed in next version. The
+   * @property {number} [id] ID identifying this unique release.
+   * @property {string} [status] OBSOLETE. Will be removed in next version. The
    * availability concept is now replaced with distributed. Any 'available'
    * release will be associated with the default distribution group of an
    * app.</br>
@@ -22,31 +22,32 @@ class StoresReleaseDetails {
    * <b>available</b>: The uploaded release has been distributed.<br>
    * <b>unavailable</b>: The uploaded release is not visible to the user. <br>
    * . Possible values include: 'available', 'unavailable'
-   * @member {string} [appName] The app's name (extracted from the uploaded
+   * @property {string} [appName] The app's name (extracted from the uploaded
    * release).
-   * @member {string} [appDisplayName] The app's display name.
-   * @member {string} [version] The release's version.<br>
+   * @property {string} [appDisplayName] The app's display name.
+   * @property {string} [version] The release's version.<br>
    * For iOS: CFBundleVersion from info.plist.
    * For Android: android:versionCode from AppManifest.xml.
-   * @member {string} [shortVersion] The release's short version.<br>
+   * @property {string} [shortVersion] The release's short version.<br>
    * For iOS: CFBundleShortVersionString from info.plist.
    * For Android: android:versionName from AppManifest.xml.
-   * @member {string} [releaseNotes] The release's release notes.
-   * @member {number} [size] The release's size in bytes.
-   * @member {string} [minOs] The release's minimum required operating system.
-   * @member {string} [androidMinApiLevel] The release's minimum required
+   * @property {string} [releaseNotes] The release's release notes.
+   * @property {number} [size] The release's size in bytes.
+   * @property {string} [minOs] The release's minimum required operating
+   * system.
+   * @property {string} [androidMinApiLevel] The release's minimum required
    * Android API level.
-   * @member {string} [bundleIdentifier] The identifier of the apps bundle.
-   * @member {string} [fingerprint] MD5 checksum of the release binary.
-   * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
-   * time.
-   * @member {string} [downloadUrl] The URL that hosts the binary for this
+   * @property {string} [bundleIdentifier] The identifier of the apps bundle.
+   * @property {string} [fingerprint] MD5 checksum of the release binary.
+   * @property {string} [uploadedAt] UTC time in ISO 8601 format of the
+   * uploaded time.
+   * @property {string} [downloadUrl] The URL that hosts the binary for this
    * release.
-   * @member {string} [installUrl] The href required to install a release on a
-   * mobile device. On iOS devices will be prefixed with
+   * @property {string} [installUrl] The href required to install a release on
+   * a mobile device. On iOS devices will be prefixed with
    * `itms-services://?action=download-manifest&url=`. Possible values include:
    * 'group', 'store'
-   * @member {object} [distributionStores] a list of distribution stores that
+   * @property {array} [distributionStores] a list of distribution stores that
    * are associated with this release.
    */
   constructor() {
@@ -175,7 +176,15 @@ class StoresReleaseDetails {
             required: false,
             serializedName: 'distribution_stores',
             type: {
-              name: 'Object'
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'StoresBasicDetailsElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'StoresBasicDetails'
+                  }
+              }
             }
           }
         }

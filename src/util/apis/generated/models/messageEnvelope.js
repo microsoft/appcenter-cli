@@ -13,9 +13,9 @@
 class MessageEnvelope {
   /**
    * Create a MessageEnvelope.
-   * @member {string} [messageId] Unique id of the message
-   * @member {string} [messageType] Type of the message
-   * @member {object} [message] Body of the message
+   * @property {string} [messageId] Unique id of the message
+   * @property {string} [messageType] Type of the message
+   * @property {object} [message] Body of the message
    */
   constructor() {
   }

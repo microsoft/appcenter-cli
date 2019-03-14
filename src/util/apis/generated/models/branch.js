@@ -6,18 +6,16 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a Branch.
  */
 class Branch {
   /**
    * Create a Branch.
-   * @member {string} name The branch name
-   * @member {object} commit
-   * @member {string} [commit.sha] The commit SHA
-   * @member {string} [commit.url] The URL to the commit
+   * @property {string} name The branch name
+   * @property {object} commit
+   * @property {string} [commit.sha] The commit SHA
+   * @property {string} [commit.url] The URL to the commit
    */
   constructor() {
   }

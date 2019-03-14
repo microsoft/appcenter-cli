@@ -13,8 +13,8 @@
 class SourceRepository {
   /**
    * Create a SourceRepository.
-   * @member {string} [name] The repository name
-   * @member {string} [cloneUrl] URL used to clone the repository
+   * @property {string} [name] The repository name
+   * @property {string} [cloneUrl] URL used to clone the repository
    */
   constructor() {
   }

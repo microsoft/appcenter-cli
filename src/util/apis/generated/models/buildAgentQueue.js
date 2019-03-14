@@ -12,7 +12,7 @@
 class BuildAgentQueue {
   /**
    * Create a BuildAgentQueue.
-   * @member {string} queue
+   * @property {string} queue
    */
   constructor() {
   }

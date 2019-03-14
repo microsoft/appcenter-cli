@@ -16,7 +16,7 @@ const models = require('./index');
 class LogFlowNumberProperty extends models['LogFlowCustomProperty'] {
   /**
    * Create a LogFlowNumberProperty.
-   * @member {number} value Number property value.
+   * @property {number} value Number property value.
    */
   constructor() {
     super();
@@ -46,7 +46,7 @@ class LogFlowNumberProperty extends models['LogFlowCustomProperty'] {
             serializedName: 'name',
             constraints: {
               MaxLength: 128,
-              Pattern: '^[a-zA-Z][a-zA-Z0-9\-_]*$'
+              Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
             type: {
               name: 'String'

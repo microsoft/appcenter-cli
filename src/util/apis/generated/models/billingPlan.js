@@ -13,17 +13,17 @@
 class BillingPlan {
   /**
    * Create a BillingPlan.
-   * @member {string} [id] The Billing Plan ID
-   * @member {string} [version] Version of the Billing Plan schema
-   * @member {number} [price] Price of the Billing Plan
-   * @member {string} [paymentSource] Service that receives payments for this
+   * @property {string} [id] The Billing Plan ID
+   * @property {string} [version] Version of the Billing Plan schema
+   * @property {number} [price] Price of the Billing Plan
+   * @property {string} [paymentSource] Service that receives payments for this
    * billing plan. Possible values include: 'None', 'AppCenter', 'GitHub',
    * 'Xtc'
-   * @member {string} [service] Name of the service that the plan applies to.
+   * @property {string} [service] Name of the service that the plan applies to.
    * Possible values include: 'Build', 'Push', 'Test'
-   * @member {object} [limits]
-   * @member {object} [attributes]
-   * @member {string} [parentId]
+   * @property {object} [limits]
+   * @property {object} [attributes]
+   * @property {string} [parentId]
    */
   constructor() {
   }

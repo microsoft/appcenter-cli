@@ -12,11 +12,12 @@
 class DistributionGroupResponse {
   /**
    * Create a DistributionGroupResponse.
-   * @member {uuid} id The unique ID of the distribution group
-   * @member {string} name The name of the distribution group used in URLs
-   * @member {string} origin The creation origin of this distribution group.
+   * @property {uuid} id The unique ID of the distribution group
+   * @property {string} name The name of the distribution group used in URLs
+   * @property {string} [displayName] The name of the distribution group
+   * @property {string} origin The creation origin of this distribution group.
    * Possible values include: 'appcenter', 'hockeyapp'
-   * @member {boolean} isPublic Whether the distribution group is public
+   * @property {boolean} isPublic Whether the distribution group is public
    */
   constructor() {
   }
@@ -45,6 +46,13 @@ class DistributionGroupResponse {
           name: {
             required: true,
             serializedName: 'name',
+            type: {
+              name: 'String'
+            }
+          },
+          displayName: {
+            required: false,
+            serializedName: 'display_name',
             type: {
               name: 'String'
             }

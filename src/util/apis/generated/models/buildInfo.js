@@ -13,12 +13,12 @@
 class BuildInfo {
   /**
    * Create a BuildInfo.
-   * @member {string} [branch] The branch name of the build producing the
+   * @property {string} [branch] The branch name of the build producing the
    * release
-   * @member {string} [commitHash] The commit hash of the build producing the
+   * @property {string} [commitHash] The commit hash of the build producing the
    * release
-   * @member {string} [commitMessage] The commit message of the build producing
-   * the release
+   * @property {string} [commitMessage] The commit message of the build
+   * producing the release
    */
   constructor() {
   }

@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a XcodeToolset.
  */
 class XcodeToolset {
   /**
    * Create a XcodeToolset.
-   * @member {array} xcodeSchemeContainers The Xcode scheme containers
+   * @property {array} xcodeSchemeContainers The Xcode scheme containers
    */
   constructor() {
   }

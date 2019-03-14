@@ -12,7 +12,7 @@
 class DataSubjectRightEmailRequest {
   /**
    * Create a DataSubjectRightEmailRequest.
-   * @member {string} email Email used for cancel delete with x-authz-bypass
+   * @property {string} email Email used for cancel delete with x-authz-bypass
    * headers
    */
   constructor() {

@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a FilterVersionsContainer.
  */
 class FilterVersionsContainer {
   /**
    * Create a FilterVersionsContainer.
-   * @member {array} [versions]
+   * @property {array} [versions]
    */
   constructor() {
   }

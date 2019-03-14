@@ -13,11 +13,11 @@
 class AppleMultifactorSecretDetails {
   /**
    * Create a AppleMultifactorSecretDetails.
-   * @member {string} username username to connect to apple store.
-   * @member {string} password password to connect to apple store.
-   * @member {string} authCode The 6 digit Apple OTP for Multifactor accounts
-   * @member {string} [appSpecificPassword] The app specific password required
-   * for app publishing for 2FA accounts
+   * @property {string} username username to connect to apple store.
+   * @property {string} password password to connect to apple store.
+   * @property {string} authCode The 6 digit Apple OTP for Multifactor accounts
+   * @property {string} [appSpecificPassword] The app specific password
+   * required for app publishing for 2FA accounts
    */
   constructor() {
   }

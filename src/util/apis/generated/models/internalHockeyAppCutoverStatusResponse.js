@@ -12,10 +12,10 @@
 class InternalHockeyAppCutoverStatusResponse {
   /**
    * Create a InternalHockeyAppCutoverStatusResponse.
-   * @member {string} id The ID of the app
-   * @member {string} [status] Does the HockeyApp app have crashes from within
-   * the last 90 days?. Possible values include: 'not_requested', 'requested',
-   * 'in_progress', 'completed'
+   * @property {string} id The ID of the app
+   * @property {string} [status] Does the HockeyApp app have crashes from
+   * within the last 90 days?. Possible values include: 'not_requested',
+   * 'requested', 'in_progress', 'completed'
    */
   constructor() {
   }

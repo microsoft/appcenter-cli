@@ -17,8 +17,8 @@ const models = require('./index');
 class ExportConfigurationAppInsightsLinkedSubscription extends models['ExportConfiguration'] {
   /**
    * Create a ExportConfigurationAppInsightsLinkedSubscription.
-   * @member {string} subscriptionId Id of customer subscription linked in App
-   * Center
+   * @property {string} subscriptionId Id of customer subscription linked in
+   * App Center
    */
   constructor() {
     super();

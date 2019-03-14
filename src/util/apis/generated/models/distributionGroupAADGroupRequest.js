@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a DistributionGroupAADGroupRequest.
  */
 class DistributionGroupAADGroupRequest {
   /**
    * Create a DistributionGroupAADGroupRequest.
-   * @member {array} [aadGroups] The list of aad group ids and names to add
+   * @property {array} [aadGroups] The list of aad group ids and names to add
    */
   constructor() {
   }

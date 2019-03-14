@@ -12,16 +12,16 @@
 class AppRepoResponse {
   /**
    * Create a AppRepoResponse.
-   * @member {uuid} id The unique id (UUID) of the repository integration
-   * @member {uuid} appId The unique id (UUID) of the app that this repository
-   * integration belongs to
-   * @member {string} repoUrl The absolute URL of the repository
-   * @member {string} [repoProvider] The provider of the repository. Possible
+   * @property {uuid} id The unique id (UUID) of the repository integration
+   * @property {uuid} appId The unique id (UUID) of the app that this
+   * repository integration belongs to
+   * @property {string} repoUrl The absolute URL of the repository
+   * @property {string} [repoProvider] The provider of the repository. Possible
    * values include: 'github', 'bitbucket', 'vsts'
-   * @member {uuid} userId The unique id (UUID) of the user who configured the
-   * repository
-   * @member {string} [installationId] Installation id from the provider
-   * @member {string} [repoId] Repository id from the provider
+   * @property {uuid} userId The unique id (UUID) of the user who configured
+   * the repository
+   * @property {string} [installationId] Installation id from the provider
+   * @property {string} [repoId] Repository id from the provider
    */
   constructor() {
   }

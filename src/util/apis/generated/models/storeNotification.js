@@ -12,9 +12,9 @@
 class StoreNotification {
   /**
    * Create a StoreNotification.
-   * @member {string} [service]
-   * @member {string} [status]
-   * @member {number} [validUntil]
+   * @property {string} [service]
+   * @property {string} [status]
+   * @property {number} [validUntil]
    */
   constructor() {
   }

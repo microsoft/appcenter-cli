@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a FilterReleasesContainer.
  */
 class FilterReleasesContainer {
   /**
    * Create a FilterReleasesContainer.
-   * @member {array} [releases]
+   * @property {array} [releases]
    */
   constructor() {
   }

@@ -12,7 +12,7 @@
 class DistributionGroupAADGroupsDeleteRequest {
   /**
    * Create a DistributionGroupAADGroupsDeleteRequest.
-   * @member {array} [aadGroupIds] The list of aad group ids
+   * @property {array} [aadGroupIds] The list of aad group ids
    */
   constructor() {
   }

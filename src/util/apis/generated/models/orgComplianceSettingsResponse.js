@@ -13,12 +13,13 @@
 class OrgComplianceSettingsResponse {
   /**
    * Create a OrgComplianceSettingsResponse.
-   * @member {string} id The internal unique id (UUID) of the organization
+   * @property {string} id The internal unique id (UUID) of the organization
    * compliance setting
-   * @member {string} orgId The internal unique id (UUID) of the organization.
-   * @member {string} certificateConnectionId certificate connection id to wrap
-   * and resign the app after wrapping
-   * @member {boolean} [isMamEnabled] flag to tell if mam warpping is enabled
+   * @property {string} orgId The internal unique id (UUID) of the
+   * organization.
+   * @property {string} certificateConnectionId certificate connection id to
+   * wrap and resign the app after wrapping
+   * @property {boolean} [isMamEnabled] flag to tell if mam warpping is enabled
    * on the Org
    */
   constructor() {

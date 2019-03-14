@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a StepReport.
  */
 class StepReport {
   /**
    * Create a StepReport.
-   * @member {array} finishedSnapshots
-   * @member {array} deviceScreenshots
+   * @property {array} finishedSnapshots
+   * @property {array} deviceScreenshots
    */
   constructor() {
   }

@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * grouped by missing symbols crashes response object
  *
@@ -15,8 +13,9 @@ const models = require('./index');
 class V2MissingSymbolCrashGroupsResponse {
   /**
    * Create a V2MissingSymbolCrashGroupsResponse.
-   * @member {number} totalCrashCount total number of cashes for all the groups
-   * @member {array} groups list of crash groups formed by missing symbols
+   * @property {number} totalCrashCount total number of cashes for all the
+   * groups
+   * @property {array} groups list of crash groups formed by missing symbols
    * combination
    */
   constructor() {

@@ -13,7 +13,7 @@
 class BillingPlansChangeTypeResponse {
   /**
    * Create a BillingPlansChangeTypeResponse.
-   * @member {string} [result] Possible values include: 'NoChange',
+   * @property {string} [result] Possible values include: 'NoChange',
    * 'Downgrade', 'Upgrade'
    */
   constructor() {

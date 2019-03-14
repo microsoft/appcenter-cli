@@ -13,21 +13,21 @@
 class StackFrame {
   /**
    * Create a StackFrame.
-   * @member {string} [address] address of the frame
-   * @member {string} [className] name of the class
-   * @member {string} [method] name of the method
-   * @member {boolean} [classMethod] is a class method
-   * @member {string} [file] name of the file
-   * @member {number} [line] line number
-   * @member {boolean} appCode this line isn't from any framework
-   * @member {string} [frameworkName] Name of the framework
-   * @member {string} codeRaw Raw frame string
-   * @member {string} codeFormatted Formatted frame string
-   * @member {string} [language] programming language of the frame. Possible
+   * @property {string} [address] address of the frame
+   * @property {string} [className] name of the class
+   * @property {string} [method] name of the method
+   * @property {boolean} [classMethod] is a class method
+   * @property {string} [file] name of the file
+   * @property {number} [line] line number
+   * @property {boolean} appCode this line isn't from any framework
+   * @property {string} [frameworkName] Name of the framework
+   * @property {string} codeRaw Raw frame string
+   * @property {string} codeFormatted Formatted frame string
+   * @property {string} [language] programming language of the frame. Possible
    * values include: 'JavaScript', 'CSharp', 'Objective-C', 'Objective-Cpp',
    * 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
-   * @member {boolean} [relevant] frame should be shown always
-   * @member {string} [methodParams] parameters of the frames method
+   * @property {boolean} [relevant] frame should be shown always
+   * @property {string} [methodParams] parameters of the frames method
    */
   constructor() {
   }

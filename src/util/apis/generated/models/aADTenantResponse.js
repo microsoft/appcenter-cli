@@ -12,8 +12,8 @@
 class AADTenantResponse {
   /**
    * Create a AADTenantResponse.
-   * @member {uuid} aadTenantId The AAD tenant id
-   * @member {string} displayName The name of the AAD Tenant
+   * @property {uuid} aadTenantId The AAD tenant id
+   * @property {string} displayName The name of the AAD Tenant
    */
   constructor() {
   }

@@ -12,8 +12,8 @@
 class SubmitDsrOperationResponse {
   /**
    * Create a SubmitDsrOperationResponse.
-   * @member {string} [status] The status of the DSR operation. Possible values
-   * include: 'NotStarted', 'InProgress', 'Completed', 'Failure'
+   * @property {string} [status] The status of the DSR operation. Possible
+   * values include: 'NotStarted', 'InProgress', 'Completed', 'Failure'
    */
   constructor() {
   }

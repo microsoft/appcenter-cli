@@ -12,7 +12,7 @@
 class ErrorLocation {
   /**
    * Create a ErrorLocation.
-   * @member {string} [uri]
+   * @property {string} [uri]
    */
   constructor() {
   }

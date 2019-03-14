@@ -12,9 +12,9 @@
 class XamarinSolution {
   /**
    * Create a XamarinSolution.
-   * @member {string} path Path to solution
-   * @member {array} configurations Solution configurations
-   * @member {string} [defaultConfiguration] Solution default configuration
+   * @property {string} path Path to solution
+   * @property {array} configurations Solution configurations
+   * @property {string} [defaultConfiguration] Solution default configuration
    */
   constructor() {
   }

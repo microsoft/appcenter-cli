@@ -6,22 +6,20 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a PerformanceReportPerformanceDataStepsItem.
  */
 class PerformanceReportPerformanceDataStepsItem {
   /**
    * Create a PerformanceReportPerformanceDataStepsItem.
-   * @member {number} [avgCpu]
-   * @member {number} [avgMem]
-   * @member {array} [samples]
-   * @member {number} [elapsedSecsEnd]
-   * @member {number} [elapsedSecsStart]
-   * @member {number} [elapsedSecs]
-   * @member {string} [name]
-   * @member {string} [id]
+   * @property {number} [avgCpu]
+   * @property {number} [avgMem]
+   * @property {array} [samples]
+   * @property {number} [elapsedSecsEnd]
+   * @property {number} [elapsedSecsStart]
+   * @property {number} [elapsedSecs]
+   * @property {string} [name]
+   * @property {string} [id]
    */
   constructor() {
   }

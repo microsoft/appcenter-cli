@@ -12,32 +12,32 @@
 class InternalHockeyAppCompatibilityResponse {
   /**
    * Create a InternalHockeyAppCompatibilityResponse.
-   * @member {string} [ownerType] The owner type of the app. Possible values
+   * @property {string} [ownerType] The owner type of the app. Possible values
    * include: 'user', 'organization'
-   * @member {string} [os] The OS of the app. Possible values include:
+   * @property {string} [os] The OS of the app. Possible values include:
    * 'Android', 'iOS', 'macOS', 'Windows', 'Custom'
-   * @member {string} [platform] The OS of the app. Possible values include:
+   * @property {string} [platform] The OS of the app. Possible values include:
    * 'Java', 'Objective-C-Swift', 'Cordova', 'React-Native', 'Unity',
    * 'Xamarin', 'Unknown'
-   * @member {boolean} [hasCrashes] Does the HockeyApp app have crashes from
+   * @property {boolean} [hasCrashes] Does the HockeyApp app have crashes from
    * within the last 90 days?
-   * @member {boolean} [hasFeedback] Does the HockeyApp app have feedback from
-   * within the last 90 days?
-   * @member {boolean} [hasMetrics] Does the HockeyApp app have metrics from
+   * @property {boolean} [hasFeedback] Does the HockeyApp app have feedback
+   * from within the last 90 days?
+   * @property {boolean} [hasMetrics] Does the HockeyApp app have metrics from
    * within the last 30 days?
-   * @member {boolean} [hasExternalBuilds] Does the HockeyApp app have any
+   * @property {boolean} [hasExternalBuilds] Does the HockeyApp app have any
    * external builds?
-   * @member {boolean} [hasSpecifiedBuildServerUrl] Does the HockeyApp app have
-   * any build server URLs specified?
-   * @member {boolean} [hasDistributionGroupsOutsideOfOwnership] Does the
+   * @property {boolean} [hasSpecifiedBuildServerUrl] Does the HockeyApp app
+   * have any build server URLs specified?
+   * @property {boolean} [hasDistributionGroupsOutsideOfOwnership] Does the
    * HockeyApp app have an associated Distribution Group that is owned by a
    * different owner?
-   * @member {boolean} [ownerHasDistributionGroups] Does the HockeyApp app's
+   * @property {boolean} [ownerHasDistributionGroups] Does the HockeyApp app's
    * owner own any Distribution Groups?
-   * @member {string} [bugtrackerType] Does the HockeyApp app have any
+   * @property {string} [bugtrackerType] Does the HockeyApp app have any
    * bugtracker configured? Which type?. Possible values include: 'none',
    * 'vso', 'jira5', 'github', 'other'
-   * @member {array} [webhookTypes] Does the HockeyApp app have any webhooks
+   * @property {array} [webhookTypes] Does the HockeyApp app have any webhooks
    * configured? Which types?
    */
   constructor() {

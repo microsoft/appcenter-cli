@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * The lite version of GitHub branch
  *
@@ -15,10 +13,10 @@ const models = require('./index');
 class GitHubBranchLite {
   /**
    * Create a GitHubBranchLite.
-   * @member {string} [ref] The repository name
-   * @member {string} [sha] The discription of repository
-   * @member {object} [repo]
-   * @member {number} [repo.id] The repository id
+   * @property {string} [ref] The repository name
+   * @property {string} [sha] The discription of repository
+   * @property {object} [repo]
+   * @property {number} [repo.id] The repository id
    */
   constructor() {
   }

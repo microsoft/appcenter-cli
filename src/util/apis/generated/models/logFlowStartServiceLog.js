@@ -16,8 +16,8 @@ const models = require('./index');
 class LogFlowStartServiceLog extends models['LogFlowLog'] {
   /**
    * Create a LogFlowStartServiceLog.
-   * @member {array} [services] The list of services of the AppCenter Start API
-   * call.
+   * @property {array} [services] The list of services of the AppCenter Start
+   * API call.
    */
   constructor() {
     super();

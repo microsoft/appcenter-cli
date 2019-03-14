@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Repostiory object
  *
@@ -15,15 +13,15 @@ const models = require('./index');
 class AlertBugTrackerRepo {
   /**
    * Create a AlertBugTrackerRepo.
-   * @member {string} name
-   * @member {string} url
-   * @member {string} id
-   * @member {string} [description]
-   * @member {boolean} [privateProperty]
-   * @member {object} [owner]
-   * @member {string} [owner.name]
-   * @member {string} [owner.id]
-   * @member {string} [owner.login]
+   * @property {string} name
+   * @property {string} url
+   * @property {string} id
+   * @property {string} [description]
+   * @property {boolean} [privateProperty]
+   * @property {object} [owner]
+   * @property {string} [owner.name]
+   * @property {string} [owner.id]
+   * @property {string} [owner.login]
    */
   constructor() {
   }

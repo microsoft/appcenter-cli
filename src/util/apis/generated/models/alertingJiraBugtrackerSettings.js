@@ -16,8 +16,8 @@ const models = require('./index');
 class AlertingJiraBugtrackerSettings extends models['AlertingBugtrackerSettings'] {
   /**
    * Create a AlertingJiraBugtrackerSettings.
-   * @member {number} jiraProjectId
-   * @member {string} jiraProjectName
+   * @property {number} jiraProjectId
+   * @property {string} jiraProjectName
    */
   constructor() {
     super();

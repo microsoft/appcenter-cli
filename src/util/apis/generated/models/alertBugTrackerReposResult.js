@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * List of bug tracker repositories
  *
@@ -15,9 +13,9 @@ const models = require('./index');
 class AlertBugTrackerReposResult {
   /**
    * Create a AlertBugTrackerReposResult.
-   * @member {string} [repoType] Possible values include: 'github', 'vsts',
+   * @property {string} [repoType] Possible values include: 'github', 'vsts',
    * 'jira'
-   * @member {array} repositories
+   * @property {array} repositories
    */
   constructor() {
   }

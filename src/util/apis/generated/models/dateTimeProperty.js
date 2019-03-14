@@ -16,7 +16,7 @@ const models = require('./index');
 class DateTimeProperty extends models['CustomProperty'] {
   /**
    * Create a DateTimeProperty.
-   * @member {date} value Date time property value.
+   * @property {date} value Date time property value.
    */
   constructor() {
     super();
@@ -46,7 +46,7 @@ class DateTimeProperty extends models['CustomProperty'] {
             serializedName: 'name',
             constraints: {
               MaxLength: 128,
-              Pattern: '^[a-zA-Z][a-zA-Z0-9\-_]*$'
+              Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
             type: {
               name: 'String'

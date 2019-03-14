@@ -13,7 +13,7 @@
 class AudienceBlobResult {
   /**
    * Create a AudienceBlobResult.
-   * @member {string} [url] Location of the audience blob.
+   * @property {string} [url] Location of the audience blob.
    */
   constructor() {
   }

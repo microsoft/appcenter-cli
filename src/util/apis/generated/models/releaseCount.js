@@ -12,10 +12,10 @@
 class ReleaseCount {
   /**
    * Create a ReleaseCount.
-   * @member {string} releaseId
-   * @member {string} [distributionGroup] Distribution group queried.
-   * @member {number} uniqueCount Count of unique downloads against user id.
-   * @member {number} totalCount Total count of downloads.
+   * @property {string} releaseId
+   * @property {string} [distributionGroup] Distribution group queried.
+   * @property {number} uniqueCount Count of unique downloads against user id.
+   * @property {number} totalCount Total count of downloads.
    */
   constructor() {
   }

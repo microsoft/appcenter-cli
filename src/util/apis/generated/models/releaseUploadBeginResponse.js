@@ -14,14 +14,14 @@
 class ReleaseUploadBeginResponse {
   /**
    * Create a ReleaseUploadBeginResponse.
-   * @member {string} uploadId The ID for the current upload
-   * @member {string} uploadUrl The URL where the client needs to upload the
+   * @property {string} uploadId The ID for the current upload
+   * @property {string} uploadUrl The URL where the client needs to upload the
    * release to
-   * @member {string} [assetId] The ID for the current upload, reserved for
+   * @property {string} [assetId] The ID for the current upload, reserved for
    * future use
-   * @member {string} [assetDomain] The URL for the current upload, reserved
+   * @property {string} [assetDomain] The URL for the current upload, reserved
    * for future use
-   * @member {string} [assetToken] The token for the current upload, reserved
+   * @property {string} [assetToken] The token for the current upload, reserved
    * for future use
    */
   constructor() {

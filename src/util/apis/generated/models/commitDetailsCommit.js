@@ -6,19 +6,17 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a CommitDetailsCommit.
  */
 class CommitDetailsCommit {
   /**
    * Create a CommitDetailsCommit.
-   * @member {string} [message] Commit message
-   * @member {object} [author]
-   * @member {string} [author.date] Date and time of the commit
-   * @member {string} [author.name] Author name
-   * @member {string} [author.email] Author's email
+   * @property {string} [message] Commit message
+   * @property {object} [author]
+   * @property {string} [author.date] Date and time of the commit
+   * @property {string} [author.name] Author name
+   * @property {string} [author.email] Author's email
    */
   constructor() {
   }

@@ -12,7 +12,7 @@
 class DeploymentModification {
   /**
    * Create a DeploymentModification.
-   * @member {string} name
+   * @property {string} name
    */
   constructor() {
   }

@@ -16,9 +16,9 @@ const models = require('./index');
 class LogFlowErrorLog extends models['LogFlowLog'] {
   /**
    * Create a LogFlowErrorLog.
-   * @member {uuid} sessionId Session ID.
-   * @member {uuid} id Error identifier.
-   * @member {number} [appLaunchToffset] Corresponds to the number of
+   * @property {uuid} sessionId Session ID.
+   * @property {uuid} id Error identifier.
+   * @property {number} [appLaunchToffset] Corresponds to the number of
    * milliseconds elapsed between the time the error occurred and the app was
    * launched.
    */

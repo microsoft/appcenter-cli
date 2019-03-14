@@ -12,7 +12,7 @@
 class IntuneAppCategory {
   /**
    * Create a IntuneAppCategory.
-   * @member {string} [name] display name for the app category
+   * @property {string} [name] display name for the app category
    */
   constructor() {
   }

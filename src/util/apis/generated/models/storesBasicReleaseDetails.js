@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Basic information on a release
  *
@@ -15,16 +13,16 @@ const models = require('./index');
 class StoresBasicReleaseDetails {
   /**
    * Create a StoresBasicReleaseDetails.
-   * @member {number} [id] ID identifying this unique release.
-   * @member {string} [version] The release's version.
+   * @property {number} [id] ID identifying this unique release.
+   * @property {string} [version] The release's version.
    * For iOS: CFBundleVersion from info.plist.
    * For Android: android:versionCode from AppManifest.xml.
-   * @member {string} [shortVersion] The release's short version.
+   * @property {string} [shortVersion] The release's short version.
    * For iOS: CFBundleShortVersionString from info.plist.
    * For Android: android:versionName from AppManifest.xml.
-   * @member {string} [uploadedAt] UTC time in ISO 8601 format of the uploaded
-   * time.
-   * @member {array} [distributionStores] a list of distribution stores that
+   * @property {string} [uploadedAt] UTC time in ISO 8601 format of the
+   * uploaded time.
+   * @property {array} [distributionStores] a list of distribution stores that
    * are associated with this release.
    */
   constructor() {

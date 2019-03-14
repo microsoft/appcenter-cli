@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Billing plans for a given period
  *
@@ -15,24 +13,24 @@ const models = require('./index');
 class BillingPeriod {
   /**
    * Create a BillingPeriod.
-   * @member {string} [startTime] Inclusive start of the period
-   * @member {string} [endTime] Exclusive end of the period.
-   * @member {object} [byAccount]
-   * @member {number} [byAccount.count] Number of instances of the billing
+   * @property {string} [startTime] Inclusive start of the period
+   * @property {string} [endTime] Exclusive end of the period.
+   * @property {object} [byAccount]
+   * @property {number} [byAccount.count] Number of instances of the billing
    * plan.
-   * @member {object} [byAccount.plan]
-   * @member {string} [byAccount.plan.id] The Billing Plan ID
-   * @member {string} [byAccount.plan.version] Version of the Billing Plan
+   * @property {object} [byAccount.plan]
+   * @property {string} [byAccount.plan.id] The Billing Plan ID
+   * @property {string} [byAccount.plan.version] Version of the Billing Plan
    * schema
-   * @member {number} [byAccount.plan.price] Price of the Billing Plan
-   * @member {string} [byAccount.plan.paymentSource] Service that receives
+   * @property {number} [byAccount.plan.price] Price of the Billing Plan
+   * @property {string} [byAccount.plan.paymentSource] Service that receives
    * payments for this billing plan. Possible values include: 'None',
    * 'AppCenter', 'GitHub', 'Xtc'
-   * @member {string} [byAccount.plan.service] Name of the service that the
+   * @property {string} [byAccount.plan.service] Name of the service that the
    * plan applies to. Possible values include: 'Build', 'Push', 'Test'
-   * @member {object} [byAccount.plan.limits]
-   * @member {object} [byAccount.plan.attributes]
-   * @member {string} [byAccount.plan.parentId]
+   * @property {object} [byAccount.plan.limits]
+   * @property {object} [byAccount.plan.attributes]
+   * @property {string} [byAccount.plan.parentId]
    */
   constructor() {
   }

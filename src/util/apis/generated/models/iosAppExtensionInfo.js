@@ -13,8 +13,8 @@
 class IosAppExtensionInfo {
   /**
    * Create a IosAppExtensionInfo.
-   * @member {string} name App extension name
-   * @member {string} targetBundleIdentifier App extension bundle identifier
+   * @property {string} name App extension name
+   * @property {string} targetBundleIdentifier App extension bundle identifier
    */
   constructor() {
   }

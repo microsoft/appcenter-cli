@@ -12,7 +12,7 @@
 class SendNotificationRequest {
   /**
    * Create a SendNotificationRequest.
-   * @member {array} userIds user list to send email notification
+   * @property {array} userIds user list to send email notification
    */
   constructor() {
   }

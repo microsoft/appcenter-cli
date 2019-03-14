@@ -12,7 +12,7 @@
 class AppDeleteRequest {
   /**
    * Create a AppDeleteRequest.
-   * @member {string} name The name of the app to be deleted from the
+   * @property {string} name The name of the app to be deleted from the
    * distribution group
    */
   constructor() {

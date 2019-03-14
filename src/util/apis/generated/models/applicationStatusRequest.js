@@ -13,18 +13,18 @@
 class ApplicationStatusRequest {
   /**
    * Create a ApplicationStatusRequest.
-   * @member {string} username The username for the Apple Developer account.
-   * @member {string} password The password for the Apple Developer account.
-   * @member {string} bundleIdentifier Bundle Identifier of application in
+   * @property {string} username The username for the Apple Developer account.
+   * @property {string} password The password for the Apple Developer account.
+   * @property {string} bundleIdentifier Bundle Identifier of application in
    * Apple Itunes portal.
-   * @member {string} trackIdentifier Track Identifier for which the status is
-   * to be fetched.
-   * @member {string} [buildVersion] The version of build for which real time
+   * @property {string} trackIdentifier Track Identifier for which the status
+   * is to be fetched.
+   * @property {string} [buildVersion] The version of build for which real time
    * status is to be fetched.
-   * @member {string} [teamIdentifier] Identifier of the team to use when
+   * @property {string} [teamIdentifier] Identifier of the team to use when
    * logged in.
-   * @member {string} [trainVersion] The Train version for which the status is
-   * to be fetched.
+   * @property {string} [trainVersion] The Train version for which the status
+   * is to be fetched.
    */
   constructor() {
   }

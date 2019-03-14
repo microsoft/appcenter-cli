@@ -13,7 +13,7 @@
 class ExportStartedResult {
   /**
    * Create a ExportStartedResult.
-   * @member {string} exportId The unique export identifier.
+   * @property {string} exportId The unique export identifier.
    */
   constructor() {
   }

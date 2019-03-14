@@ -13,9 +13,9 @@
 class JiraSecretDetails {
   /**
    * Create a JiraSecretDetails.
-   * @member {string} baseUrl baseUrl to connect to jira instance
-   * @member {string} username username to connect to jira instance
-   * @member {string} password password to connect to jira instance
+   * @property {string} baseUrl baseUrl to connect to jira instance
+   * @property {string} username username to connect to jira instance
+   * @property {string} password password to connect to jira instance
    */
   constructor() {
   }

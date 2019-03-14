@@ -16,9 +16,9 @@ const models = require('./index');
 class AlertingGithubBugtrackerSettings extends models['AlertingBugtrackerSettings'] {
   /**
    * Create a AlertingGithubBugtrackerSettings.
-   * @member {number} githubRepoId
-   * @member {string} githubRepoName
-   * @member {string} [githubLabel]
+   * @property {number} githubRepoId
+   * @property {string} githubRepoName
+   * @property {string} [githubLabel]
    */
   constructor() {
     super();

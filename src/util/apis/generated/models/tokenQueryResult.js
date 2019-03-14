@@ -13,7 +13,7 @@
 class TokenQueryResult {
   /**
    * Create a TokenQueryResult.
-   * @member {array} [tokens] List of tokens.
+   * @property {array} [tokens] List of tokens.
    */
   constructor() {
   }

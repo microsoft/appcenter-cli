@@ -13,13 +13,13 @@
 class SharedConnectionResponse {
   /**
    * Create a SharedConnectionResponse.
-   * @member {string} id id of the shared connection
-   * @member {string} [displayName] display name of shared connection
-   * @member {string} credentialType the type of the credential. Possible
+   * @property {string} id id of the shared connection
+   * @property {string} [displayName] display name of shared connection
+   * @property {string} credentialType the type of the credential. Possible
    * values include: 'credentials', 'certificate'
-   * @member {boolean} [isValid] whether the credentials are valid or not
-   * @member {boolean} [is2FA] if the account is a 2FA account or not
-   * @member {string} serviceType Polymorphic Discriminator
+   * @property {boolean} [isValid] whether the credentials are valid or not
+   * @property {boolean} [is2FA] if the account is a 2FA account or not
+   * @property {string} serviceType Polymorphic Discriminator
    */
   constructor() {
   }

@@ -16,9 +16,9 @@ const models = require('./index');
 class AlertingError extends models['AlertOperationResult'] {
   /**
    * Create a AlertingError.
-   * @member {number} code The status code return by the API. It can be 400 or
-   * 404 or 409 or 500.
-   * @member {string} [message] The reason for the request failed
+   * @property {number} code The status code return by the API. It can be 400
+   * or 404 or 409 or 500.
+   * @property {string} [message] The reason for the request failed
    */
   constructor() {
     super();

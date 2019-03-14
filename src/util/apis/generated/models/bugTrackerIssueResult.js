@@ -14,14 +14,14 @@
 class BugTrackerIssueResult {
   /**
    * Create a BugTrackerIssueResult.
-   * @member {string} [id]
-   * @member {string} [url]
-   * @member {string} [title]
-   * @member {string} [bugTrackerType] Possible values include: 'github',
+   * @property {string} [id]
+   * @property {string} [url]
+   * @property {string} [title]
+   * @property {string} [bugTrackerType] Possible values include: 'github',
    * 'vsts', 'jira'
-   * @member {string} [repoName]
-   * @member {string} [mobileCenterId]
-   * @member {string} [eventType]
+   * @property {string} [repoName]
+   * @property {string} [mobileCenterId]
+   * @property {string} [eventType]
    */
   constructor() {
   }

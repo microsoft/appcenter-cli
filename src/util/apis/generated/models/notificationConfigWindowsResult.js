@@ -16,8 +16,8 @@ const models = require('./index');
 class NotificationConfigWindowsResult extends models['NotificationConfigResult'] {
   /**
    * Create a NotificationConfigWindowsResult.
-   * @member {string} packageSid Package security identifier (SID).
-   * @member {string} [secretKey] windows push configuration secret key.
+   * @property {string} packageSid Package security identifier (SID).
+   * @property {string} [secretKey] windows push configuration secret key.
    */
   constructor() {
     super();

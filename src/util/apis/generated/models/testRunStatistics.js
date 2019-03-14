@@ -15,17 +15,17 @@
 class TestRunStatistics {
   /**
    * Create a TestRunStatistics.
-   * @member {number} [devices] Number of devices running the test
-   * @member {number} [devicesFinished] Number of finished devices
-   * @member {number} [devicesFailed] Number of failed devices
-   * @member {number} [total] Number of tests in total
-   * @member {number} [passed] Number of passed tests
-   * @member {number} [failed] Number of failed tests
-   * @member {number} [skipped] Number of skipped tests
-   * @member {number} [peakMemory] The max amount of MB used during the test
+   * @property {number} [devices] Number of devices running the test
+   * @property {number} [devicesFinished] Number of finished devices
+   * @property {number} [devicesFailed] Number of failed devices
+   * @property {number} [total] Number of tests in total
+   * @property {number} [passed] Number of passed tests
+   * @property {number} [failed] Number of failed tests
+   * @property {number} [skipped] Number of skipped tests
+   * @property {number} [peakMemory] The max amount of MB used during the test
    * run
-   * @member {number} [totalDeviceMinutes] The number of minutes of device time
-   * the test has been runnign
+   * @property {number} [totalDeviceMinutes] The number of minutes of device
+   * time the test has been runnign
    */
   constructor() {
   }

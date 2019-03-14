@@ -13,7 +13,7 @@
 class HasTestflightMetadataResponse {
   /**
    * Create a HasTestflightMetadataResponse.
-   * @member {boolean} [hasTestflightMetadata] true if the app has the
+   * @property {boolean} [hasTestflightMetadata] true if the app has the
    * testflight metadata, false otherwise
    */
   constructor() {

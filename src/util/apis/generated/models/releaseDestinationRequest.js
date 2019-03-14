@@ -15,11 +15,10 @@ const models = require('./index');
 class ReleaseDestinationRequest extends models['ReleaseStoreDestinationRequest'] {
   /**
    * Create a ReleaseDestinationRequest.
-   * @member {boolean} [mandatory] OBSOLETE! Use mandatory_update instead.
-   * @member {boolean} [mandatoryUpdate] Flag to mark the release for the
+   * @property {boolean} [mandatoryUpdate] Flag to mark the release for the
    * provided destinations as mandatory
-   * @member {boolean} [notifyTesters] Flag to enable or disable notifications
-   * to testers. Default value: true .
+   * @property {boolean} [notifyTesters] Flag to enable or disable
+   * notifications to testers. Default value: true .
    */
   constructor() {
     super();
@@ -44,13 +43,6 @@ class ReleaseDestinationRequest extends models['ReleaseStoreDestinationRequest']
             serializedName: 'id',
             type: {
               name: 'String'
-            }
-          },
-          mandatory: {
-            required: false,
-            serializedName: 'mandatory',
-            type: {
-              name: 'Boolean'
             }
           },
           mandatoryUpdate: {

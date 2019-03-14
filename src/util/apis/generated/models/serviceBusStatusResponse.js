@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ServiceBusStatusResponse.
  */
 class ServiceBusStatusResponse {
   /**
    * Create a ServiceBusStatusResponse.
-   * @member {string} status
-   * @member {array} [subscriptions]
+   * @property {string} status
+   * @property {array} [subscriptions]
    */
   constructor() {
   }

@@ -16,8 +16,8 @@ const models = require('./index');
 class AppleConnectionSecretResponse extends models['SharedConnectionResponse'] {
   /**
    * Create a AppleConnectionSecretResponse.
-   * @member {object} data apple secret details
-   * @member {string} [data.username] username to connect to apple store
+   * @property {object} data apple secret details
+   * @property {string} [data.username] username to connect to apple store
    */
   constructor() {
     super();

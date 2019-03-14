@@ -13,7 +13,7 @@
 class V2StatusResponse {
   /**
    * Create a V2StatusResponse.
-   * @member {string} status
+   * @property {string} status
    */
   constructor() {
   }

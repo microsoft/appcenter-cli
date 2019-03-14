@@ -15,7 +15,7 @@ const models = require('./index');
 class DeploymentInternal extends models['Deployment'] {
   /**
    * Create a DeploymentInternal.
-   * @member {string} [id]
+   * @property {string} [id]
    */
   constructor() {
     super();

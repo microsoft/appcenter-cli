@@ -12,9 +12,9 @@
 class DistributionGroupAADGroupPostResponse {
   /**
    * Create a DistributionGroupAADGroupPostResponse.
-   * @member {uuid} [id] The internal unique id (UUID) of the AAD group.
-   * @member {uuid} [aadGroupId] The AAD unique id (UUID) of the AAD group.
-   * @member {string} [displayName] The display name of the AAD group
+   * @property {uuid} [id] The internal unique id (UUID) of the AAD group.
+   * @property {uuid} [aadGroupId] The AAD unique id (UUID) of the AAD group.
+   * @property {string} [displayName] The display name of the AAD group
    */
   constructor() {
   }

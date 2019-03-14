@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a DistributionGroupsUserVerifyRequest.
  */
 class DistributionGroupsUserVerifyRequest {
   /**
    * Create a DistributionGroupsUserVerifyRequest.
-   * @member {array} distributionGroupIds An array of distribution group ids
+   * @property {array} distributionGroupIds An array of distribution group ids
    */
   constructor() {
   }

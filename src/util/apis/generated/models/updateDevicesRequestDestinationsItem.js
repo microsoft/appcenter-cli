@@ -12,7 +12,7 @@
 class UpdateDevicesRequestDestinationsItem {
   /**
    * Create a UpdateDevicesRequestDestinationsItem.
-   * @member {string} [name]
+   * @property {string} [name]
    */
   constructor() {
   }

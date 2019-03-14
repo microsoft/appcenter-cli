@@ -15,11 +15,11 @@ const models = require('./index');
 class OrgDistributionGroupDetailsResponse extends models['DistributionGroupResponse'] {
   /**
    * Create a OrgDistributionGroupDetailsResponse.
-   * @member {number} totalAppsCount The count of apps associated with this
+   * @property {number} totalAppsCount The count of apps associated with this
    * distribution group
-   * @member {number} totalUsersCount The count of users in the distribution
+   * @property {number} totalUsersCount The count of users in the distribution
    * group
-   * @member {array} apps The apps associated with the distribution group
+   * @property {array} apps The apps associated with the distribution group
    */
   constructor() {
     super();
@@ -49,6 +49,13 @@ class OrgDistributionGroupDetailsResponse extends models['DistributionGroupRespo
           name: {
             required: true,
             serializedName: 'name',
+            type: {
+              name: 'String'
+            }
+          },
+          displayName: {
+            required: false,
+            serializedName: 'display_name',
             type: {
               name: 'String'
             }

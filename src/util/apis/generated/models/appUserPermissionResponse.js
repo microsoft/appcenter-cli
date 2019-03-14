@@ -12,13 +12,13 @@
 class AppUserPermissionResponse {
   /**
    * Create a AppUserPermissionResponse.
-   * @member {uuid} appId The unique id (UUID) of the app
-   * @member {array} permissions The permissions the user has for the app
-   * @member {string} userEmail The email of the user
-   * @member {uuid} userId The unique id (UUID) of the user
-   * @member {string} appOrigin The creation origin of this app. Possible
+   * @property {uuid} appId The unique id (UUID) of the app
+   * @property {array} permissions The permissions the user has for the app
+   * @property {string} userEmail The email of the user
+   * @property {uuid} userId The unique id (UUID) of the user
+   * @property {string} appOrigin The creation origin of this app. Possible
    * values include: 'appcenter', 'hockeyapp', 'codepush'
-   * @member {string} appSecret A unique and secret key used to identify the
+   * @property {string} appSecret A unique and secret key used to identify the
    * app in communication with the ingestion endpoint for crash reporting and
    * analytics
    */

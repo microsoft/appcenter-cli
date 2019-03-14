@@ -12,8 +12,8 @@
 class AppAddRequest {
   /**
    * Create a AppAddRequest.
-   * @member {string} name The name of the app to be added to the distribution
-   * group
+   * @property {string} name The name of the app to be added to the
+   * distribution group
    */
   constructor() {
   }

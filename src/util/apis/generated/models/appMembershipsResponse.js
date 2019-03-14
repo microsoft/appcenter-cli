@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a AppMembershipsResponse.
  */
 class AppMembershipsResponse {
   /**
    * Create a AppMembershipsResponse.
-   * @member {string} [appOrigin] The app's origin
-   * @member {array} [memberships] An array of all ways a user has access to
+   * @property {string} [appOrigin] The app's origin
+   * @property {array} [memberships] An array of all ways a user has access to
    * the app, based on the app_memberships table.
    */
   constructor() {

@@ -15,17 +15,17 @@ const models = require('./index');
 class CodePushRelease extends models['CodePushReleaseInfo'] {
   /**
    * Create a CodePushRelease.
-   * @member {string} [label]
-   * @member {string} [packageHash]
-   * @member {string} [blobUrl]
-   * @member {object} [diffPackageMap]
-   * @member {string} [originalDeployment] Set on 'Promote'
-   * @member {string} [originalLabel] Set on 'Promote' and 'Rollback'
-   * @member {string} [releasedBy]
-   * @member {string} [releaseMethod] The release method is unknown if
+   * @property {string} [label]
+   * @property {string} [packageHash]
+   * @property {string} [blobUrl]
+   * @property {object} [diffPackageMap]
+   * @property {string} [originalDeployment] Set on 'Promote'
+   * @property {string} [originalLabel] Set on 'Promote' and 'Rollback'
+   * @property {string} [releasedBy]
+   * @property {string} [releaseMethod] The release method is unknown if
    * unspecified. Possible values include: 'Upload', 'Promote', 'Rollback'
-   * @member {number} [size]
-   * @member {number} [uploadTime]
+   * @property {number} [size]
+   * @property {number} [uploadTime]
    */
   constructor() {
     super();

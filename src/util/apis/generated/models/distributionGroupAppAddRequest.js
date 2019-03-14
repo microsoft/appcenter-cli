@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a DistributionGroupAppAddRequest.
  */
 class DistributionGroupAppAddRequest {
   /**
    * Create a DistributionGroupAppAddRequest.
-   * @member {array} [apps] The list of apps to add to distribution group
+   * @property {array} [apps] The list of apps to add to distribution group
    */
   constructor() {
   }

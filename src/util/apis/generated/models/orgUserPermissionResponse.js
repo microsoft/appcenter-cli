@@ -12,8 +12,8 @@
 class OrgUserPermissionResponse {
   /**
    * Create a OrgUserPermissionResponse.
-   * @member {uuid} orgId The unique id (UUID) of the org
-   * @member {string} userRole The user role for the org. Possible values
+   * @property {uuid} orgId The unique id (UUID) of the org
+   * @property {string} userRole The user role for the org. Possible values
    * include: 'admin', 'collaborator'
    */
   constructor() {

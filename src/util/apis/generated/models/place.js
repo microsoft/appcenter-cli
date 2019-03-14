@@ -13,9 +13,9 @@
 class Place {
   /**
    * Create a Place.
-   * @member {string} [code] the place code
-   * @member {number} [count] the count of the this place
-   * @member {number} [previousCount] the count of previous time range of the
+   * @property {string} [code] the place code
+   * @property {number} [count] the count of the this place
+   * @property {number} [previousCount] the count of previous time range of the
    * place
    */
   constructor() {

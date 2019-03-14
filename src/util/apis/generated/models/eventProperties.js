@@ -13,7 +13,7 @@
 class EventProperties {
   /**
    * Create a EventProperties.
-   * @member {array} [eventProperties]
+   * @property {array} [eventProperties]
    */
   constructor() {
   }

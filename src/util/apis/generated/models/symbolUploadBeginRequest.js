@@ -14,15 +14,15 @@
 class SymbolUploadBeginRequest {
   /**
    * Create a SymbolUploadBeginRequest.
-   * @member {string} symbolType The type of the symbol for the current symbol
-   * upload. Possible values include: 'Apple', 'Breakpad', 'AndroidProguard',
-   * 'UWP'
-   * @member {string} [clientCallback] The callback URL that the client can
+   * @property {string} symbolType The type of the symbol for the current
+   * symbol upload. Possible values include: 'Apple', 'Breakpad',
+   * 'AndroidProguard', 'UWP'
+   * @property {string} [clientCallback] The callback URL that the client can
    * optionally provide to get status updates for the current symbol upload
-   * @member {string} [fileName] The file name for the symbol upload
-   * @member {string} [build] The build number. Optional for Apple. Required
+   * @property {string} [fileName] The file name for the symbol upload
+   * @property {string} [build] The build number. Optional for Apple. Required
    * for Android.
-   * @member {string} [version] The version number. Optional for Apple.
+   * @property {string} [version] The version number. Optional for Apple.
    * Required for Android.
    */
   constructor() {

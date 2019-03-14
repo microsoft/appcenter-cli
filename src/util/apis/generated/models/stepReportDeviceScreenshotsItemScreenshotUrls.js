@@ -12,10 +12,10 @@
 class StepReportDeviceScreenshotsItemScreenshotUrls {
   /**
    * Create a StepReportDeviceScreenshotsItemScreenshotUrls.
-   * @member {string} original
-   * @member {string} small
-   * @member {string} medium
-   * @member {string} large
+   * @property {string} original
+   * @property {string} small
+   * @property {string} medium
+   * @property {string} large
    */
   constructor() {
   }

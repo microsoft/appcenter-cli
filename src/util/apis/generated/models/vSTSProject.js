@@ -13,12 +13,12 @@
 class VSTSProject {
   /**
    * Create a VSTSProject.
-   * @member {string} [id] Project id
-   * @member {string} [name] Project name
-   * @member {string} [description] Project description
-   * @member {string} [url] Project URL
-   * @member {string} [state] Project state
-   * @member {string} [visibility] Project visibility
+   * @property {string} [id] Project id
+   * @property {string} [name] Project name
+   * @property {string} [description] Project description
+   * @property {string} [url] Project URL
+   * @property {string} [state] Project state
+   * @property {string} [visibility] Project visibility
    */
   constructor() {
   }

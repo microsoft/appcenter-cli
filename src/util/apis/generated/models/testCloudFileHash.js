@@ -15,10 +15,10 @@
 class TestCloudFileHash {
   /**
    * Create a TestCloudFileHash.
-   * @member {string} fileType Type of the file. Possible values include:
+   * @property {string} fileType Type of the file. Possible values include:
    * 'dsym-file', 'app-file', 'test-file'
-   * @member {string} checksum SHA256 hash of the file
-   * @member {string} relativePath Relative path of the file
+   * @property {string} checksum SHA256 hash of the file
+   * @property {string} relativePath Relative path of the file
    */
   constructor() {
   }

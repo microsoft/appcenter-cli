@@ -13,8 +13,8 @@
 class SharedConnectionPatchRequest {
   /**
    * Create a SharedConnectionPatchRequest.
-   * @member {string} [displayName] Display name of the shared connection
-   * @member {object} data Represents the data for connecting to service
+   * @property {string} [displayName] Display name of the shared connection
+   * @property {object} data Represents the data for connecting to service
    */
   constructor() {
   }

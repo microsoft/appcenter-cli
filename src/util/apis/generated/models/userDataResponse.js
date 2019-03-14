@@ -12,10 +12,10 @@
 class UserDataResponse {
   /**
    * Create a UserDataResponse.
-   * @member {uuid} [id] The unique id (UUID) of the user
-   * @member {string} [displayName] The display name of the user
-   * @member {string} [name] The name of the user
-   * @member {string} [avatarUrl] The url at which the user's avatar can be
+   * @property {uuid} [id] The unique id (UUID) of the user
+   * @property {string} [displayName] The display name of the user
+   * @property {string} [name] The name of the user
+   * @property {string} [avatarUrl] The url at which the user's avatar can be
    * reached
    */
   constructor() {

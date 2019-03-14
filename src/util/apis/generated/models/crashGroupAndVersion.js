@@ -12,8 +12,8 @@
 class CrashGroupAndVersion {
   /**
    * Create a CrashGroupAndVersion.
-   * @member {string} [crashGroupId]
-   * @member {string} [appVersion]
+   * @property {string} [crashGroupId]
+   * @property {string} [appVersion]
    */
   constructor() {
   }

@@ -13,8 +13,8 @@
 class ExportStatusResult {
   /**
    * Create a ExportStatusResult.
-   * @member {string} exportId The unique export identifier.
-   * @member {string} status Status of the export. Possible values include:
+   * @property {string} exportId The unique export identifier.
+   * @property {string} status Status of the export. Possible values include:
    * 'InProgress', 'Completed', 'Failed'
    */
   constructor() {

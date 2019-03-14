@@ -12,10 +12,10 @@
 class TeamResponse {
   /**
    * Create a TeamResponse.
-   * @member {uuid} id The internal unique id (UUID) of the team.
-   * @member {string} name The name of the team
-   * @member {string} displayName The display name of the team
-   * @member {string} [description] The description of the team
+   * @property {uuid} id The internal unique id (UUID) of the team.
+   * @property {string} name The name of the team
+   * @property {string} displayName The display name of the team
+   * @property {string} [description] The description of the team
    */
   constructor() {
   }

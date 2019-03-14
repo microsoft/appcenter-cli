@@ -283,6 +283,1306 @@ function _getLatestByHash(appSecret, releaseHash, options, callback) {
 }
 
 /**
+ * Update details about the specified tester associated with the release
+ *
+ * @param {number} releaseId The ID of the release
+ *
+ * @param {uuid} testerId The id of the tester
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {boolean} mandatoryUpdate Whether a release is mandatory for the
+ * given destination
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      See {@link ErrorDetails} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _putDistributionTester(releaseId, testerId, ownerName, appName, mandatoryUpdate, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (releaseId === null || releaseId === undefined || typeof releaseId !== 'number') {
+      throw new Error('releaseId cannot be null or undefined and it must be of type number.');
+    }
+    if (testerId === null || testerId === undefined || typeof testerId.valueOf() !== 'string' || !msRest.isValidUuid(testerId)) {
+      throw new Error('testerId cannot be null or undefined and it must be of type string and must be a valid uuid.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (mandatoryUpdate === null || mandatoryUpdate === undefined || typeof mandatoryUpdate !== 'boolean') {
+      throw new Error('mandatoryUpdate cannot be null or undefined and it must be of type boolean.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  let destinationTesterUpdateDetails;
+  if (mandatoryUpdate !== null && mandatoryUpdate !== undefined) {
+    destinationTesterUpdateDetails = new client.models['DestinationTesterUpdateDetails']();
+    destinationTesterUpdateDetails.mandatoryUpdate = mandatoryUpdate;
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/testers/{tester_id}';
+  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId.toString()));
+  requestUrl = requestUrl.replace('{tester_id}', encodeURIComponent(testerId.toString()));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'PUT';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (destinationTesterUpdateDetails !== null && destinationTesterUpdateDetails !== undefined) {
+      let requestModelMapper = new client.models['DestinationTesterUpdateDetails']().mapper();
+      requestModel = client.serialize(requestModelMapper, destinationTesterUpdateDetails, 'destinationTesterUpdateDetails');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(destinationTesterUpdateDetails, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200 && statusCode !== 404) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 404) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Delete the given tester from the release
+ *
+ * @param {number} releaseId The ID of the release
+ *
+ * @param {string} testerId The id of the tester
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      See {@link ErrorDetails} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _deleteDistributionTester(releaseId, testerId, ownerName, appName, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (releaseId === null || releaseId === undefined || typeof releaseId !== 'number') {
+      throw new Error('releaseId cannot be null or undefined and it must be of type number.');
+    }
+    if (testerId === null || testerId === undefined || typeof testerId.valueOf() !== 'string') {
+      throw new Error('testerId cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/testers/{tester_id}';
+  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId.toString()));
+  requestUrl = requestUrl.replace('{tester_id}', encodeURIComponent(testerId));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'DELETE';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200 && statusCode !== 404) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 404) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Distributes a release to a user
+ *
+ * @param {number} releaseId The ID of the release
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {string} email Tester's email address
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {boolean} [options.mandatoryUpdate] Flag to mark the release for the
+ * provided destinations as mandatory
+ *
+ * @param {boolean} [options.notifyTesters] Flag to enable or disable
+ * notifications to testers
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _addTesters(releaseId, ownerName, appName, email, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  let mandatoryUpdate = (options && options.mandatoryUpdate !== undefined) ? options.mandatoryUpdate : undefined;
+  let notifyTesters = (options && options.notifyTesters !== undefined) ? options.notifyTesters : true;
+  // Validate
+  try {
+    if (releaseId === null || releaseId === undefined || typeof releaseId !== 'number') {
+      throw new Error('releaseId cannot be null or undefined and it must be of type number.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (mandatoryUpdate !== null && mandatoryUpdate !== undefined && typeof mandatoryUpdate !== 'boolean') {
+      throw new Error('mandatoryUpdate must be of type boolean.');
+    }
+    if (email === null || email === undefined || typeof email.valueOf() !== 'string') {
+      throw new Error('email cannot be null or undefined and it must be of type string.');
+    }
+    if (notifyTesters !== null && notifyTesters !== undefined && typeof notifyTesters !== 'boolean') {
+      throw new Error('notifyTesters must be of type boolean.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  let body;
+  if ((mandatoryUpdate !== null && mandatoryUpdate !== undefined) || (email !== null && email !== undefined) || (notifyTesters !== null && notifyTesters !== undefined)) {
+    body = new client.models['ReleaseTesterDestinationRequest']();
+    body.mandatoryUpdate = mandatoryUpdate;
+    body.email = email;
+    body.notifyTesters = notifyTesters;
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/testers';
+  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId.toString()));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'POST';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (body !== null && body !== undefined) {
+      let requestModelMapper = new client.models['ReleaseTesterDestinationRequest']().mapper();
+      requestModel = client.serialize(requestModelMapper, body, 'body');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(body, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 201 && statusCode !== 400 && statusCode !== 404) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 201) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ReleaseDestinationResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 400) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError1 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError1.request = msRest.stripRequest(httpRequest);
+        deserializationError1.response = msRest.stripResponse(response);
+        return callback(deserializationError1);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 404) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError2 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError2.request = msRest.stripRequest(httpRequest);
+        deserializationError2.response = msRest.stripResponse(response);
+        return callback(deserializationError2);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Delete the given distribution store from the release
+ *
+ * @param {number} releaseId The ID of the release
+ *
+ * @param {string} storeId The id of the distribution store
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      See {@link ErrorDetails} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _deleteDistributionStore(releaseId, storeId, ownerName, appName, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (releaseId === null || releaseId === undefined || typeof releaseId !== 'number') {
+      throw new Error('releaseId cannot be null or undefined and it must be of type number.');
+    }
+    if (storeId === null || storeId === undefined || typeof storeId.valueOf() !== 'string') {
+      throw new Error('storeId cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/stores/{store_id}';
+  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId.toString()));
+  requestUrl = requestUrl.replace('{store_id}', encodeURIComponent(storeId));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'DELETE';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200 && statusCode !== 404) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 404) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Distributes a release to a store
+ *
+ * @param {number} releaseId The ID of the release
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {uuid} id Unique id of the release destination
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _addStore(releaseId, ownerName, appName, id, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (releaseId === null || releaseId === undefined || typeof releaseId !== 'number') {
+      throw new Error('releaseId cannot be null or undefined and it must be of type number.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (id === null || id === undefined || typeof id.valueOf() !== 'string' || !msRest.isValidUuid(id)) {
+      throw new Error('id cannot be null or undefined and it must be of type string and must be a valid uuid.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  let body;
+  if (id !== null && id !== undefined) {
+    body = new client.models['ReleaseStoreDestinationRequest']();
+    body.id = id;
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/stores';
+  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId.toString()));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'POST';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (body !== null && body !== undefined) {
+      let requestModelMapper = new client.models['ReleaseStoreDestinationRequest']().mapper();
+      requestModel = client.serialize(requestModelMapper, body, 'body');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(body, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 201 && statusCode !== 400 && statusCode !== 404) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 201) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ReleaseStoreDestinationResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 400) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError1 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError1.request = msRest.stripRequest(httpRequest);
+        deserializationError1.response = msRest.stripResponse(response);
+        return callback(deserializationError1);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 404) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError2 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError2.request = msRest.stripRequest(httpRequest);
+        deserializationError2.response = msRest.stripResponse(response);
+        return callback(deserializationError2);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Update details about the specified distribution group associated with the
+ * release
+ *
+ * @param {number} releaseId The ID of the release
+ *
+ * @param {uuid} groupId The id of the releases destination
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {boolean} mandatoryUpdate Whether a release is mandatory for the
+ * given destination
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      See {@link ErrorDetails} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _putDistributionGroup(releaseId, groupId, ownerName, appName, mandatoryUpdate, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (releaseId === null || releaseId === undefined || typeof releaseId !== 'number') {
+      throw new Error('releaseId cannot be null or undefined and it must be of type number.');
+    }
+    if (groupId === null || groupId === undefined || typeof groupId.valueOf() !== 'string' || !msRest.isValidUuid(groupId)) {
+      throw new Error('groupId cannot be null or undefined and it must be of type string and must be a valid uuid.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (mandatoryUpdate === null || mandatoryUpdate === undefined || typeof mandatoryUpdate !== 'boolean') {
+      throw new Error('mandatoryUpdate cannot be null or undefined and it must be of type boolean.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  let destinationGroupUpdateDetails;
+  if (mandatoryUpdate !== null && mandatoryUpdate !== undefined) {
+    destinationGroupUpdateDetails = new client.models['DestinationGroupUpdateDetails']();
+    destinationGroupUpdateDetails.mandatoryUpdate = mandatoryUpdate;
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/groups/{group_id}';
+  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId.toString()));
+  requestUrl = requestUrl.replace('{group_id}', encodeURIComponent(groupId.toString()));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'PUT';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (destinationGroupUpdateDetails !== null && destinationGroupUpdateDetails !== undefined) {
+      let requestModelMapper = new client.models['DestinationGroupUpdateDetails']().mapper();
+      requestModel = client.serialize(requestModelMapper, destinationGroupUpdateDetails, 'destinationGroupUpdateDetails');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(destinationGroupUpdateDetails, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200 && statusCode !== 404) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 404) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Delete the given distribution group from the release
+ *
+ * @param {number} releaseId The ID of the release
+ *
+ * @param {string} groupId The id of the distribution group
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      See {@link ErrorDetails} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _deleteDistributionGroup(releaseId, groupId, ownerName, appName, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (releaseId === null || releaseId === undefined || typeof releaseId !== 'number') {
+      throw new Error('releaseId cannot be null or undefined and it must be of type number.');
+    }
+    if (groupId === null || groupId === undefined || typeof groupId.valueOf() !== 'string') {
+      throw new Error('groupId cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/groups/{group_id}';
+  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId.toString()));
+  requestUrl = requestUrl.replace('{group_id}', encodeURIComponent(groupId));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'DELETE';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200 && statusCode !== 404) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 404) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Distributes a release to a group
+ *
+ * @param {number} releaseId The ID of the release
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {uuid} id Unique id of the release destination
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {boolean} [options.mandatoryUpdate] Flag to mark the release for the
+ * provided destinations as mandatory
+ *
+ * @param {boolean} [options.notifyTesters] Flag to enable or disable
+ * notifications to testers
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _addDistributionGroup(releaseId, ownerName, appName, id, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  let mandatoryUpdate = (options && options.mandatoryUpdate !== undefined) ? options.mandatoryUpdate : undefined;
+  let notifyTesters = (options && options.notifyTesters !== undefined) ? options.notifyTesters : true;
+  // Validate
+  try {
+    if (releaseId === null || releaseId === undefined || typeof releaseId !== 'number') {
+      throw new Error('releaseId cannot be null or undefined and it must be of type number.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (id === null || id === undefined || typeof id.valueOf() !== 'string' || !msRest.isValidUuid(id)) {
+      throw new Error('id cannot be null or undefined and it must be of type string and must be a valid uuid.');
+    }
+    if (mandatoryUpdate !== null && mandatoryUpdate !== undefined && typeof mandatoryUpdate !== 'boolean') {
+      throw new Error('mandatoryUpdate must be of type boolean.');
+    }
+    if (notifyTesters !== null && notifyTesters !== undefined && typeof notifyTesters !== 'boolean') {
+      throw new Error('notifyTesters must be of type boolean.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  let body;
+  if ((id !== null && id !== undefined) || (mandatoryUpdate !== null && mandatoryUpdate !== undefined) || (notifyTesters !== null && notifyTesters !== undefined)) {
+    body = new client.models['ReleaseDestinationRequest']();
+    body.id = id;
+    body.mandatoryUpdate = mandatoryUpdate;
+    body.notifyTesters = notifyTesters;
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/releases/{release_id}/groups';
+  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId.toString()));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'POST';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (body !== null && body !== undefined) {
+      let requestModelMapper = new client.models['ReleaseDestinationRequest']().mapper();
+      requestModel = client.serialize(requestModelMapper, body, 'body');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(body, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 201 && statusCode !== 400 && statusCode !== 404) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 201) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ReleaseDestinationResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 400) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError1 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError1.request = msRest.stripRequest(httpRequest);
+        deserializationError1.response = msRest.stripResponse(response);
+        return callback(deserializationError1);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 404) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError2 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError2.request = msRest.stripRequest(httpRequest);
+        deserializationError2.response = msRest.stripResponse(response);
+        return callback(deserializationError2);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
  * Get a release with id `release_id`. If `release_id` is `latest`, return the
  * latest release that was distributed to the current user (from all the
  * distribution groups).
@@ -430,6 +1730,212 @@ function _getLatestByUser(releaseId, ownerName, appName, options, callback) {
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
           let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError1 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError1.request = msRest.stripRequest(httpRequest);
+        deserializationError1.response = msRest.stripResponse(response);
+        return callback(deserializationError1);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 404) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError2 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError2.request = msRest.stripRequest(httpRequest);
+        deserializationError2.response = msRest.stripResponse(response);
+        return callback(deserializationError2);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Update details of a release.
+ *
+ * @param {number} releaseId The ID of the release
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {boolean} [options.enabled] Toggle this release to be enable
+ * distribute/download or not.
+ *
+ * @param {string} [options.releaseNotes] Release notes for this release.
+ *
+ * @param {object} [options.build]
+ *
+ * @param {string} [options.build.branch] The branch name of the build
+ * producing the release
+ *
+ * @param {string} [options.build.commitHash] The commit hash of the build
+ * producing the release
+ *
+ * @param {string} [options.build.commitMessage] The commit message of the
+ * build producing the release
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _updateDetails(releaseId, ownerName, appName, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  let enabled = (options && options.enabled !== undefined) ? options.enabled : undefined;
+  let releaseNotes = (options && options.releaseNotes !== undefined) ? options.releaseNotes : undefined;
+  let build = (options && options.build !== undefined) ? options.build : undefined;
+  // Validate
+  try {
+    if (releaseId === null || releaseId === undefined || typeof releaseId !== 'number') {
+      throw new Error('releaseId cannot be null or undefined and it must be of type number.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (enabled !== null && enabled !== undefined && typeof enabled !== 'boolean') {
+      throw new Error('enabled must be of type boolean.');
+    }
+    if (releaseNotes !== null && releaseNotes !== undefined && typeof releaseNotes.valueOf() !== 'string') {
+      throw new Error('releaseNotes must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+  let body;
+  if ((enabled !== null && enabled !== undefined) || (releaseNotes !== null && releaseNotes !== undefined) || (build !== null && build !== undefined)) {
+    body = new client.models['ReleaseDetailsUpdateRequest']();
+    body.enabled = enabled;
+    body.releaseNotes = releaseNotes;
+    body.build = build;
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/releases/{release_id}';
+  requestUrl = requestUrl.replace('{release_id}', encodeURIComponent(releaseId.toString()));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'PUT';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (body !== null && body !== undefined) {
+      let requestModelMapper = new client.models['ReleaseDetailsUpdateRequest']().mapper();
+      requestModel = client.serialize(requestModelMapper, body, 'body');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(body, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 404) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 200) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ReleaseUpdateResponse']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 400) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ReleaseUpdateError']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1749,7 +3255,16 @@ class Releases {
     this.client = client;
     this._listTesterApps = _listTesterApps;
     this._getLatestByHash = _getLatestByHash;
+    this._putDistributionTester = _putDistributionTester;
+    this._deleteDistributionTester = _deleteDistributionTester;
+    this._addTesters = _addTesters;
+    this._deleteDistributionStore = _deleteDistributionStore;
+    this._addStore = _addStore;
+    this._putDistributionGroup = _putDistributionGroup;
+    this._deleteDistributionGroup = _deleteDistributionGroup;
+    this._addDistributionGroup = _addDistributionGroup;
     this._getLatestByUser = _getLatestByUser;
+    this._updateDetails = _updateDetails;
     this._update = _update;
     this._deleteMethod = _deleteMethod;
     this._availableToTester = _availableToTester;
@@ -1939,6 +3454,793 @@ class Releases {
   }
 
   /**
+   * Update details about the specified tester associated with the release
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {uuid} testerId The id of the tester
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {boolean} mandatoryUpdate Whether a release is mandatory for the
+   * given destination
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  putDistributionTesterWithHttpOperationResponse(releaseId, testerId, ownerName, appName, mandatoryUpdate, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._putDistributionTester(releaseId, testerId, ownerName, appName, mandatoryUpdate, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Update details about the specified tester associated with the release
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {uuid} testerId The id of the tester
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {boolean} mandatoryUpdate Whether a release is mandatory for the
+   * given destination
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {ErrorDetails} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      See {@link ErrorDetails} for more information.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  putDistributionTester(releaseId, testerId, ownerName, appName, mandatoryUpdate, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._putDistributionTester(releaseId, testerId, ownerName, appName, mandatoryUpdate, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._putDistributionTester(releaseId, testerId, ownerName, appName, mandatoryUpdate, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Delete the given tester from the release
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {string} testerId The id of the tester
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  deleteDistributionTesterWithHttpOperationResponse(releaseId, testerId, ownerName, appName, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._deleteDistributionTester(releaseId, testerId, ownerName, appName, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Delete the given tester from the release
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {string} testerId The id of the tester
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {ErrorDetails} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      See {@link ErrorDetails} for more information.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  deleteDistributionTester(releaseId, testerId, ownerName, appName, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._deleteDistributionTester(releaseId, testerId, ownerName, appName, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._deleteDistributionTester(releaseId, testerId, ownerName, appName, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Distributes a release to a user
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {string} email Tester's email address
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {boolean} [options.mandatoryUpdate] Flag to mark the release for the
+   * provided destinations as mandatory
+   *
+   * @param {boolean} [options.notifyTesters] Flag to enable or disable
+   * notifications to testers
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  addTestersWithHttpOperationResponse(releaseId, ownerName, appName, email, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._addTesters(releaseId, ownerName, appName, email, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Distributes a release to a user
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {string} email Tester's email address
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {boolean} [options.mandatoryUpdate] Flag to mark the release for the
+   * provided destinations as mandatory
+   *
+   * @param {boolean} [options.notifyTesters] Flag to enable or disable
+   * notifications to testers
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {Object} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  addTesters(releaseId, ownerName, appName, email, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._addTesters(releaseId, ownerName, appName, email, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._addTesters(releaseId, ownerName, appName, email, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Delete the given distribution store from the release
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {string} storeId The id of the distribution store
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  deleteDistributionStoreWithHttpOperationResponse(releaseId, storeId, ownerName, appName, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._deleteDistributionStore(releaseId, storeId, ownerName, appName, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Delete the given distribution store from the release
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {string} storeId The id of the distribution store
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {ErrorDetails} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      See {@link ErrorDetails} for more information.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  deleteDistributionStore(releaseId, storeId, ownerName, appName, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._deleteDistributionStore(releaseId, storeId, ownerName, appName, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._deleteDistributionStore(releaseId, storeId, ownerName, appName, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Distributes a release to a store
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {uuid} id Unique id of the release destination
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  addStoreWithHttpOperationResponse(releaseId, ownerName, appName, id, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._addStore(releaseId, ownerName, appName, id, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Distributes a release to a store
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {uuid} id Unique id of the release destination
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {Object} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  addStore(releaseId, ownerName, appName, id, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._addStore(releaseId, ownerName, appName, id, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._addStore(releaseId, ownerName, appName, id, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Update details about the specified distribution group associated with the
+   * release
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {uuid} groupId The id of the releases destination
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {boolean} mandatoryUpdate Whether a release is mandatory for the
+   * given destination
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  putDistributionGroupWithHttpOperationResponse(releaseId, groupId, ownerName, appName, mandatoryUpdate, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._putDistributionGroup(releaseId, groupId, ownerName, appName, mandatoryUpdate, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Update details about the specified distribution group associated with the
+   * release
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {uuid} groupId The id of the releases destination
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {boolean} mandatoryUpdate Whether a release is mandatory for the
+   * given destination
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {ErrorDetails} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      See {@link ErrorDetails} for more information.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  putDistributionGroup(releaseId, groupId, ownerName, appName, mandatoryUpdate, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._putDistributionGroup(releaseId, groupId, ownerName, appName, mandatoryUpdate, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._putDistributionGroup(releaseId, groupId, ownerName, appName, mandatoryUpdate, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Delete the given distribution group from the release
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {string} groupId The id of the distribution group
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  deleteDistributionGroupWithHttpOperationResponse(releaseId, groupId, ownerName, appName, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._deleteDistributionGroup(releaseId, groupId, ownerName, appName, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Delete the given distribution group from the release
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {string} groupId The id of the distribution group
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {ErrorDetails} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      See {@link ErrorDetails} for more information.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  deleteDistributionGroup(releaseId, groupId, ownerName, appName, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._deleteDistributionGroup(releaseId, groupId, ownerName, appName, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._deleteDistributionGroup(releaseId, groupId, ownerName, appName, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Distributes a release to a group
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {uuid} id Unique id of the release destination
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {boolean} [options.mandatoryUpdate] Flag to mark the release for the
+   * provided destinations as mandatory
+   *
+   * @param {boolean} [options.notifyTesters] Flag to enable or disable
+   * notifications to testers
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  addDistributionGroupWithHttpOperationResponse(releaseId, ownerName, appName, id, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._addDistributionGroup(releaseId, ownerName, appName, id, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Distributes a release to a group
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {uuid} id Unique id of the release destination
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {boolean} [options.mandatoryUpdate] Flag to mark the release for the
+   * provided destinations as mandatory
+   *
+   * @param {boolean} [options.notifyTesters] Flag to enable or disable
+   * notifications to testers
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {Object} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  addDistributionGroup(releaseId, ownerName, appName, id, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._addDistributionGroup(releaseId, ownerName, appName, id, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._addDistributionGroup(releaseId, ownerName, appName, id, options, optionalCallback);
+    }
+  }
+
+  /**
    * Get a release with id `release_id`. If `release_id` is `latest`, return the
    * latest release that was distributed to the current user (from all the
    * distribution groups).
@@ -2040,6 +4342,127 @@ class Releases {
       });
     } else {
       return self._getLatestByUser(releaseId, ownerName, appName, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Update details of a release.
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {boolean} [options.enabled] Toggle this release to be enable
+   * distribute/download or not.
+   *
+   * @param {string} [options.releaseNotes] Release notes for this release.
+   *
+   * @param {object} [options.build]
+   *
+   * @param {string} [options.build.branch] The branch name of the build
+   * producing the release
+   *
+   * @param {string} [options.build.commitHash] The commit hash of the build
+   * producing the release
+   *
+   * @param {string} [options.build.commitMessage] The commit message of the
+   * build producing the release
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  updateDetailsWithHttpOperationResponse(releaseId, ownerName, appName, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._updateDetails(releaseId, ownerName, appName, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Update details of a release.
+   *
+   * @param {number} releaseId The ID of the release
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {boolean} [options.enabled] Toggle this release to be enable
+   * distribute/download or not.
+   *
+   * @param {string} [options.releaseNotes] Release notes for this release.
+   *
+   * @param {object} [options.build]
+   *
+   * @param {string} [options.build.branch] The branch name of the build
+   * producing the release
+   *
+   * @param {string} [options.build.commitHash] The commit hash of the build
+   * producing the release
+   *
+   * @param {string} [options.build.commitMessage] The commit message of the
+   * build producing the release
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {Object} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  updateDetails(releaseId, ownerName, appName, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._updateDetails(releaseId, ownerName, appName, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._updateDetails(releaseId, ownerName, appName, options, optionalCallback);
     }
   }
 

@@ -12,10 +12,10 @@
 class AppMembershipsResponseMembershipsItem {
   /**
    * Create a AppMembershipsResponseMembershipsItem.
-   * @member {string} [appId]
-   * @member {string} [userId]
-   * @member {array} [permissions]
-   * @member {string} [origin] Possible values include: 'appcenter',
+   * @property {string} [appId]
+   * @property {string} [userId]
+   * @property {array} [permissions]
+   * @property {string} [origin] Possible values include: 'appcenter',
    * 'hockeyapp', 'codepush', 'testcloud', 'hockeyapp-dogfood'
    */
   constructor() {

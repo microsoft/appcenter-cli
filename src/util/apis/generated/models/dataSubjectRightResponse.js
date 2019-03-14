@@ -12,8 +12,8 @@
 class DataSubjectRightResponse {
   /**
    * Create a DataSubjectRightResponse.
-   * @member {uuid} token Unique request identifier
-   * @member {date} createdAt ISO 8601 format timestamp of when request was
+   * @property {uuid} token Unique request identifier
+   * @property {date} createdAt ISO 8601 format timestamp of when request was
    * created.
    */
   constructor() {

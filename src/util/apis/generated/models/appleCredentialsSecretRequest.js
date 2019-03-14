@@ -16,10 +16,10 @@ const models = require('./index');
 class AppleCredentialsSecretRequest extends models['AppleConnectionSecretRequest'] {
   /**
    * Create a AppleCredentialsSecretRequest.
-   * @member {object} data apple secret details
-   * @member {string} [data.username] username to connect to apple store.
-   * @member {string} [data.authCode] 6 digit auth code
-   * @member {string} [data.password] password to connect to apple store.
+   * @property {object} data apple secret details
+   * @property {string} [data.username] username to connect to apple store.
+   * @property {string} [data.authCode] 6 digit auth code
+   * @property {string} [data.password] password to connect to apple store.
    */
   constructor() {
     super();

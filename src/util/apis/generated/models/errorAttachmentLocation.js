@@ -12,7 +12,7 @@
 class ErrorAttachmentLocation {
   /**
    * Create a ErrorAttachmentLocation.
-   * @member {string} [uri]
+   * @property {string} [uri]
    */
   constructor() {
   }

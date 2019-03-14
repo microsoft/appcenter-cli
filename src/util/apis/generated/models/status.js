@@ -12,7 +12,7 @@
 class Status {
   /**
    * Create a Status.
-   * @member {string} status
+   * @property {string} status
    */
   constructor() {
   }

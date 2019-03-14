@@ -16,8 +16,8 @@ const models = require('./index');
 class PageLogDiagnostics extends models['LogWithPropertiesDiagnostics'] {
   /**
    * Create a PageLogDiagnostics.
-   * @member {uuid} sessionId Session ID.
-   * @member {string} name Name of the page.
+   * @property {uuid} sessionId Session ID.
+   * @property {string} name Name of the page.
    */
   constructor() {
     super();

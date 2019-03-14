@@ -12,12 +12,12 @@
 class PatchReleaseRequest {
   /**
    * Create a PatchReleaseRequest.
-   * @member {string} [status] updated status of release
-   * @member {string} [destPublishId] Destination Publish Id
-   * @member {string} [errorDetails] failure error details from store
-   * @member {string} [errorContextId] contextId for failed error message
-   * @member {string} [wrapPackageUrl] package url for wrapping request
-   * @member {boolean} [isWrapperRequest] request is for wrapping or not
+   * @property {string} [status] updated status of release
+   * @property {string} [destPublishId] Destination Publish Id
+   * @property {string} [errorDetails] failure error details from store
+   * @property {string} [errorContextId] contextId for failed error message
+   * @property {string} [wrapPackageUrl] package url for wrapping request
+   * @property {boolean} [isWrapperRequest] request is for wrapping or not
    */
   constructor() {
   }

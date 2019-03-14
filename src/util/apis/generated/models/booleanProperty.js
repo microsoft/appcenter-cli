@@ -16,7 +16,7 @@ const models = require('./index');
 class BooleanProperty extends models['CustomProperty'] {
   /**
    * Create a BooleanProperty.
-   * @member {boolean} value Boolean property value.
+   * @property {boolean} value Boolean property value.
    */
   constructor() {
     super();
@@ -46,7 +46,7 @@ class BooleanProperty extends models['CustomProperty'] {
             serializedName: 'name',
             constraints: {
               MaxLength: 128,
-              Pattern: '^[a-zA-Z][a-zA-Z0-9\-_]*$'
+              Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
             type: {
               name: 'String'

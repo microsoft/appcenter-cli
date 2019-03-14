@@ -12,13 +12,13 @@
 class TestGDPRTestRun {
   /**
    * Create a TestGDPRTestRun.
-   * @member {uuid} [id]
-   * @member {uuid} [appHashFileId]
-   * @member {string} [locale]
-   * @member {uuid} [dsymHashFileId]
-   * @member {string} [appHashFileUrl]
-   * @member {string} [dsymHashFileUrl]
-   * @member {string} [appIconUrl]
+   * @property {uuid} [id]
+   * @property {uuid} [appHashFileId]
+   * @property {string} [locale]
+   * @property {uuid} [dsymHashFileId]
+   * @property {string} [appHashFileUrl]
+   * @property {string} [dsymHashFileUrl]
+   * @property {string} [appIconUrl]
    */
   constructor() {
   }

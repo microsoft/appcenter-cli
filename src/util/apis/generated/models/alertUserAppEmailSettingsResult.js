@@ -16,9 +16,9 @@ const models = require('./index');
 class AlertUserAppEmailSettingsResult extends models['AlertUserEmailSettingsResult'] {
   /**
    * Create a AlertUserAppEmailSettingsResult.
-   * @member {string} [appId] Application ID
-   * @member {boolean} userEnabled A flag indicating if settings are enabled at
-   * user/global level
+   * @property {string} [appId] Application ID
+   * @property {boolean} userEnabled A flag indicating if settings are enabled
+   * at user/global level
    */
   constructor() {
     super();

@@ -13,7 +13,7 @@
 class NotificationIdList {
   /**
    * Create a NotificationIdList.
-   * @member {array} values List of notification Ids.
+   * @property {array} values List of notification Ids.
    */
   constructor() {
   }

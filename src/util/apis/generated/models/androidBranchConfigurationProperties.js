@@ -13,22 +13,22 @@
 class AndroidBranchConfigurationProperties {
   /**
    * Create a AndroidBranchConfigurationProperties.
-   * @member {string} [gradleWrapperPath] Path to the Gradle wrapper script
-   * @member {string} module The Gradle module to build
-   * @member {string} buildVariant The Android build variant to build
-   * @member {boolean} [runTests] Whether to run unit tests during the build
+   * @property {string} [gradleWrapperPath] Path to the Gradle wrapper script
+   * @property {string} module The Gradle module to build
+   * @property {string} buildVariant The Android build variant to build
+   * @property {boolean} [runTests] Whether to run unit tests during the build
    * (default). Default value: true .
-   * @member {boolean} [runLint] Whether to run lint checks during the build
+   * @property {boolean} [runLint] Whether to run lint checks during the build
    * (default). Default value: true .
-   * @member {boolean} [isRoot] Whether it is the root module or not. Default
+   * @property {boolean} [isRoot] Whether it is the root module or not. Default
    * value: true .
-   * @member {boolean} [automaticSigning] Whether to apply automatic signing or
-   * not. Default value: true .
-   * @member {string} [keystorePassword] The password of the keystore
-   * @member {string} [keyAlias] The key alias
-   * @member {string} [keyPassword] The key password
-   * @member {string} [keystoreFilename] The name of the keystore file
-   * @member {string} [keystoreEncoded] The keystore encoded value
+   * @property {boolean} [automaticSigning] Whether to apply automatic signing
+   * or not. Default value: true .
+   * @property {string} [keystorePassword] The password of the keystore
+   * @property {string} [keyAlias] The key alias
+   * @property {string} [keyPassword] The key password
+   * @property {string} [keystoreFilename] The name of the keystore file
+   * @property {string} [keystoreEncoded] The keystore encoded value
    */
   constructor() {
   }

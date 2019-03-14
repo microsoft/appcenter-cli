@@ -12,7 +12,7 @@
 class IntuneTargetAudience {
   /**
    * Create a IntuneTargetAudience.
-   * @member {string} [name] display name for the target audience/group
+   * @property {string} [name] display name for the target audience/group
    */
   constructor() {
   }

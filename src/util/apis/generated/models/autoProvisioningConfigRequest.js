@@ -13,15 +13,15 @@
 class AutoProvisioningConfigRequest {
   /**
    * Create a AutoProvisioningConfigRequest.
-   * @member {string} [appleDeveloperAccountKey] A key to a secret in
+   * @property {string} [appleDeveloperAccountKey] A key to a secret in
    * customer-credential-store. apple_developer_account refers to the user's
    * developer account that is used to log into https://developer.apple.com.
    * Normally the user's email.
-   * @member {string} [appleDistributionCertificateKey] A key to a secret in
+   * @property {string} [appleDistributionCertificateKey] A key to a secret in
    * customer-credential-store. distribution_certificate refers to the
    * customer's certificate (that holds the private key) that will be used to
    * sign the app.
-   * @member {boolean} [allowAutoProvisioning] When *true* enables auto
+   * @property {boolean} [allowAutoProvisioning] When *true* enables auto
    * provisioning
    */
   constructor() {

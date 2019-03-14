@@ -13,7 +13,7 @@
 class HasBuildUploadedResponse {
   /**
    * Create a HasBuildUploadedResponse.
-   * @member {boolean} [hasBuildUploaded] true if a build has been uploaded,
+   * @property {boolean} [hasBuildUploaded] true if a build has been uploaded,
    * false otherwise
    */
   constructor() {

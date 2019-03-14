@@ -13,7 +13,7 @@
 class UserSettingResponse {
   /**
    * Create a UserSettingResponse.
-   * @member {string} [marketingOptIn] The marketing opt-in setting
+   * @property {string} [marketingOptIn] The marketing opt-in setting
    */
   constructor() {
   }

@@ -13,13 +13,13 @@
 class GitHubInstallationRepository {
   /**
    * Create a GitHubInstallationRepository.
-   * @member {string} [name] The repository name
-   * @member {string} [description] The discription of repository
-   * @member {string} [cloneUrl] URL used to clone the repository
-   * @member {string} [defaultBranch] The default branch for the repo
-   * @member {string} [language] The language in the repository
-   * @member {string} [updatedAt] The repository updated time
-   * @member {boolean} [fork] Whether the repository is a fork
+   * @property {string} [name] The repository name
+   * @property {string} [description] The discription of repository
+   * @property {string} [cloneUrl] URL used to clone the repository
+   * @property {string} [defaultBranch] The default branch for the repo
+   * @property {string} [language] The language in the repository
+   * @property {string} [updatedAt] The repository updated time
+   * @property {boolean} [fork] Whether the repository is a fork
    */
   constructor() {
   }

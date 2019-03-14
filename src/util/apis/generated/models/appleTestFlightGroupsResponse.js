@@ -13,10 +13,10 @@
 class AppleTestFlightGroupsResponse {
   /**
    * Create a AppleTestFlightGroupsResponse.
-   * @member {string} [id] id of the group.
-   * @member {number} [providerId] provider id of the group.
-   * @member {number} [appleId] apple id of the group.
-   * @member {string} [name] name of the group.
+   * @property {string} [id] id of the group.
+   * @property {number} [providerId] provider id of the group.
+   * @property {number} [appleId] apple id of the group.
+   * @property {string} [name] name of the group.
    */
   constructor() {
   }

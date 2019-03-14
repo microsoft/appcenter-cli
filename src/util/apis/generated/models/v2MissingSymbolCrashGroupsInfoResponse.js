@@ -13,7 +13,7 @@
 class V2MissingSymbolCrashGroupsInfoResponse {
   /**
    * Create a V2MissingSymbolCrashGroupsInfoResponse.
-   * @member {number} totalCrashCount total number of crashes for all missing
+   * @property {number} totalCrashCount total number of crashes for all missing
    * symbol groups
    */
   constructor() {

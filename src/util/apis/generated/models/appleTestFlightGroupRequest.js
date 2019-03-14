@@ -15,17 +15,19 @@
 class AppleTestFlightGroupRequest {
   /**
    * Create a AppleTestFlightGroupRequest.
-   * @member {string} [username] The username for the Apple Developer account.
-   * @member {string} [password] The password for the Apple Developer account.
-   * @member {string} [appleId] apple_id of the app for which test flight
+   * @property {string} [username] The username for the Apple Developer
+   * account.
+   * @property {string} [password] The password for the Apple Developer
+   * account.
+   * @property {string} [appleId] apple_id of the app for which test flight
    * groups need to be fetched.
-   * @member {string} [bundleIdentifier] apple_id of the app for which test
+   * @property {string} [bundleIdentifier] apple_id of the app for which test
    * flight groups need to be fetched.
-   * @member {string} [teamIdentifier] Identifier of the team to use when
+   * @property {string} [teamIdentifier] Identifier of the team to use when
    * logged in.
-   * @member {string} [cookie] The 30-day session cookie for multi-factor
+   * @property {string} [cookie] The 30-day session cookie for multi-factor
    * authentication backed accounts.
-   * @member {string} [serviceConnectionId] The service_connection_id of the
+   * @property {string} [serviceConnectionId] The service_connection_id of the
    * stored Apple credentials instead of username, password.
    */
   constructor() {

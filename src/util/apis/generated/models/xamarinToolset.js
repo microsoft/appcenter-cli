@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a XamarinToolset.
  */
 class XamarinToolset {
   /**
    * Create a XamarinToolset.
-   * @member {array} xamarinSolutions Xamarin solutions for the toolset
+   * @property {array} xamarinSolutions Xamarin solutions for the toolset
    */
   constructor() {
   }

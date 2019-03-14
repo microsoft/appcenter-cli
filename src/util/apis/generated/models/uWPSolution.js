@@ -12,8 +12,8 @@
 class UWPSolution {
   /**
    * Create a UWPSolution.
-   * @member {string} path The path to the UWP solution
-   * @member {array} configurations The possible configurations detected for
+   * @property {string} path The path to the UWP solution
+   * @property {array} configurations The possible configurations detected for
    * the UWP solution
    */
   constructor() {

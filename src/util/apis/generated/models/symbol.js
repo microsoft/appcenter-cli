@@ -12,23 +12,24 @@
 class Symbol {
   /**
    * Create a Symbol.
-   * @member {string} symbolId The unique id for this symbol (uuid)
-   * @member {string} type The type of the symbol for the current symbol
+   * @property {string} symbolId The unique id for this symbol (uuid)
+   * @property {string} type The type of the symbol for the current symbol
    * upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
    * 'AndroidProguard', 'UWP'
-   * @member {string} appId The application that this symbol belongs to
-   * @member {string} platform The platform that this symbol is associated with
-   * @member {string} url The path name of the symbol file in blob storage
-   * @member {string} origin The origin of the symbol file. Possible values
+   * @property {string} appId The application that this symbol belongs to
+   * @property {string} platform The platform that this symbol is associated
+   * with
+   * @property {string} url The path name of the symbol file in blob storage
+   * @property {string} origin The origin of the symbol file. Possible values
    * include: 'System', 'User'
-   * @member {array} alternateSymbolIds The other symbols in the same file
-   * @member {string} status Whether the symbol is ignored. Possible values
+   * @property {array} alternateSymbolIds The other symbols in the same file
+   * @property {string} status Whether the symbol is ignored. Possible values
    * include: 'available', 'ignored'
-   * @member {string} [version] The version number. Optional for Apple.
+   * @property {string} [version] The version number. Optional for Apple.
    * Required for Android.
-   * @member {string} [build] The build number. Optional for Apple. Required
+   * @property {string} [build] The build number. Optional for Apple. Required
    * for Android.
-   * @member {string} symbolUploadId The id of the symbol upload this symbol
+   * @property {string} symbolUploadId The id of the symbol upload this symbol
    * belongs to.
    */
   constructor() {

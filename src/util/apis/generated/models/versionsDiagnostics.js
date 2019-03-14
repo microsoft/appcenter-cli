@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a VersionsDiagnostics.
  */
 class VersionsDiagnostics {
   /**
    * Create a VersionsDiagnostics.
-   * @member {array} [versions] list of version count
-   * @member {number} [total] the total count of versions
+   * @property {array} [versions] list of version count
+   * @property {number} [total] the total count of versions
    */
   constructor() {
   }

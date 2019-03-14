@@ -15,7 +15,7 @@
 class DeviceList {
   /**
    * Create a DeviceList.
-   * @member {array} devices
+   * @property {array} devices
    */
   constructor() {
   }

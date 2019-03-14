@@ -6,21 +6,19 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a IntuneStoreResponse.
  */
 class IntuneStoreResponse {
   /**
    * Create a IntuneStoreResponse.
-   * @member {object} [targetAudience]
-   * @member {string} [targetAudience.name] display name for the target
+   * @property {object} [targetAudience]
+   * @property {string} [targetAudience.name] display name for the target
    * audience/group
-   * @member {string} [targetAudience.id] ID for the target audience/group.
-   * @member {object} [appCategory]
-   * @member {string} [appCategory.name] display name for the app category
-   * @member {string} [appCategory.id] ID for the category.
+   * @property {string} [targetAudience.id] ID for the target audience/group.
+   * @property {object} [appCategory]
+   * @property {string} [appCategory.name] display name for the app category
+   * @property {string} [appCategory.id] ID for the category.
    */
   constructor() {
   }

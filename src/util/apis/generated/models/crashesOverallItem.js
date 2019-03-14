@@ -6,19 +6,17 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a CrashesOverallItem.
  */
 class CrashesOverallItem {
   /**
    * Create a CrashesOverallItem.
-   * @member {string} [crashGroupId]
-   * @member {string} [appVersion]
-   * @member {object} [overall]
-   * @member {number} [overall.crashCount]
-   * @member {number} [overall.deviceCount]
+   * @property {string} [crashGroupId]
+   * @property {string} [appVersion]
+   * @property {object} [overall]
+   * @property {number} [overall.crashCount]
+   * @property {number} [overall.deviceCount]
    */
   constructor() {
   }

@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * The organization that owns the distribution group, if it exists
  *
@@ -15,14 +13,14 @@ const models = require('./index');
 class AppInvitationDetailResponseDistributionGroup {
   /**
    * Create a AppInvitationDetailResponseDistributionGroup.
-   * @member {object} [owner]
-   * @member {uuid} [owner.id] The unique id (UUID) of the owner
-   * @member {string} [owner.avatarUrl] The avatar URL of the owner
-   * @member {string} [owner.displayName] The owner's display name
-   * @member {string} [owner.email] The owner's email address
-   * @member {string} [owner.name] The unique name that used to identify the
+   * @property {object} [owner]
+   * @property {uuid} [owner.id] The unique id (UUID) of the owner
+   * @property {string} [owner.avatarUrl] The avatar URL of the owner
+   * @property {string} [owner.displayName] The owner's display name
+   * @property {string} [owner.email] The owner's email address
+   * @property {string} [owner.name] The unique name that used to identify the
    * owner
-   * @member {string} [owner.type] The owner type. Can either be 'org' or
+   * @property {string} [owner.type] The owner type. Can either be 'org' or
    * 'user'. Possible values include: 'org', 'user'
    */
   constructor() {

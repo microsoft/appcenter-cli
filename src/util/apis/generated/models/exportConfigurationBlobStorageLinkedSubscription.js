@@ -16,8 +16,8 @@ const models = require('./index');
 class ExportConfigurationBlobStorageLinkedSubscription extends models['ExportBlobConfiguration'] {
   /**
    * Create a ExportConfigurationBlobStorageLinkedSubscription.
-   * @member {string} subscriptionId Id of customer subscription linked in App
-   * Center
+   * @property {string} subscriptionId Id of customer subscription linked in
+   * App Center
    */
   constructor() {
     super();

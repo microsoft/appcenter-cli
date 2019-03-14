@@ -16,15 +16,15 @@ const models = require('./index');
 class PrivateAppleCertificateSecretResponse extends models['PrivateAppleSecretResponse'] {
   /**
    * Create a PrivateAppleCertificateSecretResponse.
-   * @member {object} data apple secret details
-   * @member {string} [data.base64Certificate] The certificate contents in base
-   * 64 encoded string
-   * @member {string} [data.password] The password for the certificate
-   * @member {string} [data.displayName] The display name (CN) of the
+   * @property {object} data apple secret details
+   * @property {string} [data.base64Certificate] The certificate contents in
+   * base 64 encoded string
+   * @property {string} [data.password] The password for the certificate
+   * @property {string} [data.displayName] The display name (CN) of the
    * certificate
-   * @member {string} [data.certificateValidityStartDate] The date-time from
+   * @property {string} [data.certificateValidityStartDate] The date-time from
    * which the certificate is valid
-   * @member {string} [data.certificateValidityEndDate] The date-time till
+   * @property {string} [data.certificateValidityEndDate] The date-time till
    * which the certificate is valid
    */
   constructor() {

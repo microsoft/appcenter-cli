@@ -12,7 +12,7 @@
 class StorePatchRequest {
   /**
    * Create a StorePatchRequest.
-   * @member {string} serviceConnectionId Service connection id to updated.
+   * @property {string} serviceConnectionId Service connection id to updated.
    */
   constructor() {
   }

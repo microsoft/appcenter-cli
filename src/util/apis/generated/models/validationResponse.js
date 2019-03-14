@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * The response which contains the validation data that the connection is
  * valid.
@@ -16,12 +14,12 @@ const models = require('./index');
 class ValidationResponse {
   /**
    * Create a ValidationResponse.
-   * @member {string} [appId] app id
-   * @member {object} [status]
-   * @member {string} [status.status] status from store
-   * @member {string} [status.storetype] store type
-   * @member {string} [status.track] track information from store
-   * @member {string} [status.version] version of the app from store
+   * @property {string} [appId] app id
+   * @property {object} [status]
+   * @property {string} [status.status] status from store
+   * @property {string} [status.storetype] store type
+   * @property {string} [status.track] track information from store
+   * @property {string} [status.version] version of the app from store
    */
   constructor() {
   }

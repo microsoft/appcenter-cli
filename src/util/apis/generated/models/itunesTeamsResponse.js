@@ -13,8 +13,8 @@
 class ItunesTeamsResponse {
   /**
    * Create a ItunesTeamsResponse.
-   * @member {string} [teamId] Itunes team id.
-   * @member {string} [teamName] Itunes Team Name
+   * @property {string} [teamId] Itunes team id.
+   * @property {string} [teamName] Itunes Team Name
    */
   constructor() {
   }

@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a DistributionGroupAppsDeleteRequest.
  */
 class DistributionGroupAppsDeleteRequest {
   /**
    * Create a DistributionGroupAppsDeleteRequest.
-   * @member {array} [apps] The list of apps to delete from the distribution
+   * @property {array} [apps] The list of apps to delete from the distribution
    * group
    */
   constructor() {

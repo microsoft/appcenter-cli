@@ -12,8 +12,8 @@
 class TestGDPRFeatureFlag {
   /**
    * Create a TestGDPRFeatureFlag.
-   * @member {string} [name]
-   * @member {uuid} [targetId]
+   * @property {string} [name]
+   * @property {uuid} [targetId]
    */
   constructor() {
   }

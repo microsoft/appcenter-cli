@@ -12,10 +12,10 @@
 class TestGDPRFileSetFile {
   /**
    * Create a TestGDPRFileSetFile.
-   * @member {string} [path]
-   * @member {uuid} [hashFileId]
-   * @member {uuid} [appUploadId]
-   * @member {string} [hashFileUrl]
+   * @property {string} [path]
+   * @property {uuid} [hashFileId]
+   * @property {uuid} [appUploadId]
+   * @property {string} [hashFileUrl]
    */
   constructor() {
   }

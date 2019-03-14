@@ -16,8 +16,8 @@ const models = require('./index');
 class AppleCredentialNonSecretDetailsResponse extends models['AppleConnectionNonSecretResponse'] {
   /**
    * Create a AppleCredentialNonSecretDetailsResponse.
-   * @member {object} data Apple credentials non-secret data
-   * @member {string} [data.username] username to connect to apple store
+   * @property {object} data Apple credentials non-secret data
+   * @property {string} [data.username] username to connect to apple store
    */
   constructor() {
     super();

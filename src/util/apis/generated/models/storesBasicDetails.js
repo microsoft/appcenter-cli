@@ -12,12 +12,12 @@
 class StoresBasicDetails {
   /**
    * Create a StoresBasicDetails.
-   * @member {string} [id] ID identifying a unique distribution store.
-   * @member {string} [name] A name identifying a unique distribution store.
-   * @member {string} [type] type of the distribution store currently stores
+   * @property {string} [id] ID identifying a unique distribution store.
+   * @property {string} [name] A name identifying a unique distribution store.
+   * @property {string} [type] type of the distribution store currently stores
    * type can be intune or googleplay. Possible values include: 'intune',
    * 'googleplay'
-   * @member {string} [publishingStatus] publishing status of the release in
+   * @property {string} [publishingStatus] publishing status of the release in
    * the store.
    */
   constructor() {

@@ -12,7 +12,7 @@
 class ErrorAttachmentText {
   /**
    * Create a ErrorAttachmentText.
-   * @member {string} [content]
+   * @property {string} [content]
    */
   constructor() {
   }

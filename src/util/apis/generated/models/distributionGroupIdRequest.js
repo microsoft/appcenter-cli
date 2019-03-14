@@ -12,7 +12,7 @@
 class DistributionGroupIdRequest {
   /**
    * Create a DistributionGroupIdRequest.
-   * @member {uuid} id The id of the distribution group
+   * @property {uuid} id The id of the distribution group
    */
   constructor() {
   }

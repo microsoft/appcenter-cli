@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a NotifyReleasesContainer.
  */
 class NotifyReleasesContainer {
   /**
    * Create a NotifyReleasesContainer.
-   * @member {array} releases
+   * @property {array} releases
    */
   constructor() {
   }

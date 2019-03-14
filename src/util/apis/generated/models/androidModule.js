@@ -12,14 +12,15 @@
 class AndroidModule {
   /**
    * Create a AndroidModule.
-   * @member {string} name Name of the Android module
-   * @member {array} [productFlavors] The product flavors of the Android module
-   * @member {array} [buildVariants] The detected build variants of the Android
-   * module (matrix of product flavor + build type (debug|release))
-   * @member {array} [buildTypes] The detected build types fo the Android
+   * @property {string} name Name of the Android module
+   * @property {array} [productFlavors] The product flavors of the Android
    * module
-   * @member {boolean} [isRoot] Whether the module is at the root level of the
-   * project
+   * @property {array} [buildVariants] The detected build variants of the
+   * Android module (matrix of product flavor + build type (debug|release))
+   * @property {array} [buildTypes] The detected build types fo the Android
+   * module
+   * @property {boolean} [isRoot] Whether the module is at the root level of
+   * the project
    */
   constructor() {
   }

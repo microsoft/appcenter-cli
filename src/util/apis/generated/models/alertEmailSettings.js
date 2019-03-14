@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Alerting Email Settings
  *
@@ -15,7 +13,7 @@ const models = require('./index');
 class AlertEmailSettings {
   /**
    * Create a AlertEmailSettings.
-   * @member {array} settings The settings the user has for the app
+   * @property {array} settings The settings the user has for the app
    */
   constructor() {
   }

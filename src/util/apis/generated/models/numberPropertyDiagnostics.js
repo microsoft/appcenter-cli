@@ -16,7 +16,7 @@ const models = require('./index');
 class NumberPropertyDiagnostics extends models['CustomPropertyDiagnostics'] {
   /**
    * Create a NumberPropertyDiagnostics.
-   * @member {number} value Number property value.
+   * @property {number} value Number property value.
    */
   constructor() {
     super();
@@ -46,7 +46,7 @@ class NumberPropertyDiagnostics extends models['CustomPropertyDiagnostics'] {
             serializedName: 'name',
             constraints: {
               MaxLength: 128,
-              Pattern: '^[a-zA-Z][a-zA-Z0-9\-_]*$'
+              Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
             type: {
               name: 'String'

@@ -12,7 +12,7 @@
 class Modules {
   /**
    * Create a Modules.
-   * @member {object} [modules]
+   * @property {object} [modules]
    */
   constructor() {
   }

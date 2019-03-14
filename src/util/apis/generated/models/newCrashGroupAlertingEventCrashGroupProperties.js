@@ -13,14 +13,14 @@
 class NewCrashGroupAlertingEventCrashGroupProperties {
   /**
    * Create a NewCrashGroupAlertingEventCrashGroupProperties.
-   * @member {string} id
-   * @member {string} name
-   * @member {string} reason
-   * @member {string} url
-   * @member {string} appDisplayName
-   * @member {string} appPlatform
-   * @member {string} appVersion
-   * @member {array} stackTrace
+   * @property {string} id
+   * @property {string} name
+   * @property {string} reason
+   * @property {string} url
+   * @property {string} appDisplayName
+   * @property {string} appPlatform
+   * @property {string} appVersion
+   * @property {array} stackTrace
    */
   constructor() {
   }

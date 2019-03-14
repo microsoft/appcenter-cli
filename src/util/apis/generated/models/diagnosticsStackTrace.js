@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * a stacktrace in a processed and prettyfied way
  *
@@ -15,17 +13,17 @@ const models = require('./index');
 class DiagnosticsStackTrace {
   /**
    * Create a DiagnosticsStackTrace.
-   * @member {string} [title]
-   * @member {string} [reason]
-   * @member {array} [threads]
-   * @member {object} [exception]
-   * @member {string} [exception.reason] Reason of the exception
-   * @member {string} [exception.type] Type of the exception
+   * @property {string} [title]
+   * @property {string} [reason]
+   * @property {array} [threads]
+   * @property {object} [exception]
+   * @property {string} [exception.reason] Reason of the exception
+   * @property {string} [exception.type] Type of the exception
    * (NSSomethingException, NullPointerException)
-   * @member {array} [exception.frames] frames of the excetpion
-   * @member {boolean} [exception.relevant] relevant exception (crashed)
-   * @member {array} [exception.innerExceptions]
-   * @member {string} [exception.platform] SDK/Platform this thread is beeing
+   * @property {array} [exception.frames] frames of the excetpion
+   * @property {boolean} [exception.relevant] relevant exception (crashed)
+   * @property {array} [exception.innerExceptions]
+   * @property {string} [exception.platform] SDK/Platform this thread is beeing
    * generated from. Possible values include: 'ios', 'android', 'xamarin',
    * 'react-native', 'ndk', 'unity', 'other'
    */

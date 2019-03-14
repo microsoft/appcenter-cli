@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ErrorFreeDevicePercentages.
  */
 class ErrorFreeDevicePercentages {
   /**
    * Create a ErrorFreeDevicePercentages.
-   * @member {number} [averagePercentage] Average percentage
-   * @member {array} [dailyPercentages] The error-free percentage per day.
+   * @property {number} [averagePercentage] Average percentage
+   * @property {array} [dailyPercentages] The error-free percentage per day.
    */
   constructor() {
   }

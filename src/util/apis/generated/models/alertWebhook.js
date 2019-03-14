@@ -13,11 +13,11 @@
 class AlertWebhook {
   /**
    * Create a AlertWebhook.
-   * @member {string} [id] The unique id (UUID) of the webhook
-   * @member {string} name display name of the webhook
-   * @member {string} url target url of the webhook
-   * @member {boolean} [enabled] Allows eanble/disable webhook
-   * @member {array} eventTypes Event types enabled for webhook
+   * @property {string} [id] The unique id (UUID) of the webhook
+   * @property {string} name display name of the webhook
+   * @property {string} url target url of the webhook
+   * @property {boolean} [enabled] Allows eanble/disable webhook
+   * @property {array} eventTypes Event types enabled for webhook
    */
   constructor() {
   }

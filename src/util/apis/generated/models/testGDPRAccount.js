@@ -12,7 +12,7 @@
 class TestGDPRAccount {
   /**
    * Create a TestGDPRAccount.
-   * @member {uuid} [id]
+   * @property {uuid} [id]
    */
   constructor() {
   }

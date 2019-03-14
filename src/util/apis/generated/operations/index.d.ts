@@ -2530,6 +2530,577 @@ export interface Releases {
 
 
     /**
+     * Update details about the specified tester associated with the release
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {uuid} testerId The id of the tester
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {boolean} mandatoryUpdate Whether a release is mandatory for the
+     * given destination
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    putDistributionTesterWithHttpOperationResponse(releaseId: number, testerId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+
+    /**
+     * Update details about the specified tester associated with the release
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {uuid} testerId The id of the tester
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {boolean} mandatoryUpdate Whether a release is mandatory for the
+     * given destination
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorDetails} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    putDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
+    putDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, callback: ServiceCallback<models.ErrorDetails>): void;
+    putDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+
+
+    /**
+     * Delete the given tester from the release
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {string} testerId The id of the tester
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteDistributionTesterWithHttpOperationResponse(releaseId: number, testerId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+
+    /**
+     * Delete the given tester from the release
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {string} testerId The id of the tester
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorDetails} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
+    deleteDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteDistributionTester(releaseId: number, testerId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+
+
+    /**
+     * Distributes a release to a user
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} email Tester's email address
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {boolean} [options.mandatoryUpdate] Flag to mark the release for the
+     * provided destinations as mandatory
+     *
+     * @param {boolean} [options.notifyTesters] Flag to enable or disable
+     * notifications to testers
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    addTestersWithHttpOperationResponse(releaseId: number, ownerName: string, appName: string, email: string, options?: { mandatoryUpdate? : boolean, notifyTesters? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * Distributes a release to a user
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {string} email Tester's email address
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {boolean} [options.mandatoryUpdate] Flag to mark the release for the
+     * provided destinations as mandatory
+     *
+     * @param {boolean} [options.notifyTesters] Flag to enable or disable
+     * notifications to testers
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    addTesters(releaseId: number, ownerName: string, appName: string, email: string, options?: { mandatoryUpdate? : boolean, notifyTesters? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    addTesters(releaseId: number, ownerName: string, appName: string, email: string, callback: ServiceCallback<any>): void;
+    addTesters(releaseId: number, ownerName: string, appName: string, email: string, options: { mandatoryUpdate? : boolean, notifyTesters? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
+     * Delete the given distribution store from the release
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {string} storeId The id of the distribution store
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteDistributionStoreWithHttpOperationResponse(releaseId: number, storeId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+
+    /**
+     * Delete the given distribution store from the release
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {string} storeId The id of the distribution store
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorDetails} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteDistributionStore(releaseId: number, storeId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
+    deleteDistributionStore(releaseId: number, storeId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteDistributionStore(releaseId: number, storeId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+
+
+    /**
+     * Distributes a release to a store
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {uuid} id Unique id of the release destination
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    addStoreWithHttpOperationResponse(releaseId: number, ownerName: string, appName: string, id: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * Distributes a release to a store
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {uuid} id Unique id of the release destination
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    addStore(releaseId: number, ownerName: string, appName: string, id: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    addStore(releaseId: number, ownerName: string, appName: string, id: string, callback: ServiceCallback<any>): void;
+    addStore(releaseId: number, ownerName: string, appName: string, id: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
+     * Update details about the specified distribution group associated with the
+     * release
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {uuid} groupId The id of the releases destination
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {boolean} mandatoryUpdate Whether a release is mandatory for the
+     * given destination
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    putDistributionGroupWithHttpOperationResponse(releaseId: number, groupId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+
+    /**
+     * Update details about the specified distribution group associated with the
+     * release
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {uuid} groupId The id of the releases destination
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {boolean} mandatoryUpdate Whether a release is mandatory for the
+     * given destination
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorDetails} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    putDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
+    putDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, callback: ServiceCallback<models.ErrorDetails>): void;
+    putDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, mandatoryUpdate: boolean, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+
+
+    /**
+     * Delete the given distribution group from the release
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {string} groupId The id of the distribution group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteDistributionGroupWithHttpOperationResponse(releaseId: number, groupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+
+    /**
+     * Delete the given distribution group from the release
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {string} groupId The id of the distribution group
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorDetails} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
+    deleteDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteDistributionGroup(releaseId: number, groupId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
+
+
+    /**
+     * Distributes a release to a group
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {uuid} id Unique id of the release destination
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {boolean} [options.mandatoryUpdate] Flag to mark the release for the
+     * provided destinations as mandatory
+     *
+     * @param {boolean} [options.notifyTesters] Flag to enable or disable
+     * notifications to testers
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    addDistributionGroupWithHttpOperationResponse(releaseId: number, ownerName: string, appName: string, id: string, options?: { mandatoryUpdate? : boolean, notifyTesters? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * Distributes a release to a group
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {uuid} id Unique id of the release destination
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {boolean} [options.mandatoryUpdate] Flag to mark the release for the
+     * provided destinations as mandatory
+     *
+     * @param {boolean} [options.notifyTesters] Flag to enable or disable
+     * notifications to testers
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    addDistributionGroup(releaseId: number, ownerName: string, appName: string, id: string, options?: { mandatoryUpdate? : boolean, notifyTesters? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    addDistributionGroup(releaseId: number, ownerName: string, appName: string, id: string, callback: ServiceCallback<any>): void;
+    addDistributionGroup(releaseId: number, ownerName: string, appName: string, id: string, options: { mandatoryUpdate? : boolean, notifyTesters? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
      * Get a release with id `release_id`. If `release_id` is `latest`, return the
      * latest release that was distributed to the current user (from all the
      * distribution groups).
@@ -2605,6 +3176,100 @@ export interface Releases {
     getLatestByUser(releaseId: string, ownerName: string, appName: string, options?: { udid? : string, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
     getLatestByUser(releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
     getLatestByUser(releaseId: string, ownerName: string, appName: string, options: { udid? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
+     * Update details of a release.
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {boolean} [options.enabled] Toggle this release to be enable
+     * distribute/download or not.
+     *
+     * @param {string} [options.releaseNotes] Release notes for this release.
+     *
+     * @param {object} [options.build]
+     *
+     * @param {string} [options.build.branch] The branch name of the build
+     * producing the release
+     *
+     * @param {string} [options.build.commitHash] The commit hash of the build
+     * producing the release
+     *
+     * @param {string} [options.build.commitMessage] The commit message of the
+     * build producing the release
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updateDetailsWithHttpOperationResponse(releaseId: number, ownerName: string, appName: string, options?: { enabled? : boolean, releaseNotes? : string, build? : models.BuildInfo, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * Update details of a release.
+     *
+     * @param {number} releaseId The ID of the release
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {boolean} [options.enabled] Toggle this release to be enable
+     * distribute/download or not.
+     *
+     * @param {string} [options.releaseNotes] Release notes for this release.
+     *
+     * @param {object} [options.build]
+     *
+     * @param {string} [options.build.branch] The branch name of the build
+     * producing the release
+     *
+     * @param {string} [options.build.commitHash] The commit hash of the build
+     * producing the release
+     *
+     * @param {string} [options.build.commitMessage] The commit message of the
+     * build producing the release
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    updateDetails(releaseId: number, ownerName: string, appName: string, options?: { enabled? : boolean, releaseNotes? : string, build? : models.BuildInfo, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    updateDetails(releaseId: number, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    updateDetails(releaseId: number, ownerName: string, appName: string, options: { enabled? : boolean, releaseNotes? : string, build? : models.BuildInfo, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 
 
     /**
@@ -7692,9 +8357,6 @@ export interface Builds {
      *
      * @param {object} distributeInfo The distribution details
      *
-     * @param {string} [distributeInfo.distributionGroupId] DEPRECATED - A
-     * distribution group ID or a store group ID
-     *
      * @param {array} [distributeInfo.destinations] Array of objects {id:string,
      * type:string} with "id" being the distribution group ID, store ID, or tester
      * email, and "type" being "group", "store", or "tester"
@@ -7728,9 +8390,6 @@ export interface Builds {
      * @param {number} buildId The build ID
      *
      * @param {object} distributeInfo The distribution details
-     *
-     * @param {string} [distributeInfo.distributionGroupId] DEPRECATED - A
-     * distribution group ID or a store group ID
      *
      * @param {array} [distributeInfo.destinations] Array of objects {id:string,
      * type:string} with "id" being the distribution group ID, store ID, or tester
@@ -16590,11 +17249,11 @@ export interface StoreReleases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    getWithHttpOperationResponse(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.StoresReleaseDetails[]>>;
 
     /**
      * Return releases published in a store for releaseId and storeId
@@ -16619,7 +17278,7 @@ export interface StoreReleases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Object} - The deserialized result object.
+     *                      @resolve {Array} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -16627,15 +17286,15 @@ export interface StoreReleases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    get(storeName: string, releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    get(storeName: string, releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    get(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.StoresReleaseDetails[]>;
+    get(storeName: string, releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<models.StoresReleaseDetails[]>): void;
+    get(storeName: string, releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.StoresReleaseDetails[]>): void;
 
 
     /**
@@ -16782,11 +17441,11 @@ export interface StoreReleases {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getLatestWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    getLatestWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.StoresReleaseDetails[]>>;
 
     /**
      * Returns the latest release published in a store.
@@ -16809,7 +17468,7 @@ export interface StoreReleases {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Object} - The deserialized result object.
+     *                      @resolve {Array} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -16817,15 +17476,15 @@ export interface StoreReleases {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getLatest(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
-    getLatest(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    getLatest(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getLatest(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.StoresReleaseDetails[]>;
+    getLatest(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<models.StoresReleaseDetails[]>): void;
+    getLatest(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.StoresReleaseDetails[]>): void;
 }
 
 /**

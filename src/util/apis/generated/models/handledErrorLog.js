@@ -16,7 +16,7 @@ const models = require('./index');
 class HandledErrorLog extends models['Log'] {
   /**
    * Create a HandledErrorLog.
-   * @member {uuid} errorId Error ID.
+   * @property {uuid} errorId Error ID.
    */
   constructor() {
     super();

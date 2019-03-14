@@ -16,7 +16,7 @@ const models = require('./index');
 class StartSessionLogDiagnostics extends models['LogDiagnostics'] {
   /**
    * Create a StartSessionLogDiagnostics.
-   * @member {uuid} sessionId Session ID.
+   * @property {uuid} sessionId Session ID.
    */
   constructor() {
     super();

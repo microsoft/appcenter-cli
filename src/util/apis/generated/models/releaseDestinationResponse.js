@@ -15,7 +15,7 @@ const models = require('./index');
 class ReleaseDestinationResponse extends models['ReleaseStoreDestinationResponse'] {
   /**
    * Create a ReleaseDestinationResponse.
-   * @member {boolean} mandatoryUpdate Flag to mark the release for the
+   * @property {boolean} mandatoryUpdate Flag to mark the release for the
    * provided destinations as mandatory
    */
   constructor() {

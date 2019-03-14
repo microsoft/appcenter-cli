@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a UWPToolset.
  */
 class UWPToolset {
   /**
    * Create a UWPToolset.
-   * @member {array} uwpSolutions The UWP solutions detected
+   * @property {array} uwpSolutions The UWP solutions detected
    */
   constructor() {
   }

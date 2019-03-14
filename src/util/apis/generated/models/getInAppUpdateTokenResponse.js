@@ -12,7 +12,7 @@
 class GetInAppUpdateTokenResponse {
   /**
    * Create a GetInAppUpdateTokenResponse.
-   * @member {string} apiToken The api token generated will not be accessible
+   * @property {string} apiToken The api token generated will not be accessible
    * again
    */
   constructor() {

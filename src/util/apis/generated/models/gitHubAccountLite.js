@@ -13,10 +13,10 @@
 class GitHubAccountLite {
   /**
    * Create a GitHubAccountLite.
-   * @member {string} [id] GitHub Account Id
-   * @member {string} [login] GitHub Account Login Name
-   * @member {string} [type] GitHub Account Type
-   * @member {string} [url] GitHub Account Url
+   * @property {string} [id] GitHub Account Id
+   * @property {string} [login] GitHub Account Login Name
+   * @property {string} [type] GitHub Account Type
+   * @property {string} [url] GitHub Account Url
    */
   constructor() {
   }

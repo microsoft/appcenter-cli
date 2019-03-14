@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * ExternalStoreRequest
  *
@@ -15,30 +13,30 @@ const models = require('./index');
 class ExternalStoreRequest {
   /**
    * Create a ExternalStoreRequest.
-   * @member {string} [type] store Type. Possible values include: 'googleplay',
-   * 'intune', 'apple'
-   * @member {string} [name] name of the store. In case of googleplay, and
+   * @property {string} [type] store Type. Possible values include:
+   * 'googleplay', 'intune', 'apple'
+   * @property {string} [name] name of the store. In case of googleplay, and
    * Apple store this is fixed to Production.
-   * @member {string} [track] track of the store. Can be production, alpha &
+   * @property {string} [track] track of the store. Can be production, alpha &
    * beta for googleplay. Can be production, testflight-internal &
    * testflight-external for Apple Store. Possible values include:
    * 'production', 'alpha', 'beta', 'testflight-internal',
    * 'testflight-external'
-   * @member {object} [intuneDetails]
-   * @member {object} [intuneDetails.secretJson]
-   * @member {string} [intuneDetails.secretJson.idToken] the id token of user
-   * @member {string} [intuneDetails.secretJson.refreshToken] the refresh token
-   * for user
-   * @member {string} [intuneDetails.secretJson.refreshTokenExpiry] the expiry
-   * of refresh token
-   * @member {object} [intuneDetails.targetAudience]
-   * @member {string} [intuneDetails.targetAudience.name] display name for the
-   * target audience/group
-   * @member {object} [intuneDetails.appCategory]
-   * @member {string} [intuneDetails.appCategory.name] display name for the app
-   * category
-   * @member {string} [intuneDetails.tenantId] tenant id of the intune store
-   * @member {string} [serviceConnectionId] Id for the shared service
+   * @property {object} [intuneDetails]
+   * @property {object} [intuneDetails.secretJson]
+   * @property {string} [intuneDetails.secretJson.idToken] the id token of user
+   * @property {string} [intuneDetails.secretJson.refreshToken] the refresh
+   * token for user
+   * @property {string} [intuneDetails.secretJson.refreshTokenExpiry] the
+   * expiry of refresh token
+   * @property {object} [intuneDetails.targetAudience]
+   * @property {string} [intuneDetails.targetAudience.name] display name for
+   * the target audience/group
+   * @property {object} [intuneDetails.appCategory]
+   * @property {string} [intuneDetails.appCategory.name] display name for the
+   * app category
+   * @property {string} [intuneDetails.tenantId] tenant id of the intune store
+   * @property {string} [serviceConnectionId] Id for the shared service
    * connection. In case of Apple AppStore, this connection will be used to
    * create and connect to the Apple AppStore in Mobile Center.
    */

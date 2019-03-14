@@ -12,7 +12,7 @@
 class UserAppPermissionsUpdateRequest {
   /**
    * Create a UserAppPermissionsUpdateRequest.
-   * @member {array} permissions The permissions the user has for the app
+   * @property {array} permissions The permissions the user has for the app
    */
   constructor() {
   }

@@ -13,9 +13,9 @@
 class AlertingBugtrackerSettings {
   /**
    * Create a AlertingBugtrackerSettings.
-   * @member {string} [callbackUrl]
-   * @member {string} ownerName
-   * @member {string} type Polymorphic Discriminator
+   * @property {string} [callbackUrl]
+   * @property {string} ownerName
+   * @property {string} type Polymorphic Discriminator
    */
   constructor() {
   }

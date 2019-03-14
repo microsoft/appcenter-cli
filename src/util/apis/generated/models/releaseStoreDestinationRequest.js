@@ -12,7 +12,7 @@
 class ReleaseStoreDestinationRequest {
   /**
    * Create a ReleaseStoreDestinationRequest.
-   * @member {uuid} id Unique id of the release destination
+   * @property {uuid} id Unique id of the release destination
    */
   constructor() {
   }

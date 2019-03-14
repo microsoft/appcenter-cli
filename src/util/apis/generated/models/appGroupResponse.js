@@ -12,14 +12,14 @@
 class AppGroupResponse {
   /**
    * Create a AppGroupResponse.
-   * @member {uuid} id The unique ID (UUID) of the app
-   * @member {uuid} groupId The unique ID (UUID) of the group that the app
+   * @property {uuid} id The unique ID (UUID) of the app
+   * @property {uuid} groupId The unique ID (UUID) of the group that the app
    * belongs to
-   * @member {string} [displayName] The display name of the app
-   * @member {string} name The name of the app used in URLs
-   * @member {string} os The OS the app will be running on. Possible values
+   * @property {string} [displayName] The display name of the app
+   * @property {string} name The name of the app used in URLs
+   * @property {string} os The OS the app will be running on. Possible values
    * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Custom'
-   * @member {string} platform The platform of the app. Possible values
+   * @property {string} platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
    * 'Unity', 'Xamarin', 'Unknown'
    */

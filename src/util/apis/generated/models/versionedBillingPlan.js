@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Billing Plan with a version
  *
@@ -15,19 +13,19 @@ const models = require('./index');
 class VersionedBillingPlan {
   /**
    * Create a VersionedBillingPlan.
-   * @member {object} [document]
-   * @member {string} [document.id] The Billing Plan ID
-   * @member {string} [document.version] Version of the Billing Plan schema
-   * @member {number} [document.price] Price of the Billing Plan
-   * @member {string} [document.paymentSource] Service that receives payments
+   * @property {object} [document]
+   * @property {string} [document.id] The Billing Plan ID
+   * @property {string} [document.version] Version of the Billing Plan schema
+   * @property {number} [document.price] Price of the Billing Plan
+   * @property {string} [document.paymentSource] Service that receives payments
    * for this billing plan. Possible values include: 'None', 'AppCenter',
    * 'GitHub', 'Xtc'
-   * @member {string} [document.service] Name of the service that the plan
+   * @property {string} [document.service] Name of the service that the plan
    * applies to. Possible values include: 'Build', 'Push', 'Test'
-   * @member {object} [document.limits]
-   * @member {object} [document.attributes]
-   * @member {string} [document.parentId]
-   * @member {string} [etag] The version of the object
+   * @property {object} [document.limits]
+   * @property {object} [document.attributes]
+   * @property {string} [document.parentId]
+   * @property {string} [etag] The version of the object
    */
   constructor() {
   }

@@ -13,7 +13,7 @@
 class CrashAttachmentLocation {
   /**
    * Create a CrashAttachmentLocation.
-   * @member {string} uri
+   * @property {string} uri
    */
   constructor() {
   }

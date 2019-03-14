@@ -12,8 +12,8 @@
 class GDPRPurgeVerifyRequest {
   /**
    * Create a GDPRPurgeVerifyRequest.
-   * @member {string} id deployment id
-   * @member {string} key deployment key
+   * @property {string} id deployment id
+   * @property {string} key deployment key
    */
   constructor() {
   }

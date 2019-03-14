@@ -12,9 +12,9 @@
 class OS {
   /**
    * Create a OS.
-   * @member {string} [osName] OS name
-   * @member {number} [count] count current of OS
-   * @member {number} [previousCount] count of previous OS
+   * @property {string} [osName] OS name
+   * @property {number} [count] count current of OS
+   * @property {number} [previousCount] count of previous OS
    */
   constructor() {
   }

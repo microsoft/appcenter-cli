@@ -13,8 +13,8 @@
 class JiraSecretDetailsResponse {
   /**
    * Create a JiraSecretDetailsResponse.
-   * @member {string} baseUrl baseUrl to connect to jira instance
-   * @member {string} username username to connect to jira instance
+   * @property {string} baseUrl baseUrl to connect to jira instance
+   * @property {string} username username to connect to jira instance
    */
   constructor() {
   }

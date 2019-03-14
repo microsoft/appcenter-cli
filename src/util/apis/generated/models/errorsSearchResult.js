@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ErrorsSearchResult.
  */
 class ErrorsSearchResult {
   /**
    * Create a ErrorsSearchResult.
-   * @member {boolean} [hasMoreResults]
-   * @member {array} [errors]
+   * @property {boolean} [hasMoreResults]
+   * @property {array} [errors]
    */
   constructor() {
   }

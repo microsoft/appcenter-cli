@@ -13,11 +13,11 @@
 class ProvisioningProfileFile {
   /**
    * Create a ProvisioningProfileFile.
-   * @member {string} [fileName] Name of uploaded provisioning profile
-   * @member {string} [fileId] File id from secure file storage
-   * @member {string} [uploadId] Upload id to App Center File Upload Store
-   * @member {string} [targetBundleIdentifier] Target the provisioning profile
-   * is used to sign
+   * @property {string} [fileName] Name of uploaded provisioning profile
+   * @property {string} [fileId] File id from secure file storage
+   * @property {string} [uploadId] Upload id to App Center File Upload Store
+   * @property {string} [targetBundleIdentifier] Target the provisioning
+   * profile is used to sign
    */
   constructor() {
   }

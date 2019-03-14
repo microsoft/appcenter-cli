@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ActiveCrashingAppDetails.
  */
 class ActiveCrashingAppDetails {
   /**
    * Create a ActiveCrashingAppDetails.
-   * @member {string} [nextLink]
-   * @member {array} [appsWithCrashes] details of the apps with crashes
+   * @property {string} [nextLink]
+   * @property {array} [appsWithCrashes] details of the apps with crashes
    */
   constructor() {
   }

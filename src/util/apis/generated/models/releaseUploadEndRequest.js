@@ -14,7 +14,7 @@
 class ReleaseUploadEndRequest {
   /**
    * Create a ReleaseUploadEndRequest.
-   * @member {string} status The desired operation for the upload. Possible
+   * @property {string} status The desired operation for the upload. Possible
    * values include: 'committed', 'aborted'
    */
   constructor() {

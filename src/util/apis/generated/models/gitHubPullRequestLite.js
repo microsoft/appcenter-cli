@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * The lite version of GitHub pull request
  *
@@ -15,16 +13,16 @@ const models = require('./index');
 class GitHubPullRequestLite {
   /**
    * Create a GitHubPullRequestLite.
-   * @member {object} [head]
-   * @member {string} [head.ref] The repository name
-   * @member {string} [head.sha] The discription of repository
-   * @member {object} [head.repo]
-   * @member {number} [head.repo.id] The repository id
-   * @member {object} [base]
-   * @member {string} [base.ref] The repository name
-   * @member {string} [base.sha] The discription of repository
-   * @member {object} [base.repo]
-   * @member {number} [base.repo.id] The repository id
+   * @property {object} [head]
+   * @property {string} [head.ref] The repository name
+   * @property {string} [head.sha] The discription of repository
+   * @property {object} [head.repo]
+   * @property {number} [head.repo.id] The repository id
+   * @property {object} [base]
+   * @property {string} [base.ref] The repository name
+   * @property {string} [base.sha] The discription of repository
+   * @property {object} [base.repo]
+   * @property {number} [base.repo.id] The repository id
    */
   constructor() {
   }

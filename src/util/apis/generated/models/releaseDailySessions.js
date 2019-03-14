@@ -6,17 +6,15 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ReleaseDailySessions.
  */
 class ReleaseDailySessions {
   /**
    * Create a ReleaseDailySessions.
-   * @member {number} [totalSessionCounts]
-   * @member {number} [avgSessionsPerDay]
-   * @member {array} [sessions] Sessions per day
+   * @property {number} [totalSessionCounts]
+   * @property {number} [avgSessionsPerDay]
+   * @property {array} [sessions] Sessions per day
    */
   constructor() {
   }

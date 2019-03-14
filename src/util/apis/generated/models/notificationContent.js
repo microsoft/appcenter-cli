@@ -13,10 +13,10 @@
 class NotificationContent {
   /**
    * Create a NotificationContent.
-   * @member {string} name Notification name
-   * @member {string} [title] Notification title
-   * @member {string} body Notification body
-   * @member {object} [customData] Notification custom data(priority,
+   * @property {string} name Notification name
+   * @property {string} [title] Notification title
+   * @property {string} body Notification body
+   * @property {object} [customData] Notification custom data(priority,
    * expiration, etc.)
    */
   constructor() {

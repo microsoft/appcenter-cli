@@ -15,9 +15,9 @@ const models = require('./index');
 class TesterAppResponse extends models['BasicAppResponse'] {
   /**
    * Create a TesterAppResponse.
-   * @member {boolean} [microsoftInternal] it indicates if the app is microsoft
-   * internal
-   * @member {array} [permissions] The permissions associated with the app
+   * @property {boolean} [microsoftInternal] it indicates if the app is
+   * microsoft internal
+   * @property {array} [permissions] The permissions associated with the app
    */
   constructor() {
     super();

@@ -13,25 +13,25 @@
 class NewAppReleaseAlertingEventAppReleaseProperties {
   /**
    * Create a NewAppReleaseAlertingEventAppReleaseProperties.
-   * @member {string} appName
-   * @member {string} appDisplayName
-   * @member {string} releaseId
-   * @member {string} platform
-   * @member {string} uploadedAt Date and time in ISO 8601 format
-   * @member {string} [fingerprint]
-   * @member {string} [releaseNotes]
-   * @member {string} version
-   * @member {string} shortVersion
-   * @member {string} [minOs]
-   * @member {boolean} [mandatoryUpdate]
-   * @member {number} size
-   * @member {string} [provisioningProfileName]
-   * @member {string} [provisioningProfileType]
-   * @member {string} bundleIdentifier
-   * @member {string} installLink
-   * @member {string} [iconLink]
-   * @member {string} [distributionGroupId]
-   * @member {boolean} [installable]
+   * @property {string} appName
+   * @property {string} appDisplayName
+   * @property {string} releaseId
+   * @property {string} platform
+   * @property {string} uploadedAt Date and time in ISO 8601 format
+   * @property {string} [fingerprint]
+   * @property {string} [releaseNotes]
+   * @property {string} version
+   * @property {string} shortVersion
+   * @property {string} [minOs]
+   * @property {boolean} [mandatoryUpdate]
+   * @property {number} size
+   * @property {string} [provisioningProfileName]
+   * @property {string} [provisioningProfileType]
+   * @property {string} bundleIdentifier
+   * @property {string} installLink
+   * @property {string} [iconLink]
+   * @property {string} [distributionGroupId]
+   * @property {boolean} [installable]
    */
   constructor() {
   }

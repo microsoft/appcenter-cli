@@ -12,9 +12,9 @@
 class PerformanceReportPerformanceDataStepsItemSamplesItem {
   /**
    * Create a PerformanceReportPerformanceDataStepsItemSamplesItem.
-   * @member {number} [cpu]
-   * @member {number} [mem]
-   * @member {number} [elapsedSecs]
+   * @property {number} [cpu]
+   * @property {number} [mem]
+   * @property {number} [elapsedSecs]
    */
   constructor() {
   }

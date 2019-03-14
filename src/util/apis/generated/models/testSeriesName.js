@@ -13,7 +13,7 @@
 class TestSeriesName {
   /**
    * Create a TestSeriesName.
-   * @member {string} name Name of the new test series
+   * @property {string} name Name of the new test series
    */
   constructor() {
   }

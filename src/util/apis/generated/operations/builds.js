@@ -703,9 +703,6 @@ function _getDownloadUri(buildId, downloadType, ownerName, appName, options, cal
  *
  * @param {object} distributeInfo The distribution details
  *
- * @param {string} [distributeInfo.distributionGroupId] DEPRECATED - A
- * distribution group ID or a store group ID
- *
  * @param {array} [distributeInfo.destinations] Array of objects {id:string,
  * type:string} with "id" being the distribution group ID, store ID, or tester
  * email, and "type" being "group", "store", or "tester"
@@ -2342,9 +2339,6 @@ class Builds {
    *
    * @param {object} distributeInfo The distribution details
    *
-   * @param {string} [distributeInfo.distributionGroupId] DEPRECATED - A
-   * distribution group ID or a store group ID
-   *
    * @param {array} [distributeInfo.destinations] Array of objects {id:string,
    * type:string} with "id" being the distribution group ID, store ID, or tester
    * email, and "type" being "group", "store", or "tester"
@@ -2390,9 +2384,6 @@ class Builds {
    * @param {number} buildId The build ID
    *
    * @param {object} distributeInfo The distribution details
-   *
-   * @param {string} [distributeInfo.distributionGroupId] DEPRECATED - A
-   * distribution group ID or a store group ID
    *
    * @param {array} [distributeInfo.destinations] Array of objects {id:string,
    * type:string} with "id" being the distribution group ID, store ID, or tester

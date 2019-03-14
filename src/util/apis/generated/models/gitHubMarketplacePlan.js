@@ -13,7 +13,7 @@
 class GitHubMarketplacePlan {
   /**
    * Create a GitHubMarketplacePlan.
-   * @member {number} [id] Id of the GitHub plan
+   * @property {number} [id] Id of the GitHub plan
    */
   constructor() {
   }

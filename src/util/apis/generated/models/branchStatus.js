@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * The branch build status
  *
@@ -15,19 +13,19 @@ const models = require('./index');
 class BranchStatus {
   /**
    * Create a BranchStatus.
-   * @member {boolean} configured
-   * @member {object} [lastBuild]
-   * @member {number} [lastBuild.id] The build ID
-   * @member {string} [lastBuild.buildNumber] The build number
-   * @member {string} [lastBuild.queueTime] The time the build was queued
-   * @member {string} [lastBuild.startTime] The time the build was started
-   * @member {string} [lastBuild.finishTime] The time the build was finished
-   * @member {string} [lastBuild.lastChangedDate] The time the build status was
-   * last changed
-   * @member {string} [lastBuild.status] The build status
-   * @member {string} [lastBuild.result] The build result
-   * @member {string} [lastBuild.sourceBranch] The source branch name
-   * @member {string} [lastBuild.sourceVersion] The source SHA
+   * @property {boolean} configured
+   * @property {object} [lastBuild]
+   * @property {number} [lastBuild.id] The build ID
+   * @property {string} [lastBuild.buildNumber] The build number
+   * @property {string} [lastBuild.queueTime] The time the build was queued
+   * @property {string} [lastBuild.startTime] The time the build was started
+   * @property {string} [lastBuild.finishTime] The time the build was finished
+   * @property {string} [lastBuild.lastChangedDate] The time the build status
+   * was last changed
+   * @property {string} [lastBuild.status] The build status
+   * @property {string} [lastBuild.result] The build result
+   * @property {string} [lastBuild.sourceBranch] The source branch name
+   * @property {string} [lastBuild.sourceVersion] The source SHA
    */
   constructor() {
   }

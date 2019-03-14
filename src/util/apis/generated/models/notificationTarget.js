@@ -13,7 +13,7 @@
 class NotificationTarget {
   /**
    * Create a NotificationTarget.
-   * @member {string} type Polymorphic Discriminator
+   * @property {string} type Polymorphic Discriminator
    */
   constructor() {
   }

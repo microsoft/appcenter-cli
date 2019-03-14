@@ -17,7 +17,7 @@ const models = require('./index');
 class GooglePlayConnectionSecretRequest extends models['SharedConnectionRequest'] {
   /**
    * Create a GooglePlayConnectionSecretRequest.
-   * @member {object} data google secret details
+   * @property {object} data google secret details
    */
   constructor() {
     super();

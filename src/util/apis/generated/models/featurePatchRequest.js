@@ -12,9 +12,9 @@
 class FeaturePatchRequest {
   /**
    * Create a FeaturePatchRequest.
-   * @member {string} [description] The friendly name of the feature
-   * @member {string} [displayName] The full (friendly) name of the feature.
-   * @member {number} [state] The state of the feature
+   * @property {string} [description] The friendly name of the feature
+   * @property {string} [displayName] The full (friendly) name of the feature.
+   * @property {number} [state] The state of the feature
    */
   constructor() {
   }

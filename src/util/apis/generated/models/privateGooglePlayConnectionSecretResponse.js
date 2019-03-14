@@ -16,7 +16,7 @@ const models = require('./index');
 class PrivateGooglePlayConnectionSecretResponse extends models['PrivateSharedConnectionResponse'] {
   /**
    * Create a PrivateGooglePlayConnectionSecretResponse.
-   * @member {object} data google secret details
+   * @property {object} data google secret details
    */
   constructor() {
     super();

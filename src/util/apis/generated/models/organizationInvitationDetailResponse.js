@@ -6,47 +6,45 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a OrganizationInvitationDetailResponse.
  */
 class OrganizationInvitationDetailResponse {
   /**
    * Create a OrganizationInvitationDetailResponse.
-   * @member {uuid} id The unique ID (UUID) of the invitation
-   * @member {object} organization
-   * @member {uuid} [organization.id] The internal unique id (UUID) of the
+   * @property {uuid} id The unique ID (UUID) of the invitation
+   * @property {object} organization
+   * @property {uuid} [organization.id] The internal unique id (UUID) of the
    * organization.
-   * @member {string} [organization.displayName] The display name of the
+   * @property {string} [organization.displayName] The display name of the
    * organization
-   * @member {string} [organization.name] The slug name of the organization
-   * @member {string} [organization.avatarUrl] The URL to a user-uploaded
+   * @property {string} [organization.name] The slug name of the organization
+   * @property {string} [organization.avatarUrl] The URL to a user-uploaded
    * Avatar image
-   * @member {string} [organization.origin] The creation origin of this
+   * @property {string} [organization.origin] The creation origin of this
    * organization. Possible values include: 'appcenter', 'hockeyapp'
-   * @member {string} [organization.createdAt] The creation date of this
+   * @property {string} [organization.createdAt] The creation date of this
    * organization
-   * @member {string} [organization.updatedAt] The date the organization was
+   * @property {string} [organization.updatedAt] The date the organization was
    * last updated at
-   * @member {string} email The email address of the invited user
-   * @member {object} invitedBy
-   * @member {uuid} [invitedBy.id] The unique id (UUID) of the user
-   * @member {string} [invitedBy.avatarUrl] The avatar URL of the user
-   * @member {boolean} [invitedBy.canChangePassword] User is required to send
+   * @property {string} email The email address of the invited user
+   * @property {object} invitedBy
+   * @property {uuid} [invitedBy.id] The unique id (UUID) of the user
+   * @property {string} [invitedBy.avatarUrl] The avatar URL of the user
+   * @property {boolean} [invitedBy.canChangePassword] User is required to send
    * an old password in order to change the password.
-   * @member {string} [invitedBy.displayName] The full name of the user. Might
-   * for example be first and last name
-   * @member {string} [invitedBy.email] The email address of the user
-   * @member {string} [invitedBy.name] The unique name that is used to identify
-   * the user.
-   * @member {array} [invitedBy.permissions] The permissions the user has for
+   * @property {string} [invitedBy.displayName] The full name of the user.
+   * Might for example be first and last name
+   * @property {string} [invitedBy.email] The email address of the user
+   * @property {string} [invitedBy.name] The unique name that is used to
+   * identify the user.
+   * @property {array} [invitedBy.permissions] The permissions the user has for
    * the app
-   * @member {string} [invitedBy.origin] The creation origin of this user.
+   * @property {string} [invitedBy.origin] The creation origin of this user.
    * Possible values include: 'appcenter', 'hockeyapp', 'codepush'
-   * @member {boolean} isExistingUser Indicates whether the invited user
+   * @property {boolean} isExistingUser Indicates whether the invited user
    * already exists
-   * @member {string} [role] The role assigned to the invited user
+   * @property {string} [role] The role assigned to the invited user
    */
   constructor() {
   }

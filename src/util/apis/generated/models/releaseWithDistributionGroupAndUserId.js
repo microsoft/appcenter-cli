@@ -15,7 +15,7 @@ const models = require('./index');
 class ReleaseWithDistributionGroupAndUserId extends models['ReleaseWithDistributionGroup'] {
   /**
    * Create a ReleaseWithDistributionGroupAndUserId.
-   * @member {uuid} [userId] Unique user Id.  Will generate a new user Id if
+   * @property {uuid} [userId] Unique user Id.  Will generate a new user Id if
    * not provided.
    */
   constructor() {

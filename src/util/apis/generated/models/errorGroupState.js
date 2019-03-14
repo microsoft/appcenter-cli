@@ -12,9 +12,9 @@
 class ErrorGroupState {
   /**
    * Create a ErrorGroupState.
-   * @member {string} state Possible values include: 'open', 'closed',
+   * @property {string} state Possible values include: 'open', 'closed',
    * 'ignored'
-   * @member {string} [annotation]
+   * @property {string} [annotation]
    */
   constructor() {
   }

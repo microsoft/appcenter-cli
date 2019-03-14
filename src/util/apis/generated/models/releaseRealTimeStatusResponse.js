@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * status of the app from store
  *
@@ -15,13 +13,13 @@ const models = require('./index');
 class ReleaseRealTimeStatusResponse {
   /**
    * Create a ReleaseRealTimeStatusResponse.
-   * @member {string} [releaseId] release id
-   * @member {string} [appId] app id
-   * @member {object} [status]
-   * @member {string} [status.status] status from store
-   * @member {string} [status.storetype] store type
-   * @member {string} [status.track] track information from store
-   * @member {string} [status.version] version of the app from store
+   * @property {string} [releaseId] release id
+   * @property {string} [appId] app id
+   * @property {object} [status]
+   * @property {string} [status.status] status from store
+   * @property {string} [status.storetype] store type
+   * @property {string} [status.track] track information from store
+   * @property {string} [status.version] version of the app from store
    */
   constructor() {
   }

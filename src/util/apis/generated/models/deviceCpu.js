@@ -13,9 +13,9 @@
 class DeviceCpu {
   /**
    * Create a DeviceCpu.
-   * @member {string} [frequency]
-   * @member {string} [core]
-   * @member {string} [text]
+   * @property {string} [frequency]
+   * @property {string} [core]
+   * @property {string} [text]
    */
   constructor() {
   }

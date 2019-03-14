@@ -13,8 +13,8 @@
 class AADUser {
   /**
    * Create a AADUser.
-   * @member {uuid} objectId the aad user's id
-   * @member {uuid} tenantId the aad user's tenant id
+   * @property {uuid} objectId the aad user's id
+   * @property {uuid} tenantId the aad user's tenant id
    */
   constructor() {
   }

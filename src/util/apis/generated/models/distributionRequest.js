@@ -12,14 +12,12 @@
 class DistributionRequest {
   /**
    * Create a DistributionRequest.
-   * @member {string} [distributionGroupId] DEPRECATED - A distribution group
-   * ID or a store group ID
-   * @member {array} [destinations] Array of objects {id:string, type:string}
+   * @property {array} [destinations] Array of objects {id:string, type:string}
    * with "id" being the distribution group ID, store ID, or tester email, and
    * "type" being "group", "store", or "tester"
-   * @member {string} [releaseNotes] The release notes
-   * @member {boolean} [mandatoryUpdate]
-   * @member {boolean} [notifyTesters] Default value: true .
+   * @property {string} [releaseNotes] The release notes
+   * @property {boolean} [mandatoryUpdate]
+   * @property {boolean} [notifyTesters] Default value: true .
    */
   constructor() {
   }
@@ -38,13 +36,6 @@ class DistributionRequest {
         name: 'Composite',
         className: 'DistributionRequest',
         modelProperties: {
-          distributionGroupId: {
-            required: false,
-            serializedName: 'distributionGroupId',
-            type: {
-              name: 'String'
-            }
-          },
           destinations: {
             required: false,
             serializedName: 'destinations',
@@ -52,9 +43,10 @@ class DistributionRequest {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ObjectElementType',
+                  serializedName: 'DestinationDetailsElementType',
                   type: {
-                    name: 'Object'
+                    name: 'Composite',
+                    className: 'DestinationDetails'
                   }
               }
             }

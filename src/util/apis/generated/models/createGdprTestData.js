@@ -12,11 +12,11 @@
 class CreateGdprTestData {
   /**
    * Create a CreateGdprTestData.
-   * @member {uuid} [appId]
-   * @member {uuid} [accountId]
-   * @member {string} [userName]
-   * @member {string} [userEmail]
-   * @member {string} [appName]
+   * @property {uuid} [appId]
+   * @property {uuid} [accountId]
+   * @property {string} [userName]
+   * @property {string} [userEmail]
+   * @property {string} [appName]
    */
   constructor() {
   }

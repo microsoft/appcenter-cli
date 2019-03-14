@@ -15,13 +15,13 @@ const models = require('./index');
 class HandledErrorDetails extends models['HandledError'] {
   /**
    * Create a HandledErrorDetails.
-   * @member {string} [name]
-   * @member {array} [reasonFrames]
-   * @member {date} [appLaunchTimestamp] Timestamp when the app was launched,
+   * @property {string} [name]
+   * @property {array} [reasonFrames]
+   * @property {date} [appLaunchTimestamp] Timestamp when the app was launched,
    * example: '2017-03-13T18:05:42Z'.
-   * @member {string} [carrierName] Carrier name (for mobile devices).
-   * @member {boolean} [jailbreak] Flag indicating if device is jailbroken
-   * @member {object} [properties]
+   * @property {string} [carrierName] Carrier name (for mobile devices).
+   * @property {boolean} [jailbreak] Flag indicating if device is jailbroken
+   * @property {object} [properties]
    */
   constructor() {
     super();

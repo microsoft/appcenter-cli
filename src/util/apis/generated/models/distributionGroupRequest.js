@@ -12,7 +12,7 @@
 class DistributionGroupRequest {
   /**
    * Create a DistributionGroupRequest.
-   * @member {string} name The name of the distribution group
+   * @property {string} name The name of the distribution group
    */
   constructor() {
   }

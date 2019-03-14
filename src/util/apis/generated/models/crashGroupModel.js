@@ -12,8 +12,8 @@
 class CrashGroupModel {
   /**
    * Create a CrashGroupModel.
-   * @member {string} [modelName] model's name
-   * @member {number} [crashCount] count of model
+   * @property {string} [modelName] model's name
+   * @property {number} [crashCount] count of model
    */
   constructor() {
   }

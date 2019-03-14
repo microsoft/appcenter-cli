@@ -13,11 +13,11 @@
 class SharedConnectionRequest {
   /**
    * Create a SharedConnectionRequest.
-   * @member {string} [displayName] display name of shared connection
-   * @member {string} [credentialType] credential type of the shared
+   * @property {string} [displayName] display name of shared connection
+   * @property {string} [credentialType] credential type of the shared
    * connection. Values can be credentials|certificate. Possible values
    * include: 'credentials', 'certificate'. Default value: 'credentials' .
-   * @member {string} serviceType Polymorphic Discriminator
+   * @property {string} serviceType Polymorphic Discriminator
    */
   constructor() {
   }

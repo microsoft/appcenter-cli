@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a CrashGroupCarriers.
  */
 class CrashGroupCarriers {
   /**
    * Create a CrashGroupCarriers.
-   * @member {number} [crashCount]
-   * @member {array} [carriers]
+   * @property {number} [crashCount]
+   * @property {array} [carriers]
    */
   constructor() {
   }

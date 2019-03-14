@@ -13,7 +13,7 @@
 class GitHubRepositoryLite {
   /**
    * Create a GitHubRepositoryLite.
-   * @member {number} [id] The repository id
+   * @property {number} [id] The repository id
    */
   constructor() {
   }

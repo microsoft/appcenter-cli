@@ -13,8 +13,8 @@
 class V2FailureResponse {
   /**
    * Create a V2FailureResponse.
-   * @member {string} code
-   * @member {string} message
+   * @property {string} code
+   * @property {string} message
    */
   constructor() {
   }

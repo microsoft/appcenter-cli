@@ -15,7 +15,7 @@ const models = require('./index');
 class OrganizationResponseManagement extends models['OrganizationResponseInternal'] {
   /**
    * Create a OrganizationResponseManagement.
-   * @member {string} [email] The organization email, if the app was synced
+   * @property {string} [email] The organization email, if the app was synced
    * from HockeyApp
    */
   constructor() {

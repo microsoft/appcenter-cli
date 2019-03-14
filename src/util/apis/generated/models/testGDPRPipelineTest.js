@@ -12,8 +12,8 @@
 class TestGDPRPipelineTest {
   /**
    * Create a TestGDPRPipelineTest.
-   * @member {uuid} [appUploadId]
-   * @member {object} [testParameters]
+   * @property {uuid} [appUploadId]
+   * @property {object} [testParameters]
    */
   constructor() {
   }

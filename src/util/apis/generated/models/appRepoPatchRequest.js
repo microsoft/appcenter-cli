@@ -12,8 +12,8 @@
 class AppRepoPatchRequest {
   /**
    * Create a AppRepoPatchRequest.
-   * @member {string} [repoUrl] The absolute URL of the repository
-   * @member {uuid} [userId] The unique id (UUID) of the user
+   * @property {string} [repoUrl] The absolute URL of the repository
+   * @property {uuid} [userId] The unique id (UUID) of the user
    */
   constructor() {
   }

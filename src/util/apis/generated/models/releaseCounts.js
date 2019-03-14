@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ReleaseCounts.
  */
 class ReleaseCounts {
   /**
    * Create a ReleaseCounts.
-   * @member {number} [total]
-   * @member {array} counts
+   * @property {number} [total]
+   * @property {array} counts
    */
   constructor() {
   }

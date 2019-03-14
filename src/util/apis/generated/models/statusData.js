@@ -13,10 +13,10 @@
 class StatusData {
   /**
    * Create a StatusData.
-   * @member {string} [status] status from store
-   * @member {string} [storetype] store type
-   * @member {string} [track] track information from store
-   * @member {string} [version] version of the app from store
+   * @property {string} [status] status from store
+   * @property {string} [storetype] store type
+   * @property {string} [track] track information from store
+   * @property {string} [version] version of the app from store
    */
   constructor() {
   }

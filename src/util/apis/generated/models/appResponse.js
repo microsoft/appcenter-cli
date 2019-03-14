@@ -15,30 +15,30 @@ const models = require('./index');
 class AppResponse extends models['BasicAppResponse'] {
   /**
    * Create a AppResponse.
-   * @member {string} appSecret A unique and secret key used to identify the
+   * @property {string} appSecret A unique and secret key used to identify the
    * app in communication with the ingestion endpoint for crash reporting and
    * analytics
-   * @member {object} [azureSubscription]
-   * @member {uuid} [azureSubscription.subscriptionId] The azure subscription
+   * @property {object} [azureSubscription]
+   * @property {uuid} [azureSubscription.subscriptionId] The azure subscription
    * id
-   * @member {uuid} [azureSubscription.tenantId] The tenant id of the azure
+   * @property {uuid} [azureSubscription.tenantId] The tenant id of the azure
    * subscription belongs to
-   * @member {string} [azureSubscription.subscriptionName] The name of the
+   * @property {string} [azureSubscription.subscriptionName] The name of the
    * azure subscription
-   * @member {boolean} [azureSubscription.isBilling] If the subscription is
+   * @property {boolean} [azureSubscription.isBilling] If the subscription is
    * used for billing
-   * @member {boolean} [azureSubscription.isBillable] If the subscription can
+   * @property {boolean} [azureSubscription.isBillable] If the subscription can
    * be used for billing
-   * @member {boolean} [azureSubscription.isMicrosoftInternal] If the
+   * @property {boolean} [azureSubscription.isMicrosoftInternal] If the
    * subscription is internal Microsoft subscription
-   * @member {string} platform The platform of the app. Possible values
+   * @property {string} platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
    * 'Unity', 'Xamarin', 'Unknown'
-   * @member {string} origin The creation origin of this app. Possible values
+   * @property {string} origin The creation origin of this app. Possible values
    * include: 'appcenter', 'hockeyapp', 'codepush'
-   * @member {string} [createdAt] The created date of this app
-   * @member {string} [updatedAt] The last updated date of this app
-   * @member {array} [memberPermissions] The permissions of the calling user
+   * @property {string} [createdAt] The created date of this app
+   * @property {string} [updatedAt] The last updated date of this app
+   * @property {array} [memberPermissions] The permissions of the calling user
    */
   constructor() {
     super();

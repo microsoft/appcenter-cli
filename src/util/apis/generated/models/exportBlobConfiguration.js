@@ -16,7 +16,7 @@ const models = require('./index');
 class ExportBlobConfiguration extends models['ExportConfiguration'] {
   /**
    * Create a ExportBlobConfiguration.
-   * @member {string} [blobPathFormatKind] The path to the blob when enum set
+   * @property {string} [blobPathFormatKind] The path to the blob when enum set
    * to 'WithoutAppId' is 'year/month/day/hour/minute' and when set to
    * 'WithAppId' is 'appId/year/month/day/hour/minute'. Possible values
    * include: 'WithoutAppId', 'WithAppId'

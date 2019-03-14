@@ -14,7 +14,7 @@
 class ReleaseUploadBeginRequest {
   /**
    * Create a ReleaseUploadBeginRequest.
-   * @member {number} [releaseId] The ID of the release.
+   * @property {number} [releaseId] The ID of the release.
    */
   constructor() {
   }

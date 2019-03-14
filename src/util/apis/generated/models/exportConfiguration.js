@@ -13,10 +13,10 @@
 class ExportConfiguration {
   /**
    * Create a ExportConfiguration.
-   * @member {array} [exportEntities]
-   * @member {string} [resourceName] The resource name on azure
-   * @member {string} [resourceGroup] The resource group name on azure
-   * @member {string} type Polymorphic Discriminator
+   * @property {array} [exportEntities]
+   * @property {string} [resourceName] The resource name on azure
+   * @property {string} [resourceGroup] The resource group name on azure
+   * @property {string} type Polymorphic Discriminator
    */
   constructor() {
   }

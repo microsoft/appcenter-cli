@@ -16,7 +16,7 @@ const models = require('./index');
 class LogFlowStartSessionLog extends models['LogFlowLog'] {
   /**
    * Create a LogFlowStartSessionLog.
-   * @member {uuid} sessionId Session ID.
+   * @property {uuid} sessionId Session ID.
    */
   constructor() {
     super();

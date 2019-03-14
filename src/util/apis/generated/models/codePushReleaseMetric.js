@@ -12,11 +12,11 @@
 class CodePushReleaseMetric {
   /**
    * Create a CodePushReleaseMetric.
-   * @member {string} label
-   * @member {number} active
-   * @member {number} [downloaded]
-   * @member {number} [failed]
-   * @member {number} [installed]
+   * @property {string} label
+   * @property {number} active
+   * @property {number} [downloaded]
+   * @property {number} [failed]
+   * @property {number} [installed]
    */
   constructor() {
   }

@@ -13,9 +13,9 @@
 class AppleSecretDetails {
   /**
    * Create a AppleSecretDetails.
-   * @member {string} [username] username to connect to apple store.
-   * @member {string} [authCode] 6 digit auth code
-   * @member {string} [password] password to connect to apple store.
+   * @property {string} [username] username to connect to apple store.
+   * @property {string} [authCode] 6 digit auth code
+   * @property {string} [password] password to connect to apple store.
    */
   constructor() {
   }

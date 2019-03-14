@@ -12,8 +12,8 @@
 class TestGDPRHashFile {
   /**
    * Create a TestGDPRHashFile.
-   * @member {uuid} [id]
-   * @member {string} [filename]
+   * @property {uuid} [id]
+   * @property {string} [filename]
    */
   constructor() {
   }

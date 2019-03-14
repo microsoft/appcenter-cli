@@ -12,9 +12,9 @@
 class CrashingAppDetail {
   /**
    * Create a CrashingAppDetail.
-   * @member {string} [appId] application identifier
-   * @member {string} [appVersion] application version
-   * @member {string} [crashGroupId] crash group identifier
+   * @property {string} [appId] application identifier
+   * @property {string} [appVersion] application version
+   * @property {string} [crashGroupId] crash group identifier
    */
   constructor() {
   }

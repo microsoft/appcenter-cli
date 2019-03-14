@@ -16,10 +16,10 @@ const models = require('./index');
 class JiraConnectionSecretRequest extends models['SharedConnectionRequest'] {
   /**
    * Create a JiraConnectionSecretRequest.
-   * @member {object} data jira secret details
-   * @member {string} [data.baseUrl] baseUrl to connect to jira instance
-   * @member {string} [data.username] username to connect to jira instance
-   * @member {string} [data.password] password to connect to jira instance
+   * @property {object} data jira secret details
+   * @property {string} [data.baseUrl] baseUrl to connect to jira instance
+   * @property {string} [data.username] username to connect to jira instance
+   * @property {string} [data.password] password to connect to jira instance
    */
   constructor() {
     super();

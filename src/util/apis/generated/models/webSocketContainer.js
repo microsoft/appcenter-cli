@@ -13,7 +13,7 @@
 class WebSocketContainer {
   /**
    * Create a WebSocketContainer.
-   * @member {string} url WebSocket URL
+   * @property {string} url WebSocket URL
    */
   constructor() {
   }

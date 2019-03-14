@@ -13,11 +13,11 @@
 class PrivateSharedConnectionResponse {
   /**
    * Create a PrivateSharedConnectionResponse.
-   * @member {string} id id of the shared connection
-   * @member {string} [displayName] display name of shared connection
-   * @member {boolean} [isValid] whether the credentials are valid or not
-   * @member {boolean} [is2FA] if the account is a 2FA account or not
-   * @member {string} serviceType Polymorphic Discriminator
+   * @property {string} id id of the shared connection
+   * @property {string} [displayName] display name of shared connection
+   * @property {boolean} [isValid] whether the credentials are valid or not
+   * @property {boolean} [is2FA] if the account is a 2FA account or not
+   * @property {string} serviceType Polymorphic Discriminator
    */
   constructor() {
   }

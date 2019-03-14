@@ -12,7 +12,7 @@
 class DistributionGroupUserRequest {
   /**
    * Create a DistributionGroupUserRequest.
-   * @member {array} [userEmails] The list of emails of the users
+   * @property {array} [userEmails] The list of emails of the users
    */
   constructor() {
   }

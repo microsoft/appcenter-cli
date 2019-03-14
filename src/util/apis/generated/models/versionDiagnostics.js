@@ -12,9 +12,9 @@
 class VersionDiagnostics {
   /**
    * Create a VersionDiagnostics.
-   * @member {string} [version] version
-   * @member {number} [count] version count
-   * @member {number} [previousCount] the count of previous time range of the
+   * @property {string} [version] version
+   * @property {number} [count] version count
+   * @property {number} [previousCount] the count of previous time range of the
    * version
    */
   constructor() {

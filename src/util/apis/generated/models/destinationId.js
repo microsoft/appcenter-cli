@@ -15,15 +15,16 @@
 class DestinationId {
   /**
    * Create a DestinationId.
-   * @member {string} [name] Name of a distribution group / distribution store.
-   * The release will be associated with this distribution group or store. If
-   * the distribution group / store doesn't exist a 400 is returned. If both
+   * @property {string} [name] Name of a distribution group / distribution
+   * store. The release will be associated with this distribution group or
+   * store. If the distribution group / store doesn't exist a 400 is returned.
+   * If both distribution group / store name and id are passed, the id is
+   * taking precedence.
+   * @property {string} [id] Id of a distribution group / store. The release
+   * will be associated with this distribution group / store. If the
+   * distribution group / store doesn't exist a 400 is returned. If both
    * distribution group / store name and id are passed, the id is taking
    * precedence.
-   * @member {string} [id] Id of a distribution group / store. The release will
-   * be associated with this distribution group / store. If the distribution
-   * group / store doesn't exist a 400 is returned. If both distribution group
-   * / store name and id are passed, the id is taking precedence.
    */
   constructor() {
   }

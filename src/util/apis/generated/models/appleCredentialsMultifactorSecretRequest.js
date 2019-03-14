@@ -16,12 +16,12 @@ const models = require('./index');
 class AppleCredentialsMultifactorSecretRequest extends models['AppleConnectionSecretRequest'] {
   /**
    * Create a AppleCredentialsMultifactorSecretRequest.
-   * @member {object} data apple secret details
-   * @member {string} [data.username] username to connect to apple store.
-   * @member {string} [data.password] password to connect to apple store.
-   * @member {string} [data.authCode] The 6 digit Apple OTP for Multifactor
+   * @property {object} data apple secret details
+   * @property {string} [data.username] username to connect to apple store.
+   * @property {string} [data.password] password to connect to apple store.
+   * @property {string} [data.authCode] The 6 digit Apple OTP for Multifactor
    * accounts
-   * @member {string} [data.appSpecificPassword] The app specific password
+   * @property {string} [data.appSpecificPassword] The app specific password
    * required for app publishing for 2FA accounts
    */
   constructor() {

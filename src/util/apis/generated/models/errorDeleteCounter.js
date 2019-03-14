@@ -12,13 +12,13 @@
 class ErrorDeleteCounter {
   /**
    * Create a ErrorDeleteCounter.
-   * @member {string} [appId]
-   * @member {string} [errorGroupId]
-   * @member {string} [errorId]
-   * @member {number} [errorsDeleted]
-   * @member {number} [attachmentsDeleted]
-   * @member {number} [blobsSucceeded]
-   * @member {number} [blobsFailed]
+   * @property {string} [appId]
+   * @property {string} [errorGroupId]
+   * @property {string} [errorId]
+   * @property {number} [errorsDeleted]
+   * @property {number} [attachmentsDeleted]
+   * @property {number} [blobsSucceeded]
+   * @property {number} [blobsFailed]
    */
   constructor() {
   }

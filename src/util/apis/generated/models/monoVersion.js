@@ -13,8 +13,8 @@
 class MonoVersion {
   /**
    * Create a MonoVersion.
-   * @member {string} [name] The version name
-   * @member {boolean} [current] If the Mono is latest stable
+   * @property {string} [name] The version name
+   * @property {boolean} [current] If the Mono is latest stable
    */
   constructor() {
   }

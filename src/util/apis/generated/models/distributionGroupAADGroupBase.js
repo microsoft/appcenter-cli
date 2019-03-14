@@ -12,8 +12,8 @@
 class DistributionGroupAADGroupBase {
   /**
    * Create a DistributionGroupAADGroupBase.
-   * @member {uuid} [aadGroupId] The id of the aad group
-   * @member {string} [displayName] The display name of the aad group
+   * @property {uuid} [aadGroupId] The id of the aad group
+   * @property {string} [displayName] The display name of the aad group
    */
   constructor() {
   }

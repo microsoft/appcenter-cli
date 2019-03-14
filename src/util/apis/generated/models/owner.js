@@ -13,12 +13,12 @@
 class Owner {
   /**
    * Create a Owner.
-   * @member {uuid} id The unique id (UUID) of the owner
-   * @member {string} [avatarUrl] The avatar URL of the owner
-   * @member {string} displayName The owner's display name
-   * @member {string} [email] The owner's email address
-   * @member {string} name The unique name that used to identify the owner
-   * @member {string} type The owner type. Can either be 'org' or 'user'.
+   * @property {uuid} id The unique id (UUID) of the owner
+   * @property {string} [avatarUrl] The avatar URL of the owner
+   * @property {string} displayName The owner's display name
+   * @property {string} [email] The owner's email address
+   * @property {string} name The unique name that used to identify the owner
+   * @property {string} type The owner type. Can either be 'org' or 'user'.
    * Possible values include: 'org', 'user'
    */
   constructor() {

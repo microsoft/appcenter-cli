@@ -16,12 +16,12 @@ const models = require('./index');
 class AlertingVstsBugtrackerSettings extends models['AlertingBugtrackerSettings'] {
   /**
    * Create a AlertingVstsBugtrackerSettings.
-   * @member {string} vstsProjectId
-   * @member {string} vstsProjectUri
-   * @member {string} [vstsProjectName]
-   * @member {string} [vstsAccountName]
-   * @member {string} [vstsAreaPath]
-   * @member {object} [vstsDefaultPayload]
+   * @property {string} vstsProjectId
+   * @property {string} vstsProjectUri
+   * @property {string} [vstsProjectName]
+   * @property {string} [vstsAccountName]
+   * @property {string} [vstsAreaPath]
+   * @property {object} [vstsDefaultPayload]
    */
   constructor() {
     super();

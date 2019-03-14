@@ -12,9 +12,9 @@
 class IntuneGroup {
   /**
    * Create a IntuneGroup.
-   * @member {string} [id] the id of the Group
-   * @member {string} [displayName] the display name of the group
-   * @member {boolean} [securityEnabled] species if it is a security group
+   * @property {string} [id] the id of the Group
+   * @property {string} [displayName] the display name of the group
+   * @property {boolean} [securityEnabled] species if it is a security group
    */
   constructor() {
   }

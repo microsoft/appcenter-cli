@@ -16,7 +16,7 @@ const models = require('./index');
 class NotificationTargetAccountIds extends models['NotificationTarget'] {
   /**
    * Create a NotificationTargetAccountIds.
-   * @member {array} accountIds List of account IDs to target
+   * @property {array} accountIds List of account IDs to target
    */
   constructor() {
     super();

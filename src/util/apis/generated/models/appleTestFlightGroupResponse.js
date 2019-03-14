@@ -13,12 +13,12 @@
 class AppleTestFlightGroupResponse {
   /**
    * Create a AppleTestFlightGroupResponse.
-   * @member {string} [id] id of the group.
-   * @member {number} [providerId] provider id of the group.
-   * @member {number} [appAdamId] apple id of the group.
-   * @member {string} [name] name of the group.
-   * @member {boolean} [active] true if group is in active state.
-   * @member {boolean} [isInternalGroup] true if the group is an internal
+   * @property {string} [id] id of the group.
+   * @property {number} [providerId] provider id of the group.
+   * @property {number} [appAdamId] apple id of the group.
+   * @property {string} [name] name of the group.
+   * @property {boolean} [active] true if group is in active state.
+   * @property {boolean} [isInternalGroup] true if the group is an internal
    * group.
    */
   constructor() {

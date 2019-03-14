@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Response for updating a release
  *
@@ -15,11 +13,11 @@ const models = require('./index');
 class ReleaseUpdateResponse {
   /**
    * Create a ReleaseUpdateResponse.
-   * @member {boolean} [enabled]
-   * @member {boolean} [mandatoryUpdate]
-   * @member {string} [releaseNotes]
-   * @member {string} [provisioningStatusUrl]
-   * @member {array} [destinations]
+   * @property {boolean} [enabled]
+   * @property {boolean} [mandatoryUpdate]
+   * @property {string} [releaseNotes]
+   * @property {string} [provisioningStatusUrl]
+   * @property {array} [destinations]
    */
   constructor() {
   }

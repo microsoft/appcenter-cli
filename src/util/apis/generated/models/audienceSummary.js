@@ -13,11 +13,11 @@
 class AudienceSummary {
   /**
    * Create a AudienceSummary.
-   * @member {string} [name] Audience name.
-   * @member {string} [description] Audience description.
-   * @member {number} [estimatedCount] Estimated audience size.
-   * @member {string} [definition] Audience definition in OData format.
-   * @member {string} [state] Audience state. Possible values include:
+   * @property {string} [name] Audience name.
+   * @property {string} [description] Audience description.
+   * @property {number} [estimatedCount] Estimated audience size.
+   * @property {string} [definition] Audience definition in OData format.
+   * @property {string} [state] Audience state. Possible values include:
    * 'Calculating', 'Ready', 'Disabled'
    */
   constructor() {

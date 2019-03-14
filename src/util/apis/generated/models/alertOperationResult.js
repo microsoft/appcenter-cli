@@ -13,7 +13,7 @@
 class AlertOperationResult {
   /**
    * Create a AlertOperationResult.
-   * @member {string} requestId Unique request identifier for tracking
+   * @property {string} requestId Unique request identifier for tracking
    */
   constructor() {
   }

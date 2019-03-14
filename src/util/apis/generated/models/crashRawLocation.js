@@ -13,7 +13,7 @@
 class CrashRawLocation {
   /**
    * Create a CrashRawLocation.
-   * @member {string} uri
+   * @property {string} uri
    */
   constructor() {
   }

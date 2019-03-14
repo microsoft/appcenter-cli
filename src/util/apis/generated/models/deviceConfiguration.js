@@ -6,60 +6,58 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a DeviceConfiguration.
  */
 class DeviceConfiguration {
   /**
    * Create a DeviceConfiguration.
-   * @member {string} [name] The name of the device model and OS version
-   * @member {uuid} [id] The unique id of the device configuration
-   * @member {number} [tier] The tier
-   * @member {object} [image]
-   * @member {string} [image.full]
-   * @member {string} [image.thumb]
-   * @member {object} [model]
-   * @member {string} [model.name]
-   * @member {string} [model.manufacturer]
-   * @member {string} [model.model]
-   * @member {string} [model.platform]
-   * @member {object} [model.dimensions]
-   * @member {object} [model.dimensions.depth]
-   * @member {object} [model.dimensions.height]
-   * @member {object} [model.dimensions.width]
-   * @member {object} [model.resolution]
-   * @member {string} [model.resolution.height]
-   * @member {string} [model.resolution.width]
-   * @member {string} [model.resolution.ppi]
-   * @member {string} [model.releaseDate]
-   * @member {string} [model.formFactor]
-   * @member {object} [model.screenSize]
-   * @member {string} [model.screenSize.cm]
-   * @member {string} [model.screenSize.inProperty]
-   * @member {object} [model.cpu]
-   * @member {string} [model.cpu.frequency]
-   * @member {string} [model.cpu.core]
-   * @member {string} [model.cpu.text]
-   * @member {object} [model.memory]
-   * @member {string} [model.memory.formattedSize]
-   * @member {number} [model.screenRotation]
-   * @member {object} [model.deviceFrame]
-   * @member {object} [model.deviceFrame.grid]
-   * @member {number} [model.deviceFrame.grid.width]
-   * @member {number} [model.deviceFrame.grid.height]
-   * @member {string} [model.deviceFrame.grid.frameUrl]
-   * @member {array} [model.deviceFrame.grid.screen]
-   * @member {object} [model.deviceFrame.full]
-   * @member {number} [model.deviceFrame.full.width]
-   * @member {number} [model.deviceFrame.full.height]
-   * @member {string} [model.deviceFrame.full.frameUrl]
-   * @member {array} [model.deviceFrame.full.screen]
-   * @member {number} [model.availabilityCount]
-   * @member {string} [os]
-   * @member {string} [osName]
-   * @member {number} [marketShare]
+   * @property {string} [name] The name of the device model and OS version
+   * @property {uuid} [id] The unique id of the device configuration
+   * @property {number} [tier] The tier
+   * @property {object} [image]
+   * @property {string} [image.full]
+   * @property {string} [image.thumb]
+   * @property {object} [model]
+   * @property {string} [model.name]
+   * @property {string} [model.manufacturer]
+   * @property {string} [model.model]
+   * @property {string} [model.platform]
+   * @property {object} [model.dimensions]
+   * @property {object} [model.dimensions.depth]
+   * @property {object} [model.dimensions.height]
+   * @property {object} [model.dimensions.width]
+   * @property {object} [model.resolution]
+   * @property {string} [model.resolution.height]
+   * @property {string} [model.resolution.width]
+   * @property {string} [model.resolution.ppi]
+   * @property {string} [model.releaseDate]
+   * @property {string} [model.formFactor]
+   * @property {object} [model.screenSize]
+   * @property {string} [model.screenSize.cm]
+   * @property {string} [model.screenSize.inProperty]
+   * @property {object} [model.cpu]
+   * @property {string} [model.cpu.frequency]
+   * @property {string} [model.cpu.core]
+   * @property {string} [model.cpu.text]
+   * @property {object} [model.memory]
+   * @property {string} [model.memory.formattedSize]
+   * @property {number} [model.screenRotation]
+   * @property {object} [model.deviceFrame]
+   * @property {object} [model.deviceFrame.grid]
+   * @property {number} [model.deviceFrame.grid.width]
+   * @property {number} [model.deviceFrame.grid.height]
+   * @property {string} [model.deviceFrame.grid.frameUrl]
+   * @property {array} [model.deviceFrame.grid.screen]
+   * @property {object} [model.deviceFrame.full]
+   * @property {number} [model.deviceFrame.full.width]
+   * @property {number} [model.deviceFrame.full.height]
+   * @property {string} [model.deviceFrame.full.frameUrl]
+   * @property {array} [model.deviceFrame.full.screen]
+   * @property {number} [model.availabilityCount]
+   * @property {string} [os]
+   * @property {string} [osName]
+   * @property {number} [marketShare]
    */
   constructor() {
   }

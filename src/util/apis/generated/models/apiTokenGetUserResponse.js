@@ -12,11 +12,11 @@
 class ApiTokenGetUserResponse {
   /**
    * Create a ApiTokenGetUserResponse.
-   * @member {uuid} tokenId The token's unique id (UUID)
-   * @member {array} tokenScope The token's scope. A list of allowed roles.
-   * @member {string} userEmail The user email
-   * @member {uuid} userId The unique id (UUID) of the user
-   * @member {string} userOrigin The creation origin of the user who created
+   * @property {uuid} tokenId The token's unique id (UUID)
+   * @property {array} tokenScope The token's scope. A list of allowed roles.
+   * @property {string} userEmail The user email
+   * @property {uuid} userId The unique id (UUID) of the user
+   * @property {string} userOrigin The creation origin of the user who created
    * this api token. Possible values include: 'appcenter', 'hockeyapp',
    * 'codepush'
    */

@@ -13,10 +13,10 @@
 class AllItunesAppsResponse {
   /**
    * Create a AllItunesAppsResponse.
-   * @member {string} [appleId] apple id for app team id.
-   * @member {string} [bundleId] bundle identifier of app
-   * @member {string} [name] App Name
-   * @member {string} [iconUrl] url for the app icon from app store
+   * @property {string} [appleId] apple id for app team id.
+   * @property {string} [bundleId] bundle identifier of app
+   * @property {string} [name] App Name
+   * @property {string} [iconUrl] url for the app icon from app store
    */
   constructor() {
   }

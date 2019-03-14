@@ -12,10 +12,10 @@
 class DistributionGroupAadGroupsDeleteResponse {
   /**
    * Create a DistributionGroupAadGroupsDeleteResponse.
-   * @member {string} [code] The code of the result
-   * @member {number} [message] The message of the result
-   * @member {number} status The status code of the result
-   * @member {uuid} [aadGroupId] The aad id of the group
+   * @property {string} [code] The code of the result
+   * @property {number} [message] The message of the result
+   * @property {number} status The status code of the result
+   * @property {uuid} [aadGroupId] The aad id of the group
    */
   constructor() {
   }

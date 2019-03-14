@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * a thread representation
  *
@@ -15,25 +13,25 @@ const models = require('./index');
 class DiagnosticsThread {
   /**
    * Create a DiagnosticsThread.
-   * @member {string} title name of the thread
-   * @member {array} frames frames of that thread
-   * @member {object} [exception] potential additional exception happened in
+   * @property {string} title name of the thread
+   * @property {array} frames frames of that thread
+   * @property {object} [exception] potential additional exception happened in
    * that thread (Last Exception Backtrace)
-   * @member {string} [exception.reason] Reason of the exception
-   * @member {string} [exception.type] Type of the exception
+   * @property {string} [exception.reason] Reason of the exception
+   * @property {string} [exception.type] Type of the exception
    * (NSSomethingException, NullPointerException)
-   * @member {array} [exception.frames] frames of the excetpion
-   * @member {boolean} [exception.relevant] relevant exception (crashed)
-   * @member {array} [exception.innerExceptions]
-   * @member {string} [exception.platform] SDK/Platform this thread is beeing
+   * @property {array} [exception.frames] frames of the excetpion
+   * @property {boolean} [exception.relevant] relevant exception (crashed)
+   * @property {array} [exception.innerExceptions]
+   * @property {string} [exception.platform] SDK/Platform this thread is beeing
    * generated from. Possible values include: 'ios', 'android', 'xamarin',
    * 'react-native', 'ndk', 'unity', 'other'
-   * @member {boolean} [relevant] Shows if a thread is relevant or not. Is
+   * @property {boolean} [relevant] Shows if a thread is relevant or not. Is
    * false if all frames are non relevant, otherwise true
-   * @member {string} [platform] SDK/Platform this thread is beeing generated
+   * @property {string} [platform] SDK/Platform this thread is beeing generated
    * from. Possible values include: 'ios', 'android', 'xamarin',
    * 'react-native', 'ndk', 'unity', 'other'
-   * @member {boolean} [crashed] True if this thread crashed
+   * @property {boolean} [crashed] True if this thread crashed
    */
   constructor() {
   }

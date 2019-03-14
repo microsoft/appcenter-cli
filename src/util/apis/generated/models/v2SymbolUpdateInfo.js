@@ -13,9 +13,9 @@
 class V2SymbolUpdateInfo {
   /**
    * Create a V2SymbolUpdateInfo.
-   * @member {string} symbolId UUID of the symbol
-   * @member {string} appId application id
-   * @member {string} status symbol upload status. Possible values include:
+   * @property {string} symbolId UUID of the symbol
+   * @property {string} appId application id
+   * @property {string} status symbol upload status. Possible values include:
    * 'missing', 'ignored', 'available'
    */
   constructor() {

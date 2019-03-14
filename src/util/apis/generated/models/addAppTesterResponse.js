@@ -12,8 +12,8 @@
 class AddAppTesterResponse {
   /**
    * Create a AddAppTesterResponse.
-   * @member {uuid} userId The user ID of the tester that needs to be added
-   * @member {number} releaseId The ID of the release the user was added to
+   * @property {uuid} userId The user ID of the tester that needs to be added
+   * @property {number} releaseId The ID of the release the user was added to
    */
   constructor() {
   }

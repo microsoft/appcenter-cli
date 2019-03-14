@@ -13,7 +13,7 @@
 class ReleaseDetailsUpdateResponse {
   /**
    * Create a ReleaseDetailsUpdateResponse.
-   * @member {string} [releaseNotes]
+   * @property {string} [releaseNotes]
    */
   constructor() {
   }

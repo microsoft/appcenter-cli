@@ -6,47 +6,46 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a CrashGroup.
  */
 class CrashGroup {
   /**
    * Create a CrashGroup.
-   * @member {string} crashGroupId
-   * @member {string} newCrashGroupId
-   * @member {string} displayId
-   * @member {string} appVersion
-   * @member {string} build
-   * @member {string} status Possible values include: 'open', 'closed',
+   * @property {string} crashGroupId
+   * @property {string} newCrashGroupId
+   * @property {string} displayId
+   * @property {string} appVersion
+   * @property {string} build
+   * @property {string} status Possible values include: 'open', 'closed',
    * 'ignored'
-   * @member {number} count
-   * @member {number} [impactedUsers]
-   * @member {date} firstOccurrence
-   * @member {date} lastOccurrence
-   * @member {string} [exception]
-   * @member {string} crashReason
-   * @member {object} [reasonFrame]
-   * @member {string} [reasonFrame.className] name of the class
-   * @member {string} [reasonFrame.method] name of the method
-   * @member {boolean} [reasonFrame.classMethod] is a class method
-   * @member {string} [reasonFrame.file] name of the file
-   * @member {number} [reasonFrame.line] line number
-   * @member {boolean} [reasonFrame.appCode] this line isn't from any framework
-   * @member {string} [reasonFrame.frameworkName] Name of the framework
-   * @member {string} [reasonFrame.codeFormatted] Formatted frame string
-   * @member {string} [reasonFrame.codeRaw] Unformatted Frame string
-   * @member {string} [reasonFrame.language] programming language of the frame.
-   * Possible values include: 'JavaScript', 'CSharp', 'Objective-C',
+   * @property {number} count
+   * @property {number} [impactedUsers]
+   * @property {date} firstOccurrence
+   * @property {date} lastOccurrence
+   * @property {string} [exception]
+   * @property {string} crashReason
+   * @property {object} [reasonFrame]
+   * @property {string} [reasonFrame.className] name of the class
+   * @property {string} [reasonFrame.method] name of the method
+   * @property {boolean} [reasonFrame.classMethod] is a class method
+   * @property {string} [reasonFrame.file] name of the file
+   * @property {number} [reasonFrame.line] line number
+   * @property {boolean} [reasonFrame.appCode] this line isn't from any
+   * framework
+   * @property {string} [reasonFrame.frameworkName] Name of the framework
+   * @property {string} [reasonFrame.codeFormatted] Formatted frame string
+   * @property {string} [reasonFrame.codeRaw] Unformatted Frame string
+   * @property {string} [reasonFrame.language] programming language of the
+   * frame. Possible values include: 'JavaScript', 'CSharp', 'Objective-C',
    * 'Objective-Cpp', 'Cpp', 'C', 'Swift', 'Java', 'Unknown'
-   * @member {string} [reasonFrame.methodParams] parameters of the frames
+   * @property {string} [reasonFrame.methodParams] parameters of the frames
    * method
-   * @member {string} [reasonFrame.exceptionType] Exception type.
-   * @member {string} [reasonFrame.osExceptionType] OS exception type. (aka.
+   * @property {string} [reasonFrame.exceptionType] Exception type.
+   * @property {string} [reasonFrame.osExceptionType] OS exception type. (aka.
    * SIGNAL)
-   * @member {boolean} fatal Crash or handled exception
-   * @member {string} annotation
+   * @property {boolean} fatal Crash or handled exception
+   * @property {string} annotation
    */
   constructor() {
   }

@@ -15,9 +15,9 @@ const models = require('./index');
 class AppResponseInternal extends models['AppResponse'] {
   /**
    * Create a AppResponseInternal.
-   * @member {array} [featureFlags] The feature flags that are enabled for this
-   * app
-   * @member {array} [repositories] The repositories associated with this app
+   * @property {array} [featureFlags] The feature flags that are enabled for
+   * this app
+   * @property {array} [repositories] The repositories associated with this app
    */
   constructor() {
     super();

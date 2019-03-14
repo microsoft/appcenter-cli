@@ -6,20 +6,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a CreateStoreSecretRequest.
  */
 class CreateStoreSecretRequest {
   /**
    * Create a CreateStoreSecretRequest.
-   * @member {object} [secretJson]
-   * @member {string} [secretJson.idToken] the id token of user
-   * @member {string} [secretJson.refreshToken] the refresh token for user
-   * @member {string} [secretJson.refreshTokenExpiry] the expiry of refresh
+   * @property {object} [secretJson]
+   * @property {string} [secretJson.idToken] the id token of user
+   * @property {string} [secretJson.refreshToken] the refresh token for user
+   * @property {string} [secretJson.refreshTokenExpiry] the expiry of refresh
    * token
-   * @member {string} [tenantId] the tenant id for user
+   * @property {string} [tenantId] the tenant id for user
    */
   constructor() {
   }

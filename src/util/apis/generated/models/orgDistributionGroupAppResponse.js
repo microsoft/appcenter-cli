@@ -15,8 +15,8 @@ const models = require('./index');
 class OrgDistributionGroupAppResponse extends models['BasicAppResponse'] {
   /**
    * Create a OrgDistributionGroupAppResponse.
-   * @member {string} [platform] The platform of the app
-   * @member {string} [origin] The creation origin of this app
+   * @property {string} [platform] The platform of the app
+   * @property {string} [origin] The creation origin of this app
    */
   constructor() {
     super();

@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * @summary Performance Report
   *
@@ -17,17 +15,17 @@ const models = require('./index');
 class PerformanceReport {
   /**
    * Create a PerformanceReport.
-   * @member {string} [deviceSnapshotId]
-   * @member {object} [performanceData]
-   * @member {array} [performanceData.steps]
-   * @member {number} [performanceData.elapsedSecsEnd]
-   * @member {number} [performanceData.elapsedSecsStart]
-   * @member {number} [performanceData.elapsedSecs]
-   * @member {string} [performanceData.id]
-   * @member {object} [video]
-   * @member {object} [video.videoMetadata]
-   * @member {array} [video.videoMetadata.events]
-   * @member {string} [video.videoUrl]
+   * @property {string} [deviceSnapshotId]
+   * @property {object} [performanceData]
+   * @property {array} [performanceData.steps]
+   * @property {number} [performanceData.elapsedSecsEnd]
+   * @property {number} [performanceData.elapsedSecsStart]
+   * @property {number} [performanceData.elapsedSecs]
+   * @property {string} [performanceData.id]
+   * @property {object} [video]
+   * @property {object} [video.videoMetadata]
+   * @property {array} [video.videoMetadata.events]
+   * @property {string} [video.videoUrl]
    */
   constructor() {
   }

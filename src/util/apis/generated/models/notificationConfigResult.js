@@ -13,7 +13,7 @@
 class NotificationConfigResult {
   /**
    * Create a NotificationConfigResult.
-   * @member {string} type Polymorphic Discriminator
+   * @property {string} type Polymorphic Discriminator
    */
   constructor() {
   }

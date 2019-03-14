@@ -12,7 +12,7 @@
 class RepoInfo {
   /**
    * Create a RepoInfo.
-   * @member {string} repoUrl The repository url
+   * @property {string} repoUrl The repository url
    */
   constructor() {
   }

@@ -13,7 +13,7 @@
 class UserProfileResponseInternalSettings {
   /**
    * Create a UserProfileResponseInternalSettings.
-   * @member {string} [marketingOptIn] The marketing opt-in setting
+   * @property {string} [marketingOptIn] The marketing opt-in setting
    */
   constructor() {
   }

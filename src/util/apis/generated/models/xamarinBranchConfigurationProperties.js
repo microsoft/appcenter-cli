@@ -13,16 +13,16 @@
 class XamarinBranchConfigurationProperties {
   /**
    * Create a XamarinBranchConfigurationProperties.
-   * @member {string} slnPath
-   * @member {string} isSimBuild
-   * @member {string} args
-   * @member {string} configuration
-   * @member {string} p12File
-   * @member {string} p12Pwd
-   * @member {string} provProfile
-   * @member {string} [monoVersion]
-   * @member {string} [sdkBundle]
-   * @member {string} [symlink] Symlink of the SDK Bundle and Mono
+   * @property {string} slnPath
+   * @property {string} isSimBuild
+   * @property {string} args
+   * @property {string} configuration
+   * @property {string} p12File
+   * @property {string} p12Pwd
+   * @property {string} provProfile
+   * @property {string} [monoVersion]
+   * @property {string} [sdkBundle]
+   * @property {string} [symlink] Symlink of the SDK Bundle and Mono
    * installation.
    * The build will use the associated Mono bundled with related Xamarin SDK.
    * If both symlink and monoVersion or sdkBundle are passed, the symlink is

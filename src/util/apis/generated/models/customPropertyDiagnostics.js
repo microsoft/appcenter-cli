@@ -12,8 +12,8 @@
 class CustomPropertyDiagnostics {
   /**
    * Create a CustomPropertyDiagnostics.
-   * @member {string} name
-   * @member {string} type Polymorphic Discriminator
+   * @property {string} name
+   * @property {string} type Polymorphic Discriminator
    */
   constructor() {
   }
@@ -42,7 +42,7 @@ class CustomPropertyDiagnostics {
             serializedName: 'name',
             constraints: {
               MaxLength: 128,
-              Pattern: '^[a-zA-Z][a-zA-Z0-9\-_]*$'
+              Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
             type: {
               name: 'String'

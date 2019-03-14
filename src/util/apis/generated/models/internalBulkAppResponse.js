@@ -12,8 +12,8 @@
 class InternalBulkAppResponse {
   /**
    * Create a InternalBulkAppResponse.
-   * @member {string} [appName] The name of the app
-   * @member {string} [ownerDisplayName] The display name of the owner
+   * @property {string} [appName] The name of the app
+   * @property {string} [ownerDisplayName] The display name of the owner
    */
   constructor() {
   }

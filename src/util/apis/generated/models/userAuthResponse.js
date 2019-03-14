@@ -12,16 +12,17 @@
 class UserAuthResponse {
   /**
    * Create a UserAuthResponse.
-   * @member {uuid} id The unique id (UUID) of the user
-   * @member {string} displayName The full name of the user. Might for example
-   * be first and last name
-   * @member {string} email The email address of the user
-   * @member {string} [externalProvider] The name of the external auth provider
-   * @member {string} [externalUserId] The user ID given by the external
+   * @property {uuid} id The unique id (UUID) of the user
+   * @property {string} displayName The full name of the user. Might for
+   * example be first and last name
+   * @property {string} email The email address of the user
+   * @property {string} [externalProvider] The name of the external auth
    * provider
-   * @member {string} name The unique name that is used to identify the user
-   * @member {string} origin The creation origin of this user. Possible values
-   * include: 'appcenter', 'hockeyapp', 'codepush'
+   * @property {string} [externalUserId] The user ID given by the external
+   * provider
+   * @property {string} name The unique name that is used to identify the user
+   * @property {string} origin The creation origin of this user. Possible
+   * values include: 'appcenter', 'hockeyapp', 'codepush'
    */
   constructor() {
   }

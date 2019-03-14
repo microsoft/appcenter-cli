@@ -12,10 +12,11 @@
 class AzureSubscriptionAddRequest {
   /**
    * Create a AzureSubscriptionAddRequest.
-   * @member {uuid} subscriptionId The azure subscription id
-   * @member {uuid} tenantId The tenant id of the azure subscription belongs to
-   * @member {string} subscriptionName The name of the azure subscription
-   * @member {boolean} [isBilling] If the subscription is used for billing
+   * @property {uuid} subscriptionId The azure subscription id
+   * @property {uuid} tenantId The tenant id of the azure subscription belongs
+   * to
+   * @property {string} subscriptionName The name of the azure subscription
+   * @property {boolean} [isBilling] If the subscription is used for billing
    */
   constructor() {
   }

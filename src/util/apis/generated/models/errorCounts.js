@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ErrorCounts.
  */
 class ErrorCounts {
   /**
    * Create a ErrorCounts.
-   * @member {number} [count] total error count
-   * @member {array} [errors] the total error count for day
+   * @property {number} [count] total error count
+   * @property {array} [errors] the total error count for day
    */
   constructor() {
   }

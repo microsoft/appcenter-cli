@@ -12,7 +12,7 @@
 class AzureSubscriptionAddToAppRequest {
   /**
    * Create a AzureSubscriptionAddToAppRequest.
-   * @member {uuid} subscriptionId The azure subscription id
+   * @property {uuid} subscriptionId The azure subscription id
    */
   constructor() {
   }

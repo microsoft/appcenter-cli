@@ -16,9 +16,9 @@ const models = require('./index');
 class EventLog extends models['LogWithProperties'] {
   /**
    * Create a EventLog.
-   * @member {uuid} sessionId Session ID.
-   * @member {uuid} id Unique identifier for this event.
-   * @member {string} name Name of the event.
+   * @property {uuid} sessionId Session ID.
+   * @property {uuid} id Unique identifier for this event.
+   * @property {string} name Name of the event.
    */
   constructor() {
     super();

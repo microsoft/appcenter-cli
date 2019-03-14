@@ -12,7 +12,7 @@
 class BuildLog {
   /**
    * Create a BuildLog.
-   * @member {array} [value]
+   * @property {array} [value]
    */
   constructor() {
   }

@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Places and count during the time range in descending order
  *
@@ -15,8 +13,8 @@ const models = require('./index');
 class Places {
   /**
    * Create a Places.
-   * @member {number} [total]
-   * @member {array} [places]
+   * @property {number} [total]
+   * @property {array} [places]
    */
   constructor() {
   }

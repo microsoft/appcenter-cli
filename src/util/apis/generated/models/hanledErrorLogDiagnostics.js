@@ -16,7 +16,7 @@ const models = require('./index');
 class HanledErrorLogDiagnostics extends models['LogDiagnostics'] {
   /**
    * Create a HanledErrorLogDiagnostics.
-   * @member {uuid} errorId Error ID.
+   * @property {uuid} errorId Error ID.
    */
   constructor() {
     super();

@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * missing symbol crash group object
  *
@@ -15,14 +13,15 @@ const models = require('./index');
 class V2MissingSymbolCrashGroup {
   /**
    * Create a V2MissingSymbolCrashGroup.
-   * @member {string} symbolGroupId id of the symbol group
-   * @member {number} [crashCount] number of crashes that belong to this group
-   * @member {string} appId application id
-   * @member {string} appVer application version
-   * @member {string} appBuild application build
-   * @member {date} lastModified last update date for the group
-   * @member {array} missingSymbols list of missing symbols
-   * @member {string} status group status. Possible values include: 'active',
+   * @property {string} symbolGroupId id of the symbol group
+   * @property {number} [crashCount] number of crashes that belong to this
+   * group
+   * @property {string} appId application id
+   * @property {string} appVer application version
+   * @property {string} appBuild application build
+   * @property {date} lastModified last update date for the group
+   * @property {array} missingSymbols list of missing symbols
+   * @property {string} status group status. Possible values include: 'active',
    * 'pending', 'closed'
    */
   constructor() {

@@ -13,10 +13,10 @@
 class GitHubBillingAccount {
   /**
    * Create a GitHubBillingAccount.
-   * @member {string} id The unique id (UUID) of the account
-   * @member {string} displayName The account's display name
-   * @member {string} name The unique name that used to identify the owner
-   * @member {string} type The owner type. Can either be 'org' or 'user'.
+   * @property {string} id The unique id (UUID) of the account
+   * @property {string} displayName The account's display name
+   * @property {string} name The unique name that used to identify the owner
+   * @property {string} type The owner type. Can either be 'org' or 'user'.
    * Possible values include: 'org', 'user'
    */
   constructor() {

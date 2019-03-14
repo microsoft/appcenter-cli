@@ -15,11 +15,11 @@ const models = require('./index');
 class TesterAppRelease extends models['DistributionGroupRelease'] {
   /**
    * Create a TesterAppRelease.
-   * @member {number} size The release's size in bytes.
-   * @member {string} [installUrl] The href required to install a release on a
-   * mobile device. On iOS devices will be prefixed with
+   * @property {number} size The release's size in bytes.
+   * @property {string} [installUrl] The href required to install a release on
+   * a mobile device. On iOS devices will be prefixed with
    * `itms-services://?action=download-manifest&url=`
-   * @member {string} [releaseNotes] The release's release notes.
+   * @property {string} [releaseNotes] The release's release notes.
    */
   constructor() {
     super();

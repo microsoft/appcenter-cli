@@ -12,13 +12,13 @@
 class BillingInformationSearchResultsItem {
   /**
    * Create a BillingInformationSearchResultsItem.
-   * @member {string} [accountId] The Account ID
-   * @member {string} [accountName] The Account Name
-   * @member {string} [billingInternalAccountId] The Billing Internal Account
+   * @property {string} [accountId] The Account ID
+   * @property {string} [accountName] The Account Name
+   * @property {string} [billingInternalAccountId] The Billing Internal Account
    * ID
-   * @member {string} [buildPlan] The ID of the Build Billing Plan
-   * @member {string} [pushPlan] The ID of the Push Billing Plan
-   * @member {string} [testPlan] The ID of the Test Billing Plan
+   * @property {string} [buildPlan] The ID of the Build Billing Plan
+   * @property {string} [pushPlan] The ID of the Push Billing Plan
+   * @property {string} [testPlan] The ID of the Test Billing Plan
    */
   constructor() {
   }

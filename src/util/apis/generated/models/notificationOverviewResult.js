@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Notification statistics
  *
@@ -15,17 +13,17 @@ const models = require('./index');
 class NotificationOverviewResult {
   /**
    * Create a NotificationOverviewResult.
-   * @member {string} notificationId Notification id.
-   * @member {string} [name] Notification name
-   * @member {object} [notificationTarget]
-   * @member {string} [notificationTarget.type] Polymorphic Discriminator
-   * @member {date} [sendTime] Notification send time
-   * @member {number} [pnsSendFailure] Number of the notifications failed to
+   * @property {string} notificationId Notification id.
+   * @property {string} [name] Notification name
+   * @property {object} [notificationTarget]
+   * @property {string} [notificationTarget.type] Polymorphic Discriminator
+   * @property {date} [sendTime] Notification send time
+   * @property {number} [pnsSendFailure] Number of the notifications failed to
    * send to the push provider.
-   * @member {number} [pnsSendSuccess] Number of the notifications successfully
-   * sent to push the provider.
-   * @member {string} state State of the notification. Possible values include:
-   * 'Queued', 'Sending', 'Completed', 'Failed', 'NoTargetFound'
+   * @property {number} [pnsSendSuccess] Number of the notifications
+   * successfully sent to push the provider.
+   * @property {string} state State of the notification. Possible values
+   * include: 'Queued', 'Sending', 'Completed', 'Failed', 'NoTargetFound'
    */
   constructor() {
   }

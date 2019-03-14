@@ -6,21 +6,19 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a SessionsPerDevice.
  */
 class SessionsPerDevice {
   /**
    * Create a SessionsPerDevice.
-   * @member {number} [averageSessionsPerUser] average seesion per user
-   * @member {number} [previousAverageSessionsPerUser] previous average session
-   * per user
-   * @member {number} [totalCount] total session per device count
-   * @member {number} [previousTotalCount] previous total count
-   * @member {array} [sessionsPerUser] the session count for each interval per
-   * device
+   * @property {number} [averageSessionsPerUser] average seesion per user
+   * @property {number} [previousAverageSessionsPerUser] previous average
+   * session per user
+   * @property {number} [totalCount] total session per device count
+   * @property {number} [previousTotalCount] previous total count
+   * @property {array} [sessionsPerUser] the session count for each interval
+   * per device
    */
   constructor() {
   }

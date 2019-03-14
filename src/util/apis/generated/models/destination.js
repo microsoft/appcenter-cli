@@ -12,14 +12,14 @@
 class Destination {
   /**
    * Create a Destination.
-   * @member {boolean} [isLatest] Is the containing release the latest one in
+   * @property {boolean} [isLatest] Is the containing release the latest one in
    * this distribution group.
-   * @member {string} [type] type of the distribution store currently stores
+   * @property {string} [type] type of the distribution store currently stores
    * type can be intune, googleplay or windows. Possible values include:
    * 'intune', 'googleplay', 'windows'
-   * @member {string} [publishingStatus] publishing status of the release in
+   * @property {string} [publishingStatus] publishing status of the release in
    * the store.
-   * @member {string} [destinationType] Destination can be either store or
+   * @property {string} [destinationType] Destination can be either store or
    * group. Possible values include: 'group', 'store', 'tester'
    */
   constructor() {

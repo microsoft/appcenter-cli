@@ -15,9 +15,9 @@ const models = require('./index');
 class ReleaseUpdateError extends models['ErrorDetails'] {
   /**
    * Create a ReleaseUpdateError.
-   * @member {string} [releaseNotes]
-   * @member {boolean} [mandatoryUpdate]
-   * @member {array} [destinations]
+   * @property {string} [releaseNotes]
+   * @property {boolean} [mandatoryUpdate]
+   * @property {array} [destinations]
    */
   constructor() {
     super();

@@ -16,9 +16,9 @@ const models = require('./index');
 class JiraCredentialNonSecretDetailsResponse extends models['GooglePlayConnectionNonSecretResponse'] {
   /**
    * Create a JiraCredentialNonSecretDetailsResponse.
-   * @member {object} data Jira credentials non-secret details
-   * @member {string} [data.baseUrl] baseUrl to connect to jira instance
-   * @member {string} [data.username] username to connect to jira instance
+   * @property {object} data Jira credentials non-secret details
+   * @property {string} [data.baseUrl] baseUrl to connect to jira instance
+   * @property {string} [data.username] username to connect to jira instance
    */
   constructor() {
     super();

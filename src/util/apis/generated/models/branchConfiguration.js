@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * The branch build configuration
  *
@@ -15,88 +13,88 @@ const models = require('./index');
 class BranchConfiguration {
   /**
    * Create a BranchConfiguration.
-   * @member {number} id
-   * @member {string} [trigger] Possible values include: 'continous',
+   * @property {number} id
+   * @property {string} [trigger] Possible values include: 'continous',
    * 'continuous', 'manual'
-   * @member {boolean} [testsEnabled]
-   * @member {boolean} [badgeIsEnabled]
-   * @member {boolean} [signed]
-   * @member {object} [toolsets]
-   * @member {object} [toolsets.xcode]
-   * @member {string} [toolsets.xcode.projectOrWorkspacePath] Xcode
+   * @property {boolean} [testsEnabled]
+   * @property {boolean} [badgeIsEnabled]
+   * @property {boolean} [signed]
+   * @property {object} [toolsets]
+   * @property {object} [toolsets.xcode]
+   * @property {string} [toolsets.xcode.projectOrWorkspacePath] Xcode
    * project/workspace path
-   * @member {string} [toolsets.xcode.podfilePath] Path to CococaPods file, if
+   * @property {string} [toolsets.xcode.podfilePath] Path to CococaPods file,
+   * if present
+   * @property {string} [toolsets.xcode.cartfilePath] Path to Carthage file, if
    * present
-   * @member {string} [toolsets.xcode.cartfilePath] Path to Carthage file, if
-   * present
-   * @member {string} [toolsets.xcode.provisioningProfileEncoded]
-   * @member {string} [toolsets.xcode.certificateEncoded]
-   * @member {string} [toolsets.xcode.provisioningProfileFileId]
-   * @member {string} [toolsets.xcode.certificateFileId]
-   * @member {string} [toolsets.xcode.provisioningProfileUploadId]
-   * @member {array} [toolsets.xcode.appExtensionProvisioningProfileFiles]
-   * @member {string} [toolsets.xcode.certificateUploadId]
-   * @member {string} [toolsets.xcode.certificatePassword]
-   * @member {string} [toolsets.xcode.scheme]
-   * @member {string} [toolsets.xcode.xcodeVersion]
-   * @member {string} [toolsets.xcode.provisioningProfileFilename]
-   * @member {string} [toolsets.xcode.certificateFilename]
-   * @member {string} [toolsets.xcode.teamId]
-   * @member {boolean} [toolsets.xcode.automaticSigning]
-   * @member {string} [toolsets.xcode.xcodeProjectSha] The selected pbxproject
-   * hash to the repositroy
-   * @member {string} [toolsets.xcode.archiveConfiguration] The build
+   * @property {string} [toolsets.xcode.provisioningProfileEncoded]
+   * @property {string} [toolsets.xcode.certificateEncoded]
+   * @property {string} [toolsets.xcode.provisioningProfileFileId]
+   * @property {string} [toolsets.xcode.certificateFileId]
+   * @property {string} [toolsets.xcode.provisioningProfileUploadId]
+   * @property {array} [toolsets.xcode.appExtensionProvisioningProfileFiles]
+   * @property {string} [toolsets.xcode.certificateUploadId]
+   * @property {string} [toolsets.xcode.certificatePassword]
+   * @property {string} [toolsets.xcode.scheme]
+   * @property {string} [toolsets.xcode.xcodeVersion]
+   * @property {string} [toolsets.xcode.provisioningProfileFilename]
+   * @property {string} [toolsets.xcode.certificateFilename]
+   * @property {string} [toolsets.xcode.teamId]
+   * @property {boolean} [toolsets.xcode.automaticSigning]
+   * @property {string} [toolsets.xcode.xcodeProjectSha] The selected
+   * pbxproject hash to the repositroy
+   * @property {string} [toolsets.xcode.archiveConfiguration] The build
    * configuration of the target to archive
-   * @member {string} [toolsets.xcode.targetToArchive] The target id of the
+   * @property {string} [toolsets.xcode.targetToArchive] The target id of the
    * selected scheme to archive
-   * @member {object} [toolsets.javascript]
-   * @member {string} [toolsets.javascript.packageJsonPath] Path to
+   * @property {object} [toolsets.javascript]
+   * @property {string} [toolsets.javascript.packageJsonPath] Path to
    * package.json file for the main project, e.g. "package.json" or
    * "myapp/package.json"
-   * @member {boolean} [toolsets.javascript.runTests] Whether to run Jest unit
-   * tests, via npm test, during the build
-   * @member {string} [toolsets.javascript.reactNativeVersion] Version of React
-   * Native from package.json files
-   * @member {object} [toolsets.xamarin]
-   * @member {string} [toolsets.xamarin.slnPath]
-   * @member {string} [toolsets.xamarin.isSimBuild]
-   * @member {string} [toolsets.xamarin.args]
-   * @member {string} [toolsets.xamarin.configuration]
-   * @member {string} [toolsets.xamarin.p12File]
-   * @member {string} [toolsets.xamarin.p12Pwd]
-   * @member {string} [toolsets.xamarin.provProfile]
-   * @member {string} [toolsets.xamarin.monoVersion]
-   * @member {string} [toolsets.xamarin.sdkBundle]
-   * @member {string} [toolsets.xamarin.symlink] Symlink of the SDK Bundle and
-   * Mono installation.
+   * @property {boolean} [toolsets.javascript.runTests] Whether to run Jest
+   * unit tests, via npm test, during the build
+   * @property {string} [toolsets.javascript.reactNativeVersion] Version of
+   * React Native from package.json files
+   * @property {object} [toolsets.xamarin]
+   * @property {string} [toolsets.xamarin.slnPath]
+   * @property {string} [toolsets.xamarin.isSimBuild]
+   * @property {string} [toolsets.xamarin.args]
+   * @property {string} [toolsets.xamarin.configuration]
+   * @property {string} [toolsets.xamarin.p12File]
+   * @property {string} [toolsets.xamarin.p12Pwd]
+   * @property {string} [toolsets.xamarin.provProfile]
+   * @property {string} [toolsets.xamarin.monoVersion]
+   * @property {string} [toolsets.xamarin.sdkBundle]
+   * @property {string} [toolsets.xamarin.symlink] Symlink of the SDK Bundle
+   * and Mono installation.
    * The build will use the associated Mono bundled with related Xamarin SDK.
    * If both symlink and monoVersion or sdkBundle are passed, the symlink is
    * taking precedence. If non-existing symlink is passed, the current stable
    * Mono version will be configured for building.
-   * @member {object} [toolsets.android]
-   * @member {string} [toolsets.android.gradleWrapperPath] Path to the Gradle
+   * @property {object} [toolsets.android]
+   * @property {string} [toolsets.android.gradleWrapperPath] Path to the Gradle
    * wrapper script
-   * @member {string} [toolsets.android.module] The Gradle module to build
-   * @member {string} [toolsets.android.buildVariant] The Android build variant
-   * to build
-   * @member {boolean} [toolsets.android.runTests] Whether to run unit tests
+   * @property {string} [toolsets.android.module] The Gradle module to build
+   * @property {string} [toolsets.android.buildVariant] The Android build
+   * variant to build
+   * @property {boolean} [toolsets.android.runTests] Whether to run unit tests
    * during the build (default)
-   * @member {boolean} [toolsets.android.runLint] Whether to run lint checks
+   * @property {boolean} [toolsets.android.runLint] Whether to run lint checks
    * during the build (default)
-   * @member {boolean} [toolsets.android.isRoot] Whether it is the root module
-   * or not
-   * @member {boolean} [toolsets.android.automaticSigning] Whether to apply
+   * @property {boolean} [toolsets.android.isRoot] Whether it is the root
+   * module or not
+   * @property {boolean} [toolsets.android.automaticSigning] Whether to apply
    * automatic signing or not
-   * @member {string} [toolsets.android.keystorePassword] The password of the
+   * @property {string} [toolsets.android.keystorePassword] The password of the
    * keystore
-   * @member {string} [toolsets.android.keyAlias] The key alias
-   * @member {string} [toolsets.android.keyPassword] The key password
-   * @member {string} [toolsets.android.keystoreFilename] The name of the
+   * @property {string} [toolsets.android.keyAlias] The key alias
+   * @property {string} [toolsets.android.keyPassword] The key password
+   * @property {string} [toolsets.android.keystoreFilename] The name of the
    * keystore file
-   * @member {string} [toolsets.android.keystoreEncoded] The keystore encoded
+   * @property {string} [toolsets.android.keystoreEncoded] The keystore encoded
    * value
-   * @member {object} [artifactVersioning]
-   * @member {string} [artifactVersioning.buildNumberFormat] Possible values
+   * @property {object} [artifactVersioning]
+   * @property {string} [artifactVersioning.buildNumberFormat] Possible values
    * include: 'buildId', 'timestamp'
    */
   constructor() {

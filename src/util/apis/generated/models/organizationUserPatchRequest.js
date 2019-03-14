@@ -12,7 +12,7 @@
 class OrganizationUserPatchRequest {
   /**
    * Create a OrganizationUserPatchRequest.
-   * @member {string} [role] The user's role in the organizatiion. Possible
+   * @property {string} [role] The user's role in the organizatiion. Possible
    * values include: 'admin', 'collaborator'
    */
   constructor() {

@@ -17,7 +17,7 @@ const models = require('./index');
 class ExportConfigurationBlobStorageConnectionString extends models['ExportBlobConfiguration'] {
   /**
    * Create a ExportConfigurationBlobStorageConnectionString.
-   * @member {string} connectionString Connection string for blob storage
+   * @property {string} connectionString Connection string for blob storage
    * account
    */
   constructor() {

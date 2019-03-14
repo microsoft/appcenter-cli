@@ -12,7 +12,7 @@
 class DataDeletionRequest {
   /**
    * Create a DataDeletionRequest.
-   * @member {string} [dataDeletionType] Type of data to delete
+   * @property {string} [dataDeletionType] Type of data to delete
    */
   constructor() {
   }

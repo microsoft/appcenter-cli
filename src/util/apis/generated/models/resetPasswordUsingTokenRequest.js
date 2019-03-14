@@ -12,9 +12,10 @@
 class ResetPasswordUsingTokenRequest {
   /**
    * Create a ResetPasswordUsingTokenRequest.
-   * @member {string} newPassword The new password. Needs to be at least 8
+   * @property {string} newPassword The new password. Needs to be at least 8
    * characters long and contain at least one lower- and one uppercase letter.
-   * @member {string} token The reset password token that was sent to the user
+   * @property {string} token The reset password token that was sent to the
+   * user
    */
   constructor() {
   }

@@ -6,18 +6,16 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a TestReportFeaturesItemTestsItem.
  */
 class TestReportFeaturesItemTestsItem {
   /**
    * Create a TestReportFeaturesItemTestsItem.
-   * @member {string} [testName]
-   * @member {array} [runs]
-   * @member {number} [peakMemory]
-   * @member {number} [peakDuration]
+   * @property {string} [testName]
+   * @property {array} [runs]
+   * @property {number} [peakMemory]
+   * @property {number} [peakDuration]
    */
   constructor() {
   }

@@ -12,14 +12,14 @@
 class SubmitDsrOperationRequest {
   /**
    * Create a SubmitDsrOperationRequest.
-   * @member {string} [request] Possible values include: 'Delete', 'Purge',
+   * @property {string} [request] Possible values include: 'Delete', 'Purge',
    * 'UndoDelete', 'Export'
-   * @member {string} [accountId]
-   * @member {string} [appId]
-   * @member {string} [operationId] The DSR operation ID provided by the GDPR
+   * @property {string} [accountId]
+   * @property {string} [appId]
+   * @property {string} [operationId] The DSR operation ID provided by the GDPR
    * coordinator. Used for tracking only.
-   * @member {string} [requestId] Request ID provided by the GDPR coordinator.
-   * Used for tracking.
+   * @property {string} [requestId] Request ID provided by the GDPR
+   * coordinator. Used for tracking.
    */
   constructor() {
   }

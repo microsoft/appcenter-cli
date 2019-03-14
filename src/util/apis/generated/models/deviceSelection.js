@@ -15,7 +15,7 @@
 class DeviceSelection {
   /**
    * Create a DeviceSelection.
-   * @member {string} shortId Identifier of the device selection
+   * @property {string} shortId Identifier of the device selection
    */
   constructor() {
   }

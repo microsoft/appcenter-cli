@@ -307,7 +307,7 @@ function _getPublishError(storeName, releaseId, ownerName, appName, options, cal
  *
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
- *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      {array} [result]   - The deserialized result object if an error did not occur.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -410,7 +410,15 @@ function _get(storeName, releaseId, ownerName, appName, options, callback) {
             required: false,
             serializedName: 'parsedResponse',
             type: {
-              name: 'Object'
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'StoresReleaseDetailsElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'StoresReleaseDetails'
+                  }
+              }
             }
           };
           result = client.deserialize(resultMapper, parsedResponse, 'result');
@@ -710,7 +718,7 @@ function _list(storeName, ownerName, appName, options, callback) {
  *
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
- *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      {array} [result]   - The deserialized result object if an error did not occur.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -809,7 +817,15 @@ function _getLatest(storeName, ownerName, appName, options, callback) {
             required: false,
             serializedName: 'parsedResponse',
             type: {
-              name: 'Object'
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'StoresReleaseDetailsElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'StoresReleaseDetails'
+                  }
+              }
             }
           };
           result = client.deserialize(resultMapper, parsedResponse, 'result');
@@ -1050,7 +1066,7 @@ class StoreReleases {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1091,7 +1107,7 @@ class StoreReleases {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Object} - The deserialized result object.
+   *                      @resolve {Array} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1099,7 +1115,7 @@ class StoreReleases {
    *
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
-   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      {array} [result]   - The deserialized result object if an error did not occur.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1323,7 +1339,7 @@ class StoreReleases {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1362,7 +1378,7 @@ class StoreReleases {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Object} - The deserialized result object.
+   *                      @resolve {Array} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1370,7 +1386,7 @@ class StoreReleases {
    *
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
-   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      {array} [result]   - The deserialized result object if an error did not occur.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

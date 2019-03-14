@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * create the store through private API. Used by UI.
  *
@@ -15,16 +13,16 @@ const models = require('./index');
 class PrivateCreateStoreRequest {
   /**
    * Create a PrivateCreateStoreRequest.
-   * @member {string} [type] store Type. Possible values include: 'intune'
-   * @member {string} [name] name of the store.
-   * @member {object} [intuneDetails]
-   * @member {object} [intuneDetails.targetAudience]
-   * @member {string} [intuneDetails.targetAudience.name] display name for the
-   * target audience/group
-   * @member {object} [intuneDetails.appCategory]
-   * @member {string} [intuneDetails.appCategory.name] display name for the app
-   * category
-   * @member {string} [intuneDetails.tenantId] tenant id of the intune store
+   * @property {string} [type] store Type. Possible values include: 'intune'
+   * @property {string} [name] name of the store.
+   * @property {object} [intuneDetails]
+   * @property {object} [intuneDetails.targetAudience]
+   * @property {string} [intuneDetails.targetAudience.name] display name for
+   * the target audience/group
+   * @property {object} [intuneDetails.appCategory]
+   * @property {string} [intuneDetails.appCategory.name] display name for the
+   * app category
+   * @property {string} [intuneDetails.tenantId] tenant id of the intune store
    */
   constructor() {
   }

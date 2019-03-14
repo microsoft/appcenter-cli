@@ -12,8 +12,8 @@
 class ApiTokenDeleteResponse {
   /**
    * Create a ApiTokenDeleteResponse.
-   * @member {uuid} id The unique id (UUID) of the api token
-   * @member {string} tokenHash The hashed value of api token
+   * @property {uuid} id The unique id (UUID) of the api token
+   * @property {string} tokenHash The hashed value of api token
    */
   constructor() {
   }

@@ -12,7 +12,7 @@
 class PurgeResponse {
   /**
    * Create a PurgeResponse.
-   * @member {string} status
+   * @property {string} status
    */
   constructor() {
   }

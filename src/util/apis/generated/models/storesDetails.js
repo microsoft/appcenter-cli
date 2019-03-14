@@ -12,13 +12,13 @@
 class StoresDetails {
   /**
    * Create a StoresDetails.
-   * @member {string} [id] ID identifying a unique distribution store.
-   * @member {string} [name] A name identifying a unique distribution store.
-   * @member {string} [type] A type identifying the type of distribution store.
-   * Possible values include: 'googleplay', 'intune', 'apple'
-   * @member {string} [publishingStatus] A status identifying the status of
+   * @property {string} [id] ID identifying a unique distribution store.
+   * @property {string} [name] A name identifying a unique distribution store.
+   * @property {string} [type] A type identifying the type of distribution
+   * store. Possible values include: 'googleplay', 'intune', 'apple'
+   * @property {string} [publishingStatus] A status identifying the status of
    * release in the distribution store.
-   * @member {boolean} [isLatest] Is the containing release the latest one in
+   * @property {boolean} [isLatest] Is the containing release the latest one in
    * this distribution store.
    */
   constructor() {

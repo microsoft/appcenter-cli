@@ -16,7 +16,7 @@ const models = require('./index');
 class StringPropertyDiagnostics extends models['CustomPropertyDiagnostics'] {
   /**
    * Create a StringPropertyDiagnostics.
-   * @member {string} value String property value.
+   * @property {string} value String property value.
    */
   constructor() {
     super();
@@ -46,7 +46,7 @@ class StringPropertyDiagnostics extends models['CustomPropertyDiagnostics'] {
             serializedName: 'name',
             constraints: {
               MaxLength: 128,
-              Pattern: '^[a-zA-Z][a-zA-Z0-9\-_]*$'
+              Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
             type: {
               name: 'String'

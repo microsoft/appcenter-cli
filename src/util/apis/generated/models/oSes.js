@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a OSes.
  */
 class OSes {
   /**
    * Create a OSes.
-   * @member {number} [total]
-   * @member {array} [oses]
+   * @property {number} [total]
+   * @property {array} [oses]
    */
   constructor() {
   }

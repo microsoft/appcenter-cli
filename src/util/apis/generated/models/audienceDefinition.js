@@ -13,10 +13,10 @@
 class AudienceDefinition {
   /**
    * Create a AudienceDefinition.
-   * @member {string} [description] Audience description.
-   * @member {string} definition Audience definition in OData format.
-   * @member {boolean} [enabled] Default value: true .
-   * @member {object} [customProperties] Custom properties used in the
+   * @property {string} [description] Audience description.
+   * @property {string} definition Audience definition in OData format.
+   * @property {boolean} [enabled] Default value: true .
+   * @property {object} [customProperties] Custom properties used in the
    * definition.
    */
   constructor() {

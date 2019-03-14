@@ -12,13 +12,13 @@
 class CrashDeleteCounter {
   /**
    * Create a CrashDeleteCounter.
-   * @member {string} [appId]
-   * @member {string} [crashGroupId]
-   * @member {string} [crashId]
-   * @member {number} [crashesDeleted]
-   * @member {number} [attachmentsDeleted]
-   * @member {number} [blobsSucceeded]
-   * @member {number} [blobsFailed]
+   * @property {string} [appId]
+   * @property {string} [crashGroupId]
+   * @property {string} [crashId]
+   * @property {number} [crashesDeleted]
+   * @property {number} [attachmentsDeleted]
+   * @property {number} [blobsSucceeded]
+   * @property {number} [blobsFailed]
    */
   constructor() {
   }

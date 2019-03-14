@@ -12,12 +12,12 @@
 class DistributionGroupUserPostResponse {
   /**
    * Create a DistributionGroupUserPostResponse.
-   * @member {string} [code] The code of the result
-   * @member {boolean} [invitePending] Whether the has accepted the invite.
+   * @property {string} [code] The code of the result
+   * @property {boolean} [invitePending] Whether the has accepted the invite.
    * Available when an invite is pending, and the value will be "true".
-   * @member {number} [message] The message of the result
-   * @member {number} status The status code of the result
-   * @member {string} [userEmail] The email of the user
+   * @property {number} [message] The message of the result
+   * @property {number} status The status code of the result
+   * @property {string} [userEmail] The email of the user
    */
   constructor() {
   }

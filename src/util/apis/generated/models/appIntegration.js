@@ -12,9 +12,9 @@
 class AppIntegration {
   /**
    * Create a AppIntegration.
-   * @member {uuid} appId app id
-   * @member {string} state integration state
-   * @member {string} provider provider type
+   * @property {uuid} appId app id
+   * @property {string} state integration state
+   * @property {string} provider provider type
    */
   constructor() {
   }

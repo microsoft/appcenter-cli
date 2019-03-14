@@ -12,9 +12,9 @@
 class PostRepositoryProviderMappingRequest {
   /**
    * Create a PostRepositoryProviderMappingRequest.
-   * @member {string} externalAccountId Id of user in the external provider
+   * @property {string} externalAccountId Id of user in the external provider
    * service
-   * @member {uuid} accountId App Center account id to link to this provider
+   * @property {uuid} accountId App Center account id to link to this provider
    * and external id
    */
   constructor() {

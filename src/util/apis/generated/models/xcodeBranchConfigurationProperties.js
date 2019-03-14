@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Build configuration when Xcode is part of the build steps
  *
@@ -15,29 +13,29 @@ const models = require('./index');
 class XcodeBranchConfigurationProperties {
   /**
    * Create a XcodeBranchConfigurationProperties.
-   * @member {string} projectOrWorkspacePath Xcode project/workspace path
-   * @member {string} [podfilePath] Path to CococaPods file, if present
-   * @member {string} [cartfilePath] Path to Carthage file, if present
-   * @member {string} [provisioningProfileEncoded]
-   * @member {string} [certificateEncoded]
-   * @member {string} [provisioningProfileFileId]
-   * @member {string} [certificateFileId]
-   * @member {string} [provisioningProfileUploadId]
-   * @member {array} [appExtensionProvisioningProfileFiles]
-   * @member {string} [certificateUploadId]
-   * @member {string} [certificatePassword]
-   * @member {string} scheme
-   * @member {string} xcodeVersion
-   * @member {string} [provisioningProfileFilename]
-   * @member {string} [certificateFilename]
-   * @member {string} [teamId]
-   * @member {boolean} [automaticSigning]
-   * @member {string} [xcodeProjectSha] The selected pbxproject hash to the
+   * @property {string} projectOrWorkspacePath Xcode project/workspace path
+   * @property {string} [podfilePath] Path to CococaPods file, if present
+   * @property {string} [cartfilePath] Path to Carthage file, if present
+   * @property {string} [provisioningProfileEncoded]
+   * @property {string} [certificateEncoded]
+   * @property {string} [provisioningProfileFileId]
+   * @property {string} [certificateFileId]
+   * @property {string} [provisioningProfileUploadId]
+   * @property {array} [appExtensionProvisioningProfileFiles]
+   * @property {string} [certificateUploadId]
+   * @property {string} [certificatePassword]
+   * @property {string} scheme
+   * @property {string} xcodeVersion
+   * @property {string} [provisioningProfileFilename]
+   * @property {string} [certificateFilename]
+   * @property {string} [teamId]
+   * @property {boolean} [automaticSigning]
+   * @property {string} [xcodeProjectSha] The selected pbxproject hash to the
    * repositroy
-   * @member {string} [archiveConfiguration] The build configuration of the
+   * @property {string} [archiveConfiguration] The build configuration of the
    * target to archive
-   * @member {string} [targetToArchive] The target id of the selected scheme to
-   * archive
+   * @property {string} [targetToArchive] The target id of the selected scheme
+   * to archive
    */
   constructor() {
   }

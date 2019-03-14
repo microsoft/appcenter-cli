@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Selection of a billing plan
  *
@@ -15,19 +13,19 @@ const models = require('./index');
 class BillingPlanSelection {
   /**
    * Create a BillingPlanSelection.
-   * @member {number} [count] Number of instances of the billing plan.
-   * @member {object} [plan]
-   * @member {string} [plan.id] The Billing Plan ID
-   * @member {string} [plan.version] Version of the Billing Plan schema
-   * @member {number} [plan.price] Price of the Billing Plan
-   * @member {string} [plan.paymentSource] Service that receives payments for
+   * @property {number} [count] Number of instances of the billing plan.
+   * @property {object} [plan]
+   * @property {string} [plan.id] The Billing Plan ID
+   * @property {string} [plan.version] Version of the Billing Plan schema
+   * @property {number} [plan.price] Price of the Billing Plan
+   * @property {string} [plan.paymentSource] Service that receives payments for
    * this billing plan. Possible values include: 'None', 'AppCenter', 'GitHub',
    * 'Xtc'
-   * @member {string} [plan.service] Name of the service that the plan applies
-   * to. Possible values include: 'Build', 'Push', 'Test'
-   * @member {object} [plan.limits]
-   * @member {object} [plan.attributes]
-   * @member {string} [plan.parentId]
+   * @property {string} [plan.service] Name of the service that the plan
+   * applies to. Possible values include: 'Build', 'Push', 'Test'
+   * @property {object} [plan.limits]
+   * @property {object} [plan.attributes]
+   * @property {string} [plan.parentId]
    */
   constructor() {
   }

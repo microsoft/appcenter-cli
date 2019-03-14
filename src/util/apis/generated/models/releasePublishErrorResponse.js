@@ -13,8 +13,8 @@
 class ReleasePublishErrorResponse {
   /**
    * Create a ReleasePublishErrorResponse.
-   * @member {string} [message] error Details
-   * @member {boolean} [isLogsAvailable] boolean property to tell if logs are
+   * @property {string} [message] error Details
+   * @property {boolean} [isLogsAvailable] boolean property to tell if logs are
    * available for download
    */
   constructor() {

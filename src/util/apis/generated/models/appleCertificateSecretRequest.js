@@ -16,10 +16,10 @@ const models = require('./index');
 class AppleCertificateSecretRequest extends models['AppleConnectionSecretRequest'] {
   /**
    * Create a AppleCertificateSecretRequest.
-   * @member {object} data apple secret details
-   * @member {string} [data.base64Certificate] The certificate contents in base
-   * 64 encoded string
-   * @member {string} [data.password] The password for the certificate
+   * @property {object} data apple secret details
+   * @property {string} [data.base64Certificate] The certificate contents in
+   * base 64 encoded string
+   * @property {string} [data.password] The password for the certificate
    */
   constructor() {
     super();

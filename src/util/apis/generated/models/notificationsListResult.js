@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * List of notifications
  *
@@ -15,9 +13,9 @@ const models = require('./index');
 class NotificationsListResult {
   /**
    * Create a NotificationsListResult.
-   * @member {array} values
-   * @member {number} [total] the total count of notifications
-   * @member {string} [nextLink]
+   * @property {array} values
+   * @property {number} [total] the total count of notifications
+   * @property {string} [nextLink]
    */
   constructor() {
   }

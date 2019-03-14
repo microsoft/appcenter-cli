@@ -12,14 +12,14 @@
 class AccountResponse {
   /**
    * Create a AccountResponse.
-   * @member {uuid} id The internal unique id (UUID) of the account.
-   * @member {string} displayName The display name of the account
-   * @member {string} name The slug name of the account
-   * @member {string} [email] The account's email. For org that value might be
-   * empty.
-   * @member {string} origin The creation origin of this account. Possible
+   * @property {uuid} id The internal unique id (UUID) of the account.
+   * @property {string} displayName The display name of the account
+   * @property {string} name The slug name of the account
+   * @property {string} [email] The account's email. For org that value might
+   * be empty.
+   * @property {string} origin The creation origin of this account. Possible
    * values include: 'appcenter', 'hockeyapp'
-   * @member {string} type The type of this account. Possible values include:
+   * @property {string} type The type of this account. Possible values include:
    * 'user', 'org'
    */
   constructor() {

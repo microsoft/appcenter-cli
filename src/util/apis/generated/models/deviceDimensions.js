@@ -13,9 +13,9 @@
 class DeviceDimensions {
   /**
    * Create a DeviceDimensions.
-   * @member {object} [depth]
-   * @member {object} [height]
-   * @member {object} [width]
+   * @property {object} [depth]
+   * @property {object} [height]
+   * @property {object} [width]
    */
   constructor() {
   }

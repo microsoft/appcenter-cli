@@ -13,8 +13,8 @@
 class SystemVersionNameGroup {
   /**
    * Create a SystemVersionNameGroup.
-   * @member {string} [name] Name of version group
-   * @member {array} [versions]
+   * @property {string} [name] Name of version group
+   * @property {array} [versions]
    */
   constructor() {
   }

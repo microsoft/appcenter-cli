@@ -12,12 +12,12 @@
 class OrganizationUserResponse {
   /**
    * Create a OrganizationUserResponse.
-   * @member {string} email The email address of the user
-   * @member {string} displayName The full name of the user. Might for example
-   * be first and last name
-   * @member {string} joinedAt The date when the user joined the organization
-   * @member {string} name The unique name that is used to identify the user.
-   * @member {string} role The role the user has within the organization
+   * @property {string} email The email address of the user
+   * @property {string} displayName The full name of the user. Might for
+   * example be first and last name
+   * @property {string} joinedAt The date when the user joined the organization
+   * @property {string} name The unique name that is used to identify the user.
+   * @property {string} role The role the user has within the organization
    */
   constructor() {
   }

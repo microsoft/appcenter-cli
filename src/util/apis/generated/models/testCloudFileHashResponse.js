@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * @summary Test Cloud File Hash Response
   *
@@ -17,14 +15,14 @@ const models = require('./index');
 class TestCloudFileHashResponse {
   /**
    * Create a TestCloudFileHashResponse.
-   * @member {string} fileType Type of the file. Possible values include:
+   * @property {string} fileType Type of the file. Possible values include:
    * 'dsym-file', 'app-file', 'test-file'
-   * @member {string} checksum SHA256 hash of the file
-   * @member {string} [relativePath] Relative path of the file
-   * @member {object} uploadStatus Status of the upload
-   * @member {number} [uploadStatus.statusCode] HTTP status code that represent
-   * result of upload
-   * @member {string} [uploadStatus.location] URI that should be used to make
+   * @property {string} checksum SHA256 hash of the file
+   * @property {string} [relativePath] Relative path of the file
+   * @property {object} uploadStatus Status of the upload
+   * @property {number} [uploadStatus.statusCode] HTTP status code that
+   * represent result of upload
+   * @property {string} [uploadStatus.location] URI that should be used to make
    * POST request if file with given hash doesn't exist. This is set when
    * status_code is equal to 412
    */

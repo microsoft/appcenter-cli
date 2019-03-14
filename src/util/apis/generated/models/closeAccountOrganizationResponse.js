@@ -15,7 +15,7 @@ const models = require('./index');
 class CloseAccountOrganizationResponse extends models['OrganizationResponse'] {
   /**
    * Create a CloseAccountOrganizationResponse.
-   * @member {number} collaboratorsCount The number of collaborators from the
+   * @property {number} collaboratorsCount The number of collaborators from the
    * organization
    */
   constructor() {

@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * a exception
  *
@@ -15,13 +13,13 @@ const models = require('./index');
 class Exception {
   /**
    * Create a Exception.
-   * @member {string} [reason] Reason of the exception
-   * @member {string} [type] Type of the exception (NSSomethingException,
+   * @property {string} [reason] Reason of the exception
+   * @property {string} [type] Type of the exception (NSSomethingException,
    * NullPointerException)
-   * @member {array} frames frames of the excetpion
-   * @member {boolean} [relevant] relevant exception (crashed)
-   * @member {array} [innerExceptions]
-   * @member {string} [platform] SDK/Platform this thread is beeing generated
+   * @property {array} frames frames of the excetpion
+   * @property {boolean} [relevant] relevant exception (crashed)
+   * @property {array} [innerExceptions]
+   * @property {string} [platform] SDK/Platform this thread is beeing generated
    * from. Possible values include: 'ios', 'android', 'xamarin',
    * 'react-native', 'ndk', 'unity', 'other'
    */

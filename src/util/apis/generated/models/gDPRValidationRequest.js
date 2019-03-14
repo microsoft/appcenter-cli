@@ -13,7 +13,7 @@
 class GDPRValidationRequest {
   /**
    * Create a GDPRValidationRequest.
-   * @member {array} releaseIds a list of release ids to validate
+   * @property {array} releaseIds a list of release ids to validate
    */
   constructor() {
   }

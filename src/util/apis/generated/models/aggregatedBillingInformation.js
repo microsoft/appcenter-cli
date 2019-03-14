@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Aggregated Billing Information for a user or an organization
  *
@@ -15,161 +13,167 @@ const models = require('./index');
 class AggregatedBillingInformation {
   /**
    * Create a AggregatedBillingInformation.
-   * @member {string} [version] Version of the Billing Information schema
-   * @member {string} [timestamp] The ISO 8601 datetime of last modification
-   * @member {string} [id] ID of the user or organization
-   * @member {object} [billingPlans]
-   * @member {object} [billingPlans.buildService]
-   * @member {boolean} [billingPlans.buildService.canSelectTrialPlan] Can
+   * @property {string} [version] Version of the Billing Information schema
+   * @property {string} [timestamp] The ISO 8601 datetime of last modification
+   * @property {string} [id] ID of the user or organization
+   * @property {object} [billingPlans]
+   * @property {object} [billingPlans.buildService]
+   * @property {boolean} [billingPlans.buildService.canSelectTrialPlan] Can
    * customer select trial plan for that service (if it exists)?
-   * @member {string} [billingPlans.buildService.lastTrialPlanExpirationTime]
+   * @property {string} [billingPlans.buildService.lastTrialPlanExpirationTime]
    * Expiration time of the last selected trial plan. Will be null if trial
    * plan was not used.
-   * @member {object} [billingPlans.buildService.currentBillingPeriod]
-   * @member {string}
+   * @property {object} [billingPlans.buildService.currentBillingPeriod]
+   * @property {string}
    * [billingPlans.buildService.currentBillingPeriod.startTime] Inclusive start
    * of the period
-   * @member {string} [billingPlans.buildService.currentBillingPeriod.endTime]
-   * Exclusive end of the period.
-   * @member {object}
+   * @property {string}
+   * [billingPlans.buildService.currentBillingPeriod.endTime] Exclusive end of
+   * the period.
+   * @property {object}
    * [billingPlans.buildService.currentBillingPeriod.byAccount]
-   * @member {number}
+   * @property {number}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.count] Number of
    * instances of the billing plan.
-   * @member {object}
+   * @property {object}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan]
-   * @member {string}
+   * @property {string}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.id] The
    * Billing Plan ID
-   * @member {string}
+   * @property {string}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.version]
    * Version of the Billing Plan schema
-   * @member {number}
+   * @property {number}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.price]
    * Price of the Billing Plan
-   * @member {string}
+   * @property {string}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.paymentSource]
    * Service that receives payments for this billing plan. Possible values
    * include: 'None', 'AppCenter', 'GitHub', 'Xtc'
-   * @member {string}
+   * @property {string}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.service]
    * Name of the service that the plan applies to. Possible values include:
    * 'Build', 'Push', 'Test'
-   * @member {object}
+   * @property {object}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.limits]
-   * @member {object}
+   * @property {object}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.attributes]
-   * @member {string}
+   * @property {string}
    * [billingPlans.buildService.currentBillingPeriod.byAccount.plan.parentId]
-   * @member {object} [billingPlans.pushService]
-   * @member {boolean} [billingPlans.pushService.canSelectTrialPlan] Can
+   * @property {object} [billingPlans.pushService]
+   * @property {boolean} [billingPlans.pushService.canSelectTrialPlan] Can
    * customer select trial plan for that service (if it exists)?
-   * @member {string} [billingPlans.pushService.lastTrialPlanExpirationTime]
+   * @property {string} [billingPlans.pushService.lastTrialPlanExpirationTime]
    * Expiration time of the last selected trial plan. Will be null if trial
    * plan was not used.
-   * @member {object} [billingPlans.pushService.currentBillingPeriod]
-   * @member {string} [billingPlans.pushService.currentBillingPeriod.startTime]
-   * Inclusive start of the period
-   * @member {string} [billingPlans.pushService.currentBillingPeriod.endTime]
+   * @property {object} [billingPlans.pushService.currentBillingPeriod]
+   * @property {string}
+   * [billingPlans.pushService.currentBillingPeriod.startTime] Inclusive start
+   * of the period
+   * @property {string} [billingPlans.pushService.currentBillingPeriod.endTime]
    * Exclusive end of the period.
-   * @member {object} [billingPlans.pushService.currentBillingPeriod.byAccount]
-   * @member {number}
+   * @property {object}
+   * [billingPlans.pushService.currentBillingPeriod.byAccount]
+   * @property {number}
    * [billingPlans.pushService.currentBillingPeriod.byAccount.count] Number of
    * instances of the billing plan.
-   * @member {object}
+   * @property {object}
    * [billingPlans.pushService.currentBillingPeriod.byAccount.plan]
-   * @member {string}
+   * @property {string}
    * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.id] The
    * Billing Plan ID
-   * @member {string}
+   * @property {string}
    * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.version]
    * Version of the Billing Plan schema
-   * @member {number}
+   * @property {number}
    * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.price] Price
    * of the Billing Plan
-   * @member {string}
+   * @property {string}
    * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.paymentSource]
    * Service that receives payments for this billing plan. Possible values
    * include: 'None', 'AppCenter', 'GitHub', 'Xtc'
-   * @member {string}
+   * @property {string}
    * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.service]
    * Name of the service that the plan applies to. Possible values include:
    * 'Build', 'Push', 'Test'
-   * @member {object}
+   * @property {object}
    * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.limits]
-   * @member {object}
+   * @property {object}
    * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.attributes]
-   * @member {string}
+   * @property {string}
    * [billingPlans.pushService.currentBillingPeriod.byAccount.plan.parentId]
-   * @member {object} [billingPlans.testService]
-   * @member {boolean} [billingPlans.testService.canSelectTrialPlan] Can
+   * @property {object} [billingPlans.testService]
+   * @property {boolean} [billingPlans.testService.canSelectTrialPlan] Can
    * customer select trial plan for that service (if it exists)?
-   * @member {string} [billingPlans.testService.lastTrialPlanExpirationTime]
+   * @property {string} [billingPlans.testService.lastTrialPlanExpirationTime]
    * Expiration time of the last selected trial plan. Will be null if trial
    * plan was not used.
-   * @member {object} [billingPlans.testService.currentBillingPeriod]
-   * @member {string} [billingPlans.testService.currentBillingPeriod.startTime]
-   * Inclusive start of the period
-   * @member {string} [billingPlans.testService.currentBillingPeriod.endTime]
+   * @property {object} [billingPlans.testService.currentBillingPeriod]
+   * @property {string}
+   * [billingPlans.testService.currentBillingPeriod.startTime] Inclusive start
+   * of the period
+   * @property {string} [billingPlans.testService.currentBillingPeriod.endTime]
    * Exclusive end of the period.
-   * @member {object} [billingPlans.testService.currentBillingPeriod.byAccount]
-   * @member {number}
+   * @property {object}
+   * [billingPlans.testService.currentBillingPeriod.byAccount]
+   * @property {number}
    * [billingPlans.testService.currentBillingPeriod.byAccount.count] Number of
    * instances of the billing plan.
-   * @member {object}
+   * @property {object}
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan]
-   * @member {string}
+   * @property {string}
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.id] The
    * Billing Plan ID
-   * @member {string}
+   * @property {string}
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.version]
    * Version of the Billing Plan schema
-   * @member {number}
+   * @property {number}
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.price] Price
    * of the Billing Plan
-   * @member {string}
+   * @property {string}
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.paymentSource]
    * Service that receives payments for this billing plan. Possible values
    * include: 'None', 'AppCenter', 'GitHub', 'Xtc'
-   * @member {string}
+   * @property {string}
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.service]
    * Name of the service that the plan applies to. Possible values include:
    * 'Build', 'Push', 'Test'
-   * @member {object}
+   * @property {object}
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.limits]
-   * @member {object}
+   * @property {object}
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.attributes]
-   * @member {string}
+   * @property {string}
    * [billingPlans.testService.currentBillingPeriod.byAccount.plan.parentId]
-   * @member {object} [usage]
-   * @member {object} [usage.buildService]
-   * @member {object} [usage.buildService.currentUsagePeriod]
-   * @member {string} [usage.buildService.currentUsagePeriod.startTime]
+   * @property {object} [usage]
+   * @property {object} [usage.buildService]
+   * @property {object} [usage.buildService.currentUsagePeriod]
+   * @property {string} [usage.buildService.currentUsagePeriod.startTime]
    * Inclusive start time of the usage period
-   * @member {string} [usage.buildService.currentUsagePeriod.endTime] Exclusive
-   * end time of the usage period.
-   * @member {object} [usage.buildService.currentUsagePeriod.byAccount]
-   * @member {object} [usage.buildService.currentUsagePeriod.byApp]
-   * @member {object} [usage.pushService]
-   * @member {object} [usage.pushService.currentUsagePeriod]
-   * @member {string} [usage.pushService.currentUsagePeriod.startTime]
+   * @property {string} [usage.buildService.currentUsagePeriod.endTime]
+   * Exclusive end time of the usage period.
+   * @property {object} [usage.buildService.currentUsagePeriod.byAccount]
+   * @property {object} [usage.buildService.currentUsagePeriod.byApp]
+   * @property {object} [usage.pushService]
+   * @property {object} [usage.pushService.currentUsagePeriod]
+   * @property {string} [usage.pushService.currentUsagePeriod.startTime]
    * Inclusive start time of the usage period
-   * @member {string} [usage.pushService.currentUsagePeriod.endTime] Exclusive
-   * end time of the usage period.
-   * @member {object} [usage.pushService.currentUsagePeriod.byAccount]
-   * @member {object} [usage.pushService.currentUsagePeriod.byApp]
-   * @member {object} [usage.testService]
-   * @member {object} [usage.testService.currentUsagePeriod]
-   * @member {string} [usage.testService.currentUsagePeriod.startTime]
+   * @property {string} [usage.pushService.currentUsagePeriod.endTime]
+   * Exclusive end time of the usage period.
+   * @property {object} [usage.pushService.currentUsagePeriod.byAccount]
+   * @property {object} [usage.pushService.currentUsagePeriod.byApp]
+   * @property {object} [usage.testService]
+   * @property {object} [usage.testService.currentUsagePeriod]
+   * @property {string} [usage.testService.currentUsagePeriod.startTime]
    * Inclusive start time of the usage period
-   * @member {string} [usage.testService.currentUsagePeriod.endTime] Exclusive
-   * end time of the usage period.
-   * @member {object} [usage.testService.currentUsagePeriod.byAccount]
-   * @member {object} [usage.testService.currentUsagePeriod.byApp]
-   * @member {string} [azureSubscriptionId] Unique identifier for the Azure
+   * @property {string} [usage.testService.currentUsagePeriod.endTime]
+   * Exclusive end time of the usage period.
+   * @property {object} [usage.testService.currentUsagePeriod.byAccount]
+   * @property {object} [usage.testService.currentUsagePeriod.byApp]
+   * @property {string} [azureSubscriptionId] Unique identifier for the Azure
    * subscription used for billing
-   * @member {string} [azureSubscriptionState] State of the Azure subscription
-   * used for billing. Possible values include: 'Enabled', 'Disabled', 'NotSet'
+   * @property {string} [azureSubscriptionState] State of the Azure
+   * subscription used for billing. Possible values include: 'Enabled',
+   * 'Disabled', 'NotSet'
    */
   constructor() {
   }

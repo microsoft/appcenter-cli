@@ -6,18 +6,16 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a SessionDurationsDistribution.
  */
 class SessionDurationsDistribution {
   /**
    * Create a SessionDurationsDistribution.
-   * @member {array} [distribution] the count of sessions in these buckets
-   * @member {string} [previousAverageDuration] the previous average session
+   * @property {array} [distribution] the count of sessions in these buckets
+   * @property {string} [previousAverageDuration] the previous average session
    * duration for previous time range
-   * @member {string} [averageDuration] the average session duration for
+   * @property {string} [averageDuration] the average session duration for
    * current time range
    */
   constructor() {

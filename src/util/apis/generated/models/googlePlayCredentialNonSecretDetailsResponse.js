@@ -16,7 +16,7 @@ const models = require('./index');
 class GooglePlayCredentialNonSecretDetailsResponse extends models['GooglePlayConnectionNonSecretResponse'] {
   /**
    * Create a GooglePlayCredentialNonSecretDetailsResponse.
-   * @member {object} data Google Play credentials non-secret details
+   * @property {object} data Google Play credentials non-secret details
    */
   constructor() {
     super();

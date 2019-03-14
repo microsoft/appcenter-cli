@@ -6,42 +6,40 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a TestReport.
  */
 class TestReport {
   /**
    * Create a TestReport.
-   * @member {string} appUploadId
-   * @member {string} date
-   * @member {string} testType
-   * @member {string} platform
-   * @member {object} stats
-   * @member {number} [stats.os]
-   * @member {number} [stats.devices]
-   * @member {number} [stats.filesize]
-   * @member {number} [stats.totalDeviceMinutes]
-   * @member {number} [stats.devicesNotRunned]
-   * @member {number} [stats.failed]
-   * @member {number} [stats.skipped]
-   * @member {number} [stats.passed]
-   * @member {number} [stats.total]
-   * @member {number} [stats.devicesFinished]
-   * @member {number} [stats.devicesFailed]
-   * @member {number} [stats.devicesSkipped]
-   * @member {number} [stats.stepCount]
-   * @member {object} [stats.artifacts]
-   * @member {string} id
-   * @member {number} schemaVersion
-   * @member {number} revision
-   * @member {array} features
-   * @member {array} finishedDeviceSnapshots
-   * @member {array} deviceLogs
-   * @member {string} dateFinished
-   * @member {string} [errorMessage]
-   * @member {array} [snapshotFatalErrors]
+   * @property {string} appUploadId
+   * @property {string} date
+   * @property {string} testType
+   * @property {string} platform
+   * @property {object} stats
+   * @property {number} [stats.os]
+   * @property {number} [stats.devices]
+   * @property {number} [stats.filesize]
+   * @property {number} [stats.totalDeviceMinutes]
+   * @property {number} [stats.devicesNotRunned]
+   * @property {number} [stats.failed]
+   * @property {number} [stats.skipped]
+   * @property {number} [stats.passed]
+   * @property {number} [stats.total]
+   * @property {number} [stats.devicesFinished]
+   * @property {number} [stats.devicesFailed]
+   * @property {number} [stats.devicesSkipped]
+   * @property {number} [stats.stepCount]
+   * @property {object} [stats.artifacts]
+   * @property {string} id
+   * @property {number} schemaVersion
+   * @property {number} revision
+   * @property {array} features
+   * @property {array} finishedDeviceSnapshots
+   * @property {array} deviceLogs
+   * @property {string} dateFinished
+   * @property {string} [errorMessage]
+   * @property {array} [snapshotFatalErrors]
    */
   constructor() {
   }

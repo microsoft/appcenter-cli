@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * A request containing information for updating details of a release
  *
@@ -15,15 +13,15 @@ const models = require('./index');
 class ReleaseDetailsUpdateRequest {
   /**
    * Create a ReleaseDetailsUpdateRequest.
-   * @member {boolean} [enabled] Toggle this release to be enable
+   * @property {boolean} [enabled] Toggle this release to be enable
    * distribute/download or not.
-   * @member {string} [releaseNotes] Release notes for this release.
-   * @member {object} [build]
-   * @member {string} [build.branch] The branch name of the build producing the
-   * release
-   * @member {string} [build.commitHash] The commit hash of the build producing
+   * @property {string} [releaseNotes] Release notes for this release.
+   * @property {object} [build]
+   * @property {string} [build.branch] The branch name of the build producing
    * the release
-   * @member {string} [build.commitMessage] The commit message of the build
+   * @property {string} [build.commitHash] The commit hash of the build
+   * producing the release
+   * @property {string} [build.commitMessage] The commit message of the build
    * producing the release
    */
   constructor() {

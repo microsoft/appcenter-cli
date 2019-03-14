@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * List of alerting webhooks wrapped as operation result
  *
@@ -15,7 +13,7 @@ const models = require('./index');
 class AlertWebhookListResult {
   /**
    * Create a AlertWebhookListResult.
-   * @member {array} values
+   * @property {array} values
    */
   constructor() {
   }

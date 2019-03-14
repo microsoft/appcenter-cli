@@ -6,16 +6,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ErrorGroups.
  */
 class ErrorGroups {
   /**
    * Create a ErrorGroups.
-   * @member {string} [nextLink]
-   * @member {array} [errorGroups]
+   * @property {string} [nextLink]
+   * @property {array} [errorGroups]
    */
   constructor() {
   }

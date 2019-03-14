@@ -12,8 +12,8 @@
 class TestGDPRResourceListResourcesItem {
   /**
    * Create a TestGDPRResourceListResourcesItem.
-   * @member {string} [rel]
-   * @member {string} [path]
+   * @property {string} [rel]
+   * @property {string} [path]
    */
   constructor() {
   }

@@ -15,9 +15,9 @@ const models = require('./index');
 class UserProfileResponseManagement extends models['UserProfileResponseInternal'] {
   /**
    * Create a UserProfileResponseManagement.
-   * @member {string} [updatedAt] The date when the app was last updated
-   * @member {boolean} [verified] A boolean flag that indicates if the user is
-   * already verified
+   * @property {string} [updatedAt] The date when the app was last updated
+   * @property {boolean} [verified] A boolean flag that indicates if the user
+   * is already verified
    */
   constructor() {
     super();

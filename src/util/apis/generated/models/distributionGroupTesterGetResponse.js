@@ -12,10 +12,11 @@
 class DistributionGroupTesterGetResponse {
   /**
    * Create a DistributionGroupTesterGetResponse.
-   * @member {string} [displayName] The full name of the tester. Might for
+   * @property {string} [displayName] The full name of the tester. Might for
    * example be first and last name
-   * @member {string} name The unique name that is used to identify the tester.
-   * @member {string} email The email address of the tester
+   * @property {string} name The unique name that is used to identify the
+   * tester.
+   * @property {string} email The email address of the tester
    */
   constructor() {
   }

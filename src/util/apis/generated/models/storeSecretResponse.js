@@ -13,11 +13,11 @@
 class StoreSecretResponse {
   /**
    * Create a StoreSecretResponse.
-   * @member {string} [id] Store id
-   * @member {string} [name] Store Name
-   * @member {string} [type] Store Type
-   * @member {string} [secret] Secret Json
-   * @member {string} [tenantId] Tenant Id for Intune
+   * @property {string} [id] Store id
+   * @property {string} [name] Store Name
+   * @property {string} [type] Store Type
+   * @property {string} [secret] Secret Json
+   * @property {string} [tenantId] Tenant Id for Intune
    */
   constructor() {
   }

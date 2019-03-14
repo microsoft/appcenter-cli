@@ -12,8 +12,8 @@
 class SymbolUploadUserInfo {
   /**
    * Create a SymbolUploadUserInfo.
-   * @member {string} [email] The email of the user
-   * @member {string} [displayName] The full name of the user. Might for
+   * @property {string} [email] The email of the user
+   * @property {string} [displayName] The full name of the user. Might for
    * example be first and last name
    */
   constructor() {

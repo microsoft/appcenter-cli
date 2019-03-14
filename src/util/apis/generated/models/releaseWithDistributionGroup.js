@@ -15,7 +15,7 @@ const models = require('./index');
 class ReleaseWithDistributionGroup extends models['Release'] {
   /**
    * Create a ReleaseWithDistributionGroup.
-   * @member {string} [distributionGroup] Distribution group Id.
+   * @property {string} [distributionGroup] Distribution group Id.
    */
   constructor() {
     super();

@@ -12,9 +12,9 @@
 class ErrorGroupModel {
   /**
    * Create a ErrorGroupModel.
-   * @member {string} [modelName] model name
-   * @member {string} [modelCode] model code
-   * @member {number} [errorCount] count of errors in a model
+   * @property {string} [modelName] model name
+   * @property {string} [modelCode] model code
+   * @property {number} [errorCount] count of errors in a model
    */
   constructor() {
   }

@@ -12,7 +12,7 @@
 class GetOrCreateRepositoryProviderMappingRequest {
   /**
    * Create a GetOrCreateRepositoryProviderMappingRequest.
-   * @member {string} [externalAccountName] The account name given by the
+   * @property {string} [externalAccountName] The account name given by the
    * external provider. If provided, create an organization and the mapping. If
    * not, create mapping with user.
    */

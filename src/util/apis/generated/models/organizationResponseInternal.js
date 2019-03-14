@@ -15,8 +15,8 @@ const models = require('./index');
 class OrganizationResponseInternal extends models['OrganizationResponse'] {
   /**
    * Create a OrganizationResponseInternal.
-   * @member {array} [featureFlags] The feature flags that are enabled for this
-   * organization
+   * @property {array} [featureFlags] The feature flags that are enabled for
+   * this organization
    */
   constructor() {
     super();

@@ -6,19 +6,17 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a TestCloudProject.
  */
 class TestCloudProject {
   /**
    * Create a TestCloudProject.
-   * @member {string} path The path to the TestCloud project
-   * @member {string} frameworkType Possible values include: 'Appium',
+   * @property {string} path The path to the TestCloud project
+   * @property {string} frameworkType Possible values include: 'Appium',
    * 'Calabash', 'Espresso', 'UITest', 'Generated'
-   * @member {object} [frameworkProperties]
-   * @member {array} [frameworkProperties.configurations]
+   * @property {object} [frameworkProperties]
+   * @property {array} [frameworkProperties.configurations]
    */
   constructor() {
   }

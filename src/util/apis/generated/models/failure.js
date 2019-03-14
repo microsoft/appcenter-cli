@@ -12,7 +12,7 @@
 class Failure {
   /**
    * Create a Failure.
-   * @member {string} message
+   * @property {string} message
    */
   constructor() {
   }

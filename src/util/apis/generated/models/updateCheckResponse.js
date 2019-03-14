@@ -15,13 +15,13 @@ const models = require('./index');
 class UpdateCheckResponse extends models['CodePushReleaseInfo'] {
   /**
    * Create a UpdateCheckResponse.
-   * @member {string} [downloadUrl]
-   * @member {boolean} isAvailable
-   * @member {number} [packageSize]
-   * @member {boolean} [shouldRunBinaryVersion]
-   * @member {boolean} [updateAppVersion]
-   * @member {string} [packageHash]
-   * @member {string} [label]
+   * @property {string} [downloadUrl]
+   * @property {boolean} isAvailable
+   * @property {number} [packageSize]
+   * @property {boolean} [shouldRunBinaryVersion]
+   * @property {boolean} [updateAppVersion]
+   * @property {string} [packageHash]
+   * @property {string} [label]
    */
   constructor() {
     super();

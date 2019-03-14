@@ -12,11 +12,11 @@
 class StoreDestinationDetails {
   /**
    * Create a StoreDestinationDetails.
-   * @member {string} [destPublishId] destination ID identifying a unique id in
-   * distribution store.
-   * @member {string} [storeType] type of store. Possible values include:
+   * @property {string} [destPublishId] destination ID identifying a unique id
+   * in distribution store.
+   * @property {string} [storeType] type of store. Possible values include:
    * 'intune'
-   * @member {string} [appId] app id of application.
+   * @property {string} [appId] app id of application.
    */
   constructor() {
   }

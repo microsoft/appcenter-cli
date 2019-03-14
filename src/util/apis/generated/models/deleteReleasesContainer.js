@@ -6,15 +6,13 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a DeleteReleasesContainer.
  */
 class DeleteReleasesContainer {
   /**
    * Create a DeleteReleasesContainer.
-   * @member {array} releases
+   * @property {array} releases
    */
   constructor() {
   }

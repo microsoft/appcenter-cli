@@ -16,12 +16,12 @@ const models = require('./index');
 class AppleCertificateNonSecretDetailsResponse extends models['AppleConnectionNonSecretResponse'] {
   /**
    * Create a AppleCertificateNonSecretDetailsResponse.
-   * @member {object} data apple certificate non-secret details
-   * @member {string} [data.displayName] The display name (CN) of the
+   * @property {object} data apple certificate non-secret details
+   * @property {string} [data.displayName] The display name (CN) of the
    * certificate
-   * @member {string} [data.certificateValidityStartDate] The date-time from
+   * @property {string} [data.certificateValidityStartDate] The date-time from
    * which the certificate is valid
-   * @member {string} [data.certificateValidityEndDate] The date-time till
+   * @property {string} [data.certificateValidityEndDate] The date-time till
    * which the certificate is valid
    */
   constructor() {

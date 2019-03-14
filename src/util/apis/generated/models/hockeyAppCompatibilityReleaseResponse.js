@@ -12,16 +12,16 @@
 class HockeyAppCompatibilityReleaseResponse {
   /**
    * Create a HockeyAppCompatibilityReleaseResponse.
-   * @member {number} [id]
-   * @member {string} [shortversion]
-   * @member {string} [version]
-   * @member {date} [uploadedAt]
-   * @member {number} [appsize]
-   * @member {string} [notes]
-   * @member {boolean} [mandatory]
-   * @member {boolean} [external]
-   * @member {string} [deviceFamily]
-   * @member {string} [minimumOsVersion]
+   * @property {number} [id]
+   * @property {string} [shortversion]
+   * @property {string} [version]
+   * @property {date} [uploadedAt]
+   * @property {number} [appsize]
+   * @property {string} [notes]
+   * @property {boolean} [mandatory]
+   * @property {boolean} [external]
+   * @property {string} [deviceFamily]
+   * @property {string} [minimumOsVersion]
    */
   constructor() {
   }

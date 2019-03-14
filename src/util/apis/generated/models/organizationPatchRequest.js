@@ -12,9 +12,9 @@
 class OrganizationPatchRequest {
   /**
    * Create a OrganizationPatchRequest.
-   * @member {string} [displayName] The full (friendly) name of the
+   * @property {string} [displayName] The full (friendly) name of the
    * organization.
-   * @member {string} [name] The name of the organization used in URLs
+   * @property {string} [name] The name of the organization used in URLs
    */
   constructor() {
   }

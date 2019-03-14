@@ -12,9 +12,9 @@
 class TeamRequest {
   /**
    * Create a TeamRequest.
-   * @member {string} displayName The display name of the team
-   * @member {string} [name] The name of the team
-   * @member {string} [description] The description of the team
+   * @property {string} displayName The display name of the team
+   * @property {string} [name] The name of the team
+   * @property {string} [description] The description of the team
    */
   constructor() {
   }

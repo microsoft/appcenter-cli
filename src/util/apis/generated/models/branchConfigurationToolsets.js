@@ -6,8 +6,6 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * The branch build configuration for each toolset
  *
@@ -15,71 +13,73 @@ const models = require('./index');
 class BranchConfigurationToolsets {
   /**
    * Create a BranchConfigurationToolsets.
-   * @member {object} [xcode]
-   * @member {string} [xcode.projectOrWorkspacePath] Xcode project/workspace
+   * @property {object} [xcode]
+   * @property {string} [xcode.projectOrWorkspacePath] Xcode project/workspace
    * path
-   * @member {string} [xcode.podfilePath] Path to CococaPods file, if present
-   * @member {string} [xcode.cartfilePath] Path to Carthage file, if present
-   * @member {string} [xcode.provisioningProfileEncoded]
-   * @member {string} [xcode.certificateEncoded]
-   * @member {string} [xcode.provisioningProfileFileId]
-   * @member {string} [xcode.certificateFileId]
-   * @member {string} [xcode.provisioningProfileUploadId]
-   * @member {array} [xcode.appExtensionProvisioningProfileFiles]
-   * @member {string} [xcode.certificateUploadId]
-   * @member {string} [xcode.certificatePassword]
-   * @member {string} [xcode.scheme]
-   * @member {string} [xcode.xcodeVersion]
-   * @member {string} [xcode.provisioningProfileFilename]
-   * @member {string} [xcode.certificateFilename]
-   * @member {string} [xcode.teamId]
-   * @member {boolean} [xcode.automaticSigning]
-   * @member {string} [xcode.xcodeProjectSha] The selected pbxproject hash to
+   * @property {string} [xcode.podfilePath] Path to CococaPods file, if present
+   * @property {string} [xcode.cartfilePath] Path to Carthage file, if present
+   * @property {string} [xcode.provisioningProfileEncoded]
+   * @property {string} [xcode.certificateEncoded]
+   * @property {string} [xcode.provisioningProfileFileId]
+   * @property {string} [xcode.certificateFileId]
+   * @property {string} [xcode.provisioningProfileUploadId]
+   * @property {array} [xcode.appExtensionProvisioningProfileFiles]
+   * @property {string} [xcode.certificateUploadId]
+   * @property {string} [xcode.certificatePassword]
+   * @property {string} [xcode.scheme]
+   * @property {string} [xcode.xcodeVersion]
+   * @property {string} [xcode.provisioningProfileFilename]
+   * @property {string} [xcode.certificateFilename]
+   * @property {string} [xcode.teamId]
+   * @property {boolean} [xcode.automaticSigning]
+   * @property {string} [xcode.xcodeProjectSha] The selected pbxproject hash to
    * the repositroy
-   * @member {string} [xcode.archiveConfiguration] The build configuration of
+   * @property {string} [xcode.archiveConfiguration] The build configuration of
    * the target to archive
-   * @member {string} [xcode.targetToArchive] The target id of the selected
+   * @property {string} [xcode.targetToArchive] The target id of the selected
    * scheme to archive
-   * @member {object} [javascript]
-   * @member {string} [javascript.packageJsonPath] Path to package.json file
+   * @property {object} [javascript]
+   * @property {string} [javascript.packageJsonPath] Path to package.json file
    * for the main project, e.g. "package.json" or "myapp/package.json"
-   * @member {boolean} [javascript.runTests] Whether to run Jest unit tests,
+   * @property {boolean} [javascript.runTests] Whether to run Jest unit tests,
    * via npm test, during the build
-   * @member {string} [javascript.reactNativeVersion] Version of React Native
+   * @property {string} [javascript.reactNativeVersion] Version of React Native
    * from package.json files
-   * @member {object} [xamarin]
-   * @member {string} [xamarin.slnPath]
-   * @member {string} [xamarin.isSimBuild]
-   * @member {string} [xamarin.args]
-   * @member {string} [xamarin.configuration]
-   * @member {string} [xamarin.p12File]
-   * @member {string} [xamarin.p12Pwd]
-   * @member {string} [xamarin.provProfile]
-   * @member {string} [xamarin.monoVersion]
-   * @member {string} [xamarin.sdkBundle]
-   * @member {string} [xamarin.symlink] Symlink of the SDK Bundle and Mono
+   * @property {object} [xamarin]
+   * @property {string} [xamarin.slnPath]
+   * @property {string} [xamarin.isSimBuild]
+   * @property {string} [xamarin.args]
+   * @property {string} [xamarin.configuration]
+   * @property {string} [xamarin.p12File]
+   * @property {string} [xamarin.p12Pwd]
+   * @property {string} [xamarin.provProfile]
+   * @property {string} [xamarin.monoVersion]
+   * @property {string} [xamarin.sdkBundle]
+   * @property {string} [xamarin.symlink] Symlink of the SDK Bundle and Mono
    * installation.
    * The build will use the associated Mono bundled with related Xamarin SDK.
    * If both symlink and monoVersion or sdkBundle are passed, the symlink is
    * taking precedence. If non-existing symlink is passed, the current stable
    * Mono version will be configured for building.
-   * @member {object} [android]
-   * @member {string} [android.gradleWrapperPath] Path to the Gradle wrapper
+   * @property {object} [android]
+   * @property {string} [android.gradleWrapperPath] Path to the Gradle wrapper
    * script
-   * @member {string} [android.module] The Gradle module to build
-   * @member {string} [android.buildVariant] The Android build variant to build
-   * @member {boolean} [android.runTests] Whether to run unit tests during the
-   * build (default)
-   * @member {boolean} [android.runLint] Whether to run lint checks during the
-   * build (default)
-   * @member {boolean} [android.isRoot] Whether it is the root module or not
-   * @member {boolean} [android.automaticSigning] Whether to apply automatic
+   * @property {string} [android.module] The Gradle module to build
+   * @property {string} [android.buildVariant] The Android build variant to
+   * build
+   * @property {boolean} [android.runTests] Whether to run unit tests during
+   * the build (default)
+   * @property {boolean} [android.runLint] Whether to run lint checks during
+   * the build (default)
+   * @property {boolean} [android.isRoot] Whether it is the root module or not
+   * @property {boolean} [android.automaticSigning] Whether to apply automatic
    * signing or not
-   * @member {string} [android.keystorePassword] The password of the keystore
-   * @member {string} [android.keyAlias] The key alias
-   * @member {string} [android.keyPassword] The key password
-   * @member {string} [android.keystoreFilename] The name of the keystore file
-   * @member {string} [android.keystoreEncoded] The keystore encoded value
+   * @property {string} [android.keystorePassword] The password of the keystore
+   * @property {string} [android.keyAlias] The key alias
+   * @property {string} [android.keyPassword] The key password
+   * @property {string} [android.keystoreFilename] The name of the keystore
+   * file
+   * @property {string} [android.keystoreEncoded] The keystore encoded value
    */
   constructor() {
   }

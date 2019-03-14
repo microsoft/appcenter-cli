@@ -16,8 +16,8 @@ const models = require('./index');
 class StartServiceLogDiagnostics extends models['LogDiagnostics'] {
   /**
    * Create a StartServiceLogDiagnostics.
-   * @member {array} [services] The list of services of the AppCenter Start API
-   * call.
+   * @property {array} [services] The list of services of the AppCenter Start
+   * API call.
    */
   constructor() {
     super();

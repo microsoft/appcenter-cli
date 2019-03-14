@@ -17,7 +17,7 @@ const models = require('./index');
 class ExportConfigurationAppInsightsKey extends models['ExportConfiguration'] {
   /**
    * Create a ExportConfigurationAppInsightsKey.
-   * @member {string} instrumentationKey Instrumentation key for Application
+   * @property {string} instrumentationKey Instrumentation key for Application
    * Insights resource
    */
   constructor() {
