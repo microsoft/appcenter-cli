@@ -15,7 +15,7 @@ function runAutorest() {
     autorestScript += '.cmd'
   }
 
-  const configFilePath = path.join(__dirname, '..', 'swagger', 'readme.md')
+  const configFilePath = path.join(__dirname, '..', 'swagger', 'autoRest.yaml')
 
   console.log(`Running ${autorestScript} "${configFilePath}"`)
 
