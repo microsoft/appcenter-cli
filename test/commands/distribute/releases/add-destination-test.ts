@@ -60,32 +60,72 @@ describe("releases add-destination command", () => {
   });
 
   describe("when distributing a group", () => {
+    const fakeGroupId = "00000000-0000-0000-0000-000000000000";
     const getDistributionGroupUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}`;
     const postAddReleaseGroupDestinationUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}/groups`;
 
-    describe("when everything works as expected", function () {
+    describe("when the distribution is successful", function () {
       beforeEach(() => {
         nockScope.get(getDistributionGroupUrl)
-          .reply(200, {
-            id: "00000000-0000-0000-0000-000000000000",
-            name: fakeDistributionGroupName,
-            dismay_name: "my group",
-            origin: "appcenter",
-            is_public: false
-          });
-
-          nockScope.post(postAddReleaseGroupDestinationUrl)
-          .reply(201, {
-          });
+        .reply(200, {
+          id: fakeGroupId,
+          name: fakeDistributionGroupName,
+          dismay_name: "my group",
+          origin: "appcenter",
+          is_public: false
+        });
       });
 
+      function successfulGroupMock(options: { mandatory: boolean, silent: boolean}) {
+        const expectedBody = {
+          id: fakeGroupId,
+          mandatory_update: options.mandatory,
+          notify_testers: !options.silent
+        };
+
+        nockScope.post(postAddReleaseGroupDestinationUrl, expectedBody)
+        .reply(201, {
+          id: fakeGroupId,
+          mandatory_update: options.mandatory,
+          notify_testers: !options.silent
+        });
+      }
+
       it("reports the command as succeeded", async () => {
+        successfulGroupMock({ mandatory: false, silent: false });
+
         const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName]));
         const result = await command.execute();
 
         expect(result.succeeded).to.be.true;
 
         nockScope.done();
+      });
+
+      it("reports the command as succeeded with --mandatory", async () => {
+        successfulGroupMock({ mandatory: true, silent: false });
+
+        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName, "--mandatory"]));
+        const result = await command.execute();
+
+        expect(result.succeeded).to.be.true;
+      });
+
+      it("reports the command as succeeded with --silent", async () => {
+        successfulGroupMock({ mandatory: false, silent: true });
+
+        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName, "--silent"]));
+        const result = await command.execute();
+
+        expect(result.succeeded).to.be.true;
+      });
+
+      it("reports the command as succeeded with --silent and --mandatory", async () => {
+        successfulGroupMock({ mandatory: true, silent: true });
+        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName, "--mandatory", "--silent"]));
+        const result = await command.execute();
+
+        expect(result.succeeded).to.be.true;
       });
     });
 
@@ -135,12 +175,12 @@ describe("releases add-destination command", () => {
 
   describe("when distributing a tester", () => {
     const fakeTesterEmail = "fake@gmail.com";
-    const addRelaseTesterDestinationUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}/testers`;
+    const addReleaseTesterDestinationUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}/testers`;
 
     describe("when the release doesn't exist", () => {
       it("reports the command as failed", async () => {
         nockScope
-          .post(addRelaseTesterDestinationUrl)
+          .post(addReleaseTesterDestinationUrl)
           .reply(404);
 
           const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail]));
@@ -154,7 +194,7 @@ describe("releases add-destination command", () => {
     describe("when the distribution failed", () => {
       it("reports the command as failed", async () => {
         nockScope
-          .post(addRelaseTesterDestinationUrl)
+          .post(addReleaseTesterDestinationUrl)
           .reply(400);
 
         const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail]));
@@ -162,6 +202,7 @@ describe("releases add-destination command", () => {
 
         expect(result.succeeded).to.be.false;
         expect(result.errorCode).to.eql(ErrorCodes.Exception);
+
         expect(result.errorMessage).to.eql(`Could not add tester ${fakeTesterEmail} to release ${fakeReleaseId}`);
       });
     });
@@ -202,7 +243,6 @@ describe("releases add-destination command", () => {
         expect(result.succeeded).to.be.true;
       });
     });
-
     function successfulTesterMock(options: { mandatory: boolean, silent: boolean }) {
       const expectedBody = {
         email: fakeTesterEmail,
@@ -210,7 +250,7 @@ describe("releases add-destination command", () => {
         notify_testers: !options.silent
       };
       nockScope
-        .post(addRelaseTesterDestinationUrl, expectedBody)
+        .post(addReleaseTesterDestinationUrl, expectedBody)
         .reply(201, {
           email: fakeTesterEmail,
           mandatory_update: options.mandatory,

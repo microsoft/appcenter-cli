@@ -103,8 +103,8 @@ export default class AddDestinationCommand extends AppCommand {
   private async addGroupToRelease(client: AppCenterClient, distributionGroup: models.DistributionGroupResponse, releaseId: number): Promise<models.ReleaseDestinationResponse> {
     const { result, response } = await clientRequest<models.ReleaseDestinationResponse>(async (cb) => {
       client.releases.addDistributionGroup(releaseId, this.app.ownerName, this.app.appName, distributionGroup.id, {
-        mandatoryUpdate: false,
-        notifyTesters: false,
+        mandatoryUpdate: this.mandatory,
+        notifyTesters: !this.silent
       }, cb);
     });
 
