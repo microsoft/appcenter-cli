@@ -96,6 +96,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
     if (!_.isNil(this.releaseNotes) && !_.isNil(this.releaseNotesFile)) {
       throw failure(ErrorCodes.InvalidParameter, "'--release-notes' and '--release-notes-file' switches are mutually exclusive");
     }
+
+    if (!_.isNil(this.distributionGroup)) {
+      out.text(`The -g/--group parameter has been deprecated in favor of the 'add-destinations' command. This parameter will be removed in a future release.`);
+    }
   }
 
   private getPrerequisites(client: AppCenterClient): Promise<[number | null, Buffer, string]> {
