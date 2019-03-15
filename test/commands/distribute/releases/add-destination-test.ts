@@ -133,6 +133,92 @@ describe("releases add-destination command", () => {
 
   });
 
+  describe("when distributing a tester", () => {
+    const fakeTesterEmail = "fake@gmail.com";
+    const addRelaseTesterDestinationUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}/testers`;
+
+    describe("when the release doesn't exist", () => {
+      it("reports the command as failed", async () => {
+        nockScope
+          .post(addRelaseTesterDestinationUrl)
+          .reply(404);
+
+          const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail]));
+          const result: CommandFailedResult = await command.execute() as CommandFailedResult;
+
+          expect(result.succeeded).to.be.false;
+          expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
+          expect(result.errorMessage).to.eql(`Could not find release ${fakeReleaseId}`);
+      });
+    });
+    describe("when the distribution failed", () => {
+      it("reports the command as failed", async () => {
+        nockScope
+          .post(addRelaseTesterDestinationUrl)
+          .reply(400);
+
+        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail]));
+        const result: CommandFailedResult = await command.execute() as CommandFailedResult;
+
+        expect(result.succeeded).to.be.false;
+        expect(result.errorCode).to.eql(ErrorCodes.Exception);
+        expect(result.errorMessage).to.eql(`Could not add tester ${fakeTesterEmail} to release ${fakeReleaseId}`);
+      });
+    });
+
+    describe("when the distribution is successful", () => {
+      it("reports the command as succeeded", async () => {
+        successfulTesterMock({ mandatory: false, silent: false });
+
+        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail]));
+        const result = await command.execute();
+
+        expect(result.succeeded).to.be.true;
+      });
+
+       it("reports the command as succeeded with --mandatory", async () => {
+        successfulTesterMock({ mandatory: true, silent: false });
+
+        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail, "--mandatory"]));
+        const result = await command.execute();
+
+        expect(result.succeeded).to.be.true;
+      });
+
+      it("reports the command as succeeded with --silent", async () => {
+        successfulTesterMock({ mandatory: false, silent: true });
+
+        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail, "--silent"]));
+        const result = await command.execute();
+
+        expect(result.succeeded).to.be.true;
+      });
+
+      it("reports the command as succeeded with --silent and --mandatory", async () => {
+        successfulTesterMock({ mandatory: true, silent: true });
+        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail, "--mandatory", "--silent"]));
+        const result = await command.execute();
+
+        expect(result.succeeded).to.be.true;
+      });
+    });
+
+    function successfulTesterMock(options: { mandatory: boolean, silent: boolean }) {
+      const expectedBody = {
+        email: fakeTesterEmail,
+        mandatory_update: options.mandatory,
+        notify_testers: !options.silent
+      };
+      nockScope
+        .post(addRelaseTesterDestinationUrl, expectedBody)
+        .reply(201, {
+          email: fakeTesterEmail,
+          mandatory_update: options.mandatory,
+          notify_testers: !options.silent
+        });
+    }
+  });
+
   function getCommandArgs(additionalArgs: string[]): CommandArgs {
     const args: string[] = ["-a", fakeAppIdentifier, "--token", fakeToken, "--env", "local"].concat(additionalArgs);
     return {

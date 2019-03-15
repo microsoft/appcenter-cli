@@ -1,4 +1,4 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
+import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg, defaultValue } from "../../../util/commandline";
 import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
@@ -39,6 +39,16 @@ export default class AddDestinationCommand extends AppCommand {
   @hasArg
   public destination: string;
 
+  @help("Mandatory")
+  @shortName("m")
+  @longName("mandatory")
+  public mandatory: boolean;
+
+  @help("Silent")
+  @shortName("s")
+  @longName("silent")
+  public silent: boolean;
+
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
@@ -69,7 +79,7 @@ export default class AddDestinationCommand extends AppCommand {
       const distributionGroup = await this.getDistributionGroup(client, releaseId);
       await this.addGroupToRelease(client, distributionGroup, releaseId);
     } else if (this.destinationType === "tester") {
-      return;
+      await this.addTesterToRelease(client, releaseId);
     }
   }
 
@@ -106,5 +116,24 @@ export default class AddDestinationCommand extends AppCommand {
       debug(`Failed to distribute the release - ${inspect(result)}`);
       throw new AddDestinationError(`Could not add ${this.destinationType} ${this.destination} to release ${releaseId}`, ErrorCodes.Exception);
     }
+  }
+
+  private async addTesterToRelease(client: AppCenterClient, releaseId: number) {
+    const { result, response } = await clientRequest<models.ReleaseDetailsResponse>(async (cb) => {
+      client.releases.addTesters(releaseId, this.app.ownerName, this.app.appName, this.destination, {
+        mandatoryUpdate: this.mandatory,
+        notifyTesters: !this.silent
+      }, cb);
+    });
+
+    if (response.statusCode >= 200 && response.statusCode < 400) {
+      return result;
+    } else if (response.statusCode === 404) {
+      throw new AddDestinationError(`Could not find release ${releaseId}`, ErrorCodes.InvalidParameter);
+    } else {
+      debug(`Failed to distribute the release - ${inspect(result)}`);
+      throw new AddDestinationError(`Could not add ${this.destinationType} ${this.destination} to release ${releaseId}`, ErrorCodes.Exception);
+    }
+    return result;
   }
 }
