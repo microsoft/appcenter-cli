@@ -15,7 +15,7 @@ class AddDestinationError extends Error {
   }
 }
 
-@help("Adds a new destination to an existing release")
+@help("Distributes an existing release to an additional destination")
 export default class AddDestinationCommand extends AppCommand {
 
   @help("Release ID")
@@ -63,21 +63,20 @@ export default class AddDestinationCommand extends AppCommand {
     debug(`Distributing destination ${this.destination} of type ${this.destinationType} to release ${releaseId}`);
 
     try {
-      await out.progress(`Adding the destination to the release ...`, this.addDestination(client, releaseId));
+      await this.addDestination(client, releaseId);
     } catch (error) {
-      }
       return failure(error.errorCode, error.message);
     }
-
+    out.text(`Distribution of ${this.mandatory ? "mandatory " : ""}release ${this.releaseId} to ${this.destinationType} was successful ${this.silent ? "without" : "with"} notification`);
     return success();
-  }
+    }
 
   private async addDestination(client: AppCenterClient, releaseId: number): Promise<void> {
     if (this.destinationType === "group") {
-      const distributionGroup = await this.getDistributionGroup(client, releaseId);
-      await this.addGroupToRelease(client, distributionGroup, releaseId);
+      const distributionGroup = await out.progress(`Fetching distribution group information ...`, this.getDistributionGroup(client, releaseId));
+      await out.progress(`Distributing release to group ${this.destination}...`, this.addGroupToRelease(client, distributionGroup, releaseId));
     } else if (this.destinationType === "tester") {
-      await this.addTesterToRelease(client, releaseId);
+      await out.progress(`Distributing release to tester ${this.destination}...`, this.addTesterToRelease(client, releaseId));
     }
   }
 
@@ -132,6 +131,5 @@ export default class AddDestinationCommand extends AppCommand {
       debug(`Failed to distribute the release - ${inspect(result)}`);
       throw new AddDestinationError(`Could not add ${this.destinationType} ${this.destination} to release ${releaseId}`, ErrorCodes.Exception);
     }
-    return result;
   }
 }
