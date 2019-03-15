@@ -20156,6 +20156,9 @@
           "$ref": "#/definitions/DistributionStore"
         },
         {
+          "$ref": "#/definitions/DestinationId"
+        },
+        {
           "type": "object",
           "properties": {
             "destination_type": {
@@ -30373,9 +30376,6 @@
         "buildService": {
           "$ref": "#/definitions/ServiceBillingPlans"
         },
-        "pushService": {
-          "$ref": "#/definitions/ServiceBillingPlans"
-        },
         "testService": {
           "$ref": "#/definitions/ServiceBillingPlans"
         }
@@ -30404,11 +30404,6 @@
           },
           "buildPlan": {
             "description": "The ID of the Build Billing Plan",
-            "type": "string",
-            "format": "string"
-          },
-          "pushPlan": {
-            "description": "The ID of the Push Billing Plan",
             "type": "string",
             "format": "string"
           },
@@ -30469,7 +30464,6 @@
           "type": "string",
           "enum": [
             "Build",
-            "Push",
             "Test"
           ]
         },
@@ -30515,9 +30509,6 @@
         "buildService": {
           "$ref": "#/definitions/BillingPlanSelection"
         },
-        "pushService": {
-          "$ref": "#/definitions/BillingPlanSelection"
-        },
         "testService": {
           "$ref": "#/definitions/BillingPlanSelection"
         }
@@ -30528,9 +30519,6 @@
       "type": "object",
       "properties": {
         "buildService": {
-          "$ref": "#/definitions/ServiceResourceUsage"
-        },
-        "pushService": {
           "$ref": "#/definitions/ServiceResourceUsage"
         },
         "testService": {
@@ -30663,21 +30651,12 @@
           "description": "Is the age of the most recent Build service usage record within expected limits",
           "type": "boolean"
         },
-        "expectedLatestPushExists": {
-          "description": "Is the age of the most recent Push service usage record within expected limits",
-          "type": "boolean"
-        },
         "expectedLatestTestExists": {
           "description": "Is the age of the most recent Test service usage record within expected limits",
           "type": "boolean"
         },
         "latestBuildUsageRecordTime": {
           "description": "The time of the most recent Build service usage record",
-          "type": "string",
-          "format": "dateTime"
-        },
-        "latestPushUsageRecordTime": {
-          "description": "The time of the most recent Push service usage record",
           "type": "string",
           "format": "dateTime"
         },
@@ -32414,8 +32393,7 @@
       "type": "string",
       "enum": [
         "Test",
-        "Build",
-        "Push"
+        "Build"
       ],
       "x-ms-parameter-location": "method"
     },
