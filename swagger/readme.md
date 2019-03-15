@@ -1,7 +1,6 @@
 # Autorest configuration file for AppCenter cli
 > see https://aka.ms/autorest
 
-# moved this to autoRest.yaml
 ```yaml
 input-file: bifrost.swagger.json
 output-folder: ../src/util/apis/generated
