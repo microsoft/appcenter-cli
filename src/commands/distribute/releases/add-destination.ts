@@ -91,22 +91,20 @@ export default class AddDestinationCommand extends AppCommand {
   }
 
   private async addGroupToRelease(client: AppCenterClient, distributionGroup: models.DistributionGroupResponse, releaseId: number): Promise<models.ReleaseDestinationResponse> {
-    try {
-      const { result } = await clientRequest<models.ReleaseDestinationResponse>(async (cb) => {
-        client.releases.addDistributionGroup(releaseId, this.app.ownerName, this.app.appName, distributionGroup.id, {
-          mandatoryUpdate: false,
-          notifyTesters: false,
-        }, cb);
-      });
+    const { result, response } = await clientRequest<models.ReleaseDestinationResponse>(async (cb) => {
+      client.releases.addDistributionGroup(releaseId, this.app.ownerName, this.app.appName, distributionGroup.id, {
+        mandatoryUpdate: false,
+        notifyTesters: false,
+      }, cb);
+    });
 
+    if (response.statusCode >= 200 && response.statusCode < 400) {
       return result;
-    } catch (error) {
-      if (error.statusCode === 404) {
-        throw new AddDestinationError(`Could not find release ${releaseId}`, ErrorCodes.InvalidParameter);
-      } else {
-        debug(`Failed to distribute the release - ${inspect(error)}`);
-        throw new AddDestinationError(`Could not add ${this.destinationType} ${this.destination} to release ${releaseId}`, ErrorCodes.Exception);
-      }
+    } else if (response.statusCode === 404) {
+      throw new AddDestinationError(`Could not find release ${releaseId}`, ErrorCodes.InvalidParameter);
+    } else {
+      debug(`Failed to distribute the release - ${inspect(result)}`);
+      throw new AddDestinationError(`Could not add ${this.destinationType} ${this.destination} to release ${releaseId}`, ErrorCodes.Exception);
     }
   }
 }
