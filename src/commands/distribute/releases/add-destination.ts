@@ -65,8 +65,6 @@ export default class AddDestinationCommand extends AppCommand {
     try {
       await out.progress(`Adding the destination to the release ...`, this.addDestination(client, releaseId));
     } catch (error) {
-      if (error.errorCode !== ErrorCodes.InvalidParameter) {
-        debug(`Failed to add destination - ${inspect(error)}`);
       }
       return failure(error.errorCode, error.message);
     }
