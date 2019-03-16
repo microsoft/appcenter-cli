@@ -23,6 +23,7 @@ describe("release command", () => {
   const fakeReleaseId = "1";
   const fakeReleaseUrl = "/fake/release/url/" + fakeReleaseId;
   const fakeDistributionGroupName = "fakeDistributionGroupName";
+  const fakeGroupId = "00000000-0000-0000-0000-000000000000";
   /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const version = "1.0";
@@ -65,8 +66,10 @@ describe("release command", () => {
           setupSuccessfulPostUploadResponse(
             setupSuccessfulUploadResponse(
               setupSuccessfulPatchUploadResponse(
-                setupSuccessfulDistributeReleaseResponse(
-                  Nock(fakeHost))))));
+                setupSuccessfulReleaseDetailsResponse(
+                  setupSuccessfulAddGroupResponse(
+                    setupSuccsessFulGetDistributionGroupResponse(
+                      Nock(fakeHost))))))));
         skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
     });
 
@@ -106,7 +109,7 @@ describe("release command", () => {
             setupFailedUploadResponse(
               setupSuccessfulAbortUploadResponse(
                   Nock(fakeHost)))));
-        skippedRequestsScope = setupSuccessfulDistributeReleaseResponse(
+        skippedRequestsScope = setupSuccessfulReleaseDetailsResponse(
           setupSuccessfulPatchUploadResponse(Nock(fakeHost)));
     });
 
@@ -217,11 +220,9 @@ describe("release command", () => {
     }));
   }
 
-  function setupSuccessfulDistributeReleaseResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`, {
-      distribution_group_name: fakeDistributionGroupName,
-      release_notes: releaseNotes,
-      notify_testers: true
+  function setupSuccessfulReleaseDetailsResponse(nockScope: Nock.Scope): Nock.Scope {
+    return nockScope.put(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`, {
+      release_notes: releaseNotes
     }).reply(200, ((uri: any, requestBody: any) => {
       distributeSpy(requestBody);
       return {
@@ -230,4 +231,34 @@ describe("release command", () => {
       };
     }));
   }
+
+  function setupSuccessfulAddGroupResponse(nockScope: Nock.Scope): Nock.Scope {
+    const postAddReleaseGroupDestinationUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}/groups`;
+    const expectedBody = {
+      id: fakeGroupId,
+      mandatory_update: false,
+      notify_testers: true
+    };
+
+    return nockScope.post(postAddReleaseGroupDestinationUrl, expectedBody)
+    .reply(201, {
+      id: fakeGroupId,
+      mandatory_update: false,
+      notify_testers: true
+    });
+  }
+
+  function setupSuccsessFulGetDistributionGroupResponse(nockScope: Nock.Scope): Nock.Scope {
+    const getDistributionGroupUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}`;
+
+    return nockScope.get(getDistributionGroupUrl)
+      .reply(200, {
+        id: fakeGroupId,
+        name: fakeDistributionGroupName,
+        dismay_name: "my group",
+        origin: "appcenter",
+        is_public: false
+      });
+  }
+
 });

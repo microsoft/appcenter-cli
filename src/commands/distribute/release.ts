@@ -248,12 +248,11 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return releaseRequestResponse.result;
   }
 
-  private async putReleaseDetails(client: AppCenterClient, app: DefaultApp, releaseId: number, releaseNotesString?: string, enabled?: boolean): Promise<models.ReleaseUpdateResponse> {
+  private async putReleaseDetails(client: AppCenterClient, app: DefaultApp, releaseId: number, releaseNotesString?: string): Promise<models.ReleaseUpdateResponse> {
     try {
       const { result, response } = await out.progress(`Updating release details...`,
         clientRequest<models.ReleaseUpdateResponse>(async (cb) => client.releases.updateDetails(releaseId, app.ownerName, app.appName, {
           releaseNotes: releaseNotesString,
-          enabled: enabled
         }, cb))
       );
 
