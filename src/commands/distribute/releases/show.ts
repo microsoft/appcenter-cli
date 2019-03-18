@@ -61,7 +61,7 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
       ["Download URL", "downloadUrl"],
       ["Install URL", "installUrl"],
       ["Icon URL", "appIconUrl"],
-      ["Distribution Group", "distributionGroups", (distributionGroups: models.DistributionGroup[]) => _.get(distributionGroups, "[0].name", "")]
+      ["Destinations", "destinations", (destinations: models.Destination[]) => JSON.stringify(destinations)]
     ], releaseDetails);
 
     return success();
