@@ -248,18 +248,19 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return releaseRequestResponse.result;
   }
 
-  private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number, releaseNotesString: string): Promise<models.ReleaseDetailsResponse> {
-    let updateReleaseRequestResponse: ClientResponse<models.ReleaseDetailsResponse>;
+  private async putReleaseDetails(client: AppCenterClient, app: DefaultApp, releaseId: number, releaseNotesString?: string): Promise<models.ReleaseUpdateResponse> {
     try {
-      updateReleaseRequestResponse = await out.progress(`Distributing the release...`,
-        clientRequest<models.ReleaseDetailsResponse>(async (cb) => client.releases.update(releaseId, {
-          distributionGroupName: this.distributionGroup,
-          releaseNotes: releaseNotesString
-        }, app.ownerName, app.appName, cb)));
-      const statusCode = updateReleaseRequestResponse.response.statusCode;
+      const { result, response } = await out.progress(`Updating release details...`,
+        clientRequest<models.ReleaseUpdateResponse>(async (cb) => client.releases.updateDetails(releaseId, app.ownerName, app.appName, {
+          releaseNotes: releaseNotesString,
+        }, cb))
+      );
+
+      const statusCode = response.statusCode;
       if (statusCode >= 400) {
         throw statusCode;
       }
+      return result;
     } catch (error) {
       if (error === 400) {
         throw failure(ErrorCodes.Exception, "changing distribution group is not supported");
@@ -268,7 +269,46 @@ export default class ReleaseBinaryCommand extends AppCommand {
         throw failure(ErrorCodes.Exception, `failed to set distribution group and release notes for release ${releaseId}`);
       }
     }
+  }
 
-    return updateReleaseRequestResponse.result;
+  private async getDistributionGroup(client: AppCenterClient, releaseId: number, destination: string): Promise<models.DistributionGroupResponse> {
+    try {
+      const { result } = await clientRequest<models.DistributionGroupResponse>(async (cb) => {
+        client.distributionGroups.get(this.app.ownerName, this.app.appName, destination, cb);
+      });
+
+      return result;
+    } catch (error) {
+      if (error.statusCode === 404) {
+        throw failure(ErrorCodes.InvalidParameter, `Could not find group ${destination}`);
+      } else {
+        debug(`Failed to distribute the release - ${inspect(error)}`);
+        throw failure(ErrorCodes.Exception, `Could not fetch group data for ${destination}`);
+      }
+    }
+  }
+
+  private async addGroupToRelease(client: AppCenterClient, distributionGroup: models.DistributionGroupResponse, releaseId: number): Promise<models.ReleaseDestinationResponse> {
+    const { result, response } = await clientRequest<models.ReleaseDestinationResponse>(async (cb) => {
+      client.releases.addDistributionGroup(releaseId, this.app.ownerName, this.app.appName, distributionGroup.id, {
+        mandatoryUpdate: false,
+        notifyTesters: true
+      }, cb);
+    });
+
+    if (response.statusCode >= 200 && response.statusCode < 400) {
+      return result;
+    } else if (response.statusCode === 404) {
+      throw failure(ErrorCodes.InvalidParameter, `Could not find release ${releaseId}`);
+    } else {
+      debug(`Failed to distribute the release - ${inspect(result)}`);
+      throw failure(ErrorCodes.Exception, `Could not add group ${distributionGroup.displayName} to release ${releaseId}`);
+    }
+  }
+
+  private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number, releaseNotesString: string): Promise<void> {
+    await this.putReleaseDetails(client, app, releaseId, releaseNotesString);
+    const getDistributionGroupResponse = await this.getDistributionGroup(client, releaseId, this.distributionGroup);
+    await this.addGroupToRelease(client, getDistributionGroupResponse, releaseId);
   }
 }

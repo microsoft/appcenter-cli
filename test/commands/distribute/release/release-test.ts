@@ -9,7 +9,7 @@ import * as ChaiAsPromised from "chai-as-promised";
 use(ChaiAsPromised);
 
 import ReleaseBinaryCommand from "../../../../src/commands/distribute/release";
-import { CommandArgs, CommandResult } from "../../../../src/util/commandline";
+import { CommandArgs, CommandResult, CommandFailedResult } from "../../../../src/util/commandline";
 
 Temp.track();
 
@@ -23,6 +23,7 @@ describe("release command", () => {
   const fakeReleaseId = "1";
   const fakeReleaseUrl = "/fake/release/url/" + fakeReleaseId;
   const fakeDistributionGroupName = "fakeDistributionGroupName";
+  const fakeGroupId = "00000000-0000-0000-0000-000000000000";
   /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const version = "1.0";
@@ -65,8 +66,10 @@ describe("release command", () => {
           setupSuccessfulPostUploadResponse(
             setupSuccessfulUploadResponse(
               setupSuccessfulPatchUploadResponse(
-                setupSuccessfulDistributeReleaseResponse(
-                  Nock(fakeHost))))));
+                setupSuccessfulCreateReleaseResponse(
+                  setupSuccessfulAddGroupResponse(
+                    setupSuccsessFulGetDistributionGroupResponse(
+                      Nock(fakeHost))))))));
         skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
     });
 
@@ -106,7 +109,7 @@ describe("release command", () => {
             setupFailedUploadResponse(
               setupSuccessfulAbortUploadResponse(
                   Nock(fakeHost)))));
-        skippedRequestsScope = setupSuccessfulDistributeReleaseResponse(
+        skippedRequestsScope = setupSuccessfulCreateReleaseResponse(
           setupSuccessfulPatchUploadResponse(Nock(fakeHost)));
     });
 
@@ -117,10 +120,90 @@ describe("release command", () => {
 
       // Act
       const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath, "-g", fakeDistributionGroupName]));
-      const result = await expect(command.execute()).to.eventually.be.rejected;
+      const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
 
       // Assert
-      testUploadFailure(result, expectedRequestsScope, skippedRequestsScope);
+      testFailure(result, "release binary file uploading failed: HTTP 500 null", expectedRequestsScope, skippedRequestsScope);
+    });
+  });
+
+  describe("when creating the release fails", () => {
+    beforeEach(() => {
+      expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
+        setupSuccessfulPostUploadResponse(
+          setupSuccessfulUploadResponse(
+            setupSuccessfulPatchUploadResponse(
+              setupFailedCreateReleaseResponse(
+                    Nock(fakeHost))))));
+
+      skippedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
+        setupSuccessfulAddGroupResponse(Nock(fakeHost)));
+    });
+
+    it("does not try to add the group to the release", async () => {
+      // Arrange
+      const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+      const releaseNotesFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
+
+      // Act
+      const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath, "-g", fakeDistributionGroupName]));
+      const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
+
+      // Assert
+      testFailure(result, `failed to set distribution group and release notes for release ${fakeReleaseId}`, expectedRequestsScope, skippedRequestsScope);
+    });
+  });
+
+  describe("when getting the distribution group fails", () => {
+    beforeEach(() => {
+      expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
+        setupSuccessfulPostUploadResponse(
+          setupSuccessfulUploadResponse(
+            setupSuccessfulPatchUploadResponse(
+              setupSuccessfulCreateReleaseResponse(
+                  setupFailedGetDistributionGroupResponse(
+                    Nock(fakeHost)))))));
+
+      skippedRequestsScope = setupSuccessfulAddGroupResponse(Nock(fakeHost));
+    });
+
+    it("does not try to add the group to the release", async () => {
+      // Arrange
+      const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+      const releaseNotesFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
+
+      // Act
+      const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath, "-g", fakeDistributionGroupName]));
+      const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
+
+      // Assert
+      testFailure(result, `Could not find group ${fakeDistributionGroupName}`, expectedRequestsScope, skippedRequestsScope);
+    });
+  });
+
+  describe("when adding the group to the distribution group fails", () => {
+    beforeEach(() => {
+      expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
+        setupSuccessfulPostUploadResponse(
+          setupSuccessfulUploadResponse(
+            setupSuccessfulPatchUploadResponse(
+              setupSuccessfulCreateReleaseResponse(
+                setupSuccsessFulGetDistributionGroupResponse(
+                  setupFailedAddGroupResponse(
+                    Nock(fakeHost))))))));
+    });
+
+    it("responds with a failed result", async () => {
+      // Arrange
+      const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+      const releaseNotesFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
+
+      // Act
+      const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath, "-g", fakeDistributionGroupName]));
+      const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
+
+      // Assert
+      testFailure(result, `Could not find release ${fakeReleaseId}`, expectedRequestsScope);
     });
   });
 
@@ -144,9 +227,12 @@ describe("release command", () => {
     executionScope.done(); // All normal API calls are executed
   }
 
-  function testUploadFailure(result: CommandResult, executionScope: Nock.Scope, skippedScope: Nock.Scope) {
+  function testFailure(result: CommandFailedResult, errorMessage: string, executionScope: Nock.Scope, skippedScope?: Nock.Scope) {
     expect(result.succeeded).to.eql(false, "Command should fail");
-    expect(skippedScope.isDone()).to.eql(false, "Upload should not be completed");
+    expect(result.errorMessage).to.eql(errorMessage);
+    if (skippedScope) {
+      expect(skippedScope.isDone()).to.eql(false, "Skipped scope should not be completed");
+    }
     executionScope.done(); // All normal API calls are executed
   }
 
@@ -217,11 +303,9 @@ describe("release command", () => {
     }));
   }
 
-  function setupSuccessfulDistributeReleaseResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`, {
-      distribution_group_name: fakeDistributionGroupName,
-      release_notes: releaseNotes,
-      notify_testers: true
+  function setupSuccessfulCreateReleaseResponse(nockScope: Nock.Scope): Nock.Scope {
+    return nockScope.put(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`, {
+      release_notes: releaseNotes
     }).reply(200, ((uri: any, requestBody: any) => {
       distributeSpy(requestBody);
       return {
@@ -230,4 +314,59 @@ describe("release command", () => {
       };
     }));
   }
+
+  function setupFailedCreateReleaseResponse(nockScope: Nock.Scope): Nock.Scope {
+    return nockScope.put(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`, {
+      release_notes: releaseNotes
+    }).reply(404);
+  }
+
+  function setupSuccessfulAddGroupResponse(nockScope: Nock.Scope): Nock.Scope {
+    const postAddReleaseGroupDestinationUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}/groups`;
+    const expectedBody = {
+      id: fakeGroupId,
+      mandatory_update: false,
+      notify_testers: true
+    };
+
+    return nockScope.post(postAddReleaseGroupDestinationUrl, expectedBody)
+    .reply(201, {
+      id: fakeGroupId,
+      mandatory_update: false,
+      notify_testers: true
+    });
+  }
+
+  function setupFailedAddGroupResponse(nockScope: Nock.Scope): Nock.Scope {
+    const postAddReleaseGroupDestinationUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}/groups`;
+    const expectedBody = {
+      id: fakeGroupId,
+      mandatory_update: false,
+      notify_testers: true
+    };
+
+    return nockScope.post(postAddReleaseGroupDestinationUrl, expectedBody)
+    .reply(404);
+  }
+
+  function setupSuccsessFulGetDistributionGroupResponse(nockScope: Nock.Scope): Nock.Scope {
+    const getDistributionGroupUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}`;
+
+    return nockScope.get(getDistributionGroupUrl)
+      .reply(200, {
+        id: fakeGroupId,
+        name: fakeDistributionGroupName,
+        dismay_name: "my group",
+        origin: "appcenter",
+        is_public: false
+      });
+  }
+
+  function setupFailedGetDistributionGroupResponse(nockScope: Nock.Scope): Nock.Scope {
+    const getDistributionGroupUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}`;
+
+    return nockScope.get(getDistributionGroupUrl)
+      .reply(404);
+  }
+
 });
