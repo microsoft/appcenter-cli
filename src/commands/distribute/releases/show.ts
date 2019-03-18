@@ -1,8 +1,9 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
-import { inspect } from "util";
+import { inspect, } from "util";
 import * as _ from "lodash";
+import { release } from "os";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:releases:show");
 
@@ -17,8 +18,8 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
-
     const releaseId = Number(this.releaseId);
+    const noDestinations = `The release with id ${releaseId} does not have any release destinations.`;
     if (!Number.isSafeInteger(releaseId) || releaseId <= 0) {
       return failure(ErrorCodes.InvalidParameter, `${this.releaseId} is not a valid release id`);
     }
@@ -43,8 +44,6 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
       }
     }
 
-    const noDestinations = `The release with id ${releaseId} does not have any release destinations.`;
-
     out.report([
       ["ID", "id"],
       ["Status", "status"],
@@ -63,7 +62,7 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
       ["Download URL", "downloadUrl"],
       ["Install URL", "installUrl"],
       ["Icon URL", "appIconUrl"],
-      ["Destinations", "destinations", (destinations: models.Destination[]) => destinations && destinations.length > 1 ? JSON.stringify(destinations) : noDestinations]
+      ["Destinations", "destinations", (destinations: models.Destination[]) => destinations && destinations.length > 1 ? JSON.stringify(destinations, null, 2) : noDestinations]
     ], releaseDetails);
 
     return success();
