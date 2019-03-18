@@ -1,9 +1,8 @@
 import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
-import { inspect, } from "util";
+import { inspect } from "util";
 import * as _ from "lodash";
-import { release } from "os";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:releases:show");
 
