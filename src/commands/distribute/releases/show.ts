@@ -17,7 +17,6 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
-    
     const releaseId = Number(this.releaseId);
     const noDestinations = `The release with id ${releaseId} does not have any release destinations.`;
     if (!Number.isSafeInteger(releaseId) || releaseId <= 0) {
