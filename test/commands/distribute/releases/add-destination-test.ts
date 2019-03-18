@@ -54,7 +54,7 @@ describe("releases add-destination command", () => {
 
         expect(result.succeeded).to.be.false;
         expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
-        expect(result.errorMessage).to.eql("not-a-type is not a valid destination type. Available types are: group, tester");
+        expect(result.errorMessage).to.contain("not-a-type is not a valid destination type.");
       });
     });
   });

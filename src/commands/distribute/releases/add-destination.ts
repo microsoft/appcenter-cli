@@ -25,7 +25,7 @@ export default class AddDestinationCommand extends AppCommand {
   @hasArg
   public releaseId: string;
 
-  @help("Destination Type: group or tester")
+  @help("Destination Type: " + ValidDestinationTypes.join(", "))
   @shortName("t")
   @longName("type")
   @required
@@ -69,7 +69,7 @@ export default class AddDestinationCommand extends AppCommand {
     }
     out.text(`Distribution of ${this.mandatory ? "mandatory " : ""}release ${this.releaseId} to ${this.destinationType} was successful ${this.silent ? "without" : "with"} notification`);
     return success();
-    }
+  }
 
   private async addDestination(client: AppCenterClient, releaseId: number): Promise<void> {
     if (this.destinationType === "group") {
