@@ -283,7 +283,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
         throw failure(ErrorCodes.InvalidParameter, `Could not find group ${destination}`);
       } else {
         debug(`Failed to distribute the release - ${inspect(error)}`);
-        throw failure(ErrorCodes.Exception, `Could not add group ${destination} to release ${releaseId}`);
+        throw failure(ErrorCodes.Exception, `Could not fetch group data for ${destination}`);
       }
     }
   }
