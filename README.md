@@ -83,6 +83,7 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 | `appcenter distribute releases delete` | Deletes the release |
 | `appcenter distribute releases list` | Shows the list of all releases for the application |
 | `appcenter distribute releases show` | Shows full details about release |
+| `appcenter distribute releases add-destination` | Distributes an existing release to an additional destination |
 | | |
 | `appcenter orgs create` | Create a new organization |
 | `appcenter orgs list` | Lists organizations in which current user is collaborator |
