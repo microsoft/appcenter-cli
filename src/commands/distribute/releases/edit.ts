@@ -2,10 +2,11 @@ import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortNam
 import { AppCenterClient, clientRequest, models } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
+import { handleHttpError } from "../../../util/apis/create-client";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:releases:delete");
 
-@help("Enables or disables specified release")
+@help("Toggles enabling and disabling the specified release")
 export default class EditReleaseCommand extends AppCommand {
   @help("Release ID")
   @shortName("r")
@@ -14,7 +15,7 @@ export default class EditReleaseCommand extends AppCommand {
   @hasArg
   public releaseId: string;
 
-  @help("Release state")
+  @help("Release state: enabled or disabled")
   @name("State")
   @position(0)
   @required
@@ -40,17 +41,12 @@ export default class EditReleaseCommand extends AppCommand {
         (cb) => client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
       ));
       if (httpRequest.response.statusCode >= 400) {
-        throw httpRequest.response.statusCode;
+        return httpRequest.response.statusCode === 404 ? failure(ErrorCodes.InvalidParameter, `release ${this.releaseId} doesn't exist`) : failure(ErrorCodes.Exception, "failed to load release details");
       } else {
         releaseDetails = httpRequest.result;
       }
     } catch (error) {
-      if (error === 404) {
-        return failure(ErrorCodes.InvalidParameter, `release ${this.releaseId} doesn't exist`);
-      } else {
-        debug(`Failed to load release details - ${inspect(error)}`);
-        return failure(ErrorCodes.Exception, "failed to load release details");
-      }
+        handleHttpError(error, false, "failed to load release details");
     }
 
     try {
@@ -58,7 +54,7 @@ export default class EditReleaseCommand extends AppCommand {
       const httpResponse = await out.progress(`${state === "enabled" ? "Enabling" : "Disabling"} the release...`,
         clientRequest((cb) => client.releases.updateDetails(releaseId, app.ownerName, app.appName, { enabled: state === "enabled" }, cb)));
       if (httpResponse.response.statusCode >= 400) {
-        throw httpResponse.result;
+        return failure(ErrorCodes.Exception, `failed to ${state === "enabled" ? "enable" : "disable"} the release`);
       }
     } catch (error) {
       debug(`Failed to update the release - ${inspect(error)}`);
