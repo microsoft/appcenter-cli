@@ -1,15 +1,9 @@
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
-import { ErrorCodes } from "../../../util/commandline";
+import { ErrorCodes, failure } from "../../../util/commandline";
 import { inspect } from "util";
 import { DefaultApp } from "../../../util/profile";
 
 const debug = require("debug")("appcenter-cli:commands:distribute");
-
-export class AddDestinationError extends Error {
-  constructor(message: string, public errorCode: ErrorCodes) {
-    super(message);
-  }
-}
 
 export interface GetDistributionGroupOptions {
   client: AppCenterClient;
@@ -41,10 +35,10 @@ export async function getDistributionGroup(options: GetDistributionGroupOptions)
     return result;
   } catch (error) {
     if (error.statusCode === 404) {
-      throw new AddDestinationError(`Could not find group ${destination}`, ErrorCodes.InvalidParameter);
+      throw failure(ErrorCodes.InvalidParameter, `Could not find group ${destination}`);
     } else {
       debug(`Failed to distribute the release - ${inspect(error)}`);
-      throw new AddDestinationError(`Could not add ${destinationType} ${destination} to release ${releaseId}`, ErrorCodes.Exception);
+      throw failure( ErrorCodes.Exception, `Could not add ${destinationType} ${destination} to release ${releaseId}`);
     }
   }
 }
@@ -62,9 +56,9 @@ export async function addGroupToRelease(options: AddGroupToReleaseOptions): Prom
   if (response.statusCode >= 200 && response.statusCode < 400) {
     return result;
   } else if (response.statusCode === 404) {
-    throw new AddDestinationError(`Could not find release ${releaseId}`, ErrorCodes.InvalidParameter);
+    throw failure(ErrorCodes.InvalidParameter, `Could not find release ${releaseId}`);
   } else {
     debug(`Failed to distribute the release - ${inspect(result)}`);
-    throw new AddDestinationError(`Could not add ${destinationType} ${destination} to release ${releaseId}`, ErrorCodes.Exception);
+    throw failure(ErrorCodes.Exception, `Could not add ${destinationType} ${destination} to release ${releaseId}`);
   }
 }

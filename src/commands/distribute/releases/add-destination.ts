@@ -4,7 +4,7 @@ import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
 import { DefaultApp } from "../../../util/profile";
-import { AddDestinationError, getDistributionGroup, addGroupToRelease } from "../lib/distribute-util";
+import { getDistributionGroup, addGroupToRelease } from "../lib/distribute-util";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:releases:add-destination");
 
@@ -45,8 +45,6 @@ export default class AddDestinationCommand extends AppCommand {
   public silent: boolean;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
-    const app: DefaultApp = this.app;
-
     const releaseId = Number(this.releaseId);
     if (!Number.isSafeInteger(releaseId) || releaseId <= 0) {
       return failure(ErrorCodes.InvalidParameter, `${this.releaseId} is not a valid release id`);
@@ -60,7 +58,7 @@ export default class AddDestinationCommand extends AppCommand {
     try {
       await this.addDestination(client, releaseId);
     } catch (error) {
-      return failure(error.errorCode, error.message);
+      return error;
     }
     out.text(`Distribution of ${this.mandatory ? "mandatory " : ""}release ${this.releaseId} to ${this.destinationType} was successful ${this.silent ? "without" : "with"} notification`);
     return success();
@@ -90,10 +88,10 @@ export default class AddDestinationCommand extends AppCommand {
     if (response.statusCode >= 200 && response.statusCode < 400) {
       return result;
     } else if (response.statusCode === 404) {
-      throw new AddDestinationError(`Could not find release ${releaseId}`, ErrorCodes.InvalidParameter);
+      throw failure(ErrorCodes.InvalidParameter, `Could not find release ${releaseId}`);
     } else {
       debug(`Failed to distribute the release - ${inspect(result)}`);
-      throw new AddDestinationError(`Could not add ${this.destinationType} ${this.destination} to release ${releaseId}`, ErrorCodes.Exception);
+      throw failure(ErrorCodes.Exception, `Could not add ${this.destinationType} ${this.destination} to release ${releaseId}`);
     }
   }
 }
