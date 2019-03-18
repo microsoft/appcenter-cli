@@ -4,16 +4,11 @@ import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
 import { DefaultApp } from "../../../util/profile";
+import { AddDestinationError, getDistributionGroup, addGroupToRelease } from "../lib/distribute-util";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:releases:add-destination");
 
 const ValidDestinationTypes = ["group", "tester"];
-
-class AddDestinationError extends Error {
-  constructor(message: string, public errorCode: ErrorCodes) {
-    super(message);
-  }
-}
 
 @help("Distributes an existing release to an additional destination")
 export default class AddDestinationCommand extends AppCommand {
@@ -73,45 +68,14 @@ export default class AddDestinationCommand extends AppCommand {
 
   private async addDestination(client: AppCenterClient, releaseId: number): Promise<void> {
     if (this.destinationType === "group") {
-      const distributionGroup = await out.progress(`Fetching distribution group information ...`, this.getDistributionGroup(client, releaseId));
-      await out.progress(`Distributing release to group ${this.destination}...`, this.addGroupToRelease(client, distributionGroup, releaseId));
+      const distributionGroup = await out.progress(`Fetching distribution group information ...`, getDistributionGroup({
+        client, releaseId, app: this.app, destination: this.destination, destinationType: this.destinationType
+      }));
+      await out.progress(`Distributing release to group ${this.destination}...`, addGroupToRelease({
+        client, releaseId, distributionGroup, app: this.app, destination: this.destination, destinationType: this.destinationType, mandatory: this.mandatory, silent: this.silent
+      }));
     } else if (this.destinationType === "tester") {
       await out.progress(`Distributing release to tester ${this.destination}...`, this.addTesterToRelease(client, releaseId));
-    }
-  }
-
-  private async getDistributionGroup(client: AppCenterClient, releaseId: number): Promise<models.DistributionGroupResponse> {
-    try {
-      const { result } = await clientRequest<models.DistributionGroupResponse>(async (cb) => {
-        client.distributionGroups.get(this.app.ownerName, this.app.appName, this.destination, cb);
-      });
-
-      return result;
-    } catch (error) {
-      if (error.statusCode === 404) {
-        throw new AddDestinationError(`Could not find group ${this.destination}`, ErrorCodes.InvalidParameter);
-      } else {
-        debug(`Failed to distribute the release - ${inspect(error)}`);
-        throw new AddDestinationError(`Could not add ${this.destinationType} ${this.destination} to release ${releaseId}`, ErrorCodes.Exception);
-      }
-    }
-  }
-
-  private async addGroupToRelease(client: AppCenterClient, distributionGroup: models.DistributionGroupResponse, releaseId: number): Promise<models.ReleaseDestinationResponse> {
-    const { result, response } = await clientRequest<models.ReleaseDestinationResponse>(async (cb) => {
-      client.releases.addDistributionGroup(releaseId, this.app.ownerName, this.app.appName, distributionGroup.id, {
-        mandatoryUpdate: this.mandatory,
-        notifyTesters: !this.silent
-      }, cb);
-    });
-
-    if (response.statusCode >= 200 && response.statusCode < 400) {
-      return result;
-    } else if (response.statusCode === 404) {
-      throw new AddDestinationError(`Could not find release ${releaseId}`, ErrorCodes.InvalidParameter);
-    } else {
-      debug(`Failed to distribute the release - ${inspect(result)}`);
-      throw new AddDestinationError(`Could not add ${this.destinationType} ${this.destination} to release ${releaseId}`, ErrorCodes.Exception);
     }
   }
 
