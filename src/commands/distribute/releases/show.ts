@@ -50,6 +50,7 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
       ["Display Name", "appDisplayName"],
       ["Version", "version"],
       ["Short Version", "shortVersion"],
+      ["Enabled", "enabled"],
       ["Release Notes", "releaseNotes"],
       ["Size", "size"],
       ["OS Required", "minOs"],
