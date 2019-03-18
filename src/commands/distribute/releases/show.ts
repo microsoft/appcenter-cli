@@ -43,6 +43,8 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
       }
     }
 
+    const noDestinations = `The release with id ${releaseId} does not have any release destinations.`;
+
     out.report([
       ["ID", "id"],
       ["Status", "status"],
@@ -61,7 +63,7 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
       ["Download URL", "downloadUrl"],
       ["Install URL", "installUrl"],
       ["Icon URL", "appIconUrl"],
-      ["Destinations", "destinations", (destinations: models.Destination[]) => JSON.stringify(destinations)]
+      ["Destinations", "destinations", (destinations: models.Destination[]) => destinations && destinations.length > 1 ? JSON.stringify(destinations) : noDestinations]
     ], releaseDetails);
 
     return success();
