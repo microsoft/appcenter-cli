@@ -307,8 +307,8 @@ export default class ReleaseBinaryCommand extends AppCommand {
   }
 
   private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number, releaseNotesString: string): Promise<void> {
-    const updateReleaseDetailsResponse = await this.putReleaseDetails(client, app, releaseId, releaseNotesString);
+    await this.putReleaseDetails(client, app, releaseId, releaseNotesString);
     const getDistributionGroupResponse = await this.getDistributionGroup(client, releaseId, this.distributionGroup);
-    const addGroupToReleaseResponse = await this.addGroupToRelease(client, getDistributionGroupResponse, releaseId);
+    await this.addGroupToRelease(client, getDistributionGroupResponse, releaseId);
   }
 }
