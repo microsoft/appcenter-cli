@@ -7,6 +7,7 @@ import * as Request from "request";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../util/profile";
+import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:release");
 
@@ -271,44 +272,13 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private async getDistributionGroup(client: AppCenterClient, releaseId: number, destination: string): Promise<models.DistributionGroupResponse> {
-    try {
-      const { result } = await clientRequest<models.DistributionGroupResponse>(async (cb) => {
-        client.distributionGroups.get(this.app.ownerName, this.app.appName, destination, cb);
-      });
-
-      return result;
-    } catch (error) {
-      if (error.statusCode === 404) {
-        throw failure(ErrorCodes.InvalidParameter, `Could not find group ${destination}`);
-      } else {
-        debug(`Failed to distribute the release - ${inspect(error)}`);
-        throw failure(ErrorCodes.Exception, `Could not fetch group data for ${destination}`);
-      }
-    }
-  }
-
-  private async addGroupToRelease(client: AppCenterClient, distributionGroup: models.DistributionGroupResponse, releaseId: number): Promise<models.ReleaseDestinationResponse> {
-    const { result, response } = await clientRequest<models.ReleaseDestinationResponse>(async (cb) => {
-      client.releases.addDistributionGroup(releaseId, this.app.ownerName, this.app.appName, distributionGroup.id, {
-        mandatoryUpdate: false,
-        notifyTesters: true
-      }, cb);
-    });
-
-    if (response.statusCode >= 200 && response.statusCode < 400) {
-      return result;
-    } else if (response.statusCode === 404) {
-      throw failure(ErrorCodes.InvalidParameter, `Could not find release ${releaseId}`);
-    } else {
-      debug(`Failed to distribute the release - ${inspect(result)}`);
-      throw failure(ErrorCodes.Exception, `Could not add group ${distributionGroup.displayName} to release ${releaseId}`);
-    }
-  }
-
   private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number, releaseNotesString: string): Promise<void> {
     await this.putReleaseDetails(client, app, releaseId, releaseNotesString);
-    const getDistributionGroupResponse = await this.getDistributionGroup(client, releaseId, this.distributionGroup);
-    await this.addGroupToRelease(client, getDistributionGroupResponse, releaseId);
+    const distributionGroupResponse = await getDistributionGroup({
+      client, releaseId, app: this.app, destination: this.distributionGroup, destinationType: "group"
+    });
+    await addGroupToRelease({
+      client, releaseId, distributionGroup: distributionGroupResponse, app: this.app, destination: this.distributionGroup, destinationType: "group", mandatory: false, silent: false
+    });
   }
 }
