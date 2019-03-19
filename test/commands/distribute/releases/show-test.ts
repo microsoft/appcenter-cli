@@ -8,7 +8,7 @@ use(ChaiAsPromised);
 import ShowReleasesCommand from "../../../../src/commands/distribute/releases/show";
 import { CommandArgs, CommandFailedResult, ErrorCodes } from "../../../../src/util/commandline";
 import { out } from "../../../../src/util/interaction";
-import { ReleaseDetailsResponse } from "../../../../src/util/apis/generated/models";
+import { Destination, ReleaseDetailsResponse } from "../../../../src/util/apis/generated/models";
 
 describe("releases show command", () => {
   const fakeAppOwner = "fakeAppOwner";
@@ -45,21 +45,44 @@ describe("releases show command", () => {
   });
 
   describe("when everything works as expected", () => {
+    const destinations: Destination[] = [
+      {
+        name: "destination 1",
+        id: "12345",
+        destinationType: "group"
+      },
+      {
+        name: "destination 2",
+        id: "12345",
+        destinationType: "tester"
+      }
+    ];
+    // These models are here because the serialized property names are snake_case.
+    const apiDestinations = [
+      {
+        name: "destination 1",
+        id: "12345",
+        destination_type: "group"
+      },
+      {
+        name: "destination 2",
+        id: "12345",
+        destination_type: "tester"
+      }
+    ];
+
     const apiReleaseDetails = {
       id: fakeReleaseId,
       android_min_api_level: "5",
       app_name: fakeAppName,
-      distribution_groups: [{
-        id: "234",
-        name: "my group"
-      }]
+      destinations: apiDestinations
     };
 
     const releaseDetails: ReleaseDetailsResponse = {
       id: apiReleaseDetails.id,
       androidMinApiLevel: apiReleaseDetails.android_min_api_level,
       appName: apiReleaseDetails.app_name,
-      distributionGroups: apiReleaseDetails.distribution_groups
+      destinations: destinations
     };
 
     beforeEach(() => {
@@ -98,7 +121,7 @@ describe("releases show command", () => {
         ["Download URL", "downloadUrl"],
         ["Install URL", "installUrl"],
         ["Icon URL", "appIconUrl"],
-        ["Distribution Group", "distributionGroups", sinon.match.any]],
+        ["Destinations", "destinations", sinon.match.func]],
         releaseDetails
       );
 
