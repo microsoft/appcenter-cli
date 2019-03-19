@@ -61,7 +61,7 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
       ["Download URL", "downloadUrl"],
       ["Install URL", "installUrl"],
       ["Icon URL", "appIconUrl"],
-      ["Destinations", "destinations", (destinations: models.Destination[]) => destinations && destinations.length > 1 ? JSON.stringify(destinations, null, 2) : noDestinations]
+      ["Destinations", "destinations", (destinations: models.Destination[]) => destinations && destinations.length > 0 ? JSON.stringify(destinations, null, 2) : noDestinations]
     ], releaseDetails);
 
     return success();
