@@ -44,7 +44,7 @@ describe("releases show command", () => {
     Nock.enableNetConnect();
   });
 
-  describe.only("when everything works as expected", () => {
+  describe("when everything works as expected", () => {
     const destinations: Destination[] = [
       {
         name: "destination 1",
