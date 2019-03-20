@@ -59,7 +59,7 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 | `appcenter codepush patch` | Update the metadata for an existing CodePush release |
 | `appcenter codepush promote` | Create a new release for the destination deployment, which includes the exact code and metadata from the latest release of the source deployment |
 | `appcenter codepush release-cordova` | Release a Cordova update to an app deployment |
-| `appcenter codepush release-electron` | Release a Electron update to an deployment |
+| `appcenter codepush release-electron` | Release an Electron update to a deployment |
 | `appcenter codepush release-react` | Release a React Native update to an app deployment |
 | `appcenter codepush release` | Release an update to an app deployment |
 | `appcenter codepush rollback` | Rollback a deployment to a previous release |
@@ -80,11 +80,11 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 | `appcenter distribute groups list` | Lists all distribution groups of the app |
 | `appcenter distribute groups show` | Shows information about the distribution group |
 | `appcenter distribute groups update` | Update existing distribution group |
+| `appcenter distribute releases add-destination` | Distributes an existing release to an additional destination |
 | `appcenter distribute releases delete` | Deletes the release |
+| `appcenter distribute releases edit` | Toggles enabling and disabling the specified release |
 | `appcenter distribute releases list` | Shows the list of all releases for the application |
 | `appcenter distribute releases show` | Shows full details about release |
-| `appcenter distribute releases edit` | Enables/disables the release |
-| `appcenter distribute releases add-destination` | Distributes an existing release to an additional destination |
 | | |
 | `appcenter orgs create` | Create a new organization |
 | `appcenter orgs list` | Lists organizations in which current user is collaborator |
