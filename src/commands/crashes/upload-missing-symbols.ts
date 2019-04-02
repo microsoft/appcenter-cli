@@ -22,6 +22,8 @@ import * as ChildProcess from "child_process";
 const debug = require("debug")("appcenter-cli:commands:apps:crashes:upload-missing-symbols");
 const bplist = require("bplist");
 
+const MAX_SQL_INTEGER = 2147483647;
+
 @help("Upload missing crash symbols for the application (only from macOS)")
 export default class UploadMissingSymbols extends AppCommand {
   @help("Path to a dSYM package or a directory containing dSYM packages")
@@ -69,7 +71,7 @@ export default class UploadMissingSymbols extends AppCommand {
 
   private async getMissingSymbolsIds(client: AppCenterClient, app: DefaultApp): Promise<string[]> {
     try {
-      const httpResponse = await clientRequest<models.V2MissingSymbolCrashGroupsResponse>((cb) => client.missingSymbolGroups.list(Number.MAX_SAFE_INTEGER, app.ownerName, app.appName, cb));
+      const httpResponse = await clientRequest<models.V2MissingSymbolCrashGroupsResponse>((cb) => client.missingSymbolGroups.list(MAX_SQL_INTEGER, app.ownerName, app.appName, cb));
       return _.flatten(httpResponse.result.groups
         .map((crashGroup) => crashGroup.missingSymbols.filter((s) => s.status === "missing").map((s) => s.symbolId)));
     } catch (error) {
