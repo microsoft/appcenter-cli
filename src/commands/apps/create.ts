@@ -4,6 +4,7 @@ import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes
 import { out } from "../../util/interaction";
 import { reportApp } from "./lib/format-app";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { APP_ENVIRONMENT_VALIDATIONS } from "./lib/app-environment-validation";
 
 const debug = require("debug")("appcenter-cli:commands:apps:create");
 import { inspect } from "util";
@@ -62,6 +63,12 @@ export default class AppCreateCommand extends Command {
     };
 
     if (this.environment) {
+      if (this.environment.length > APP_ENVIRONMENT_VALIDATIONS.maxLength.rule) {
+        return failure(ErrorCodes.InvalidParameter, APP_ENVIRONMENT_VALIDATIONS.maxLength.errorMessage);
+      }
+      if (!APP_ENVIRONMENT_VALIDATIONS.matchRegexp.rule.test(this.environment)) {
+        return failure(ErrorCodes.InvalidParameter, APP_ENVIRONMENT_VALIDATIONS.matchRegexp.errorMessage);
+      }
       appAttributes.environment = this.environment;
     }
 
