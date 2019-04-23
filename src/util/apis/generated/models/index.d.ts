@@ -12,7 +12,7 @@ export interface GetInAppUpdateTokenResponse {
   /**
    * The api token generated will not be accessible again
   */
-  apiToken: string;
+  token: string;
 }
 
 export interface ApiTokensCreateResponse {
@@ -177,6 +177,11 @@ export interface AppPatchRequest {
   */
   displayName?: string;
   /**
+   * A one-word descriptive environment value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  environment?: string;
+  /**
    * The name of the app used in URLs
   */
   name?: string;
@@ -226,6 +231,11 @@ export interface AppRequest {
   */
   description?: string;
   /**
+   * A one-word descriptive environment value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  environment?: string;
+  /**
    * The descriptive name of the app. This can contain any characters
   */
   displayName: string;
@@ -235,12 +245,12 @@ export interface AppRequest {
   name?: string;
   /**
    * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
-   * 'Tizen', 'tvOS', 'Windows'
+   * 'Tizen', 'tvOS', 'Windows', 'Linux'
   */
   os: string;
   /**
    * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
-   * 'Cordova', 'React-Native', 'Xamarin', 'Unity'
+   * 'Cordova', 'React-Native', 'Xamarin', 'Unity', 'Electron'
   */
   platform: string;
 }
@@ -315,6 +325,14 @@ export interface DistributionGroupRequest {
    * The name of the distribution group
   */
   name: string;
+  /**
+   * The display name of the distribution group. If not specified, the name will be used.
+  */
+  displayName?: string;
+}
+
+export interface AppDistributionGroupUsersRequest {
+  memberIds?: string[];
 }
 
 export interface DistributionGroupUserRequest {
@@ -489,12 +507,13 @@ export interface InternalHockeyAppCompatibilityResponse {
   */
   ownerType?: string;
   /**
-   * The OS of the app. Possible values include: 'Android', 'iOS', 'macOS', 'Windows', 'Custom'
+   * The OS of the app. Possible values include: 'Android', 'iOS', 'macOS', 'Windows', 'Linux',
+   * 'Custom'
   */
   os?: string;
   /**
    * The OS of the app. Possible values include: 'Java', 'Objective-C-Swift', 'Cordova',
-   * 'React-Native', 'Unity', 'Xamarin', 'Unknown'
+   * 'React-Native', 'Unity', 'Electron', 'Xamarin', 'Unknown'
   */
   platform?: string;
   /**
@@ -617,6 +636,20 @@ export interface OrganizationUserPatchRequest {
    * The user's role in the organizatiion. Possible values include: 'admin', 'collaborator'
   */
   role?: string;
+}
+
+export interface AddOrganizationAdminRequest {
+  /**
+   * The internal unique id (UUID) of the account.
+  */
+  userId: string;
+}
+
+export interface TransferAppAdminRequest {
+  /**
+   * The internal unique id (UUID) of the user/org.
+  */
+  newOwnerId: string;
 }
 
 export interface PasswordUpdateRequest {
@@ -830,17 +863,22 @@ export interface AppGroupResponse {
   */
   displayName?: string;
   /**
+   * A one-word descriptive environment value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  environment?: string;
+  /**
    * The name of the app used in URLs
   */
   name: string;
   /**
    * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
-   * 'Tizen', 'tvOS', 'Windows', 'Custom'
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
   */
   os: string;
   /**
    * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
-   * 'Cordova', 'React-Native', 'Unity', 'Xamarin', 'Unknown'
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'Unknown'
   */
   platform: string;
 }
@@ -886,6 +924,11 @@ export interface BasicAppResponse {
   */
   displayName: string;
   /**
+   * A one-word descriptive environment value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  environment?: string;
+  /**
    * The string representation of the URL pointing to the app's icon
   */
   iconUrl?: string;
@@ -899,7 +942,7 @@ export interface BasicAppResponse {
   name: string;
   /**
    * The OS the app will be running on. Possible values include: 'Android', 'iOS', 'macOS',
-   * 'Tizen', 'tvOS', 'Windows', 'Custom'
+   * 'Tizen', 'tvOS', 'Windows', 'Linux', 'Custom'
   */
   os: string;
   owner: Owner;
@@ -914,7 +957,7 @@ export interface AppResponse extends BasicAppResponse {
   azureSubscription?: AzureSubscriptionResponse;
   /**
    * The platform of the app. Possible values include: 'Java', 'Objective-C-Swift', 'UWP',
-   * 'Cordova', 'React-Native', 'Unity', 'Xamarin', 'Unknown'
+   * 'Cordova', 'React-Native', 'Unity', 'Electron', 'Xamarin', 'Unknown'
   */
   platform: string;
   /**
@@ -1229,6 +1272,11 @@ export interface DistributionGroupDetailsResponse extends DistributionGroupRespo
    * The count of non-pending users in the distribution group who will be notified by new releases
   */
   notifiedUserCount: number;
+  /**
+   * Type of group (Default, HockeyAppDefault or MicrosoftDogfooding). Possible values include:
+   * 'Default', 'HockeyAppDefault', 'MicrosoftDogfooding'
+  */
+  groupType?: string;
   /**
    * The distribution group users
   */
@@ -4316,6 +4364,10 @@ export interface ReleaseDestinationResponse extends ReleaseStoreDestinationRespo
    * Flag to mark the release for the provided destinations as mandatory
   */
   mandatoryUpdate: boolean;
+  /**
+   * The url to check provisioning status.
+  */
+  provisioningStatusUrl?: string;
 }
 
 /**
@@ -4366,6 +4418,10 @@ export interface DestinationError {
    * developer credentials.<br>
    * <b>store_release_forbidden</b>: Publish to store is forbidden due to conflicts/errors in the
    * release version and already existing version in the store.<br>
+   * <b>store_release_promotion</b>: Release already distributed, promoting a release is not
+   * supported.<br>
+   * <b>store_track_deactivated</b>: One or more tracks would be deactivated with this release.
+   * This is not supported yet.<br>
    * <b>store_release_not_found</b>: App with the given package name is not found in the store.<br>
    * <b>store_release_not_available</b>: The release is not available.<br>
    * <b>internal_server_error</b>: Failed to distribute to a destination due to an internal server
@@ -4468,6 +4524,90 @@ export interface HockeyAppCompatibilityReleaseResponse {
   external?: boolean;
   deviceFamily?: string;
   minimumOsVersion?: string;
+}
+
+/**
+ * Describes the migration schema for a provisioning profile defined in HockeyApp.
+*/
+export interface ProvisioningProfileMigration {
+  /**
+   * The name of the provisioning profile.
+  */
+  name: string;
+  /**
+   * The bundle/application identifier.
+  */
+  bundleId: string;
+  /**
+   * The team identifier.
+  */
+  teamIdentifier: string;
+  /**
+   * The type of provisoning profile.
+  */
+  type: number;
+  /**
+   * A boolean value that indicates whether the provisioning profile represents an app extension.
+  */
+  isAppex: boolean;
+  /**
+   * The provisioning profile's expiration date in RFC 3339 format, i.e. 2017-07-21T17:32:28Z.
+  */
+  expiredAt?: Date;
+  /**
+   * A list of UDIDs of provisioned devices.
+  */
+  udids?: string[];
+  /**
+   * A provisioning profile URL that indicates where to download it from.
+  */
+  url?: string;
+}
+
+/**
+ * A single HockeyApp release to migrate to App Center
+*/
+export interface HockeyAppMigrationRelease {
+  id?: number;
+  shortversion?: string;
+  version?: string;
+  appsize?: number;
+  minimumOsVersion?: string;
+  md5Fingerprint?: string;
+  createdAt?: Date;
+  buildUrl?: string;
+  bundleIdentifier?: string;
+  deviceFamily?: string;
+  languages?: string[];
+  /**
+   * For iOS apps, a dictionary of UUIDs for architectures (in format `{"armv7":
+   * "353df799-d450-3308-8492-928ecf1ebf53", "arm64": "e67c0e93-b6d6-3f5a-b3a7-68d2b215bf27"}`)
+  */
+  uuids?: { [propertyName: string]: string };
+  isExternalBuild?: boolean;
+  mandatory?: boolean;
+  /**
+   * The status of the release in HockeyApp. Maps to HockeyAppSchema.AppVersionStatus. Possible
+   * values: Deleted = -1, New = 0, Inactive = 1, Active = 2, Hidden = 3, SonomaActive = 4
+  */
+  status?: number;
+  notes?: string;
+  /**
+   * List of DistributionGroup IDs the release is distributed to
+  */
+  distributionGroupIds?: string[];
+  /**
+   * List of User IDs the release is distributed to
+  */
+  distributionUserIds?: string[];
+  provisioningProfiles?: ProvisioningProfileMigration[];
+}
+
+/**
+ * A list of HockeyApp releases to migrate to App Center
+*/
+export interface MigrateReleaseRequest {
+  releases?: HockeyAppMigrationRelease[];
 }
 
 /**
@@ -5036,6 +5176,53 @@ export interface DeviceRegistrationUrl {
   registrationUrl: string;
 }
 
+/**
+ * URL that can be used to check the status of the update devices operation and the updated
+ * profiles.
+*/
+export interface ResignAttemptResponse {
+  /**
+   * The status of the resigning operation.
+  */
+  status: string;
+  /**
+   * ID of the user performing the resign operaiton.
+  */
+  userId: string;
+  /**
+   * App ID that the resign operation is being performed against.
+  */
+  appId: string;
+  /**
+   * ID of the release which is being resigned.
+  */
+  originalReleaseId: number;
+  /**
+   * ID of the resign operation.
+  */
+  resignId: string;
+  /**
+   * Context ID for the resigning operation.
+  */
+  contextId: string;
+  /**
+   * The time that the resign operation was started.
+  */
+  startTime: number;
+  /**
+   * List of destinations that the resign operation is being performed against.
+  */
+  destinations?: any[];
+  /**
+   * Error code associated with the exception.
+  */
+  errorCode?: string;
+  /**
+   * Error message associated with the exception.
+  */
+  errorMessage?: string;
+}
+
 export interface StoresBasicDetails {
   /**
    * ID identifying a unique distribution store.
@@ -5478,6 +5665,16 @@ export interface HasTestflightMetadataResponse {
    * true if the app has the testflight metadata, false otherwise
   */
   hasTestflightMetadata?: boolean;
+}
+
+/**
+ * Wheither or not to skip the validation for this release
+*/
+export interface SkipValidationRequest {
+  /**
+   * true if we want to skip the validation, false otherwise
+  */
+  skipValidation?: boolean;
 }
 
 export interface IntuneTargetAudienceResponse {
@@ -8973,7 +9170,8 @@ export interface ExportConfigurationListResult {
 }
 
 /**
- * Generic notification target.
+ * Type of Notification target (audiences, devices, user ids or account ids). The object must
+ * include the correct properties for the specified target type.
 */
 export interface NotificationTarget {
   /**
@@ -9043,7 +9241,7 @@ export interface NotificationContent {
   */
   body: string;
   /**
-   * Notification custom data(priority, expiration, etc.)
+   * Notification custom data (such as badge, color, sound, etc.)
   */
   customData?: { [propertyName: string]: string };
 }
@@ -9142,7 +9340,8 @@ export interface NotificationTargetDevices extends NotificationTarget {
 }
 
 /**
- * Generic notification configuration.
+ * Generic notification configuration. Is a base type and caller should choose one of the derived
+ * types specified in the enum.
 */
 export interface NotificationConfig {
   /**
@@ -11003,6 +11202,126 @@ export interface DataSubjectRightStatusResponse {
    * explanation message of the status
   */
   message: string;
+}
+
+export interface UserResponse {
+  accountId: string;
+  mail?: string;
+  displayName: string;
+}
+
+export interface UsersResponse {
+  value: UserResponse[];
+}
+
+/**
+ * This response contains the Azure AD B2C client ID for an application.
+*/
+export interface ClientIdResponse {
+  clientId?: string;
+}
+
+export interface AuthTenant {
+  id: string;
+  name: string;
+}
+
+export interface AuthTenantsResponse {
+  value?: AuthTenant[];
+}
+
+export interface ApplicationResponse {
+  id?: string;
+  createdAt?: Date;
+  name?: string;
+}
+
+export interface ApplicationsResponse {
+  value?: ApplicationResponse[];
+}
+
+export interface ScopeResponse {
+  id?: string;
+  appName?: string;
+  scope?: string;
+  url?: string;
+}
+
+export interface ScopesResponse {
+  value?: ScopeResponse[];
+}
+
+export interface AuthApplicationResponse {
+  id: string;
+  tenantId: string;
+  tenantName: string;
+  policyId: string;
+  scopeId: string;
+  scopeUrl: string;
+  isSdkConfigured?: boolean;
+}
+
+export interface AuthApplicationPostRequest {
+  tenantId?: string;
+  tenantDomain?: string;
+}
+
+export interface AuthApplicationPatchRequest {
+  policyId: string;
+  scopeId: string;
+  scopeUrl: string;
+}
+
+export interface ExistingAuthApplicationPostRequest {
+  tenantId: string;
+  tenantName: string;
+  id: string;
+  policyId: string;
+  scopeId: string;
+  scopeUrl: string;
+}
+
+export interface TrustFrameworkPolicyResponse {
+  id?: string;
+}
+
+export interface TrustFrameworkPoliciesResponse {
+  value?: TrustFrameworkPolicyResponse[];
+}
+
+export interface IdentityProvider {
+  /**
+   * The unique name of a provider. Valid values are:
+   * facebook, google, microsoft, email
+   * Read only
+  */
+  providerId: string;
+  /**
+   * Determines if the provider is currently active or not
+  */
+  enabled: boolean;
+  clientId?: string;
+  clientSecret?: string;
+}
+
+export interface IdentityProviderPatchPayload {
+  /**
+   * Determines if the provider is currently active or not
+  */
+  enabled?: boolean;
+  clientId?: string;
+  clientSecret?: string;
+}
+
+/**
+ * This response contains the location of the resource URI for 201 or 202 responses.
+*/
+export interface LocationResponse {
+  location?: string;
+}
+
+export interface ExistingCosmosDbParameters {
+  cosmosDbConnectionString?: string;
 }
 
 export interface ListOKResponseItem {

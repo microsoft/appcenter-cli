@@ -621,7 +621,7 @@ function _errorAttachments(errorId, ownerName, appName, options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _groupList(ownerName, appName, options, callback) {
+function _errorSearch(ownerName, appName, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -1065,8 +1065,9 @@ function _getRetentionSettings(ownerName, appName, options, callback) {
 
 /**
  * Percentage of error-free devices by day in the time range based on the
- * selected versions. Api will return -1 if crash devices is greater than
- * active devices
+ * selected versions. If SingleErrorTypeParameter is not provided, defaults to
+ * handlederror. API will return -1 if crash devices is greater than active
+ * devices
  *
  * @param {date} start Start date time in data in ISO 8601 date time format
  *
@@ -1081,8 +1082,8 @@ function _getRetentionSettings(ownerName, appName, options, callback) {
  *
  * @param {array} [options.versions]
  *
- * @param {string} [options.errorType] Type of error. Possible values include:
- * 'all', 'unhandledError', 'handledError'
+ * @param {string} [options.errorType] Type of error (handled vs unhandled),
+ * excluding All. Possible values include: 'unhandledError', 'handledError'
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1379,7 +1380,7 @@ function _groupErrorStackTrace(errorGroupId, ownerName, appName, options, callba
  * @param {object} [options] Optional Parameters.
  *
  * @param {number} [options.top] The maximum number of results to return. (0
- * will fetch all results)
+ * will fetch all results till the max number.)
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1535,7 +1536,7 @@ function _groupOperatingSystemCounts(errorGroupId, ownerName, appName, options, 
  * @param {object} [options] Optional Parameters.
  *
  * @param {number} [options.top] The maximum number of results to return. (0
- * will fetch all results)
+ * will fetch all results till the max number.)
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -2499,10 +2500,6 @@ function _latestErrorDetails(errorGroupId, ownerName, appName, options, callback
  *
  * @param {date} start Start date time in data in ISO 8601 date time format
  *
- * @param {string} model
- *
- * @param {string} os
- *
  * @param {string} ownerName The name of the owner
  *
  * @param {string} appName The name of the application
@@ -2511,6 +2508,10 @@ function _latestErrorDetails(errorGroupId, ownerName, appName, options, callback
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
  * format
+ *
+ * @param {string} [options.model]
+ *
+ * @param {string} [options.os]
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -2528,7 +2529,7 @@ function _latestErrorDetails(errorGroupId, ownerName, appName, options, callback
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _listForGroup(errorGroupId, start, model, os, ownerName, appName, options, callback) {
+function _listForGroup(errorGroupId, start, ownerName, appName, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -2539,6 +2540,8 @@ function _listForGroup(errorGroupId, start, model, os, ownerName, appName, optio
     throw new Error('callback cannot be null.');
   }
   let end = (options && options.end !== undefined) ? options.end : undefined;
+  let model = (options && options.model !== undefined) ? options.model : undefined;
+  let os = (options && options.os !== undefined) ? options.os : undefined;
   // Validate
   try {
     if (errorGroupId === null || errorGroupId === undefined || typeof errorGroupId.valueOf() !== 'string') {
@@ -2552,11 +2555,11 @@ function _listForGroup(errorGroupId, start, model, os, ownerName, appName, optio
         (typeof end.valueOf() === 'string' && !isNaN(Date.parse(end))))) {
           throw new Error('end must be of type date.');
         }
-    if (model === null || model === undefined || typeof model.valueOf() !== 'string') {
-      throw new Error('model cannot be null or undefined and it must be of type string.');
+    if (model !== null && model !== undefined && typeof model.valueOf() !== 'string') {
+      throw new Error('model must be of type string.');
     }
-    if (os === null || os === undefined || typeof os.valueOf() !== 'string') {
-      throw new Error('os cannot be null or undefined and it must be of type string.');
+    if (os !== null && os !== undefined && typeof os.valueOf() !== 'string') {
+      throw new Error('os must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -2579,8 +2582,12 @@ function _listForGroup(errorGroupId, start, model, os, ownerName, appName, optio
   if (end !== null && end !== undefined) {
     queryParameters.push('end=' + encodeURIComponent(client.serializeObject(end)));
   }
-  queryParameters.push('model=' + encodeURIComponent(model));
-  queryParameters.push('os=' + encodeURIComponent(os));
+  if (model !== null && model !== undefined) {
+    queryParameters.push('model=' + encodeURIComponent(model));
+  }
+  if (os !== null && os !== undefined) {
+    queryParameters.push('os=' + encodeURIComponent(os));
+  }
   if (queryParameters.length > 0) {
     requestUrl += '?' + queryParameters.join('&');
   }
@@ -3496,10 +3503,11 @@ function _errorGroupsSearch(ownerName, appName, options, callback) {
  * based on which column
  *
  * @param {number} [options.top] The maximum number of results to return. (0
- * will fetch all results)
+ * will fetch all results till the max number.)
  *
- * @param {string} [options.errorType] Type of error. Possible values include:
- * 'all', 'unhandledError', 'handledError'
+ * @param {string} [options.errorType] Type of error (handled vs unhandled),
+ * including All. Possible values include: 'all', 'unhandledError',
+ * 'handledError'
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -3517,7 +3525,7 @@ function _errorGroupsSearch(ownerName, appName, options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _groupList1(start, ownerName, appName, options, callback) {
+function _groupList(start, ownerName, appName, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -3680,7 +3688,9 @@ function _groupList1(start, ownerName, appName, options, callback) {
 }
 
 /**
- * Count of errors by day in the time range based the selected versions.
+ * Count of crashes or errors by day in the time range based the selected
+ * versions. If SingleErrorTypeParameter is not provided, defaults to
+ * handlederror.
  *
  * @param {date} start Start date time in data in ISO 8601 date time format
  *
@@ -3695,8 +3705,8 @@ function _groupList1(start, ownerName, appName, options, callback) {
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
  * format
  *
- * @param {string} [options.errorType] Type of error. Possible values include:
- * 'all', 'unhandledError', 'handledError'
+ * @param {string} [options.errorType] Type of error (handled vs unhandled),
+ * excluding All. Possible values include: 'unhandledError', 'handledError'
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -3860,7 +3870,7 @@ function _countsPerDay(start, ownerName, appName, options, callback) {
  * format
  *
  * @param {number} [options.top] The maximum number of results to return. (0
- * will fetch all results)
+ * will fetch all results till the max number.)
  *
  * @param {number} [options.skip] The offset (starting at 0) of the first
  * result to return. This parameter along with limit is used to perform
@@ -3873,8 +3883,9 @@ function _countsPerDay(start, ownerName, appName, options, callback) {
  * count of all the items across all pages. Possible values include:
  * 'allpages', 'none'
  *
- * @param {string} [options.errorType] Type of error. Possible values include:
- * 'all', 'unhandledError', 'handledError'
+ * @param {string} [options.errorType] Type of error (handled vs unhandled),
+ * including All. Possible values include: 'all', 'unhandledError',
+ * 'handledError'
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -4073,7 +4084,7 @@ class Errors {
     this._errorAttachmentTextMethod = _errorAttachmentTextMethod;
     this._errorAttachmentLocationMethod = _errorAttachmentLocationMethod;
     this._errorAttachments = _errorAttachments;
-    this._groupList = _groupList;
+    this._errorSearch = _errorSearch;
     this._putRetentionSettings = _putRetentionSettings;
     this._getRetentionSettings = _getRetentionSettings;
     this._errorFreeDevicePercentagesMethod = _errorFreeDevicePercentagesMethod;
@@ -4092,7 +4103,7 @@ class Errors {
     this._groupDetails = _groupDetails;
     this._updateState = _updateState;
     this._errorGroupsSearch = _errorGroupsSearch;
-    this._groupList1 = _groupList1;
+    this._groupList = _groupList;
     this._countsPerDay = _countsPerDay;
     this._availableVersionsMethod = _availableVersionsMethod;
   }
@@ -4506,11 +4517,11 @@ class Errors {
    *
    * @reject {Error} - The error object.
    */
-  groupListWithHttpOperationResponse(ownerName, appName, options) {
+  errorSearchWithHttpOperationResponse(ownerName, appName, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._groupList(ownerName, appName, options, (err, result, request, response) => {
+      self._errorSearch(ownerName, appName, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -4572,7 +4583,7 @@ class Errors {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  groupList(ownerName, appName, options, optionalCallback) {
+  errorSearch(ownerName, appName, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -4581,14 +4592,14 @@ class Errors {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._groupList(ownerName, appName, options, (err, result, request, response) => {
+        self._errorSearch(ownerName, appName, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._groupList(ownerName, appName, options, optionalCallback);
+      return self._errorSearch(ownerName, appName, options, optionalCallback);
     }
   }
 
@@ -4780,8 +4791,9 @@ class Errors {
 
   /**
    * Percentage of error-free devices by day in the time range based on the
-   * selected versions. Api will return -1 if crash devices is greater than
-   * active devices
+   * selected versions. If SingleErrorTypeParameter is not provided, defaults to
+   * handlederror. API will return -1 if crash devices is greater than active
+   * devices
    *
    * @param {date} start Start date time in data in ISO 8601 date time format
    *
@@ -4796,8 +4808,8 @@ class Errors {
    *
    * @param {array} [options.versions]
    *
-   * @param {string} [options.errorType] Type of error. Possible values include:
-   * 'all', 'unhandledError', 'handledError'
+   * @param {string} [options.errorType] Type of error (handled vs unhandled),
+   * excluding All. Possible values include: 'unhandledError', 'handledError'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -4824,8 +4836,9 @@ class Errors {
 
   /**
    * Percentage of error-free devices by day in the time range based on the
-   * selected versions. Api will return -1 if crash devices is greater than
-   * active devices
+   * selected versions. If SingleErrorTypeParameter is not provided, defaults to
+   * handlederror. API will return -1 if crash devices is greater than active
+   * devices
    *
    * @param {date} start Start date time in data in ISO 8601 date time format
    *
@@ -4840,8 +4853,8 @@ class Errors {
    *
    * @param {array} [options.versions]
    *
-   * @param {string} [options.errorType] Type of error. Possible values include:
-   * 'all', 'unhandledError', 'handledError'
+   * @param {string} [options.errorType] Type of error (handled vs unhandled),
+   * excluding All. Possible values include: 'unhandledError', 'handledError'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -4991,7 +5004,7 @@ class Errors {
    * @param {object} [options] Optional Parameters.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
-   * will fetch all results)
+   * will fetch all results till the max number.)
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -5028,7 +5041,7 @@ class Errors {
    * @param {object} [options] Optional Parameters.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
-   * will fetch all results)
+   * will fetch all results till the max number.)
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -5088,7 +5101,7 @@ class Errors {
    * @param {object} [options] Optional Parameters.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
-   * will fetch all results)
+   * will fetch all results till the max number.)
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -5125,7 +5138,7 @@ class Errors {
    * @param {object} [options] Optional Parameters.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
-   * will fetch all results)
+   * will fetch all results till the max number.)
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -5746,10 +5759,6 @@ class Errors {
    *
    * @param {date} start Start date time in data in ISO 8601 date time format
    *
-   * @param {string} model
-   *
-   * @param {string} os
-   *
    * @param {string} ownerName The name of the owner
    *
    * @param {string} appName The name of the application
@@ -5758,6 +5767,10 @@ class Errors {
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
    * format
+   *
+   * @param {string} [options.model]
+   *
+   * @param {string} [options.os]
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -5768,11 +5781,11 @@ class Errors {
    *
    * @reject {Error} - The error object.
    */
-  listForGroupWithHttpOperationResponse(errorGroupId, start, model, os, ownerName, appName, options) {
+  listForGroupWithHttpOperationResponse(errorGroupId, start, ownerName, appName, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._listForGroup(errorGroupId, start, model, os, ownerName, appName, options, (err, result, request, response) => {
+      self._listForGroup(errorGroupId, start, ownerName, appName, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -5789,10 +5802,6 @@ class Errors {
    *
    * @param {date} start Start date time in data in ISO 8601 date time format
    *
-   * @param {string} model
-   *
-   * @param {string} os
-   *
    * @param {string} ownerName The name of the owner
    *
    * @param {string} appName The name of the application
@@ -5801,6 +5810,10 @@ class Errors {
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
    * format
+   *
+   * @param {string} [options.model]
+   *
+   * @param {string} [options.os]
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -5827,7 +5840,7 @@ class Errors {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  listForGroup(errorGroupId, start, model, os, ownerName, appName, options, optionalCallback) {
+  listForGroup(errorGroupId, start, ownerName, appName, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -5836,14 +5849,14 @@ class Errors {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._listForGroup(errorGroupId, start, model, os, ownerName, appName, options, (err, result, request, response) => {
+        self._listForGroup(errorGroupId, start, ownerName, appName, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._listForGroup(errorGroupId, start, model, os, ownerName, appName, options, optionalCallback);
+      return self._listForGroup(errorGroupId, start, ownerName, appName, options, optionalCallback);
     }
   }
 
@@ -6389,10 +6402,11 @@ class Errors {
    * based on which column
    *
    * @param {number} [options.top] The maximum number of results to return. (0
-   * will fetch all results)
+   * will fetch all results till the max number.)
    *
-   * @param {string} [options.errorType] Type of error. Possible values include:
-   * 'all', 'unhandledError', 'handledError'
+   * @param {string} [options.errorType] Type of error (handled vs unhandled),
+   * including All. Possible values include: 'all', 'unhandledError',
+   * 'handledError'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -6403,11 +6417,11 @@ class Errors {
    *
    * @reject {Error} - The error object.
    */
-  groupList1WithHttpOperationResponse(start, ownerName, appName, options) {
+  groupListWithHttpOperationResponse(start, ownerName, appName, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._groupList1(start, ownerName, appName, options, (err, result, request, response) => {
+      self._groupList(start, ownerName, appName, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -6439,10 +6453,11 @@ class Errors {
    * based on which column
    *
    * @param {number} [options.top] The maximum number of results to return. (0
-   * will fetch all results)
+   * will fetch all results till the max number.)
    *
-   * @param {string} [options.errorType] Type of error. Possible values include:
-   * 'all', 'unhandledError', 'handledError'
+   * @param {string} [options.errorType] Type of error (handled vs unhandled),
+   * including All. Possible values include: 'all', 'unhandledError',
+   * 'handledError'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -6469,7 +6484,7 @@ class Errors {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  groupList1(start, ownerName, appName, options, optionalCallback) {
+  groupList(start, ownerName, appName, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -6478,19 +6493,21 @@ class Errors {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._groupList1(start, ownerName, appName, options, (err, result, request, response) => {
+        self._groupList(start, ownerName, appName, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._groupList1(start, ownerName, appName, options, optionalCallback);
+      return self._groupList(start, ownerName, appName, options, optionalCallback);
     }
   }
 
   /**
-   * Count of errors by day in the time range based the selected versions.
+   * Count of crashes or errors by day in the time range based the selected
+   * versions. If SingleErrorTypeParameter is not provided, defaults to
+   * handlederror.
    *
    * @param {date} start Start date time in data in ISO 8601 date time format
    *
@@ -6505,8 +6522,8 @@ class Errors {
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
    * format
    *
-   * @param {string} [options.errorType] Type of error. Possible values include:
-   * 'all', 'unhandledError', 'handledError'
+   * @param {string} [options.errorType] Type of error (handled vs unhandled),
+   * excluding All. Possible values include: 'unhandledError', 'handledError'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -6532,7 +6549,9 @@ class Errors {
   }
 
   /**
-   * Count of errors by day in the time range based the selected versions.
+   * Count of crashes or errors by day in the time range based the selected
+   * versions. If SingleErrorTypeParameter is not provided, defaults to
+   * handlederror.
    *
    * @param {date} start Start date time in data in ISO 8601 date time format
    *
@@ -6547,8 +6566,8 @@ class Errors {
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
    * format
    *
-   * @param {string} [options.errorType] Type of error. Possible values include:
-   * 'all', 'unhandledError', 'handledError'
+   * @param {string} [options.errorType] Type of error (handled vs unhandled),
+   * excluding All. Possible values include: 'unhandledError', 'handledError'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -6610,7 +6629,7 @@ class Errors {
    * format
    *
    * @param {number} [options.top] The maximum number of results to return. (0
-   * will fetch all results)
+   * will fetch all results till the max number.)
    *
    * @param {number} [options.skip] The offset (starting at 0) of the first
    * result to return. This parameter along with limit is used to perform
@@ -6623,8 +6642,9 @@ class Errors {
    * count of all the items across all pages. Possible values include:
    * 'allpages', 'none'
    *
-   * @param {string} [options.errorType] Type of error. Possible values include:
-   * 'all', 'unhandledError', 'handledError'
+   * @param {string} [options.errorType] Type of error (handled vs unhandled),
+   * including All. Possible values include: 'all', 'unhandledError',
+   * 'handledError'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -6664,7 +6684,7 @@ class Errors {
    * format
    *
    * @param {number} [options.top] The maximum number of results to return. (0
-   * will fetch all results)
+   * will fetch all results till the max number.)
    *
    * @param {number} [options.skip] The offset (starting at 0) of the first
    * result to return. This parameter along with limit is used to perform
@@ -6677,8 +6697,9 @@ class Errors {
    * count of all the items across all pages. Possible values include:
    * 'allpages', 'none'
    *
-   * @param {string} [options.errorType] Type of error. Possible values include:
-   * 'all', 'unhandledError', 'handledError'
+   * @param {string} [options.errorType] Type of error (handled vs unhandled),
+   * including All. Possible values include: 'all', 'unhandledError',
+   * 'handledError'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

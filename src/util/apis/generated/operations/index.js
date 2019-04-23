@@ -39,6 +39,7 @@ exports.Symbols = require('./symbols');
 exports.SymbolUploads = require('./symbolUploads');
 exports.StoreNotifications = require('./storeNotifications');
 exports.Repositories = require('./repositories');
+exports.Identity = require('./identity');
 exports.RepositoryConfigurations = require('./repositoryConfigurations');
 exports.Provisioning = require('./provisioning');
 exports.ReleaseUploads = require('./releaseUploads');

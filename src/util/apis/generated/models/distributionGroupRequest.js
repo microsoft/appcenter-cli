@@ -17,6 +17,8 @@ class DistributionGroupRequest {
   /**
    * Create a DistributionGroupRequest.
    * @property {string} name The name of the distribution group
+   * @property {string} [displayName] The display name of the distribution
+   * group. If not specified, the name will be used.
    */
   constructor() {
   }
@@ -38,6 +40,13 @@ class DistributionGroupRequest {
           name: {
             required: true,
             serializedName: 'name',
+            type: {
+              name: 'String'
+            }
+          },
+          displayName: {
+            required: false,
+            serializedName: 'display_name',
             type: {
               name: 'String'
             }

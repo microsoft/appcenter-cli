@@ -1678,6 +1678,9 @@ function _deleteForOrg(orgName, distributionGroupName, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {string} [options.displayName] The display name of the distribution
+ * group. If not specified, the name will be used.
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -1705,6 +1708,7 @@ function _createForOrg(orgName, name, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let displayName = (options && options.displayName !== undefined) ? options.displayName : undefined;
   // Validate
   try {
     if (orgName === null || orgName === undefined || typeof orgName.valueOf() !== 'string') {
@@ -1713,13 +1717,17 @@ function _createForOrg(orgName, name, options, callback) {
     if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
       throw new Error('name cannot be null or undefined and it must be of type string.');
     }
+    if (displayName !== null && displayName !== undefined && typeof displayName.valueOf() !== 'string') {
+      throw new Error('displayName must be of type string.');
+    }
   } catch (error) {
     return callback(error);
   }
   let distributionGroup;
-  if (name !== null && name !== undefined) {
+  if ((name !== null && name !== undefined) || (displayName !== null && displayName !== undefined)) {
     distributionGroup = new client.models['DistributionGroupRequest']();
     distributionGroup.name = name;
+    distributionGroup.displayName = displayName;
   }
 
   // Construct URL
@@ -3168,6 +3176,9 @@ function _list(ownerName, appName, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {string} [options.displayName] The display name of the distribution
+ * group. If not specified, the name will be used.
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -3195,6 +3206,7 @@ function _create(ownerName, appName, name, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let displayName = (options && options.displayName !== undefined) ? options.displayName : undefined;
   // Validate
   try {
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
@@ -3206,13 +3218,17 @@ function _create(ownerName, appName, name, options, callback) {
     if (name === null || name === undefined || typeof name.valueOf() !== 'string') {
       throw new Error('name cannot be null or undefined and it must be of type string.');
     }
+    if (displayName !== null && displayName !== undefined && typeof displayName.valueOf() !== 'string') {
+      throw new Error('displayName must be of type string.');
+    }
   } catch (error) {
     return callback(error);
   }
   let distributionGroup;
-  if (name !== null && name !== undefined) {
+  if ((name !== null && name !== undefined) || (displayName !== null && displayName !== undefined)) {
     distributionGroup = new client.models['DistributionGroupRequest']();
     distributionGroup.name = name;
+    distributionGroup.displayName = displayName;
   }
 
   // Construct URL
@@ -4410,6 +4426,9 @@ class DistributionGroups {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {string} [options.displayName] The display name of the distribution
+   * group. If not specified, the name will be used.
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -4442,6 +4461,9 @@ class DistributionGroups {
    * @param {string} name The name of the distribution group
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {string} [options.displayName] The display name of the distribution
+   * group. If not specified, the name will be used.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -5321,6 +5343,9 @@ class DistributionGroups {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {string} [options.displayName] The display name of the distribution
+   * group. If not specified, the name will be used.
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -5354,6 +5379,9 @@ class DistributionGroups {
    * @param {string} name The name of the distribution group
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {string} [options.displayName] The display name of the distribution
+   * group. If not specified, the name will be used.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

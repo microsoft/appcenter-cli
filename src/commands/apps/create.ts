@@ -46,6 +46,12 @@ export default class AppCreateCommand extends Command {
   @hasArg
   platform: string;
 
+  @help("The environment of the app. This must be one word, alphanumeric, first letter capitalized.")
+  @shortName("e")
+  @longName("environment-app")
+  @hasArg
+  environment: string;
+
   async run(client: AppCenterClient): Promise<CommandResult> {
     const appAttributes: models.AppRequest = {
       displayName: this.displayName,
@@ -54,6 +60,10 @@ export default class AppCreateCommand extends Command {
       description: this.description,
       name: this.name,
     };
+
+    if (this.environment) {
+      appAttributes.environment = this.environment;
+    }
 
     debug(`Creating app with attributes: ${inspect(appAttributes)}`);
     const createAppResponse = await out.progress("Creating app ...",

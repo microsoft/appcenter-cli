@@ -20,8 +20,8 @@ class NotificationContent {
    * @property {string} name Notification name
    * @property {string} [title] Notification title
    * @property {string} body Notification body
-   * @property {object} [customData] Notification custom data(priority,
-   * expiration, etc.)
+   * @property {object} [customData] Notification custom data (such as badge,
+   * color, sound, etc.)
    */
   constructor() {
   }
