@@ -5105,7 +5105,7 @@ function _gdprExportAccount(options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _gdprExportAccount1(options, callback) {
+function _gdprExport(options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -5234,7 +5234,7 @@ class Test {
     this._gdprExportUser = _gdprExportUser;
     this._gdprExportFeatureFlag = _gdprExportFeatureFlag;
     this._gdprExportAccount = _gdprExportAccount;
-    this._gdprExportAccount1 = _gdprExportAccount1;
+    this._gdprExport = _gdprExport;
   }
 
   /**
@@ -8663,11 +8663,11 @@ class Test {
    *
    * @reject {Error} - The error object.
    */
-  gdprExportAccount1WithHttpOperationResponse(options) {
+  gdprExportWithHttpOperationResponse(options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._gdprExportAccount1(options, (err, result, request, response) => {
+      self._gdprExport(options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -8707,7 +8707,7 @@ class Test {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  gdprExportAccount1(options, optionalCallback) {
+  gdprExport(options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -8716,14 +8716,14 @@ class Test {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._gdprExportAccount1(options, (err, result, request, response) => {
+        self._gdprExport(options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._gdprExportAccount1(options, optionalCallback);
+      return self._gdprExport(options, optionalCallback);
     }
   }
 

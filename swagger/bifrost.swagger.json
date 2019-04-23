@@ -4736,6 +4736,81 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/resourceProvisioning": {
+      "get": {
+        "operationId": "identity_getResourceProvisioning",
+        "consumes": [],
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "file"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "mbaas"
+        ]
+      },
+      "post": {
+        "summary": "Creates Cosmos DB or attaches an existing one",
+        "operationId": "identity_postResourceProvisioning",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "existingCosmosDbParameters",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/ExistingCosmosDbParameters"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "202": {
+            "description": "Request Accepted"
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "mbaas"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/repo_config": {
       "get": {
         "description": "Returns the repository build configuration status of the app",
@@ -7261,7 +7336,7 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/errors/search": {
       "get": {
-        "operationId": "Errors_GroupList",
+        "operationId": "Errors_ErrorSearch",
         "description": "Errors list based on search parameters",
         "parameters": [
           {
@@ -7391,7 +7466,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/errors/errorfreeDevicePercentages": {
       "get": {
         "operationId": "Errors_ErrorFreeDevicePercentages",
-        "description": "Percentage of error-free devices by day in the time range based on the selected versions. Api will return -1 if crash devices is greater than active devices",
+        "description": "Percentage of error-free devices by day in the time range based on the selected versions. If SingleErrorTypeParameter is not provided, defaults to handlederror. API will return -1 if crash devices is greater than active devices",
         "parameters": [
           {
             "$ref": "#/parameters/ErrorStartParameter"
@@ -7403,7 +7478,7 @@
             "$ref": "#/parameters/ErrorVersionsParameter"
           },
           {
-            "$ref": "#/parameters/ErrorTypeParameter"
+            "$ref": "#/parameters/SingleErrorTypeParameter"
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -7414,7 +7489,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Percentage of error-free devices by day in the time range and overall percentage of the time range.",
+            "description": "Percentage of error-free devices by day in the time range and overall percentage of the entire time range.",
             "schema": {
               "$ref": "#/definitions/ErrorFreeDevicePercentages"
             }
@@ -7824,10 +7899,10 @@
             "$ref": "#/parameters/ErrorEndParameter"
           },
           {
-            "$ref": "#/parameters/ModelParameter"
+            "$ref": "#/parameters/ModelParameterOptional"
           },
           {
-            "$ref": "#/parameters/OsParameter"
+            "$ref": "#/parameters/OsParameterOptional"
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -8146,7 +8221,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/errors/errorCountsPerDay": {
       "get": {
         "operationId": "Errors_CountsPerDay",
-        "description": "Count of errors by day in the time range based the selected versions.",
+        "description": "Count of crashes or errors by day in the time range based the selected versions. If SingleErrorTypeParameter is not provided, defaults to handlederror.",
         "parameters": [
           {
             "$ref": "#/parameters/ErrorVersionParameterOptional"
@@ -8158,7 +8233,7 @@
             "$ref": "#/parameters/ErrorEndParameter"
           },
           {
-            "$ref": "#/parameters/ErrorTypeParameter"
+            "$ref": "#/parameters/SingleErrorTypeParameter"
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -8169,7 +8244,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Count of errors by day in the time range and total crashes over the time range.",
+            "description": "Count of crashes or errors by day in the time range, and total over the entire time range.",
             "schema": {
               "$ref": "#/definitions/ErrorCounts"
             }
@@ -11921,6 +11996,51 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/auth/users": {
+      "get": {
+        "summary": "Returns users of a tenant.\nReturns all users if no searchTerm param is specified.",
+        "operationId": "identity_getUsers",
+        "consumes": [],
+        "parameters": [
+          {
+            "name": "AC-Authorization-Microsoft-Graph",
+            "in": "header",
+            "description": "MSGraph Auth Token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "description": "User search term",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "file"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "mbaas"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/apple_test_flight_groups": {
       "get": {
         "deprecated": true,
@@ -14073,7 +14193,7 @@
     "/v0.1/account/test/export": {
       "get": {
         "description": "Lists all the endpoints available for Test account data",
-        "operationId": "test_gdprExportAccount",
+        "operationId": "test_gdprExport",
         "responses": {
           "200": {
             "description": "OK",
@@ -14096,13 +14216,13 @@
   "definitions": {
     "GetInAppUpdateTokenResponse": {
       "properties": {
-        "api_token": {
+        "token": {
           "type": "string",
           "description": "The api token generated will not be accessible again"
         }
       },
       "required": [
-        "api_token"
+        "token"
       ]
     },
     "ApiTokensCreateResponse": {
@@ -14378,6 +14498,10 @@
           "description": "The display name of the app",
           "type": "string"
         },
+        "environment": {
+          "description": "A one-word descriptive environment value that starts with a capital letter but is otherwise lowercase",
+          "type": "string"
+        },
         "name": {
           "description": "The name of the app used in URLs",
           "type": "string"
@@ -14441,6 +14565,10 @@
           "description": "A short text describing the app",
           "type": "string"
         },
+        "environment": {
+          "description": "A one-word descriptive environment value that starts with a capital letter but is otherwise lowercase",
+          "type": "string"
+        },
         "display_name": {
           "description": "The descriptive name of the app. This can contain any characters",
           "type": "string"
@@ -14458,7 +14586,8 @@
             "macOS",
             "Tizen",
             "tvOS",
-            "Windows"
+            "Windows",
+            "Linux"
           ]
         },
         "platform": {
@@ -14471,7 +14600,8 @@
             "Cordova",
             "React-Native",
             "Xamarin",
-            "Unity"
+            "Unity",
+            "Electron"
           ]
         }
       },
@@ -14581,11 +14711,26 @@
         "name": {
           "description": "The name of the distribution group",
           "type": "string"
+        },
+        "display_name": {
+          "description": "The display name of the distribution group. If not specified, the name will be used.",
+          "type": "string"
         }
       },
       "required": [
         "name"
       ]
+    },
+    "AppDistributionGroupUsersRequest": {
+      "properties": {
+        "member_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
     },
     "DistributionGroupUserRequest": {
       "properties": {
@@ -14840,6 +14985,7 @@
             "iOS",
             "macOS",
             "Windows",
+            "Linux",
             "Custom"
           ]
         },
@@ -14852,6 +14998,7 @@
             "Cordova",
             "React-Native",
             "Unity",
+            "Electron",
             "Xamarin",
             "Unknown"
           ]
@@ -15013,6 +15160,30 @@
           ]
         }
       }
+    },
+    "AddOrganizationAdminRequest": {
+      "properties": {
+        "user_id": {
+          "description": "The internal unique id (UUID) of the account.",
+          "format": "uuid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "user_id"
+      ]
+    },
+    "TransferAppAdminRequest": {
+      "properties": {
+        "new_owner_id": {
+          "description": "The internal unique id (UUID) of the user/org.",
+          "format": "uuid",
+          "type": "string"
+        }
+      },
+      "required": [
+        "new_owner_id"
+      ]
     },
     "PasswordUpdateRequest": {
       "properties": {
@@ -15341,6 +15512,10 @@
           "description": "The display name of the app",
           "type": "string"
         },
+        "environment": {
+          "description": "A one-word descriptive environment value that starts with a capital letter but is otherwise lowercase",
+          "type": "string"
+        },
         "name": {
           "description": "The name of the app used in URLs",
           "type": "string"
@@ -15355,6 +15530,7 @@
             "Tizen",
             "tvOS",
             "Windows",
+            "Linux",
             "Custom"
           ]
         },
@@ -15368,6 +15544,7 @@
             "Cordova",
             "React-Native",
             "Unity",
+            "Electron",
             "Xamarin",
             "Unknown"
           ]
@@ -15507,6 +15684,10 @@
           "description": "The display name of the app",
           "type": "string"
         },
+        "environment": {
+          "description": "A one-word descriptive environment value that starts with a capital letter but is otherwise lowercase",
+          "type": "string"
+        },
         "icon_url": {
           "description": "The string representation of the URL pointing to the app's icon",
           "type": "string"
@@ -15529,6 +15710,7 @@
             "Tizen",
             "tvOS",
             "Windows",
+            "Linux",
             "Custom"
           ]
         },
@@ -15568,6 +15750,7 @@
                 "Cordova",
                 "React-Native",
                 "Unity",
+                "Electron",
                 "Xamarin",
                 "Unknown"
               ]
@@ -15876,6 +16059,15 @@
             "notified_user_count": {
               "description": "The count of non-pending users in the distribution group who will be notified by new releases",
               "type": "number"
+            },
+            "group_type": {
+              "description": "Type of group (Default, HockeyAppDefault or MicrosoftDogfooding)",
+              "type": "string",
+              "enum": [
+                "Default",
+                "HockeyAppDefault",
+                "MicrosoftDogfooding"
+              ]
             },
             "users": {
               "description": "The distribution group users",
@@ -20127,6 +20319,10 @@
             "mandatory_update": {
               "description": "Flag to mark the release for the provided destinations as mandatory",
               "type": "boolean"
+            },
+            "provisioning_status_url": {
+              "description": "The url to check provisioning status.",
+              "type": "string"
             }
           },
           "required": [
@@ -20404,7 +20600,7 @@
       "properties": {
         "code": {
           "type": "string",
-          "description": "Error Codes:<br>\n<b>invalid_store_secrets</b>: While distributing to store, secrets provided for store are not valid.<br>\n<b>store_release_bad_request</b>: Proper package release details for the store is not provided.<br>\n<b>store_release_unauthorized</b>: User is not authorized to publish to store due to invalid developer credentials.<br>\n<b>store_release_forbidden</b>: Publish to store is forbidden due to conflicts/errors in the release version and already existing version in the store.<br>\n<b>store_release_not_found</b>: App with the given package name is not found in the store.<br>\n<b>store_release_not_available</b>: The release is not available.<br>\n<b>internal_server_error</b>: Failed to distribute to a destination due to an internal server error.\n"
+          "description": "Error Codes:<br>\n<b>invalid_store_secrets</b>: While distributing to store, secrets provided for store are not valid.<br>\n<b>store_release_bad_request</b>: Proper package release details for the store is not provided.<br>\n<b>store_release_unauthorized</b>: User is not authorized to publish to store due to invalid developer credentials.<br>\n<b>store_release_forbidden</b>: Publish to store is forbidden due to conflicts/errors in the release version and already existing version in the store.<br>\n<b>store_release_promotion</b>: Release already distributed, promoting a release is not supported.<br>\n<b>store_track_deactivated</b>: One or more tracks would be deactivated with this release. This is not supported yet.<br>\n<b>store_release_not_found</b>: App with the given package name is not found in the store.<br>\n<b>store_release_not_available</b>: The release is not available.<br>\n<b>internal_server_error</b>: Failed to distribute to a destination due to an internal server error.\n"
         },
         "message": {
           "type": "string"
@@ -20531,6 +20727,161 @@
           "type": "string"
         }
       }
+    },
+    "MigrateReleaseRequest": {
+      "description": "A list of HockeyApp releases to migrate to App Center",
+      "properties": {
+        "releases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HockeyAppMigrationRelease"
+          }
+        }
+      }
+    },
+    "HockeyAppMigrationRelease": {
+      "description": "A single HockeyApp release to migrate to App Center",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "shortversion": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "appsize": {
+          "type": "integer"
+        },
+        "minimum_os_version": {
+          "type": "string"
+        },
+        "md5_fingerprint": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "build_url": {
+          "type": "string"
+        },
+        "bundle_identifier": {
+          "type": "string"
+        },
+        "device_family": {
+          "type": "string"
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "uuids": {
+          "description": "For iOS apps, a dictionary of UUIDs for architectures (in format `{\"armv7\": \"353df799-d450-3308-8492-928ecf1ebf53\", \"arm64\": \"e67c0e93-b6d6-3f5a-b3a7-68d2b215bf27\"}`)",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "example": {
+            "armv7": "353df799-d450-3308-8492-928ecf1ebf53",
+            "arm64": "e67c0e93-b6d6-3f5a-b3a7-68d2b215bf27"
+          }
+        },
+        "is_external_build": {
+          "type": "boolean"
+        },
+        "mandatory": {
+          "type": "boolean"
+        },
+        "status": {
+          "description": "The status of the release in HockeyApp. Maps to HockeyAppSchema.AppVersionStatus. Possible values: Deleted = -1, New = 0, Inactive = 1, Active = 2, Hidden = 3, SonomaActive = 4",
+          "type": "integer"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "distribution_group_ids": {
+          "description": "List of DistributionGroup IDs the release is distributed to",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "distribution_user_ids": {
+          "description": "List of User IDs the release is distributed to",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "provisioning_profiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProvisioningProfileMigration"
+          }
+        }
+      }
+    },
+    "ProvisioningProfileMigration": {
+      "description": "Describes the migration schema for a provisioning profile defined in HockeyApp.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The name of the provisioning profile.",
+          "type": "string"
+        },
+        "bundle_id": {
+          "description": "The bundle/application identifier.",
+          "type": "string"
+        },
+        "team_identifier": {
+          "description": "The team identifier.",
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of provisoning profile.",
+          "type": "integer",
+          "enum": [
+            0,
+            1,
+            2
+          ]
+        },
+        "is_appex": {
+          "description": "A boolean value that indicates whether the provisioning profile represents an app extension.",
+          "type": "boolean"
+        },
+        "expired_at": {
+          "description": "The provisioning profile's expiration date in RFC 3339 format, i.e. 2017-07-21T17:32:28Z.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "udids": {
+          "description": "A list of UDIDs of provisioned devices.",
+          "type": "array",
+          "items": {
+            "description": "A UDID of a provisioned device.",
+            "type": "string"
+          }
+        },
+        "url": {
+          "description": "A provisioning profile URL that indicates where to download it from.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "bundle_id",
+        "team_identifier",
+        "type",
+        "is_appex"
+      ]
     },
     "DeviceConfigurationResponse": {
       "description": "A response containing the fully encoded binary blob for a mobileconfig",
@@ -21142,6 +21493,63 @@
         }
       }
     },
+    "ResignAttemptResponse": {
+      "description": "URL that can be used to check the status of the update devices operation and the updated profiles.",
+      "required": [
+        "status",
+        "appId",
+        "originalReleaseId",
+        "userId",
+        "contextId",
+        "resignId",
+        "startTime"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "The status of the resigning operation."
+        },
+        "userId": {
+          "type": "string",
+          "description": "ID of the user performing the resign operaiton."
+        },
+        "appId": {
+          "type": "string",
+          "description": "App ID that the resign operation is being performed against."
+        },
+        "originalReleaseId": {
+          "type": "number",
+          "description": "ID of the release which is being resigned."
+        },
+        "resignId": {
+          "type": "string",
+          "description": "ID of the resign operation."
+        },
+        "contextId": {
+          "type": "string",
+          "description": "Context ID for the resigning operation."
+        },
+        "startTime": {
+          "type": "number",
+          "description": "The time that the resign operation was started."
+        },
+        "destinations": {
+          "type": "array",
+          "description": "List of destinations that the resign operation is being performed against.",
+          "items": {
+            "type": "object"
+          }
+        },
+        "errorCode": {
+          "type": "string",
+          "description": "Error code associated with the exception."
+        },
+        "errorMessage": {
+          "type": "string",
+          "description": "Error message associated with the exception."
+        }
+      }
+    },
     "StoresReleaseDetails": {
       "description": "Details of an uploaded release",
       "properties": {
@@ -21535,6 +21943,15 @@
       "properties": {
         "has_testflight_metadata": {
           "description": "true if the app has the testflight metadata, false otherwise",
+          "type": "boolean"
+        }
+      }
+    },
+    "SkipValidationRequest": {
+      "description": "Wheither or not to skip the validation for this release",
+      "properties": {
+        "skip_validation": {
+          "description": "true if we want to skip the validation, false otherwise",
           "type": "boolean"
         }
       }
@@ -27357,6 +27774,20 @@
           "$ref": "#/definitions/NotificationContent"
         }
       },
+      "example": {
+        "notification_target": {
+          "type": "devices_target",
+          "devices": [
+            "146fbdde-0aaf-444d-bcc0-6d84520c9080",
+            "746fbdde-0aaf-444d-bcc0-6d84520c9111"
+          ]
+        },
+        "notification_content": {
+          "name": "Transaction 23-09814",
+          "title": "Sales Order Update",
+          "body": "Sales order 18987 for customer Acme Dynamite status changed to SHIPPED"
+        }
+      },
       "required": [
         "notification_content"
       ]
@@ -27383,7 +27814,7 @@
           "maxLength": 4000
         },
         "custom_data": {
-          "description": "Notification custom data(priority, expiration, etc.)",
+          "description": "Notification custom data (such as badge, color, sound, etc.)",
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -27408,12 +27839,18 @@
       ]
     },
     "NotificationTarget": {
-      "description": "Generic notification target.",
+      "description": "Type of Notification target (audiences, devices, user ids or account ids). The object must include the correct properties for the specified target type.",
       "type": "object",
       "discriminator": "type",
       "properties": {
         "type": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "audiences_target",
+            "devices_target",
+            "user_ids_target",
+            "account_ids_target"
+          ]
         }
       },
       "required": [
@@ -27510,12 +27947,17 @@
       ]
     },
     "NotificationConfig": {
-      "description": "Generic notification configuration.",
+      "description": "Generic notification configuration. Is a base type and caller should choose one of the derived types specified in the enum.",
       "type": "object",
       "discriminator": "type",
       "properties": {
         "type": {
-          "type": "string"
+          "type": "string",
+          "enum": [
+            "apns_token_config",
+            "gcm_config",
+            "wns_config"
+          ]
         }
       },
       "required": [
@@ -30761,6 +31203,312 @@
         "status",
         "message"
       ]
+    },
+    "UsersResponse": {
+      "required": [
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "value": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserResponse"
+          }
+        }
+      }
+    },
+    "UserResponse": {
+      "required": [
+        "accountId",
+        "displayName"
+      ],
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "mail": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        }
+      }
+    },
+    "ClientIdResponse": {
+      "description": "This response contains the Azure AD B2C client ID for an application.",
+      "type": "object",
+      "properties": {
+        "clientId": {
+          "format": "uuid",
+          "type": "string"
+        }
+      }
+    },
+    "AuthTenantsResponse": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuthTenant"
+          }
+        }
+      }
+    },
+    "AuthTenant": {
+      "required": [
+        "id",
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "ApplicationsResponse": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApplicationResponse"
+          }
+        }
+      }
+    },
+    "ApplicationResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "createdAt": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "ScopesResponse": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ScopeResponse"
+          }
+        }
+      }
+    },
+    "ScopeResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "appName": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "AuthApplicationResponse": {
+      "required": [
+        "id",
+        "tenantId",
+        "tenantName",
+        "policyId",
+        "scopeId",
+        "scopeUrl"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "tenantId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "tenantName": {
+          "type": "string"
+        },
+        "policyId": {
+          "type": "string"
+        },
+        "scopeId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "scopeUrl": {
+          "type": "string"
+        },
+        "isSdkConfigured": {
+          "type": "boolean"
+        }
+      }
+    },
+    "AuthApplicationPostRequest": {
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "tenantDomain": {
+          "type": "string"
+        }
+      }
+    },
+    "AuthApplicationPatchRequest": {
+      "required": [
+        "policyId",
+        "scopeId",
+        "scopeUrl"
+      ],
+      "type": "object",
+      "properties": {
+        "policyId": {
+          "type": "string"
+        },
+        "scopeId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "scopeUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "ExistingAuthApplicationPostRequest": {
+      "required": [
+        "tenantId",
+        "tenantName",
+        "id",
+        "policyId",
+        "scopeId",
+        "scopeUrl"
+      ],
+      "type": "object",
+      "properties": {
+        "tenantId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "tenantName": {
+          "type": "string"
+        },
+        "id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "policyId": {
+          "type": "string"
+        },
+        "scopeId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "scopeUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "TrustFrameworkPoliciesResponse": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TrustFrameworkPolicyResponse"
+          }
+        }
+      }
+    },
+    "TrustFrameworkPolicyResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "IdentityProvider": {
+      "required": [
+        "provider_id",
+        "enabled"
+      ],
+      "type": "object",
+      "properties": {
+        "provider_id": {
+          "description": "The unique name of a provider. Valid values are:\nfacebook, google, microsoft, email\nRead only",
+          "type": "string"
+        },
+        "enabled": {
+          "description": "Determines if the provider is currently active or not",
+          "type": "boolean"
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "client_secret": {
+          "type": "string"
+        }
+      }
+    },
+    "IdentityProviderPatchPayload": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "description": "Determines if the provider is currently active or not",
+          "type": "boolean"
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "client_secret": {
+          "type": "string"
+        }
+      }
+    },
+    "LocationResponse": {
+      "description": "This response contains the location of the resource URI for 201 or 202 responses.",
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string"
+        }
+      }
+    },
+    "ExistingCosmosDbParameters": {
+      "type": "object",
+      "properties": {
+        "cosmosDbConnectionString": {
+          "type": "string"
+        }
+      }
     }
   },
   "parameters": {
@@ -31797,7 +32545,7 @@
     "ErrorTopParameter": {
       "name": "$top",
       "in": "query",
-      "description": "The maximum number of results to return. (0 will fetch all results)",
+      "description": "The maximum number of results to return. (0 will fetch all results till the max number.)",
       "required": false,
       "default": 30,
       "minimum": 0,
@@ -31940,18 +32688,18 @@
       "default": "timestamp",
       "x-ms-parameter-location": "method"
     },
-    "OsParameter": {
+    "OsParameterOptional": {
       "name": "os",
       "in": "query",
-      "required": true,
+      "required": false,
       "type": "string",
       "format": "string",
       "x-ms-parameter-location": "method"
     },
-    "ModelParameter": {
+    "ModelParameterOptional": {
       "name": "model",
       "in": "query",
-      "required": true,
+      "required": false,
       "type": "string",
       "format": "string",
       "x-ms-parameter-location": "method"
@@ -32004,11 +32752,23 @@
     "ErrorTypeParameter": {
       "name": "errorType",
       "in": "query",
-      "description": "Type of error",
+      "description": "Type of error (handled vs unhandled), including All",
       "required": false,
       "type": "string",
       "enum": [
         "all",
+        "unhandledError",
+        "handledError"
+      ],
+      "x-ms-parameter-location": "method"
+    },
+    "SingleErrorTypeParameter": {
+      "name": "errorType",
+      "in": "query",
+      "description": "Type of error (handled vs unhandled), excluding All",
+      "required": false,
+      "type": "string",
+      "enum": [
         "unhandledError",
         "handledError"
       ],
@@ -32481,6 +33241,9 @@
     },
     {
       "name": "gdpr"
+    },
+    {
+      "name": "mbaas"
     }
   ]
 }

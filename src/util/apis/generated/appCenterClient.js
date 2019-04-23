@@ -75,6 +75,7 @@ class AppCenterClient extends ServiceClient {
     this.symbolUploads = new operations.SymbolUploads(this);
     this.storeNotifications = new operations.StoreNotifications(this);
     this.repositories = new operations.Repositories(this);
+    this.identity = new operations.Identity(this);
     this.repositoryConfigurations = new operations.RepositoryConfigurations(this);
     this.provisioning = new operations.Provisioning(this);
     this.releaseUploads = new operations.ReleaseUploads(this);

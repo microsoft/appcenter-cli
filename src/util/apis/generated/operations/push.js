@@ -839,8 +839,8 @@ function _list(ownerName, appName, options, callback) {
  *
  * @param {string} notificationContent.body Notification body
  *
- * @param {object} [notificationContent.customData] Notification custom
- * data(priority, expiration, etc.)
+ * @param {object} [notificationContent.customData] Notification custom data
+ * (such as badge, color, sound, etc.)
  *
  * @param {object} [options] Optional Parameters.
  *
@@ -2119,8 +2119,8 @@ class Push {
    *
    * @param {string} notificationContent.body Notification body
    *
-   * @param {object} [notificationContent.customData] Notification custom
-   * data(priority, expiration, etc.)
+   * @param {object} [notificationContent.customData] Notification custom data
+   * (such as badge, color, sound, etc.)
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -2166,8 +2166,8 @@ class Push {
    *
    * @param {string} notificationContent.body Notification body
    *
-   * @param {object} [notificationContent.customData] Notification custom
-   * data(priority, expiration, etc.)
+   * @param {object} [notificationContent.customData] Notification custom data
+   * (such as badge, color, sound, etc.)
    *
    * @param {object} [options] Optional Parameters.
    *

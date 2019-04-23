@@ -10,6 +10,7 @@ export function reportApp(app: models.AppResponse): void {
     [ "Name", "name"],
     [ "OS", "os"],
     [ "Platform", "platform"],
+    [ "Environment", "environment" ],
     [ "Owner ID", "owner.id"],
     [ "Owner Display Name", "owner.displayName"],
     [ "Owner Email", "owner.email" ],

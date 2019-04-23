@@ -61,6 +61,13 @@ class OrgDistributionGroupAppResponse extends models['BasicAppResponse'] {
               name: 'String'
             }
           },
+          environment: {
+            required: false,
+            serializedName: 'environment',
+            type: {
+              name: 'String'
+            }
+          },
           iconUrl: {
             required: false,
             serializedName: 'icon_url',

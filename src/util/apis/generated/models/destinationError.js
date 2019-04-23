@@ -26,6 +26,10 @@ class DestinationError {
    * <b>store_release_forbidden</b>: Publish to store is forbidden due to
    * conflicts/errors in the release version and already existing version in
    * the store.<br>
+   * <b>store_release_promotion</b>: Release already distributed, promoting a
+   * release is not supported.<br>
+   * <b>store_track_deactivated</b>: One or more tracks would be deactivated
+   * with this release. This is not supported yet.<br>
    * <b>store_release_not_found</b>: App with the given package name is not
    * found in the store.<br>
    * <b>store_release_not_available</b>: The release is not available.<br>

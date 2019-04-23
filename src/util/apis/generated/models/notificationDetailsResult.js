@@ -25,7 +25,7 @@ class NotificationDetailsResult extends models['NotificationOverviewResult'] {
    * @property {string} [notificationContent.title] Notification title
    * @property {string} [notificationContent.body] Notification body
    * @property {object} [notificationContent.customData] Notification custom
-   * data(priority, expiration, etc.)
+   * data (such as badge, color, sound, etc.)
    * @property {array} [failureOutcomes] Failture outcome counts
    */
   constructor() {

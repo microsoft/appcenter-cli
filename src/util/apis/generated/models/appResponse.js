@@ -37,7 +37,7 @@ class AppResponse extends models['BasicAppResponse'] {
    * subscription is internal Microsoft subscription
    * @property {string} platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Unity', 'Xamarin', 'Unknown'
+   * 'Unity', 'Electron', 'Xamarin', 'Unknown'
    * @property {string} origin The creation origin of this app. Possible values
    * include: 'appcenter', 'hockeyapp', 'codepush'
    * @property {string} [createdAt] The created date of this app
@@ -79,6 +79,13 @@ class AppResponse extends models['BasicAppResponse'] {
           displayName: {
             required: true,
             serializedName: 'display_name',
+            type: {
+              name: 'String'
+            }
+          },
+          environment: {
+            required: false,
+            serializedName: 'environment',
             type: {
               name: 'String'
             }

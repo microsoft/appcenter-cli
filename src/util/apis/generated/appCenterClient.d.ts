@@ -62,6 +62,7 @@ export default class AppCenterClient extends ServiceClient {
   symbolUploads: operations.SymbolUploads;
   storeNotifications: operations.StoreNotifications;
   repositories: operations.Repositories;
+  identity: operations.Identity;
   repositoryConfigurations: operations.RepositoryConfigurations;
   provisioning: operations.Provisioning;
   releaseUploads: operations.ReleaseUploads;

@@ -28,6 +28,12 @@ export default class AppUpdateCommand extends AppCommand {
   @hasArg
   name: string;
 
+  @help("The environment of the app. This must be one word, alphanumeric, first letter capitalized.")
+  @shortName("e")
+  @longName("environment-app")
+  @hasArg
+  environment: string;
+
   async run(client: AppCenterClient): Promise<CommandResult> {
     const appAttributes: models.AppPatchRequest = {};
 
@@ -41,6 +47,10 @@ export default class AppUpdateCommand extends AppCommand {
 
     if (this.name) {
       appAttributes.name = this.name;
+    }
+
+    if (this.environment) {
+      appAttributes.environment = this.environment;
     }
 
     const app = this.app;
