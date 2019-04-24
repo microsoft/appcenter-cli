@@ -27,7 +27,11 @@ export class NUnitXmlUtil extends XmlUtil {
         self.removeEmptySuitesTransformation(xml);
 
         if (mainXml) {
-          mainXml = self.combine(mainXml, xml);
+          if (this.isNUnit3(xml)) {
+          mainXml = self.combineNUnit3(mainXml, xml);
+          } else {
+            mainXml = self.combineNUnit2(mainXml, xml);
+          }
         } else {
           mainXml = xml;
         }
@@ -42,7 +46,7 @@ export class NUnitXmlUtil extends XmlUtil {
     return "nunit_xml_zip.zip";
   }
 
-  combine(xml1: Document, xml2: Document): Document {
+  combineNUnit2(xml1: Document, xml2: Document): Document {
     this.combineTestResultsAttribute(xml1, xml2, "total");
     this.combineTestResultsAttribute(xml1, xml2, "errors");
     this.combineTestResultsAttribute(xml1, xml2, "failures");
@@ -53,6 +57,25 @@ export class NUnitXmlUtil extends XmlUtil {
     this.combineTestResultsAttribute(xml1, xml2, "invalid");
 
     const testSuitesParent: Element = this.collectAllElements(xml1.documentElement, "test-results")[0];
+    const testSuites: Element[] = this.collectChildren(xml2.documentElement, "test-suite");
+
+    testSuites.forEach((child: Element) => {
+      testSuitesParent.appendChild(child);
+    });
+
+    return xml1;
+  }
+
+  combineNUnit3(xml1: Document, xml2: Document): Document {
+    this.combineTestResultsAttribute(xml1, xml2, "testcasecount");
+    this.combineTestResultsAttribute(xml1, xml2, "total");
+    this.combineTestResultsAttribute(xml1, xml2, "passed");
+    this.combineTestResultsAttribute(xml1, xml2, "failed");
+    this.combineTestResultsAttribute(xml1, xml2, "inconclusive");
+    this.combineTestResultsAttribute(xml1, xml2, "skipped");
+    this.combineTestResultsAttribute(xml1, xml2, "asserts");
+
+    const testSuitesParent: Element = this.collectAllElements(xml1.documentElement, "test-run")[0];
     const testSuites: Element[] = this.collectChildren(xml2.documentElement, "test-suite");
 
     testSuites.forEach((child: Element) => {
@@ -90,7 +113,7 @@ export class NUnitXmlUtil extends XmlUtil {
     const elements: Element[] = this.collectAllElements(xml.documentElement, "test-case");
     elements.forEach((element: Element) => {
       const resultAttr: Attr = element.attributes.getNamedItem("result");
-      if (resultAttr && resultAttr.value === "Ignored") {
+      if (resultAttr && resultAttr.value === "Ignored" ||  resultAttr.value === "Skipped") {
         element.parentNode.removeChild(element);
       }
     });
@@ -106,28 +129,51 @@ export class NUnitXmlUtil extends XmlUtil {
   }
 
   combineTestResultsAttribute(xml1: Document, xml2: Document, attributeName: string) {
-    this.addTestResultsAttribute(xml1, attributeName, this.getTestResultsAttribute(xml2, attributeName));
+    this.addResultsAttribute(xml1, attributeName, this.getResultsAttribute(xml2, attributeName));
   }
 
-  getTestResultsAttribute(xml: Document, attributeName: string): number {
-    const testResults: Element[] = this.collectAllElements(xml.documentElement, "test-results");
-    if (testResults.length === 0) {
+  getResultsAttribute(xml: Document, attributeName: string): number {
+    const testResults: Element = this.getResultsNode(xml);
+    if (!testResults) {
       return 0;
     }
 
-    const attr: Attr = testResults[0].attributes.getNamedItem(attributeName);
+    const attr: Attr = testResults.attributes.getNamedItem(attributeName);
     if (attr.value) {
       return Number(attr.value);
     }
     return 0;
   }
 
-  addTestResultsAttribute(xml: Document, attributeName: string, value: number) {
-    const currentValue: number = this.getTestResultsAttribute(xml, attributeName);
-    const testResults: Element[] = this.collectAllElements(xml.documentElement, "test-results");
-    const attr: Attr = testResults[0].attributes.getNamedItem(attributeName);
+  addResultsAttribute(xml: Document, attributeName: string, value: number) {
+    const currentValue: number = this.getResultsAttribute(xml, attributeName);
+    const testResults: Element = this.getResultsNode(xml);
+
+    if (!testResults) {
+      return;
+    }
+
+    const attr: Attr = testResults.attributes.getNamedItem(attributeName);
     if (attr) {
       attr.value = String(currentValue + value);
     }
+  }
+
+  getResultsNode(xml: Document): Element {
+    let testResults: Element[] = this.collectAllElements(xml.documentElement, "test-results");
+    if (testResults.length === 0) {
+      testResults = this.collectAllElements(xml.documentElement, "test-run");
+    }
+
+    return testResults[0];
+  }
+
+  isNUnit3(xml: Document): boolean {
+    const testResults: Element[] = this.collectAllElements(xml.documentElement, "test-results");
+    if (testResults.length === 0) {
+      return true;
+    }
+
+    return false;
   }
 }

@@ -2,7 +2,9 @@ import { expect } from "chai";
 import { DOMParser, XMLSerializer } from "xmldom";
 import * as xmlLib from "libxmljs";
 import * as path from "path";
+import * as fs from "fs";
 import { NUnitXmlUtil } from "../../../../src/commands/test/lib/nunit-xml-util";
+import { XmlUtil } from "../../../../src/commands/test/lib/xml-util";
 
 describe("nunit xml util", function () {
   const strXml: string =
@@ -132,10 +134,51 @@ describe("nunit xml util", function () {
     expect(xmlUtil.countChildren(null)).to.eql(0);
   });
 
-  it("should combine xmls correctly", async () => {
+  it("should should identify nunit2 xml correctly", async () => {
 
     // If
-    const pathToArchive: string = path.join(__dirname, "../resources/nunit_xml_zip.zip");
+    const pathToArchive: string = path.join(__dirname, "../resources/nunit2_report.xml");
+    const xml: Document = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(pathToArchive, "utf-8"), "text/xml");
+
+    // When
+    const isNUnit3: boolean = xmlUtil.isNUnit3(xml);
+
+    // Doesn't throw exception
+    expect(isNUnit3).to.eql(false);
+  });
+
+  it("should should identify nunit3 xml correctly", async () => {
+
+    // If
+    const pathToArchive: string = path.join(__dirname, "../resources/nunit3_report.xml");
+    const xml: Document = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(pathToArchive, "utf-8"), "text/xml");
+
+    // When
+    const isNUnit3: boolean = xmlUtil.isNUnit3(xml);
+
+    // Doesn't throw exception
+    expect(isNUnit3).to.eql(true);
+  });
+
+  it("should combine nunit2 xmls correctly", async () => {
+
+    // If
+    const pathToArchive: string = path.join(__dirname, "../resources/nunit2_xml_zip.zip");
+
+    // When
+    const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
+
+    // Then
+    const finalStrXml: string = new XMLSerializer().serializeToString(xml);
+
+    // Doesn't throw exception
+    xmlLib.parseXml(finalStrXml);
+  });
+
+  it("should combine nunit3 xmls correctly", async () => {
+
+    // If
+    const pathToArchive: string = path.join(__dirname, "../resources/nunit3_xml_zip.zip");
 
     // When
     const xml: Document = await xmlUtil.mergeXmlResults(pathToArchive);
