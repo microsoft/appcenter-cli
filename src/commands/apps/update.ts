@@ -29,9 +29,9 @@ export default class AppUpdateCommand extends AppCommand {
   @hasArg
   name: string;
 
-  @help("The environment of the app. This must be one word, alphanumeric, first letter capitalized.")
+  @help("The app environment. Suggested values are Alpha, Beta, Production, Store, Enterprise. Custom values are allowed and must be must be one word, alphanumeric, first letter capitalized.")
   @shortName("e")
-  @longName("environment-app")
+  @longName("app-environment")
   @hasArg
   environment: string;
 
