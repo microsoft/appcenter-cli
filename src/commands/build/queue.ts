@@ -25,7 +25,7 @@ export default class QueueBuildCommand extends AppCommand {
   @shortName("s")
   @longName("source-version")
   @hasArg
-  public sourceVersion: string;  
+  public sourceVersion: string;
 
   async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     const app = this.app;
