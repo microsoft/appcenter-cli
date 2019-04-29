@@ -9,7 +9,7 @@ const debug = require("debug")("appcenter-cli:commands:build:queue");
 @help("Queue a new build")
 export default class QueueBuildCommand extends AppCommand {
 
-  @help("Branch to be build")
+  @help("Branch to be built")
   @shortName("b")
   @longName("branch")
   @required
