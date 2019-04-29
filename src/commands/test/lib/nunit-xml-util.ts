@@ -28,7 +28,7 @@ export class NUnitXmlUtil extends XmlUtil {
 
         if (mainXml) {
           if (this.isNUnit3(xml)) {
-          mainXml = self.combineNUnit3(mainXml, xml);
+            mainXml = self.combineNUnit3(mainXml, xml);
           } else {
             mainXml = self.combineNUnit2(mainXml, xml);
           }
@@ -47,14 +47,14 @@ export class NUnitXmlUtil extends XmlUtil {
   }
 
   combineNUnit2(xml1: Document, xml2: Document): Document {
-    this.combineTestResultsAttribute(xml1, xml2, "total");
-    this.combineTestResultsAttribute(xml1, xml2, "errors");
-    this.combineTestResultsAttribute(xml1, xml2, "failures");
-    this.combineTestResultsAttribute(xml1, xml2, "not-run");
-    this.combineTestResultsAttribute(xml1, xml2, "inconclusive");
-    this.combineTestResultsAttribute(xml1, xml2, "ignored");
-    this.combineTestResultsAttribute(xml1, xml2, "skipped");
-    this.combineTestResultsAttribute(xml1, xml2, "invalid");
+    this.combineResultsAttribute(xml1, xml2, "total");
+    this.combineResultsAttribute(xml1, xml2, "errors");
+    this.combineResultsAttribute(xml1, xml2, "failures");
+    this.combineResultsAttribute(xml1, xml2, "not-run");
+    this.combineResultsAttribute(xml1, xml2, "inconclusive");
+    this.combineResultsAttribute(xml1, xml2, "ignored");
+    this.combineResultsAttribute(xml1, xml2, "skipped");
+    this.combineResultsAttribute(xml1, xml2, "invalid");
 
     const testSuitesParent: Element = this.collectAllElements(xml1.documentElement, "test-results")[0];
     const testSuites: Element[] = this.collectChildren(xml2.documentElement, "test-suite");
@@ -67,13 +67,13 @@ export class NUnitXmlUtil extends XmlUtil {
   }
 
   combineNUnit3(xml1: Document, xml2: Document): Document {
-    this.combineTestResultsAttribute(xml1, xml2, "testcasecount");
-    this.combineTestResultsAttribute(xml1, xml2, "total");
-    this.combineTestResultsAttribute(xml1, xml2, "passed");
-    this.combineTestResultsAttribute(xml1, xml2, "failed");
-    this.combineTestResultsAttribute(xml1, xml2, "inconclusive");
-    this.combineTestResultsAttribute(xml1, xml2, "skipped");
-    this.combineTestResultsAttribute(xml1, xml2, "asserts");
+    this.combineResultsAttribute(xml1, xml2, "testcasecount");
+    this.combineResultsAttribute(xml1, xml2, "total");
+    this.combineResultsAttribute(xml1, xml2, "passed");
+    this.combineResultsAttribute(xml1, xml2, "failed");
+    this.combineResultsAttribute(xml1, xml2, "inconclusive");
+    this.combineResultsAttribute(xml1, xml2, "skipped");
+    this.combineResultsAttribute(xml1, xml2, "asserts");
 
     const testSuitesParent: Element = this.collectAllElements(xml1.documentElement, "test-run")[0];
     const testSuites: Element[] = this.collectChildren(xml2.documentElement, "test-suite");
@@ -128,7 +128,7 @@ export class NUnitXmlUtil extends XmlUtil {
     });
   }
 
-  combineTestResultsAttribute(xml1: Document, xml2: Document, attributeName: string) {
+  combineResultsAttribute(xml1: Document, xml2: Document, attributeName: string) {
     this.addResultsAttribute(xml1, attributeName, this.getResultsAttribute(xml2, attributeName));
   }
 
@@ -170,10 +170,6 @@ export class NUnitXmlUtil extends XmlUtil {
 
   isNUnit3(xml: Document): boolean {
     const testResults: Element[] = this.collectAllElements(xml.documentElement, "test-results");
-    if (testResults.length === 0) {
-      return true;
-    }
-
-    return false;
+    return testResults.length === 0;
   }
 }
