@@ -5,7 +5,7 @@ import { validXmlFile } from "../../../../src/commands/test/lib/xml-util";
 describe("xml util", function () {
 
   it("should return positive validation result for the correct xml file", async () => {
-    const pathToXml: string = path.join(__dirname, "../resources/nunit_report.xml");
+    const pathToXml: string = path.join(__dirname, "../resources/nunit2_report.xml");
 
     const isValid: boolean = validXmlFile(pathToXml);
 
