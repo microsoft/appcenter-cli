@@ -193,7 +193,7 @@ export class UITestPreparer {
     let testCloudPath = path.join(toolsDir, "test-cloud.exe");
 
     if (!await fileExists(testCloudPath)) {
-      testCloudPath = path.join(toolsDir, "Xamarin.UITest.Console.exe");
+      testCloudPath = path.join(toolsDir, "Xamarin.UITest.CLI.exe");
       if (!await fileExists(testCloudPath)) {
         throw new Error(`Cannot find test-cloud.exe, the exe was not found in the path specified by "--uitest-tools-dir".${os.EOL}` +
           `Please check that ${testCloudPath} points to a test-cloud.exe.${os.EOL}` +
