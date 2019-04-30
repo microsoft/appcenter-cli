@@ -69,6 +69,13 @@ class AppResponseInternal extends models['AppResponse'] {
               name: 'String'
             }
           },
+          releaseType: {
+            required: false,
+            serializedName: 'release_type',
+            type: {
+              name: 'String'
+            }
+          },
           iconUrl: {
             required: false,
             serializedName: 'icon_url',

@@ -6571,6 +6571,9 @@ export interface Apps {
      * @param {string} [app.environment] A one-word descriptive environment value
      * that starts with a capital letter but is otherwise lowercase
      *
+     * @param {string} [app.releaseType] A one-word descriptive release-type value
+     * that starts with a capital letter but is otherwise lowercase
+     *
      * @param {string} app.displayName The descriptive name of the app. This can
      * contain any characters
      *
@@ -6606,6 +6609,9 @@ export interface Apps {
      * @param {string} [app.description] A short text describing the app
      *
      * @param {string} [app.environment] A one-word descriptive environment value
+     * that starts with a capital letter but is otherwise lowercase
+     *
+     * @param {string} [app.releaseType] A one-word descriptive release-type value
      * that starts with a capital letter but is otherwise lowercase
      *
      * @param {string} app.displayName The descriptive name of the app. This can
@@ -7277,6 +7283,9 @@ export interface Apps {
      * @param {string} [options.app.environment] A one-word descriptive environment
      * value that starts with a capital letter but is otherwise lowercase
      *
+     * @param {string} [options.app.releaseType] A one-word descriptive release
+     * type value that starts with a capital letter but is otherwise lowercase
+     *
      * @param {string} [options.app.name] The name of the app used in URLs
      *
      * @param {string} [options.app.iconUrl] The string representation of the URL
@@ -7310,6 +7319,9 @@ export interface Apps {
      *
      * @param {string} [options.app.environment] A one-word descriptive environment
      * value that starts with a capital letter but is otherwise lowercase
+     *
+     * @param {string} [options.app.releaseType] A one-word descriptive release
+     * type value that starts with a capital letter but is otherwise lowercase
      *
      * @param {string} [options.app.name] The name of the app used in URLs
      *
@@ -7414,6 +7426,9 @@ export interface Apps {
      * @param {string} [app.environment] A one-word descriptive environment value
      * that starts with a capital letter but is otherwise lowercase
      *
+     * @param {string} [app.releaseType] A one-word descriptive release-type value
+     * that starts with a capital letter but is otherwise lowercase
+     *
      * @param {string} app.displayName The descriptive name of the app. This can
      * contain any characters
      *
@@ -7447,6 +7462,9 @@ export interface Apps {
      * @param {string} [app.description] A short text describing the app
      *
      * @param {string} [app.environment] A one-word descriptive environment value
+     * that starts with a capital letter but is otherwise lowercase
+     *
+     * @param {string} [app.releaseType] A one-word descriptive release-type value
      * that starts with a capital letter but is otherwise lowercase
      *
      * @param {string} app.displayName The descriptive name of the app. This can
@@ -13471,199 +13489,6 @@ export interface Repositories {
 
 /**
  * @class
- * Identity
- * __NOTE__: An instance of this class is automatically created for an
- * instance of the AppCenterClient.
- */
-export interface Identity {
-
-
-    /**
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    getResourceProvisioningWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<stream.Readable>>;
-
-    /**
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Object} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    getResourceProvisioning(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<stream.Readable>;
-    getResourceProvisioning(ownerName: string, appName: string, callback: ServiceCallback<stream.Readable>): void;
-    getResourceProvisioning(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<stream.Readable>): void;
-
-
-    /**
-     * @summary Creates Cosmos DB or attaches an existing one
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.cosmosDbConnectionString]
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    postResourceProvisioningWithHttpOperationResponse(ownerName: string, appName: string, options?: { cosmosDbConnectionString? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<stream.Readable>>;
-
-    /**
-     * @summary Creates Cosmos DB or attaches an existing one
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.cosmosDbConnectionString]
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Object} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    postResourceProvisioning(ownerName: string, appName: string, options?: { cosmosDbConnectionString? : string, customHeaders? : { [headerName: string]: string; } }): Promise<stream.Readable>;
-    postResourceProvisioning(ownerName: string, appName: string, callback: ServiceCallback<stream.Readable>): void;
-    postResourceProvisioning(ownerName: string, appName: string, options: { cosmosDbConnectionString? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<stream.Readable>): void;
-
-
-    /**
-     * @summary Returns users of a tenant.
-     * Returns all users if no searchTerm param is specified.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.acAuthorizationMicrosoftGraph] MSGraph Auth Token
-     *
-     * @param {string} [options.searchTerm] User search term
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    getUsersWithHttpOperationResponse(ownerName: string, appName: string, options?: { acAuthorizationMicrosoftGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<stream.Readable>>;
-
-    /**
-     * @summary Returns users of a tenant.
-     * Returns all users if no searchTerm param is specified.
-     *
-     * @param {string} ownerName The name of the owner
-     *
-     * @param {string} appName The name of the application
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {string} [options.acAuthorizationMicrosoftGraph] MSGraph Auth Token
-     *
-     * @param {string} [options.searchTerm] User search term
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {Object} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {Object} [result]   - The deserialized result object if an error did not occur.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    getUsers(ownerName: string, appName: string, options?: { acAuthorizationMicrosoftGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }): Promise<stream.Readable>;
-    getUsers(ownerName: string, appName: string, callback: ServiceCallback<stream.Readable>): void;
-    getUsers(ownerName: string, appName: string, options: { acAuthorizationMicrosoftGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<stream.Readable>): void;
-}
-
-/**
- * @class
  * RepositoryConfigurations
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
@@ -19485,6 +19310,235 @@ export interface CodePushDeploymentMetrics {
 
 /**
  * @class
+ * Data
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface Data {
+
+
+    /**
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getResourceProvisioningWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getResourceProvisioning(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    getResourceProvisioning(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    getResourceProvisioning(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
+     * @summary Creates Cosmos DB or attaches an existing one
+     *
+     * @param {string} acAuthorizationARM
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.provisionDatabaseParameters]
+     *
+     * @param {string} [options.provisionDatabaseParameters.subscriptionId]
+     *
+     * @param {string}
+     * [options.provisionDatabaseParameters.databaseConnectionString]
+     *
+     * @param {string} [options.provisionDatabaseParameters.resourceRegion]
+     *
+     * @param {string} [options.provisionDatabaseParameters.database]
+     *
+     * @param {string} [options.provisionDatabaseParameters.collection]
+     *
+     * @param {number} [options.provisionDatabaseParameters.requestUnits]
+     *
+     * @param {string} [options.provisionDatabaseParameters.accountName]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    postResourceProvisioningWithHttpOperationResponse(acAuthorizationARM: string, ownerName: string, appName: string, options?: { provisionDatabaseParameters? : models.DataProvisioningParameters, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * @summary Creates Cosmos DB or attaches an existing one
+     *
+     * @param {string} acAuthorizationARM
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.provisionDatabaseParameters]
+     *
+     * @param {string} [options.provisionDatabaseParameters.subscriptionId]
+     *
+     * @param {string}
+     * [options.provisionDatabaseParameters.databaseConnectionString]
+     *
+     * @param {string} [options.provisionDatabaseParameters.resourceRegion]
+     *
+     * @param {string} [options.provisionDatabaseParameters.database]
+     *
+     * @param {string} [options.provisionDatabaseParameters.collection]
+     *
+     * @param {number} [options.provisionDatabaseParameters.requestUnits]
+     *
+     * @param {string} [options.provisionDatabaseParameters.accountName]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    postResourceProvisioning(acAuthorizationARM: string, ownerName: string, appName: string, options?: { provisionDatabaseParameters? : models.DataProvisioningParameters, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    postResourceProvisioning(acAuthorizationARM: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    postResourceProvisioning(acAuthorizationARM: string, ownerName: string, appName: string, options: { provisionDatabaseParameters? : models.DataProvisioningParameters, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
+     * @summary Checks that the Azure Cosmos DB account name already exists. A
+     * valid account name may contain only lowercase letters, numbers, and the '-'
+     * character, and must be between 3 and 31 characters.
+     *
+     * @param {string} acAuthorizationARM
+     *
+     * @param {string} accountName
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    checkNameExistsWithHttpOperationResponse(acAuthorizationARM: string, accountName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<stream.Readable>>;
+
+    /**
+     * @summary Checks that the Azure Cosmos DB account name already exists. A
+     * valid account name may contain only lowercase letters, numbers, and the '-'
+     * character, and must be between 3 and 31 characters.
+     *
+     * @param {string} acAuthorizationARM
+     *
+     * @param {string} accountName
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    checkNameExists(acAuthorizationARM: string, accountName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<stream.Readable>;
+    checkNameExists(acAuthorizationARM: string, accountName: string, ownerName: string, appName: string, callback: ServiceCallback<stream.Readable>): void;
+    checkNameExists(acAuthorizationARM: string, accountName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<stream.Readable>): void;
+}
+
+/**
+ * @class
  * CrashGroups
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
@@ -20283,6 +20337,83 @@ export interface BranchConfigurations {
     deleteMethod(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.SuccessResponse>;
     deleteMethod(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.SuccessResponse>): void;
     deleteMethod(branch: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SuccessResponse>): void;
+}
+
+/**
+ * @class
+ * Identity
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface Identity {
+
+
+    /**
+     * @summary Returns users of a tenant.
+     * Returns all users if no searchTerm param is specified.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.acAuthorizationMicrosoftGraph] MSGraph Auth Token
+     *
+     * @param {string} [options.searchTerm] User search term
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getUsersWithHttpOperationResponse(ownerName: string, appName: string, options?: { acAuthorizationMicrosoftGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * @summary Returns users of a tenant.
+     * Returns all users if no searchTerm param is specified.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.acAuthorizationMicrosoftGraph] MSGraph Auth Token
+     *
+     * @param {string} [options.searchTerm] User search term
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getUsers(ownerName: string, appName: string, options?: { acAuthorizationMicrosoftGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    getUsers(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    getUsers(ownerName: string, appName: string, options: { acAuthorizationMicrosoftGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 }
 
 /**

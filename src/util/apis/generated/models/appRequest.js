@@ -19,6 +19,8 @@ class AppRequest {
    * @property {string} [description] A short text describing the app
    * @property {string} [environment] A one-word descriptive environment value
    * that starts with a capital letter but is otherwise lowercase
+   * @property {string} [releaseType] A one-word descriptive release-type value
+   * that starts with a capital letter but is otherwise lowercase
    * @property {string} displayName The descriptive name of the app. This can
    * contain any characters
    * @property {string} [name] The name of the app used in URLs
@@ -55,6 +57,13 @@ class AppRequest {
           environment: {
             required: false,
             serializedName: 'environment',
+            type: {
+              name: 'String'
+            }
+          },
+          releaseType: {
+            required: false,
+            serializedName: 'release_type',
             type: {
               name: 'String'
             }

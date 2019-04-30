@@ -21,6 +21,8 @@ class BasicAppResponse {
    * @property {string} displayName The display name of the app
    * @property {string} [environment] A one-word descriptive environment value
    * that starts with a capital letter but is otherwise lowercase
+   * @property {string} [releaseType] A one-word descriptive release-type value
+   * that starts with a capital letter but is otherwise lowercase
    * @property {string} [iconUrl] The string representation of the URL pointing
    * to the app's icon
    * @property {string} [iconSource] The string representation of the source of
@@ -80,6 +82,13 @@ class BasicAppResponse {
           environment: {
             required: false,
             serializedName: 'environment',
+            type: {
+              name: 'String'
+            }
+          },
+          releaseType: {
+            required: false,
+            serializedName: 'release_type',
             type: {
               name: 'String'
             }

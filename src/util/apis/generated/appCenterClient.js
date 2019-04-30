@@ -75,7 +75,6 @@ class AppCenterClient extends ServiceClient {
     this.symbolUploads = new operations.SymbolUploads(this);
     this.storeNotifications = new operations.StoreNotifications(this);
     this.repositories = new operations.Repositories(this);
-    this.identity = new operations.Identity(this);
     this.repositoryConfigurations = new operations.RepositoryConfigurations(this);
     this.provisioning = new operations.Provisioning(this);
     this.releaseUploads = new operations.ReleaseUploads(this);
@@ -93,10 +92,12 @@ class AppCenterClient extends ServiceClient {
     this.codePushDeploymentReleases = new operations.CodePushDeploymentReleases(this);
     this.codePushDeployments = new operations.CodePushDeployments(this);
     this.codePushDeploymentMetrics = new operations.CodePushDeploymentMetrics(this);
+    this.data = new operations.Data(this);
     this.crashGroups = new operations.CrashGroups(this);
     this.commits = new operations.Commits(this);
     this.bugTracker = new operations.BugTracker(this);
     this.branchConfigurations = new operations.BranchConfigurations(this);
+    this.identity = new operations.Identity(this);
     this.appleMapping = new operations.AppleMapping(this);
     this.analytics = new operations.Analytics(this);
     this.apiTokens = new operations.ApiTokens(this);

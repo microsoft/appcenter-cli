@@ -182,6 +182,11 @@ export interface AppPatchRequest {
   */
   environment?: string;
   /**
+   * A one-word descriptive release type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
    * The name of the app used in URLs
   */
   name?: string;
@@ -235,6 +240,11 @@ export interface AppRequest {
    * lowercase
   */
   environment?: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
   /**
    * The descriptive name of the app. This can contain any characters
   */
@@ -868,6 +878,11 @@ export interface AppGroupResponse {
   */
   environment?: string;
   /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
+  /**
    * The name of the app used in URLs
   */
   name: string;
@@ -928,6 +943,11 @@ export interface BasicAppResponse {
    * lowercase
   */
   environment?: string;
+  /**
+   * A one-word descriptive release-type value that starts with a capital letter but is otherwise
+   * lowercase
+  */
+  releaseType?: string;
   /**
    * The string representation of the URL pointing to the app's icon
   */
@@ -3402,6 +3422,55 @@ export interface BuildConcurrencyResponse {
   committedQuantity?: number;
 }
 
+export interface CreateReleaseUploadRequest {
+  /**
+   * The file extension of the uploaded file. Possible values include: 'ipa', 'apk', 'msi', 'xap',
+   * 'appx', 'appxbundle', 'msix', 'msixbundle', 'appxupload', 'msixupload', 'app.zip', 'dmg',
+   * 'pkg'
+  */
+  fileExtension: string;
+}
+
+export interface CreateReleaseUploadResponse {
+  /**
+   * The ID for the newly created upload. It is going to be required later in the process.
+  */
+  id: string;
+  /**
+   * The URL used to upload the release.
+  */
+  uploadUrl: string;
+}
+
+export interface GetReleaseStatusResponse {
+  /**
+   * The ID for the upload.
+  */
+  id: string;
+  /**
+   * The URL used to upload the release.
+  */
+  uploadUrl: string;
+  /**
+   * The current upload status. Possible values include: 'uploadStarted', 'uploadFinished',
+   * 'readyToBePublished', 'malwareDetected', 'error'
+  */
+  uploadStatus: string;
+  /**
+   * Details describing what went wrong processing the upload. Will only be set if status =
+   * 'error'.
+  */
+  errorDetails?: string;
+  /**
+   * The distinct ID of the release. Will only be set when the status = 'readyToBePublished'.
+  */
+  releaseDistinctId?: number;
+  /**
+   * The URL of the release. Will only be set when the status = 'readyToBePublished'.
+  */
+  releaseUrl?: any;
+}
+
 /**
  * Response for getting a list of releases in a distribution group
 */
@@ -4020,7 +4089,8 @@ export interface ReleaseDetailsResponse {
    * be returned.<br>
    * <b>store</b>: The release distributed to external stores and distribution_stores details will
    * be returned.<br>
-   * . Possible values include: 'group', 'store'
+   * <b>tester</b>: The release distributed testers details will be returned.<br>
+   * . Possible values include: 'group', 'store', 'tester'
   */
   destinationType?: string;
   /**
@@ -4611,6 +4681,21 @@ export interface MigrateReleaseRequest {
 }
 
 /**
+ * Details of the upload to patch
+*/
+export interface PrivateUpdateUploadDetails {
+  /**
+   * Possible values include: 'uploadStarted', 'uploadFinished', 'readyToBePublished',
+   * 'malwareDetected', 'error'
+  */
+  status: string;
+  /**
+   * Message of the error
+  */
+  errorMessage: string;
+}
+
+/**
  * A response containing the fully encoded binary blob for a mobileconfig
 */
 export interface DeviceConfigurationResponse {
@@ -4722,6 +4807,32 @@ export interface ResignStatus {
    * Error message for any error that occured during the resigning operation.
   */
   errorMessage?: string;
+}
+
+/**
+ * The information for a resign attempt.
+*/
+export interface ResignInfo {
+  /**
+   * The group name of the resign attempt
+  */
+  groupName?: string;
+  /**
+   * The provisioning profile name of group for the given resign attempt
+  */
+  profileName?: string;
+  /**
+   * The provisioning profile type of group for the given resign attempt
+  */
+  profileType?: string;
+  /**
+   * The name of the certificate used for the resign attempt
+  */
+  certificateName?: string;
+  /**
+   * The expiration date of the certificate used for the resign attempt
+  */
+  certificateExpiration?: string;
 }
 
 /**
@@ -11214,6 +11325,11 @@ export interface UsersResponse {
   value: UserResponse[];
 }
 
+export interface InnerError {
+  code?: string;
+  innererror?: InnerError;
+}
+
 /**
  * This response contains the Azure AD B2C client ID for an application.
 */
@@ -11320,8 +11436,35 @@ export interface LocationResponse {
   location?: string;
 }
 
-export interface ExistingCosmosDbParameters {
-  cosmosDbConnectionString?: string;
+/**
+ * This response contains an estimated price-per-RU denominated in a given currency.
+*/
+export interface EstimatedPricingResponse {
+  pricePerHour?: number;
+  /**
+   * Possible values include: 'USD', 'EUR', 'GBP', 'AUD', 'INR', 'CAD', 'ARS', 'BRL', 'DKK', 'HKD',
+   * 'IDR', 'JPY', 'KRW', 'MYR', 'MXN', 'NZD', 'NOK', 'RUB', 'SAR', 'ZAR', 'SEK', 'CHF', 'TWD',
+   * 'TRY'
+  */
+  currency?: string;
+}
+
+export interface DataProvisioningParameters {
+  subscriptionId?: string;
+  databaseConnectionString?: string;
+  resourceRegion?: string;
+  database?: string;
+  collection?: string;
+  requestUnits?: number;
+  accountName?: string;
+}
+
+export interface ProvisionStatusResponse {
+  /**
+   * Possible values include: 'Empty', 'Accepted', 'Creating', 'Connected', 'Invalid'
+  */
+  status: string;
+  message: string;
 }
 
 export interface ListOKResponseItem {

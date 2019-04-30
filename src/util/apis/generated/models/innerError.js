@@ -11,35 +11,44 @@
 'use strict';
 
 /**
- * Class representing a ExistingCosmosDbParameters.
+ * Class representing a InnerError.
  */
-class ExistingCosmosDbParameters {
+class InnerError {
   /**
-   * Create a ExistingCosmosDbParameters.
-   * @property {string} [cosmosDbConnectionString]
+   * Create a InnerError.
+   * @property {string} [code]
+   * @property {object} [innererror]
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of ExistingCosmosDbParameters
+   * Defines the metadata of InnerError
    *
-   * @returns {object} metadata of ExistingCosmosDbParameters
+   * @returns {object} metadata of InnerError
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'ExistingCosmosDbParameters',
+      serializedName: 'InnerError',
       type: {
         name: 'Composite',
-        className: 'ExistingCosmosDbParameters',
+        className: 'InnerError',
         modelProperties: {
-          cosmosDbConnectionString: {
+          code: {
             required: false,
-            serializedName: 'cosmosDbConnectionString',
+            serializedName: 'code',
             type: {
               name: 'String'
+            }
+          },
+          innererror: {
+            required: false,
+            serializedName: 'innererror',
+            type: {
+              name: 'Composite',
+              className: 'InnerError'
             }
           }
         }
@@ -48,4 +57,4 @@ class ExistingCosmosDbParameters {
   }
 }
 
-module.exports = ExistingCosmosDbParameters;
+module.exports = InnerError;

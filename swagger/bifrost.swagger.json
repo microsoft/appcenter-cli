@@ -4736,81 +4736,6 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/resourceProvisioning": {
-      "get": {
-        "operationId": "identity_getResourceProvisioning",
-        "consumes": [],
-        "parameters": [
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "file"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "mbaas"
-        ]
-      },
-      "post": {
-        "summary": "Creates Cosmos DB or attaches an existing one",
-        "operationId": "identity_postResourceProvisioning",
-        "consumes": [
-          "application/json-patch+json",
-          "application/json",
-          "text/json",
-          "application/*+json"
-        ],
-        "parameters": [
-          {
-            "name": "existingCosmosDbParameters",
-            "in": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/ExistingCosmosDbParameters"
-            }
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "file"
-            }
-          },
-          "202": {
-            "description": "Request Accepted"
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "mbaas"
-        ]
-      }
-    },
     "/v0.1/apps/{owner_name}/{app_name}/repo_config": {
       "get": {
         "description": "Returns the repository build configuration status of the app",
@@ -10351,6 +10276,162 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/data/resource_provisioning": {
+      "get": {
+        "operationId": "data_getResourceProvisioning",
+        "consumes": [],
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/ProvisionStatusResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "mbaas"
+        ]
+      },
+      "post": {
+        "summary": "Creates Cosmos DB or attaches an existing one",
+        "operationId": "data_postResourceProvisioning",
+        "consumes": [
+          "application/json-patch+json",
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "name": "AC-Authorization-ARM",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "provisionDatabaseParameters",
+            "in": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/DataProvisioningParameters"
+            }
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Request Accepted",
+            "schema": {
+              "$ref": "#/definitions/ProvisionStatusResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "mbaas"
+        ]
+      }
+    },
+    "/v0.1/apps/{owner_name}/{app_name}/data/database_account_names/{accountName}": {
+      "head": {
+        "summary": "Checks that the Azure Cosmos DB account name already exists. A valid account name may contain only lowercase letters, numbers, and the '-' character, and must be between 3 and 31 characters.",
+        "operationId": "data_checkNameExists",
+        "consumes": [],
+        "parameters": [
+          {
+            "name": "AC-Authorization-ARM",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accountName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "maxLength": 31,
+            "minLength": 3
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK. The account name is valid but is already in use.",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "400": {
+            "description": "Bad request. Account name in not valid."
+          },
+          "401": {
+            "description": "Unauthorized. Provided ARM Authorization token is invalid or expired."
+          },
+          "404": {
+            "description": "Not Found. The account name is available and valid."
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "mbaas"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/crashes_info": {
       "get": {
         "description": "Gets whether the application has any crashes. Available for UWP apps only.",
@@ -12028,6 +12109,18 @@
             "description": "Success",
             "schema": {
               "type": "file"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -14502,6 +14595,10 @@
           "description": "A one-word descriptive environment value that starts with a capital letter but is otherwise lowercase",
           "type": "string"
         },
+        "release_type": {
+          "description": "A one-word descriptive release type value that starts with a capital letter but is otherwise lowercase",
+          "type": "string"
+        },
         "name": {
           "description": "The name of the app used in URLs",
           "type": "string"
@@ -14567,6 +14664,10 @@
         },
         "environment": {
           "description": "A one-word descriptive environment value that starts with a capital letter but is otherwise lowercase",
+          "type": "string"
+        },
+        "release_type": {
+          "description": "A one-word descriptive release-type value that starts with a capital letter but is otherwise lowercase",
           "type": "string"
         },
         "display_name": {
@@ -15516,6 +15617,10 @@
           "description": "A one-word descriptive environment value that starts with a capital letter but is otherwise lowercase",
           "type": "string"
         },
+        "release_type": {
+          "description": "A one-word descriptive release-type value that starts with a capital letter but is otherwise lowercase",
+          "type": "string"
+        },
         "name": {
           "description": "The name of the app used in URLs",
           "type": "string"
@@ -15686,6 +15791,10 @@
         },
         "environment": {
           "description": "A one-word descriptive environment value that starts with a capital letter but is otherwise lowercase",
+          "type": "string"
+        },
+        "release_type": {
+          "description": "A one-word descriptive release-type value that starts with a capital letter but is otherwise lowercase",
           "type": "string"
         },
         "icon_url": {
@@ -19427,6 +19536,89 @@
         }
       }
     },
+    "CreateReleaseUploadRequest": {
+      "properties": {
+        "file_extension": {
+          "description": "The file extension of the uploaded file",
+          "type": "string",
+          "enum": [
+            "ipa",
+            "apk",
+            "msi",
+            "xap",
+            "appx",
+            "appxbundle",
+            "msix",
+            "msixbundle",
+            "appxupload",
+            "msixupload",
+            "app.zip",
+            "dmg",
+            "pkg"
+          ]
+        }
+      },
+      "required": [
+        "file_extension"
+      ]
+    },
+    "CreateReleaseUploadResponse": {
+      "properties": {
+        "id": {
+          "description": "The ID for the newly created upload. It is going to be required later in the process.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "upload_url": {
+          "description": "The URL used to upload the release.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "upload_url"
+      ]
+    },
+    "GetReleaseStatusResponse": {
+      "properties": {
+        "id": {
+          "description": "The ID for the upload.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "upload_url": {
+          "description": "The URL used to upload the release.",
+          "type": "string"
+        },
+        "upload_status": {
+          "description": "The current upload status.",
+          "type": "string",
+          "enum": [
+            "uploadStarted",
+            "uploadFinished",
+            "readyToBePublished",
+            "malwareDetected",
+            "error"
+          ]
+        },
+        "error_details": {
+          "description": "Details describing what went wrong processing the upload. Will only be set if status = 'error'.",
+          "type": "string"
+        },
+        "release_distinct_id": {
+          "description": "The distinct ID of the release. Will only be set when the status = 'readyToBePublished'.",
+          "type": "number"
+        },
+        "release_url": {
+          "description": "The URL of the release. Will only be set when the status = 'readyToBePublished'."
+        }
+      },
+      "required": [
+        "id",
+        "upload_url",
+        "upload_status"
+      ]
+    },
     "TesterAppWithReleaseResponse": {
       "properties": {
         "id": {
@@ -19932,11 +20124,12 @@
           "type": "string"
         },
         "destination_type": {
-          "description": "OBSOLETE. Will be removed in next version. The destination type.<br>\n<b>group</b>: The release distributed to internal groups and distribution_groups details will be returned.<br>\n<b>store</b>: The release distributed to external stores and distribution_stores details will be returned.<br>\n",
+          "description": "OBSOLETE. Will be removed in next version. The destination type.<br>\n<b>group</b>: The release distributed to internal groups and distribution_groups details will be returned.<br>\n<b>store</b>: The release distributed to external stores and distribution_stores details will be returned.<br>\n<b>tester</b>: The release distributed testers details will be returned.<br>\n",
           "type": "string",
           "enum": [
             "group",
-            "store"
+            "store",
+            "tester"
           ]
         },
         "distribution_groups": {
@@ -20883,6 +21076,30 @@
         "is_appex"
       ]
     },
+    "PrivateUpdateUploadDetails": {
+      "description": "Details of the upload to patch",
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "uploadStarted",
+            "uploadFinished",
+            "readyToBePublished",
+            "malwareDetected",
+            "error"
+          ]
+        },
+        "error_message": {
+          "type": "string",
+          "description": "Message of the error"
+        }
+      },
+      "required": [
+        "status",
+        "error_message"
+      ]
+    },
     "DeviceConfigurationResponse": {
       "description": "A response containing the fully encoded binary blob for a mobileconfig",
       "properties": {
@@ -21006,6 +21223,31 @@
         "error_message": {
           "type": "string",
           "description": "Error message for any error that occured during the resigning operation."
+        }
+      }
+    },
+    "ResignInfo": {
+      "description": "The information for a resign attempt.",
+      "properties": {
+        "group_name": {
+          "type": "string",
+          "description": "The group name of the resign attempt"
+        },
+        "profile_name": {
+          "type": "string",
+          "description": "The provisioning profile name of group for the given resign attempt"
+        },
+        "profile_type": {
+          "type": "string",
+          "description": "The provisioning profile type of group for the given resign attempt"
+        },
+        "certificate_name": {
+          "type": "string",
+          "description": "The name of the certificate used for the resign attempt"
+        },
+        "certificate_expiration": {
+          "type": "string",
+          "description": "The expiration date of the certificate used for the resign attempt"
         }
       }
     },
@@ -31238,6 +31480,17 @@
         }
       }
     },
+    "InnerError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "innererror": {
+          "$ref": "#/definitions/InnerError"
+        }
+      }
+    },
     "ClientIdResponse": {
       "description": "This response contains the Azure AD B2C client ID for an application.",
       "type": "object",
@@ -31502,10 +31755,92 @@
         }
       }
     },
-    "ExistingCosmosDbParameters": {
+    "EstimatedPricingResponse": {
+      "description": "This response contains an estimated price-per-RU denominated in a given currency.",
       "type": "object",
       "properties": {
-        "cosmosDbConnectionString": {
+        "pricePerHour": {
+          "format": "double",
+          "type": "number"
+        },
+        "currency": {
+          "enum": [
+            "USD",
+            "EUR",
+            "GBP",
+            "AUD",
+            "INR",
+            "CAD",
+            "ARS",
+            "BRL",
+            "DKK",
+            "HKD",
+            "IDR",
+            "JPY",
+            "KRW",
+            "MYR",
+            "MXN",
+            "NZD",
+            "NOK",
+            "RUB",
+            "SAR",
+            "ZAR",
+            "SEK",
+            "CHF",
+            "TWD",
+            "TRY"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "DataProvisioningParameters": {
+      "type": "object",
+      "properties": {
+        "subscriptionId": {
+          "type": "string"
+        },
+        "databaseConnectionString": {
+          "type": "string"
+        },
+        "resourceRegion": {
+          "type": "string"
+        },
+        "database": {
+          "type": "string"
+        },
+        "collection": {
+          "type": "string"
+        },
+        "requestUnits": {
+          "format": "int64",
+          "maximum": 2147483647,
+          "minimum": 400,
+          "type": "integer"
+        },
+        "accountName": {
+          "type": "string"
+        }
+      }
+    },
+    "ProvisionStatusResponse": {
+      "required": [
+        "status",
+        "message"
+      ],
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "Empty",
+            "Accepted",
+            "Creating",
+            "Connected",
+            "Invalid"
+          ],
+          "type": "string"
+        },
+        "message": {
           "type": "string"
         }
       }

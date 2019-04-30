@@ -25,6 +25,9 @@ const WebResource = msRest.WebResource;
  * @param {string} [app.environment] A one-word descriptive environment value
  * that starts with a capital letter but is otherwise lowercase
  *
+ * @param {string} [app.releaseType] A one-word descriptive release-type value
+ * that starts with a capital letter but is otherwise lowercase
+ *
  * @param {string} app.displayName The descriptive name of the app. This can
  * contain any characters
  *
@@ -1511,6 +1514,9 @@ function _get(ownerName, appName, options, callback) {
  * @param {string} [options.app.environment] A one-word descriptive environment
  * value that starts with a capital letter but is otherwise lowercase
  *
+ * @param {string} [options.app.releaseType] A one-word descriptive release
+ * type value that starts with a capital letter but is otherwise lowercase
+ *
  * @param {string} [options.app.name] The name of the app used in URLs
  *
  * @param {string} [options.app.iconUrl] The string representation of the URL
@@ -1762,6 +1768,9 @@ function _deleteMethod(appName, ownerName, options, callback) {
  * @param {string} [app.description] A short text describing the app
  *
  * @param {string} [app.environment] A one-word descriptive environment value
+ * that starts with a capital letter but is otherwise lowercase
+ *
+ * @param {string} [app.releaseType] A one-word descriptive release-type value
  * that starts with a capital letter but is otherwise lowercase
  *
  * @param {string} app.displayName The descriptive name of the app. This can
@@ -2082,6 +2091,9 @@ class Apps {
    * @param {string} [app.environment] A one-word descriptive environment value
    * that starts with a capital letter but is otherwise lowercase
    *
+   * @param {string} [app.releaseType] A one-word descriptive release-type value
+   * that starts with a capital letter but is otherwise lowercase
+   *
    * @param {string} app.displayName The descriptive name of the app. This can
    * contain any characters
    *
@@ -2129,6 +2141,9 @@ class Apps {
    * @param {string} [app.description] A short text describing the app
    *
    * @param {string} [app.environment] A one-word descriptive environment value
+   * that starts with a capital letter but is otherwise lowercase
+   *
+   * @param {string} [app.releaseType] A one-word descriptive release-type value
    * that starts with a capital letter but is otherwise lowercase
    *
    * @param {string} app.displayName The descriptive name of the app. This can
@@ -3085,6 +3100,9 @@ class Apps {
    * @param {string} [options.app.environment] A one-word descriptive environment
    * value that starts with a capital letter but is otherwise lowercase
    *
+   * @param {string} [options.app.releaseType] A one-word descriptive release
+   * type value that starts with a capital letter but is otherwise lowercase
+   *
    * @param {string} [options.app.name] The name of the app used in URLs
    *
    * @param {string} [options.app.iconUrl] The string representation of the URL
@@ -3130,6 +3148,9 @@ class Apps {
    *
    * @param {string} [options.app.environment] A one-word descriptive environment
    * value that starts with a capital letter but is otherwise lowercase
+   *
+   * @param {string} [options.app.releaseType] A one-word descriptive release
+   * type value that starts with a capital letter but is otherwise lowercase
    *
    * @param {string} [options.app.name] The name of the app used in URLs
    *
@@ -3276,6 +3297,9 @@ class Apps {
    * @param {string} [app.environment] A one-word descriptive environment value
    * that starts with a capital letter but is otherwise lowercase
    *
+   * @param {string} [app.releaseType] A one-word descriptive release-type value
+   * that starts with a capital letter but is otherwise lowercase
+   *
    * @param {string} app.displayName The descriptive name of the app. This can
    * contain any characters
    *
@@ -3321,6 +3345,9 @@ class Apps {
    * @param {string} [app.description] A short text describing the app
    *
    * @param {string} [app.environment] A one-word descriptive environment value
+   * that starts with a capital letter but is otherwise lowercase
+   *
+   * @param {string} [app.releaseType] A one-word descriptive release-type value
    * that starts with a capital letter but is otherwise lowercase
    *
    * @param {string} app.displayName The descriptive name of the app. This can

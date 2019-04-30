@@ -57,7 +57,7 @@ export default class AppUpdateCommand extends AppCommand {
       if (!APP_RELEASE_TYPE_VALIDATIONS.matchRegexp.rule.test(this.release_type)) {
         return failure(ErrorCodes.InvalidParameter, APP_RELEASE_TYPE_VALIDATIONS.matchRegexp.errorMessage);
       }
-      appAttributes.release_type = this.release_type;
+      appAttributes.releaseType = this.release_type;
     }
 
     const app = this.app;
