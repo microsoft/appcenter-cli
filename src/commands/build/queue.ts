@@ -9,7 +9,7 @@ const debug = require("debug")("appcenter-cli:commands:build:queue");
 @help("Queue a new build")
 export default class QueueBuildCommand extends AppCommand {
 
-  @help("Branch to be build")
+  @help("Branch to be built")
   @shortName("b")
   @longName("branch")
   @required
@@ -21,6 +21,12 @@ export default class QueueBuildCommand extends AppCommand {
   @longName("debug-logs")
   public debugLogs: boolean;
 
+  @help("Source control version reference")
+  @shortName("s")
+  @longName("source-version")
+  @hasArg
+  public sourceVersion: string;
+
   async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     const app = this.app;
 
@@ -29,7 +35,8 @@ export default class QueueBuildCommand extends AppCommand {
     try {
       queueBuildRequestResponse = await out.progress(`Queueing build for branch ${this.branchName}...`,
         clientRequest<models.Build>((cb) => client.builds.create(this.branchName, app.ownerName, app.appName, {
-          debug: this.debugLogs
+          debug: this.debugLogs,
+          sourceVersion: this.sourceVersion
         }, cb)));
     } catch (error) {
       if (error.statusCode === 400) {
