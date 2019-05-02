@@ -11,42 +11,41 @@
 'use strict';
 
 /**
- * Class representing a ProvisionStatusResponse.
+ * Class representing a InstanceDatabase.
  */
-class ProvisionStatusResponse {
+class InstanceDatabase {
   /**
-   * Create a ProvisionStatusResponse.
-   * @property {string} status Possible values include: 'Empty', 'Accepted',
-   * 'Creating', 'Connected', 'Invalid'
-   * @property {string} [message]
+   * Create a InstanceDatabase.
+   * @property {string} id
+   * @property {string} name
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of ProvisionStatusResponse
+   * Defines the metadata of InstanceDatabase
    *
-   * @returns {object} metadata of ProvisionStatusResponse
+   * @returns {object} metadata of InstanceDatabase
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'ProvisionStatusResponse',
+      serializedName: 'InstanceDatabase',
       type: {
         name: 'Composite',
-        className: 'ProvisionStatusResponse',
+        className: 'InstanceDatabase',
         modelProperties: {
-          status: {
+          id: {
             required: true,
-            serializedName: 'status',
+            serializedName: 'id',
             type: {
               name: 'String'
             }
           },
-          message: {
-            required: false,
-            serializedName: 'message',
+          name: {
+            required: true,
+            serializedName: 'name',
             type: {
               name: 'String'
             }
@@ -57,4 +56,4 @@ class ProvisionStatusResponse {
   }
 }
 
-module.exports = ProvisionStatusResponse;
+module.exports = InstanceDatabase;

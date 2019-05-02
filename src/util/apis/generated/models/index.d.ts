@@ -177,11 +177,6 @@ export interface AppPatchRequest {
   */
   displayName?: string;
   /**
-   * A one-word descriptive environment value that starts with a capital letter but is otherwise
-   * lowercase
-  */
-  environment?: string;
-  /**
    * A one-word descriptive release type value that starts with a capital letter but is otherwise
    * lowercase
   */
@@ -235,11 +230,6 @@ export interface AppRequest {
    * A short text describing the app
   */
   description?: string;
-  /**
-   * A one-word descriptive environment value that starts with a capital letter but is otherwise
-   * lowercase
-  */
-  environment?: string;
   /**
    * A one-word descriptive release-type value that starts with a capital letter but is otherwise
    * lowercase
@@ -873,11 +863,6 @@ export interface AppGroupResponse {
   */
   displayName?: string;
   /**
-   * A one-word descriptive environment value that starts with a capital letter but is otherwise
-   * lowercase
-  */
-  environment?: string;
-  /**
    * A one-word descriptive release-type value that starts with a capital letter but is otherwise
    * lowercase
   */
@@ -938,11 +923,6 @@ export interface BasicAppResponse {
    * The display name of the app
   */
   displayName: string;
-  /**
-   * A one-word descriptive environment value that starts with a capital letter but is otherwise
-   * lowercase
-  */
-  environment?: string;
   /**
    * A one-word descriptive release-type value that starts with a capital letter but is otherwise
    * lowercase
@@ -1836,6 +1816,10 @@ export interface AppMembershipsResponseMembershipsItem {
    * 'hockeyapp-dogfood'
   */
   origin?: string;
+  /**
+   * Possible values include: 'user', 'org', 'distribution_group', 'team', 'release'
+  */
+  sourceType?: string;
 }
 
 export interface AppMembershipsResponse {
@@ -3469,6 +3453,26 @@ export interface GetReleaseStatusResponse {
    * The URL of the release. Will only be set when the status = 'readyToBePublished'.
   */
   releaseUrl?: any;
+}
+
+export interface PatchReleaseUploadStatusRequest {
+  /**
+   * The new status of the release upload. Possible values include: 'uploadFinished',
+   * 'uploadCanceled'
+  */
+  uploadStatus: string;
+}
+
+export interface PatchReleaseUploadStatusResponse {
+  /**
+   * The ID for the upload.
+  */
+  id: string;
+  /**
+   * The current upload status. Possible values include: 'uploadStarted', 'uploadFinished',
+   * 'uploadCanceled', 'readyToBePublished', 'malwareDetected', 'error'
+  */
+  uploadStatus: string;
 }
 
 /**
@@ -11315,21 +11319,6 @@ export interface DataSubjectRightStatusResponse {
   message: string;
 }
 
-export interface UserResponse {
-  accountId: string;
-  mail?: string;
-  displayName: string;
-}
-
-export interface UsersResponse {
-  value: UserResponse[];
-}
-
-export interface InnerError {
-  code?: string;
-  innererror?: InnerError;
-}
-
 /**
  * This response contains the Azure AD B2C client ID for an application.
 */
@@ -11377,11 +11366,6 @@ export interface AuthApplicationResponse {
   isSdkConfigured?: boolean;
 }
 
-export interface AuthApplicationPostRequest {
-  tenantId?: string;
-  tenantDomain?: string;
-}
-
 export interface AuthApplicationPatchRequest {
   policyId: string;
   scopeId: string;
@@ -11405,35 +11389,16 @@ export interface TrustFrameworkPoliciesResponse {
   value?: TrustFrameworkPolicyResponse[];
 }
 
-export interface IdentityProvider {
-  /**
-   * The unique name of a provider. Valid values are:
-   * facebook, google, microsoft, email
-   * Read only
-  */
-  providerId: string;
-  /**
-   * Determines if the provider is currently active or not
-  */
-  enabled: boolean;
-  clientId?: string;
-  clientSecret?: string;
-}
-
-export interface IdentityProviderPatchPayload {
-  /**
-   * Determines if the provider is currently active or not
-  */
-  enabled?: boolean;
-  clientId?: string;
-  clientSecret?: string;
-}
-
 /**
  * This response contains the location of the resource URI for 201 or 202 responses.
 */
 export interface LocationResponse {
   location?: string;
+}
+
+export interface InnerError {
+  code?: string;
+  innererror?: InnerError;
 }
 
 /**
@@ -11449,9 +11414,55 @@ export interface EstimatedPricingResponse {
   currency?: string;
 }
 
+export interface DataInstance {
+  id: string;
+  name: string;
+}
+
+export interface DataInstancesResponse {
+  value?: DataInstance[];
+}
+
+export interface InstanceDatabase {
+  id: string;
+  name: string;
+}
+
+export interface InstanceDatabasesResponse {
+  value?: InstanceDatabase[];
+}
+
+export interface DatabaseCollection {
+  id: string;
+  name: string;
+}
+
+export interface DatabaseCollectionsResponse {
+  value?: DatabaseCollection[];
+}
+
+export interface UserResponse {
+  accountId: string;
+  mail?: string;
+  displayName: string;
+}
+
+export interface UsersResponse {
+  value: UserResponse[];
+}
+
 export interface DataProvisioningParameters {
   subscriptionId?: string;
   databaseConnectionString?: string;
+  /**
+   * Possible values include: 'East Asia', 'Southeast Asia', 'Australia Central', 'Australia
+   * Central 2', 'Australia East', 'Australia Southeast', 'Brazil South', 'Canada Central', 'Canada
+   * East', 'Central India', 'South India', 'West India', 'North Europe', 'West Europe', 'France
+   * Central', 'France South', 'Germany Central', 'Germany Northeast', 'Japan East', 'Japan West',
+   * 'Korea Central', 'Korea South', 'South Africa North', 'South Africa West', 'UK South', 'UK
+   * West', 'Central US', 'East US', 'East US 2', 'US Gov Arizona', 'US Gov Texas', 'North Central
+   * US', 'South Central US', 'West US', 'West US 2', 'West Central US'
+  */
   resourceRegion?: string;
   database?: string;
   collection?: string;
@@ -11464,7 +11475,7 @@ export interface ProvisionStatusResponse {
    * Possible values include: 'Empty', 'Accepted', 'Creating', 'Connected', 'Invalid'
   */
   status: string;
-  message: string;
+  message?: string;
 }
 
 export interface ListOKResponseItem {

@@ -6568,9 +6568,6 @@ export interface Apps {
      *
      * @param {string} [app.description] A short text describing the app
      *
-     * @param {string} [app.environment] A one-word descriptive environment value
-     * that starts with a capital letter but is otherwise lowercase
-     *
      * @param {string} [app.releaseType] A one-word descriptive release-type value
      * that starts with a capital letter but is otherwise lowercase
      *
@@ -6607,9 +6604,6 @@ export interface Apps {
      * @param {object} app The data for the app
      *
      * @param {string} [app.description] A short text describing the app
-     *
-     * @param {string} [app.environment] A one-word descriptive environment value
-     * that starts with a capital letter but is otherwise lowercase
      *
      * @param {string} [app.releaseType] A one-word descriptive release-type value
      * that starts with a capital letter but is otherwise lowercase
@@ -7280,9 +7274,6 @@ export interface Apps {
      *
      * @param {string} [options.app.displayName] The display name of the app
      *
-     * @param {string} [options.app.environment] A one-word descriptive environment
-     * value that starts with a capital letter but is otherwise lowercase
-     *
      * @param {string} [options.app.releaseType] A one-word descriptive release
      * type value that starts with a capital letter but is otherwise lowercase
      *
@@ -7316,9 +7307,6 @@ export interface Apps {
      * @param {string} [options.app.description] A short text describing the app
      *
      * @param {string} [options.app.displayName] The display name of the app
-     *
-     * @param {string} [options.app.environment] A one-word descriptive environment
-     * value that starts with a capital letter but is otherwise lowercase
      *
      * @param {string} [options.app.releaseType] A one-word descriptive release
      * type value that starts with a capital letter but is otherwise lowercase
@@ -7423,9 +7411,6 @@ export interface Apps {
      *
      * @param {string} [app.description] A short text describing the app
      *
-     * @param {string} [app.environment] A one-word descriptive environment value
-     * that starts with a capital letter but is otherwise lowercase
-     *
      * @param {string} [app.releaseType] A one-word descriptive release-type value
      * that starts with a capital letter but is otherwise lowercase
      *
@@ -7460,9 +7445,6 @@ export interface Apps {
      * @param {object} app The data for the app
      *
      * @param {string} [app.description] A short text describing the app
-     *
-     * @param {string} [app.environment] A one-word descriptive environment value
-     * that starts with a capital letter but is otherwise lowercase
      *
      * @param {string} [app.releaseType] A one-word descriptive release-type value
      * that starts with a capital letter but is otherwise lowercase
@@ -19390,6 +19372,15 @@ export interface Data {
      * [options.provisionDatabaseParameters.databaseConnectionString]
      *
      * @param {string} [options.provisionDatabaseParameters.resourceRegion]
+     * Possible values include: 'East Asia', 'Southeast Asia', 'Australia Central',
+     * 'Australia Central 2', 'Australia East', 'Australia Southeast', 'Brazil
+     * South', 'Canada Central', 'Canada East', 'Central India', 'South India',
+     * 'West India', 'North Europe', 'West Europe', 'France Central', 'France
+     * South', 'Germany Central', 'Germany Northeast', 'Japan East', 'Japan West',
+     * 'Korea Central', 'Korea South', 'South Africa North', 'South Africa West',
+     * 'UK South', 'UK West', 'Central US', 'East US', 'East US 2', 'US Gov
+     * Arizona', 'US Gov Texas', 'North Central US', 'South Central US', 'West US',
+     * 'West US 2', 'West Central US'
      *
      * @param {string} [options.provisionDatabaseParameters.database]
      *
@@ -19429,6 +19420,15 @@ export interface Data {
      * [options.provisionDatabaseParameters.databaseConnectionString]
      *
      * @param {string} [options.provisionDatabaseParameters.resourceRegion]
+     * Possible values include: 'East Asia', 'Southeast Asia', 'Australia Central',
+     * 'Australia Central 2', 'Australia East', 'Australia Southeast', 'Brazil
+     * South', 'Canada Central', 'Canada East', 'Central India', 'South India',
+     * 'West India', 'North Europe', 'West Europe', 'France Central', 'France
+     * South', 'Germany Central', 'Germany Northeast', 'Japan East', 'Japan West',
+     * 'Korea Central', 'Korea South', 'South Africa North', 'South Africa West',
+     * 'UK South', 'UK West', 'Central US', 'East US', 'East US 2', 'US Gov
+     * Arizona', 'US Gov Texas', 'North Central US', 'South Central US', 'West US',
+     * 'West US 2', 'West Central US'
      *
      * @param {string} [options.provisionDatabaseParameters.database]
      *

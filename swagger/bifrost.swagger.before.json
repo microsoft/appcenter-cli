@@ -14915,10 +14915,6 @@
           "description": "The display name of the app",
           "type": "string"
         },
-        "environment": {
-          "description": "A one-word descriptive environment value that starts with a capital letter but is otherwise lowercase",
-          "type": "string"
-        },
         "release_type": {
           "description": "A one-word descriptive release type value that starts with a capital letter but is otherwise lowercase",
           "type": "string"
@@ -14984,10 +14980,6 @@
       "properties": {
         "description": {
           "description": "A short text describing the app",
-          "type": "string"
-        },
-        "environment": {
-          "description": "A one-word descriptive environment value that starts with a capital letter but is otherwise lowercase",
           "type": "string"
         },
         "release_type": {
@@ -15937,10 +15929,6 @@
           "description": "The display name of the app",
           "type": "string"
         },
-        "environment": {
-          "description": "A one-word descriptive environment value that starts with a capital letter but is otherwise lowercase",
-          "type": "string"
-        },
         "release_type": {
           "description": "A one-word descriptive release-type value that starts with a capital letter but is otherwise lowercase",
           "type": "string"
@@ -16111,10 +16099,6 @@
         },
         "display_name": {
           "description": "The display name of the app",
-          "type": "string"
-        },
-        "environment": {
-          "description": "A one-word descriptive environment value that starts with a capital letter but is otherwise lowercase",
           "type": "string"
         },
         "release_type": {
@@ -17425,6 +17409,16 @@
                   "codepush",
                   "testcloud",
                   "hockeyapp-dogfood"
+                ]
+              },
+              "source_type": {
+                "type": "string",
+                "enum": [
+                  "user",
+                  "org",
+                  "distribution_group",
+                  "team",
+                  "release"
                 ]
               }
             }
@@ -19940,6 +19934,46 @@
       "required": [
         "id",
         "upload_url",
+        "upload_status"
+      ]
+    },
+    "PatchReleaseUploadStatusRequest": {
+      "properties": {
+        "upload_status": {
+          "description": "The new status of the release upload",
+          "type": "string",
+          "enum": [
+            "uploadFinished",
+            "uploadCanceled"
+          ]
+        }
+      },
+      "required": [
+        "upload_status"
+      ]
+    },
+    "PatchReleaseUploadStatusResponse": {
+      "properties": {
+        "id": {
+          "description": "The ID for the upload.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "upload_status": {
+          "description": "The current upload status.",
+          "type": "string",
+          "enum": [
+            "uploadStarted",
+            "uploadFinished",
+            "uploadCanceled",
+            "readyToBePublished",
+            "malwareDetected",
+            "error"
+          ]
+        }
+      },
+      "required": [
+        "id",
         "upload_status"
       ]
     },
@@ -31770,51 +31804,6 @@
         "message"
       ]
     },
-    "UsersResponse": {
-      "required": [
-        "value"
-      ],
-      "type": "object",
-      "properties": {
-        "value": {
-          "uniqueItems": false,
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/UserResponse"
-          }
-        }
-      }
-    },
-    "UserResponse": {
-      "required": [
-        "accountId",
-        "displayName"
-      ],
-      "type": "object",
-      "properties": {
-        "accountId": {
-          "format": "uuid",
-          "type": "string"
-        },
-        "mail": {
-          "type": "string"
-        },
-        "displayName": {
-          "type": "string"
-        }
-      }
-    },
-    "InnerError": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "string"
-        },
-        "innererror": {
-          "$ref": "#/definitions/InnerError"
-        }
-      }
-    },
     "ClientIdResponse": {
       "description": "This response contains the Azure AD B2C client ID for an application.",
       "type": "object",
@@ -31946,18 +31935,6 @@
         }
       }
     },
-    "AuthApplicationPostRequest": {
-      "type": "object",
-      "properties": {
-        "tenantId": {
-          "format": "uuid",
-          "type": "string"
-        },
-        "tenantDomain": {
-          "type": "string"
-        }
-      }
-    },
     "AuthApplicationPatchRequest": {
       "required": [
         "policyId",
@@ -32032,50 +32009,23 @@
         }
       }
     },
-    "IdentityProvider": {
-      "required": [
-        "provider_id",
-        "enabled"
-      ],
-      "type": "object",
-      "properties": {
-        "provider_id": {
-          "description": "The unique name of a provider. Valid values are:\nfacebook, google, microsoft, email\nRead only",
-          "type": "string"
-        },
-        "enabled": {
-          "description": "Determines if the provider is currently active or not",
-          "type": "boolean"
-        },
-        "client_id": {
-          "type": "string"
-        },
-        "client_secret": {
-          "type": "string"
-        }
-      }
-    },
-    "IdentityProviderPatchPayload": {
-      "type": "object",
-      "properties": {
-        "enabled": {
-          "description": "Determines if the provider is currently active or not",
-          "type": "boolean"
-        },
-        "client_id": {
-          "type": "string"
-        },
-        "client_secret": {
-          "type": "string"
-        }
-      }
-    },
     "LocationResponse": {
       "description": "This response contains the location of the resource URI for 201 or 202 responses.",
       "type": "object",
       "properties": {
         "location": {
           "type": "string"
+        }
+      }
+    },
+    "InnerError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "innererror": {
+          "$ref": "#/definitions/InnerError"
         }
       }
     },
@@ -32118,6 +32068,121 @@
         }
       }
     },
+    "DataInstancesResponse": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataInstance"
+          }
+        }
+      }
+    },
+    "DataInstance": {
+      "required": [
+        "id",
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "InstanceDatabasesResponse": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InstanceDatabase"
+          }
+        }
+      }
+    },
+    "InstanceDatabase": {
+      "required": [
+        "id",
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "DatabaseCollectionsResponse": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DatabaseCollection"
+          }
+        }
+      }
+    },
+    "DatabaseCollection": {
+      "required": [
+        "id",
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "UsersResponse": {
+      "required": [
+        "value"
+      ],
+      "type": "object",
+      "properties": {
+        "value": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserResponse"
+          }
+        }
+      }
+    },
+    "UserResponse": {
+      "required": [
+        "accountId",
+        "displayName"
+      ],
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "mail": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        }
+      }
+    },
     "DataProvisioningParameters": {
       "type": "object",
       "properties": {
@@ -32128,6 +32193,44 @@
           "type": "string"
         },
         "resourceRegion": {
+          "enum": [
+            "East Asia",
+            "Southeast Asia",
+            "Australia Central",
+            "Australia Central 2",
+            "Australia East",
+            "Australia Southeast",
+            "Brazil South",
+            "Canada Central",
+            "Canada East",
+            "Central India",
+            "South India",
+            "West India",
+            "North Europe",
+            "West Europe",
+            "France Central",
+            "France South",
+            "Germany Central",
+            "Germany Northeast",
+            "Japan East",
+            "Japan West",
+            "Korea Central",
+            "Korea South",
+            "South Africa North",
+            "South Africa West",
+            "UK South",
+            "UK West",
+            "Central US",
+            "East US",
+            "East US 2",
+            "US Gov Arizona",
+            "US Gov Texas",
+            "North Central US",
+            "South Central US",
+            "West US",
+            "West US 2",
+            "West Central US"
+          ],
           "type": "string"
         },
         "database": {
@@ -32149,8 +32252,7 @@
     },
     "ProvisionStatusResponse": {
       "required": [
-        "status",
-        "message"
+        "status"
       ],
       "type": "object",
       "properties": {

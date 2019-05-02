@@ -11,41 +11,41 @@
 'use strict';
 
 /**
- * Class representing a AuthApplicationPostRequest.
+ * Class representing a DataInstance.
  */
-class AuthApplicationPostRequest {
+class DataInstance {
   /**
-   * Create a AuthApplicationPostRequest.
-   * @property {uuid} [tenantId]
-   * @property {string} [tenantDomain]
+   * Create a DataInstance.
+   * @property {string} id
+   * @property {string} name
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of AuthApplicationPostRequest
+   * Defines the metadata of DataInstance
    *
-   * @returns {object} metadata of AuthApplicationPostRequest
+   * @returns {object} metadata of DataInstance
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'AuthApplicationPostRequest',
+      serializedName: 'DataInstance',
       type: {
         name: 'Composite',
-        className: 'AuthApplicationPostRequest',
+        className: 'DataInstance',
         modelProperties: {
-          tenantId: {
-            required: false,
-            serializedName: 'tenantId',
+          id: {
+            required: true,
+            serializedName: 'id',
             type: {
               name: 'String'
             }
           },
-          tenantDomain: {
-            required: false,
-            serializedName: 'tenantDomain',
+          name: {
+            required: true,
+            serializedName: 'name',
             type: {
               name: 'String'
             }
@@ -56,4 +56,4 @@ class AuthApplicationPostRequest {
   }
 }
 
-module.exports = AuthApplicationPostRequest;
+module.exports = DataInstance;

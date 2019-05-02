@@ -62,13 +62,6 @@ class TesterAppResponse extends models['BasicAppResponse'] {
               name: 'String'
             }
           },
-          environment: {
-            required: false,
-            serializedName: 'environment',
-            type: {
-              name: 'String'
-            }
-          },
           releaseType: {
             required: false,
             serializedName: 'release_type',

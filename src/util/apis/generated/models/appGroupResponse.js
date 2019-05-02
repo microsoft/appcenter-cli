@@ -20,8 +20,6 @@ class AppGroupResponse {
    * @property {uuid} groupId The unique ID (UUID) of the group that the app
    * belongs to
    * @property {string} [displayName] The display name of the app
-   * @property {string} [environment] A one-word descriptive environment value
-   * that starts with a capital letter but is otherwise lowercase
    * @property {string} [releaseType] A one-word descriptive release-type value
    * that starts with a capital letter but is otherwise lowercase
    * @property {string} name The name of the app used in URLs
@@ -66,13 +64,6 @@ class AppGroupResponse {
           displayName: {
             required: false,
             serializedName: 'display_name',
-            type: {
-              name: 'String'
-            }
-          },
-          environment: {
-            required: false,
-            serializedName: 'environment',
             type: {
               name: 'String'
             }

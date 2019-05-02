@@ -17,8 +17,6 @@ class AppRequest {
   /**
    * Create a AppRequest.
    * @property {string} [description] A short text describing the app
-   * @property {string} [environment] A one-word descriptive environment value
-   * that starts with a capital letter but is otherwise lowercase
    * @property {string} [releaseType] A one-word descriptive release-type value
    * that starts with a capital letter but is otherwise lowercase
    * @property {string} displayName The descriptive name of the app. This can
@@ -50,13 +48,6 @@ class AppRequest {
           description: {
             required: false,
             serializedName: 'description',
-            type: {
-              name: 'String'
-            }
-          },
-          environment: {
-            required: false,
-            serializedName: 'environment',
             type: {
               name: 'String'
             }

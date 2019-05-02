@@ -22,9 +22,6 @@ const WebResource = msRest.WebResource;
  *
  * @param {string} [app.description] A short text describing the app
  *
- * @param {string} [app.environment] A one-word descriptive environment value
- * that starts with a capital letter but is otherwise lowercase
- *
  * @param {string} [app.releaseType] A one-word descriptive release-type value
  * that starts with a capital letter but is otherwise lowercase
  *
@@ -1511,9 +1508,6 @@ function _get(ownerName, appName, options, callback) {
  *
  * @param {string} [options.app.displayName] The display name of the app
  *
- * @param {string} [options.app.environment] A one-word descriptive environment
- * value that starts with a capital letter but is otherwise lowercase
- *
  * @param {string} [options.app.releaseType] A one-word descriptive release
  * type value that starts with a capital letter but is otherwise lowercase
  *
@@ -1766,9 +1760,6 @@ function _deleteMethod(appName, ownerName, options, callback) {
  * @param {object} app The data for the app
  *
  * @param {string} [app.description] A short text describing the app
- *
- * @param {string} [app.environment] A one-word descriptive environment value
- * that starts with a capital letter but is otherwise lowercase
  *
  * @param {string} [app.releaseType] A one-word descriptive release-type value
  * that starts with a capital letter but is otherwise lowercase
@@ -2088,9 +2079,6 @@ class Apps {
    *
    * @param {string} [app.description] A short text describing the app
    *
-   * @param {string} [app.environment] A one-word descriptive environment value
-   * that starts with a capital letter but is otherwise lowercase
-   *
    * @param {string} [app.releaseType] A one-word descriptive release-type value
    * that starts with a capital letter but is otherwise lowercase
    *
@@ -2139,9 +2127,6 @@ class Apps {
    * @param {object} app The data for the app
    *
    * @param {string} [app.description] A short text describing the app
-   *
-   * @param {string} [app.environment] A one-word descriptive environment value
-   * that starts with a capital letter but is otherwise lowercase
    *
    * @param {string} [app.releaseType] A one-word descriptive release-type value
    * that starts with a capital letter but is otherwise lowercase
@@ -3097,9 +3082,6 @@ class Apps {
    *
    * @param {string} [options.app.displayName] The display name of the app
    *
-   * @param {string} [options.app.environment] A one-word descriptive environment
-   * value that starts with a capital letter but is otherwise lowercase
-   *
    * @param {string} [options.app.releaseType] A one-word descriptive release
    * type value that starts with a capital letter but is otherwise lowercase
    *
@@ -3145,9 +3127,6 @@ class Apps {
    * @param {string} [options.app.description] A short text describing the app
    *
    * @param {string} [options.app.displayName] The display name of the app
-   *
-   * @param {string} [options.app.environment] A one-word descriptive environment
-   * value that starts with a capital letter but is otherwise lowercase
    *
    * @param {string} [options.app.releaseType] A one-word descriptive release
    * type value that starts with a capital letter but is otherwise lowercase
@@ -3294,9 +3273,6 @@ class Apps {
    *
    * @param {string} [app.description] A short text describing the app
    *
-   * @param {string} [app.environment] A one-word descriptive environment value
-   * that starts with a capital letter but is otherwise lowercase
-   *
    * @param {string} [app.releaseType] A one-word descriptive release-type value
    * that starts with a capital letter but is otherwise lowercase
    *
@@ -3343,9 +3319,6 @@ class Apps {
    * @param {object} app The data for the app
    *
    * @param {string} [app.description] A short text describing the app
-   *
-   * @param {string} [app.environment] A one-word descriptive environment value
-   * that starts with a capital letter but is otherwise lowercase
    *
    * @param {string} [app.releaseType] A one-word descriptive release-type value
    * that starts with a capital letter but is otherwise lowercase

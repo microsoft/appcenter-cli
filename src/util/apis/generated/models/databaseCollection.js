@@ -11,42 +11,41 @@
 'use strict';
 
 /**
- * Class representing a ProvisionStatusResponse.
+ * Class representing a DatabaseCollection.
  */
-class ProvisionStatusResponse {
+class DatabaseCollection {
   /**
-   * Create a ProvisionStatusResponse.
-   * @property {string} status Possible values include: 'Empty', 'Accepted',
-   * 'Creating', 'Connected', 'Invalid'
-   * @property {string} [message]
+   * Create a DatabaseCollection.
+   * @property {string} id
+   * @property {string} name
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of ProvisionStatusResponse
+   * Defines the metadata of DatabaseCollection
    *
-   * @returns {object} metadata of ProvisionStatusResponse
+   * @returns {object} metadata of DatabaseCollection
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'ProvisionStatusResponse',
+      serializedName: 'DatabaseCollection',
       type: {
         name: 'Composite',
-        className: 'ProvisionStatusResponse',
+        className: 'DatabaseCollection',
         modelProperties: {
-          status: {
+          id: {
             required: true,
-            serializedName: 'status',
+            serializedName: 'id',
             type: {
               name: 'String'
             }
           },
-          message: {
-            required: false,
-            serializedName: 'message',
+          name: {
+            required: true,
+            serializedName: 'name',
             type: {
               name: 'String'
             }
@@ -57,4 +56,4 @@ class ProvisionStatusResponse {
   }
 }
 
-module.exports = ProvisionStatusResponse;
+module.exports = DatabaseCollection;

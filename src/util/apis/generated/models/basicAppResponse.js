@@ -19,8 +19,6 @@ class BasicAppResponse {
    * @property {uuid} id The unique ID (UUID) of the app
    * @property {string} [description] The description of the app
    * @property {string} displayName The display name of the app
-   * @property {string} [environment] A one-word descriptive environment value
-   * that starts with a capital letter but is otherwise lowercase
    * @property {string} [releaseType] A one-word descriptive release-type value
    * that starts with a capital letter but is otherwise lowercase
    * @property {string} [iconUrl] The string representation of the URL pointing
@@ -75,13 +73,6 @@ class BasicAppResponse {
           displayName: {
             required: true,
             serializedName: 'display_name',
-            type: {
-              name: 'String'
-            }
-          },
-          environment: {
-            required: false,
-            serializedName: 'environment',
             type: {
               name: 'String'
             }
