@@ -21,6 +21,8 @@ class ReleaseDestinationResponse extends models['ReleaseStoreDestinationResponse
    * Create a ReleaseDestinationResponse.
    * @property {boolean} mandatoryUpdate Flag to mark the release for the
    * provided destinations as mandatory
+   * @property {string} [provisioningStatusUrl] The url to check provisioning
+   * status.
    */
   constructor() {
     super();
@@ -52,6 +54,13 @@ class ReleaseDestinationResponse extends models['ReleaseStoreDestinationResponse
             serializedName: 'mandatory_update',
             type: {
               name: 'Boolean'
+            }
+          },
+          provisioningStatusUrl: {
+            required: false,
+            serializedName: 'provisioning_status_url',
+            type: {
+              name: 'String'
             }
           }
         }

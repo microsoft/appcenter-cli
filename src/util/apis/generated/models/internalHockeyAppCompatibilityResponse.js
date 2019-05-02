@@ -19,10 +19,10 @@ class InternalHockeyAppCompatibilityResponse {
    * @property {string} [ownerType] The owner type of the app. Possible values
    * include: 'user', 'organization'
    * @property {string} [os] The OS of the app. Possible values include:
-   * 'Android', 'iOS', 'macOS', 'Windows', 'Custom'
+   * 'Android', 'iOS', 'macOS', 'Windows', 'Linux', 'Custom'
    * @property {string} [platform] The OS of the app. Possible values include:
    * 'Java', 'Objective-C-Swift', 'Cordova', 'React-Native', 'Unity',
-   * 'Xamarin', 'Unknown'
+   * 'Electron', 'Xamarin', 'Unknown'
    * @property {boolean} [hasCrashes] Does the HockeyApp app have crashes from
    * within the last 90 days?
    * @property {boolean} [hasFeedback] Does the HockeyApp app have feedback

@@ -18,6 +18,8 @@ class AppPatchRequest {
    * Create a AppPatchRequest.
    * @property {string} [description] A short text describing the app
    * @property {string} [displayName] The display name of the app
+   * @property {string} [releaseType] A one-word descriptive release type value
+   * that starts with a capital letter but is otherwise lowercase
    * @property {string} [name] The name of the app used in URLs
    * @property {string} [iconUrl] The string representation of the URL pointing
    * to the app's icon
@@ -49,6 +51,13 @@ class AppPatchRequest {
           displayName: {
             required: false,
             serializedName: 'display_name',
+            type: {
+              name: 'String'
+            }
+          },
+          releaseType: {
+            required: false,
+            serializedName: 'release_type',
             type: {
               name: 'String'
             }

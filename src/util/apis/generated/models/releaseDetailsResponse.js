@@ -59,7 +59,9 @@ class ReleaseDetailsResponse {
    * distribution_groups details will be returned.<br>
    * <b>store</b>: The release distributed to external stores and
    * distribution_stores details will be returned.<br>
-   * . Possible values include: 'group', 'store'
+   * <b>tester</b>: The release distributed testers details will be
+   * returned.<br>
+   * . Possible values include: 'group', 'store', 'tester'
    * @property {array} [distributionGroups] OBSOLETE. Will be removed in next
    * version. A list of distribution groups that are associated with this
    * release.

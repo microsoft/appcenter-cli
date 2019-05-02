@@ -4,6 +4,7 @@ import { AppCommand, CommandArgs, CommandResult, help, success, failure, ErrorCo
 import { out } from "../../util/interaction";
 import { reportApp } from "./lib/format-app";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
+import { APP_RELEASE_TYPE_VALIDATIONS } from "./lib/app-release-type-validation";
 
 @help("Update an app")
 export default class AppUpdateCommand extends AppCommand {
@@ -28,6 +29,12 @@ export default class AppUpdateCommand extends AppCommand {
   @hasArg
   name: string;
 
+  @help("The app release type. Suggested values are Alpha, Beta, Production, Store, Enterprise. Custom values are allowed and must be must be one word, alphanumeric, first letter capitalized.")
+  @shortName("r")
+  @longName("release-type")
+  @hasArg
+  release_type: string;
+
   async run(client: AppCenterClient): Promise<CommandResult> {
     const appAttributes: models.AppPatchRequest = {};
 
@@ -41,6 +48,16 @@ export default class AppUpdateCommand extends AppCommand {
 
     if (this.name) {
       appAttributes.name = this.name;
+    }
+
+    if (this.release_type) {
+      if (this.release_type.length > APP_RELEASE_TYPE_VALIDATIONS.maxLength.rule) {
+        return failure(ErrorCodes.InvalidParameter, APP_RELEASE_TYPE_VALIDATIONS.maxLength.errorMessage);
+      }
+      if (!APP_RELEASE_TYPE_VALIDATIONS.matchRegexp.rule.test(this.release_type)) {
+        return failure(ErrorCodes.InvalidParameter, APP_RELEASE_TYPE_VALIDATIONS.matchRegexp.errorMessage);
+      }
+      appAttributes.releaseType = this.release_type;
     }
 
     const app = this.app;

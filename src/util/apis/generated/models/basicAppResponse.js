@@ -19,13 +19,16 @@ class BasicAppResponse {
    * @property {uuid} id The unique ID (UUID) of the app
    * @property {string} [description] The description of the app
    * @property {string} displayName The display name of the app
+   * @property {string} [releaseType] A one-word descriptive release-type value
+   * that starts with a capital letter but is otherwise lowercase
    * @property {string} [iconUrl] The string representation of the URL pointing
    * to the app's icon
    * @property {string} [iconSource] The string representation of the source of
    * the app's icon
    * @property {string} name The name of the app used in URLs
    * @property {string} os The OS the app will be running on. Possible values
-   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Custom'
+   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux',
+   * 'Custom'
    * @property {object} owner
    * @property {uuid} [owner.id] The unique id (UUID) of the owner
    * @property {string} [owner.avatarUrl] The avatar URL of the owner
@@ -70,6 +73,13 @@ class BasicAppResponse {
           displayName: {
             required: true,
             serializedName: 'display_name',
+            type: {
+              name: 'String'
+            }
+          },
+          releaseType: {
+            required: false,
+            serializedName: 'release_type',
             type: {
               name: 'String'
             }

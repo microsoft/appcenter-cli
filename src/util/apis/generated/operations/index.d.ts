@@ -4665,6 +4665,9 @@ export interface DistributionGroups {
      *
      * @param {object} [options] Optional Parameters.
      *
+     * @param {string} [options.displayName] The display name of the distribution
+     * group. If not specified, the name will be used.
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -4674,7 +4677,7 @@ export interface DistributionGroups {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createForOrgWithHttpOperationResponse(orgName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+    createForOrgWithHttpOperationResponse(orgName: string, name: string, options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
 
     /**
      * Creates a disribution goup which can be shared across apps under an
@@ -4685,6 +4688,9 @@ export interface DistributionGroups {
      * @param {string} name The name of the distribution group
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.displayName] The display name of the distribution
+     * group. If not specified, the name will be used.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -4712,9 +4718,9 @@ export interface DistributionGroups {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    createForOrg(orgName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
+    createForOrg(orgName: string, name: string, options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
     createForOrg(orgName: string, name: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
-    createForOrg(orgName: string, name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    createForOrg(orgName: string, name: string, options: { displayName? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
 
 
     /**
@@ -5306,6 +5312,9 @@ export interface DistributionGroups {
      *
      * @param {object} [options] Optional Parameters.
      *
+     * @param {string} [options.displayName] The display name of the distribution
+     * group. If not specified, the name will be used.
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -5315,7 +5324,7 @@ export interface DistributionGroups {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(ownerName: string, appName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
+    createWithHttpOperationResponse(ownerName: string, appName: string, name: string, options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.DistributionGroupResponse>>;
 
     /**
      * Creates a new distribution group and returns it to the caller
@@ -5327,6 +5336,9 @@ export interface DistributionGroups {
      * @param {string} name The name of the distribution group
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.displayName] The display name of the distribution
+     * group. If not specified, the name will be used.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -5354,9 +5366,9 @@ export interface DistributionGroups {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(ownerName: string, appName: string, name: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
+    create(ownerName: string, appName: string, name: string, options?: { displayName? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.DistributionGroupResponse>;
     create(ownerName: string, appName: string, name: string, callback: ServiceCallback<models.DistributionGroupResponse>): void;
-    create(ownerName: string, appName: string, name: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
+    create(ownerName: string, appName: string, name: string, options: { displayName? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.DistributionGroupResponse>): void;
 }
 
 /**
@@ -6556,17 +6568,20 @@ export interface Apps {
      *
      * @param {string} [app.description] A short text describing the app
      *
+     * @param {string} [app.releaseType] A one-word descriptive release-type value
+     * that starts with a capital letter but is otherwise lowercase
+     *
      * @param {string} app.displayName The descriptive name of the app. This can
      * contain any characters
      *
      * @param {string} [app.name] The name of the app used in URLs
      *
      * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin', 'Unity'
+     * 'Xamarin', 'Unity', 'Electron'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -6590,17 +6605,20 @@ export interface Apps {
      *
      * @param {string} [app.description] A short text describing the app
      *
+     * @param {string} [app.releaseType] A one-word descriptive release-type value
+     * that starts with a capital letter but is otherwise lowercase
+     *
      * @param {string} app.displayName The descriptive name of the app. This can
      * contain any characters
      *
      * @param {string} [app.name] The name of the app used in URLs
      *
      * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin', 'Unity'
+     * 'Xamarin', 'Unity', 'Electron'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -7256,6 +7274,9 @@ export interface Apps {
      *
      * @param {string} [options.app.displayName] The display name of the app
      *
+     * @param {string} [options.app.releaseType] A one-word descriptive release
+     * type value that starts with a capital letter but is otherwise lowercase
+     *
      * @param {string} [options.app.name] The name of the app used in URLs
      *
      * @param {string} [options.app.iconUrl] The string representation of the URL
@@ -7286,6 +7307,9 @@ export interface Apps {
      * @param {string} [options.app.description] A short text describing the app
      *
      * @param {string} [options.app.displayName] The display name of the app
+     *
+     * @param {string} [options.app.releaseType] A one-word descriptive release
+     * type value that starts with a capital letter but is otherwise lowercase
      *
      * @param {string} [options.app.name] The name of the app used in URLs
      *
@@ -7387,17 +7411,20 @@ export interface Apps {
      *
      * @param {string} [app.description] A short text describing the app
      *
+     * @param {string} [app.releaseType] A one-word descriptive release-type value
+     * that starts with a capital letter but is otherwise lowercase
+     *
      * @param {string} app.displayName The descriptive name of the app. This can
      * contain any characters
      *
      * @param {string} [app.name] The name of the app used in URLs
      *
      * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin', 'Unity'
+     * 'Xamarin', 'Unity', 'Electron'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -7419,17 +7446,20 @@ export interface Apps {
      *
      * @param {string} [app.description] A short text describing the app
      *
+     * @param {string} [app.releaseType] A one-word descriptive release-type value
+     * that starts with a capital letter but is otherwise lowercase
+     *
      * @param {string} app.displayName The descriptive name of the app. This can
      * contain any characters
      *
      * @param {string} [app.name] The name of the app used in URLs
      *
      * @param {string} app.os The OS the app will be running on. Possible values
-     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+     * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin', 'Unity'
+     * 'Xamarin', 'Unity', 'Electron'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -12491,7 +12521,7 @@ export interface Test {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    gdprExportAccount1WithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRResourceList>>;
+    gdprExportWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRResourceList>>;
 
     /**
      * Lists all the endpoints available for Test account data
@@ -12523,9 +12553,9 @@ export interface Test {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    gdprExportAccount1(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRResourceList>;
-    gdprExportAccount1(callback: ServiceCallback<models.TestGDPRResourceList>): void;
-    gdprExportAccount1(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRResourceList>): void;
+    gdprExport(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRResourceList>;
+    gdprExport(callback: ServiceCallback<models.TestGDPRResourceList>): void;
+    gdprExport(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRResourceList>): void;
 }
 
 /**
@@ -14276,8 +14306,8 @@ export interface Push {
      *
      * @param {string} notificationContent.body Notification body
      *
-     * @param {object} [notificationContent.customData] Notification custom
-     * data(priority, expiration, etc.)
+     * @param {object} [notificationContent.customData] Notification custom data
+     * (such as badge, color, sound, etc.)
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -14311,8 +14341,8 @@ export interface Push {
      *
      * @param {string} notificationContent.body Notification body
      *
-     * @param {object} [notificationContent.customData] Notification custom
-     * data(priority, expiration, etc.)
+     * @param {object} [notificationContent.customData] Notification custom data
+     * (such as badge, color, sound, etc.)
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -15464,7 +15494,7 @@ export interface Errors {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    groupListWithHttpOperationResponse(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorsSearchResult>>;
+    errorSearchWithHttpOperationResponse(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorsSearchResult>>;
 
     /**
      * Errors list based on search parameters
@@ -15518,9 +15548,9 @@ export interface Errors {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    groupList(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorsSearchResult>;
-    groupList(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorsSearchResult>): void;
-    groupList(ownerName: string, appName: string, options: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorsSearchResult>): void;
+    errorSearch(ownerName: string, appName: string, options?: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorsSearchResult>;
+    errorSearch(ownerName: string, appName: string, callback: ServiceCallback<models.ErrorsSearchResult>): void;
+    errorSearch(ownerName: string, appName: string, options: { filter? : string, q? : string, order? : string, sort? : string, top? : number, skip? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorsSearchResult>): void;
 
 
     /**
@@ -15657,8 +15687,9 @@ export interface Errors {
 
     /**
      * Percentage of error-free devices by day in the time range based on the
-     * selected versions. Api will return -1 if crash devices is greater than
-     * active devices
+     * selected versions. If SingleErrorTypeParameter is not provided, defaults to
+     * handlederror. API will return -1 if crash devices is greater than active
+     * devices
      *
      * @param {date} start Start date time in data in ISO 8601 date time format
      *
@@ -15673,8 +15704,8 @@ export interface Errors {
      *
      * @param {array} [options.versions]
      *
-     * @param {string} [options.errorType] Type of error. Possible values include:
-     * 'all', 'unhandledError', 'handledError'
+     * @param {string} [options.errorType] Type of error (handled vs unhandled),
+     * excluding All. Possible values include: 'unhandledError', 'handledError'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -15689,8 +15720,9 @@ export interface Errors {
 
     /**
      * Percentage of error-free devices by day in the time range based on the
-     * selected versions. Api will return -1 if crash devices is greater than
-     * active devices
+     * selected versions. If SingleErrorTypeParameter is not provided, defaults to
+     * handlederror. API will return -1 if crash devices is greater than active
+     * devices
      *
      * @param {date} start Start date time in data in ISO 8601 date time format
      *
@@ -15705,8 +15737,8 @@ export interface Errors {
      *
      * @param {array} [options.versions]
      *
-     * @param {string} [options.errorType] Type of error. Possible values include:
-     * 'all', 'unhandledError', 'handledError'
+     * @param {string} [options.errorType] Type of error (handled vs unhandled),
+     * excluding All. Possible values include: 'unhandledError', 'handledError'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -15814,7 +15846,7 @@ export interface Errors {
      * @param {object} [options] Optional Parameters.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
-     * will fetch all results)
+     * will fetch all results till the max number.)
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -15839,7 +15871,7 @@ export interface Errors {
      * @param {object} [options] Optional Parameters.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
-     * will fetch all results)
+     * will fetch all results till the max number.)
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -15884,7 +15916,7 @@ export interface Errors {
      * @param {object} [options] Optional Parameters.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
-     * will fetch all results)
+     * will fetch all results till the max number.)
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -15909,7 +15941,7 @@ export interface Errors {
      * @param {object} [options] Optional Parameters.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
-     * will fetch all results)
+     * will fetch all results till the max number.)
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -16353,10 +16385,6 @@ export interface Errors {
      *
      * @param {date} start Start date time in data in ISO 8601 date time format
      *
-     * @param {string} model
-     *
-     * @param {string} os
-     *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
@@ -16365,6 +16393,10 @@ export interface Errors {
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
      * format
+     *
+     * @param {string} [options.model]
+     *
+     * @param {string} [options.os]
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -16375,7 +16407,7 @@ export interface Errors {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listForGroupWithHttpOperationResponse(errorGroupId: string, start: Date|string, model: string, os: string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.HandledErrors>>;
+    listForGroupWithHttpOperationResponse(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, model? : string, os? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.HandledErrors>>;
 
     /**
      * Get all errors for group
@@ -16383,10 +16415,6 @@ export interface Errors {
      * @param {string} errorGroupId The id of the error group
      *
      * @param {date} start Start date time in data in ISO 8601 date time format
-     *
-     * @param {string} model
-     *
-     * @param {string} os
      *
      * @param {string} ownerName The name of the owner
      *
@@ -16396,6 +16424,10 @@ export interface Errors {
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
      * format
+     *
+     * @param {string} [options.model]
+     *
+     * @param {string} [options.os]
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -16422,9 +16454,9 @@ export interface Errors {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listForGroup(errorGroupId: string, start: Date|string, model: string, os: string, ownerName: string, appName: string, options?: { end? : Date, customHeaders? : { [headerName: string]: string; } }): Promise<models.HandledErrors>;
-    listForGroup(errorGroupId: string, start: Date|string, model: string, os: string, ownerName: string, appName: string, callback: ServiceCallback<models.HandledErrors>): void;
-    listForGroup(errorGroupId: string, start: Date|string, model: string, os: string, ownerName: string, appName: string, options: { end? : Date, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.HandledErrors>): void;
+    listForGroup(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options?: { end? : Date, model? : string, os? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.HandledErrors>;
+    listForGroup(errorGroupId: string, start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.HandledErrors>): void;
+    listForGroup(errorGroupId: string, start: Date|string, ownerName: string, appName: string, options: { end? : Date, model? : string, os? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.HandledErrors>): void;
 
 
     /**
@@ -16834,10 +16866,11 @@ export interface Errors {
      * based on which column
      *
      * @param {number} [options.top] The maximum number of results to return. (0
-     * will fetch all results)
+     * will fetch all results till the max number.)
      *
-     * @param {string} [options.errorType] Type of error. Possible values include:
-     * 'all', 'unhandledError', 'handledError'
+     * @param {string} [options.errorType] Type of error (handled vs unhandled),
+     * including All. Possible values include: 'all', 'unhandledError',
+     * 'handledError'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -16848,7 +16881,7 @@ export interface Errors {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    groupList1WithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { version? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroups>>;
+    groupListWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { version? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroups>>;
 
     /**
      * List of error groups
@@ -16872,10 +16905,11 @@ export interface Errors {
      * based on which column
      *
      * @param {number} [options.top] The maximum number of results to return. (0
-     * will fetch all results)
+     * will fetch all results till the max number.)
      *
-     * @param {string} [options.errorType] Type of error. Possible values include:
-     * 'all', 'unhandledError', 'handledError'
+     * @param {string} [options.errorType] Type of error (handled vs unhandled),
+     * including All. Possible values include: 'all', 'unhandledError',
+     * 'handledError'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -16902,13 +16936,15 @@ export interface Errors {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    groupList1(start: Date|string, ownerName: string, appName: string, options?: { version? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroups>;
-    groupList1(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorGroups>): void;
-    groupList1(start: Date|string, ownerName: string, appName: string, options: { version? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroups>): void;
+    groupList(start: Date|string, ownerName: string, appName: string, options?: { version? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroups>;
+    groupList(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorGroups>): void;
+    groupList(start: Date|string, ownerName: string, appName: string, options: { version? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroups>): void;
 
 
     /**
-     * Count of errors by day in the time range based the selected versions.
+     * Count of crashes or errors by day in the time range based the selected
+     * versions. If SingleErrorTypeParameter is not provided, defaults to
+     * handlederror.
      *
      * @param {date} start Start date time in data in ISO 8601 date time format
      *
@@ -16923,8 +16959,8 @@ export interface Errors {
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
      * format
      *
-     * @param {string} [options.errorType] Type of error. Possible values include:
-     * 'all', 'unhandledError', 'handledError'
+     * @param {string} [options.errorType] Type of error (handled vs unhandled),
+     * excluding All. Possible values include: 'unhandledError', 'handledError'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -16938,7 +16974,9 @@ export interface Errors {
     countsPerDayWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorCounts>>;
 
     /**
-     * Count of errors by day in the time range based the selected versions.
+     * Count of crashes or errors by day in the time range based the selected
+     * versions. If SingleErrorTypeParameter is not provided, defaults to
+     * handlederror.
      *
      * @param {date} start Start date time in data in ISO 8601 date time format
      *
@@ -16953,8 +16991,8 @@ export interface Errors {
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
      * format
      *
-     * @param {string} [options.errorType] Type of error. Possible values include:
-     * 'all', 'unhandledError', 'handledError'
+     * @param {string} [options.errorType] Type of error (handled vs unhandled),
+     * excluding All. Possible values include: 'unhandledError', 'handledError'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -17001,7 +17039,7 @@ export interface Errors {
      * format
      *
      * @param {number} [options.top] The maximum number of results to return. (0
-     * will fetch all results)
+     * will fetch all results till the max number.)
      *
      * @param {number} [options.skip] The offset (starting at 0) of the first
      * result to return. This parameter along with limit is used to perform
@@ -17014,8 +17052,9 @@ export interface Errors {
      * count of all the items across all pages. Possible values include:
      * 'allpages', 'none'
      *
-     * @param {string} [options.errorType] Type of error. Possible values include:
-     * 'all', 'unhandledError', 'handledError'
+     * @param {string} [options.errorType] Type of error (handled vs unhandled),
+     * including All. Possible values include: 'all', 'unhandledError',
+     * 'handledError'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -17043,7 +17082,7 @@ export interface Errors {
      * format
      *
      * @param {number} [options.top] The maximum number of results to return. (0
-     * will fetch all results)
+     * will fetch all results till the max number.)
      *
      * @param {number} [options.skip] The offset (starting at 0) of the first
      * result to return. This parameter along with limit is used to perform
@@ -17056,8 +17095,9 @@ export interface Errors {
      * count of all the items across all pages. Possible values include:
      * 'allpages', 'none'
      *
-     * @param {string} [options.errorType] Type of error. Possible values include:
-     * 'all', 'unhandledError', 'handledError'
+     * @param {string} [options.errorType] Type of error (handled vs unhandled),
+     * including All. Possible values include: 'all', 'unhandledError',
+     * 'handledError'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -19252,6 +19292,253 @@ export interface CodePushDeploymentMetrics {
 
 /**
  * @class
+ * Data
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface Data {
+
+
+    /**
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getResourceProvisioningWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getResourceProvisioning(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    getResourceProvisioning(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    getResourceProvisioning(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
+     * @summary Creates Cosmos DB or attaches an existing one
+     *
+     * @param {string} acAuthorizationARM
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.provisionDatabaseParameters]
+     *
+     * @param {string} [options.provisionDatabaseParameters.subscriptionId]
+     *
+     * @param {string}
+     * [options.provisionDatabaseParameters.databaseConnectionString]
+     *
+     * @param {string} [options.provisionDatabaseParameters.resourceRegion]
+     * Possible values include: 'East Asia', 'Southeast Asia', 'Australia Central',
+     * 'Australia Central 2', 'Australia East', 'Australia Southeast', 'Brazil
+     * South', 'Canada Central', 'Canada East', 'Central India', 'South India',
+     * 'West India', 'North Europe', 'West Europe', 'France Central', 'France
+     * South', 'Germany Central', 'Germany Northeast', 'Japan East', 'Japan West',
+     * 'Korea Central', 'Korea South', 'South Africa North', 'South Africa West',
+     * 'UK South', 'UK West', 'Central US', 'East US', 'East US 2', 'US Gov
+     * Arizona', 'US Gov Texas', 'North Central US', 'South Central US', 'West US',
+     * 'West US 2', 'West Central US'
+     *
+     * @param {string} [options.provisionDatabaseParameters.database]
+     *
+     * @param {string} [options.provisionDatabaseParameters.collection]
+     *
+     * @param {number} [options.provisionDatabaseParameters.requestUnits]
+     *
+     * @param {string} [options.provisionDatabaseParameters.accountName]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    postResourceProvisioningWithHttpOperationResponse(acAuthorizationARM: string, ownerName: string, appName: string, options?: { provisionDatabaseParameters? : models.DataProvisioningParameters, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * @summary Creates Cosmos DB or attaches an existing one
+     *
+     * @param {string} acAuthorizationARM
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.provisionDatabaseParameters]
+     *
+     * @param {string} [options.provisionDatabaseParameters.subscriptionId]
+     *
+     * @param {string}
+     * [options.provisionDatabaseParameters.databaseConnectionString]
+     *
+     * @param {string} [options.provisionDatabaseParameters.resourceRegion]
+     * Possible values include: 'East Asia', 'Southeast Asia', 'Australia Central',
+     * 'Australia Central 2', 'Australia East', 'Australia Southeast', 'Brazil
+     * South', 'Canada Central', 'Canada East', 'Central India', 'South India',
+     * 'West India', 'North Europe', 'West Europe', 'France Central', 'France
+     * South', 'Germany Central', 'Germany Northeast', 'Japan East', 'Japan West',
+     * 'Korea Central', 'Korea South', 'South Africa North', 'South Africa West',
+     * 'UK South', 'UK West', 'Central US', 'East US', 'East US 2', 'US Gov
+     * Arizona', 'US Gov Texas', 'North Central US', 'South Central US', 'West US',
+     * 'West US 2', 'West Central US'
+     *
+     * @param {string} [options.provisionDatabaseParameters.database]
+     *
+     * @param {string} [options.provisionDatabaseParameters.collection]
+     *
+     * @param {number} [options.provisionDatabaseParameters.requestUnits]
+     *
+     * @param {string} [options.provisionDatabaseParameters.accountName]
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    postResourceProvisioning(acAuthorizationARM: string, ownerName: string, appName: string, options?: { provisionDatabaseParameters? : models.DataProvisioningParameters, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    postResourceProvisioning(acAuthorizationARM: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    postResourceProvisioning(acAuthorizationARM: string, ownerName: string, appName: string, options: { provisionDatabaseParameters? : models.DataProvisioningParameters, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
+     * @summary Checks that the Azure Cosmos DB account name already exists. A
+     * valid account name may contain only lowercase letters, numbers, and the '-'
+     * character, and must be between 3 and 31 characters.
+     *
+     * @param {string} acAuthorizationARM
+     *
+     * @param {string} accountName
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    checkNameExistsWithHttpOperationResponse(acAuthorizationARM: string, accountName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<stream.Readable>>;
+
+    /**
+     * @summary Checks that the Azure Cosmos DB account name already exists. A
+     * valid account name may contain only lowercase letters, numbers, and the '-'
+     * character, and must be between 3 and 31 characters.
+     *
+     * @param {string} acAuthorizationARM
+     *
+     * @param {string} accountName
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    checkNameExists(acAuthorizationARM: string, accountName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<stream.Readable>;
+    checkNameExists(acAuthorizationARM: string, accountName: string, ownerName: string, appName: string, callback: ServiceCallback<stream.Readable>): void;
+    checkNameExists(acAuthorizationARM: string, accountName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<stream.Readable>): void;
+}
+
+/**
+ * @class
  * CrashGroups
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
@@ -20050,6 +20337,83 @@ export interface BranchConfigurations {
     deleteMethod(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.SuccessResponse>;
     deleteMethod(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.SuccessResponse>): void;
     deleteMethod(branch: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SuccessResponse>): void;
+}
+
+/**
+ * @class
+ * Identity
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface Identity {
+
+
+    /**
+     * @summary Returns users of a tenant.
+     * Returns all users if no searchTerm param is specified.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.acAuthorizationMicrosoftGraph] MSGraph Auth Token
+     *
+     * @param {string} [options.searchTerm] User search term
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getUsersWithHttpOperationResponse(ownerName: string, appName: string, options?: { acAuthorizationMicrosoftGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * @summary Returns users of a tenant.
+     * Returns all users if no searchTerm param is specified.
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.acAuthorizationMicrosoftGraph] MSGraph Auth Token
+     *
+     * @param {string} [options.searchTerm] User search term
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getUsers(ownerName: string, appName: string, options?: { acAuthorizationMicrosoftGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    getUsers(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    getUsers(ownerName: string, appName: string, options: { acAuthorizationMicrosoftGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 }
 
 /**

@@ -11,7 +11,9 @@
 'use strict';
 
 /**
- * Generic notification target.
+ * Type of Notification target (audiences, devices, user ids or account ids).
+ * The object must include the correct properties for the specified target
+ * type.
  *
  */
 class NotificationTarget {

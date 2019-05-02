@@ -11,7 +11,8 @@
 'use strict';
 
 /**
- * Generic notification configuration.
+ * Generic notification configuration. Is a base type and caller should choose
+ * one of the derived types specified in the enum.
  *
  */
 class NotificationConfig {

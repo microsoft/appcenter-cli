@@ -27,6 +27,9 @@ class DistributionGroupDetailsResponse extends models['DistributionGroupResponse
    * group
    * @property {number} notifiedUserCount The count of non-pending users in the
    * distribution group who will be notified by new releases
+   * @property {string} [groupType] Type of group (Default, HockeyAppDefault or
+   * MicrosoftDogfooding). Possible values include: 'Default',
+   * 'HockeyAppDefault', 'MicrosoftDogfooding'
    * @property {array} users The distribution group users
    */
   constructor() {
@@ -108,6 +111,13 @@ class DistributionGroupDetailsResponse extends models['DistributionGroupResponse
             serializedName: 'notified_user_count',
             type: {
               name: 'Number'
+            }
+          },
+          groupType: {
+            required: false,
+            serializedName: 'group_type',
+            type: {
+              name: 'String'
             }
           },
           users: {

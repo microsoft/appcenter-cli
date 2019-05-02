@@ -20,12 +20,15 @@ class AppGroupResponse {
    * @property {uuid} groupId The unique ID (UUID) of the group that the app
    * belongs to
    * @property {string} [displayName] The display name of the app
+   * @property {string} [releaseType] A one-word descriptive release-type value
+   * that starts with a capital letter but is otherwise lowercase
    * @property {string} name The name of the app used in URLs
    * @property {string} os The OS the app will be running on. Possible values
-   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Custom'
+   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux',
+   * 'Custom'
    * @property {string} platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Unity', 'Xamarin', 'Unknown'
+   * 'Unity', 'Electron', 'Xamarin', 'Unknown'
    */
   constructor() {
   }
@@ -61,6 +64,13 @@ class AppGroupResponse {
           displayName: {
             required: false,
             serializedName: 'display_name',
+            type: {
+              name: 'String'
+            }
+          },
+          releaseType: {
+            required: false,
+            serializedName: 'release_type',
             type: {
               name: 'String'
             }

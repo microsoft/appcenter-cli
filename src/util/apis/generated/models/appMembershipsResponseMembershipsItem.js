@@ -21,6 +21,8 @@ class AppMembershipsResponseMembershipsItem {
    * @property {array} [permissions]
    * @property {string} [origin] Possible values include: 'appcenter',
    * 'hockeyapp', 'codepush', 'testcloud', 'hockeyapp-dogfood'
+   * @property {string} [sourceType] Possible values include: 'user', 'org',
+   * 'distribution_group', 'team', 'release'
    */
   constructor() {
   }
@@ -70,6 +72,13 @@ class AppMembershipsResponseMembershipsItem {
           origin: {
             required: false,
             serializedName: 'origin',
+            type: {
+              name: 'String'
+            }
+          },
+          sourceType: {
+            required: false,
+            serializedName: 'source_type',
             type: {
               name: 'String'
             }

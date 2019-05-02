@@ -22,17 +22,20 @@ const WebResource = msRest.WebResource;
  *
  * @param {string} [app.description] A short text describing the app
  *
+ * @param {string} [app.releaseType] A one-word descriptive release-type value
+ * that starts with a capital letter but is otherwise lowercase
+ *
  * @param {string} app.displayName The descriptive name of the app. This can
  * contain any characters
  *
  * @param {string} [app.name] The name of the app used in URLs
  *
  * @param {string} app.os The OS the app will be running on. Possible values
- * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+ * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
  *
  * @param {string} app.platform The platform of the app. Possible values
  * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
- * 'Xamarin', 'Unity'
+ * 'Xamarin', 'Unity', 'Electron'
  *
  * @param {object} [options] Optional Parameters.
  *
@@ -1505,6 +1508,9 @@ function _get(ownerName, appName, options, callback) {
  *
  * @param {string} [options.app.displayName] The display name of the app
  *
+ * @param {string} [options.app.releaseType] A one-word descriptive release
+ * type value that starts with a capital letter but is otherwise lowercase
+ *
  * @param {string} [options.app.name] The name of the app used in URLs
  *
  * @param {string} [options.app.iconUrl] The string representation of the URL
@@ -1755,17 +1761,20 @@ function _deleteMethod(appName, ownerName, options, callback) {
  *
  * @param {string} [app.description] A short text describing the app
  *
+ * @param {string} [app.releaseType] A one-word descriptive release-type value
+ * that starts with a capital letter but is otherwise lowercase
+ *
  * @param {string} app.displayName The descriptive name of the app. This can
  * contain any characters
  *
  * @param {string} [app.name] The name of the app used in URLs
  *
  * @param {string} app.os The OS the app will be running on. Possible values
- * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+ * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
  *
  * @param {string} app.platform The platform of the app. Possible values
  * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
- * 'Xamarin', 'Unity'
+ * 'Xamarin', 'Unity', 'Electron'
  *
  * @param {object} [options] Optional Parameters.
  *
@@ -2070,17 +2079,20 @@ class Apps {
    *
    * @param {string} [app.description] A short text describing the app
    *
+   * @param {string} [app.releaseType] A one-word descriptive release-type value
+   * that starts with a capital letter but is otherwise lowercase
+   *
    * @param {string} app.displayName The descriptive name of the app. This can
    * contain any characters
    *
    * @param {string} [app.name] The name of the app used in URLs
    *
    * @param {string} app.os The OS the app will be running on. Possible values
-   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
    *
    * @param {string} app.platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Xamarin', 'Unity'
+   * 'Xamarin', 'Unity', 'Electron'
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -2116,17 +2128,20 @@ class Apps {
    *
    * @param {string} [app.description] A short text describing the app
    *
+   * @param {string} [app.releaseType] A one-word descriptive release-type value
+   * that starts with a capital letter but is otherwise lowercase
+   *
    * @param {string} app.displayName The descriptive name of the app. This can
    * contain any characters
    *
    * @param {string} [app.name] The name of the app used in URLs
    *
    * @param {string} app.os The OS the app will be running on. Possible values
-   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
    *
    * @param {string} app.platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Xamarin', 'Unity'
+   * 'Xamarin', 'Unity', 'Electron'
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -3067,6 +3082,9 @@ class Apps {
    *
    * @param {string} [options.app.displayName] The display name of the app
    *
+   * @param {string} [options.app.releaseType] A one-word descriptive release
+   * type value that starts with a capital letter but is otherwise lowercase
+   *
    * @param {string} [options.app.name] The name of the app used in URLs
    *
    * @param {string} [options.app.iconUrl] The string representation of the URL
@@ -3109,6 +3127,9 @@ class Apps {
    * @param {string} [options.app.description] A short text describing the app
    *
    * @param {string} [options.app.displayName] The display name of the app
+   *
+   * @param {string} [options.app.releaseType] A one-word descriptive release
+   * type value that starts with a capital letter but is otherwise lowercase
    *
    * @param {string} [options.app.name] The name of the app used in URLs
    *
@@ -3252,17 +3273,20 @@ class Apps {
    *
    * @param {string} [app.description] A short text describing the app
    *
+   * @param {string} [app.releaseType] A one-word descriptive release-type value
+   * that starts with a capital letter but is otherwise lowercase
+   *
    * @param {string} app.displayName The descriptive name of the app. This can
    * contain any characters
    *
    * @param {string} [app.name] The name of the app used in URLs
    *
    * @param {string} app.os The OS the app will be running on. Possible values
-   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
    *
    * @param {string} app.platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Xamarin', 'Unity'
+   * 'Xamarin', 'Unity', 'Electron'
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -3296,17 +3320,20 @@ class Apps {
    *
    * @param {string} [app.description] A short text describing the app
    *
+   * @param {string} [app.releaseType] A one-word descriptive release-type value
+   * that starts with a capital letter but is otherwise lowercase
+   *
    * @param {string} app.displayName The descriptive name of the app. This can
    * contain any characters
    *
    * @param {string} [app.name] The name of the app used in URLs
    *
    * @param {string} app.os The OS the app will be running on. Possible values
-   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
    *
    * @param {string} app.platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Xamarin', 'Unity'
+   * 'Xamarin', 'Unity', 'Electron'
    *
    * @param {object} [options] Optional Parameters.
    *

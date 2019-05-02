@@ -16,7 +16,7 @@
 class GetInAppUpdateTokenResponse {
   /**
    * Create a GetInAppUpdateTokenResponse.
-   * @property {string} apiToken The api token generated will not be accessible
+   * @property {string} token The api token generated will not be accessible
    * again
    */
   constructor() {
@@ -36,9 +36,9 @@ class GetInAppUpdateTokenResponse {
         name: 'Composite',
         className: 'GetInAppUpdateTokenResponse',
         modelProperties: {
-          apiToken: {
+          token: {
             required: true,
-            serializedName: 'api_token',
+            serializedName: 'token',
             type: {
               name: 'String'
             }

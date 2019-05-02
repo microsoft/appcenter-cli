@@ -17,14 +17,16 @@ class AppRequest {
   /**
    * Create a AppRequest.
    * @property {string} [description] A short text describing the app
+   * @property {string} [releaseType] A one-word descriptive release-type value
+   * that starts with a capital letter but is otherwise lowercase
    * @property {string} displayName The descriptive name of the app. This can
    * contain any characters
    * @property {string} [name] The name of the app used in URLs
    * @property {string} os The OS the app will be running on. Possible values
-   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows'
+   * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
    * @property {string} platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Xamarin', 'Unity'
+   * 'Xamarin', 'Unity', 'Electron'
    */
   constructor() {
   }
@@ -46,6 +48,13 @@ class AppRequest {
           description: {
             required: false,
             serializedName: 'description',
+            type: {
+              name: 'String'
+            }
+          },
+          releaseType: {
+            required: false,
+            serializedName: 'release_type',
             type: {
               name: 'String'
             }
