@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import * as unzip from "unzip";
+import * as unzipper from "unzipper";
 import { DOMParser } from "xmldom";
 
 export abstract class XmlUtil {
@@ -57,24 +57,27 @@ export abstract class XmlUtil {
   public getMergeXmlResultsPromise(pathToArchive: string, tempPath: string, processXml: Function, resolvePromise: Function): Promise<Document> {
     return new Promise<Document>((resolve, reject) => {
       fs.createReadStream(pathToArchive)
-        .pipe(unzip.Parse())
-        .on("entry", function (entry: unzip.Entry) {
+        .pipe(unzipper.Parse())
+        .on("entry", function (entry: unzipper.Entry) {
           // Skip directories and hidden system files
           if (entry.type === "Directory" || path.basename(entry.path).substring(0, 1) === ".") {
+            entry.autodrain();
             return;
           }
           const fullPath: string = path.join(tempPath, entry.path);
-          entry.pipe(fs.createWriteStream(fullPath).on("close", () => {
+          entry.pipe(fs.createWriteStream(fullPath)).on("finish", () => {
             try {
-              processXml(fullPath, entry);
+              processXml(fullPath, entry.path);
             } catch (e) {
               reject(e);
             }
-          }));
+          });
         })
-        .on("close", () => {
-          resolvePromise(resolve);
-        });
+        .promise()
+        .then(
+          () => resolvePromise(resolve),
+          (e) => console.log("error", e)
+        );
     });
   }
 }
