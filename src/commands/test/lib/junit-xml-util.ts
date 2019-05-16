@@ -1,7 +1,7 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
 import { XmlUtil } from "./xml-util";
 import * as fs from "fs";
-import * as unzip from "unzip";
+import * as unzipper from "unzipper";
 import { DOMParser } from "xmldom";
 
 export class JUnitXmlUtil extends XmlUtil {
@@ -13,11 +13,11 @@ export class JUnitXmlUtil extends XmlUtil {
     const self: JUnitXmlUtil = this;
 
     return this.getMergeXmlResultsPromise(pathToArchive, tempPath,
-      (fullPath: string, entry: unzip.Entry) => {
+      (fullPath: string, relativePath: string) => {
         const xml: Document = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
 
         let name: string = "unknown";
-        const matches: RegExpMatchArray = entry.path.match("^(.*)_TEST.*");
+        const matches: RegExpMatchArray = relativePath.match("^(.*)_TEST.*");
         if (matches && matches.length > 1) {
           name = matches[1].replace(/\./gi, "_");
         }
