@@ -3,7 +3,7 @@ import { AppCenterClient, models, clientCall } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { toDefaultApp, getUser } from "../../util/profile";
 
-@help("Set default application for all CLI commands")
+@help("Set default application for all CLI commands. Not compatible when authenticating with '--token' or an environment variable. Use environment variable 'MOBILE_CENTER_CURRENT_APP' to set the default app instead.")
 export default class SetCurrentAppCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);
@@ -30,6 +30,12 @@ export default class SetCurrentAppCommand extends Command {
     }
 
     const profile = getUser();
+
+    if (!profile) {
+      return failure(ErrorCodes.InvalidParameter,
+        `Could not find a logged in profile, please note that this command is not compatible with the '--token' parameter or the token environment variable.`);
+    }
+
     profile.defaultApp = newDefault;
     profile.save();
     return success();
