@@ -90,7 +90,7 @@ export default class UploadSymbols extends AppCommand {
     }
 
     // upload symbols
-    await out.progress("Uploading symbols...", new UploadSymbolsHelper(client, app, debug).uploadSymbolsZip(pathToZipToUpload, symbolType));
+    await out.progress("Uploading symbols...", new UploadSymbolsHelper(client, app, debug).uploadSymbolsArtifact(pathToZipToUpload, { symbolType }));
 
     return success();
   }

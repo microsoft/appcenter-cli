@@ -13,7 +13,7 @@ import * as MockRequire from "mock-require";
 use(ChaiAsPromised);
 
 // Mocking AzureBlobUploadHelper
-import AzureBlobUploadHelperMock from "./lib/azure-blob-uploader-helper-mock";
+import AzureBlobUploadHelperMock from "../lib/azure-blob-uploader-helper-mock";
 MockRequire("../../../../src/commands/crashes/lib/azure-blob-upload-helper", {
   default: AzureBlobUploadHelperMock
 });
@@ -81,7 +81,7 @@ describe("upload-symbols command", () => {
       const result = await executeUploadCommand(["-b", zipPath]);
 
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-      const [url, uploadedZipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
+      const [url, uploadedZipPath] = AzureBlobUploadHelperMock.getUploadedArtifactUrlAndPath();
       expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
       expect(uploadedZipPath).to.eql(zipPath, "Zip file should be passed as it is");
     });
@@ -102,7 +102,7 @@ describe("upload-symbols command", () => {
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-      const [url, uploadedZipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
+      const [url, uploadedZipPath] = AzureBlobUploadHelperMock.getUploadedArtifactUrlAndPath();
       expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
       expect(uploadedZipPath).to.eql(zipPath, "Zip file should be passed as it is");
     });
@@ -116,7 +116,7 @@ describe("upload-symbols command", () => {
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-      const [url, zipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
+      const [url, zipPath] = AzureBlobUploadHelperMock.getUploadedArtifactUrlAndPath();
       expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
 
       const uploadedZipEntries = getEntitiesList(await getUploadedZip(zipPath));
@@ -134,7 +134,7 @@ describe("upload-symbols command", () => {
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-      const [url, zipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
+      const [url, zipPath] = AzureBlobUploadHelperMock.getUploadedArtifactUrlAndPath();
       expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
 
       const uploadedZipEntries = getEntitiesList(await getUploadedZip(zipPath));
@@ -154,7 +154,7 @@ describe("upload-symbols command", () => {
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-      const [url, zipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
+      const [url, zipPath] = AzureBlobUploadHelperMock.getUploadedArtifactUrlAndPath();
       expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
 
       const uploadedZipEntries = getEntitiesList(await getUploadedZip(zipPath));
@@ -175,7 +175,7 @@ describe("upload-symbols command", () => {
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-      const [url, uploadedZipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
+      const [url, uploadedZipPath] = AzureBlobUploadHelperMock.getUploadedArtifactUrlAndPath();
       expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
       expect(uploadedZipPath).not.to.eql(zipPath, "Uploaded ZIP path should be different from original ZIP path");
 
@@ -195,7 +195,7 @@ describe("upload-symbols command", () => {
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-      const [url, uploadedZipPath] = AzureBlobUploadHelperMock.getUploadedZipUrlAndPath();
+      const [url, uploadedZipPath] = AzureBlobUploadHelperMock.getUploadedArtifactUrlAndPath();
       expect(url).to.eql(fakeFullUploadUrl, `ZIP file should be uploaded to ${fakeFullUploadUrl}`);
       expect(uploadedZipPath).not.to.eql(zipPath, "Uploaded ZIP path should be different from original ZIP path");
 
