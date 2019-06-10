@@ -41,7 +41,7 @@ export default class UploadMappings extends AppCommand {
     this.validateParameters();
 
     this.getStatsForFsPath(this.mappingPath);
-    if (this.getLowerCasedFileExtension(this.mappingPath) !== ".txt") {
+    if (Path.extname(this.mappingPath).toLowerCase() !== ".txt") {
       throw failure(ErrorCodes.InvalidParameter, `path ${this.mappingPath} does not point to valid mapping.txt file`);
     }
     const uploadRequest: models.SymbolUploadBeginRequest = {
@@ -72,10 +72,6 @@ export default class UploadMappings extends AppCommand {
         throw failure(ErrorCodes.Exception, `failed to get statistics for file system entry ${filePath}`);
       }
     }
-  }
-
-  private getLowerCasedFileExtension(filePath: string): string {
-    return Path.extname(filePath).toLowerCase();
   }
 
   private validateParameters() {
