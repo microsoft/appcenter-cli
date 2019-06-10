@@ -164,8 +164,8 @@ describe("upload-mappings command", () => {
 
       // Assert
       expect(result.succeeded).to.eql(false, "Command should fail");
-      expect(expectedRequestsScope.isDone()).to.eql(false, "Upload should not be completed");
-      skippedRequestsScope.done();
+      expect(skippedRequestsScope.isDone()).to.eql(false, "Upload should not be completed");
+      expectedRequestsScope.done(); // All normal API calls are executed
     });
 
     after(() => {
