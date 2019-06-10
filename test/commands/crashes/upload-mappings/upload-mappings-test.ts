@@ -163,7 +163,9 @@ describe("upload-mappings command", () => {
       const result = await expect(executeUploadCommand(["-m", mappingsPath, "-n", "1.0", "-c", "1"])).to.eventually.be.rejected;
 
       // Assert
-      testUploadFailure(result, expectedRequestsScope, skippedRequestsScope);
+      expect(result.succeeded).to.eql(false, "Command should fail");
+      expect(expectedRequestsScope.isDone()).to.eql(false, "Upload should not be completed");
+      skippedRequestsScope.done();
     });
 
     after(() => {
@@ -187,12 +189,6 @@ describe("upload-mappings command", () => {
   function testCommandSuccess(result: CommandResult, executionScope: Nock.Scope, abortScope: Nock.Scope) {
       expect(result.succeeded).to.eql(true, "Command should be successfully completed");
       expect(abortScope.isDone()).to.eql(false, "Upload should not be aborted");
-      executionScope.done(); // All normal API calls are executed
-  }
-
-  function testUploadFailure(result: CommandResult, executionScope: Nock.Scope, patchScope: Nock.Scope) {
-      expect(result.succeeded).to.eql(false, "Command should fail");
-      expect(patchScope.isDone()).to.eql(false, "Upload should not be completed");
       executionScope.done(); // All normal API calls are executed
   }
 
