@@ -108,6 +108,20 @@ describe("upload-mappings command", () => {
       // Act/Assert
       await expect(executeUploadCommand(["-m", mappingsPath])).to.eventually.be.rejected;
     });
+
+    it("negative version code provided", async () => {
+      // Arrange
+      const mappingsPath = await createMappingsFile(mappingsFileContent, "test.test");
+      // Act/Assert
+      await expect(executeUploadCommand(["-m", mappingsPath, "-n", "1.0", "-c", "-1"])).to.eventually.be.rejected;
+    });
+
+    it("zero version code provided", async () => {
+      // Arrange
+      const mappingsPath = await createMappingsFile(mappingsFileContent, "test.test");
+      // Act/Assert
+      await expect(executeUploadCommand(["-m", mappingsPath, "-n", "1.0", "-c", "0"])).to.eventually.be.rejected;
+    });
   });
 
   describe("when AndroidProguard network requests are successful", () => {

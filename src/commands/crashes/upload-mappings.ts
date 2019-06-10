@@ -48,7 +48,7 @@ export default class UploadMappings extends AppCommand {
       symbolType: SymbolType.AndroidProGuard,
       fileName: "mapping.txt",
       version: this.versionName,
-      build: this.versionCode
+      build: String(this.versionCode)
     };
 
     // upload mappings
@@ -81,7 +81,9 @@ export default class UploadMappings extends AppCommand {
   private validateParameters() {
     // check that user have selected all of --mapping, --version-name, and --version-code
     if (_.isNil(this.mappingPath) || _.isNil(this.versionName) || _.isNil(this.versionCode)) {
-      throw failure(ErrorCodes.InvalidParameter, "all of '--mapping', '--version-name', and '--version-code' are required");
+      throw failure(ErrorCodes.InvalidParameter, "all of '--mapping|-m', '--version-name|-n', and '--version-code|-c' are required");
+    } else if (Number.parseInt(this.versionCode, 10) <= 0) {
+      throw failure(ErrorCodes.InvalidParameter, "--version-code|-c must be a positive non-zero integer");
     }
   }
 
