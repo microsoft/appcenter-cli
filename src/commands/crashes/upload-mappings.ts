@@ -46,7 +46,7 @@ export default class UploadMappings extends AppCommand {
     }
     const uploadRequest: models.SymbolUploadBeginRequest = {
       symbolType: SymbolType.AndroidProGuard,
-      fileName: "mapping.txt",
+      fileName: Path.basename(this.mappingPath),
       version: this.versionName,
       build: String(this.versionCode)
     };

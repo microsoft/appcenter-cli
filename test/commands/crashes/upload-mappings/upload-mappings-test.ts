@@ -143,6 +143,20 @@ describe("upload-mappings command", () => {
       expect(url).to.eql(fakeFullUploadUrl, `mapping.txt file should be uploaded to ${fakeFullUploadUrl}`);
       expect(uploadedZipPath).to.eql(mappingsPath, "mapping.txt file should be passed as it is");
     });
+
+    it("uploads test.txt", async () => {
+      // Arrange
+      const mappingsPath = await createMappingsFile(mappingsFileContent, "test.txt");
+
+      // Act
+      const result = await executeUploadCommand(["-m", mappingsPath, "-n", "1.0", "-c", "1"]);
+
+      // Assert
+      testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+      const [url, uploadedZipPath] = AzureBlobUploadHelperMock.getUploadedArtifactUrlAndPath();
+      expect(url).to.eql(fakeFullUploadUrl, `test.txt file should be uploaded to ${fakeFullUploadUrl}`);
+      expect(uploadedZipPath).to.eql(mappingsPath, "test.txt file should be passed as it is");
+    });
   });
 
   describe("when AndroidProguard upload fails", () => {
@@ -210,7 +224,7 @@ describe("upload-mappings command", () => {
 
   function setupSuccessfulAndroidProguardPostUploadResponse(nockScope: Nock.Scope): Nock.Scope {
     return nockScope.post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads`, {
-      symbol_type: "AndroidProguard", file_name: "mapping.txt", build: "1", version: "1.0"
+      symbol_type: "AndroidProguard", file_name: /.+\.txt/, build: "1", version: "1.0"
     }).reply(200, ((uri: any, requestBody: any) => {
       postSymbolSpy(requestBody);
       return {
