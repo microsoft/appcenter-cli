@@ -42,7 +42,7 @@ export default class UploadMappings extends AppCommand {
 
     this.getStatsForFsPath(this.mappingPath);
     if (Path.extname(this.mappingPath).toLowerCase() !== ".txt") {
-      throw failure(ErrorCodes.InvalidParameter, `path ${this.mappingPath} does not point to valid mapping.txt file`);
+      throw failure(ErrorCodes.InvalidParameter, `path ${this.mappingPath} does not point to valid mapping file – only .txt files are supported`);
     }
     const uploadRequest: models.SymbolUploadBeginRequest = {
       symbolType: SymbolType.AndroidProGuard,
