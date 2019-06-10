@@ -266,6 +266,6 @@ export default class UploadMissingSymbols extends AppCommand {
 
     const tempFilePath = await createTempFileFromZip(zip);
 
-    await helper.uploadSymbolsZip(tempFilePath, SymbolType.Apple);
+    await helper.uploadSymbolsArtifact(tempFilePath, { symbolType: SymbolType.Apple} );
   }
 }

@@ -4,8 +4,9 @@ import { DefaultApp } from "../../../util/profile";
 import { inspect } from "util";
 import AzureBlobUploadHelper from "./azure-blob-upload-helper";
 
-// eventually we may want to support AndroidProGuard or UWP here
+// eventually we may want to support UWP here
 export enum SymbolType {
+  AndroidProGuard = "AndroidProguard",
   Apple = "Apple",
   Breakpad = "Breakpad"
 }
@@ -13,7 +14,7 @@ export enum SymbolType {
 export default class SymbolsUploadingHelper {
   constructor(private client: AppCenterClient, private app: DefaultApp, private debug: Function) {}
 
-  public async uploadSymbolsZip(zip: string, symbolType: SymbolType): Promise<void> {
+  public async uploadSymbolsArtifact(artifactPath: string, symbolType: models.SymbolUploadBeginRequest): Promise<void> {
     // executing API request to get an upload URL
     const uploadingBeginRequestResult = await this.executeSymbolsUploadingBeginRequest(this.client, this.app, symbolType);
 
@@ -23,7 +24,7 @@ export default class SymbolsUploadingHelper {
     try {
       // putting ZIP to the specified URL
       const uploadUrl: string = uploadingBeginRequestResult.uploadUrl;
-      await new AzureBlobUploadHelper(this.debug).upload(uploadUrl, zip);
+      await new AzureBlobUploadHelper(this.debug).upload(uploadUrl, artifactPath);
 
       // sending 'committed' API request to finish uploading
       await this.executeSymbolsUploadingEndRequest(this.client, this.app, symbolUploadId, "committed");
@@ -34,10 +35,10 @@ export default class SymbolsUploadingHelper {
     }
   }
 
-  private async executeSymbolsUploadingBeginRequest(client: AppCenterClient, app: DefaultApp, symbolType: SymbolType): Promise<models.SymbolUploadBeginResponse> {
+  private async executeSymbolsUploadingBeginRequest(client: AppCenterClient, app: DefaultApp, symbolType: models.SymbolUploadBeginRequest): Promise<models.SymbolUploadBeginResponse> {
     this.debug("Executing API request to get uploading URL");
     const uploadingBeginResponse = await clientRequest<models.SymbolUploadBeginResponse>((cb) => client.symbolUploads.create(
-      { symbolType },
+      symbolType,
       app.ownerName,
       app.appName,
       cb)).catch((error: any) => {

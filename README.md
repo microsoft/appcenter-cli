@@ -72,6 +72,7 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 | | |
 | `appcenter crashes upload-missing-symbols` | Upload missing crash symbols for the application (only from macOS) |
 | `appcenter crashes upload-symbols` | Upload the crash symbols for the application |
+| `appcenter crashes upload-mappings` | Upload Android mapping files for the application |
 | | |
 | `appcenter distribute release` | Upload release binary and trigger distribution |
 | `appcenter distribute groups create` | Create new distribution group |
