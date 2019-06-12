@@ -46,7 +46,7 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 | `appcenter apps delete` | Delete an app |
 | `appcenter apps get-current` | Get the application that's set as default for all CLI commands |
 | `appcenter apps list` | Get list of configured applications |
-| `appcenter apps set-current` | Set default application for all CLI commands |
+| `appcenter apps set-current` | Set default application for all CLI commands. Not compatible when authenticating with '--token' or an environment variable. Use environment variable 'MOBILE_CENTER_CURRENT_APP' to set the default app instead |
 | `appcenter apps show` | Get the details of an app |
 | `appcenter apps update` | Update an app |
 | | |
@@ -70,9 +70,9 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 | `appcenter codepush deployment remove` | Remove CodePush deployment |
 | `appcenter codepush deployment rename` | Rename CodePush deployment |
 | | |
+| `appcenter crashes upload-mappings` | Upload the Android mappings for the application |
 | `appcenter crashes upload-missing-symbols` | Upload missing crash symbols for the application (only from macOS) |
 | `appcenter crashes upload-symbols` | Upload the crash symbols for the application |
-| `appcenter crashes upload-mappings` | Upload Android mapping files for the application |
 | | |
 | `appcenter distribute release` | Upload release binary and trigger distribution |
 | `appcenter distribute groups create` | Create new distribution group |
