@@ -29,7 +29,7 @@ export async function isValidDeployment(client: AppCenterClient, app: DefaultApp
 
 export function generateWarningVersionForPoorVersionIfNeeded(version: string): string {
   if (regexpForMajorMinor.test(version)) {
-    return version + ".X"
+    return version + ".X";
   } else if (regexpForMajor.test(version)) {
     return version + ".X.X";
   } else {
