@@ -151,7 +151,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     const warningVersion = generateWarningVersionForPoorVersionIfNeeded(version);
 
     if (warningVersion) {
-      out.text(`\nYour target-binary-version "${version}" will be treated as "${warningVersion}"\n`);
+      out.text(`\nYour target-binary-version "${version}" will be treated as "${warningVersion}".\n`);
     }
   }
 
