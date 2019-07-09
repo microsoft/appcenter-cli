@@ -27,7 +27,7 @@ export async function isValidDeployment(client: AppCenterClient, app: DefaultApp
   return httpRequest.response.statusCode === 200 ? Promise.resolve(true) : Promise.resolve(false);
 }
 
-export function generateWarningVersionForPoorVersionIfNeeded(version: string): string {
+export function validateVersion(version: string): string {
   if (regexpForMajorMinor.test(version)) {
     return version + ".X";
   } else if (regexpForMajor.test(version)) {

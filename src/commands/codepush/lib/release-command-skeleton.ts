@@ -10,7 +10,7 @@ import * as chalk from "chalk";
 import { sign, zip } from "../lib/update-contents-tasks";
 import { isBinaryOrZip, getLastFolderInPath, moveReleaseFilesInTmpFolder, isDirectory } from "../lib/file-utils";
 import { environments } from "../lib/environment";
-import { isValidRange, isValidRollout, isValidDeployment, generateWarningVersionForPoorVersionIfNeeded } from "../lib/validation-utils";
+import { isValidRange, isValidRollout, isValidDeployment, validateVersion } from "../lib/validation-utils";
 import { LegacyCodePushRelease }  from "../lib/release-strategy/index";
 import { getTokenFromEnvironmentVar } from "../../../util/profile/environment-vars";
 
@@ -117,7 +117,7 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
       const serverUrl = this.getServerUrl();
       const token = this.token || getTokenFromEnvironmentVar() || await getUser().accessToken;
 
-      this.printWarningForPoorTargetBinaryVersionIfNeeded(this.targetBinaryVersion);
+      this.checkTargetBinaryVersion(this.targetBinaryVersion);
 
       await out.progress("Creating CodePush release...",  this.releaseStrategy.release(client, app, this.deploymentName, updateContentsZipPath, {
         appVersion: this.targetBinaryVersion,
@@ -147,8 +147,8 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     }
   }
 
-  private printWarningForPoorTargetBinaryVersionIfNeeded(version: string): void {
-    const warningVersion = generateWarningVersionForPoorVersionIfNeeded(version);
+  private checkTargetBinaryVersion(version: string): void {
+    const warningVersion = validateVersion(version);
 
     if (warningVersion) {
       out.text(`\nYour target-binary-version "${version}" will be treated as "${warningVersion}".\n`);
