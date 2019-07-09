@@ -1,4 +1,4 @@
-import { isValidVersion, isValidRange, generateWarningVersionForPoorVersionIfNeeded } from "../../../../src/commands/codepush/lib/validation-utils";
+import { isValidVersion, isValidRange, validateVersion } from "../../../../src/commands/codepush/lib/validation-utils";
 import { expect } from "chai";
 
 describe("isValidVersion", function () {
@@ -95,7 +95,7 @@ describe("isValidRange", function () {
   });
 });
 
-describe("generateWarningVersionForPoorVersionIfNeeded", function () {
+describe("validateVersion", function () {
   context("when a given version contains only major number", function () {
     const semverCompliantRanges = [
       "1",
@@ -105,7 +105,7 @@ describe("generateWarningVersionForPoorVersionIfNeeded", function () {
 
     it("returns generated warning version", function () {
       for (const range of semverCompliantRanges) {
-        expect(generateWarningVersionForPoorVersionIfNeeded(range)).to.equal(range + addedMinorPatchNumbers);
+        expect(validateVersion(range)).to.equal(range + addedMinorPatchNumbers);
       }
     });
   });
@@ -119,7 +119,7 @@ describe("generateWarningVersionForPoorVersionIfNeeded", function () {
 
     it("returns generated warning version", function () {
       for (const range of semverCompliantRanges) {
-        expect(generateWarningVersionForPoorVersionIfNeeded(range)).to.equal(range + addedMinorPatchNumbers);
+        expect(validateVersion(range)).to.equal(range + addedMinorPatchNumbers);
       }
     });
   });
@@ -135,7 +135,7 @@ describe("generateWarningVersionForPoorVersionIfNeeded", function () {
 
     it("returns 'null'", function () {
       for (const range of semverCompliantRanges) {
-        expect(generateWarningVersionForPoorVersionIfNeeded(range)).to.equal(null);
+        expect(validateVersion(range)).to.equal(null);
       }
     });
   });
