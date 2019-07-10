@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as unzipper from "unzipper";
 import { DOMParser } from "xmldom";
+import { Stream } from "stream";
 
 export abstract class XmlUtil {
   public abstract mergeXmlResults(pathToArchive: string): Promise<Document>;
@@ -56,23 +57,31 @@ export abstract class XmlUtil {
 
   public getMergeXmlResultsPromise(pathToArchive: string, tempPath: string, processXml: Function, resolvePromise: Function): Promise<Document> {
     return new Promise<Document>((resolve, reject) => {
+      var stream = new Stream;
       fs.createReadStream(pathToArchive)
         .pipe(unzipper.Parse())
-        .on("entry", function (entry: unzipper.Entry) {
-          // Skip directories and hidden system files
-          if (entry.type === "Directory" || path.basename(entry.path).substring(0, 1) === ".") {
-            entry.autodrain();
-            return;
-          }
-          const fullPath: string = path.join(tempPath, entry.path);
-          entry.pipe(fs.createWriteStream(fullPath)).on("finish", () => {
-            try {
-              processXml(fullPath, entry.path);
-            } catch (e) {
-              reject(e);
+        .pipe(stream.Transform({
+            objectMode: true,
+            transform: function (entry, e, cb) {
+              if (entry.type !== "Directory" && path.basename(entry.path).substring(0, 1) !== ".") {
+                const fullPath: string = path.join(tempPath, entry.path);
+                entry.pipe(fs.createWriteStream(fullPath))
+                  .on('finish', () => {
+                    try {
+                      processXml(fullPath, entry.path);
+                      cb();
+                    }
+                    catch (err) {
+                      cb(err);
+                    }
+                  });
+              }
+              else {
+                entry.autodrain();
+                cb();
+              }
             }
-          });
-        })
+          })
         .promise()
         .then(
           () => resolvePromise(resolve),
@@ -87,7 +96,7 @@ export function validXmlFile(file: string): boolean {
     const xml = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(file, "utf-8"), "text/xml");
 
     return xml != null;
-  } catch {
+  } catch (e) {
     return false;
   }
 }

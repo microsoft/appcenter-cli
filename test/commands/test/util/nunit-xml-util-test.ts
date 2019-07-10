@@ -186,6 +186,8 @@ describe("nunit xml util", function () {
     // Then
     const finalStrXml: string = new XMLSerializer().serializeToString(xml);
 
+    console.log(xml);
+
     // Doesn't throw exception
     xmlLib.parseXml(finalStrXml);
   });

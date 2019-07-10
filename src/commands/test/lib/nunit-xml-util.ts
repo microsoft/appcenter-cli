@@ -3,6 +3,7 @@ import { XmlUtil } from "./xml-util";
 import * as fs from "fs";
 import * as unzipper from "unzipper";
 import { DOMParser } from "xmldom";
+import { out } from "../../../util/interaction";
 
 export class NUnitXmlUtil extends XmlUtil {
 
@@ -12,7 +13,7 @@ export class NUnitXmlUtil extends XmlUtil {
 
     const self: NUnitXmlUtil = this;
 
-    return this.getMergeXmlResultsPromise(pathToArchive, tempPath,
+    const outputXml: Promise<Document> = this.getMergeXmlResultsPromise(pathToArchive, tempPath,
       (fullPath: string, relativePath: string) => {
         const xml: Document = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
 
@@ -25,7 +26,6 @@ export class NUnitXmlUtil extends XmlUtil {
         self.appendToTestNameTransformation(xml, `_${name}`);
         self.removeIgnoredTransformation(xml);
         self.removeEmptySuitesTransformation(xml);
-
         if (mainXml) {
           if (this.isNUnit3(xml)) {
             mainXml = self.combineNUnit3(mainXml, xml);
@@ -40,6 +40,10 @@ export class NUnitXmlUtil extends XmlUtil {
         resolve(mainXml);
       }
     );
+
+    console.log(outputXml);
+
+    return outputXml;
   }
 
   public getArchiveName(): string {
