@@ -7,6 +7,7 @@ import { inspect } from "util";
 import { TokenEntry } from "../../../src/util/token-store";
 import * as keychainParser from "../../../src/util/token-store/osx/osx-keychain-parser";
 import * as tokenStore from "../../../src/util/token-store/osx/osx-token-store";
+import { count } from "rxjs/operators";
 
 type DoneFunc = {(err?: Error): void};
 
@@ -93,7 +94,7 @@ describe("storing complete data in keychain", function () {
   after(() => keychain.remove(testUser));
 
   it("should have at least one item", async function (): Promise<void> {
-    const c = await keychain.list().count().toPromise();
+    const c = await keychain.list().pipe(count()).toPromise();
     expect(c).to.be.above(0);
   });
 
@@ -125,7 +126,7 @@ describe("storing data without a tokenId in keychain", function () {
   after(() => keychain.remove(testUser));
 
   it("should have at least one item", async function (): Promise<void> {
-    const c = await keychain.list().count().toPromise();
+    const c = await keychain.list().pipe(count()).toPromise();
     expect(c).to.be.above(0);
   });
 

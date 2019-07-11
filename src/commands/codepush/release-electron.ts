@@ -6,7 +6,7 @@ import { inspect } from "util";
 import * as pfs from "../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as mkdirp from "mkdirp";
-import * as chalk from "chalk";
+import chalk from "chalk";
 import { fileDoesNotExistOrIsDirectory, createEmptyTmpReleaseFolder } from "./lib/file-utils";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";
 import { getElectronProjectAppVersion, runWebPackBundleCommand, isValidOS, isValidPlatform, isElectronProject } from "./lib/electron-utils";

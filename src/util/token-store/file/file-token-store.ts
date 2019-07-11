@@ -9,6 +9,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as rx from "rxjs";
+import { map } from "rxjs/operators";
 import { toPairs } from "lodash";
 
 const debug = require("debug")("appcenter-cli:util:token-store:file:file-token-store");
@@ -30,7 +31,11 @@ export class FileTokenStore implements TokenStore {
 
   list(): rx.Observable<TokenEntry> {
     this.loadTokenStoreCache();
-    return rx.Observable.from(toPairs(this.tokenStoreCache)).map((pair) => ({ key: pair[0], accessToken: pair[1]}));
+    //return rx.from(toPairs(this.tokenStoreCache)).map((pair) => ({ key: pair[0], accessToken: pair[1]}));
+
+    return rx.from(toPairs(this.tokenStoreCache)).pipe(
+      map((pair:[string, TokenValueType]) => ({ key: pair[0], accessToken: pair[1]}))
+    );
   }
 
   get(key: TokenKeyType): Promise<TokenEntry> {

@@ -98,16 +98,11 @@ export function text(...args: any[]): void {
 // Output tabular data.
 // By default, does a simple default table using cli-table3.
 // If you want to, you can pass in explicit table initialization
-// options. See https://github.com/jamestalmage/cli-table3 for docs
+// options. See https://github.com/cli-table/cli-table3 for docs
 // on the module.
 //
-export function table(options: any, data: any[]): void;
-export function table(data: any[]): void;
-export function table(...args: any[]): void {
+export function table(options: any, data: any[]): void {
   console.assert(!formatIsCsv(), "this function doesn't support CSV mode");
-  let options: any;
-  let data: any[];
-  [options, data] = args;
 
   if (!data) {
     data = options;

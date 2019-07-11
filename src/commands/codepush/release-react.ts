@@ -4,7 +4,7 @@ import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as pfs from "../../util/misc/promisfied-fs";
-import * as chalk from "chalk";
+import chalk from "chalk";
 import * as path from "path";
 import * as mkdirp from "mkdirp";
 import { fileDoesNotExistOrIsDirectory, createEmptyTmpReleaseFolder, removeReactTmpDir } from "./lib/file-utils";

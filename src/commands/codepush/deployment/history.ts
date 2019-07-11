@@ -4,7 +4,7 @@ import { inspect } from "util";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { formatDate } from "./lib/date-helper";
 import { scriptName } from "../../../util/misc";
-import * as chalk from "chalk";
+import chalk from "chalk";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:deployments:history");
 
@@ -38,6 +38,8 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
 
       let tableTitles: string[] = ["Label", "Release Time", "App Version", "Mandatory", "Description", "Install Metrics"];
       tableTitles = tableTitles.map((title) => chalk.cyan(title));
+
+      console.log("OMG: " + releases.length);
 
       out.table(
         out.getCommandOutputTableOptions(tableTitles),

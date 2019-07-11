@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import * as chalk from "chalk";
+import chalk from "chalk";
 import * as xml2js from "xml2js";
 import { out } from "../../../util/interaction";
 import { isValidVersion } from "./validation-utils";
