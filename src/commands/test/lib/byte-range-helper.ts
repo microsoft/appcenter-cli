@@ -16,7 +16,6 @@ export async function getByteRange(path: string, start: number, length: number):
     for (let i = 0; i < readResult.bytesRead; i++) {
       result.push(buffer[i]);
     }
-
     return result;
   }
   finally {

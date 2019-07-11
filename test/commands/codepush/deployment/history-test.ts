@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import chalk from "chalk";
 import * as Nock from "nock";
 import * as Sinon from "sinon";
 import CodePushDeploymentHistoryCommand from "../../../../src/commands/codepush/deployment/history";
