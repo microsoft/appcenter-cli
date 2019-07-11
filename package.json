@@ -17,7 +17,7 @@
   },
   "preferGlobal": true,
   "scripts": {
-    "build": "npm run tslint && gulp build:raw",
+    "build": "npm run tslint && gulp build:raw --strict",
     "tslint": "tslint --project .",
     "test": "npm run tslint && mocha --require ts-node/register ./test/**/*-test.[tj]s",
     "watch-test": "mocha --require ts-node/register ./test/**/*-test.[tj]s --watch",
