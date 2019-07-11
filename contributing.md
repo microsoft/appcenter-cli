@@ -1,5 +1,4 @@
 # App Center CLI - command line for App Center
-(Kind of obvious from the name, really)
 
 App Center CLI is a command line interface to interact with the App Center services. It's intended
 for use by mobile developers and people building scripts that need to interact with App Center (for example,
@@ -7,19 +6,19 @@ local CI configurations).
 
 ## Technologies Used
 
-App Center cli is written using Node.js version 8 and [Typescript](http://typescriptlang.org). Wrappers over the App Center HTTP API are
+App Center cli is written using Node.js version 10 and [Typescript](http://typescriptlang.org). Wrappers over the App Center HTTP API are
 generated using the [AutoRest](https://github.com/Azure/autorest) code generator. And the usual
 plethora of npm modules.
 
 We use [mocha](https://http://mochajs.org/) for a test runner / framework. [Chai](http://http://chaijs.com/) is
 the assertion library. [Sinon](http://sinonjs.org) is the general mocking library, and [nock](https://github.com/node-nock/nock)
-will be used to record and playback mock http traffic. [Note: this isn't set up yet.]
+is used to record and playback mock http traffic.
 
 # Setting Up
 
 ## Prerequisites
 
-Install the latest version of Node 8 from [here](https://nodejs.org). If you are on a Mac, we recommend
+Install the latest version of Node 10 from [here](https://nodejs.org). If you are on a Mac, we recommend
 a 64-bit version.
 
 Also have a working git installation. The code is available from this [repo](https://github.com/Microsoft/appcenter-cli).
@@ -35,6 +34,9 @@ If you need multiple versions of node on your machine at the same time, consider
 For Mac or Linux, try [nvm](https://github.com/creationix/nvm). For Windows machines, [nodist](https://github.com/marcelklehr/nodist)
 works well.
 
+Make sure you have selected the correct version of node from `nvm` - you
+can check this by running `nvm ls` from a terminal for example.
+
 #### Typescript compiler
 
 The typescript compilation can be run via the `npm run build` command.
@@ -47,6 +49,9 @@ gulp is used as a task runner under the hood, but should not be called directly.
 
 By default, to run the CLI you need to compile the typescript explicitly first. The `ts-node` command line tool will let you run
 `.ts` files directly from the command line. Install it with `npm install -g ts-node`.
+
+The latest `ts-node` required installation in local dev to work
+correctly.
 
 #### mono
 
@@ -233,7 +238,7 @@ A good description should include:
 - Friendly description of the fixes/changes made
 - Details of the change
 
-An example of a good description is: "Distribute your app via the CLI: Users can now create & manage your distribution groups, upload your release and distribute it using the new CLI version 0.8.0."
+An example of a good description is: "Distribute your app via the CLI: Users can now create & manage your distribution groups, upload your release and distribute it"
 
 # Building Installers
 
