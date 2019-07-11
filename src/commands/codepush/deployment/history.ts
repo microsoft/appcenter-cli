@@ -39,8 +39,6 @@ export default class CodePushDeploymentHistoryCommand extends AppCommand {
       let tableTitles: string[] = ["Label", "Release Time", "App Version", "Mandatory", "Description", "Install Metrics"];
       tableTitles = tableTitles.map((title) => chalk.cyan(title));
 
-      console.log("OMG: " + releases.length);
-
       out.table(
         out.getCommandOutputTableOptions(tableTitles),
         releases.map((release) => {

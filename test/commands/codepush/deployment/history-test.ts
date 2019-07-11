@@ -61,38 +61,36 @@ describe("CodePush deployment history", () => {
 
       Nock(testData.fakeHost)
         .get(`/v0.1/apps/${testData.fakeAppIdentifier}/deployments/${testData.fakeDeploymentName}/releases`)
-        .reply(200, () => { requestReleasesSpy(); return testData.fakeReleasesResponse; })
+        .reply((uri, requestBody) => { requestReleasesSpy(); return [200, testData.fakeReleasesResponse]; } )
         .get(`/v0.1/apps/${testData.fakeAppIdentifier}/deployments/${testData.fakeDeploymentName}/metrics`)
-        .reply(200, () => { requestMetricsSpy(); return testData.fakeMetricsResponse; })
+        .reply((uri, requestBody) => { requestMetricsSpy(); return [200, testData.fakeMetricsResponse]; })
         .get(`/v0.1/apps/${testData.fakeAppIdentifier}/deployments/${testData.fakeNonExistentDeploymentName}/releases`)
-        .reply(400, () => { requestReleasesSpy(); return {}; })
+        .reply((uri, requestBody) => { requestReleasesSpy(); return [400, {}]; })
         .get(`/v0.1/apps/${testData.fakeNonExistentAppIdentifier}/deployments/${testData.fakeDeploymentName}/releases`)
-        .reply(404, () => { requestReleasesSpy(); return {}; });
+        .reply((uri, requestBody) => { requestReleasesSpy(); return [404, {}]; });
     });
 
     it("should output table with correct data", async () => {
       // Arrange
-      //const stubbedOutTable = Sinon.stub(out, "table");
+      const stubbedOutTable = Sinon.stub(out, "table");
       const command = new CodePushDeploymentHistoryCommand(getDeploymentHistoryCommandArgs(testData.fakeAppIdentifier, testData.fakeDeploymentName));
 
       // Act
       const result = await command.execute();
 
-      // const tableRows: string[][] = stubbedOutTable.args[0][1];
-      // expect(stubbedOutTable.exceptions[0]).to.be.undefined;
-      // console.log(tableRows.length);
-      // expect(tableRows).to.be.an("array");
-      // const unchalkedRows: string[] = []; //tableRows.map((row) => row.map((element) => stripAnsi(element)));
+      const tableRows: string[][] = stubbedOutTable.lastCall.args[1];
+      expect(tableRows).to.be.an("array");
+      const unchalkedRows: string[][] = tableRows.map((row) => row.map((element) => stripAnsi(element)));
 
       // // Assert
-      // expect(result.succeeded).to.be.true;
-      // expect(requestReleasesSpy.calledOnce).to.be.true;
-      // expect(requestMetricsSpy.calledOnce).to.be.true;
-      // expect(stubbedOutTable.calledOnce).to.be.true;
-      // expect(unchalkedRows).to.eql(testData.expectedOutTableRows);
+      expect(result.succeeded).to.be.true;
+      expect(requestReleasesSpy.calledOnce).to.be.true;
+      expect(requestMetricsSpy.calledOnce).to.be.true;
+      expect(stubbedOutTable.calledOnce).to.be.true;
+      expect(unchalkedRows).to.eql(testData.expectedOutTableRows);
 
       // Restore
-      //stubbedOutTable.restore();
+      stubbedOutTable.restore();
     });
 
     it("should output an error when app does not exist", async () => {

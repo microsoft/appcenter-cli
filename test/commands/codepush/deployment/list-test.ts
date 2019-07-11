@@ -250,8 +250,8 @@ describe("CodePush deployment list tests", () => {
       expect(spyOutTable.calledOnce).to.be.true;
       expect(spyOutText.calledOnce).to.be.true;
 
-      const resultTable = spyOutTable.getCall(0).args[0];
-      expect(resultTable[0]).to.be.an("array");
+      const resultTable = spyOutTable.lastCall.args[1];
+      expect(resultTable).to.be.an("array");
       expect(removeColorFromTableRows(resultTable)).to.be.eql(expectedOutputTable);
 
       const resultText = spyOutText.getCall(0).args[0];
@@ -279,8 +279,8 @@ describe("CodePush deployment list tests", () => {
       expect(spyOutTable.calledOnce).to.be.true;
       expect(spyOutText.calledOnce).to.be.true;
 
-      const resultTable = spyOutTable.getCall(0).args[0];
-      expect(resultTable[0]).to.be.an("array");
+      const resultTable = spyOutTable.lastCall.args[1];
+      expect(resultTable).to.be.an("array");
       expect(removeColorFromTableRows(resultTable)).to.be.eql(expectedOutputTable);
 
       const resultText = spyOutText.getCall(0).args[0];
@@ -319,7 +319,7 @@ describe("CodePush deployment list tests", () => {
       expect(spyOutTable.calledOnce).to.be.true;
       expect(spyOutText.calledOnce).to.be.true;
 
-      const resultTable = spyOutTable.getCall(0).args[0];
+      const resultTable = spyOutTable.lastCall.args[1];
       expect(removeColorFromTableRows(resultTable)).to.be.eql(expectedOutputTable);
 
       const resultText = spyOutText.getCall(0).args[0];
@@ -342,9 +342,9 @@ describe("CodePush deployment list tests", () => {
       expect(result.succeeded).to.be.true;
       expect(spyOutTable.calledOnce).to.be.true;
 
-      const resultTable = spyOutTable.getCall(0).args[0];
-      expect(resultTable).to.be.an("array");
-      expect(resultTable).to.be.eql(expectedOutputTable);
+      const resultTable = spyOutTable.lastCall.args[1];
+      expect(resultTable[0]).to.be.an("array");
+      expect(resultTable[0]).to.be.eql(expectedOutputTable);
       nockScope.done();
     });
 
@@ -379,8 +379,8 @@ describe("CodePush deployment list tests", () => {
       statusCode: number = 200
     ): void {
     nockScope.get(`/${fakeParamsForRequest.appVersion}/apps/${fakeParamsForRequest.userName}/${fakeParamsForRequest.appName}/deployments`)
-      .reply(statusCode, (uri: any, requestBody: any)  => {
-        return returnDeployments;
+      .reply((uri: any, requestBody: any)  => {
+        return [statusCode, returnDeployments];
       }
     );
   }
@@ -394,8 +394,8 @@ describe("CodePush deployment list tests", () => {
       times: number = 1
     ): void {
     nockScope.get(`/${fakeParamsForRequest.appVersion}/apps/${fakeParamsForRequest.userName}/${fakeParamsForRequest.appName}/deployments/${fakeDeployment.name}/metrics`).times(times)
-      .reply(statusCode, (uri: any, requestBody: any): any  => {
-        return returnMetrics;
+      .reply((uri: any, requestBody: any): any  => {
+        return [statusCode, returnMetrics];
       }
     );
   }
