@@ -103,7 +103,7 @@
     "debug": "^4.1.1",
     "from2": "^2.3.0",
     "glob": "^7.1.4",
-    "gradle-to-js": "^1.2.1",
+    "gradle-to-js": "^2.0.0",
     "inquirer": "^6.5.0",
     "iso8601-duration": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
