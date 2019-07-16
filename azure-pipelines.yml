@@ -1,0 +1,34 @@
+# AppCenter CLI
+#
+# Triggers are configured in the UI
+
+jobs:
+- job:
+
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps:
+  - task: ComponentGovernanceComponentDetection@0
+    inputs:
+      scanType: 'Register'
+      verbosity: 'Verbose'
+      alertWarningLevel: 'Medium'
+      failOnAlert: true
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm install
+      npm run build
+    displayName: 'npm install and build'
+
+  - script: |
+      npm test
+    displayName: 'npm test'
+
+  - publish: $(System.DefaultWorkingDirectory)
+    artifact: Workspace
