@@ -8,7 +8,7 @@ export interface IByteRange {
 export async function getByteRange(path: string, start: number, length: number): Promise<number[]> {
   const fd = await pfs.open(path, "r", null);
   try {
-    const buffer = new Buffer(length);
+    const buffer = Buffer.alloc(length);
     const readResult = await pfs.read(fd, buffer, 0, length, start);
 
     const result: number[] = [];
@@ -16,7 +16,6 @@ export async function getByteRange(path: string, start: number, length: number):
     for (let i = 0; i < readResult.bytesRead; i++) {
       result.push(buffer[i]);
     }
-
     return result;
   }
   finally {

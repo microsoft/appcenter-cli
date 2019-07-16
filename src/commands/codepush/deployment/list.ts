@@ -2,7 +2,7 @@ import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, succ
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
-import * as chalk from "chalk";
+import chalk from "chalk";
 import { scriptName } from "../../../util/misc";
 import { formatDate } from "./lib/date-helper";
 

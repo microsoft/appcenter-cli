@@ -69,6 +69,7 @@ describe("distribute releases edit command", async () => {
       }
 
       // Assert
+      expect(command).to.eql(undefined);
       expect(errorMessage).to.eql(expectedErrorMessage);
     });
 
@@ -98,6 +99,7 @@ describe("distribute releases edit command", async () => {
       }
 
       // Assert
+      expect(command).to.eql(undefined);
       expect(errorMessage).to.eql(expectedErrorMessage);
     });
 
