@@ -81,7 +81,7 @@ describe("CodePush deployment history", () => {
       expect(tableRows).to.be.an("array");
       const unchalkedRows: string[][] = tableRows.map((row) => row.map((element) => stripAnsi(element)));
 
-      // // Assert
+      // Assert
       expect(result.succeeded).to.be.true;
       expect(requestReleasesSpy.calledOnce).to.be.true;
       expect(requestMetricsSpy.calledOnce).to.be.true;

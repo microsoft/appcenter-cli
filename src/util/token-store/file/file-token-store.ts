@@ -31,7 +31,6 @@ export class FileTokenStore implements TokenStore {
 
   list(): rx.Observable<TokenEntry> {
     this.loadTokenStoreCache();
-    //return rx.from(toPairs(this.tokenStoreCache)).map((pair) => ({ key: pair[0], accessToken: pair[1]}));
     return rx.from(toPairs(this.tokenStoreCache)).pipe(
       map((pair: [string, TokenValueType]) => ({ key: pair[0], accessToken: pair[1]}))
     );

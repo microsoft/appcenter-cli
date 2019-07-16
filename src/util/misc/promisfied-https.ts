@@ -15,7 +15,7 @@ export async function getToFile(url: string, filePath: string): Promise<void> {
     }).on("error", (err: NodeJS.ErrnoException) => {
       fs.unlink(filePath, function (failed) {
         if (failed) {
-            console.error(failed);
+          console.error(failed);
         }
       });
       reject(err);
