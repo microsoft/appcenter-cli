@@ -1,6 +1,6 @@
 # Introduction
 
-Visual Studio App Center command line interface (cli) is a unified tool for running App Center services from the command line.
+The Visual Studio App Center command line interface (cli) is a unified tool for running App Center services from the command line.
 Our aim is to offer a concise and powerful tool for our developers to use App Center services and easily script a sequence of
 commands that they'd like to execute. You can currently login and view/configure all the apps that you have access to in App Center.
 
