@@ -42,7 +42,7 @@ describe("Validating orgs command", () => {
       const args: CommandArgs = {
         command: ["orgs", "list"],
         commandPath: "",
-        args: []
+        args: ["--token", "fakeToken"]
       };
       const command = new OrgListCommand(args);
       const result = await command.execute();
