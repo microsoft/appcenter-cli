@@ -24,7 +24,7 @@ jobs:
     inputs:
       scanType: 'Register'
       verbosity: 'Verbose'
-      alertWarningLevel: 'High'
+      alertWarningLevel: 'Medium'
       failOnAlert: true
     condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
 
@@ -33,7 +33,7 @@ jobs:
     inputs:
       scanType: 'Register'
       verbosity: 'Verbose'
-      alertWarningLevel: 'High'
+      alertWarningLevel: 'Medium'
       failOnAlert: false
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
