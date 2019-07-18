@@ -1,4 +1,4 @@
-import { isValidVersion, isValidRange } from "../../../../src/commands/codepush/lib/validation-utils";
+import { isValidVersion, isValidRange, validateVersion } from "../../../../src/commands/codepush/lib/validation-utils";
 import { expect } from "chai";
 
 describe("isValidVersion", function () {
@@ -90,6 +90,52 @@ describe("isValidRange", function () {
     it("returns false", function () {
       for (const range of invalidRanges) {
         expect(isValidRange(range)).to.be.false;
+      }
+    });
+  });
+});
+
+describe("validateVersion", function () {
+  context("when a given version contains only major number", function () {
+    const semverCompliantRanges = [
+      "1",
+      "123"
+    ];
+    const addedMinorPatchNumbers = ".X.X";
+
+    it("returns generated warning version", function () {
+      for (const range of semverCompliantRanges) {
+        expect(validateVersion(range)).to.equal(range + addedMinorPatchNumbers);
+      }
+    });
+  });
+
+  context("when a given version contains only major and minor number", function () {
+    const semverCompliantRanges = [
+      "1.0",
+      "123.456"
+    ];
+    const addedMinorPatchNumbers = ".X";
+
+    it("returns generated warning version", function () {
+      for (const range of semverCompliantRanges) {
+        expect(validateVersion(range)).to.equal(range + addedMinorPatchNumbers);
+      }
+    });
+  });
+
+  context("when a given version is full or range", function () {
+    const semverCompliantRanges = [
+      "1.0.0",
+      "123.456.789",
+      "'*'",
+      "'1.2.3 - 1.2.7'",
+      "'>=1.2.3 <1.2.7'"
+    ];
+
+    it("returns 'null'", function () {
+      for (const range of semverCompliantRanges) {
+        expect(validateVersion(range)).to.equal(null);
       }
     });
   });
