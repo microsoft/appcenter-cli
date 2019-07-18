@@ -1,9 +1,7 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
 import { XmlUtil } from "./xml-util";
 import * as fs from "fs";
-import * as unzipper from "unzipper";
 import { DOMParser } from "xmldom";
-import { out } from "../../../util/interaction";
 
 export class NUnitXmlUtil extends XmlUtil {
 
@@ -40,8 +38,6 @@ export class NUnitXmlUtil extends XmlUtil {
         resolve(mainXml);
       }
     );
-
-    console.log(outputXml);
 
     return outputXml;
   }

@@ -2,7 +2,6 @@ import * as fs from "fs";
 import * as path from "path";
 import * as unzipper from "unzipper";
 import { DOMParser } from "xmldom";
-import { Stream } from "stream";
 
 export abstract class XmlUtil {
   public abstract mergeXmlResults(pathToArchive: string): Promise<Document>;
@@ -57,36 +56,20 @@ export abstract class XmlUtil {
 
   public getMergeXmlResultsPromise(pathToArchive: string, tempPath: string, processXml: Function, resolvePromise: Function): Promise<Document> {
     return new Promise<Document>((resolve, reject) => {
-      var stream = new Stream;
-      fs.createReadStream(pathToArchive)
-        .pipe(unzipper.Parse())
-        .pipe(stream.Transform({
-            objectMode: true,
-            transform: function (entry, e, cb) {
-              if (entry.type !== "Directory" && path.basename(entry.path).substring(0, 1) !== ".") {
-                const fullPath: string = path.join(tempPath, entry.path);
-                entry.pipe(fs.createWriteStream(fullPath))
-                  .on('finish', () => {
-                    try {
-                      processXml(fullPath, entry.path);
-                      cb();
-                    }
-                    catch (err) {
-                      cb(err);
-                    }
-                  });
-              }
-              else {
-                entry.autodrain();
-                cb();
-              }
-            }
-          })
-        .promise()
-        .then(
-          () => resolvePromise(resolve),
-          (e) => console.log("error", e)
-        );
+        fs.createReadStream(pathToArchive)
+        .pipe(unzipper.Extract({ path: tempPath })).on("close", () => {
+          try {
+            const files = fs.readdirSync(tempPath);
+            files.filter((fileName)  => {
+              return fileName.endsWith(".xml");
+            }).forEach((file) => processXml(path.join(tempPath, file), file));
+
+            resolvePromise(resolve);
+          } catch (e) {
+            console.log("error", `XML parsing failed: ${e}`);
+            reject(e);
+          }
+        });
     });
   }
 }
