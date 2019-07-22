@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { DOMParser, XMLSerializer } from "xmldom";
-import * as xmlLib from "libxmljs";
+import * as parser from "fast-xml-parser";
 import * as path from "path";
 import * as fs from "fs";
 import { NUnitXmlUtil } from "../../../../src/commands/test/lib/nunit-xml-util";
@@ -38,6 +38,8 @@ describe("nunit xml util", function () {
 </test-results>';
 
   const xmlUtil: NUnitXmlUtil = new NUnitXmlUtil();
+  // Large XML file takes time to process:
+  this.timeout(4000);
 
   it("should collect all elements", () => {
     let xml: Document = new DOMParser().parseFromString(strXml);
@@ -172,7 +174,7 @@ describe("nunit xml util", function () {
     const finalStrXml: string = new XMLSerializer().serializeToString(xml);
 
     // Doesn't throw exception
-    xmlLib.parseXml(finalStrXml);
+    parser.parse(finalStrXml);
   });
 
   it("should combine nunit3 xmls correctly", async () => {
@@ -187,7 +189,7 @@ describe("nunit xml util", function () {
     const finalStrXml: string = new XMLSerializer().serializeToString(xml);
 
     // Doesn't throw exception
-    xmlLib.parseXml(finalStrXml);
+    parser.parse(finalStrXml);
   });
 
   it("should throw an explicit exception", async () => {
