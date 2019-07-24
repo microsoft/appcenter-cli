@@ -1,0 +1,73 @@
+# AppCenter CLI
+#
+# Triggers are configured in the UI
+
+jobs:
+- job:
+
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm ci
+      npm run build
+    displayName: 'npm install and build'
+
+  - task: ComponentGovernanceComponentDetection@0
+    displayName: Component Governance (PR)
+    inputs:
+      scanType: 'Register'
+      verbosity: 'Verbose'
+      alertWarningLevel: 'Medium'
+      failOnAlert: true
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+
+  - task: ComponentGovernanceComponentDetection@0
+    displayName: Component Governance (CI)
+    inputs:
+      scanType: 'Register'
+      verbosity: 'Verbose'
+      alertWarningLevel: 'Medium'
+      failOnAlert: false
+    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+  - script: |
+      npm test
+    displayName: 'npm test'
+
+  - script: |
+      npm pack
+    displayName: 'Package for npm release'
+
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: '$(Build.SourcesDirectory)'
+      contents: '*.tgz' 
+      targetFolder: $(Build.ArtifactStagingDirectory)/npm
+    displayName: 'Copy npm package'
+
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: '$(Build.SourcesDirectory)'
+      contents: 'package.json' 
+      targetFolder: $(Build.ArtifactStagingDirectory)/npm
+    displayName: 'Copy package.json'
+
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: '$(Build.SourcesDirectory)'
+      contents: 'package-lock.json' 
+      targetFolder: $(Build.ArtifactStagingDirectory)/npm
+    displayName: 'Copy package-lock.json'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)/npm'
+      artifactName: npm
+    displayName: 'Publish npm artifact'

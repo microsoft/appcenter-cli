@@ -1,5 +1,5 @@
 import * as path from "path";
-import * as chalk from "chalk";
+import chalk from "chalk";
 import { out } from "../../../util/interaction";
 const childProcess = require("child_process");
 

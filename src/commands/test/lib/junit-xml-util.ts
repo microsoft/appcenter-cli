@@ -1,7 +1,6 @@
 import * as pfs from "../../../util/misc/promisfied-fs";
 import { XmlUtil } from "./xml-util";
 import * as fs from "fs";
-import * as unzipper from "unzipper";
 import { DOMParser } from "xmldom";
 
 export class JUnitXmlUtil extends XmlUtil {
