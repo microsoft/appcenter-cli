@@ -3,8 +3,8 @@
 var util = require('util');
 
 // Verify user has minimum required version of node installed
-var minMajorVersion = 10;
-var minMinorVersion = 0;
+var minMajorVersion = 6;
+var minMinorVersion = 3;
 
 function getCurrentVersion() {
   var matches = process.version.match(/v?(\d+)\.(\d+)\.(\d+)/);
