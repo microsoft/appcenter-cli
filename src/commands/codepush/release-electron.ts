@@ -6,10 +6,10 @@ import { inspect } from "util";
 import * as pfs from "../../util/misc/promisfied-fs";
 import * as path from "path";
 import * as mkdirp from "mkdirp";
-import chalk from "chalk";
+import * as chalk from "chalk";
 import { fileDoesNotExistOrIsDirectory, createEmptyTmpReleaseFolder } from "./lib/file-utils";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";
-import { getElectronProjectAppVersion, runWebPackBundleCommand, isValidOS, isElectronProject } from "./lib/electron-utils";
+import { getElectronProjectAppVersion, runWebPackBundleCommand, isValidOS, isValidPlatform, isElectronProject } from "./lib/electron-utils";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-electron");
 
@@ -68,6 +68,8 @@ export default class CodePushReleaseElectronCommand extends CodePushReleaseComma
 
   private os: string;
 
+  private platform: string;
+
   private mode: string;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
@@ -84,6 +86,7 @@ export default class CodePushReleaseElectronCommand extends CodePushReleaseComma
       const appInfo = (await out.progress("Getting app info...", clientRequest<models.AppResponse>(
           (cb) => client.apps.get(this.app.ownerName, this.app.appName, cb)))).result;
       this.os = appInfo.os.toLowerCase();
+      this.platform = appInfo.platform.toLowerCase();
 
       this.updateContentsPath = this.outputDir || await pfs.mkTempDir("code-push");
 

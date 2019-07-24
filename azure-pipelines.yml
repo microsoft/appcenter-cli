@@ -9,33 +9,22 @@ jobs:
     vmImage: 'ubuntu-latest'
 
   steps:
+  - task: ComponentGovernanceComponentDetection@0
+    inputs:
+      scanType: 'Register'
+      verbosity: 'Verbose'
+      alertWarningLevel: 'Medium'
+      failOnAlert: true
+
   - task: NodeTool@0
     inputs:
       versionSpec: '10.x'
     displayName: 'Install Node.js'
 
   - script: |
-      npm ci
+      npm install
       npm run build
     displayName: 'npm install and build'
-
-  - task: ComponentGovernanceComponentDetection@0
-    displayName: Component Governance (PR)
-    inputs:
-      scanType: 'Register'
-      verbosity: 'Verbose'
-      alertWarningLevel: 'Medium'
-      failOnAlert: true
-    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
-
-  - task: ComponentGovernanceComponentDetection@0
-    displayName: Component Governance (CI)
-    inputs:
-      scanType: 'Register'
-      verbosity: 'Verbose'
-      alertWarningLevel: 'Medium'
-      failOnAlert: false
-    condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
   - script: |
       npm test

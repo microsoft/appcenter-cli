@@ -61,7 +61,7 @@ export function mkdir(path: string | Buffer): Promise<void> {
 }
 
 export function mkdirp(path: string): Promise<string>;
-export function mkdirp(path: string, opts: object): Promise<string>;
+export function mkdirp(path: string, opts: mkDirP.Opts): Promise<string>;
 export function mkdirp(...args: any[]): Promise<string> {
   return new Promise<string>((resolve, reject) => {
     mkDirP.apply(null, args.concat([(err: Error, made: string) => {

@@ -9,6 +9,7 @@ import * as childProcess from "child_process";
 import * as from from "from2";
 import * as split from "split2";
 import * as through from "through2";
+import * as stream from "stream";
 
 import { TokenStore, TokenEntry, TokenKeyType, TokenValueType } from "../token-store";
 import { createOsxSecurityParsingStream, OsxSecurityParsingStream } from "./osx-keychain-parser";

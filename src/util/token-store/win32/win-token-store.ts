@@ -5,6 +5,7 @@
 
 import * as childProcess from "child_process";
 import { Observable, Observer } from "rxjs";
+import * as stream from "stream";
 import * as split from "split2";
 import * as through from "through2";
 import * as path from "path";
