@@ -56,28 +56,20 @@ export abstract class XmlUtil {
 
   public getMergeXmlResultsPromise(pathToArchive: string, tempPath: string, processXml: Function, resolvePromise: Function): Promise<Document> {
     return new Promise<Document>((resolve, reject) => {
-      fs.createReadStream(pathToArchive)
-        .pipe(unzipper.Parse())
-        .on("entry", function (entry: unzipper.Entry) {
-          // Skip directories and hidden system files
-          if (entry.type === "Directory" || path.basename(entry.path).substring(0, 1) === ".") {
-            entry.autodrain();
-            return;
+        fs.createReadStream(pathToArchive)
+        .pipe(unzipper.Extract({ path: tempPath })).on("close", () => {
+          try {
+            const files = fs.readdirSync(tempPath);
+            files.filter((fileName)  => {
+              return fileName.endsWith(".xml");
+            }).forEach((file) => processXml(path.join(tempPath, file), file));
+
+            resolvePromise(resolve);
+          } catch (e) {
+            console.log("error", `XML parsing failed: ${e}`);
+            reject(e);
           }
-          const fullPath: string = path.join(tempPath, entry.path);
-          entry.pipe(fs.createWriteStream(fullPath)).on("finish", () => {
-            try {
-              processXml(fullPath, entry.path);
-            } catch (e) {
-              reject(e);
-            }
-          });
-        })
-        .promise()
-        .then(
-          () => resolvePromise(resolve),
-          (e) => console.log("error", e)
-        );
+        });
     });
   }
 }
@@ -87,7 +79,7 @@ export function validXmlFile(file: string): boolean {
     const xml = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(file, "utf-8"), "text/xml");
 
     return xml != null;
-  } catch {
+  } catch (e) {
     return false;
   }
 }

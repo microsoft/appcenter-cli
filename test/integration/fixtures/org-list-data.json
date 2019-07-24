@@ -1,0 +1,76 @@
+[
+    {
+        "scope": "https://api.appcenter.ms:443",
+        "method": "GET",
+        "path": "/v0.1/orgs",
+        "body": "",
+        "status": 200,
+        "response": [
+            {
+                "id": "47409385-78a5-4477-aa1c-119a8a252201",
+                "display_name": "org 1",
+                "name": "org-1",
+                "origin": "myorigin",
+                "created_at": "2017-10-11T13:28:33.000Z",
+                "updated_at": "2017-10-11T13:28:33.000Z",
+                "avatar_url": null
+            },
+            {
+                "id": "50fb4ad7-6b9d-4b01-af19-fb50f4431a39",
+                "display_name": "org 2",
+                "name": "org-2",
+                "origin": "myorigin",
+                "created_at": "2017-09-27T08:59:40.000Z",
+                "updated_at": "2017-09-27T08:59:40.000Z",
+                "avatar_url": null
+            },
+            {
+                "id": "586743f1-0257-479d-b687-16c8934fff9a",
+                "display_name": "org 3",
+                "name": "org-3",
+                "origin": "myorigin",
+                "created_at": "2018-02-13T14:00:06.000Z",
+                "updated_at": "2018-02-13T14:00:06.000Z",
+                "avatar_url": null
+            },
+            {
+                "id": "1446243b-0a06-4659-9a6b-69db5b03d1ec",
+                "display_name": "org 4",
+                "name": "org-4",
+                "origin": "myorigin",
+                "created_at": "2017-09-01T08:08:15.000Z",
+                "updated_at": "2017-09-01T08:08:15.000Z",
+                "avatar_url": null
+            },
+            {
+                "id": "f734f4426-f8f7-4379-b169-1a7f481f781c",
+                "display_name": "org 5",
+                "name": "org-5",
+                "origin": "myorigin",
+                "created_at": "2018-03-15T14:09:39.000Z",
+                "updated_at": "2018-03-15T14:09:39.000Z",
+                "avatar_url": null
+            }
+        ],
+        "rawHeaders": [
+            "Server",
+            "nginx/1.15.8",
+            "Date",
+            "Fri, 12 Jul 2019 22:09:15 GMT",
+            "Content-Type",
+            "application/json; charset=utf-8",
+            "Content-Length",
+            "2006",
+            "Connection",
+            "close",
+            "Vary",
+            "Accept-Encoding",
+            "access-control-allow-origin",
+            "*",
+            "vary",
+            "Accept-Encoding",
+            "strict-transport-security",
+            "max-age=15724800; includeSubDomains"
+        ]
+    }
+]

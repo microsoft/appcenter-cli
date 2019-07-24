@@ -1,9 +1,8 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg, defaultValue } from "../../../util/commandline";
-import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
+import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
-import { DefaultApp } from "../../../util/profile";
 import { getDistributionGroup, addGroupToRelease } from "../lib/distribute-util";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:releases:add-destination");

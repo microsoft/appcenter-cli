@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import * as chalk from "chalk";
 import * as Nock from "nock";
 import * as Sinon from "sinon";
 import CodePushDeploymentHistoryCommand from "../../../../src/commands/codepush/deployment/history";
@@ -8,6 +7,9 @@ import { CommandArgs, CommandFailedResult } from "../../../../src/util/commandli
 import { out } from "../../../../src/util/interaction";
 
 import * as testData from "./history-test-data";
+
+// Have to use `require` because of this: https://github.com/chalk/strip-ansi/issues/11
+const stripAnsi = require("strip-ansi");
 
 describe("CodePush deployment history", () => {
 
@@ -21,7 +23,7 @@ describe("CodePush deployment history", () => {
         const releaseAdditionalInfoString = generateReleaseAdditionalInfoString(fakeRelease);
 
         //Assert
-        expect(chalk.stripColor(releaseAdditionalInfoString)).to.be.equal(testData.expectedAdditionalInfoStrings[index]);
+        expect(stripAnsi(releaseAdditionalInfoString)).to.be.equal(testData.expectedAdditionalInfoStrings[index]);
       });
     });
 
@@ -38,7 +40,7 @@ describe("CodePush deployment history", () => {
         const releaseMetricsString = generateReleaseMetricsString(fakeRelease, testData.fakeMetrics, testData.fakeReleasesTotalActive);
 
         // Assert
-        expect(chalk.stripColor(releaseMetricsString)).to.be.equal(testData.expectedMetricsStrings[index]);
+        expect(stripAnsi(releaseMetricsString)).to.be.equal(testData.expectedMetricsStrings[index]);
       });
     });
   });
@@ -58,13 +60,13 @@ describe("CodePush deployment history", () => {
 
       Nock(testData.fakeHost)
         .get(`/v0.1/apps/${testData.fakeAppIdentifier}/deployments/${testData.fakeDeploymentName}/releases`)
-        .reply(200, () => { requestReleasesSpy(); return testData.fakeReleasesResponse; })
+        .reply((uri, requestBody) => { requestReleasesSpy(); return [200, testData.fakeReleasesResponse]; } )
         .get(`/v0.1/apps/${testData.fakeAppIdentifier}/deployments/${testData.fakeDeploymentName}/metrics`)
-        .reply(200, () => { requestMetricsSpy(); return testData.fakeMetricsResponse; })
+        .reply((uri, requestBody) => { requestMetricsSpy(); return [200, testData.fakeMetricsResponse]; })
         .get(`/v0.1/apps/${testData.fakeAppIdentifier}/deployments/${testData.fakeNonExistentDeploymentName}/releases`)
-        .reply(400, () => { requestReleasesSpy(); return {}; })
+        .reply((uri, requestBody) => { requestReleasesSpy(); return [400, {}]; })
         .get(`/v0.1/apps/${testData.fakeNonExistentAppIdentifier}/deployments/${testData.fakeDeploymentName}/releases`)
-        .reply(404, () => { requestReleasesSpy(); return {}; });
+        .reply((uri, requestBody) => { requestReleasesSpy(); return [404, {}]; });
     });
 
     it("should output table with correct data", async () => {
@@ -76,7 +78,8 @@ describe("CodePush deployment history", () => {
       const result = await command.execute();
 
       const tableRows: string[][] = stubbedOutTable.lastCall.args[1];
-      const unchalkedRows = tableRows.map((row) => row.map((element) => chalk.stripColor(element)));
+      expect(tableRows).to.be.an("array");
+      const unchalkedRows: string[][] = tableRows.map((row) => row.map((element) => stripAnsi(element)));
 
       // Assert
       expect(result.succeeded).to.be.true;
