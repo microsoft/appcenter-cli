@@ -6,7 +6,7 @@ import { getUser, DefaultApp } from "../../../util/profile/index";
 import { inspect } from "util";
 import * as fs from "fs";
 import * as pfs from "../../../util/misc/promisfied-fs";
-import chalk from "chalk";
+import * as chalk from "chalk";
 import { sign, zip } from "../lib/update-contents-tasks";
 import { isBinaryOrZip, getLastFolderInPath, moveReleaseFilesInTmpFolder, isDirectory } from "../lib/file-utils";
 import { environments } from "../lib/environment";

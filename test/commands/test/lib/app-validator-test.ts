@@ -17,7 +17,7 @@ function createFakeAppFile(appFilePath: string, entryNames: string[]): Promise<s
         const inputFile = path.join(dirPath, appFilePath);
         const zip = new JsZip();
         for (const entryName of entryNames) {
-          zip.file(entryName, Buffer.from("Fake file"));
+          zip.file(entryName, new Buffer("Fake file"));
         }
 
         JsZipHelper.writeZipToPath(inputFile, zip, "STORE").then(() => resolve(inputFile), (writingError) => reject(writingError));

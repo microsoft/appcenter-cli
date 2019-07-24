@@ -2,7 +2,7 @@ import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, succ
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
-import chalk from "chalk";
+import * as chalk from "chalk";
 import { isValidRollout, isValidRange } from "./lib/validation-utils";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:promote");

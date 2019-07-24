@@ -6,7 +6,7 @@ commands that they'd like to execute. You can currently login and view/configure
 
 # Prerequisites
 
-App Center CLI requires Node.js version 10 or better.
+App Center CLI requires Node.js version 8 or better.
 
 # Installation
 

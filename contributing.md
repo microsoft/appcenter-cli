@@ -1,4 +1,5 @@
 # App Center CLI - command line for App Center
+(Kind of obvious from the name, really)
 
 App Center CLI is a command line interface to interact with the App Center services. It's intended
 for use by mobile developers and people building scripts that need to interact with App Center (for example,
@@ -6,19 +7,19 @@ local CI configurations).
 
 ## Technologies Used
 
-App Center cli is written using Node.js version 10 and [Typescript](http://typescriptlang.org). 
-Wrappers over the App Center HTTP API are generated using the [AutoRest](https://github.com/Azure/autorest) code generator. 
-And the usual plethora of npm modules.
+App Center cli is written using Node.js version 8 and [Typescript](http://typescriptlang.org). Wrappers over the App Center HTTP API are
+generated using the [AutoRest](https://github.com/Azure/autorest) code generator. And the usual
+plethora of npm modules.
 
 We use [mocha](https://http://mochajs.org/) for a test runner / framework. [Chai](http://http://chaijs.com/) is
 the assertion library. [Sinon](http://sinonjs.org) is the general mocking library, and [nock](https://github.com/node-nock/nock)
-is used to record and playback mock http traffic.
+will be used to record and playback mock http traffic. [Note: this isn't set up yet.]
 
 # Setting Up
 
 ## Prerequisites
 
-Install the latest version of Node 10 from [here](https://nodejs.org). If you are on a Mac, we recommend
+Install the latest version of Node 8 from [here](https://nodejs.org). If you are on a Mac, we recommend
 a 64-bit version.
 
 Also have a working git installation. The code is available from this [repo](https://github.com/Microsoft/appcenter-cli).
@@ -34,9 +35,6 @@ If you need multiple versions of node on your machine at the same time, consider
 For Mac or Linux, try [nvm](https://github.com/creationix/nvm). For Windows machines, [nodist](https://github.com/marcelklehr/nodist)
 works well.
 
-Make sure you have selected the correct version of node from `nvm` - you
-can check this by running `nvm ls` from a terminal for example.
-
 #### Typescript compiler
 
 The typescript compilation can be run via the `npm run build` command.
@@ -49,9 +47,6 @@ gulp is used as a task runner under the hood, but should not be called directly.
 
 By default, to run the CLI you need to compile the typescript explicitly first. The `ts-node` command line tool will let you run
 `.ts` files directly from the command line. Install it with `npm install -g ts-node`.
-
-The latest `ts-node` required installation in local dev to work
-correctly.
 
 #### mono
 
@@ -140,8 +135,7 @@ This is where the source code for the CLI lives.
 
 #### src/commands
 
-The implementation of each command is in this directory. Each category (distribute, build, app, etc) will be a subdirectory of 
-this directory. Each command lives in an individual source file with the same name as the command.
+The implementation of each command is in this directory. Each category (distribute, build, app, etc) will be a subdirectory of this directory. Each command lives in an individual source file with the same name as the command.
 
 For example:
 
@@ -151,20 +145,16 @@ For example:
 | `appcenter profile configure` | src/commands/profile/configure.ts |
 | `appcenter apps list` | src/commands/apps/list.ts |
 
-The command line parser and dispatcher uses the directory structure and file names to determine which code to run, so the 
-naming conventions are important.
+The command line parser and dispatcher uses the directory structure and file names to determine which code to run, so the naming conventions are important.
 
 In addition, place a `category.txt` file in your category directory. The contents of
 this file will be displayed by the help system when getting help for the category.
 
-If you have shared code across commands in your category, you can add a directory named `lib` in your category's directory and 
-put that code there. The command line dispatcher will explicitly ignore this directory and not try to accidentally run your 
-utility code from the command line.
+If you have shared code across commands in your category, you can add a directory named `lib` in your category's directory and put that code there. The command line dispatcher will explicitly ignore this directory and not try to accidentally run your utility code from the command line.
 
 #### src/util
 
-This contains framework and utility code used across all the commands. See readme files in each directory for specific details 
-of each one. (Working on these.)
+This contains framework and utility code used across all the commands. See readme files in each directory for specific details of each one. (Working on these.)
 
 #### src/util/apis
 
@@ -183,8 +173,7 @@ The command line parser and dispatching code, along with base class and decorato
 Central point for all user I/O done by commands. Use `interaction.prompt` to get input from a user, and
 `interaction.out` to output various forms of results.
 
-Commands should use these rather than directly using `console.log` because the interaction library handles output formats 
-(the `--format` switch) and the `--quiet` switch transparently to the command author.
+Commands should use these rather than directly using `console.log` because the interaction library handles output formats (the `--format` switch) and the `--quiet` switch transparently to the command author.
 
 #### src/util/profile
 
@@ -196,18 +185,14 @@ Support files for build and packaging.
 
 #### test
 
-Test code lives here. For new tests create a subdirectory structure corresponding to the `src` folder. Test code will be 
-automatically run if you name the file `<testname>-test.ts` or `<testname>-test.js`. We recommend using Typescript for 
-you tests to keep things consistent across the entire codebase.
+Test code lives here. For new tests create a subdirectory structure corresponding to the `src` folder. Test code will be automatically run if you name the file `<testname>-test.ts` or `<testname>-test.js`. We recommend using Typescript for you tests to keep things consistent across the entire codebase.
 
 #### typings
 
-Stores type definitions for the external Javascript libraries used. These are checked in rather than dynamically 
-downloaded in case we need to edit them.
+Stores type definitions for the external Javascript libraries used. These are checked in rather than dynamically downloaded in case we need to edit them.
 
 # Naming conventions
-To get consistent user experience among commands for all beacons, the command line argument names should follow 
-the following conventions.
+To get consistent user experience among commands for all beacons, the command line argument names should follow the following conventions.
 
 1. **All argument names**: lower-case nouns, separated by dash "-".
 
@@ -237,26 +222,20 @@ the following conventions.
 
 # Development Processes
 
-We follow the standard GitHub flow. Each person working on the cli should create their own fork of the repo. Work in 
-your own repo (preferably on a feature branch). When ready, send a pull request to the master 
-Microsoft/MobileCenter-cli repo against the master branch. After review, the pull request will be merged.
+We follow the standard GitHub flow. Each person working on the cli should create their own fork of the repo. Work in your own repo (preferably on a feature branch). When ready, send a pull request to the master Microsoft/MobileCenter-cli repo against the master branch. After review, the pull request will be merged.
 
 # Submitting a PR
 
-PR submitters should include a description of the change they would like to include in the 
-[changelog](https://docs.microsoft.com/en-us/appcenter/general/changelog). Each time a PR is merged and the next 
-version of the CLI is released, the first paragraph in the PR description will be copied into the changelog.
+PR submitters should include a description of the change they would like to include in the [changelog](https://docs.microsoft.com/en-us/appcenter/general/changelog). Each time a PR is merged and the next version of the CLI is released, the first paragraph in the PR description will be copied into the changelog.
 
 A good description should include:
 
 - Friendly description of the fixes/changes made
 - Details of the change
 
-An example of a good description is: "Distribute your app via the CLI: Users can now create & manage your 
-distribution groups, upload your release and distribute it"
+An example of a good description is: "Distribute your app via the CLI: Users can now create & manage your distribution groups, upload your release and distribute it using the new CLI version 0.8.0."
 
 # Building Installers
 
-TBD. We'll need builds for a Mac installer, Windows MSI, and at least one format of Linux package, 
-plus be able to push to NPM.
+TBD. We'll need builds for a Mac installer, Windows MSI, and at least one format of Linux package, plus be able to push to NPM.
 

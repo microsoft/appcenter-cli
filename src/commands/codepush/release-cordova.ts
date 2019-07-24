@@ -3,7 +3,7 @@ import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
-import chalk from "chalk";
+import * as chalk from "chalk";
 import * as path from "path";
 import * as fs from "fs";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";

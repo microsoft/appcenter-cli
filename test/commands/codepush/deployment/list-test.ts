@@ -6,11 +6,8 @@ import * as Sinon from "sinon";
 import * as Nock from "nock";
 import { formatDate } from "../../../../src/commands/codepush/deployment/lib/date-helper";
 import { getFakeParamsForRequest, FakeParamsForRequests } from "../utils";
-import chalk from "chalk";
+import * as chalk from "chalk";
 import { out } from "../../../../src/util/interaction/index";
-
-// Have to use `require` because of this: https://github.com/chalk/strip-ansi/issues/11
-const stripAnsi = require("strip-ansi");
 
 describe("CodePush deployment list tests", () => {
   const fakeBlobUrl = "fakeURL";
@@ -250,8 +247,8 @@ describe("CodePush deployment list tests", () => {
       expect(spyOutTable.calledOnce).to.be.true;
       expect(spyOutText.calledOnce).to.be.true;
 
-      const resultTable = spyOutTable.lastCall.args[1];
-      expect(resultTable).to.be.an("array");
+      const resultTable = spyOutTable.getCall(0).args[1];
+      expect(resultTable[0]).to.be.an("array");
       expect(removeColorFromTableRows(resultTable)).to.be.eql(expectedOutputTable);
 
       const resultText = spyOutText.getCall(0).args[0];
@@ -279,8 +276,8 @@ describe("CodePush deployment list tests", () => {
       expect(spyOutTable.calledOnce).to.be.true;
       expect(spyOutText.calledOnce).to.be.true;
 
-      const resultTable = spyOutTable.lastCall.args[1];
-      expect(resultTable).to.be.an("array");
+      const resultTable = spyOutTable.getCall(0).args[1];
+      expect(resultTable[0]).to.be.an("array");
       expect(removeColorFromTableRows(resultTable)).to.be.eql(expectedOutputTable);
 
       const resultText = spyOutText.getCall(0).args[0];
@@ -319,7 +316,7 @@ describe("CodePush deployment list tests", () => {
       expect(spyOutTable.calledOnce).to.be.true;
       expect(spyOutText.calledOnce).to.be.true;
 
-      const resultTable = spyOutTable.lastCall.args[1];
+      const resultTable = spyOutTable.getCall(0).args[1];
       expect(removeColorFromTableRows(resultTable)).to.be.eql(expectedOutputTable);
 
       const resultText = spyOutText.getCall(0).args[0];
@@ -342,9 +339,9 @@ describe("CodePush deployment list tests", () => {
       expect(result.succeeded).to.be.true;
       expect(spyOutTable.calledOnce).to.be.true;
 
-      const resultTable = spyOutTable.lastCall.args[1];
-      expect(resultTable[0]).to.be.an("array");
-      expect(resultTable[0]).to.be.eql(expectedOutputTable);
+      const resultTable = spyOutTable.getCall(0).args[1][0];
+      expect(resultTable).to.be.an("array");
+      expect(resultTable).to.be.eql(expectedOutputTable);
       nockScope.done();
     });
 
@@ -379,8 +376,8 @@ describe("CodePush deployment list tests", () => {
       statusCode: number = 200
     ): void {
     nockScope.get(`/${fakeParamsForRequest.appVersion}/apps/${fakeParamsForRequest.userName}/${fakeParamsForRequest.appName}/deployments`)
-      .reply((uri: any, requestBody: any)  => {
-        return [statusCode, returnDeployments];
+      .reply(statusCode, (uri: any, requestBody: any)  => {
+        return returnDeployments;
       }
     );
   }
@@ -394,18 +391,18 @@ describe("CodePush deployment list tests", () => {
       times: number = 1
     ): void {
     nockScope.get(`/${fakeParamsForRequest.appVersion}/apps/${fakeParamsForRequest.userName}/${fakeParamsForRequest.appName}/deployments/${fakeDeployment.name}/metrics`).times(times)
-      .reply((uri: any, requestBody: any): any  => {
-        return [statusCode, returnMetrics];
+      .reply(statusCode, (uri: any, requestBody: any): any  => {
+        return returnMetrics;
       }
     );
   }
 
   function removeColorFromText(text: string): string  {
-    return stripAnsi(text);
+    return chalk.stripColor(text);
   }
 
   function removeColorFromTableRows(tableRows: string[][]) {
-    return tableRows.map((row) => row.map((element) => stripAnsi(element)));
+    return tableRows.map((row) => row.map((element) => chalk.stripColor(element)));
   }
 
   function getCommandArgsForListCommand(fakeConsts: FakeParamsForRequests, additionalArgs: string[] = []): CommandArgs {
