@@ -11,7 +11,7 @@ export class NUnitXmlUtil extends XmlUtil {
 
     const self: NUnitXmlUtil = this;
 
-    const outputXml: Promise<Document> = this.getMergeXmlResultsPromise(pathToArchive, tempPath,
+    return this.getMergeXmlResultsPromise(pathToArchive, tempPath,
       (fullPath: string, relativePath: string) => {
         const xml: Document = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
 
@@ -24,6 +24,7 @@ export class NUnitXmlUtil extends XmlUtil {
         self.appendToTestNameTransformation(xml, `_${name}`);
         self.removeIgnoredTransformation(xml);
         self.removeEmptySuitesTransformation(xml);
+
         if (mainXml) {
           if (this.isNUnit3(xml)) {
             mainXml = self.combineNUnit3(mainXml, xml);
@@ -38,8 +39,6 @@ export class NUnitXmlUtil extends XmlUtil {
         resolve(mainXml);
       }
     );
-
-    return outputXml;
   }
 
   public getArchiveName(): string {
