@@ -20,6 +20,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @hasArg
   public filePath: string;
 
+  @help("Build version parameter required for .zip and .msi files")
+  @shortName("b")
+  @longName("build-version")
+  @hasArg
+  public buildVersion: string;
+
   @help("Distribution group name")
   @shortName("g")
   @longName("group")
