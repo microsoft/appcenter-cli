@@ -103,6 +103,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
     if (!_.isNil(this.releaseNotes) && !_.isNil(this.releaseNotesFile)) {
       throw failure(ErrorCodes.InvalidParameter, "'--release-notes' and '--release-notes-file' switches are mutually exclusive");
     }
+    if (_.isNil(this.buildVersion)) {
+      const extension = this.filePath.substring(this.filePath.lastIndexOf(".")).toLowerCase();
+      if ([".zip", ".msi"].includes(extension)) {
+        throw failure(ErrorCodes.InvalidParameter, "--build-version parameter must be specified when uploading .zip or .msi file");
+      }
+    }
   }
 
   private getPrerequisites(client: AppCenterClient): Promise<[number | null, Buffer, string]> {
