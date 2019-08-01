@@ -20254,6 +20254,10 @@
         "release_id": {
           "description": "The ID of the release.",
           "type": "number"
+        },
+        "build_version": {
+          "description": "The build version of the uploaded WPF/Winforms",
+          "type": "string"
         }
       }
     },

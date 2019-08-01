@@ -178,6 +178,9 @@ function _complete(uploadId, ownerName, appName, status, options, callback) {
  *
  * @param {number} [options.releaseId] The ID of the release.
  *
+ * @param {string} [options.buildVersion] The build version of the uploaded
+ * WPF/Winforms
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -206,6 +209,7 @@ function _create(ownerName, appName, options, callback) {
     throw new Error('callback cannot be null.');
   }
   let releaseId = (options && options.releaseId !== undefined) ? options.releaseId : undefined;
+  let buildVersion = (options && options.buildVersion !== undefined) ? options.buildVersion : undefined;
   // Validate
   try {
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
@@ -217,13 +221,17 @@ function _create(ownerName, appName, options, callback) {
     if (releaseId !== null && releaseId !== undefined && typeof releaseId !== 'number') {
       throw new Error('releaseId must be of type number.');
     }
+    if (buildVersion !== null && buildVersion !== undefined && typeof buildVersion.valueOf() !== 'string') {
+      throw new Error('buildVersion must be of type string.');
+    }
   } catch (error) {
     return callback(error);
   }
   let body;
-  if (releaseId !== null && releaseId !== undefined) {
+  if ((releaseId !== null && releaseId !== undefined) || (buildVersion !== null && buildVersion !== undefined)) {
     body = new client.models['ReleaseUploadBeginRequest']();
     body.releaseId = releaseId;
+    body.buildVersion = buildVersion;
   }
 
   // Construct URL
@@ -436,6 +444,9 @@ class ReleaseUploads {
    *
    * @param {number} [options.releaseId] The ID of the release.
    *
+   * @param {string} [options.buildVersion] The build version of the uploaded
+   * WPF/Winforms
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -469,6 +480,9 @@ class ReleaseUploads {
    * @param {object} [options] Optional Parameters.
    *
    * @param {number} [options.releaseId] The ID of the release.
+   *
+   * @param {string} [options.buildVersion] The build version of the uploaded
+   * WPF/Winforms
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

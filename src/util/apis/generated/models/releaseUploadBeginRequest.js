@@ -19,6 +19,8 @@ class ReleaseUploadBeginRequest {
   /**
    * Create a ReleaseUploadBeginRequest.
    * @property {number} [releaseId] The ID of the release.
+   * @property {string} [buildVersion] The build version of the uploaded
+   * WPF/Winforms
    */
   constructor() {
   }
@@ -42,6 +44,13 @@ class ReleaseUploadBeginRequest {
             serializedName: 'release_id',
             type: {
               name: 'Number'
+            }
+          },
+          buildVersion: {
+            required: false,
+            serializedName: 'build_version',
+            type: {
+              name: 'String'
             }
           }
         }
