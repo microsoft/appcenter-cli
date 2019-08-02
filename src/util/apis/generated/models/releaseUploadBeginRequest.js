@@ -19,8 +19,7 @@ class ReleaseUploadBeginRequest {
   /**
    * Create a ReleaseUploadBeginRequest.
    * @property {number} [releaseId] The ID of the release.
-   * @property {string} [buildVersion] The build version of the uploaded
-   * WPF/Winforms
+   * @property {string} [buildVersion] The build version of the uploaded binary
    */
   constructor() {
   }

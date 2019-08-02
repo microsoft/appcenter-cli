@@ -4174,7 +4174,7 @@ export interface ReleaseUploadBeginRequest {
   */
   releaseId?: number;
   /**
-   * The build version of the uploaded WPF/Winforms
+   * The build version of the uploaded binary
   */
   buildVersion?: string;
 }

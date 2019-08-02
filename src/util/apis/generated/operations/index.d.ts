@@ -13828,7 +13828,7 @@ export interface ReleaseUploads {
      * @param {number} [options.releaseId] The ID of the release.
      *
      * @param {string} [options.buildVersion] The build version of the uploaded
-     * WPF/Winforms
+     * binary
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -13853,7 +13853,7 @@ export interface ReleaseUploads {
      * @param {number} [options.releaseId] The ID of the release.
      *
      * @param {string} [options.buildVersion] The build version of the uploaded
-     * WPF/Winforms
+     * binary
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request

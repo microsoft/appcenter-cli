@@ -20580,7 +20580,7 @@
           "type": "number"
         },
         "build_version": {
-          "description": "The build version of the uploaded WPF/Winforms",
+          "description": "The build version of the uploaded binary",
           "type": "string"
         }
       }

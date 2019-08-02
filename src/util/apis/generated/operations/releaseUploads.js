@@ -179,7 +179,7 @@ function _complete(uploadId, ownerName, appName, status, options, callback) {
  * @param {number} [options.releaseId] The ID of the release.
  *
  * @param {string} [options.buildVersion] The build version of the uploaded
- * WPF/Winforms
+ * binary
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -445,7 +445,7 @@ class ReleaseUploads {
    * @param {number} [options.releaseId] The ID of the release.
    *
    * @param {string} [options.buildVersion] The build version of the uploaded
-   * WPF/Winforms
+   * binary
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -482,7 +482,7 @@ class ReleaseUploads {
    * @param {number} [options.releaseId] The ID of the release.
    *
    * @param {string} [options.buildVersion] The build version of the uploaded
-   * WPF/Winforms
+   * binary
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
