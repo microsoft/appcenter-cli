@@ -2,7 +2,7 @@ import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName,
 import { CommandArgs } from "../../../util/commandline/command";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
-import { getUser, DefaultApp } from "../../../util/profile/index";
+import { getUser } from "../../../util/profile/index";
 import { inspect } from "util";
 import * as fs from "fs";
 import * as pfs from "../../../util/misc/promisfied-fs";
@@ -11,20 +11,10 @@ import { sign, zip } from "../lib/update-contents-tasks";
 import { isBinaryOrZip, getLastFolderInPath, moveReleaseFilesInTmpFolder, isDirectory } from "../lib/file-utils";
 import { environments } from "../lib/environment";
 import { isValidRange, isValidRollout, isValidDeployment, validateVersion } from "../lib/validation-utils";
-import { LegacyCodePushRelease }  from "../lib/release-strategy/index";
 import { getTokenFromEnvironmentVar } from "../../../util/profile/environment-vars";
+import AppCenterCodePushRelease from "./appcenter-release";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-skeleton");
-
-export interface ReleaseStrategy {
-    release(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata: {
-      appVersion?: string;
-      description?: string;
-      isDisabled?: boolean;
-      isMandatory?: boolean;
-      rollout?: number;
-    }, token?: string, serverUrl?: string): Promise<void>;
-}
 
 export default class CodePushReleaseCommandSkeleton extends AppCommand {
   @help("Deployment to release the update to")
@@ -75,13 +65,12 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
 
   protected targetBinaryVersion: string;
 
-  private readonly releaseStrategy: ReleaseStrategy;
+  private readonly releaseStrategy: AppCenterCodePushRelease;
 
   constructor(args: CommandArgs) {
     super(args);
 
-    // Сurrently use old service due to we have limitation of 1MB payload limit through bifrost service
-    this.releaseStrategy = new LegacyCodePushRelease();
+    this.releaseStrategy = new AppCenterCodePushRelease();
   }
 
   public async run(client: AppCenterClient): Promise<CommandResult> {

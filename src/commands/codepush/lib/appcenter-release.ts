@@ -1,9 +1,8 @@
-import { ReleaseStrategy } from "../release-command-skeleton";
-import { AppCenterClient, models, clientRequest } from "../../../../util/apis";
-import { DefaultApp } from "../../../../util/profile/index";
+import { AppCenterClient, models, clientRequest } from "../../../util/apis";
+import { DefaultApp } from "../../../util/profile/index";
 import * as fs from "fs";
 
-export default class AppCenterCodePushRelease implements ReleaseStrategy {
+export default class AppCenterCodePushRelease {
   public async release(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata:
     { appVersion?: string;
       description?: string;
