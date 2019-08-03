@@ -11,11 +11,11 @@
 'use strict';
 
 /**
- * Class representing a AppMembershipsResponseMembershipsItem.
+ * Class representing a AppMembership.
  */
-class AppMembershipsResponseMembershipsItem {
+class AppMembership {
   /**
-   * Create a AppMembershipsResponseMembershipsItem.
+   * Create a AppMembership.
    * @property {string} [appId]
    * @property {string} [userId]
    * @property {array} [permissions]
@@ -23,23 +23,24 @@ class AppMembershipsResponseMembershipsItem {
    * 'hockeyapp', 'codepush', 'testcloud', 'hockeyapp-dogfood'
    * @property {string} [sourceType] Possible values include: 'user', 'org',
    * 'distribution_group', 'team', 'release'
+   * @property {string} [sourceId]
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of AppMembershipsResponseMembershipsItem
+   * Defines the metadata of AppMembership
    *
-   * @returns {object} metadata of AppMembershipsResponseMembershipsItem
+   * @returns {object} metadata of AppMembership
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'AppMembershipsResponse_membershipsItem',
+      serializedName: 'AppMembership',
       type: {
         name: 'Composite',
-        className: 'AppMembershipsResponseMembershipsItem',
+        className: 'AppMembership',
         modelProperties: {
           appId: {
             required: false,
@@ -82,6 +83,13 @@ class AppMembershipsResponseMembershipsItem {
             type: {
               name: 'String'
             }
+          },
+          sourceId: {
+            required: false,
+            serializedName: 'source_id',
+            type: {
+              name: 'String'
+            }
           }
         }
       }
@@ -89,4 +97,4 @@ class AppMembershipsResponseMembershipsItem {
   }
 }
 
-module.exports = AppMembershipsResponseMembershipsItem;
+module.exports = AppMembership;

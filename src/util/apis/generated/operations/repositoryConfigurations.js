@@ -176,6 +176,8 @@ function _list(ownerName, appName, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {string} [options.externalUserId] The external user ID
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -202,6 +204,7 @@ function _createOrUpdate(ownerName, appName, repoUrl, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let externalUserId = (options && options.externalUserId !== undefined) ? options.externalUserId : undefined;
   // Validate
   try {
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
@@ -213,13 +216,17 @@ function _createOrUpdate(ownerName, appName, repoUrl, options, callback) {
     if (repoUrl === null || repoUrl === undefined || typeof repoUrl.valueOf() !== 'string') {
       throw new Error('repoUrl cannot be null or undefined and it must be of type string.');
     }
+    if (externalUserId !== null && externalUserId !== undefined && typeof externalUserId.valueOf() !== 'string') {
+      throw new Error('externalUserId must be of type string.');
+    }
   } catch (error) {
     return callback(error);
   }
   let repo;
-  if (repoUrl !== null && repoUrl !== undefined) {
+  if ((repoUrl !== null && repoUrl !== undefined) || (externalUserId !== null && externalUserId !== undefined)) {
     repo = new client.models['RepoInfo']();
     repo.repoUrl = repoUrl;
+    repo.externalUserId = externalUserId;
   }
 
   // Construct URL
@@ -554,6 +561,8 @@ class RepositoryConfigurations {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {string} [options.externalUserId] The external user ID
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -587,6 +596,8 @@ class RepositoryConfigurations {
    * @param {string} repoUrl The repository url
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {string} [options.externalUserId] The external user ID
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

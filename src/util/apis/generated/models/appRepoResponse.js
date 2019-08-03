@@ -21,11 +21,12 @@ class AppRepoResponse {
    * repository integration belongs to
    * @property {string} repoUrl The absolute URL of the repository
    * @property {string} [repoProvider] The provider of the repository. Possible
-   * values include: 'github', 'bitbucket', 'vsts'
+   * values include: 'github', 'bitbucket', 'vsts', 'gitlab'
    * @property {uuid} userId The unique id (UUID) of the user who configured
    * the repository
    * @property {string} [installationId] Installation id from the provider
    * @property {string} [repoId] Repository id from the provider
+   * @property {string} [externalUserId] User id from the provider
    */
   constructor() {
   }
@@ -89,6 +90,13 @@ class AppRepoResponse {
           repoId: {
             required: false,
             serializedName: 'repo_id',
+            type: {
+              name: 'String'
+            }
+          },
+          externalUserId: {
+            required: false,
+            serializedName: 'external_user_id',
             type: {
               name: 'String'
             }

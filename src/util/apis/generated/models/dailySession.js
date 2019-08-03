@@ -16,7 +16,7 @@
 class DailySession {
   /**
    * Create a DailySession.
-   * @property {string} [datetime] the ISO 8601 datetime
+   * @property {string} [datetime] The ISO 8601 datetime.
    * @property {number} [count]
    */
   constructor() {

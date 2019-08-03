@@ -64,6 +64,7 @@ class AppCenterClient extends ServiceClient {
     this.azureSubscription = new operations.AzureSubscription(this);
     this.organization = new operations.Organization(this);
     this.apps = new operations.Apps(this);
+    this.aadGroup = new operations.AadGroup(this);
     this.organizations = new operations.Organizations(this);
     this.billingAggregatedInformation = new operations.BillingAggregatedInformation(this);
     this.invitations = new operations.Invitations(this);
@@ -87,6 +88,7 @@ class AppCenterClient extends ServiceClient {
     this.stores = new operations.Stores(this);
     this.missingSymbolGroups = new operations.MissingSymbolGroups(this);
     this.app = new operations.App(this);
+    this.codePushDeploymentUpload = new operations.CodePushDeploymentUpload(this);
     this.codePushDeploymentRelease = new operations.CodePushDeploymentRelease(this);
     this.deploymentReleases = new operations.DeploymentReleases(this);
     this.codePushDeploymentReleases = new operations.CodePushDeploymentReleases(this);

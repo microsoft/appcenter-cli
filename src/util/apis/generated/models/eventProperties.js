@@ -11,7 +11,7 @@
 'use strict';
 
 /**
- * Event properties during the time range
+ * Event properties during the time range.
  *
  */
 class EventProperties {

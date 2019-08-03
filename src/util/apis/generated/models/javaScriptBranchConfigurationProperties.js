@@ -18,10 +18,10 @@
 class JavaScriptBranchConfigurationProperties {
   /**
    * Create a JavaScriptBranchConfigurationProperties.
-   * @property {string} packageJsonPath Path to package.json file for the main
-   * project, e.g. "package.json" or "myapp/package.json"
+   * @property {string} [packageJsonPath] Path to package.json file for the
+   * main project, e.g. "package.json" or "myapp/package.json"
    * @property {boolean} [runTests] Whether to run Jest unit tests, via npm
-   * test, during the build. Default value: true .
+   * test, during the build
    * @property {string} [reactNativeVersion] Version of React Native from
    * package.json files
    */
@@ -43,7 +43,7 @@ class JavaScriptBranchConfigurationProperties {
         className: 'JavaScriptBranchConfigurationProperties',
         modelProperties: {
           packageJsonPath: {
-            required: true,
+            required: false,
             serializedName: 'packageJsonPath',
             type: {
               name: 'String'
@@ -52,7 +52,6 @@ class JavaScriptBranchConfigurationProperties {
           runTests: {
             required: false,
             serializedName: 'runTests',
-            defaultValue: true,
             type: {
               name: 'Boolean'
             }

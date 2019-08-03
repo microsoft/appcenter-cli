@@ -16,8 +16,8 @@
 class CrashGroupPlace {
   /**
    * Create a CrashGroupPlace.
-   * @property {string} [placeName] Place name
-   * @property {number} [crashCount] count of places
+   * @property {string} [placeName] Place name.
+   * @property {number} [crashCount] Count of places.
    */
   constructor() {
   }

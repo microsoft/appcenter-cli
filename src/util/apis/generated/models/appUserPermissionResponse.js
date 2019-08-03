@@ -25,6 +25,8 @@ class AppUserPermissionResponse {
    * @property {string} appSecret A unique and secret key used to identify the
    * app in communication with the ingestion endpoint for crash reporting and
    * analytics
+   * @property {boolean} isCutoverFromHockeyapp Whether the app had a
+   * 'hockeyapp' origin before being "cut over" to App Center
    */
   constructor() {
   }
@@ -90,6 +92,13 @@ class AppUserPermissionResponse {
             serializedName: 'app_secret',
             type: {
               name: 'String'
+            }
+          },
+          isCutoverFromHockeyapp: {
+            required: true,
+            serializedName: 'is_cutover_from_hockeyapp',
+            type: {
+              name: 'Boolean'
             }
           }
         }

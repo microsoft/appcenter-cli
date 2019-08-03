@@ -51,6 +51,7 @@ export default class AppCenterClient extends ServiceClient {
   azureSubscription: operations.AzureSubscription;
   organization: operations.Organization;
   apps: operations.Apps;
+  aadGroup: operations.AadGroup;
   organizations: operations.Organizations;
   billingAggregatedInformation: operations.BillingAggregatedInformation;
   invitations: operations.Invitations;
@@ -74,6 +75,7 @@ export default class AppCenterClient extends ServiceClient {
   stores: operations.Stores;
   missingSymbolGroups: operations.MissingSymbolGroups;
   app: operations.App;
+  codePushDeploymentUpload: operations.CodePushDeploymentUpload;
   codePushDeploymentRelease: operations.CodePushDeploymentRelease;
   deploymentReleases: operations.DeploymentReleases;
   codePushDeploymentReleases: operations.CodePushDeploymentReleases;

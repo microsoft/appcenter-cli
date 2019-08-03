@@ -3377,7 +3377,7 @@ function _gdprExportFileSetFile(ownerName, appName, options, callback) {
 }
 
 /**
- * Lists all the endpoints available for Test app data
+ * Lists all the endpoints available for Test apps data
  *
  * @param {string} ownerName The name of the owner
  *
@@ -3401,7 +3401,7 @@ function _gdprExportFileSetFile(ownerName, appName, options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _gdprExportApp(ownerName, appName, options, callback) {
+function _gdprExportApps(ownerName, appName, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -4773,110 +4773,6 @@ function _getDeviceConfigurations(ownerName, appName, options, callback) {
 }
 
 /**
- * Lists user data
- *
- * @param {object} [options] Optional Parameters.
- *
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- *
- * @param {function} callback - The callback.
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestGDPRUser} for more information.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-function _gdprExportUser(options, callback) {
-   /* jshint validthis: true */
-  let client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-
-  // Construct URL
-  let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/account/test/export/users';
-
-  // Create HTTP transport objects
-  let httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.url = requestUrl;
-  httpRequest.headers = {};
-  // Set Headers
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  if(options) {
-    for(let headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, (err, response, responseBody) => {
-    if (err) {
-      return callback(err);
-    }
-    let statusCode = response.statusCode;
-    if (statusCode !== 200) {
-      let error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      let parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          let internalError = null;
-          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-          error.code = internalError ? internalError.code : parsedErrorResponse.code;
-          error.message = internalError ? internalError.message : parsedErrorResponse.message;
-        }
-      } catch (defaultError) {
-        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                         `- "${responseBody}" for the default response.`;
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    let result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      let parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestGDPRUser']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-}
-
-/**
  * Lists feature flag data
  *
  * @param {object} [options] Optional Parameters.
@@ -5085,7 +4981,7 @@ function _gdprExportAccount(options, callback) {
 }
 
 /**
- * Lists all the endpoints available for Test account data
+ * Lists all the endpoints available for Test accounts data
  *
  * @param {object} [options] Optional Parameters.
  *
@@ -5105,7 +5001,7 @@ function _gdprExportAccount(options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _gdprExport(options, callback) {
+function _gdprExportAccounts(options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -5221,7 +5117,7 @@ class Test {
     this._gdprExportPipelineTest = _gdprExportPipelineTest;
     this._gdprExportHashFile = _gdprExportHashFile;
     this._gdprExportFileSetFile = _gdprExportFileSetFile;
-    this._gdprExportApp = _gdprExportApp;
+    this._gdprExportApps = _gdprExportApps;
     this._getSubscriptions = _getSubscriptions;
     this._createSubscription = _createSubscription;
     this._getDeviceSetOfOwner = _getDeviceSetOfOwner;
@@ -5231,10 +5127,9 @@ class Test {
     this._createDeviceSetOfOwner = _createDeviceSetOfOwner;
     this._createDeviceSelection = _createDeviceSelection;
     this._getDeviceConfigurations = _getDeviceConfigurations;
-    this._gdprExportUser = _gdprExportUser;
     this._gdprExportFeatureFlag = _gdprExportFeatureFlag;
     this._gdprExportAccount = _gdprExportAccount;
-    this._gdprExport = _gdprExport;
+    this._gdprExportAccounts = _gdprExportAccounts;
   }
 
   /**
@@ -7526,7 +7421,7 @@ class Test {
   }
 
   /**
-   * Lists all the endpoints available for Test app data
+   * Lists all the endpoints available for Test apps data
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7543,11 +7438,11 @@ class Test {
    *
    * @reject {Error} - The error object.
    */
-  gdprExportAppWithHttpOperationResponse(ownerName, appName, options) {
+  gdprExportAppsWithHttpOperationResponse(ownerName, appName, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._gdprExportApp(ownerName, appName, options, (err, result, request, response) => {
+      self._gdprExportApps(ownerName, appName, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -7558,7 +7453,7 @@ class Test {
   }
 
   /**
-   * Lists all the endpoints available for Test app data
+   * Lists all the endpoints available for Test apps data
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7591,7 +7486,7 @@ class Test {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  gdprExportApp(ownerName, appName, options, optionalCallback) {
+  gdprExportApps(ownerName, appName, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -7600,14 +7495,14 @@ class Test {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._gdprExportApp(ownerName, appName, options, (err, result, request, response) => {
+        self._gdprExportApps(ownerName, appName, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._gdprExportApp(ownerName, appName, options, optionalCallback);
+      return self._gdprExportApps(ownerName, appName, options, optionalCallback);
     }
   }
 
@@ -8416,84 +8311,6 @@ class Test {
   }
 
   /**
-   * Lists user data
-   *
-   * @param {object} [options] Optional Parameters.
-   *
-   * @param {object} [options.customHeaders] Headers that will be added to the
-   * request
-   *
-   * @returns {Promise} A promise is returned
-   *
-   * @resolve {HttpOperationResponse<TestGDPRUser>} - The deserialized result object.
-   *
-   * @reject {Error} - The error object.
-   */
-  gdprExportUserWithHttpOperationResponse(options) {
-    let client = this.client;
-    let self = this;
-    return new Promise((resolve, reject) => {
-      self._gdprExportUser(options, (err, result, request, response) => {
-        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
-        httpOperationResponse.body = result;
-        if (err) { reject(err); }
-        else { resolve(httpOperationResponse); }
-        return;
-      });
-    });
-  }
-
-  /**
-   * Lists user data
-   *
-   * @param {object} [options] Optional Parameters.
-   *
-   * @param {object} [options.customHeaders] Headers that will be added to the
-   * request
-   *
-   * @param {function} [optionalCallback] - The optional callback.
-   *
-   * @returns {function|Promise} If a callback was passed as the last parameter
-   * then it returns the callback else returns a Promise.
-   *
-   * {Promise} A promise is returned
-   *
-   *                      @resolve {TestGDPRUser} - The deserialized result object.
-   *
-   *                      @reject {Error} - The error object.
-   *
-   * {function} optionalCallback(err, result, request, response)
-   *
-   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestGDPRUser} for more information.
-   *
-   *                      {object} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
-   */
-  gdprExportUser(options, optionalCallback) {
-    let client = this.client;
-    let self = this;
-    if (!optionalCallback && typeof options === 'function') {
-      optionalCallback = options;
-      options = null;
-    }
-    if (!optionalCallback) {
-      return new Promise((resolve, reject) => {
-        self._gdprExportUser(options, (err, result, request, response) => {
-          if (err) { reject(err); }
-          else { resolve(result); }
-          return;
-        });
-      });
-    } else {
-      return self._gdprExportUser(options, optionalCallback);
-    }
-  }
-
-  /**
    * Lists feature flag data
    *
    * @param {object} [options] Optional Parameters.
@@ -8650,7 +8467,7 @@ class Test {
   }
 
   /**
-   * Lists all the endpoints available for Test account data
+   * Lists all the endpoints available for Test accounts data
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -8663,11 +8480,11 @@ class Test {
    *
    * @reject {Error} - The error object.
    */
-  gdprExportWithHttpOperationResponse(options) {
+  gdprExportAccountsWithHttpOperationResponse(options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._gdprExport(options, (err, result, request, response) => {
+      self._gdprExportAccounts(options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -8678,7 +8495,7 @@ class Test {
   }
 
   /**
-   * Lists all the endpoints available for Test account data
+   * Lists all the endpoints available for Test accounts data
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -8707,7 +8524,7 @@ class Test {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  gdprExport(options, optionalCallback) {
+  gdprExportAccounts(options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -8716,14 +8533,14 @@ class Test {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._gdprExport(options, (err, result, request, response) => {
+        self._gdprExportAccounts(options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._gdprExport(options, optionalCallback);
+      return self._gdprExportAccounts(options, optionalCallback);
     }
   }
 

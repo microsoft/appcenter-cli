@@ -27,7 +27,8 @@ class HockeyAppMigrationRelease {
    * @property {string} [buildUrl]
    * @property {string} [bundleIdentifier]
    * @property {string} [deviceFamily]
-   * @property {array} [languages]
+   * @property {array} [languages] The languages supported by the release.
+   * Limited to 510 characters in a serialized array.
    * @property {object} [uuids] For iOS apps, a dictionary of UUIDs for
    * architectures (in format `{"armv7":
    * "353df799-d450-3308-8492-928ecf1ebf53", "arm64":

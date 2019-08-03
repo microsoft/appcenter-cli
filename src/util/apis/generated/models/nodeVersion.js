@@ -11,35 +11,44 @@
 'use strict';
 
 /**
- * Class representing a TestGDPRUser.
+ * The Node version
+ *
  */
-class TestGDPRUser {
+class NodeVersion {
   /**
-   * Create a TestGDPRUser.
-   * @property {uuid} [id]
+   * Create a NodeVersion.
+   * @property {string} [name] The version name
+   * @property {boolean} [current] If the Node version is default for AppCenter
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of TestGDPRUser
+   * Defines the metadata of NodeVersion
    *
-   * @returns {object} metadata of TestGDPRUser
+   * @returns {object} metadata of NodeVersion
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'TestGDPRUser',
+      serializedName: 'NodeVersion',
       type: {
         name: 'Composite',
-        className: 'TestGDPRUser',
+        className: 'NodeVersion',
         modelProperties: {
-          id: {
+          name: {
             required: false,
-            serializedName: 'id',
+            serializedName: 'name',
             type: {
               name: 'String'
+            }
+          },
+          current: {
+            required: false,
+            serializedName: 'current',
+            type: {
+              name: 'Boolean'
             }
           }
         }
@@ -48,4 +57,4 @@ class TestGDPRUser {
   }
 }
 
-module.exports = TestGDPRUser;
+module.exports = NodeVersion;

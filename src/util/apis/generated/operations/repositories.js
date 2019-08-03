@@ -17,7 +17,7 @@ const WebResource = msRest.WebResource;
  * Gets the repositories available from the source code host
  *
  * @param {string} sourceHost The source host. Possible values include:
- * 'github', 'bitbucket', 'vsts'
+ * 'github', 'bitbucket', 'vsts', 'gitlab'
  *
  * @param {string} ownerName The name of the owner
  *
@@ -207,7 +207,7 @@ class Repositories {
    * Gets the repositories available from the source code host
    *
    * @param {string} sourceHost The source host. Possible values include:
-   * 'github', 'bitbucket', 'vsts'
+   * 'github', 'bitbucket', 'vsts', 'gitlab'
    *
    * @param {string} ownerName The name of the owner
    *
@@ -251,7 +251,7 @@ class Repositories {
    * Gets the repositories available from the source code host
    *
    * @param {string} sourceHost The source host. Possible values include:
-   * 'github', 'bitbucket', 'vsts'
+   * 'github', 'bitbucket', 'vsts', 'gitlab'
    *
    * @param {string} ownerName The name of the owner
    *

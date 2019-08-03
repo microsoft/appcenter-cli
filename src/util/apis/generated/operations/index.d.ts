@@ -885,6 +885,9 @@ export interface OrgInvitations {
      *
      * @param {object} [options] Optional Parameters.
      *
+     * @param {string} [options.role] The role of the user to be added. Possible
+     * values include: 'admin', 'collaborator', 'member'
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -894,7 +897,7 @@ export interface OrgInvitations {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    sendNewInvitationWithHttpOperationResponse(orgName: string, email: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+    sendNewInvitationWithHttpOperationResponse(orgName: string, email: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * Cancels an existing organization invitation for the user and sends a new one
@@ -905,6 +908,9 @@ export interface OrgInvitations {
      * reset mail to.
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The role of the user to be added. Possible
+     * values include: 'admin', 'collaborator', 'member'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -930,9 +936,9 @@ export interface OrgInvitations {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    sendNewInvitation(orgName: string, email: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    sendNewInvitation(orgName: string, email: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<void>;
     sendNewInvitation(orgName: string, email: string, callback: ServiceCallback<void>): void;
-    sendNewInvitation(orgName: string, email: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    sendNewInvitation(orgName: string, email: string, options: { role? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -946,7 +952,7 @@ export interface OrgInvitations {
      * @param {object} [options] Optional Parameters.
      *
      * @param {string} [options.role] The user's role in the organizatiion.
-     * Possible values include: 'admin', 'collaborator'
+     * Possible values include: 'admin', 'collaborator', 'member'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -970,7 +976,7 @@ export interface OrgInvitations {
      * @param {object} [options] Optional Parameters.
      *
      * @param {string} [options.role] The user's role in the organizatiion.
-     * Possible values include: 'admin', 'collaborator'
+     * Possible values include: 'admin', 'collaborator', 'member'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -1006,9 +1012,12 @@ export interface OrgInvitations {
      *
      * @param {string} orgName The organization's name
      *
-     * @param {string} userEmail The user's email address'
+     * @param {string} userEmail The user's email address
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The user's role. Possible values include:
+     * 'admin', 'collaborator', 'member'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -1019,16 +1028,19 @@ export interface OrgInvitations {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(orgName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+    createWithHttpOperationResponse(orgName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * Invites a new or existing user to an organization
      *
      * @param {string} orgName The organization's name
      *
-     * @param {string} userEmail The user's email address'
+     * @param {string} userEmail The user's email address
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The user's role. Possible values include:
+     * 'admin', 'collaborator', 'member'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -1054,9 +1066,9 @@ export interface OrgInvitations {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(orgName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    create(orgName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<void>;
     create(orgName: string, userEmail: string, callback: ServiceCallback<void>): void;
-    create(orgName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    create(orgName: string, userEmail: string, options: { role? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -1064,9 +1076,12 @@ export interface OrgInvitations {
      *
      * @param {string} orgName The organization's name
      *
-     * @param {string} userEmail The user's email address'
+     * @param {string} userEmail The user's email address
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The user's role. Possible values include:
+     * 'admin', 'collaborator', 'member'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -1077,16 +1092,19 @@ export interface OrgInvitations {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(orgName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+    deleteMethodWithHttpOperationResponse(orgName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * Removes a user's invitation to an organization
      *
      * @param {string} orgName The organization's name
      *
-     * @param {string} userEmail The user's email address'
+     * @param {string} userEmail The user's email address
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The user's role. Possible values include:
+     * 'admin', 'collaborator', 'member'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -1112,9 +1130,9 @@ export interface OrgInvitations {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(orgName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteMethod(orgName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<void>;
     deleteMethod(orgName: string, userEmail: string, callback: ServiceCallback<void>): void;
-    deleteMethod(orgName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    deleteMethod(orgName: string, userEmail: string, options: { role? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -1552,9 +1570,12 @@ export interface AppInvitations {
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} userEmail The user's email address'
+     * @param {string} userEmail The user's email address
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The user's role. Possible values include:
+     * 'admin', 'collaborator', 'member'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -1565,7 +1586,7 @@ export interface AppInvitations {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(ownerName: string, appName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+    createWithHttpOperationResponse(ownerName: string, appName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * Invites a new or existing user to an app
@@ -1574,9 +1595,12 @@ export interface AppInvitations {
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} userEmail The user's email address'
+     * @param {string} userEmail The user's email address
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The user's role. Possible values include:
+     * 'admin', 'collaborator', 'member'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -1602,9 +1626,9 @@ export interface AppInvitations {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(ownerName: string, appName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    create(ownerName: string, appName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<void>;
     create(ownerName: string, appName: string, userEmail: string, callback: ServiceCallback<void>): void;
-    create(ownerName: string, appName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    create(ownerName: string, appName: string, userEmail: string, options: { role? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -2172,7 +2196,7 @@ export interface Users {
      * @param {object} [options] Optional Parameters.
      *
      * @param {string} [options.role] The user's role in the organizatiion.
-     * Possible values include: 'admin', 'collaborator'
+     * Possible values include: 'admin', 'collaborator', 'member'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -2195,7 +2219,7 @@ export interface Users {
      * @param {object} [options] Optional Parameters.
      *
      * @param {string} [options.role] The user's role in the organizatiion.
-     * Possible values include: 'admin', 'collaborator'
+     * Possible values include: 'admin', 'collaborator', 'member'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -2284,6 +2308,68 @@ export interface Users {
     removeFromOrg(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
     removeFromOrg(orgName: string, userName: string, callback: ServiceCallback<void>): void;
     removeFromOrg(orgName: string, userName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Get a user information from an organization by name - if there is explicit
+     * permission return it, if not if not return highest implicit permission
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} userName The slug name of the user
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<OrganizationUserResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getForOrgWithHttpOperationResponse(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationUserResponse>>;
+
+    /**
+     * Get a user information from an organization by name - if there is explicit
+     * permission return it, if not if not return highest implicit permission
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {string} userName The slug name of the user
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {OrganizationUserResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {OrganizationUserResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link OrganizationUserResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getForOrg(orgName: string, userName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationUserResponse>;
+    getForOrg(orgName: string, userName: string, callback: ServiceCallback<models.OrganizationUserResponse>): void;
+    getForOrg(orgName: string, userName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationUserResponse>): void;
 
 
     /**
@@ -2462,8 +2548,9 @@ export interface Releases {
 
 
     /**
-     * Get a release with hash 'release_hash' or the 'latest' from all the
-     * distribution groups assigned to the current user.
+     * If 'latest' is not specified then it will return the specified release if
+     * it's enabled. If 'latest' is specified, regardless of whether a release hash
+     * is provided, the latest enabled release is returned.
      *
      * @param {string} appSecret The secret of the target application
      *
@@ -2489,8 +2576,9 @@ export interface Releases {
     getLatestByHashWithHttpOperationResponse(appSecret: string, releaseHash: string, options?: { udid? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
-     * Get a release with hash 'release_hash' or the 'latest' from all the
-     * distribution groups assigned to the current user.
+     * If 'latest' is not specified then it will return the specified release if
+     * it's enabled. If 'latest' is specified, regardless of whether a release hash
+     * is provided, the latest enabled release is returned.
      *
      * @param {string} appSecret The secret of the target application
      *
@@ -2531,6 +2619,69 @@ export interface Releases {
     getLatestByHash(appSecret: string, releaseHash: string, options?: { udid? : string, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
     getLatestByHash(appSecret: string, releaseHash: string, callback: ServiceCallback<any>): void;
     getLatestByHash(appSecret: string, releaseHash: string, options: { udid? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
+     * Delete the given tester from the all releases
+     *
+     * @param {string} testerId The id of the tester
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteTesterFromDestinationsWithHttpOperationResponse(testerId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorDetails>>;
+
+    /**
+     * Delete the given tester from the all releases
+     *
+     * @param {string} testerId The id of the tester
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {ErrorDetails} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {ErrorDetails} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link ErrorDetails} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteTesterFromDestinations(testerId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorDetails>;
+    deleteTesterFromDestinations(testerId: string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorDetails>): void;
+    deleteTesterFromDestinations(testerId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorDetails>): void;
 
 
     /**
@@ -3333,7 +3484,7 @@ export interface Releases {
      * producing the release
      *
      * @param {boolean} [body.notifyTesters] A boolean which determines whether to
-     * notify testers of a new release, default to true.
+     * notify testers of a new release, default to false.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -3409,7 +3560,7 @@ export interface Releases {
      * producing the release
      *
      * @param {boolean} [body.notifyTesters] A boolean which determines whether to
-     * notify testers of a new release, default to true.
+     * notify testers of a new release, default to false.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -5508,9 +5659,12 @@ export interface Teams {
      *
      * @param {string} teamName The team's name
      *
-     * @param {string} userEmail The user's email address'
+     * @param {string} userEmail The user's email address
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The user's role. Possible values include:
+     * 'admin', 'collaborator', 'member'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -5521,7 +5675,7 @@ export interface Teams {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    addUserWithHttpOperationResponse(orgName: string, teamName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TeamUserResponse>>;
+    addUserWithHttpOperationResponse(orgName: string, teamName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TeamUserResponse>>;
 
     /**
      * Adds a new user to a team that is owned by an organization
@@ -5530,9 +5684,12 @@ export interface Teams {
      *
      * @param {string} teamName The team's name
      *
-     * @param {string} userEmail The user's email address'
+     * @param {string} userEmail The user's email address
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The user's role. Possible values include:
+     * 'admin', 'collaborator', 'member'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -5559,9 +5716,9 @@ export interface Teams {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    addUser(orgName: string, teamName: string, userEmail: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TeamUserResponse>;
+    addUser(orgName: string, teamName: string, userEmail: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.TeamUserResponse>;
     addUser(orgName: string, teamName: string, userEmail: string, callback: ServiceCallback<models.TeamUserResponse>): void;
-    addUser(orgName: string, teamName: string, userEmail: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TeamUserResponse>): void;
+    addUser(orgName: string, teamName: string, userEmail: string, options: { role? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TeamUserResponse>): void;
 
 
     /**
@@ -6548,6 +6705,195 @@ export interface Organization {
     deleteAvatar(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationResponse>;
     deleteAvatar(orgName: string, callback: ServiceCallback<models.OrganizationResponse>): void;
     deleteAvatar(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationResponse>): void;
+
+
+    /**
+     * Allows the role of an aad_group to be changed
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {uuid} aadGroupId The unique ID (UUID) of the aad_group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The user's role in the organizatiion.
+     * Possible values include: 'admin', 'collaborator', 'member'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    updateAADGroupsWithHttpOperationResponse(orgName: string, aadGroupId: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Allows the role of an aad_group to be changed
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {uuid} aadGroupId The unique ID (UUID) of the aad_group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.role] The user's role in the organizatiion.
+     * Possible values include: 'admin', 'collaborator', 'member'
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    updateAADGroups(orgName: string, aadGroupId: string, options?: { role? : string, customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    updateAADGroups(orgName: string, aadGroupId: string, callback: ServiceCallback<void>): void;
+    updateAADGroups(orgName: string, aadGroupId: string, options: { role? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Delete already added aad group from the organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {uuid} aadGroupId The unique ID (UUID) of the aad_group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<null>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    deleteAADGroupWithHttpOperationResponse(orgName: string, aadGroupId: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+
+    /**
+     * Delete already added aad group from the organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {uuid} aadGroupId The unique ID (UUID) of the aad_group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {null} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {null} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    deleteAADGroup(orgName: string, aadGroupId: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteAADGroup(orgName: string, aadGroupId: string, callback: ServiceCallback<void>): void;
+    deleteAADGroup(orgName: string, aadGroupId: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+
+
+    /**
+     * Adds aad groups to an organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {uuid} aadGroupId The id of the aad group
+     *
+     * @param {uuid} tenantId The id of the aad tenant
+     *
+     * @param {string} displayName The display name of the aad group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AddAADGroupResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    addAADGroupsWithHttpOperationResponse(orgName: string, aadGroupId: string, tenantId: string, displayName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AddAADGroupResponse>>;
+
+    /**
+     * Adds aad groups to an organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {uuid} aadGroupId The id of the aad group
+     *
+     * @param {uuid} tenantId The id of the aad tenant
+     *
+     * @param {string} displayName The display name of the aad group
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AddAADGroupResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AddAADGroupResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AddAADGroupResponse} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    addAADGroups(orgName: string, aadGroupId: string, tenantId: string, displayName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AddAADGroupResponse>;
+    addAADGroups(orgName: string, aadGroupId: string, tenantId: string, displayName: string, callback: ServiceCallback<models.AddAADGroupResponse>): void;
+    addAADGroups(orgName: string, aadGroupId: string, tenantId: string, displayName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AddAADGroupResponse>): void;
 }
 
 /**
@@ -6581,7 +6927,7 @@ export interface Apps {
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin', 'Unity', 'Electron'
+     * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -6618,7 +6964,7 @@ export interface Apps {
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin', 'Unity', 'Electron'
+     * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -7424,7 +7770,7 @@ export interface Apps {
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin', 'Unity', 'Electron'
+     * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -7459,7 +7805,7 @@ export interface Apps {
      *
      * @param {string} app.platform The platform of the app. Possible values
      * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-     * 'Xamarin', 'Unity', 'Electron'
+     * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -7551,6 +7897,69 @@ export interface Apps {
     list(options?: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.AppResponse[]>;
     list(callback: ServiceCallback<models.AppResponse[]>): void;
     list(options: { orderBy? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AppResponse[]>): void;
+}
+
+/**
+ * @class
+ * AadGroup
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface AadGroup {
+
+
+    /**
+     * Returns a list of aad groups that belong to an organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listForOrgWithHttpOperationResponse(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OrganizationAADGroupResponse[]>>;
+
+    /**
+     * Returns a list of aad groups that belong to an organization
+     *
+     * @param {string} orgName The organization's name
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Array} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    listForOrg(orgName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.OrganizationAADGroupResponse[]>;
+    listForOrg(orgName: string, callback: ServiceCallback<models.OrganizationAADGroupResponse[]>): void;
+    listForOrg(orgName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.OrganizationAADGroupResponse[]>): void;
 }
 
 /**
@@ -7843,6 +8252,58 @@ export interface Organizations {
     list(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.ListOKResponseItem[]>;
     list(callback: ServiceCallback<models.ListOKResponseItem[]>): void;
     list(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ListOKResponseItem[]>): void;
+
+
+    /**
+     * Returns a list organizations in which the requesting user is an admin
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AdministeredOrgsResponse>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    listAdministeredWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AdministeredOrgsResponse>>;
+
+    /**
+     * Returns a list organizations in which the requesting user is an admin
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AdministeredOrgsResponse} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AdministeredOrgsResponse} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AdministeredOrgsResponse} for more
+     *                      information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    listAdministered(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.AdministeredOrgsResponse>;
+    listAdministered(callback: ServiceCallback<models.AdministeredOrgsResponse>): void;
+    listAdministered(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AdministeredOrgsResponse>): void;
 }
 
 /**
@@ -7928,6 +8389,80 @@ export interface BillingAggregatedInformation {
     getForOrg(orgName: string, options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.AggregatedBillingInformation>;
     getForOrg(orgName: string, callback: ServiceCallback<models.AggregatedBillingInformation>): void;
     getForOrg(orgName: string, options: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AggregatedBillingInformation>): void;
+
+
+    /**
+     * Aggregated Billing Information for the requesting user and the organizations
+     * in which the user is an admin.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.service] Type of service that should be included in
+     * the Billing Information. Possible values include: 'Test', 'Build'
+     *
+     * @param {string} [options.period] Type of period that should be included in
+     * the Billing Information. Possible values include: 'Previous', 'Current',
+     * 'Next'
+     *
+     * @param {boolean} [options.showOriginalPlans] Controls whether the API should
+     * show the original plan when Azure Subscription is not enabled
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<AllAccountsAggregatedBillingInformation>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getAllWithHttpOperationResponse(options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AllAccountsAggregatedBillingInformation>>;
+
+    /**
+     * Aggregated Billing Information for the requesting user and the organizations
+     * in which the user is an admin.
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.service] Type of service that should be included in
+     * the Billing Information. Possible values include: 'Test', 'Build'
+     *
+     * @param {string} [options.period] Type of period that should be included in
+     * the Billing Information. Possible values include: 'Previous', 'Current',
+     * 'Next'
+     *
+     * @param {boolean} [options.showOriginalPlans] Controls whether the API should
+     * show the original plan when Azure Subscription is not enabled
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {AllAccountsAggregatedBillingInformation} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {AllAccountsAggregatedBillingInformation} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link AllAccountsAggregatedBillingInformation} for
+     *                      more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getAll(options?: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }): Promise<models.AllAccountsAggregatedBillingInformation>;
+    getAll(callback: ServiceCallback<models.AllAccountsAggregatedBillingInformation>): void;
+    getAll(options: { service? : string, period? : string, showOriginalPlans? : boolean, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.AllAccountsAggregatedBillingInformation>): void;
 
 
     /**
@@ -8195,33 +8730,39 @@ export interface Builds {
 
 
     /**
-     * Gets the Mono versions available to this app
+     * Returns available toolsets for application
      *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.tools] Toolset name. Possible values include:
+     * 'xamarin', 'xcode', 'node'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<Toolsets>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    listMonoVersionsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.MonoVersion[]>>;
+    listToolsetsWithHttpOperationResponse(ownerName: string, appName: string, options?: { tools? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Toolsets>>;
 
     /**
-     * Gets the Mono versions available to this app
+     * Returns available toolsets for application
      *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.tools] Toolset name. Possible values include:
+     * 'xamarin', 'xcode', 'node'
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -8233,7 +8774,7 @@ export interface Builds {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {Array} - The deserialized result object.
+     *                      @resolve {Toolsets} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -8241,15 +8782,16 @@ export interface Builds {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {Array} [result]   - The deserialized result object if an error did not occur.
+     *                      {Toolsets} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link Toolsets} for more information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    listMonoVersions(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.MonoVersion[]>;
-    listMonoVersions(ownerName: string, appName: string, callback: ServiceCallback<models.MonoVersion[]>): void;
-    listMonoVersions(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.MonoVersion[]>): void;
+    listToolsets(ownerName: string, appName: string, options?: { tools? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.Toolsets>;
+    listToolsets(ownerName: string, appName: string, callback: ServiceCallback<models.Toolsets>): void;
+    listToolsets(ownerName: string, appName: string, options: { tools? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Toolsets>): void;
 
 
     /**
@@ -8321,7 +8863,7 @@ export interface Builds {
      * @param {number} buildId The build ID
      *
      * @param {string} downloadType The download type. Possible values include:
-     * 'build', 'symbols', 'logs'
+     * 'build', 'symbols', 'logs', 'mapping', 'bundle'
      *
      * @param {string} ownerName The name of the owner
      *
@@ -8346,7 +8888,7 @@ export interface Builds {
      * @param {number} buildId The build ID
      *
      * @param {string} downloadType The download type. Possible values include:
-     * 'build', 'symbols', 'logs'
+     * 'build', 'symbols', 'logs', 'mapping', 'bundle'
      *
      * @param {string} ownerName The name of the owner
      *
@@ -11735,7 +12277,7 @@ export interface Test {
 
 
     /**
-     * Lists all the endpoints available for Test app data
+     * Lists all the endpoints available for Test apps data
      *
      * @param {string} ownerName The name of the owner
      *
@@ -11752,10 +12294,10 @@ export interface Test {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    gdprExportAppWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRResourceList>>;
+    gdprExportAppsWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRResourceList>>;
 
     /**
-     * Lists all the endpoints available for Test app data
+     * Lists all the endpoints available for Test apps data
      *
      * @param {string} ownerName The name of the owner
      *
@@ -11788,9 +12330,9 @@ export interface Test {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    gdprExportApp(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRResourceList>;
-    gdprExportApp(ownerName: string, appName: string, callback: ServiceCallback<models.TestGDPRResourceList>): void;
-    gdprExportApp(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRResourceList>): void;
+    gdprExportApps(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRResourceList>;
+    gdprExportApps(ownerName: string, appName: string, callback: ServiceCallback<models.TestGDPRResourceList>): void;
+    gdprExportApps(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRResourceList>): void;
 
 
     /**
@@ -12355,57 +12897,6 @@ export interface Test {
 
 
     /**
-     * Lists user data
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @returns {Promise} A promise is returned
-     *
-     * @resolve {HttpOperationResponse<TestGDPRUser>} - The deserialized result object.
-     *
-     * @reject {Error|ServiceError} - The error object.
-     */
-    gdprExportUserWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRUser>>;
-
-    /**
-     * Lists user data
-     *
-     * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.customHeaders] Headers that will be added to the
-     * request
-     *
-     * @param {ServiceCallback} [optionalCallback] - The optional callback.
-     *
-     * @returns {ServiceCallback|Promise} If a callback was passed as the last
-     * parameter then it returns the callback else returns a Promise.
-     *
-     * {Promise} A promise is returned.
-     *
-     *                      @resolve {TestGDPRUser} - The deserialized result object.
-     *
-     *                      @reject {Error|ServiceError} - The error object.
-     *
-     * {ServiceCallback} optionalCallback(err, result, request, response)
-     *
-     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
-     *
-     *                      {TestGDPRUser} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link TestGDPRUser} for more information.
-     *
-     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
-     *
-     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
-     */
-    gdprExportUser(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRUser>;
-    gdprExportUser(callback: ServiceCallback<models.TestGDPRUser>): void;
-    gdprExportUser(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRUser>): void;
-
-
-    /**
      * Lists feature flag data
      *
      * @param {object} [options] Optional Parameters.
@@ -12508,7 +12999,7 @@ export interface Test {
 
 
     /**
-     * Lists all the endpoints available for Test account data
+     * Lists all the endpoints available for Test accounts data
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -12521,10 +13012,10 @@ export interface Test {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    gdprExportWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRResourceList>>;
+    gdprExportAccountsWithHttpOperationResponse(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.TestGDPRResourceList>>;
 
     /**
-     * Lists all the endpoints available for Test account data
+     * Lists all the endpoints available for Test accounts data
      *
      * @param {object} [options] Optional Parameters.
      *
@@ -12553,9 +13044,9 @@ export interface Test {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    gdprExport(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRResourceList>;
-    gdprExport(callback: ServiceCallback<models.TestGDPRResourceList>): void;
-    gdprExport(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRResourceList>): void;
+    gdprExportAccounts(options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.TestGDPRResourceList>;
+    gdprExportAccounts(callback: ServiceCallback<models.TestGDPRResourceList>): void;
+    gdprExportAccounts(options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.TestGDPRResourceList>): void;
 }
 
 /**
@@ -13223,7 +13714,7 @@ export interface SymbolUploads {
      * @param {object} body The symbol information
      *
      * @param {string} body.symbolType The type of the symbol for the current
-     * symbol upload. Possible values include: 'Apple', 'Breakpad',
+     * symbol upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
      * 'AndroidProguard', 'UWP'
      *
      * @param {string} [body.clientCallback] The callback URL that the client can
@@ -13261,7 +13752,7 @@ export interface SymbolUploads {
      * @param {object} body The symbol information
      *
      * @param {string} body.symbolType The type of the symbol for the current
-     * symbol upload. Possible values include: 'Apple', 'Breakpad',
+     * symbol upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
      * 'AndroidProguard', 'UWP'
      *
      * @param {string} [body.clientCallback] The callback URL that the client can
@@ -13391,7 +13882,7 @@ export interface Repositories {
      * Gets the repositories available from the source code host
      *
      * @param {string} sourceHost The source host. Possible values include:
-     * 'github', 'bitbucket', 'vsts'
+     * 'github', 'bitbucket', 'vsts', 'gitlab'
      *
      * @param {string} ownerName The name of the owner
      *
@@ -13423,7 +13914,7 @@ export interface Repositories {
      * Gets the repositories available from the source code host
      *
      * @param {string} sourceHost The source host. Possible values include:
-     * 'github', 'bitbucket', 'vsts'
+     * 'github', 'bitbucket', 'vsts', 'gitlab'
      *
      * @param {string} ownerName The name of the owner
      *
@@ -13553,6 +14044,8 @@ export interface RepositoryConfigurations {
      *
      * @param {object} [options] Optional Parameters.
      *
+     * @param {string} [options.externalUserId] The external user ID
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -13562,7 +14055,7 @@ export interface RepositoryConfigurations {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createOrUpdateWithHttpOperationResponse(ownerName: string, appName: string, repoUrl: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SuccessResponse>>;
+    createOrUpdateWithHttpOperationResponse(ownerName: string, appName: string, repoUrl: string, options?: { externalUserId? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SuccessResponse>>;
 
     /**
      * Configures the repository for build
@@ -13574,6 +14067,8 @@ export interface RepositoryConfigurations {
      * @param {string} repoUrl The repository url
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.externalUserId] The external user ID
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -13600,9 +14095,9 @@ export interface RepositoryConfigurations {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    createOrUpdate(ownerName: string, appName: string, repoUrl: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.SuccessResponse>;
+    createOrUpdate(ownerName: string, appName: string, repoUrl: string, options?: { externalUserId? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.SuccessResponse>;
     createOrUpdate(ownerName: string, appName: string, repoUrl: string, callback: ServiceCallback<models.SuccessResponse>): void;
-    createOrUpdate(ownerName: string, appName: string, repoUrl: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SuccessResponse>): void;
+    createOrUpdate(ownerName: string, appName: string, repoUrl: string, options: { externalUserId? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SuccessResponse>): void;
 
 
     /**
@@ -14651,6 +15146,8 @@ export interface FileAssets {
      *
      * @param {object} [options] Optional Parameters.
      *
+     * @param {object} [options.payload]
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -14660,7 +15157,7 @@ export interface FileAssets {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.FileAsset>>;
+    createWithHttpOperationResponse(ownerName: string, appName: string, options?: { payload? : any, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.FileAsset>>;
 
     /**
      * Create a new asset to upload a file
@@ -14670,6 +15167,8 @@ export interface FileAssets {
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.payload]
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -14696,9 +15195,9 @@ export interface FileAssets {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.FileAsset>;
+    create(ownerName: string, appName: string, options?: { payload? : any, customHeaders? : { [headerName: string]: string; } }): Promise<models.FileAsset>;
     create(ownerName: string, appName: string, callback: ServiceCallback<models.FileAsset>): void;
-    create(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.FileAsset>): void;
+    create(ownerName: string, appName: string, options: { payload? : any, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.FileAsset>): void;
 }
 
 /**
@@ -15704,6 +16203,8 @@ export interface Errors {
      *
      * @param {array} [options.versions]
      *
+     * @param {string} [options.appbuild] app build
+     *
      * @param {string} [options.errorType] Type of error (handled vs unhandled),
      * excluding All. Possible values include: 'unhandledError', 'handledError'
      *
@@ -15716,7 +16217,7 @@ export interface Errors {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    errorFreeDevicePercentagesMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorFreeDevicePercentages>>;
+    errorFreeDevicePercentagesMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], appbuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorFreeDevicePercentages>>;
 
     /**
      * Percentage of error-free devices by day in the time range based on the
@@ -15736,6 +16237,8 @@ export interface Errors {
      * format
      *
      * @param {array} [options.versions]
+     *
+     * @param {string} [options.appbuild] app build
      *
      * @param {string} [options.errorType] Type of error (handled vs unhandled),
      * excluding All. Possible values include: 'unhandledError', 'handledError'
@@ -15766,9 +16269,9 @@ export interface Errors {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    errorFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorFreeDevicePercentages>;
+    errorFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], appbuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorFreeDevicePercentages>;
     errorFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorFreeDevicePercentages>): void;
-    errorFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorFreeDevicePercentages>): void;
+    errorFreeDevicePercentagesMethod(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], appbuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorFreeDevicePercentages>): void;
 
 
     /**
@@ -16857,6 +17360,8 @@ export interface Errors {
      *
      * @param {string} [options.version]
      *
+     * @param {string} [options.appbuild] app build
+     *
      * @param {string} [options.groupState]
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
@@ -16881,7 +17386,7 @@ export interface Errors {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    groupListWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { version? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroups>>;
+    groupListWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { version? : string, appbuild? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorGroups>>;
 
     /**
      * List of error groups
@@ -16895,6 +17400,8 @@ export interface Errors {
      * @param {object} [options] Optional Parameters.
      *
      * @param {string} [options.version]
+     *
+     * @param {string} [options.appbuild] app build
      *
      * @param {string} [options.groupState]
      *
@@ -16936,9 +17443,9 @@ export interface Errors {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    groupList(start: Date|string, ownerName: string, appName: string, options?: { version? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroups>;
+    groupList(start: Date|string, ownerName: string, appName: string, options?: { version? : string, appbuild? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorGroups>;
     groupList(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorGroups>): void;
-    groupList(start: Date|string, ownerName: string, appName: string, options: { version? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroups>): void;
+    groupList(start: Date|string, ownerName: string, appName: string, options: { version? : string, appbuild? : string, groupState? : string, end? : Date, orderby? : string, top? : number, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorGroups>): void;
 
 
     /**
@@ -16958,6 +17465,8 @@ export interface Errors {
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
      * format
+     *
+     * @param {string} [options.appbuild] app build
      *
      * @param {string} [options.errorType] Type of error (handled vs unhandled),
      * excluding All. Possible values include: 'unhandledError', 'handledError'
@@ -16971,7 +17480,7 @@ export interface Errors {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    countsPerDayWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorCounts>>;
+    countsPerDayWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, appbuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ErrorCounts>>;
 
     /**
      * Count of crashes or errors by day in the time range based the selected
@@ -16990,6 +17499,8 @@ export interface Errors {
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
      * format
+     *
+     * @param {string} [options.appbuild] app build
      *
      * @param {string} [options.errorType] Type of error (handled vs unhandled),
      * excluding All. Possible values include: 'unhandledError', 'handledError'
@@ -17019,9 +17530,9 @@ export interface Errors {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    countsPerDay(start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorCounts>;
+    countsPerDay(start: Date|string, ownerName: string, appName: string, options?: { version? : string, end? : Date, appbuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ErrorCounts>;
     countsPerDay(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ErrorCounts>): void;
-    countsPerDay(start: Date|string, ownerName: string, appName: string, options: { version? : string, end? : Date, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorCounts>): void;
+    countsPerDay(start: Date|string, ownerName: string, appName: string, options: { version? : string, end? : Date, appbuild? : string, errorType? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ErrorCounts>): void;
 
 
     /**
@@ -17354,6 +17865,8 @@ export interface StoreReleases {
      *
      * @param {object} [options] Optional Parameters.
      *
+     * @param {string} [options.body]
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -17363,7 +17876,7 @@ export interface StoreReleases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+    deleteMethodWithHttpOperationResponse(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { body? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * delete the release with release Id
@@ -17377,6 +17890,8 @@ export interface StoreReleases {
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.body]
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -17402,9 +17917,9 @@ export interface StoreReleases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteMethod(storeName: string, releaseId: string, ownerName: string, appName: string, options?: { body? : string, customHeaders? : { [headerName: string]: string; } }): Promise<void>;
     deleteMethod(storeName: string, releaseId: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
-    deleteMethod(storeName: string, releaseId: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    deleteMethod(storeName: string, releaseId: string, ownerName: string, appName: string, options: { body? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -17757,6 +18272,8 @@ export interface Stores {
      *
      * @param {object} [options] Optional Parameters.
      *
+     * @param {string} [options.body]
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -17766,7 +18283,7 @@ export interface Stores {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+    deleteMethodWithHttpOperationResponse(storeName: string, ownerName: string, appName: string, options?: { body? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * delete the store based on specific store name.
@@ -17778,6 +18295,8 @@ export interface Stores {
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.body]
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -17803,9 +18322,9 @@ export interface Stores {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(storeName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteMethod(storeName: string, ownerName: string, appName: string, options?: { body? : string, customHeaders? : { [headerName: string]: string; } }): Promise<void>;
     deleteMethod(storeName: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
-    deleteMethod(storeName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    deleteMethod(storeName: string, ownerName: string, appName: string, options: { body? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -18303,6 +18822,78 @@ export interface App {
 
 /**
  * @class
+ * CodePushDeploymentUpload
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface CodePushDeploymentUpload {
+
+
+    /**
+     * Create a new CodePush release upload for the specified deployment
+     *
+     * @param {string} deploymentName deployment name
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<CodePushReleaseUpload>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    createWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CodePushReleaseUpload>>;
+
+    /**
+     * Create a new CodePush release upload for the specified deployment
+     *
+     * @param {string} deploymentName deployment name
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {CodePushReleaseUpload} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {CodePushReleaseUpload} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CodePushReleaseUpload} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    create(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CodePushReleaseUpload>;
+    create(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushReleaseUpload>): void;
+    create(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushReleaseUpload>): void;
+}
+
+/**
+ * @class
  * CodePushDeploymentRelease
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
@@ -18617,36 +19208,50 @@ export interface CodePushDeploymentReleases {
      *
      * @param {string} deploymentName deployment name
      *
+     * @param {object} uploadedRelease The necessary information required to
+     * download the bundle and being the release process.
+     *
+     * @param {object} uploadedRelease.releaseUpload The upload metadata from the
+     * release initialization step.
+     *
+     * @param {uuid} uploadedRelease.releaseUpload.id The ID for the newly created
+     * upload. It is going to be required later in the process.
+     *
+     * @param {string} uploadedRelease.releaseUpload.uploadDomain The URL domain
+     * used to upload the release.
+     *
+     * @param {string} uploadedRelease.releaseUpload.token The URL encoded token
+     * used for upload permissions.
+     *
+     * @param {string} uploadedRelease.targetBinaryVersion the binary version of
+     * the application
+     *
+     * @param {string} [uploadedRelease.deploymentName] This specifies which
+     * deployment you want to release the update to. Default is Staging.
+     *
+     * @param {string} [uploadedRelease.description] This provides an optional
+     * "change log" for the deployment.
+     *
+     * @param {boolean} [uploadedRelease.disabled] This specifies whether an update
+     * should be downloadable by end users or not.
+     *
+     * @param {boolean} [uploadedRelease.mandatory] This specifies whether the
+     * update should be considered mandatory or not (e.g. it includes a critical
+     * security fix).
+     *
+     * @param {boolean} [uploadedRelease.noDuplicateReleaseError] This specifies
+     * that if the update is identical to the latest release on the deployment, the
+     * CLI should generate a warning instead of an error.
+     *
+     * @param {number} [uploadedRelease.rollout] This specifies the percentage of
+     * users (as an integer between 1 and 100) that should be eligible to receive
+     * this update.
+     *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} targetBinaryVersion the binary version of the application
-     *
      * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.packageProperty] The upload zip file
-     *
-     * @param {string} [options.deploymentName1] This specifies which deployment
-     * you want to release the update to. Default is Staging.
-     *
-     * @param {string} [options.description] This provides an optional "change log"
-     * for the deployment.
-     *
-     * @param {boolean} [options.disabled] This specifies whether an update should
-     * be downloadable by end users or not.
-     *
-     * @param {boolean} [options.mandatory] This specifies whether the update
-     * should be considered mandatory or not (e.g. it includes a critical security
-     * fix).
-     *
-     * @param {boolean} [options.noDuplicateReleaseError] This specifies that if
-     * the update is identical to the latest release on the deployment, the CLI
-     * should generate a warning instead of an error.
-     *
-     * @param {number} [options.rollout] This specifies the percentage of users (as
-     * an integer between 1 and 100) that should be eligible to receive this
-     * update.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -18657,43 +19262,57 @@ export interface CodePushDeploymentReleases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, targetBinaryVersion: string, options?: { packageProperty? : stream.Readable, deploymentName1? : string, description? : string, disabled? : boolean, mandatory? : boolean, noDuplicateReleaseError? : boolean, rollout? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CodePushRelease>>;
+    createWithHttpOperationResponse(deploymentName: string, uploadedRelease: models.CodePushUploadedRelease, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CodePushRelease>>;
 
     /**
      * Create a new CodePush release for the specified deployment
      *
      * @param {string} deploymentName deployment name
      *
+     * @param {object} uploadedRelease The necessary information required to
+     * download the bundle and being the release process.
+     *
+     * @param {object} uploadedRelease.releaseUpload The upload metadata from the
+     * release initialization step.
+     *
+     * @param {uuid} uploadedRelease.releaseUpload.id The ID for the newly created
+     * upload. It is going to be required later in the process.
+     *
+     * @param {string} uploadedRelease.releaseUpload.uploadDomain The URL domain
+     * used to upload the release.
+     *
+     * @param {string} uploadedRelease.releaseUpload.token The URL encoded token
+     * used for upload permissions.
+     *
+     * @param {string} uploadedRelease.targetBinaryVersion the binary version of
+     * the application
+     *
+     * @param {string} [uploadedRelease.deploymentName] This specifies which
+     * deployment you want to release the update to. Default is Staging.
+     *
+     * @param {string} [uploadedRelease.description] This provides an optional
+     * "change log" for the deployment.
+     *
+     * @param {boolean} [uploadedRelease.disabled] This specifies whether an update
+     * should be downloadable by end users or not.
+     *
+     * @param {boolean} [uploadedRelease.mandatory] This specifies whether the
+     * update should be considered mandatory or not (e.g. it includes a critical
+     * security fix).
+     *
+     * @param {boolean} [uploadedRelease.noDuplicateReleaseError] This specifies
+     * that if the update is identical to the latest release on the deployment, the
+     * CLI should generate a warning instead of an error.
+     *
+     * @param {number} [uploadedRelease.rollout] This specifies the percentage of
+     * users (as an integer between 1 and 100) that should be eligible to receive
+     * this update.
+     *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} targetBinaryVersion the binary version of the application
-     *
      * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.packageProperty] The upload zip file
-     *
-     * @param {string} [options.deploymentName1] This specifies which deployment
-     * you want to release the update to. Default is Staging.
-     *
-     * @param {string} [options.description] This provides an optional "change log"
-     * for the deployment.
-     *
-     * @param {boolean} [options.disabled] This specifies whether an update should
-     * be downloadable by end users or not.
-     *
-     * @param {boolean} [options.mandatory] This specifies whether the update
-     * should be considered mandatory or not (e.g. it includes a critical security
-     * fix).
-     *
-     * @param {boolean} [options.noDuplicateReleaseError] This specifies that if
-     * the update is identical to the latest release on the deployment, the CLI
-     * should generate a warning instead of an error.
-     *
-     * @param {number} [options.rollout] This specifies the percentage of users (as
-     * an integer between 1 and 100) that should be eligible to receive this
-     * update.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -18720,9 +19339,9 @@ export interface CodePushDeploymentReleases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(deploymentName: string, ownerName: string, appName: string, targetBinaryVersion: string, options?: { packageProperty? : stream.Readable, deploymentName1? : string, description? : string, disabled? : boolean, mandatory? : boolean, noDuplicateReleaseError? : boolean, rollout? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.CodePushRelease>;
-    create(deploymentName: string, ownerName: string, appName: string, targetBinaryVersion: string, callback: ServiceCallback<models.CodePushRelease>): void;
-    create(deploymentName: string, ownerName: string, appName: string, targetBinaryVersion: string, options: { packageProperty? : stream.Readable, deploymentName1? : string, description? : string, disabled? : boolean, mandatory? : boolean, noDuplicateReleaseError? : boolean, rollout? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushRelease>): void;
+    create(deploymentName: string, uploadedRelease: models.CodePushUploadedRelease, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CodePushRelease>;
+    create(deploymentName: string, uploadedRelease: models.CodePushUploadedRelease, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushRelease>): void;
+    create(deploymentName: string, uploadedRelease: models.CodePushUploadedRelease, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushRelease>): void;
 }
 
 /**
@@ -18844,6 +19463,8 @@ export interface CodePushDeployments {
      *
      * @param {object} [options] Optional Parameters.
      *
+     * @param {object} [options.body]
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -18853,7 +19474,7 @@ export interface CodePushDeployments {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+    deleteMethodWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, options?: { body? : any, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * Deletes a CodePush Deployment for the given app
@@ -18865,6 +19486,8 @@ export interface CodePushDeployments {
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.body]
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -18890,9 +19513,9 @@ export interface CodePushDeployments {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteMethod(deploymentName: string, ownerName: string, appName: string, options?: { body? : any, customHeaders? : { [headerName: string]: string; } }): Promise<void>;
     deleteMethod(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<void>): void;
-    deleteMethod(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    deleteMethod(deploymentName: string, ownerName: string, appName: string, options: { body? : any, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -19468,11 +20091,71 @@ export interface Data {
 
 
     /**
+     * @summary Gets general data about the provisioned database
+     *
+     * @param {string} acAuthorizationARM ARM token
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    getOverviewWithHttpOperationResponse(acAuthorizationARM: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+
+    /**
+     * @summary Gets general data about the provisioned database
+     *
+     * @param {string} acAuthorizationARM ARM token
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Object} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Object} [result]   - The deserialized result object if an error did not occur.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    getOverview(acAuthorizationARM: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    getOverview(acAuthorizationARM: string, ownerName: string, appName: string, callback: ServiceCallback<any>): void;
+    getOverview(acAuthorizationARM: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+
+
+    /**
      * @summary Checks that the Azure Cosmos DB account name already exists. A
      * valid account name may contain only lowercase letters, numbers, and the '-'
      * character, and must be between 3 and 31 characters.
-     *
-     * @param {string} acAuthorizationARM
      *
      * @param {string} accountName
      *
@@ -19491,14 +20174,12 @@ export interface Data {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    checkNameExistsWithHttpOperationResponse(acAuthorizationARM: string, accountName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<stream.Readable>>;
+    checkNameExistsWithHttpOperationResponse(accountName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<stream.Readable>>;
 
     /**
      * @summary Checks that the Azure Cosmos DB account name already exists. A
      * valid account name may contain only lowercase letters, numbers, and the '-'
      * character, and must be between 3 and 31 characters.
-     *
-     * @param {string} acAuthorizationARM
      *
      * @param {string} accountName
      *
@@ -19532,9 +20213,9 @@ export interface Data {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    checkNameExists(acAuthorizationARM: string, accountName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<stream.Readable>;
-    checkNameExists(acAuthorizationARM: string, accountName: string, ownerName: string, appName: string, callback: ServiceCallback<stream.Readable>): void;
-    checkNameExists(acAuthorizationARM: string, accountName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<stream.Readable>): void;
+    checkNameExists(accountName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<stream.Readable>;
+    checkNameExists(accountName: string, ownerName: string, appName: string, callback: ServiceCallback<stream.Readable>): void;
+    checkNameExists(accountName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<stream.Readable>): void;
 }
 
 /**
@@ -20103,11 +20784,11 @@ export interface BranchConfigurations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<BranchConfiguration>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<BranchConfigurationWithId>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getWithHttpOperationResponse(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BranchConfiguration>>;
+    getWithHttpOperationResponse(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BranchConfigurationWithId>>;
 
     /**
      * Gets the branch configuration
@@ -20130,7 +20811,7 @@ export interface BranchConfigurations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {BranchConfiguration} - The deserialized result object.
+     *                      @resolve {BranchConfigurationWithId} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -20138,22 +20819,177 @@ export interface BranchConfigurations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {BranchConfiguration} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link BranchConfiguration} for more information.
+     *                      {BranchConfigurationWithId} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link BranchConfigurationWithId} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    get(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BranchConfiguration>;
-    get(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.BranchConfiguration>): void;
-    get(branch: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BranchConfiguration>): void;
+    get(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BranchConfigurationWithId>;
+    get(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.BranchConfigurationWithId>): void;
+    get(branch: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BranchConfigurationWithId>): void;
 
 
     /**
      * Configures the branch for build
      *
      * @param {string} branch The branch name
+     *
+     * @param {object} params Parameters of the configuration
+     *
+     * @param {string} [params.trigger] Possible values include: 'continous',
+     * 'continuous', 'manual'
+     *
+     * @param {boolean} [params.testsEnabled]
+     *
+     * @param {boolean} [params.badgeIsEnabled]
+     *
+     * @param {boolean} [params.signed]
+     *
+     * @param {string} [params.cloneFromBranch] A configured branch name to clone
+     * from. If provided, all other parameters will be ignored. Only supported in
+     * POST requests.
+     *
+     * @param {object} [params.toolsets]
+     *
+     * @param {object} [params.toolsets.xcode]
+     *
+     * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
+     * project/workspace path
+     *
+     * @param {string} [params.toolsets.xcode.podfilePath] Path to CococaPods file,
+     * if present
+     *
+     * @param {string} [params.toolsets.xcode.cartfilePath] Path to Carthage file,
+     * if present
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileEncoded]
+     *
+     * @param {string} [params.toolsets.xcode.certificateEncoded]
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileFileId]
+     *
+     * @param {string} [params.toolsets.xcode.certificateFileId]
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileUploadId]
+     *
+     * @param {array} [params.toolsets.xcode.appExtensionProvisioningProfileFiles]
+     *
+     * @param {string} [params.toolsets.xcode.certificateUploadId]
+     *
+     * @param {string} [params.toolsets.xcode.certificatePassword]
+     *
+     * @param {string} [params.toolsets.xcode.scheme]
+     *
+     * @param {string} [params.toolsets.xcode.xcodeVersion] Xcode version used to
+     * build. Available versions can be found in "/xcode_versions" API. Default is
+     * latest stable version, at the time when the configuration is set.
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileFilename]
+     *
+     * @param {string} [params.toolsets.xcode.certificateFilename]
+     *
+     * @param {string} [params.toolsets.xcode.teamId]
+     *
+     * @param {boolean} [params.toolsets.xcode.automaticSigning]
+     *
+     * @param {string} [params.toolsets.xcode.xcodeProjectSha] The selected
+     * pbxproject hash to the repositroy
+     *
+     * @param {string} [params.toolsets.xcode.archiveConfiguration] The build
+     * configuration of the target to archive
+     *
+     * @param {string} [params.toolsets.xcode.targetToArchive] The target id of the
+     * selected scheme to archive
+     *
+     * @param {boolean} [params.toolsets.xcode.forceLegacyBuildSystem] Setting this
+     * to true forces the build to use Xcode legacy build system. Otherwise, the
+     * setting from workspace settings is used.
+     * By default new build system is used if workspace setting is not committed to
+     * the repository. Only used for iOS React Native app, with Xcode 10.
+     *
+     *
+     * @param {object} [params.toolsets.javascript]
+     *
+     * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
+     * package.json file for the main project, e.g. "package.json" or
+     * "myapp/package.json"
+     *
+     * @param {boolean} [params.toolsets.javascript.runTests] Whether to run Jest
+     * unit tests, via npm test, during the build
+     *
+     * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
+     * React Native from package.json files
+     *
+     * @param {object} [params.toolsets.xamarin]
+     *
+     * @param {string} [params.toolsets.xamarin.slnPath]
+     *
+     * @param {boolean} [params.toolsets.xamarin.isSimBuild]
+     *
+     * @param {string} [params.toolsets.xamarin.args]
+     *
+     * @param {string} [params.toolsets.xamarin.configuration]
+     *
+     * @param {string} [params.toolsets.xamarin.p12File]
+     *
+     * @param {string} [params.toolsets.xamarin.p12Pwd]
+     *
+     * @param {string} [params.toolsets.xamarin.provProfile]
+     *
+     * @param {string} [params.toolsets.xamarin.monoVersion]
+     *
+     * @param {string} [params.toolsets.xamarin.sdkBundle]
+     *
+     * @param {string} [params.toolsets.xamarin.symlink] Symlink of the SDK Bundle
+     * and Mono installation.
+     * The build will use the associated Mono bundled with related Xamarin SDK. If
+     * both symlink and monoVersion or sdkBundle are passed, the symlink is taking
+     * precedence. If non-existing symlink is passed, the current stable Mono
+     * version will be configured for building.
+     *
+     *
+     * @param {object} [params.toolsets.android]
+     *
+     * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
+     * Gradle wrapper script
+     *
+     * @param {string} [params.toolsets.android.module] The Gradle module to build
+     *
+     * @param {string} [params.toolsets.android.buildVariant] The Android build
+     * variant to build
+     *
+     * @param {boolean} [params.toolsets.android.runTests] Whether to run unit
+     * tests during the build (default)
+     *
+     * @param {boolean} [params.toolsets.android.runLint] Whether to run lint
+     * checks during the build (default)
+     *
+     * @param {boolean} [params.toolsets.android.isRoot] Whether it is the root
+     * module or not
+     *
+     * @param {boolean} [params.toolsets.android.automaticSigning] Whether to apply
+     * automatic signing or not
+     *
+     * @param {string} [params.toolsets.android.keystorePassword] The password of
+     * the keystore
+     *
+     * @param {string} [params.toolsets.android.keyAlias] The key alias
+     *
+     * @param {string} [params.toolsets.android.keyPassword] The key password
+     *
+     * @param {string} [params.toolsets.android.keystoreFilename] The name of the
+     * keystore file
+     *
+     * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
+     * encoded value
+     *
+     * @param {object} [params.artifactVersioning]
+     *
+     * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
+     * values include: 'buildId', 'timestamp'
      *
      * @param {string} ownerName The name of the owner
      *
@@ -20166,16 +21002,170 @@ export interface BranchConfigurations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<BranchConfiguration>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<BranchConfigurationWithId>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BranchConfiguration>>;
+    createWithHttpOperationResponse(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BranchConfigurationWithId>>;
 
     /**
      * Configures the branch for build
      *
      * @param {string} branch The branch name
+     *
+     * @param {object} params Parameters of the configuration
+     *
+     * @param {string} [params.trigger] Possible values include: 'continous',
+     * 'continuous', 'manual'
+     *
+     * @param {boolean} [params.testsEnabled]
+     *
+     * @param {boolean} [params.badgeIsEnabled]
+     *
+     * @param {boolean} [params.signed]
+     *
+     * @param {string} [params.cloneFromBranch] A configured branch name to clone
+     * from. If provided, all other parameters will be ignored. Only supported in
+     * POST requests.
+     *
+     * @param {object} [params.toolsets]
+     *
+     * @param {object} [params.toolsets.xcode]
+     *
+     * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
+     * project/workspace path
+     *
+     * @param {string} [params.toolsets.xcode.podfilePath] Path to CococaPods file,
+     * if present
+     *
+     * @param {string} [params.toolsets.xcode.cartfilePath] Path to Carthage file,
+     * if present
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileEncoded]
+     *
+     * @param {string} [params.toolsets.xcode.certificateEncoded]
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileFileId]
+     *
+     * @param {string} [params.toolsets.xcode.certificateFileId]
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileUploadId]
+     *
+     * @param {array} [params.toolsets.xcode.appExtensionProvisioningProfileFiles]
+     *
+     * @param {string} [params.toolsets.xcode.certificateUploadId]
+     *
+     * @param {string} [params.toolsets.xcode.certificatePassword]
+     *
+     * @param {string} [params.toolsets.xcode.scheme]
+     *
+     * @param {string} [params.toolsets.xcode.xcodeVersion] Xcode version used to
+     * build. Available versions can be found in "/xcode_versions" API. Default is
+     * latest stable version, at the time when the configuration is set.
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileFilename]
+     *
+     * @param {string} [params.toolsets.xcode.certificateFilename]
+     *
+     * @param {string} [params.toolsets.xcode.teamId]
+     *
+     * @param {boolean} [params.toolsets.xcode.automaticSigning]
+     *
+     * @param {string} [params.toolsets.xcode.xcodeProjectSha] The selected
+     * pbxproject hash to the repositroy
+     *
+     * @param {string} [params.toolsets.xcode.archiveConfiguration] The build
+     * configuration of the target to archive
+     *
+     * @param {string} [params.toolsets.xcode.targetToArchive] The target id of the
+     * selected scheme to archive
+     *
+     * @param {boolean} [params.toolsets.xcode.forceLegacyBuildSystem] Setting this
+     * to true forces the build to use Xcode legacy build system. Otherwise, the
+     * setting from workspace settings is used.
+     * By default new build system is used if workspace setting is not committed to
+     * the repository. Only used for iOS React Native app, with Xcode 10.
+     *
+     *
+     * @param {object} [params.toolsets.javascript]
+     *
+     * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
+     * package.json file for the main project, e.g. "package.json" or
+     * "myapp/package.json"
+     *
+     * @param {boolean} [params.toolsets.javascript.runTests] Whether to run Jest
+     * unit tests, via npm test, during the build
+     *
+     * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
+     * React Native from package.json files
+     *
+     * @param {object} [params.toolsets.xamarin]
+     *
+     * @param {string} [params.toolsets.xamarin.slnPath]
+     *
+     * @param {boolean} [params.toolsets.xamarin.isSimBuild]
+     *
+     * @param {string} [params.toolsets.xamarin.args]
+     *
+     * @param {string} [params.toolsets.xamarin.configuration]
+     *
+     * @param {string} [params.toolsets.xamarin.p12File]
+     *
+     * @param {string} [params.toolsets.xamarin.p12Pwd]
+     *
+     * @param {string} [params.toolsets.xamarin.provProfile]
+     *
+     * @param {string} [params.toolsets.xamarin.monoVersion]
+     *
+     * @param {string} [params.toolsets.xamarin.sdkBundle]
+     *
+     * @param {string} [params.toolsets.xamarin.symlink] Symlink of the SDK Bundle
+     * and Mono installation.
+     * The build will use the associated Mono bundled with related Xamarin SDK. If
+     * both symlink and monoVersion or sdkBundle are passed, the symlink is taking
+     * precedence. If non-existing symlink is passed, the current stable Mono
+     * version will be configured for building.
+     *
+     *
+     * @param {object} [params.toolsets.android]
+     *
+     * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
+     * Gradle wrapper script
+     *
+     * @param {string} [params.toolsets.android.module] The Gradle module to build
+     *
+     * @param {string} [params.toolsets.android.buildVariant] The Android build
+     * variant to build
+     *
+     * @param {boolean} [params.toolsets.android.runTests] Whether to run unit
+     * tests during the build (default)
+     *
+     * @param {boolean} [params.toolsets.android.runLint] Whether to run lint
+     * checks during the build (default)
+     *
+     * @param {boolean} [params.toolsets.android.isRoot] Whether it is the root
+     * module or not
+     *
+     * @param {boolean} [params.toolsets.android.automaticSigning] Whether to apply
+     * automatic signing or not
+     *
+     * @param {string} [params.toolsets.android.keystorePassword] The password of
+     * the keystore
+     *
+     * @param {string} [params.toolsets.android.keyAlias] The key alias
+     *
+     * @param {string} [params.toolsets.android.keyPassword] The key password
+     *
+     * @param {string} [params.toolsets.android.keystoreFilename] The name of the
+     * keystore file
+     *
+     * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
+     * encoded value
+     *
+     * @param {object} [params.artifactVersioning]
+     *
+     * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
+     * values include: 'buildId', 'timestamp'
      *
      * @param {string} ownerName The name of the owner
      *
@@ -20193,7 +21183,7 @@ export interface BranchConfigurations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {BranchConfiguration} - The deserialized result object.
+     *                      @resolve {BranchConfigurationWithId} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -20201,22 +21191,177 @@ export interface BranchConfigurations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {BranchConfiguration} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link BranchConfiguration} for more information.
+     *                      {BranchConfigurationWithId} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link BranchConfigurationWithId} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BranchConfiguration>;
-    create(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.BranchConfiguration>): void;
-    create(branch: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BranchConfiguration>): void;
+    create(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BranchConfigurationWithId>;
+    create(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, callback: ServiceCallback<models.BranchConfigurationWithId>): void;
+    create(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BranchConfigurationWithId>): void;
 
 
     /**
      * Reconfigures the branch for build
      *
      * @param {string} branch The branch name
+     *
+     * @param {object} params Parameters of the configuration
+     *
+     * @param {string} [params.trigger] Possible values include: 'continous',
+     * 'continuous', 'manual'
+     *
+     * @param {boolean} [params.testsEnabled]
+     *
+     * @param {boolean} [params.badgeIsEnabled]
+     *
+     * @param {boolean} [params.signed]
+     *
+     * @param {string} [params.cloneFromBranch] A configured branch name to clone
+     * from. If provided, all other parameters will be ignored. Only supported in
+     * POST requests.
+     *
+     * @param {object} [params.toolsets]
+     *
+     * @param {object} [params.toolsets.xcode]
+     *
+     * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
+     * project/workspace path
+     *
+     * @param {string} [params.toolsets.xcode.podfilePath] Path to CococaPods file,
+     * if present
+     *
+     * @param {string} [params.toolsets.xcode.cartfilePath] Path to Carthage file,
+     * if present
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileEncoded]
+     *
+     * @param {string} [params.toolsets.xcode.certificateEncoded]
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileFileId]
+     *
+     * @param {string} [params.toolsets.xcode.certificateFileId]
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileUploadId]
+     *
+     * @param {array} [params.toolsets.xcode.appExtensionProvisioningProfileFiles]
+     *
+     * @param {string} [params.toolsets.xcode.certificateUploadId]
+     *
+     * @param {string} [params.toolsets.xcode.certificatePassword]
+     *
+     * @param {string} [params.toolsets.xcode.scheme]
+     *
+     * @param {string} [params.toolsets.xcode.xcodeVersion] Xcode version used to
+     * build. Available versions can be found in "/xcode_versions" API. Default is
+     * latest stable version, at the time when the configuration is set.
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileFilename]
+     *
+     * @param {string} [params.toolsets.xcode.certificateFilename]
+     *
+     * @param {string} [params.toolsets.xcode.teamId]
+     *
+     * @param {boolean} [params.toolsets.xcode.automaticSigning]
+     *
+     * @param {string} [params.toolsets.xcode.xcodeProjectSha] The selected
+     * pbxproject hash to the repositroy
+     *
+     * @param {string} [params.toolsets.xcode.archiveConfiguration] The build
+     * configuration of the target to archive
+     *
+     * @param {string} [params.toolsets.xcode.targetToArchive] The target id of the
+     * selected scheme to archive
+     *
+     * @param {boolean} [params.toolsets.xcode.forceLegacyBuildSystem] Setting this
+     * to true forces the build to use Xcode legacy build system. Otherwise, the
+     * setting from workspace settings is used.
+     * By default new build system is used if workspace setting is not committed to
+     * the repository. Only used for iOS React Native app, with Xcode 10.
+     *
+     *
+     * @param {object} [params.toolsets.javascript]
+     *
+     * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
+     * package.json file for the main project, e.g. "package.json" or
+     * "myapp/package.json"
+     *
+     * @param {boolean} [params.toolsets.javascript.runTests] Whether to run Jest
+     * unit tests, via npm test, during the build
+     *
+     * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
+     * React Native from package.json files
+     *
+     * @param {object} [params.toolsets.xamarin]
+     *
+     * @param {string} [params.toolsets.xamarin.slnPath]
+     *
+     * @param {boolean} [params.toolsets.xamarin.isSimBuild]
+     *
+     * @param {string} [params.toolsets.xamarin.args]
+     *
+     * @param {string} [params.toolsets.xamarin.configuration]
+     *
+     * @param {string} [params.toolsets.xamarin.p12File]
+     *
+     * @param {string} [params.toolsets.xamarin.p12Pwd]
+     *
+     * @param {string} [params.toolsets.xamarin.provProfile]
+     *
+     * @param {string} [params.toolsets.xamarin.monoVersion]
+     *
+     * @param {string} [params.toolsets.xamarin.sdkBundle]
+     *
+     * @param {string} [params.toolsets.xamarin.symlink] Symlink of the SDK Bundle
+     * and Mono installation.
+     * The build will use the associated Mono bundled with related Xamarin SDK. If
+     * both symlink and monoVersion or sdkBundle are passed, the symlink is taking
+     * precedence. If non-existing symlink is passed, the current stable Mono
+     * version will be configured for building.
+     *
+     *
+     * @param {object} [params.toolsets.android]
+     *
+     * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
+     * Gradle wrapper script
+     *
+     * @param {string} [params.toolsets.android.module] The Gradle module to build
+     *
+     * @param {string} [params.toolsets.android.buildVariant] The Android build
+     * variant to build
+     *
+     * @param {boolean} [params.toolsets.android.runTests] Whether to run unit
+     * tests during the build (default)
+     *
+     * @param {boolean} [params.toolsets.android.runLint] Whether to run lint
+     * checks during the build (default)
+     *
+     * @param {boolean} [params.toolsets.android.isRoot] Whether it is the root
+     * module or not
+     *
+     * @param {boolean} [params.toolsets.android.automaticSigning] Whether to apply
+     * automatic signing or not
+     *
+     * @param {string} [params.toolsets.android.keystorePassword] The password of
+     * the keystore
+     *
+     * @param {string} [params.toolsets.android.keyAlias] The key alias
+     *
+     * @param {string} [params.toolsets.android.keyPassword] The key password
+     *
+     * @param {string} [params.toolsets.android.keystoreFilename] The name of the
+     * keystore file
+     *
+     * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
+     * encoded value
+     *
+     * @param {object} [params.artifactVersioning]
+     *
+     * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
+     * values include: 'buildId', 'timestamp'
      *
      * @param {string} ownerName The name of the owner
      *
@@ -20229,16 +21374,170 @@ export interface BranchConfigurations {
      *
      * @returns {Promise} A promise is returned
      *
-     * @resolve {HttpOperationResponse<BranchConfiguration>} - The deserialized result object.
+     * @resolve {HttpOperationResponse<BranchConfigurationWithId>} - The deserialized result object.
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    updateWithHttpOperationResponse(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BranchConfiguration>>;
+    updateWithHttpOperationResponse(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.BranchConfigurationWithId>>;
 
     /**
      * Reconfigures the branch for build
      *
      * @param {string} branch The branch name
+     *
+     * @param {object} params Parameters of the configuration
+     *
+     * @param {string} [params.trigger] Possible values include: 'continous',
+     * 'continuous', 'manual'
+     *
+     * @param {boolean} [params.testsEnabled]
+     *
+     * @param {boolean} [params.badgeIsEnabled]
+     *
+     * @param {boolean} [params.signed]
+     *
+     * @param {string} [params.cloneFromBranch] A configured branch name to clone
+     * from. If provided, all other parameters will be ignored. Only supported in
+     * POST requests.
+     *
+     * @param {object} [params.toolsets]
+     *
+     * @param {object} [params.toolsets.xcode]
+     *
+     * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
+     * project/workspace path
+     *
+     * @param {string} [params.toolsets.xcode.podfilePath] Path to CococaPods file,
+     * if present
+     *
+     * @param {string} [params.toolsets.xcode.cartfilePath] Path to Carthage file,
+     * if present
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileEncoded]
+     *
+     * @param {string} [params.toolsets.xcode.certificateEncoded]
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileFileId]
+     *
+     * @param {string} [params.toolsets.xcode.certificateFileId]
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileUploadId]
+     *
+     * @param {array} [params.toolsets.xcode.appExtensionProvisioningProfileFiles]
+     *
+     * @param {string} [params.toolsets.xcode.certificateUploadId]
+     *
+     * @param {string} [params.toolsets.xcode.certificatePassword]
+     *
+     * @param {string} [params.toolsets.xcode.scheme]
+     *
+     * @param {string} [params.toolsets.xcode.xcodeVersion] Xcode version used to
+     * build. Available versions can be found in "/xcode_versions" API. Default is
+     * latest stable version, at the time when the configuration is set.
+     *
+     * @param {string} [params.toolsets.xcode.provisioningProfileFilename]
+     *
+     * @param {string} [params.toolsets.xcode.certificateFilename]
+     *
+     * @param {string} [params.toolsets.xcode.teamId]
+     *
+     * @param {boolean} [params.toolsets.xcode.automaticSigning]
+     *
+     * @param {string} [params.toolsets.xcode.xcodeProjectSha] The selected
+     * pbxproject hash to the repositroy
+     *
+     * @param {string} [params.toolsets.xcode.archiveConfiguration] The build
+     * configuration of the target to archive
+     *
+     * @param {string} [params.toolsets.xcode.targetToArchive] The target id of the
+     * selected scheme to archive
+     *
+     * @param {boolean} [params.toolsets.xcode.forceLegacyBuildSystem] Setting this
+     * to true forces the build to use Xcode legacy build system. Otherwise, the
+     * setting from workspace settings is used.
+     * By default new build system is used if workspace setting is not committed to
+     * the repository. Only used for iOS React Native app, with Xcode 10.
+     *
+     *
+     * @param {object} [params.toolsets.javascript]
+     *
+     * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
+     * package.json file for the main project, e.g. "package.json" or
+     * "myapp/package.json"
+     *
+     * @param {boolean} [params.toolsets.javascript.runTests] Whether to run Jest
+     * unit tests, via npm test, during the build
+     *
+     * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
+     * React Native from package.json files
+     *
+     * @param {object} [params.toolsets.xamarin]
+     *
+     * @param {string} [params.toolsets.xamarin.slnPath]
+     *
+     * @param {boolean} [params.toolsets.xamarin.isSimBuild]
+     *
+     * @param {string} [params.toolsets.xamarin.args]
+     *
+     * @param {string} [params.toolsets.xamarin.configuration]
+     *
+     * @param {string} [params.toolsets.xamarin.p12File]
+     *
+     * @param {string} [params.toolsets.xamarin.p12Pwd]
+     *
+     * @param {string} [params.toolsets.xamarin.provProfile]
+     *
+     * @param {string} [params.toolsets.xamarin.monoVersion]
+     *
+     * @param {string} [params.toolsets.xamarin.sdkBundle]
+     *
+     * @param {string} [params.toolsets.xamarin.symlink] Symlink of the SDK Bundle
+     * and Mono installation.
+     * The build will use the associated Mono bundled with related Xamarin SDK. If
+     * both symlink and monoVersion or sdkBundle are passed, the symlink is taking
+     * precedence. If non-existing symlink is passed, the current stable Mono
+     * version will be configured for building.
+     *
+     *
+     * @param {object} [params.toolsets.android]
+     *
+     * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
+     * Gradle wrapper script
+     *
+     * @param {string} [params.toolsets.android.module] The Gradle module to build
+     *
+     * @param {string} [params.toolsets.android.buildVariant] The Android build
+     * variant to build
+     *
+     * @param {boolean} [params.toolsets.android.runTests] Whether to run unit
+     * tests during the build (default)
+     *
+     * @param {boolean} [params.toolsets.android.runLint] Whether to run lint
+     * checks during the build (default)
+     *
+     * @param {boolean} [params.toolsets.android.isRoot] Whether it is the root
+     * module or not
+     *
+     * @param {boolean} [params.toolsets.android.automaticSigning] Whether to apply
+     * automatic signing or not
+     *
+     * @param {string} [params.toolsets.android.keystorePassword] The password of
+     * the keystore
+     *
+     * @param {string} [params.toolsets.android.keyAlias] The key alias
+     *
+     * @param {string} [params.toolsets.android.keyPassword] The key password
+     *
+     * @param {string} [params.toolsets.android.keystoreFilename] The name of the
+     * keystore file
+     *
+     * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
+     * encoded value
+     *
+     * @param {object} [params.artifactVersioning]
+     *
+     * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
+     * values include: 'buildId', 'timestamp'
      *
      * @param {string} ownerName The name of the owner
      *
@@ -20256,7 +21555,7 @@ export interface BranchConfigurations {
      *
      * {Promise} A promise is returned.
      *
-     *                      @resolve {BranchConfiguration} - The deserialized result object.
+     *                      @resolve {BranchConfigurationWithId} - The deserialized result object.
      *
      *                      @reject {Error|ServiceError} - The error object.
      *
@@ -20264,16 +21563,17 @@ export interface BranchConfigurations {
      *
      *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
      *
-     *                      {BranchConfiguration} [result]   - The deserialized result object if an error did not occur.
-     *                      See {@link BranchConfiguration} for more information.
+     *                      {BranchConfigurationWithId} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link BranchConfigurationWithId} for more
+     *                      information.
      *
      *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    update(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BranchConfiguration>;
-    update(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.BranchConfiguration>): void;
-    update(branch: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BranchConfiguration>): void;
+    update(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.BranchConfigurationWithId>;
+    update(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, callback: ServiceCallback<models.BranchConfigurationWithId>): void;
+    update(branch: string, params: models.BranchConfiguration, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.BranchConfigurationWithId>): void;
 
 
     /**
@@ -20286,6 +21586,8 @@ export interface BranchConfigurations {
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.payload]
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -20296,7 +21598,7 @@ export interface BranchConfigurations {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SuccessResponse>>;
+    deleteMethodWithHttpOperationResponse(branch: string, ownerName: string, appName: string, options?: { payload? : any, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SuccessResponse>>;
 
     /**
      * Deletes the branch build configuration
@@ -20308,6 +21610,8 @@ export interface BranchConfigurations {
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.payload]
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -20334,9 +21638,9 @@ export interface BranchConfigurations {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(branch: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.SuccessResponse>;
+    deleteMethod(branch: string, ownerName: string, appName: string, options?: { payload? : any, customHeaders? : { [headerName: string]: string; } }): Promise<models.SuccessResponse>;
     deleteMethod(branch: string, ownerName: string, appName: string, callback: ServiceCallback<models.SuccessResponse>): void;
-    deleteMethod(branch: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SuccessResponse>): void;
+    deleteMethod(branch: string, ownerName: string, appName: string, options: { payload? : any, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.SuccessResponse>): void;
 }
 
 /**
@@ -20358,7 +21662,7 @@ export interface Identity {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.acAuthorizationMicrosoftGraph] MSGraph Auth Token
+     * @param {string} [options.acAuthorizationAADGraph] MSGraph Auth Token
      *
      * @param {string} [options.searchTerm] User search term
      *
@@ -20371,7 +21675,7 @@ export interface Identity {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    getUsersWithHttpOperationResponse(ownerName: string, appName: string, options?: { acAuthorizationMicrosoftGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
+    getUsersWithHttpOperationResponse(ownerName: string, appName: string, options?: { acAuthorizationAADGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<any>>;
 
     /**
      * @summary Returns users of a tenant.
@@ -20383,7 +21687,7 @@ export interface Identity {
      *
      * @param {object} [options] Optional Parameters.
      *
-     * @param {string} [options.acAuthorizationMicrosoftGraph] MSGraph Auth Token
+     * @param {string} [options.acAuthorizationAADGraph] MSGraph Auth Token
      *
      * @param {string} [options.searchTerm] User search term
      *
@@ -20411,9 +21715,9 @@ export interface Identity {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    getUsers(ownerName: string, appName: string, options?: { acAuthorizationMicrosoftGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
+    getUsers(ownerName: string, appName: string, options?: { acAuthorizationAADGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }): Promise<any>;
     getUsers(ownerName: string, appName: string, callback: ServiceCallback<any>): void;
-    getUsers(ownerName: string, appName: string, options: { acAuthorizationMicrosoftGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
+    getUsers(ownerName: string, appName: string, options: { acAuthorizationAADGraph? : string, searchTerm? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<any>): void;
 }
 
 /**
@@ -20551,6 +21855,8 @@ export interface AppleMapping {
      *
      * @param {object} [options] Optional Parameters.
      *
+     * @param {string} [options.body]
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -20560,7 +21866,7 @@ export interface AppleMapping {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deleteMethodWithHttpOperationResponse(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
+    deleteMethodWithHttpOperationResponse(ownerName: string, appName: string, options?: { body? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
      * Delete mapping of apple app to an existing app in apple store.
@@ -20570,6 +21876,8 @@ export interface AppleMapping {
      * @param {string} appName The name of the application
      *
      * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.body]
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -20595,9 +21903,9 @@ export interface AppleMapping {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deleteMethod(ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<void>;
+    deleteMethod(ownerName: string, appName: string, options?: { body? : string, customHeaders? : { [headerName: string]: string; } }): Promise<void>;
     deleteMethod(ownerName: string, appName: string, callback: ServiceCallback<void>): void;
-    deleteMethod(ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
+    deleteMethod(ownerName: string, appName: string, options: { body? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<void>): void;
 
 
     /**
@@ -20703,7 +22011,7 @@ export interface Analytics {
     /**
      * Count of active versions in the time range ordered by version.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -20712,7 +22020,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
      * will fetch all results)
@@ -20733,7 +22041,7 @@ export interface Analytics {
     /**
      * Count of active versions in the time range ordered by version.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -20742,7 +22050,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
      * will fetch all results)
@@ -20780,9 +22088,9 @@ export interface Analytics {
 
 
     /**
-     * Count of sessions per device in the time range
+     * Count of sessions per device in the time range.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} interval Size of interval in ISO 8601 duration format.
      * (PnYnMnDTnHnMnS|PnW|P<date>T<time>). The valid durations are 1 day (P1D), 1
@@ -20795,7 +22103,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -20811,9 +22119,9 @@ export interface Analytics {
     perDeviceCountsWithHttpOperationResponse(start: Date|string, interval: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SessionsPerDevice>>;
 
     /**
-     * Count of sessions per device in the time range
+     * Count of sessions per device in the time range.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} interval Size of interval in ISO 8601 duration format.
      * (PnYnMnDTnHnMnS|PnW|P<date>T<time>). The valid durations are 1 day (P1D), 1
@@ -20826,7 +22134,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -20861,9 +22169,9 @@ export interface Analytics {
 
 
     /**
-     * Gets session duration .
+     * Gets session duration.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -20872,7 +22180,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -20888,9 +22196,9 @@ export interface Analytics {
     sessionDurationsDistributionMethodWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.SessionDurationsDistribution>>;
 
     /**
-     * Gets session duration .
+     * Gets session duration.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -20899,7 +22207,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -20937,7 +22245,7 @@ export interface Analytics {
     /**
      * Count of sessions in the time range.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} interval Size of interval in ISO 8601 duration format.
      * (PnYnMnDTnHnMnS|PnW|P<date>T<time>). The valid durations are 1 day (P1D), 1
@@ -20950,7 +22258,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -20968,7 +22276,7 @@ export interface Analytics {
     /**
      * Count of sessions in the time range.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} interval Size of interval in ISO 8601 duration format.
      * (PnYnMnDTnHnMnS|PnW|P<date>T<time>). The valid durations are 1 day (P1D), 1
@@ -20981,7 +22289,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -21015,9 +22323,9 @@ export interface Analytics {
 
 
     /**
-     * Places in the time range
+     * Places in the time range.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21026,7 +22334,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
      * will fetch all results)
@@ -21045,9 +22353,9 @@ export interface Analytics {
     placeCountsWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Places>>;
 
     /**
-     * Places in the time range
+     * Places in the time range.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21056,7 +22364,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
      * will fetch all results)
@@ -21094,9 +22402,9 @@ export interface Analytics {
 
 
     /**
-     * OSes in the time range
+     * OSes in the time range.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21105,7 +22413,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
      * will fetch all results)
@@ -21124,9 +22432,9 @@ export interface Analytics {
     operatingSystemCountsWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.OSes>>;
 
     /**
-     * OSes in the time range
+     * OSes in the time range.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21135,7 +22443,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
      * will fetch all results)
@@ -21173,9 +22481,9 @@ export interface Analytics {
 
 
     /**
-     * models in the time range
+     * Models in the time range.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21184,7 +22492,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
      * will fetch all results)
@@ -21203,9 +22511,9 @@ export interface Analytics {
     modelCountsWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.AnalyticsModels>>;
 
     /**
-     * models in the time range
+     * Models in the time range.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21214,7 +22522,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
      * will fetch all results)
@@ -21321,9 +22629,9 @@ export interface Analytics {
 
 
     /**
-     * languages in the time range
+     * Languages in the time range.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21332,7 +22640,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
      * will fetch all results)
@@ -21351,9 +22659,9 @@ export interface Analytics {
     languageCountsWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, top? : number, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Languages>>;
 
     /**
-     * languages in the time range
+     * Languages in the time range.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21362,7 +22670,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
      * will fetch all results)
@@ -21471,13 +22779,12 @@ export interface Analytics {
 
     /**
      * Event properties value counts during the time range in descending order.
-     * Limited up to 5 values.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
-     * @param {string} eventPropertyName The id of the event property
+     * @param {string} eventPropertyName The id of the event property.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21486,11 +22793,12 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
-     * @param {number} [options.top] The number of property values to return
+     * @param {number} [options.top] The number of property values to return. Set
+     * to 0 in order to fetch all results available.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -21505,13 +22813,12 @@ export interface Analytics {
 
     /**
      * Event properties value counts during the time range in descending order.
-     * Limited up to 5 values.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
-     * @param {string} eventPropertyName The id of the event property
+     * @param {string} eventPropertyName The id of the event property.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21520,11 +22827,12 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
-     * @param {number} [options.top] The number of property values to return
+     * @param {number} [options.top] The number of property values to return. Set
+     * to 0 in order to fetch all results available.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -21557,9 +22865,9 @@ export interface Analytics {
 
 
     /**
-     * Event properties.  Up to the first 5 received properties.
+     * Event properties.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21579,9 +22887,9 @@ export interface Analytics {
     eventPropertiesMethodWithHttpOperationResponse(eventName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.EventProperties>>;
 
     /**
-     * Event properties.  Up to the first 5 received properties.
+     * Event properties.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21622,9 +22930,9 @@ export interface Analytics {
     /**
      * Count of events by interval in the time range.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21633,7 +22941,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -21651,9 +22959,9 @@ export interface Analytics {
     /**
      * Count of events by interval in the time range.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21662,7 +22970,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -21699,9 +23007,9 @@ export interface Analytics {
     /**
      * Count of devices for an event by interval in the time range.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21710,7 +23018,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -21728,9 +23036,9 @@ export interface Analytics {
     /**
      * Count of devices for an event by interval in the time range.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21739,7 +23047,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -21776,9 +23084,9 @@ export interface Analytics {
     /**
      * Count of events per session by interval in the time range.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21787,7 +23095,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -21805,9 +23113,9 @@ export interface Analytics {
     /**
      * Count of events per session by interval in the time range.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21816,7 +23124,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -21853,9 +23161,9 @@ export interface Analytics {
     /**
      * Count of events per device by interval in the time range.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21864,7 +23172,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -21882,9 +23190,9 @@ export interface Analytics {
     /**
      * Count of events per device by interval in the time range.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21893,7 +23201,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -21928,9 +23236,9 @@ export interface Analytics {
 
 
     /**
-     * Delete the set of Events with the specified event names
+     * Delete the set of Events with the specified event names.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21950,9 +23258,9 @@ export interface Analytics {
     eventsDeleteWithHttpOperationResponse(eventName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
-     * Delete the set of Events with the specified event names
+     * Delete the set of Events with the specified event names.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -21992,7 +23300,7 @@ export interface Analytics {
     /**
      * Count of active events in the time range ordered by event.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -22001,11 +23309,11 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
-     * @param {array} [options.eventName] to select the specific events
+     * @param {array} [options.eventName] To select the specific events.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
      * will fetch all results)
@@ -22035,7 +23343,7 @@ export interface Analytics {
     /**
      * Count of active events in the time range ordered by event.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -22044,11 +23352,11 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
-     * @param {array} [options.eventName] to select the specific events
+     * @param {array} [options.eventName] To select the specific events.
      *
      * @param {number} [options.top] The maximum number of results to return. (0
      * will fetch all results)
@@ -22095,9 +23403,9 @@ export interface Analytics {
 
 
     /**
-     * Delete the set of Events with the specified event names
+     * Delete the set of Events with the specified event names.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -22117,9 +23425,9 @@ export interface Analytics {
     eventsDeleteLogsWithHttpOperationResponse(eventName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<void>>;
 
     /**
-     * Delete the set of Events with the specified event names
+     * Delete the set of Events with the specified event names.
      *
-     * @param {string} eventName The id of the event
+     * @param {string} eventName The id of the event.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -22224,7 +23532,7 @@ export interface Analytics {
      * selected versions. Api will return -1 if crash devices is greater than
      * active devices.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} version
      *
@@ -22235,7 +23543,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -22253,7 +23561,7 @@ export interface Analytics {
      * selected versions. Api will return -1 if crash devices is greater than
      * active devices.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} version
      *
@@ -22264,7 +23572,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -22303,7 +23611,7 @@ export interface Analytics {
      * Overall crashes and affected users count of the selected crash group with
      * selected version. Available for UWP apps only.
      *
-     * @param {string} crashGroupId The id of the crash group
+     * @param {string} crashGroupId The id of the crash group.
      *
      * @param {string} version
      *
@@ -22330,7 +23638,7 @@ export interface Analytics {
      * Overall crashes and affected users count of the selected crash group with
      * selected version. Available for UWP apps only.
      *
-     * @param {string} crashGroupId The id of the crash group
+     * @param {string} crashGroupId The id of the crash group.
      *
      * @param {string} version
      *
@@ -22373,10 +23681,10 @@ export interface Analytics {
     /**
      * @summary Available for UWP apps only.
      *
-     * top OSes of the selected crash group with selected version. Available for
+     * Top OSes of the selected crash group with selected version. Available for
      * UWP apps only.
      *
-     * @param {string} crashGroupId The id of the crash group
+     * @param {string} crashGroupId The id of the crash group.
      *
      * @param {string} version
      *
@@ -22403,10 +23711,10 @@ export interface Analytics {
     /**
      * @summary Available for UWP apps only.
      *
-     * top OSes of the selected crash group with selected version. Available for
+     * Top OSes of the selected crash group with selected version. Available for
      * UWP apps only.
      *
-     * @param {string} crashGroupId The id of the crash group
+     * @param {string} crashGroupId The id of the crash group.
      *
      * @param {string} version
      *
@@ -22453,10 +23761,10 @@ export interface Analytics {
     /**
      * @summary Available for UWP apps only.
      *
-     * top models of the selected crash group with selected version. Available for
+     * Top models of the selected crash group with selected version. Available for
      * UWP apps only.
      *
-     * @param {string} crashGroupId The id of the crash group
+     * @param {string} crashGroupId The id of the crash group.
      *
      * @param {string} version
      *
@@ -22483,10 +23791,10 @@ export interface Analytics {
     /**
      * @summary Available for UWP apps only.
      *
-     * top models of the selected crash group with selected version. Available for
+     * Top models of the selected crash group with selected version. Available for
      * UWP apps only.
      *
-     * @param {string} crashGroupId The id of the crash group
+     * @param {string} crashGroupId The id of the crash group.
      *
      * @param {string} version
      *
@@ -22535,11 +23843,11 @@ export interface Analytics {
      * Count of crashes by day in the time range of the selected crash group with
      * selected version. Available for UWP apps only.
      *
-     * @param {string} crashGroupId The id of the crash group
+     * @param {string} crashGroupId The id of the crash group.
      *
      * @param {string} version
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -22548,7 +23856,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -22567,11 +23875,11 @@ export interface Analytics {
      * Count of crashes by day in the time range of the selected crash group with
      * selected version. Available for UWP apps only.
      *
-     * @param {string} crashGroupId The id of the crash group
+     * @param {string} crashGroupId The id of the crash group.
      *
      * @param {string} version
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -22580,7 +23888,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -22614,7 +23922,7 @@ export interface Analytics {
 
     /**
      * Overall crashes and affected users count of the selected crash groups with
-     * selected versions
+     * selected versions.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -22637,7 +23945,7 @@ export interface Analytics {
 
     /**
      * Overall crashes and affected users count of the selected crash groups with
-     * selected versions
+     * selected versions.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -22682,7 +23990,7 @@ export interface Analytics {
      * Count of crashes by day in the time range based the selected versions.
      * Available for UWP apps only.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -22691,7 +23999,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -22712,7 +24020,7 @@ export interface Analytics {
      * Count of crashes by day in the time range based the selected versions.
      * Available for UWP apps only.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
      *
      * @param {string} ownerName The name of the owner
      *
@@ -22721,7 +24029,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -23364,7 +24672,9 @@ export interface Analytics {
     /**
      * Count of active devices by interval in the time range.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
+     *
+     * @param {string} appBuild
      *
      * @param {string} ownerName The name of the owner
      *
@@ -23373,7 +24683,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -23386,12 +24696,14 @@ export interface Analytics {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    deviceCountsWithHttpOperationResponse(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ActiveDeviceCounts>>;
+    deviceCountsWithHttpOperationResponse(start: Date|string, appBuild: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ActiveDeviceCounts>>;
 
     /**
      * Count of active devices by interval in the time range.
      *
-     * @param {date} start Start date time in data in ISO 8601 date time format
+     * @param {date} start Start date time in data in ISO 8601 date time format.
+     *
+     * @param {string} appBuild
      *
      * @param {string} ownerName The name of the owner
      *
@@ -23400,7 +24712,7 @@ export interface Analytics {
      * @param {object} [options] Optional Parameters.
      *
      * @param {date} [options.end] Last date time in data in ISO 8601 date time
-     * format
+     * format.
      *
      * @param {array} [options.versions]
      *
@@ -23429,9 +24741,9 @@ export interface Analytics {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    deviceCounts(start: Date|string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.ActiveDeviceCounts>;
-    deviceCounts(start: Date|string, ownerName: string, appName: string, callback: ServiceCallback<models.ActiveDeviceCounts>): void;
-    deviceCounts(start: Date|string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ActiveDeviceCounts>): void;
+    deviceCounts(start: Date|string, appBuild: string, ownerName: string, appName: string, options?: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }): Promise<models.ActiveDeviceCounts>;
+    deviceCounts(start: Date|string, appBuild: string, ownerName: string, appName: string, callback: ServiceCallback<models.ActiveDeviceCounts>): void;
+    deviceCounts(start: Date|string, appBuild: string, ownerName: string, appName: string, options: { end? : Date, versions? : string[], customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ActiveDeviceCounts>): void;
 }
 
 /**

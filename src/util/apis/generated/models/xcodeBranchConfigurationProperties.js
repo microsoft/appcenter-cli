@@ -17,7 +17,7 @@
 class XcodeBranchConfigurationProperties {
   /**
    * Create a XcodeBranchConfigurationProperties.
-   * @property {string} projectOrWorkspacePath Xcode project/workspace path
+   * @property {string} [projectOrWorkspacePath] Xcode project/workspace path
    * @property {string} [podfilePath] Path to CococaPods file, if present
    * @property {string} [cartfilePath] Path to Carthage file, if present
    * @property {string} [provisioningProfileEncoded]
@@ -28,8 +28,10 @@ class XcodeBranchConfigurationProperties {
    * @property {array} [appExtensionProvisioningProfileFiles]
    * @property {string} [certificateUploadId]
    * @property {string} [certificatePassword]
-   * @property {string} scheme
-   * @property {string} xcodeVersion
+   * @property {string} [scheme]
+   * @property {string} [xcodeVersion] Xcode version used to build. Available
+   * versions can be found in "/xcode_versions" API. Default is latest stable
+   * version, at the time when the configuration is set.
    * @property {string} [provisioningProfileFilename]
    * @property {string} [certificateFilename]
    * @property {string} [teamId]
@@ -40,6 +42,11 @@ class XcodeBranchConfigurationProperties {
    * target to archive
    * @property {string} [targetToArchive] The target id of the selected scheme
    * to archive
+   * @property {boolean} [forceLegacyBuildSystem] Setting this to true forces
+   * the build to use Xcode legacy build system. Otherwise, the setting from
+   * workspace settings is used.
+   * By default new build system is used if workspace setting is not committed
+   * to the repository. Only used for iOS React Native app, with Xcode 10.
    */
   constructor() {
   }
@@ -59,7 +66,7 @@ class XcodeBranchConfigurationProperties {
         className: 'XcodeBranchConfigurationProperties',
         modelProperties: {
           projectOrWorkspacePath: {
-            required: true,
+            required: false,
             serializedName: 'projectOrWorkspacePath',
             type: {
               name: 'String'
@@ -144,14 +151,14 @@ class XcodeBranchConfigurationProperties {
             }
           },
           scheme: {
-            required: true,
+            required: false,
             serializedName: 'scheme',
             type: {
               name: 'String'
             }
           },
           xcodeVersion: {
-            required: true,
+            required: false,
             serializedName: 'xcodeVersion',
             type: {
               name: 'String'
@@ -204,6 +211,13 @@ class XcodeBranchConfigurationProperties {
             serializedName: 'targetToArchive',
             type: {
               name: 'String'
+            }
+          },
+          forceLegacyBuildSystem: {
+            required: false,
+            serializedName: 'forceLegacyBuildSystem',
+            type: {
+              name: 'Boolean'
             }
           }
         }

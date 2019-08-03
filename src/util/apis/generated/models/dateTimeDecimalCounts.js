@@ -16,8 +16,8 @@
 class DateTimeDecimalCounts {
   /**
    * Create a DateTimeDecimalCounts.
-   * @property {string} [datetime] the ISO 8601 datetime
-   * @property {number} [count] decimal count of the object
+   * @property {string} [datetime] The ISO 8601 datetime.
+   * @property {number} [count] Decimal count of the object.
    */
   constructor() {
   }

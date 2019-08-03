@@ -64,7 +64,7 @@ class InvitationDetailResponse {
    * subscription is internal Microsoft subscription
    * @property {string} [app.platform] The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Unity', 'Electron', 'Xamarin', 'Unknown'
+   * 'Unity', 'Electron', 'Xamarin', 'WPF', 'WinForms', 'Unknown'
    * @property {string} [app.origin] The creation origin of this app. Possible
    * values include: 'appcenter', 'hockeyapp', 'codepush'
    * @property {string} [app.createdAt] The created date of this app
