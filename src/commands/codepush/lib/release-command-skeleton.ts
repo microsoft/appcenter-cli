@@ -2,16 +2,13 @@ import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName,
 import { CommandArgs } from "../../../util/commandline/command";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
-import { getUser } from "../../../util/profile/index";
 import { inspect } from "util";
 import * as fs from "fs";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import chalk from "chalk";
 import { sign, zip } from "../lib/update-contents-tasks";
 import { isBinaryOrZip, getLastFolderInPath, moveReleaseFilesInTmpFolder, isDirectory } from "../lib/file-utils";
-import { environments } from "../lib/environment";
 import { isValidRange, isValidRollout, isValidDeployment, validateVersion } from "../lib/validation-utils";
-import { getTokenFromEnvironmentVar } from "../../../util/profile/environment-vars";
 import AppCenterCodePushRelease from "./appcenter-release";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-skeleton");
@@ -103,18 +100,18 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
 
     try {
       const app = this.app;
-      const serverUrl = this.getServerUrl();
-      const token = this.token || getTokenFromEnvironmentVar() || await getUser().accessToken;
 
       this.checkTargetBinaryVersion(this.targetBinaryVersion);
 
-      await out.progress("Creating CodePush release...",  this.releaseStrategy.release(client, app, this.deploymentName, updateContentsZipPath, {
-        appVersion: this.targetBinaryVersion,
+      const releaseUpload = await this.releaseStrategy.upload(client, app, this.deploymentName, updateContentsZipPath);
+      await out.progress("Creating CodePush release...",  this.releaseStrategy.release(client, app, this.deploymentName, {
+        releaseUpload: releaseUpload,
+        targetBinaryVersion: this.targetBinaryVersion,
         description: this.description,
-        isDisabled: this.disabled,
-        isMandatory: this.mandatory,
+        disabled: this.disabled,
+        mandatory: this.mandatory,
         rollout: this.rollout
-      }, token, serverUrl));
+      }));
 
       out.text(`Successfully released an update containing the "${this.updateContentsPath}" `
         + `${fs.lstatSync(this.updateContentsPath).isDirectory() ? "directory" : "file"}`
@@ -141,22 +138,6 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
 
     if (warningVersion) {
       out.text(`\nYour target-binary-version "${version}" will be treated as "${warningVersion}".\n`);
-    }
-  }
-
-  private getServerUrl(): string | undefined {
-    const environment = environments(this.getEnvironmentName());
-    return environment && environment.managementEndpoint;
-  }
-
-  private getEnvironmentName(): string | undefined {
-    if (this.environmentName) {
-      return this.environmentName;
-    }
-
-    const user = getUser();
-    if (user) {
-      return user.environment;
     }
   }
 
