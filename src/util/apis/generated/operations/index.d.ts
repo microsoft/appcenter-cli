@@ -13827,6 +13827,9 @@ export interface ReleaseUploads {
      *
      * @param {number} [options.releaseId] The ID of the release.
      *
+     * @param {string} [options.buildVersion] The build version of the uploaded
+     * binary
+     *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
      *
@@ -13836,7 +13839,7 @@ export interface ReleaseUploads {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(ownerName: string, appName: string, options?: { releaseId? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ReleaseUploadBeginResponse>>;
+    createWithHttpOperationResponse(ownerName: string, appName: string, options?: { releaseId? : number, buildVersion? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.ReleaseUploadBeginResponse>>;
 
     /**
      * Begins the upload process for a new release for the specified application.
@@ -13848,6 +13851,9 @@ export interface ReleaseUploads {
      * @param {object} [options] Optional Parameters.
      *
      * @param {number} [options.releaseId] The ID of the release.
+     *
+     * @param {string} [options.buildVersion] The build version of the uploaded
+     * binary
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -13875,9 +13881,9 @@ export interface ReleaseUploads {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(ownerName: string, appName: string, options?: { releaseId? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.ReleaseUploadBeginResponse>;
+    create(ownerName: string, appName: string, options?: { releaseId? : number, buildVersion? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.ReleaseUploadBeginResponse>;
     create(ownerName: string, appName: string, callback: ServiceCallback<models.ReleaseUploadBeginResponse>): void;
-    create(ownerName: string, appName: string, options: { releaseId? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseUploadBeginResponse>): void;
+    create(ownerName: string, appName: string, options: { releaseId? : number, buildVersion? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.ReleaseUploadBeginResponse>): void;
 }
 
 /**

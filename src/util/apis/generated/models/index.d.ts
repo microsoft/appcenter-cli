@@ -4173,6 +4173,10 @@ export interface ReleaseUploadBeginRequest {
    * The ID of the release.
   */
   releaseId?: number;
+  /**
+   * The build version of the uploaded binary
+  */
+  buildVersion?: string;
 }
 
 /**

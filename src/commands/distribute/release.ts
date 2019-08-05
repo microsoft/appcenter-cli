@@ -20,6 +20,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @hasArg
   public filePath: string;
 
+  @help("Build version parameter required for .zip and .msi files")
+  @shortName("b")
+  @longName("build-version")
+  @hasArg
+  public buildVersion: string;
+
   @help("Distribution group name")
   @shortName("g")
   @longName("group")
@@ -97,6 +103,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
     if (!_.isNil(this.releaseNotes) && !_.isNil(this.releaseNotesFile)) {
       throw failure(ErrorCodes.InvalidParameter, "'--release-notes' and '--release-notes-file' switches are mutually exclusive");
     }
+    if (_.isNil(this.buildVersion)) {
+      const extension = this.filePath.substring(this.filePath.lastIndexOf(".")).toLowerCase();
+      if ([".zip", ".msi"].includes(extension)) {
+        throw failure(ErrorCodes.InvalidParameter, "--build-version parameter must be specified when uploading .zip or .msi file");
+      }
+    }
   }
 
   private getPrerequisites(client: AppCenterClient): Promise<[number | null, Buffer, string]> {
@@ -166,7 +178,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     let createReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadBeginResponse>;
     try {
       createReleaseUploadRequestResponse = await out.progress("Creating release upload...",
-        clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.releaseUploads.create(app.ownerName, app.appName, cb)));
+        clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.releaseUploads.create(app.ownerName, app.appName, { buildVersion: this.buildVersion }, cb)));
     } catch (error) {
       throw failure(ErrorCodes.Exception, `failed to create release upload for ${this.filePath}`);
     }
