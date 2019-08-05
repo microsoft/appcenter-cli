@@ -246,6 +246,93 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
   });
 }
 
+export function runHermesEmitBinaryCommand(bundleName: string, outputFolder: string, sourcemapOutput: string, extraHermesOptions: string[]): Promise<void> {
+  const hermesArgs: string[] = [];
+  const envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
+
+  if (typeof envNodeArgs !== "undefined") {
+      Array.prototype.push.apply(hermesArgs, envNodeArgs.trim().split(/\s+/));
+  }
+
+  Array.prototype.push.apply(hermesArgs, [
+      "-emit-binary",
+      "-out", path.join(outputFolder, bundleName + ".hbc"),
+      path.join(outputFolder, bundleName),
+      ...extraHermesOptions,
+  ]);
+
+  if (sourcemapOutput) {
+      hermesArgs.push("-output-source-map");
+  }
+
+  out.text(chalk.cyan("Converting JS bundle to byte code via Hermes, running command:\n"));
+  const hermesProcess = spawn(path.join("node_modules", "hermesvm", getHermesOSBin(), "hermes"), hermesArgs);
+  out.text(`${path.join("node_modules", "hermesvm", getHermesOSBin(), "hermes")} ${hermesArgs.join(" ")}`);
+
+  return new Promise<void>((resolve, reject) => {
+      hermesProcess.stdout.on("data", (data: Buffer) => {
+        out.text(data.toString().trim());
+      });
+
+      hermesProcess.stderr.on("data", (data: Buffer) => {
+        // Since hermes is printing lots of messages on stderr, we skip anything here.
+      });
+
+      hermesProcess.on("close", (exitCode: number) => {
+          if (exitCode) {
+              reject(new Error(`"hermes" command exited with code ${exitCode}.`));
+          }
+          // Copy HBC bundle to overwrite JS bundle
+          fs.copyFile(path.join(outputFolder, bundleName + ".hbc"), path.join(outputFolder, bundleName),
+            (err) => {
+              if (err) {
+                console.error(err);
+                reject(new Error(`"hermes" command exited with code ${exitCode}.`));
+              }
+              fs.unlinkSync(path.join(outputFolder, bundleName + ".hbc"));
+              resolve(null as void);
+            }
+          );
+      });
+  });
+}
+
+export function getHermesEnabled(gradleFile: string): boolean {
+  let buildGradlePath: string = path.join("android", "app");
+  if (gradleFile) {
+    buildGradlePath = gradleFile;
+  }
+  if (fs.lstatSync(buildGradlePath).isDirectory()) {
+    buildGradlePath = path.join(buildGradlePath, "build.gradle");
+  }
+
+  if (fileDoesNotExistOrIsDirectory(buildGradlePath)) {
+    throw new Error(`Unable to find gradle file "${buildGradlePath}".`);
+  }
+
+  return g2js.parseFile(buildGradlePath)
+    .catch(() => {
+      throw new Error(`Unable to parse the "${buildGradlePath}" file. Please ensure it is a well-formed Gradle file.`);
+    })
+    .then((buildGradle: any) => {
+      return Array.from(buildGradle["project.ext.react"]).includes("enableHermes: true");
+    });
+}
+
+function getHermesOSBin(): string {
+  switch (process.platform) {
+    case "win32":
+      return "win64-bin";
+    case "darwin":
+      return "osx-bin";
+    case "freebsd":
+    case "linux":
+    case "sunos":
+    default:
+      return "linux64-bin";
+  }
+}
+
 export function isValidOS(os: string): boolean {
   switch (os.toLowerCase()) {
     case "android":
