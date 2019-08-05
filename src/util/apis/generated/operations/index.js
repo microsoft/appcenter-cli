@@ -51,6 +51,7 @@ exports.StoreReleasePublishLogs = require('./storeReleasePublishLogs');
 exports.Stores = require('./stores');
 exports.MissingSymbolGroups = require('./missingSymbolGroups');
 exports.App = require('./app');
+exports.CodePushDeploymentUpload = require('./codePushDeploymentUpload');
 exports.CodePushDeploymentRelease = require('./codePushDeploymentRelease');
 exports.DeploymentReleases = require('./deploymentReleases');
 exports.CodePushDeploymentReleases = require('./codePushDeploymentReleases');

@@ -87,6 +87,7 @@ class AppCenterClient extends ServiceClient {
     this.stores = new operations.Stores(this);
     this.missingSymbolGroups = new operations.MissingSymbolGroups(this);
     this.app = new operations.App(this);
+    this.codePushDeploymentUpload = new operations.CodePushDeploymentUpload(this);
     this.codePushDeploymentRelease = new operations.CodePushDeploymentRelease(this);
     this.deploymentReleases = new operations.DeploymentReleases(this);
     this.codePushDeploymentReleases = new operations.CodePushDeploymentReleases(this);

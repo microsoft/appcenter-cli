@@ -192,6 +192,8 @@ function _promote(deploymentName, promoteDeploymentName, ownerName, appName, opt
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {object} [options.body]
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -217,10 +219,14 @@ function _deleteMethod(deploymentName, ownerName, appName, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let body = (options && options.body !== undefined) ? options.body : undefined;
   // Validate
   try {
     if (deploymentName === null || deploymentName === undefined || typeof deploymentName.valueOf() !== 'string') {
       throw new Error('deploymentName cannot be null or undefined and it must be of type string.');
+    }
+    if (body !== null && body !== undefined && typeof body !== 'object') {
+      throw new Error('body must be of type object.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -253,7 +259,27 @@ function _deleteMethod(deploymentName, ownerName, appName, options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (body !== null && body !== undefined) {
+      let requestModelMapper = {
+        required: false,
+        serializedName: 'body',
+        type: {
+          name: 'Object'
+        }
+      };
+      requestModel = client.serialize(requestModelMapper, body, 'body');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(body, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -1056,6 +1082,8 @@ class CodePushDeployments {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {object} [options.body]
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -1089,6 +1117,8 @@ class CodePushDeployments {
    * @param {string} appName The name of the application
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.body]
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

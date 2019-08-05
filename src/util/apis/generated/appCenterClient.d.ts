@@ -74,6 +74,7 @@ export default class AppCenterClient extends ServiceClient {
   stores: operations.Stores;
   missingSymbolGroups: operations.MissingSymbolGroups;
   app: operations.App;
+  codePushDeploymentUpload: operations.CodePushDeploymentUpload;
   codePushDeploymentRelease: operations.CodePushDeploymentRelease;
   deploymentReleases: operations.DeploymentReleases;
   codePushDeploymentReleases: operations.CodePushDeploymentReleases;
