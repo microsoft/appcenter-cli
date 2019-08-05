@@ -102,6 +102,83 @@ describe("release command", () => {
 
   });
 
+  context("build-version", () => {
+    const zipFileName = "binary.zip";
+    const msiFileName = "binary.msi";
+    const buildVersion = "sample-build-version";
+
+    describe("when build version specified", () => {
+      beforeEach(() => {
+        expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
+          setupSuccessfulPostUploadResponse(
+            setupSuccessfulUploadResponse(
+              setupSuccessfulPatchUploadResponse(
+                setupSuccessfulCreateReleaseResponse(
+                  setupSuccessfulAddGroupResponse(
+                    setupSuccsessFulGetDistributionGroupResponse(
+                      Nock(fakeHost))), false)))));
+        skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
+      });
+
+      it("should return success for zip file", async () => {
+        // Arrange
+        const releaseFilePath = createFile(tmpFolderPath, zipFileName, releaseFileContent);
+
+        // Act
+        const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-g", fakeDistributionGroupName, "-b", buildVersion]));
+        const result = await command.execute();
+
+        // Assert
+        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        Sinon.assert.calledWith(postSymbolSpy, Sinon.match(JSON.stringify({build_version: buildVersion})));
+      });
+
+      it("should return success for msi file", async () => {
+        // Arrange
+        const releaseFilePath = createFile(tmpFolderPath, msiFileName, releaseFileContent);
+
+        // Act
+        const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-g", fakeDistributionGroupName, "-b", buildVersion]));
+        const result = await command.execute();
+
+        // Assert
+        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        Sinon.assert.calledWith(postSymbolSpy, Sinon.match(JSON.stringify({build_version: buildVersion})));
+      });
+    });
+
+    describe("when validates input arguments", () => {
+      beforeEach(() => {
+          skippedRequestsScope = Nock(fakeHost);
+      });
+
+      it("raises error when zip file uploading and no --build-version specified", async () => {
+        // Arrange
+        const expectedErrorMessage = "--build-version parameter must be specified when uploading .zip or .msi file";
+
+        // Act
+        const command = new ReleaseBinaryCommand(getCommandArgs(["-f", zipFileName, "-g", fakeDistributionGroupName]));
+        const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
+
+        // Assert
+        testFailure(result, expectedErrorMessage, skippedRequestsScope);
+      });
+
+      it("raises error when msi file uploading and no --build-version specified", async () => {
+        // Arrange
+        const expectedErrorMessage = "--build-version parameter must be specified when uploading .zip or .msi file";
+
+        // Act
+        const command = new ReleaseBinaryCommand(getCommandArgs(["-f", msiFileName, "-g", fakeDistributionGroupName]));
+        const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
+
+        // Assert
+        testFailure(result, expectedErrorMessage, skippedRequestsScope);
+      });
+    });
+
+  });
+
   describe("when release upload fails", () => {
     beforeEach(() => {
         expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
@@ -303,10 +380,10 @@ describe("release command", () => {
     }));
   }
 
-  function setupSuccessfulCreateReleaseResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.put(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`, {
-      release_notes: releaseNotes
-    }).reply(200, ((uri: any, requestBody: any) => {
+  function setupSuccessfulCreateReleaseResponse(nockScope: Nock.Scope, optionalReleaseNotes = true): Nock.Scope {
+    return nockScope.put(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`,
+      optionalReleaseNotes ? { release_notes: releaseNotes } : undefined
+    ).reply(200, ((uri: any, requestBody: any) => {
       distributeSpy(requestBody);
       return {
         version,
