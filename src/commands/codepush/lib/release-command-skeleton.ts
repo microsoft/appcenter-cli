@@ -103,9 +103,10 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
 
       this.checkTargetBinaryVersion(this.targetBinaryVersion);
 
-      const releaseUpload = await this.releaseStrategy.upload(client, app, this.deploymentName, updateContentsZipPath);
+      const releaseUpload = this.releaseStrategy.upload(client, app, this.deploymentName, updateContentsZipPath);
+      await out.progress("Uploading bundle...", releaseUpload);
       await out.progress("Creating CodePush release...",  this.releaseStrategy.release(client, app, this.deploymentName, {
-        releaseUpload: releaseUpload,
+        releaseUpload: await releaseUpload,
         targetBinaryVersion: this.targetBinaryVersion,
         description: this.description,
         disabled: this.disabled,
