@@ -17,6 +17,7 @@ class GetReleaseStatusResponse {
   /**
    * Create a GetReleaseStatusResponse.
    * @property {uuid} id The ID for the upload.
+   * @property {string} uploadUrl The URL used to upload the release.
    * @property {string} uploadStatus The current upload status. Possible values
    * include: 'uploadStarted', 'uploadFinished', 'readyToBePublished',
    * 'malwareDetected', 'error'
@@ -47,6 +48,13 @@ class GetReleaseStatusResponse {
           id: {
             required: true,
             serializedName: 'id',
+            type: {
+              name: 'String'
+            }
+          },
+          uploadUrl: {
+            required: true,
+            serializedName: 'upload_url',
             type: {
               name: 'String'
             }

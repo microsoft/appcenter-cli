@@ -11,11 +11,11 @@
 'use strict';
 
 /**
- * Class representing a AppMembership.
+ * Class representing a AppMembershipsResponseMembershipsItem.
  */
-class AppMembership {
+class AppMembershipsResponseMembershipsItem {
   /**
-   * Create a AppMembership.
+   * Create a AppMembershipsResponseMembershipsItem.
    * @property {string} [appId]
    * @property {string} [userId]
    * @property {array} [permissions]
@@ -23,24 +23,23 @@ class AppMembership {
    * 'hockeyapp', 'codepush', 'testcloud', 'hockeyapp-dogfood'
    * @property {string} [sourceType] Possible values include: 'user', 'org',
    * 'distribution_group', 'team', 'release'
-   * @property {string} [sourceId]
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of AppMembership
+   * Defines the metadata of AppMembershipsResponseMembershipsItem
    *
-   * @returns {object} metadata of AppMembership
+   * @returns {object} metadata of AppMembershipsResponseMembershipsItem
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'AppMembership',
+      serializedName: 'AppMembershipsResponse_membershipsItem',
       type: {
         name: 'Composite',
-        className: 'AppMembership',
+        className: 'AppMembershipsResponseMembershipsItem',
         modelProperties: {
           appId: {
             required: false,
@@ -83,13 +82,6 @@ class AppMembership {
             type: {
               name: 'String'
             }
-          },
-          sourceId: {
-            required: false,
-            serializedName: 'source_id',
-            type: {
-              name: 'String'
-            }
           }
         }
       }
@@ -97,4 +89,4 @@ class AppMembership {
   }
 }
 
-module.exports = AppMembership;
+module.exports = AppMembershipsResponseMembershipsItem;

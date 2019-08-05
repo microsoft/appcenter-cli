@@ -29,7 +29,7 @@ class SymbolUpload {
    * Possible values include: 'created', 'committed', 'aborted', 'processing',
    * 'indexed', 'failed'
    * @property {string} symbolType The type of the symbol for the current
-   * symbol upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
+   * symbol upload. Possible values include: 'Apple', 'Breakpad',
    * 'AndroidProguard', 'UWP'
    * @property {array} [symbolsUploaded] The symbols found in the upload
    * @property {string} [origin] The origin of the symbol upload. Possible

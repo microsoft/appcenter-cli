@@ -18,7 +18,7 @@ class PrivateReleaseUpdateRequest {
   /**
    * Create a PrivateReleaseUpdateRequest.
    * @property {string} [publishingStatus] The store publishing status.
-   * Possible values include: 'failed', 'processing', 'submitted', 'timeout'
+   * Possible values include: 'failed', 'processing', 'submitted'
    */
   constructor() {
   }

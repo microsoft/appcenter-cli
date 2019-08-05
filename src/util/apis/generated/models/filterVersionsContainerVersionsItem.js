@@ -16,8 +16,8 @@
 class FilterVersionsContainerVersionsItem {
   /**
    * Create a FilterVersionsContainerVersionsItem.
-   * @property {string} version App version.
-   * @property {string} build App build number.
+   * @property {string} version App version
+   * @property {string} build App build number
    */
   constructor() {
   }

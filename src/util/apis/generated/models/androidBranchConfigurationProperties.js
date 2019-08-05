@@ -18,15 +18,16 @@ class AndroidBranchConfigurationProperties {
   /**
    * Create a AndroidBranchConfigurationProperties.
    * @property {string} [gradleWrapperPath] Path to the Gradle wrapper script
-   * @property {string} [module] The Gradle module to build
-   * @property {string} [buildVariant] The Android build variant to build
+   * @property {string} module The Gradle module to build
+   * @property {string} buildVariant The Android build variant to build
    * @property {boolean} [runTests] Whether to run unit tests during the build
    * (default). Default value: true .
    * @property {boolean} [runLint] Whether to run lint checks during the build
-   * (default)
-   * @property {boolean} [isRoot] Whether it is the root module or not
+   * (default). Default value: true .
+   * @property {boolean} [isRoot] Whether it is the root module or not. Default
+   * value: true .
    * @property {boolean} [automaticSigning] Whether to apply automatic signing
-   * or not
+   * or not. Default value: true .
    * @property {string} [keystorePassword] The password of the keystore
    * @property {string} [keyAlias] The key alias
    * @property {string} [keyPassword] The key password
@@ -58,14 +59,14 @@ class AndroidBranchConfigurationProperties {
             }
           },
           module: {
-            required: false,
+            required: true,
             serializedName: 'module',
             type: {
               name: 'String'
             }
           },
           buildVariant: {
-            required: false,
+            required: true,
             serializedName: 'buildVariant',
             type: {
               name: 'String'
@@ -82,6 +83,7 @@ class AndroidBranchConfigurationProperties {
           runLint: {
             required: false,
             serializedName: 'runLint',
+            defaultValue: true,
             type: {
               name: 'Boolean'
             }
@@ -89,6 +91,7 @@ class AndroidBranchConfigurationProperties {
           isRoot: {
             required: false,
             serializedName: 'isRoot',
+            defaultValue: true,
             type: {
               name: 'Boolean'
             }
@@ -96,6 +99,7 @@ class AndroidBranchConfigurationProperties {
           automaticSigning: {
             required: false,
             serializedName: 'automaticSigning',
+            defaultValue: true,
             type: {
               name: 'Boolean'
             }

@@ -34,7 +34,7 @@ class PrivateAppleSecretResponse extends models['PrivateSharedConnectionResponse
   mapper() {
     return {
       required: false,
-      serializedName: 'apple',
+      serializedName: 'PrivateAppleSecretResponse',
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {

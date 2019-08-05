@@ -11,16 +11,16 @@
 'use strict';
 
 /**
- * An event property value with counts.
+ * An event property value with counts
  *
  */
 class EventPropertyValue {
   /**
    * Create a EventPropertyValue.
-   * @property {string} [name] The event property value name.
-   * @property {number} [count] The count of the the event property value.
+   * @property {string} [name] The event property value name
+   * @property {number} [count] The count of the the event property value
    * @property {number} [previousCount] The count of previous time range of the
-   * event property value.
+   * event property value
    */
   constructor() {
   }

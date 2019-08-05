@@ -290,16 +290,13 @@ function _listXamarinSDKBundles(ownerName, appName, options, callback) {
 }
 
 /**
- * Returns available toolsets for application
+ * Gets the Mono versions available to this app
  *
  * @param {string} ownerName The name of the owner
  *
  * @param {string} appName The name of the application
  *
  * @param {object} [options] Optional Parameters.
- *
- * @param {string} [options.tools] Toolset name. Possible values include:
- * 'xamarin', 'xcode', 'node'
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -310,14 +307,13 @@ function _listXamarinSDKBundles(ownerName, appName, options, callback) {
  *
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
- *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Toolsets} for more information.
+ *                      {array} [result]   - The deserialized result object if an error did not occur.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _listToolsets(ownerName, appName, options, callback) {
+function _listMonoVersions(ownerName, appName, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -327,12 +323,8 @@ function _listToolsets(ownerName, appName, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  let tools = (options && options.tools !== undefined) ? options.tools : undefined;
   // Validate
   try {
-    if (tools !== null && tools !== undefined && typeof tools.valueOf() !== 'string') {
-      throw new Error('tools must be of type string.');
-    }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
@@ -345,16 +337,9 @@ function _listToolsets(ownerName, appName, options, callback) {
 
   // Construct URL
   let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/toolsets';
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/mono_versions';
   requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
   requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-  let queryParameters = [];
-  if (tools !== null && tools !== undefined) {
-    queryParameters.push('tools=' + encodeURIComponent(tools));
-  }
-  if (queryParameters.length > 0) {
-    requestUrl += '?' + queryParameters.join('&');
-  }
 
   // Create HTTP transport objects
   let httpRequest = new WebResource();
@@ -413,7 +398,21 @@ function _listToolsets(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Toolsets']().mapper();
+          let resultMapper = {
+            required: false,
+            serializedName: 'parsedResponse',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'MonoVersionElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'MonoVersion'
+                  }
+              }
+            }
+          };
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -567,7 +566,7 @@ function _getLog(buildId, ownerName, appName, options, callback) {
  * @param {number} buildId The build ID
  *
  * @param {string} downloadType The download type. Possible values include:
- * 'build', 'symbols', 'logs', 'mapping', 'bundle'
+ * 'build', 'symbols', 'logs'
  *
  * @param {string} ownerName The name of the owner
  *
@@ -1883,7 +1882,7 @@ class Builds {
     this.client = client;
     this._listXcodeVersions = _listXcodeVersions;
     this._listXamarinSDKBundles = _listXamarinSDKBundles;
-    this._listToolsets = _listToolsets;
+    this._listMonoVersions = _listMonoVersions;
     this._getLog = _getLog;
     this._getDownloadUri = _getDownloadUri;
     this._distribute = _distribute;
@@ -2067,7 +2066,7 @@ class Builds {
   }
 
   /**
-   * Returns available toolsets for application
+   * Gets the Mono versions available to this app
    *
    * @param {string} ownerName The name of the owner
    *
@@ -2075,23 +2074,20 @@ class Builds {
    *
    * @param {object} [options] Optional Parameters.
    *
-   * @param {string} [options.tools] Toolset name. Possible values include:
-   * 'xamarin', 'xcode', 'node'
-   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Toolsets>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<Array>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
-  listToolsetsWithHttpOperationResponse(ownerName, appName, options) {
+  listMonoVersionsWithHttpOperationResponse(ownerName, appName, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._listToolsets(ownerName, appName, options, (err, result, request, response) => {
+      self._listMonoVersions(ownerName, appName, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -2102,16 +2098,13 @@ class Builds {
   }
 
   /**
-   * Returns available toolsets for application
+   * Gets the Mono versions available to this app
    *
    * @param {string} ownerName The name of the owner
    *
    * @param {string} appName The name of the application
    *
    * @param {object} [options] Optional Parameters.
-   *
-   * @param {string} [options.tools] Toolset name. Possible values include:
-   * 'xamarin', 'xcode', 'node'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -2123,7 +2116,7 @@ class Builds {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Toolsets} - The deserialized result object.
+   *                      @resolve {Array} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2131,14 +2124,13 @@ class Builds {
    *
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
-   *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Toolsets} for more information.
+   *                      {array} [result]   - The deserialized result object if an error did not occur.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  listToolsets(ownerName, appName, options, optionalCallback) {
+  listMonoVersions(ownerName, appName, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -2147,14 +2139,14 @@ class Builds {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._listToolsets(ownerName, appName, options, (err, result, request, response) => {
+        self._listMonoVersions(ownerName, appName, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._listToolsets(ownerName, appName, options, optionalCallback);
+      return self._listMonoVersions(ownerName, appName, options, optionalCallback);
     }
   }
 
@@ -2254,7 +2246,7 @@ class Builds {
    * @param {number} buildId The build ID
    *
    * @param {string} downloadType The download type. Possible values include:
-   * 'build', 'symbols', 'logs', 'mapping', 'bundle'
+   * 'build', 'symbols', 'logs'
    *
    * @param {string} ownerName The name of the owner
    *
@@ -2291,7 +2283,7 @@ class Builds {
    * @param {number} buildId The build ID
    *
    * @param {string} downloadType The download type. Possible values include:
-   * 'build', 'symbols', 'logs', 'mapping', 'bundle'
+   * 'build', 'symbols', 'logs'
    *
    * @param {string} ownerName The name of the owner
    *

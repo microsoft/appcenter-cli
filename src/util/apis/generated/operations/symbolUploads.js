@@ -960,7 +960,7 @@ function _list(ownerName, appName, options, callback) {
  * @param {object} body The symbol information
  *
  * @param {string} body.symbolType The type of the symbol for the current
- * symbol upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
+ * symbol upload. Possible values include: 'Apple', 'Breakpad',
  * 'AndroidProguard', 'UWP'
  *
  * @param {string} [body.clientCallback] The callback URL that the client can
@@ -1651,7 +1651,7 @@ class SymbolUploads {
    * @param {object} body The symbol information
    *
    * @param {string} body.symbolType The type of the symbol for the current
-   * symbol upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
+   * symbol upload. Possible values include: 'Apple', 'Breakpad',
    * 'AndroidProguard', 'UWP'
    *
    * @param {string} [body.clientCallback] The callback URL that the client can
@@ -1701,7 +1701,7 @@ class SymbolUploads {
    * @param {object} body The symbol information
    *
    * @param {string} body.symbolType The type of the symbol for the current
-   * symbol upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
+   * symbol upload. Possible values include: 'Apple', 'Breakpad',
    * 'AndroidProguard', 'UWP'
    *
    * @param {string} [body.clientCallback] The callback URL that the client can

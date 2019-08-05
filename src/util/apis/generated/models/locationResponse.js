@@ -11,33 +11,35 @@
 'use strict';
 
 /**
- * Class representing a PatchRepoInfo.
+ * This response contains the location of the resource URI for 201 or 202
+ * responses.
+ *
  */
-class PatchRepoInfo {
+class LocationResponse {
   /**
-   * Create a PatchRepoInfo.
-   * @property {string} [externalUserId] The external user ID
+   * Create a LocationResponse.
+   * @property {string} [location]
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of PatchRepoInfo
+   * Defines the metadata of LocationResponse
    *
-   * @returns {object} metadata of PatchRepoInfo
+   * @returns {object} metadata of LocationResponse
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'PatchRepoInfo',
+      serializedName: 'LocationResponse',
       type: {
         name: 'Composite',
-        className: 'PatchRepoInfo',
+        className: 'LocationResponse',
         modelProperties: {
-          externalUserId: {
+          location: {
             required: false,
-            serializedName: 'external_user_id',
+            serializedName: 'location',
             type: {
               name: 'String'
             }
@@ -48,4 +50,4 @@ class PatchRepoInfo {
   }
 }
 
-module.exports = PatchRepoInfo;
+module.exports = LocationResponse;

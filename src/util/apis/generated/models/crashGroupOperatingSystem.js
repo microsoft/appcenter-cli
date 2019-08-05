@@ -16,8 +16,8 @@
 class CrashGroupOperatingSystem {
   /**
    * Create a CrashGroupOperatingSystem.
-   * @property {string} [operatingSystemName] OS name.
-   * @property {number} [crashCount] Count of OS.
+   * @property {string} [operatingSystemName] OS name
+   * @property {number} [crashCount] count of OS
    */
   constructor() {
   }

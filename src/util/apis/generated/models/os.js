@@ -16,9 +16,9 @@
 class OS {
   /**
    * Create a OS.
-   * @property {string} [osName] OS name.
-   * @property {number} [count] Count current of OS.
-   * @property {number} [previousCount] Count of previous OS.
+   * @property {string} [osName] OS name
+   * @property {number} [count] count current of OS
+   * @property {number} [previousCount] count of previous OS
    */
   constructor() {
   }

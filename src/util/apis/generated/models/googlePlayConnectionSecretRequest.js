@@ -36,7 +36,7 @@ class GooglePlayConnectionSecretRequest extends models['SharedConnectionRequest'
   mapper() {
     return {
       required: false,
-      serializedName: 'googleplay',
+      serializedName: 'GooglePlayConnectionSecretRequest',
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {

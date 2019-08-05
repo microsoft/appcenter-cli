@@ -16,9 +16,7 @@
 class UserEmailRequest {
   /**
    * Create a UserEmailRequest.
-   * @property {string} userEmail The user's email address
-   * @property {string} [role] The user's role. Possible values include:
-   * 'admin', 'collaborator', 'member'
+   * @property {string} userEmail The user's email address'
    */
   constructor() {
   }
@@ -40,13 +38,6 @@ class UserEmailRequest {
           userEmail: {
             required: true,
             serializedName: 'user_email',
-            type: {
-              name: 'String'
-            }
-          },
-          role: {
-            required: false,
-            serializedName: 'role',
             type: {
               name: 'String'
             }

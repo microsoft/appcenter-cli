@@ -38,7 +38,7 @@ class JiraConnectionSecretRequest extends models['SharedConnectionRequest'] {
   mapper() {
     return {
       required: false,
-      serializedName: 'jira',
+      serializedName: 'JiraConnectionSecretRequest',
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {

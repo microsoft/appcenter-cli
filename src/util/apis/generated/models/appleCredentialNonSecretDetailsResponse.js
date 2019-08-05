@@ -36,7 +36,7 @@ class AppleCredentialNonSecretDetailsResponse extends models['AppleConnectionNon
   mapper() {
     return {
       required: false,
-      serializedName: 'credentials',
+      serializedName: 'AppleCredentialNonSecretDetailsResponse',
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {

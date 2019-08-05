@@ -22,8 +22,6 @@ class UserProfileResponseManagement extends models['UserProfileResponseInternal'
    * @property {string} [updatedAt] The date when the app was last updated
    * @property {boolean} [verified] A boolean flag that indicates if the user
    * is already verified
-   * @property {array} [identityProviders] The identity providers associated
-   * with the user's account
    */
   constructor() {
     super();
@@ -147,21 +145,6 @@ class UserProfileResponseManagement extends models['UserProfileResponseInternal'
             serializedName: 'verified',
             type: {
               name: 'Boolean'
-            }
-          },
-          identityProviders: {
-            required: false,
-            serializedName: 'identity_providers',
-            type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'UserProfileResponseManagementIdentityProvidersItemElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'UserProfileResponseManagementIdentityProvidersItem'
-                  }
-              }
             }
           }
         }

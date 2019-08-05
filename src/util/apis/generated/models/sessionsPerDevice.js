@@ -16,13 +16,13 @@
 class SessionsPerDevice {
   /**
    * Create a SessionsPerDevice.
-   * @property {number} [averageSessionsPerUser] Average seesion per user.
-   * @property {number} [previousAverageSessionsPerUser] Previous average
-   * session per user.
-   * @property {number} [totalCount] Total session per device count.
-   * @property {number} [previousTotalCount] Previous total count.
-   * @property {array} [sessionsPerUser] The session count for each interval
-   * per device.
+   * @property {number} [averageSessionsPerUser] average seesion per user
+   * @property {number} [previousAverageSessionsPerUser] previous average
+   * session per user
+   * @property {number} [totalCount] total session per device count
+   * @property {number} [previousTotalCount] previous total count
+   * @property {array} [sessionsPerUser] the session count for each interval
+   * per device
    */
   constructor() {
   }

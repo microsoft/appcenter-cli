@@ -535,7 +535,7 @@ function _userDevicesList(options, callback) {
       return callback(err);
     }
     let statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 403) {
+    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 403 && statusCode !== 404) {
       let error = new Error(responseBody);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -623,6 +623,23 @@ function _userDevicesList(options, callback) {
         deserializationError2.request = msRest.stripRequest(httpRequest);
         deserializationError2.response = msRest.stripResponse(response);
         return callback(deserializationError2);
+      }
+    }
+    // Deserialize Response
+    if (statusCode === 404) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError3 = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError3.request = msRest.stripRequest(httpRequest);
+        deserializationError3.response = msRest.stripResponse(response);
+        return callback(deserializationError3);
       }
     }
 

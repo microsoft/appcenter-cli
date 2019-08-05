@@ -16,8 +16,8 @@
 class CrashCounts {
   /**
    * Create a CrashCounts.
-   * @property {number} [count] Total crash count.
-   * @property {array} [crashes] The total crash count for day.
+   * @property {number} [count] total crash count
+   * @property {array} [crashes] the total crash count for day
    */
   constructor() {
   }

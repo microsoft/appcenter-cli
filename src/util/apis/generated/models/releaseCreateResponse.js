@@ -11,36 +11,37 @@
 'use strict';
 
 /**
- * Class representing a AabAndroidManifestXml.
+ * The response from the release creation API that just contains the created
+ * release's distinct id.
+ *
  */
-class AabAndroidManifestXml {
+class ReleaseCreateResponse {
   /**
-   * Create a AabAndroidManifestXml.
-   * @property {string} xml The contents of the binary XML file encoded as
-   * base64.
+   * Create a ReleaseCreateResponse.
+   * @property {number} releaseDistinctId The distinct ID of the release.
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of AabAndroidManifestXml
+   * Defines the metadata of ReleaseCreateResponse
    *
-   * @returns {object} metadata of AabAndroidManifestXml
+   * @returns {object} metadata of ReleaseCreateResponse
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'AabAndroidManifestXml',
+      serializedName: 'ReleaseCreateResponse',
       type: {
         name: 'Composite',
-        className: 'AabAndroidManifestXml',
+        className: 'ReleaseCreateResponse',
         modelProperties: {
-          xml: {
+          releaseDistinctId: {
             required: true,
-            serializedName: 'xml',
+            serializedName: 'release_distinct_id',
             type: {
-              name: 'String'
+              name: 'Number'
             }
           }
         }
@@ -49,4 +50,4 @@ class AabAndroidManifestXml {
   }
 }
 
-module.exports = AabAndroidManifestXml;
+module.exports = ReleaseCreateResponse;

@@ -613,6 +613,12 @@
             "schema": {
               "$ref": "#/definitions/ErrorDetails"
             }
+          },
+          "404": {
+            "description": "<b>not_found</b>: A user can't be found.\n",
+            "schema": {
+              "$ref": "#/definitions/ErrorDetails"
+            }
           }
         },
         "security": [
@@ -719,7 +725,7 @@
     },
     "/v0.1/sdk/apps/{app_secret}/releases/{release_hash}": {
       "get": {
-        "description": "If 'latest' is not specified then it will return the specified release if it's enabled. If 'latest' is specified, regardless of whether a release hash is provided, the latest enabled release is returned.",
+        "description": "Get a release with hash 'release_hash' or the 'latest' from all the distribution groups assigned to the current user.",
         "operationId": "releases_getLatestByHash",
         "parameters": [
           {
@@ -816,16 +822,6 @@
     "/v0.1/public/hooks": {
       "post": {
         "description": "Public webhook sink",
-        "parameters": [
-          {
-            "name": "payload",
-            "in": "body",
-            "required": false,
-            "schema": {
-              "type": "object"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "Success"
@@ -1154,40 +1150,6 @@
           }
         },
         "operationId": "users_removeFromOrg",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      },
-      "get": {
-        "description": "Get a user information from an organization by name - if there is explicit permission return it, if not if not return highest implicit permission",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          },
-          {
-            "$ref": "#/parameters/user_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OrganizationUserResponse"
-            }
-          },
-          "default": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "users_getForOrg",
         "security": [
           {
             "APIToken": []
@@ -1775,9 +1737,6 @@
           },
           {
             "$ref": "#/parameters/email"
-          },
-          {
-            "$ref": "#/parameters/role"
           }
         ],
         "responses": {
@@ -2601,155 +2560,6 @@
         ]
       }
     },
-    "/v0.1/orgs/{org_name}/aad_groups/{aad_group_id}": {
-      "patch": {
-        "description": "Allows the role of an aad_group to be changed",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          },
-          {
-            "$ref": "#/parameters/aad_group_id"
-          },
-          {
-            "name": "user_role",
-            "in": "body",
-            "description": "The new role of the user",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/OrganizationAadGroupPatchRequest"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "default": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "organization_updateAADGroups",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      },
-      "delete": {
-        "description": "Delete already added aad group from the organization",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          },
-          {
-            "$ref": "#/parameters/aad_group_id"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "default": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "organization_deleteAADGroup",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      }
-    },
-    "/v0.1/orgs/{org_name}/aad_groups": {
-      "get": {
-        "description": "Returns a list of aad groups that belong to an organization",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/OrganizationAADGroupResponse"
-              }
-            }
-          },
-          "default": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "aadGroup_listForOrg",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      },
-      "post": {
-        "description": "Adds aad groups to an organization",
-        "parameters": [
-          {
-            "$ref": "#/parameters/organization_name"
-          },
-          {
-            "name": "aad_group",
-            "in": "body",
-            "description": "the AAD group added",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/AADGroup"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/AddAADGroupResponse"
-            }
-          },
-          "default": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "operationId": "organization_addAADGroups",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "account"
-        ]
-      }
-    },
     "/v0.1/orgs/{org_name}": {
       "get": {
         "description": "Returns the details of a single organization",
@@ -3016,45 +2826,6 @@
         ]
       }
     },
-    "/v0.1/billing/allAccountsAggregated": {
-      "get": {
-        "operationId": "billingAggregatedInformation_getAll",
-        "description": "Aggregated Billing Information for the requesting user and the organizations in which the user is an admin.",
-        "parameters": [
-          {
-            "$ref": "#/parameters/ServiceTypeFilterParameter"
-          },
-          {
-            "$ref": "#/parameters/PeriodTypeFilterParameter"
-          },
-          {
-            "$ref": "#/parameters/ShowOriginalPlansFilterParameter"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Aggregated Billing Information for the requesting user and the organizations in which the user is an admin.",
-            "schema": {
-              "$ref": "#/definitions/AllAccountsAggregatedBillingInformation"
-            }
-          },
-          "default": {
-            "description": "Error code with reason",
-            "schema": {
-              "$ref": "#/definitions/BillingError"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "billing"
-        ]
-      }
-    },
     "/v0.1/azure_subscriptions": {
       "get": {
         "description": "Returns a list of azure subscriptions for the user",
@@ -3089,7 +2860,6 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/xcode_versions": {
       "get": {
-        "deprecated": true,
         "description": "Gets the Xcode versions available to this app",
         "parameters": [
           {
@@ -3126,7 +2896,6 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/xamarin_sdk_bundles": {
       "get": {
-        "deprecated": true,
         "description": "Gets the Xamarin SDK bundles available to this app",
         "parameters": [
           {
@@ -3644,94 +3413,6 @@
         ],
         "tags": [
           "account"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/toolsets": {
-      "get": {
-        "description": "Returns available toolsets for application",
-        "parameters": [
-          {
-            "name": "tools",
-            "in": "query",
-            "description": "Toolset name",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "xamarin",
-              "xcode",
-              "node"
-            ]
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Toolsets"
-            }
-          },
-          "default": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/ValidationErrorResponse"
-            }
-          }
-        },
-        "operationId": "builds_listToolsets",
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "build"
-        ]
-      }
-    },
-    "/v0.1/apps/{owner_name}/{app_name}/testers/{tester_id}": {
-      "delete": {
-        "operationId": "releases_deleteTesterFromDestinations",
-        "description": "Delete the given tester from the all releases",
-        "parameters": [
-          {
-            "name": "tester_id",
-            "type": "string",
-            "in": "path",
-            "description": "The id of the tester",
-            "required": true
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          },
-          "404": {
-            "description": "Tester can't be found\n",
-            "schema": {
-              "$ref": "#/definitions/ErrorDetails"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "distribute"
         ]
       }
     },
@@ -4565,8 +4246,8 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/test/export": {
       "get": {
-        "description": "Lists all the endpoints available for Test apps data",
-        "operationId": "test_gdprExportApps",
+        "description": "Lists all the endpoints available for Test app data",
+        "operationId": "test_gdprExportApp",
         "responses": {
           "200": {
             "description": "OK",
@@ -5314,8 +4995,7 @@
             "enum": [
               "github",
               "bitbucket",
-              "vsts",
-              "gitlab"
+              "vsts"
             ]
           },
           {
@@ -7112,6 +6792,42 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/mono_versions": {
+      "get": {
+        "description": "Gets the Mono versions available to this app",
+        "parameters": [
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/MonoVersions"
+            }
+          },
+          "default": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ValidationErrorResponse"
+            }
+          }
+        },
+        "operationId": "builds_listMonoVersions",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "build"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/invitations/{user_email}": {
       "post": {
         "deprecated": true,
@@ -7399,14 +7115,6 @@
       "post": {
         "description": "Create a new asset to upload a file",
         "parameters": [
-          {
-            "name": "payload",
-            "in": "body",
-            "required": false,
-            "schema": {
-              "type": "object"
-            }
-          },
           {
             "$ref": "#/parameters/owner_name"
           },
@@ -8004,9 +7712,6 @@
           },
           {
             "$ref": "#/parameters/ErrorVersionsParameter"
-          },
-          {
-            "$ref": "#/parameters/ErrorAppBuildParameterOptional"
           },
           {
             "$ref": "#/parameters/SingleErrorTypeParameter"
@@ -8701,9 +8406,6 @@
             "$ref": "#/parameters/ErrorVersionParameterOptional"
           },
           {
-            "$ref": "#/parameters/ErrorAppBuildParameterOptional"
-          },
-          {
             "$ref": "#/parameters/GroupStateParameter"
           },
           {
@@ -8765,9 +8467,6 @@
           },
           {
             "$ref": "#/parameters/ErrorEndParameter"
-          },
-          {
-            "$ref": "#/parameters/ErrorAppBuildParameterOptional"
           },
           {
             "$ref": "#/parameters/SingleErrorTypeParameter"
@@ -9078,14 +8777,6 @@
             "required": true
           },
           {
-            "name": "body",
-            "in": "body",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "$ref": "#/parameters/owner_name"
           },
           {
@@ -9304,14 +8995,6 @@
             "in": "path",
             "description": "The name of the store",
             "required": true
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -10341,45 +10024,6 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/uploads": {
-      "post": {
-        "description": "Create a new CodePush release upload for the specified deployment",
-        "operationId": "codePushDeploymentUpload_create",
-        "parameters": [
-          {
-            "$ref": "#/parameters/path_deployment_name"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/CodePushReleaseUpload"
-            }
-          },
-          "default": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "codepush"
-        ]
-      }
-    },
     "/v0.1/apps/{owner_name}/{app_name}/deployments/{deployment_name}/rollback_release": {
       "post": {
         "description": "Rollback the latest or a specific release for an app deployment",
@@ -10559,18 +10203,68 @@
       "post": {
         "description": "Create a new CodePush release for the specified deployment",
         "operationId": "codePushDeploymentReleases_create",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
             "$ref": "#/parameters/path_deployment_name"
           },
           {
-            "name": "uploaded_release",
-            "description": "The necessary information required to download the bundle and being the release process.",
-            "in": "body",
+            "name": "package",
+            "in": "formData",
+            "description": "The upload zip file",
+            "type": "file"
+          },
+          {
+            "name": "targetBinaryVersion",
+            "description": "the binary version of the application",
+            "in": "formData",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/CodePushUploadedRelease"
-            }
+            "type": "string"
+          },
+          {
+            "name": "deploymentName",
+            "in": "formData",
+            "description": "This specifies which deployment you want to release the update to. Default is Staging.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "formData",
+            "description": "This provides an optional \"change log\" for the deployment.",
+            "required": false,
+            "type": "string",
+            "maximum": 10000
+          },
+          {
+            "name": "disabled",
+            "in": "formData",
+            "description": "This specifies whether an update should be downloadable by end users or not.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "mandatory",
+            "in": "formData",
+            "description": "This specifies whether the update should be considered mandatory or not (e.g. it includes a critical security fix).",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "noDuplicateReleaseError",
+            "in": "formData",
+            "description": "This specifies that if the update is identical to the latest release on the deployment, the CLI should generate a warning instead of an error.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "rollout",
+            "in": "formData",
+            "description": "This specifies the percentage of users (as an integer between 1 and 100) that should be eligible to receive this update.",
+            "required": false,
+            "type": "integer"
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -10702,14 +10396,6 @@
         "parameters": [
           {
             "$ref": "#/parameters/path_deployment_name"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "type": "object"
-            }
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -11013,55 +10699,6 @@
         ]
       }
     },
-    "/v0.1/apps/{owner_name}/{app_name}/data/overview": {
-      "get": {
-        "summary": "Gets general data about the provisioned database",
-        "operationId": "data_getOverview",
-        "consumes": [],
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "parameters": [
-          {
-            "name": "AC-Authorization-ARM",
-            "in": "header",
-            "description": "ARM token",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/owner_name"
-          },
-          {
-            "$ref": "#/parameters/app_name"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/OverviewResponse"
-            }
-          },
-          "500": {
-            "description": "Server Error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "APIToken": []
-          }
-        ],
-        "tags": [
-          "mbaas"
-        ]
-      }
-    },
     "/v0.1/apps/{owner_name}/{app_name}/data/database_account_names/{accountName}": {
       "head": {
         "summary": "Checks that the Azure Cosmos DB account name already exists. A valid account name may contain only lowercase letters, numbers, and the '-' character, and must be between 3 and 31 characters.",
@@ -11069,6 +10706,12 @@
         "consumes": [],
         "produces": [],
         "parameters": [
+          {
+            "name": "AC-Authorization-ARM",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "accountName",
             "in": "path",
@@ -11096,9 +10739,6 @@
           },
           "404": {
             "description": "Not Found. The account name is available and valid."
-          },
-          "500": {
-            "description": "Internal Error."
           }
         },
         "security": [
@@ -11965,9 +11605,7 @@
             "enum": [
               "build",
               "symbols",
-              "logs",
-              "mapping",
-              "bundle"
+              "logs"
             ],
             "in": "path",
             "description": "The download type",
@@ -12299,7 +11937,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/BranchConfigurationWithId"
+              "$ref": "#/definitions/BranchConfiguration"
             }
           },
           "default": {
@@ -12326,15 +11964,6 @@
             "$ref": "#/parameters/branch"
           },
           {
-            "name": "params",
-            "in": "body",
-            "description": "Parameters of the configuration",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/BranchConfiguration"
-            }
-          },
-          {
             "$ref": "#/parameters/owner_name"
           },
           {
@@ -12345,7 +11974,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/BranchConfigurationWithId"
+              "$ref": "#/definitions/BranchConfiguration"
             }
           }
         },
@@ -12366,15 +11995,6 @@
             "$ref": "#/parameters/branch"
           },
           {
-            "name": "params",
-            "in": "body",
-            "description": "Parameters of the configuration",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/BranchConfiguration"
-            }
-          },
-          {
             "$ref": "#/parameters/owner_name"
           },
           {
@@ -12385,7 +12005,7 @@
           "200": {
             "description": "Success",
             "schema": {
-              "$ref": "#/definitions/BranchConfigurationWithId"
+              "$ref": "#/definitions/BranchConfiguration"
             }
           }
         },
@@ -12404,14 +12024,6 @@
         "parameters": [
           {
             "$ref": "#/parameters/branch"
-          },
-          {
-            "name": "payload",
-            "in": "body",
-            "required": false,
-            "schema": {
-              "type": "object"
-            }
           },
           {
             "$ref": "#/parameters/owner_name"
@@ -12796,7 +12408,7 @@
         ],
         "parameters": [
           {
-            "name": "AC-Authorization-AAD-Graph",
+            "name": "AC-Authorization-Microsoft-Graph",
             "in": "header",
             "description": "MSGraph Auth Token",
             "required": false,
@@ -12925,14 +12537,6 @@
         "description": "Delete mapping of apple app to an existing app in apple store.",
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "$ref": "#/parameters/owner_name"
           },
           {
@@ -13036,7 +12640,7 @@
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13055,7 +12659,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/analytics/sessions_per_device": {
       "get": {
         "operationId": "Analytics_PerDeviceCounts",
-        "description": "Count of sessions per device in the time range.",
+        "description": "Count of sessions per device in the time range",
         "parameters": [
           {
             "$ref": "#/parameters/StartParameter"
@@ -13078,13 +12682,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Count of sessions per device in the time range.",
+            "description": "Count of sessions per device in the time range",
             "schema": {
               "$ref": "#/definitions/SessionsPerDevice"
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13103,7 +12707,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/analytics/session_durations_distribution": {
       "get": {
         "operationId": "Analytics_SessionDurationsDistribution",
-        "description": "Gets session duration.",
+        "description": "Gets session duration .",
         "parameters": [
           {
             "$ref": "#/parameters/StartParameter"
@@ -13129,7 +12733,7 @@
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13177,7 +12781,7 @@
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -13196,7 +12800,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/analytics/places": {
       "get": {
         "operationId": "Analytics_PlaceCounts",
-        "description": "Places in the time range.",
+        "description": "Places in the time range",
         "parameters": [
           {
             "$ref": "#/parameters/StartParameter"
@@ -13219,13 +12823,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Places with count during the time range in descending order.",
+            "description": "Places with count during the time range in descending order",
             "schema": {
               "$ref": "#/definitions/Places"
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13244,7 +12848,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/analytics/oses": {
       "get": {
         "operationId": "Analytics_OperatingSystemCounts",
-        "description": "OSes in the time range.",
+        "description": "OSes in the time range",
         "parameters": [
           {
             "$ref": "#/parameters/StartParameter"
@@ -13267,13 +12871,13 @@
         ],
         "responses": {
           "200": {
-            "description": "OSes with count during the time range in descending order.",
+            "description": "OSes with count during the time range in descending order",
             "schema": {
               "$ref": "#/definitions/OSes"
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13292,7 +12896,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/analytics/models": {
       "get": {
         "operationId": "Analytics_ModelCounts",
-        "description": "Models in the time range.",
+        "description": "models in the time range",
         "parameters": [
           {
             "$ref": "#/parameters/StartParameter"
@@ -13315,13 +12919,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Models with count during the time range in descending order.",
+            "description": "Models with count during the time range in descending order",
             "schema": {
               "$ref": "#/definitions/AnalyticsModels"
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13379,7 +12983,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/analytics/languages": {
       "get": {
         "operationId": "Analytics_LanguageCounts",
-        "description": "Languages in the time range.",
+        "description": "languages in the time range",
         "parameters": [
           {
             "$ref": "#/parameters/StartParameter"
@@ -13402,13 +13006,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Languages with count during the time range in descending order.",
+            "description": "Languages with count during the time range in descending order",
             "schema": {
               "$ref": "#/definitions/Languages"
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13466,7 +13070,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/analytics/events/{event_name}/properties/{event_property_name}/counts": {
       "get": {
         "operationId": "Analytics_EventPropertyCounts",
-        "description": "Event properties value counts during the time range in descending order.",
+        "description": "Event properties value counts during the time range in descending order.  Limited up to 5 values.",
         "parameters": [
           {
             "$ref": "#/parameters/EventParameter"
@@ -13495,13 +13099,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Event properties value counts during the time range in descending order.",
+            "description": "Event properties value counts during the time range in descending order.  Limited up to 5 values.",
             "schema": {
               "$ref": "#/definitions/EventPropertyValues"
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13520,7 +13124,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/analytics/events/{event_name}/properties": {
       "get": {
         "operationId": "Analytics_EventProperties",
-        "description": "Event properties.",
+        "description": "Event properties.  Up to the first 5 received properties.",
         "parameters": [
           {
             "$ref": "#/parameters/EventParameter"
@@ -13534,13 +13138,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Event properties.",
+            "description": "Event properties.  Up to the first 5 received properties.",
             "schema": {
               "$ref": "#/definitions/EventProperties"
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13588,7 +13192,7 @@
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13636,7 +13240,7 @@
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13684,7 +13288,7 @@
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13732,7 +13336,7 @@
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13751,7 +13355,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/analytics/events/{event_name}": {
       "delete": {
         "operationId": "Analytics_EventsDelete",
-        "description": "Delete the set of Events with the specified event names.",
+        "description": "Delete the set of Events with the specified event names",
         "parameters": [
           {
             "$ref": "#/parameters/EventParameter"
@@ -13765,10 +13369,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Event successfully deleted."
+            "description": "Event successfully deleted"
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13828,7 +13432,7 @@
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13847,7 +13451,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/analytics/event_logs/{event_name}": {
       "delete": {
         "operationId": "Analytics_EventsDeleteLogs",
-        "description": "Delete the set of Events with the specified event names.",
+        "description": "Delete the set of Events with the specified event names",
         "parameters": [
           {
             "$ref": "#/parameters/EventParameter"
@@ -13861,10 +13465,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Event successfully deleted."
+            "description": "Event successfully deleted"
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13903,7 +13507,7 @@
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -13949,7 +13553,7 @@
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -13987,13 +13591,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Overall crashes and affected users count.",
+            "description": "Overall crashes and affected users count",
             "schema": {
               "$ref": "#/definitions/CrashOverall"
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -14012,7 +13616,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/analytics/crash_groups/{crash_group_id}/operating_systems": {
       "get": {
         "operationId": "Analytics_CrashGroupOperatingSystemCounts",
-        "description": "Top OSes of the selected crash group with selected version. Available for UWP apps only.",
+        "description": "top OSes of the selected crash group with selected version. Available for UWP apps only.",
         "summary": "Available for UWP apps only.",
         "deprecated": true,
         "parameters": [
@@ -14034,13 +13638,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Top OSes with percentage in descending order.",
+            "description": "Top OSes with percentage in descending order",
             "schema": {
               "$ref": "#/definitions/CrashGroupOperatingSystems"
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -14059,7 +13663,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/analytics/crash_groups/{crash_group_id}/models": {
       "get": {
         "operationId": "Analytics_CrashGroupModelCounts",
-        "description": "Top models of the selected crash group with selected version. Available for UWP apps only.",
+        "description": "top models of the selected crash group with selected version. Available for UWP apps only.",
         "summary": "Available for UWP apps only.",
         "deprecated": true,
         "parameters": [
@@ -14081,13 +13685,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Top models with percentage in descending order.",
+            "description": "Top Models with percentage in descending order",
             "schema": {
               "$ref": "#/definitions/CrashGroupModels"
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -14137,7 +13741,7 @@
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -14156,7 +13760,7 @@
     "/v0.1/apps/{owner_name}/{app_name}/analytics/crash_groups": {
       "post": {
         "operationId": "Analytics_CrashGroupsTotals",
-        "description": "Overall crashes and affected users count of the selected crash groups with selected versions.",
+        "description": "Overall crashes and affected users count of the selected crash groups with selected versions",
         "parameters": [
           {
             "$ref": "#/parameters/CrashGroupsParameter"
@@ -14170,13 +13774,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Overall crashes and affected users count for all selected crash groups.",
+            "description": "Overall crashes and affected users count for all selected crash groups",
             "schema": {
               "$ref": "#/definitions/CrashesOverall"
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -14223,7 +13827,7 @@
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -14599,9 +14203,6 @@
             "$ref": "#/parameters/VersionsParameter"
           },
           {
-            "$ref": "#/parameters/AppBuildParameter"
-          },
-          {
             "$ref": "#/parameters/owner_name"
           },
           {
@@ -14616,7 +14217,7 @@
             }
           },
           "default": {
-            "description": "Error code with reason.",
+            "description": "Error code with reason",
             "schema": {
               "$ref": "#/definitions/Error"
             }
@@ -14940,32 +14541,25 @@
         ]
       }
     },
-    "/v0.1/administeredOrgs": {
+    "/v0.1/account/test/export/users": {
       "get": {
-        "description": "Returns a list organizations in which the requesting user is an admin",
-        "parameters": [],
+        "description": "Lists user data",
+        "operationId": "test_gdprExportUser",
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "OK",
             "schema": {
-              "$ref": "#/definitions/AdministeredOrgsResponse"
-            }
-          },
-          "default": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
+              "$ref": "#/definitions/TestGDPRUser"
             }
           }
         },
-        "operationId": "organizations_listAdministered",
         "security": [
           {
             "APIToken": []
           }
         ],
         "tags": [
-          "account"
+          "test"
         ]
       }
     },
@@ -15015,8 +14609,8 @@
     },
     "/v0.1/account/test/export": {
       "get": {
-        "description": "Lists all the endpoints available for Test accounts data",
-        "operationId": "test_gdprExportAccounts",
+        "description": "Lists all the endpoints available for Test account data",
+        "operationId": "test_gdprExport",
         "responses": {
           "200": {
             "description": "OK",
@@ -15198,34 +14792,6 @@
         }
       }
     },
-    "AADGroupUserSyncRequest": {
-      "properties": {
-        "user_id": {
-          "description": "user id",
-          "type": "string",
-          "format": "uuid"
-        },
-        "aad_group_id": {
-          "description": "The appcenter AAD group id",
-          "type": "string",
-          "format": "uuid"
-        },
-        "role": {
-          "description": "role",
-          "type": "string",
-          "enum": [
-            "admin",
-            "collaborator",
-            "member"
-          ]
-        }
-      },
-      "required": [
-        "user_id",
-        "aad_group_id",
-        "role"
-      ]
-    },
     "AADTenantAddRequest": {
       "properties": {
         "user_id": {
@@ -15373,10 +14939,6 @@
           "description": "The unique id (UUID) of the user",
           "format": "uuid",
           "type": "string"
-        },
-        "external_user_id": {
-          "description": "The external user id from the provider",
-          "type": "string"
         }
       }
     },
@@ -15392,8 +14954,7 @@
           "enum": [
             "github",
             "bitbucket",
-            "vsts",
-            "gitlab"
+            "vsts"
           ]
         },
         "user_id": {
@@ -15407,10 +14968,6 @@
         },
         "repo_id": {
           "description": "Repository id from the provider",
-          "type": "string"
-        },
-        "external_user_id": {
-          "description": "The external user id from the provider",
           "type": "string"
         }
       },
@@ -15461,9 +15018,7 @@
             "React-Native",
             "Xamarin",
             "Unity",
-            "Electron",
-            "WPF",
-            "WinForms"
+            "Electron"
           ]
         }
       },
@@ -15915,10 +15470,6 @@
               "generic"
             ]
           }
-        },
-        "has_ai_export": {
-          "description": "Does the HockeyApp app export any data to Application Insights?",
-          "type": "boolean"
         }
       }
     },
@@ -15935,15 +15486,12 @@
             "not_requested",
             "requested",
             "in_progress",
-            "failed",
-            "completed",
-            "cleaned"
+            "completed"
           ]
         }
       },
       "required": [
-        "id",
-        "status"
+        "id"
       ]
     },
     "InternalUserRequest": {
@@ -16025,8 +15573,7 @@
           "type": "string",
           "enum": [
             "admin",
-            "collaborator",
-            "member"
+            "collaborator"
           ]
         }
       }
@@ -16167,17 +15714,8 @@
     "UserEmailRequest": {
       "properties": {
         "user_email": {
-          "description": "The user's email address",
+          "description": "The user's email address'",
           "type": "string"
-        },
-        "role": {
-          "description": "The user's role",
-          "type": "string",
-          "enum": [
-            "admin",
-            "collaborator",
-            "member"
-          ]
         }
       },
       "required": [
@@ -16425,8 +15963,6 @@
             "Unity",
             "Electron",
             "Xamarin",
-            "WPF",
-            "WinForms",
             "Unknown"
           ]
         }
@@ -16526,8 +16062,7 @@
           "enum": [
             "github",
             "bitbucket",
-            "vsts",
-            "gitlab"
+            "vsts"
           ]
         },
         "user_id": {
@@ -16541,10 +16076,6 @@
         },
         "repo_id": {
           "description": "Repository id from the provider",
-          "type": "string"
-        },
-        "external_user_id": {
-          "description": "User id from the provider",
           "type": "string"
         }
       },
@@ -16638,8 +16169,6 @@
                 "Unity",
                 "Electron",
                 "Xamarin",
-                "WPF",
-                "WinForms",
                 "Unknown"
               ]
             },
@@ -16754,10 +16283,6 @@
                   }
                 }
               }
-            },
-            "cutover_from_hockeyapp_at": {
-              "description": "The cutover date of this app",
-              "type": "string"
             }
           }
         }
@@ -16804,10 +16329,6 @@
         "app_secret": {
           "description": "A unique and secret key used to identify the app in communication with the ingestion endpoint for crash reporting and analytics",
           "type": "string"
-        },
-        "is_cutover_from_hockeyapp": {
-          "description": "Whether the app had a 'hockeyapp' origin before being \"cut over\" to App Center",
-          "type": "boolean"
         }
       },
       "required": [
@@ -16816,8 +16337,7 @@
         "user_email",
         "permissions",
         "app_origin",
-        "app_secret",
-        "is_cutover_from_hockeyapp"
+        "app_secret"
       ]
     },
     "AppWithTeamPermissionsResponse": {
@@ -17292,34 +16812,12 @@
         "state": {
           "description": "The state (unset, enabled, disabled) of the feature",
           "type": "integer"
-        },
-        "created_at": {
-          "description": "The creation date of the feature",
-          "type": "string"
-        },
-        "updated_at": {
-          "description": "The date the feature was last updated at",
-          "type": "string"
         }
       },
       "required": [
         "name",
         "display_name",
         "state"
-      ]
-    },
-    "GlobalFeatureFlagsResponse": {
-      "properties": {
-        "value": {
-          "description": "The dictionary of global state values indexed by feature flag names",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        }
-      },
-      "required": [
-        "value"
       ]
     },
     "InternalUserSignupResponse": {
@@ -17477,17 +16975,6 @@
         "role"
       ]
     },
-    "AdministeredOrgsResponse": {
-      "properties": {
-        "organizations": {
-          "$ref": "#/definitions/OrganizationResponse"
-        }
-      },
-      "required": [
-        "organizations"
-      ],
-      "type": "object"
-    },
     "OrganizationResponse": {
       "properties": {
         "id": {
@@ -17602,34 +17089,6 @@
         "email",
         "joined_at",
         "name",
-        "role"
-      ]
-    },
-    "OrganizationAADGroupResponse": {
-      "properties": {
-        "aad_group_id": {
-          "description": "The id of the aad group",
-          "type": "string",
-          "format": "uuid"
-        },
-        "azure_aad_group_id": {
-          "description": "The azure id of the aad group",
-          "type": "string",
-          "format": "uuid"
-        },
-        "role": {
-          "description": "The role the user has within the organization",
-          "type": "string"
-        },
-        "display_name": {
-          "description": "The display name of the aad group",
-          "type": "string"
-        }
-      },
-      "required": [
-        "aad_group_id",
-        "azure_aad_group_id",
-        "display_name",
         "role"
       ]
     },
@@ -17929,77 +17388,6 @@
           "type": "array",
           "description": "An array of all ways a user has access to the app, based on the app_memberships table.",
           "items": {
-            "$ref": "#/definitions/AppMembership"
-          }
-        }
-      }
-    },
-    "AppMembership": {
-      "properties": {
-        "app_id": {
-          "type": "string"
-        },
-        "user_id": {
-          "type": "string"
-        },
-        "permissions": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "origin": {
-          "type": "string",
-          "enum": [
-            "appcenter",
-            "hockeyapp",
-            "codepush",
-            "testcloud",
-            "hockeyapp-dogfood"
-          ]
-        },
-        "source_type": {
-          "type": "string",
-          "enum": [
-            "user",
-            "org",
-            "distribution_group",
-            "team",
-            "release"
-          ]
-        },
-        "source_id": {
-          "type": "string"
-        }
-      }
-    },
-    "AppMembershipsValidationResponse": {
-      "properties": {
-        "excess_app_memberships": {
-          "properties": {
-            "app_users_memberships": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/AppMembership"
-              }
-            },
-            "distribution_group_memberships": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/AppMembership"
-              }
-            },
-            "organization_admin_memberships": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/AppMembership"
-              }
-            }
-          }
-        },
-        "app_users_with_missing_memberships": {
-          "type": "array",
-          "items": {
             "properties": {
               "app_id": {
                 "type": "string"
@@ -18014,42 +17402,24 @@
                 }
               },
               "origin": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "distribution_group_users_with_missing_memberships": {
-          "type": "array",
-          "items": {
-            "properties": {
-              "distribution_group_id": {
-                "type": "string"
+                "type": "string",
+                "enum": [
+                  "appcenter",
+                  "hockeyapp",
+                  "codepush",
+                  "testcloud",
+                  "hockeyapp-dogfood"
+                ]
               },
-              "user_id": {
-                "type": "string"
-              },
-              "origin": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "organization_admins_with_missing_memberships": {
-          "type": "array",
-          "items": {
-            "properties": {
-              "organization_id": {
-                "type": "string"
-              },
-              "user_id": {
-                "type": "string"
-              },
-              "role": {
-                "type": "string"
-              },
-              "origin": {
-                "type": "string"
+              "source_type": {
+                "type": "string",
+                "enum": [
+                  "user",
+                  "org",
+                  "distribution_group",
+                  "team",
+                  "release"
+                ]
               }
             }
           }
@@ -18166,28 +17536,6 @@
             "verified": {
               "description": "A boolean flag that indicates if the user is already verified",
               "type": "boolean"
-            },
-            "identity_providers": {
-              "description": "The identity providers associated with the user's account",
-              "type": "array",
-              "items": {
-                "properties": {
-                  "provider_name": {
-                    "description": "The name of the identity provider type",
-                    "type": "string",
-                    "enum": [
-                      "github",
-                      "aad",
-                      "facebook",
-                      "google"
-                    ]
-                  },
-                  "origin": {
-                    "description": "Whether the identity provider originated in HockeyApp or App Center",
-                    "type": "string"
-                  }
-                }
-              }
             }
           }
         }
@@ -18242,29 +17590,6 @@
         "type"
       ]
     },
-    "AADGroup": {
-      "properties": {
-        "aad_group_id": {
-          "description": "The id of the aad group",
-          "type": "string",
-          "format": "uuid"
-        },
-        "tenant_id": {
-          "description": "The id of the aad tenant",
-          "type": "string",
-          "format": "uuid"
-        },
-        "display_name": {
-          "description": "The display name of the aad group",
-          "type": "string"
-        }
-      },
-      "required": [
-        "aad_group_id",
-        "tenant_id",
-        "display_name"
-      ]
-    },
     "AADUser": {
       "description": "an AAD user's id and tenant id",
       "properties": {
@@ -18295,65 +17620,6 @@
       "required": [
         "hexcid"
       ]
-    },
-    "LinkAADtoUserRequest": {
-      "properties": {
-        "aad_tenant_ids": {
-          "description": "An array of AAD tenant data needed to link the user to the tenants",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uuid"
-          }
-        },
-        "role": {
-          "description": "The role of the user to be added",
-          "type": "string",
-          "enum": [
-            "admin",
-            "collaborator",
-            "member"
-          ]
-        }
-      },
-      "required": [
-        "aad_tenant_ids"
-      ]
-    },
-    "AddUserAsRoleRequest": {
-      "properties": {
-        "role": {
-          "description": "The role of the user to be added",
-          "type": "string",
-          "enum": [
-            "admin",
-            "collaborator",
-            "member"
-          ]
-        }
-      }
-    },
-    "OrganizationAadGroupPatchRequest": {
-      "properties": {
-        "role": {
-          "description": "The user's role in the organizatiion",
-          "type": "string",
-          "enum": [
-            "admin",
-            "collaborator",
-            "member"
-          ]
-        }
-      }
-    },
-    "AddAADGroupResponse": {
-      "properties": {
-        "id": {
-          "description": "The unique ID (UUID) of the aad group",
-          "format": "uuid",
-          "type": "string"
-        }
-      }
     },
     "SharedConnectionPatchRequest": {
       "description": "Shared connection patch request",
@@ -18487,7 +17753,6 @@
     },
     "AppleConnectionSecretRequest": {
       "description": "Apple connection secrets",
-      "x-ms-discriminator-value": "apple",
       "discriminator": "credentialType",
       "allOf": [
         {
@@ -18497,7 +17762,6 @@
     },
     "AppleCredentialsMultifactorSecretRequest": {
       "description": "Apple connection secrets",
-      "x-ms-discriminator-value": "credentials",
       "allOf": [
         {
           "$ref": "#/definitions/AppleConnectionSecretRequest"
@@ -18515,7 +17779,6 @@
     },
     "AppleCredentialsSecretRequest": {
       "description": "Apple connection secrets",
-      "x-ms-discriminator-value": "credentials",
       "allOf": [
         {
           "$ref": "#/definitions/AppleConnectionSecretRequest"
@@ -18533,7 +17796,6 @@
     },
     "AppleCertificateSecretRequest": {
       "description": "Apple certificate secrets",
-      "x-ms-discriminator-value": "certificate",
       "allOf": [
         {
           "$ref": "#/definitions/AppleConnectionSecretRequest"
@@ -18551,7 +17813,6 @@
     },
     "PrivateAppleSecretResponse": {
       "description": "private Apple connection secrets response",
-      "x-ms-discriminator-value": "apple",
       "discriminator": "credentialType",
       "allOf": [
         {
@@ -18561,7 +17822,6 @@
     },
     "PrivateAppleCredentialsSecretResponse": {
       "description": "private Apple connection secrets response",
-      "x-ms-discriminator-value": "certificate",
       "allOf": [
         {
           "$ref": "#/definitions/PrivateAppleSecretResponse"
@@ -18580,7 +17840,6 @@
     },
     "PrivateAppleCertificateSecretResponse": {
       "description": "private Apple connection secrets response",
-      "x-ms-discriminator-value": "certificate",
       "allOf": [
         {
           "$ref": "#/definitions/PrivateAppleSecretResponse"
@@ -18658,7 +17917,6 @@
     },
     "AppleConnectionSecretResponse": {
       "description": "Apple connection secrets",
-      "x-ms-discriminator-value": "apple",
       "allOf": [
         {
           "$ref": "#/definitions/SharedConnectionResponse"
@@ -18677,7 +17935,6 @@
     },
     "AppleConnectionNonSecretResponse": {
       "description": "Apple connection secrets",
-      "x-ms-discriminator-value": "apple",
       "allOf": [
         {
           "$ref": "#/definitions/SharedConnectionResponse"
@@ -18687,7 +17944,6 @@
     },
     "AppleCredentialNonSecretDetailsResponse": {
       "description": "Apple credentials non-secret details",
-      "x-ms-discriminator-value": "credentials",
       "allOf": [
         {
           "$ref": "#/definitions/AppleConnectionNonSecretResponse"
@@ -18705,7 +17961,6 @@
     },
     "AppleCertificateNonSecretDetailsResponse": {
       "description": "Apple certificate non-secret details",
-      "x-ms-discriminator-value": "certificate",
       "allOf": [
         {
           "$ref": "#/definitions/AppleConnectionNonSecretResponse"
@@ -18723,7 +17978,6 @@
     },
     "AppleCertificateSecretDetailsResponse": {
       "description": "Apple connection secrets",
-      "x-ms-discriminator-value": "apple",
       "allOf": [
         {
           "$ref": "#/definitions/SharedConnectionResponse"
@@ -18816,7 +18070,6 @@
     },
     "JiraConnectionSecretRequest": {
       "description": "Jira connection secrets",
-      "x-ms-discriminator-value": "jira",
       "allOf": [
         {
           "$ref": "#/definitions/SharedConnectionRequest"
@@ -18834,7 +18087,6 @@
     },
     "JiraConnectionSecretResponse": {
       "description": "Jira connection secrets",
-      "x-ms-discriminator-value": "jira",
       "allOf": [
         {
           "$ref": "#/definitions/SharedConnectionResponse"
@@ -18853,7 +18105,6 @@
     },
     "PrivateJiraConnectionSecretResponse": {
       "description": "private Jira connection secrets response",
-      "x-ms-discriminator-value": "jira",
       "allOf": [
         {
           "$ref": "#/definitions/PrivateSharedConnectionResponse"
@@ -18913,7 +18164,6 @@
     },
     "GooglePlayConnectionSecretRequest": {
       "description": "Google Play connection secrets this should be the JSON file data which is provided by google play",
-      "x-ms-discriminator-value": "googleplay",
       "allOf": [
         {
           "$ref": "#/definitions/SharedConnectionRequest"
@@ -18931,7 +18181,6 @@
     },
     "GooglePlayConnectionSecretResponse": {
       "description": "Google Play connection secrets",
-      "x-ms-discriminator-value": "googleplay",
       "allOf": [
         {
           "$ref": "#/definitions/SharedConnectionResponse"
@@ -18950,7 +18199,6 @@
     },
     "PrivateGooglePlayConnectionSecretResponse": {
       "description": "private google connection secrets response",
-      "x-ms-discriminator-value": "googleplay",
       "allOf": [
         {
           "$ref": "#/definitions/PrivateSharedConnectionResponse"
@@ -18969,7 +18217,6 @@
     },
     "GooglePlayConnectionNonSecretResponse": {
       "description": "Google Play non-secret data",
-      "x-ms-discriminator-value": "googleplay",
       "allOf": [
         {
           "$ref": "#/definitions/SharedConnectionResponse"
@@ -18979,7 +18226,6 @@
     },
     "GooglePlayCredentialNonSecretDetailsResponse": {
       "description": "Google Play credentials non-secret details",
-      "x-ms-discriminator-value": "credentials",
       "allOf": [
         {
           "$ref": "#/definitions/GooglePlayConnectionNonSecretResponse"
@@ -18997,7 +18243,6 @@
     },
     "JiraConnectionNonSecretResponse": {
       "description": "Jira non-secret data",
-      "x-ms-discriminator-value": "jira",
       "allOf": [
         {
           "$ref": "#/definitions/SharedConnectionResponse"
@@ -19007,7 +18252,6 @@
     },
     "JiraCredentialNonSecretDetailsResponse": {
       "description": "Jira credentials non-secret details",
-      "x-ms-discriminator-value": "credentials",
       "allOf": [
         {
           "$ref": "#/definitions/GooglePlayConnectionNonSecretResponse"
@@ -19615,10 +18859,6 @@
           "description": "Name of the Android module",
           "type": "string"
         },
-        "hasBundle": {
-          "description": "Module contains bundle settings",
-          "type": "boolean"
-        },
         "productFlavors": {
           "description": "The product flavors of the Android module",
           "type": "array",
@@ -19852,6 +19092,9 @@
     "BranchConfiguration": {
       "description": "The branch build configuration",
       "properties": {
+        "id": {
+          "type": "integer"
+        },
         "trigger": {
           "type": "string",
           "enum": [
@@ -19869,10 +19112,6 @@
         "signed": {
           "type": "boolean"
         },
-        "cloneFromBranch": {
-          "description": "A configured branch name to clone from. If provided, all other parameters will be ignored. Only supported in POST requests.",
-          "type": "string"
-        },
         "toolsets": {
           "$ref": "#/definitions/BranchConfigurationToolsets"
         },
@@ -19882,24 +19121,9 @@
       },
       "additionalProperties": {
         "$ref": "#/definitions/BranchProperties"
-      }
-    },
-    "BranchConfigurationWithId": {
-      "allOf": [
-        {
-          "$ref": "#/definitions/BranchConfiguration"
-        },
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "integer"
-            }
-          },
-          "required": [
-            "id"
-          ]
-        }
+      },
+      "required": [
+        "id"
       ]
     },
     "BranchConfigurationToolsets": {
@@ -19977,8 +19201,7 @@
           "type": "string"
         },
         "xcodeVersion": {
-          "type": "string",
-          "description": "Xcode version used to build. Available versions can be found in \"/xcode_versions\" API. Default is latest stable version, at the time when the configuration is set."
+          "type": "string"
         },
         "provisioningProfileFilename": {
           "type": "string"
@@ -20003,12 +19226,13 @@
         "targetToArchive": {
           "type": "string",
           "description": "The target id of the selected scheme to archive"
-        },
-        "forceLegacyBuildSystem": {
-          "type": "boolean",
-          "description": "Setting this to true forces the build to use Xcode legacy build system. Otherwise, the setting from workspace settings is used.\nBy default new build system is used if workspace setting is not committed to the repository. Only used for iOS React Native app, with Xcode 10.\n"
         }
-      }
+      },
+      "required": [
+        "projectOrWorkspacePath",
+        "scheme",
+        "xcodeVersion"
+      ]
     },
     "AndroidBranchConfigurationProperties": {
       "description": "Build configuration for Android projects",
@@ -20035,15 +19259,18 @@
         },
         "runLint": {
           "description": "Whether to run lint checks during the build (default)",
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "isRoot": {
           "description": "Whether it is the root module or not",
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "automaticSigning": {
           "description": "Whether to apply automatic signing or not",
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "keystorePassword": {
           "description": "The password of the keystore",
@@ -20065,7 +19292,11 @@
           "description": "The keystore encoded value",
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "module",
+        "buildVariant"
+      ]
     },
     "JavaScriptBranchConfigurationProperties": {
       "description": "Build configuration when React Native, or other JavaScript tech, is part of the build steps",
@@ -20076,13 +19307,17 @@
         },
         "runTests": {
           "description": "Whether to run Jest unit tests, via npm test, during the build",
-          "type": "boolean"
+          "type": "boolean",
+          "default": true
         },
         "reactNativeVersion": {
           "description": "Version of React Native from package.json files",
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "packageJsonPath"
+      ]
     },
     "XamarinBranchConfigurationProperties": {
       "description": "Build configuration for Xamarin projects",
@@ -20091,7 +19326,7 @@
           "type": "string"
         },
         "isSimBuild": {
-          "type": "boolean"
+          "type": "string"
         },
         "args": {
           "type": "string"
@@ -20118,7 +19353,16 @@
           "description": "Symlink of the SDK Bundle and Mono installation.\nThe build will use the associated Mono bundled with related Xamarin SDK. If both symlink and monoVersion or sdkBundle are passed, the symlink is taking precedence. If non-existing symlink is passed, the current stable Mono version will be configured for building.\n",
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "slnPath",
+        "isSimBuild",
+        "args",
+        "configuration",
+        "p12File",
+        "p12Pwd",
+        "provProfile"
+      ]
     },
     "Branch": {
       "properties": {
@@ -20242,38 +19486,11 @@
         "repo_url": {
           "type": "string",
           "description": "The repository url"
-        },
-        "external_user_id": {
-          "type": "string",
-          "description": "The external user ID"
         }
       },
       "required": [
         "repo_url"
       ]
-    },
-    "PatchRepoInfo": {
-      "properties": {
-        "external_user_id": {
-          "type": "string",
-          "description": "The external user ID"
-        }
-      }
-    },
-    "Toolsets": {
-      "description": "Set of toolsets available for app",
-      "type": "object",
-      "properties": {
-        "xamarin": {
-          "$ref": "#/definitions/XamarinSDKBundles"
-        },
-        "xcode": {
-          "$ref": "#/definitions/XcodeVersions"
-        },
-        "node": {
-          "$ref": "#/definitions/NodeVersions"
-        }
-      }
     },
     "XcodeVersions": {
       "description": "A list of Xcode versions",
@@ -20291,6 +19508,26 @@
         },
         "current": {
           "description": "If the Xcode is latest stable",
+          "type": "boolean"
+        }
+      }
+    },
+    "MonoVersions": {
+      "description": "A list of Mono versions",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MonoVersion"
+      }
+    },
+    "MonoVersion": {
+      "description": "The Mono version",
+      "properties": {
+        "name": {
+          "description": "The version name",
+          "type": "string"
+        },
+        "current": {
+          "description": "If the Mono is latest stable",
           "type": "boolean"
         }
       }
@@ -20330,26 +19567,6 @@
         }
       }
     },
-    "NodeVersions": {
-      "description": "A list of Node versions",
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/NodeVersion"
-      }
-    },
-    "NodeVersion": {
-      "description": "The Node version",
-      "properties": {
-        "name": {
-          "description": "The version name",
-          "type": "string"
-        },
-        "current": {
-          "description": "If the Node version is default for AppCenter",
-          "type": "boolean"
-        }
-      }
-    },
     "Builds": {
       "description": "A list of builds",
       "type": "array",
@@ -20358,11 +19575,11 @@
       }
     },
     "BuildParams": {
-      "type": "object",
       "properties": {
         "sourceVersion": {
           "type": "string",
-          "description": "Version to build which represents the full Git commit reference"
+          "description": "Version to build which represents the full Git commit reference",
+          "example": "1d71331f19e6830dbf99aa2c53cb264e4a490bab"
         },
         "debug": {
           "type": "boolean",
@@ -20637,6 +19854,32 @@
         }
       }
     },
+    "CreateReleaseUploadRequest": {
+      "properties": {
+        "file_extension": {
+          "description": "The file extension of the uploaded file",
+          "type": "string",
+          "enum": [
+            "ipa",
+            "apk",
+            "msi",
+            "xap",
+            "appx",
+            "appxbundle",
+            "msix",
+            "msixbundle",
+            "appxupload",
+            "msixupload",
+            "app.zip",
+            "dmg",
+            "pkg"
+          ]
+        }
+      },
+      "required": [
+        "file_extension"
+      ]
+    },
     "CreateReleaseUploadResponse": {
       "properties": {
         "id": {
@@ -20644,19 +19887,14 @@
           "type": "string",
           "format": "uuid"
         },
-        "upload_domain": {
-          "description": "The URL domain used to upload the release.",
-          "type": "string"
-        },
-        "token": {
-          "description": "The URL encoded token used for upload permissions.",
+        "upload_url": {
+          "description": "The URL used to upload the release.",
           "type": "string"
         }
       },
       "required": [
         "id",
-        "upload_domain",
-        "token"
+        "upload_url"
       ]
     },
     "GetReleaseStatusResponse": {
@@ -20665,6 +19903,10 @@
           "description": "The ID for the upload.",
           "type": "string",
           "format": "uuid"
+        },
+        "upload_url": {
+          "description": "The URL used to upload the release.",
+          "type": "string"
         },
         "upload_status": {
           "description": "The current upload status.",
@@ -20691,6 +19933,7 @@
       },
       "required": [
         "id",
+        "upload_url",
         "upload_status"
       ]
     },
@@ -21370,6 +20613,14 @@
     "ReleaseCreateRequest": {
       "description": "A request containing information for creating a release.",
       "properties": {
+        "uploaded_by": {
+          "type": "string",
+          "description": "The user that uploaded the build."
+        },
+        "name": {
+          "type": "string",
+          "description": "The display name of the app, extracted from the build."
+        },
         "version": {
           "description": "The release's version.<br>\nFor iOS: CFBundleVersion from info.plist.<br>\nFor Android: android:versionCode from AppManifest.xml.\n",
           "type": "string"
@@ -21392,7 +20643,7 @@
         },
         "languages": {
           "type": "array",
-          "description": "The languages supported by the release. Limited to 510 characters in a serialized array.",
+          "description": "The languages supported by the release.",
           "items": {
             "type": "string"
           }
@@ -21408,10 +20659,6 @@
         "package_url": {
           "type": "string",
           "description": "The URL to the release's binary."
-        },
-        "upload_id": {
-          "type": "string",
-          "description": "The upload id associated with the release, to map to the releases upload table."
         },
         "icon_url": {
           "type": "string",
@@ -21436,10 +20683,26 @@
         }
       },
       "required": [
+        "name",
+        "version",
+        "build_version",
+        "unique_identifier",
+        "minimum_os_version",
         "fingerprint",
         "size",
-        "package_url",
-        "upload_id"
+        "package_url"
+      ]
+    },
+    "ReleaseCreateResponse": {
+      "description": "The response from the release creation API that just contains the created release's distinct id.",
+      "properties": {
+        "release_distinct_id": {
+          "description": "The distinct ID of the release.",
+          "type": "number"
+        }
+      },
+      "required": [
+        "release_distinct_id"
       ]
     },
     "ReleaseUpdateRequest": {
@@ -21484,9 +20747,9 @@
           "$ref": "#/definitions/BuildInfo"
         },
         "notify_testers": {
-          "description": "A boolean which determines whether to notify testers of a new release, default to false.",
+          "description": "A boolean which determines whether to notify testers of a new release, default to true.",
           "type": "boolean",
-          "default": false
+          "default": true
         }
       }
     },
@@ -21667,8 +20930,7 @@
           "enum": [
             "failed",
             "processing",
-            "submitted",
-            "timeout"
+            "submitted"
           ]
         }
       }
@@ -22064,7 +21326,6 @@
         },
         "languages": {
           "type": "array",
-          "description": "The languages supported by the release. Limited to 510 characters in a serialized array.",
           "items": {
             "type": "string"
           }
@@ -22195,41 +21456,6 @@
       "required": [
         "status",
         "error_message"
-      ]
-    },
-    "MalwareScanResultPayload": {
-      "description": "Malware scan result from Malware Scan service",
-      "type": "object",
-      "properties": {
-        "requestId": {
-          "description": "Scan request identifier",
-          "type": "string",
-          "format": "uuid"
-        },
-        "result": {
-          "description": "Scan result",
-          "type": "string",
-          "enum": [
-            "clean",
-            "infected",
-            "error"
-          ]
-        }
-      },
-      "required": [
-        "requestId",
-        "result"
-      ]
-    },
-    "AabAndroidManifestXml": {
-      "properties": {
-        "xml": {
-          "description": "The contents of the binary XML file encoded as base64.",
-          "type": "string"
-        }
-      },
-      "required": [
-        "xml"
       ]
     },
     "DeviceConfigurationResponse": {
@@ -23857,7 +23083,6 @@
           "type": "string",
           "enum": [
             "Apple",
-            "JavaScript",
             "Breakpad",
             "AndroidProguard",
             "UWP"
@@ -23938,7 +23163,6 @@
           "type": "string",
           "enum": [
             "Apple",
-            "JavaScript",
             "Breakpad",
             "AndroidProguard",
             "UWP"
@@ -25876,12 +25100,12 @@
       "type": "object",
       "properties": {
         "count": {
-          "description": "Total crash count.",
+          "description": "total crash count",
           "type": "integer",
           "format": "int64"
         },
         "crashes": {
-          "description": "The total crash count for day.",
+          "description": "the total crash count for day",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DateTimeCounts"
@@ -25892,21 +25116,21 @@
     "ActiveDeviceCounts": {
       "properties": {
         "daily": {
-          "description": "The active device count for each interval.",
+          "description": "the active device count for each interval",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DateTimeCounts"
           }
         },
         "weekly": {
-          "description": "The active device count for each interval with a week's retention.",
+          "description": "the active device count for each interval with a week's retention",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DateTimeCounts"
           }
         },
         "monthly": {
-          "description": "The active device count for each interval with a month's retention.",
+          "description": "the active device count for each interval with a month's retention",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DateTimeCounts"
@@ -25915,7 +25139,7 @@
       }
     },
     "Places": {
-      "description": "Places and count during the time range in descending order.",
+      "description": "Places and count during the time range in descending order",
       "properties": {
         "total": {
           "type": "integer",
@@ -25930,20 +25154,20 @@
       }
     },
     "Place": {
-      "description": "The place code and the count.",
+      "description": "The place code and the count",
       "type": "object",
       "properties": {
         "code": {
-          "description": "The place code.",
+          "description": "the place code",
           "type": "string"
         },
         "count": {
-          "description": "The count of the this place.",
+          "description": "the count of the this place",
           "type": "integer",
           "format": "int64"
         },
         "previous_count": {
-          "description": "The count of previous time range of the place.",
+          "description": "the count of previous time range of the place",
           "type": "integer",
           "format": "int64"
         }
@@ -25966,7 +25190,7 @@
               ]
             },
             "message": {
-              "description": "The reason for the request failed.",
+              "description": "The reason for the request failed",
               "type": "string"
             }
           }
@@ -25977,17 +25201,17 @@
       "type": "object",
       "properties": {
         "distribution": {
-          "description": "The count of sessions in these buckets.",
+          "description": "the count of sessions in these buckets",
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
               "bucket": {
-                "description": "The bucket name.",
+                "description": "the bucket name",
                 "type": "string"
               },
               "count": {
-                "description": "The count of sessions in current bucket.",
+                "description": "the count of sessions in current bucket",
                 "type": "integer",
                 "format": "int64"
               }
@@ -25995,11 +25219,11 @@
           }
         },
         "previous_average_duration": {
-          "description": "The previous average session duration for previous time range.",
+          "description": "the previous average session duration for previous time range",
           "type": "string"
         },
         "average_duration": {
-          "description": "The average session duration for current time range.",
+          "description": "the average session duration for current time range",
           "type": "string"
         }
       }
@@ -26007,14 +25231,14 @@
     "Versions": {
       "properties": {
         "versions": {
-          "description": "List of version count.",
+          "description": "list of version count",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Version"
           }
         },
         "total": {
-          "description": "The total count of versions.",
+          "description": "the total count of versions",
           "type": "integer",
           "format": "int64"
         }
@@ -26024,16 +25248,16 @@
       "type": "object",
       "properties": {
         "version": {
-          "description": "Version.",
+          "description": "version",
           "type": "string"
         },
         "count": {
-          "description": "Version count.",
+          "description": "version count",
           "type": "integer",
           "format": "int64"
         },
         "previous_count": {
-          "description": "The count of previous time range of the version.",
+          "description": "the count of previous time range of the version",
           "type": "integer",
           "format": "int64"
         }
@@ -26049,37 +25273,37 @@
       "type": "object",
       "properties": {
         "average_sessions_per_user": {
-          "description": "Average seesion per user.",
+          "description": "average seesion per user",
           "type": "number",
           "format": "double"
         },
         "previous_average_sessions_per_user": {
-          "description": "Previous average session per user.",
+          "description": "previous average session per user",
           "type": "number",
           "format": "double"
         },
         "total_count": {
-          "description": "Total session per device count.",
+          "description": "total session per device count",
           "type": "integer",
           "format": "int64"
         },
         "previous_total_count": {
-          "description": "Previous total count.",
+          "description": "previous total count",
           "type": "integer",
           "format": "int64"
         },
         "sessions_per_user": {
           "type": "array",
-          "description": "The session count for each interval per device.",
+          "description": "the session count for each interval per device",
           "items": {
             "type": "object",
             "properties": {
               "datetime": {
-                "description": "The ISO 8601 datetime.",
+                "description": "the ISO 8601 datetime",
                 "type": "string"
               },
               "count": {
-                "description": "Count.",
+                "description": "count",
                 "type": "number",
                 "format": "double"
               }
@@ -26107,15 +25331,15 @@
       "properties": {
         "model_name": {
           "type": "string",
-          "description": "Model's name."
+          "description": "model's name"
         },
         "count": {
-          "description": "Count current of model.",
+          "description": "count current of model",
           "type": "integer",
           "format": "int64"
         },
         "previous_count": {
-          "description": "Count of previous model.",
+          "description": "count of previous model",
           "type": "integer",
           "format": "int64"
         }
@@ -26140,15 +25364,15 @@
       "properties": {
         "language_name": {
           "type": "string",
-          "description": "Language's name."
+          "description": "language's name"
         },
         "count": {
-          "description": "Count current of language.",
+          "description": "count current of language",
           "type": "integer",
           "format": "int64"
         },
         "previous_count": {
-          "description": "Count of previous lanugage.",
+          "description": "count of previous lanugage",
           "type": "integer",
           "format": "int64"
         }
@@ -26173,15 +25397,15 @@
       "properties": {
         "os_name": {
           "type": "string",
-          "description": "OS name."
+          "description": "OS name"
         },
         "count": {
-          "description": "Count current of OS.",
+          "description": "count current of OS",
           "type": "integer",
           "format": "int64"
         },
         "previous_count": {
-          "description": "Count of previous OS.",
+          "description": "count of previous OS",
           "type": "integer",
           "format": "int64"
         }
@@ -26190,11 +25414,11 @@
     "DateTimeCounts": {
       "properties": {
         "datetime": {
-          "description": "The ISO 8601 datetime.",
+          "description": "the ISO 8601 datetime",
           "type": "string"
         },
         "count": {
-          "description": "Count of the object.",
+          "description": "count of the object",
           "type": "integer",
           "format": "int64"
         }
@@ -26203,11 +25427,11 @@
     "DateTimeDecimalCounts": {
       "properties": {
         "datetime": {
-          "description": "The ISO 8601 datetime.",
+          "description": "the ISO 8601 datetime",
           "type": "string"
         },
         "count": {
-          "description": "Decimal count of the object.",
+          "description": "decimal count of the object",
           "type": "number",
           "format": "double"
         }
@@ -26232,25 +25456,11 @@
         }
       }
     },
-    "AvailableAppBuilds": {
-      "type": "object",
-      "properties": {
-        "app_builds": {
-          "description": "List of available app builds.",
-          "type": "array",
-          "items": {
-            "description": "App Build name.",
-            "type": "string",
-            "format": "string"
-          }
-        }
-      }
-    },
     "CrashFreeDevicePercentages": {
       "type": "object",
       "properties": {
         "average_percentage": {
-          "description": "Average percentage.",
+          "description": "Average percentage",
           "type": "number",
           "format": "double"
         },
@@ -26273,7 +25483,6 @@
       "type": "object",
       "properties": {
         "modules": {
-          "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/Module"
           }
@@ -26283,18 +25492,18 @@
     "DateTimePercentages": {
       "properties": {
         "datetime": {
-          "description": "The ISO 8601 datetime.",
+          "description": "the ISO 8601 datetime",
           "type": "string"
         },
         "percentage": {
-          "description": "Percentage of the object.",
+          "description": "percentage of the object",
           "type": "number",
           "format": "double"
         }
       }
     },
     "CrashesOverall": {
-      "description": "List of crash groups with overall crashes count and affected users.",
+      "description": "list of crash groups with overall crashes count and affected users",
       "type": "array",
       "items": {
         "type": "object",
@@ -26346,10 +25555,10 @@
       "properties": {
         "model_name": {
           "type": "string",
-          "description": "Model's name."
+          "description": "model's name"
         },
         "crash_count": {
-          "description": "Count of model.",
+          "description": "count of model",
           "type": "integer",
           "format": "int64"
         }
@@ -26375,12 +25584,12 @@
       "properties": {
         "operating_system_name": {
           "type": "string",
-          "description": "OS name."
+          "description": "OS name"
         },
         "crash_count": {
           "type": "integer",
           "format": "int64",
-          "description": "Count of OS."
+          "description": "count of OS"
         }
       }
     },
@@ -26404,12 +25613,12 @@
       "properties": {
         "place_name": {
           "type": "string",
-          "description": "Place name."
+          "description": "Place name"
         },
         "crash_count": {
           "type": "integer",
           "format": "int64",
-          "description": "Count of places."
+          "description": "count of places"
         }
       }
     },
@@ -26433,12 +25642,12 @@
       "properties": {
         "language_name": {
           "type": "string",
-          "description": "Language name."
+          "description": "language name"
         },
         "crash_count": {
           "type": "integer",
           "format": "int64",
-          "description": "Count of languages."
+          "description": "count of languages"
         }
       }
     },
@@ -26462,12 +25671,12 @@
       "properties": {
         "carrier_name": {
           "type": "string",
-          "description": "Carrier name."
+          "description": "carrier name"
         },
         "crash_count": {
           "type": "integer",
           "format": "int64",
-          "description": "Crash count of carrier."
+          "description": "crash count of carrier"
         }
       }
     },
@@ -26508,12 +25717,12 @@
           }
         },
         "total": {
-          "description": "The total count of events.",
+          "description": "the total count of events",
           "type": "integer",
           "format": "int64"
         },
         "total_devices": {
-          "description": "The active device over this period.",
+          "description": "the active device over this period",
           "type": "integer",
           "format": "int64"
         }
@@ -26535,7 +25744,7 @@
           "format": "int64"
         },
         "previous_device_count": {
-          "description": "The device count of previous time range of the event.",
+          "description": "the device count of previous time range of the event",
           "type": "integer",
           "format": "int64"
         },
@@ -26544,7 +25753,7 @@
           "format": "int64"
         },
         "previous_count": {
-          "description": "The event count of previous time range of the event.",
+          "description": "the event count of previous time range of the event",
           "type": "integer",
           "format": "int64"
         },
@@ -26639,13 +25848,13 @@
       }
     },
     "EventProperties": {
-      "description": "Event properties during the time range.",
+      "description": "Event properties during the time range",
       "type": "object",
       "properties": {
         "event_properties": {
           "type": "array",
           "items": {
-            "description": "The event property.",
+            "description": "The event property",
             "type": "string",
             "format": "string"
           }
@@ -26653,16 +25862,16 @@
       }
     },
     "EventPropertyValues": {
-      "description": "Event property value counts during the time range in descending order.",
+      "description": "Event property value counts during the time range in descending order",
       "type": "object",
       "properties": {
         "total": {
-          "description": "The total property value counts.",
+          "description": "The total property value counts",
           "type": "integer",
           "format": "int64"
         },
         "values": {
-          "description": "The event property values.",
+          "description": "The event property values",
           "type": "array",
           "items": {
             "$ref": "#/definitions/EventPropertyValue"
@@ -26671,20 +25880,20 @@
       }
     },
     "EventPropertyValue": {
-      "description": "An event property value with counts.",
+      "description": "An event property value with counts",
       "type": "object",
       "properties": {
         "name": {
-          "description": "The event property value name.",
+          "description": "The event property value name",
           "type": "string"
         },
         "count": {
-          "description": "The count of the the event property value.",
+          "description": "The count of the the event property value",
           "type": "integer",
           "format": "int64"
         },
         "previous_count": {
-          "description": "The count of previous time range of the event property value.",
+          "description": "The count of previous time range of the event property value",
           "type": "integer",
           "format": "int64"
         }
@@ -26755,12 +25964,12 @@
             "type": "object",
             "properties": {
               "version": {
-                "description": "App version.\n",
+                "description": "App version\n",
                 "type": "string",
                 "format": "string"
               },
               "build": {
-                "description": "App build number.\n",
+                "description": "App build number\n",
                 "type": "string",
                 "format": "string"
               }
@@ -26844,7 +26053,7 @@
           "format": "double"
         },
         "sessions": {
-          "description": "Sessions per day.",
+          "description": "Sessions per day",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DailySession"
@@ -26857,7 +26066,7 @@
       "properties": {
         "datetime": {
           "type": "string",
-          "description": "The ISO 8601 datetime."
+          "description": "the ISO 8601 datetime"
         },
         "count": {
           "type": "integer",
@@ -26877,7 +26086,7 @@
           "format": "int64"
         },
         "counts": {
-          "description": "Release counts per day.",
+          "description": "Release Counts per day",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DateTimeDownloadReleaseCount"
@@ -26889,7 +26098,7 @@
       "type": "object",
       "properties": {
         "datetime": {
-          "description": "The ISO 8601 datetime.",
+          "description": "the ISO 8601 datetime",
           "type": "string"
         },
         "total": {
@@ -29230,7 +28439,7 @@
       ]
     },
     "NotificationTarget": {
-      "description": "Type of Notification target (audiences, devices, user ids, account ids or broadcast). The object must include the correct properties for the specified target type except for broadcast.",
+      "description": "Type of Notification target (audiences, devices, user ids or account ids). The object must include the correct properties for the specified target type.",
       "type": "object",
       "discriminator": "type",
       "properties": {
@@ -29240,22 +28449,12 @@
             "audiences_target",
             "devices_target",
             "user_ids_target",
-            "account_ids_target",
-            "broadcast_target"
+            "account_ids_target"
           ]
         }
       },
       "required": [
         "type"
-      ]
-    },
-    "NotificationTargetBroadcast": {
-      "description": "Broadcast notification to all the devices",
-      "x-ms-discriminator-value": "broadcast_target",
-      "allOf": [
-        {
-          "$ref": "#/definitions/NotificationTarget"
-        }
       ]
     },
     "NotificationTargetUserIds": {
@@ -30979,6 +30178,15 @@
         }
       }
     },
+    "TestGDPRUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
     "TestGDPRAccount": {
       "type": "object",
       "properties": {
@@ -31061,18 +30269,6 @@
         }
       }
     },
-    "TestGDPRPipelineTest": {
-      "type": "object",
-      "properties": {
-        "app_upload_id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "test_parameters": {
-          "type": "object"
-        }
-      }
-    },
     "TestGDPRFileSetFile": {
       "type": "object",
       "properties": {
@@ -31092,68 +30288,17 @@
         }
       }
     },
-    "CodePushUploadedRelease": {
+    "TestGDPRPipelineTest": {
+      "type": "object",
       "properties": {
-        "release_upload": {
-          "description": "The upload metadata from the release initialization step.",
-          "$ref": "#/definitions/CodePushReleaseUpload"
-        },
-        "target_binary_version": {
-          "description": "the binary version of the application",
-          "type": "string"
-        },
-        "deployment_name": {
-          "description": "This specifies which deployment you want to release the update to. Default is Staging.",
-          "type": "string"
-        },
-        "description": {
-          "description": "This provides an optional \"change log\" for the deployment.",
-          "type": "string",
-          "maximum": 10000
-        },
-        "disabled": {
-          "description": "This specifies whether an update should be downloadable by end users or not.",
-          "type": "boolean"
-        },
-        "mandatory": {
-          "description": "This specifies whether the update should be considered mandatory or not (e.g. it includes a critical security fix).",
-          "type": "boolean"
-        },
-        "no_duplicate_release_error": {
-          "description": "This specifies that if the update is identical to the latest release on the deployment, the CLI should generate a warning instead of an error.",
-          "type": "boolean"
-        },
-        "rollout": {
-          "description": "This specifies the percentage of users (as an integer between 1 and 100) that should be eligible to receive this update.",
-          "type": "integer"
-        }
-      },
-      "required": [
-        "release_upload",
-        "target_binary_version"
-      ]
-    },
-    "CodePushReleaseUpload": {
-      "properties": {
-        "id": {
-          "description": "The ID for the newly created upload. It is going to be required later in the process.",
+        "app_upload_id": {
           "type": "string",
           "format": "uuid"
         },
-        "upload_domain": {
-          "description": "The URL domain used to upload the release.",
-          "type": "string"
-        },
-        "token": {
-          "description": "The URL encoded token used for upload permissions.",
-          "type": "string"
+        "test_parameters": {
+          "type": "object"
         }
-      },
-      "required": [
-        "id",
-        "upload_domain",
-        "token"
-      ]
+      }
     },
     "Deployment": {
       "required": [
@@ -32235,15 +31380,6 @@
         }
       }
     },
-    "AllAccountsAggregatedBillingInformation": {
-      "description": "Aggregated Billing Information for a user an the organizations in which the user is an admin.",
-      "type": "object",
-      "properties": {
-        "aggregatedBillings": {
-          "$ref": "#/definitions/AggregatedBillingInformation"
-        }
-      }
-    },
     "AttributesValues": {
       "description": "Collection of attribute values.",
       "type": "object",
@@ -32604,27 +31740,6 @@
         }
       }
     },
-    "DataSubjectRightCustomerIdRequest": {
-      "type": "object",
-      "properties": {
-        "dataSubjectIdentifier": {
-          "description": "customer account id (b2c identifier) / customer user id (free form text) depending on the value of the fied `type`",
-          "type": "string"
-        },
-        "type": {
-          "description": "type of the customer dataSubjectIdentifier",
-          "type": "string",
-          "enum": [
-            "CustomerAccountId",
-            "CustomerUserId"
-          ],
-          "x-ms-enum": {
-            "name": "CustomerIdentifierType",
-            "modelAsString": false
-          }
-        }
-      }
-    },
     "DataSubjectRightEmailRequest": {
       "type": "object",
       "properties": {
@@ -32696,17 +31811,6 @@
         "clientId": {
           "format": "uuid",
           "type": "string"
-        }
-      }
-    },
-    "InnerError": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "string"
-        },
-        "innererror": {
-          "$ref": "#/definitions/InnerError"
         }
       }
     },
@@ -32825,6 +31929,9 @@
         },
         "scopeUrl": {
           "type": "string"
+        },
+        "isSdkConfigured": {
+          "type": "boolean"
         }
       }
     },
@@ -32902,59 +32009,23 @@
         }
       }
     },
-    "OverviewResponse": {
+    "LocationResponse": {
+      "description": "This response contains the location of the resource URI for 201 or 202 responses.",
       "type": "object",
       "properties": {
-        "databaseLocation": {
-          "enum": [
-            "East Asia",
-            "Southeast Asia",
-            "Australia Central",
-            "Australia Central 2",
-            "Australia East",
-            "Australia Southeast",
-            "Brazil South",
-            "Canada Central",
-            "Canada East",
-            "Central India",
-            "South India",
-            "West India",
-            "North Europe",
-            "West Europe",
-            "France Central",
-            "France South",
-            "Germany Central",
-            "Germany Northeast",
-            "Japan East",
-            "Japan West",
-            "Korea Central",
-            "Korea South",
-            "South Africa North",
-            "South Africa West",
-            "UK South",
-            "UK West",
-            "Central US",
-            "East US",
-            "East US 2",
-            "US Gov Arizona",
-            "US Gov Texas",
-            "North Central US",
-            "South Central US",
-            "West US",
-            "West US 2",
-            "West Central US"
-          ],
+        "location": {
+          "type": "string"
+        }
+      }
+    },
+    "InnerError": {
+      "type": "object",
+      "properties": {
+        "code": {
           "type": "string"
         },
-        "accountName": {
-          "type": "string"
-        },
-        "databaseId": {
-          "type": "string"
-        },
-        "throughput": {
-          "format": "int32",
-          "type": "integer"
+        "innererror": {
+          "$ref": "#/definitions/InnerError"
         }
       }
     },
@@ -33380,15 +32451,6 @@
       "required": true,
       "x-ms-parameter-location": "method"
     },
-    "aad_group_id": {
-      "name": "aad_group_id",
-      "type": "string",
-      "format": "uuid",
-      "in": "path",
-      "description": "The unique ID (UUID) of the aad_group",
-      "required": true,
-      "x-ms-parameter-location": "method"
-    },
     "team_name": {
       "name": "team_name",
       "type": "string",
@@ -33485,16 +32547,6 @@
       "required": true,
       "schema": {
         "$ref": "#/definitions/DistributionGroupAADGroupsDeleteRequest"
-      },
-      "x-ms-parameter-location": "method"
-    },
-    "role": {
-      "name": "role",
-      "in": "body",
-      "description": "The role of the user to be added",
-      "required": false,
-      "schema": {
-        "$ref": "#/definitions/AddUserAsRoleRequest"
       },
       "x-ms-parameter-location": "method"
     },
@@ -33911,7 +32963,7 @@
     "StorageAccountNameParameter": {
       "name": "storageAccount",
       "in": "query",
-      "description": "Storage account name.",
+      "description": "Storage account name",
       "required": true,
       "type": "string",
       "format": "string",
@@ -33920,7 +32972,7 @@
     "StorageAccountNameOptionalParameter": {
       "name": "storageAccount",
       "in": "query",
-      "description": "Storage account name.",
+      "description": "Storage account name",
       "required": false,
       "type": "string",
       "format": "string",
@@ -33929,7 +32981,7 @@
     "QueueNameParameter": {
       "name": "queueName",
       "in": "query",
-      "description": "Name of the queue.",
+      "description": "Name of the queue",
       "required": true,
       "type": "string",
       "format": "string",
@@ -33938,7 +32990,7 @@
     "QueueTypeParameter": {
       "name": "queueType",
       "in": "query",
-      "description": "Type of the queue.",
+      "description": "Type of the queue",
       "required": true,
       "enum": [
         "analytics",
@@ -33953,7 +33005,7 @@
     "CounterIdParameter": {
       "name": "counterId",
       "in": "path",
-      "description": "Counter Id.",
+      "description": "Counter Id",
       "required": true,
       "type": "string",
       "format": "string",
@@ -33962,7 +33014,7 @@
     "MigrationParameter": {
       "name": "migration",
       "in": "body",
-      "description": "Migration parameters.",
+      "description": "Migration parameters",
       "required": true,
       "x-ms-parameter-location": "method",
       "schema": {
@@ -33997,7 +33049,7 @@
     "MigrationNameParameter": {
       "name": "name",
       "in": "path",
-      "description": "Name.",
+      "description": "Name",
       "required": true,
       "type": "string",
       "x-ms-parameter-location": "method"
@@ -34005,7 +33057,7 @@
     "AppKeyForAdminParameter": {
       "name": "appId",
       "in": "query",
-      "description": "The id of the application.",
+      "description": "The id of the application",
       "required": false,
       "type": "string",
       "format": "string",
@@ -34014,7 +33066,7 @@
     "DistributionKeyParameter": {
       "name": "distribution_id",
       "in": "path",
-      "description": "The id of the distribution group.",
+      "description": "the id of the distribution group",
       "required": true,
       "type": "string",
       "format": "string",
@@ -34023,7 +33075,7 @@
     "StartParameter": {
       "name": "start",
       "in": "query",
-      "description": "Start date time in data in ISO 8601 date time format.",
+      "description": "Start date time in data in ISO 8601 date time format",
       "required": true,
       "type": "string",
       "format": "date-time",
@@ -34032,7 +33084,7 @@
     "EndParameter": {
       "name": "end",
       "in": "query",
-      "description": "Last date time in data in ISO 8601 date time format.",
+      "description": "Last date time in data in ISO 8601 date time format",
       "required": false,
       "type": "string",
       "format": "date-time",
@@ -34041,7 +33093,7 @@
     "CrashGroupParameter": {
       "name": "crash_group_id",
       "in": "path",
-      "description": "The id of the crash group.",
+      "description": "The id of the crash group",
       "required": true,
       "type": "string",
       "format": "string",
@@ -34059,7 +33111,7 @@
     "EventParameter": {
       "name": "event_name",
       "in": "path",
-      "description": "The id of the event.",
+      "description": "The id of the event",
       "required": true,
       "type": "string",
       "format": "string",
@@ -34068,7 +33120,7 @@
     "EventPropertyParameter": {
       "name": "event_property_name",
       "in": "path",
-      "description": "The id of the event property.",
+      "description": "The id of the event property",
       "required": true,
       "type": "string",
       "format": "string",
@@ -34102,18 +33154,10 @@
       "format": "string",
       "x-ms-parameter-location": "method"
     },
-    "AppBuildParameter": {
-      "name": "app_build",
-      "in": "query",
-      "required": true,
-      "type": "string",
-      "format": "string",
-      "x-ms-parameter-location": "method"
-    },
     "EventNameParameter": {
       "name": "event_name",
       "in": "query",
-      "description": "To select the specific events.",
+      "description": "to select the specific events",
       "required": false,
       "type": "array",
       "items": {
@@ -34145,10 +33189,11 @@
     "PropertyTopParameter": {
       "name": "$top",
       "in": "query",
-      "description": "The number of property values to return. Set to 0 in order to fetch all results available.",
+      "description": "The number of property values to return",
       "required": false,
-      "default": 10,
-      "minimum": 0,
+      "default": 5,
+      "minimum": 1,
+      "maximum": 10,
       "type": "integer",
       "format": "int64",
       "x-ms-parameter-location": "method"
@@ -34235,15 +33280,6 @@
     "ErrorVersionParameterOptional": {
       "name": "version",
       "in": "query",
-      "required": false,
-      "type": "string",
-      "format": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "ErrorAppBuildParameterOptional": {
-      "name": "appbuild",
-      "in": "query",
-      "description": "app build",
       "required": false,
       "type": "string",
       "format": "string",
@@ -34913,22 +33949,6 @@
       "description": "Email used for delete with x-authz-bypass headers",
       "required": true,
       "type": "string",
-      "x-ms-parameter-location": "method"
-    },
-    "DataSubjectRightOwnerName": {
-      "name": "owner_name",
-      "type": "string",
-      "in": "path",
-      "description": "The name of the app owner",
-      "required": true,
-      "x-ms-parameter-location": "method"
-    },
-    "DataSubjectRightAppName": {
-      "name": "app_name",
-      "type": "string",
-      "in": "path",
-      "description": "The name of the app",
-      "required": true,
       "x-ms-parameter-location": "method"
     }
   },

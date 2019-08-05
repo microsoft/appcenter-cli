@@ -11,9 +11,9 @@
 'use strict';
 
 /**
- * Type of Notification target (audiences, devices, user ids, account ids or
- * broadcast). The object must include the correct properties for the specified
- * target type except for broadcast.
+ * Type of Notification target (audiences, devices, user ids or account ids).
+ * The object must include the correct properties for the specified target
+ * type.
  *
  */
 class NotificationTarget {

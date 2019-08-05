@@ -16,11 +16,11 @@
 class SessionDurationsDistribution {
   /**
    * Create a SessionDurationsDistribution.
-   * @property {array} [distribution] The count of sessions in these buckets.
-   * @property {string} [previousAverageDuration] The previous average session
-   * duration for previous time range.
-   * @property {string} [averageDuration] The average session duration for
-   * current time range.
+   * @property {array} [distribution] the count of sessions in these buckets
+   * @property {string} [previousAverageDuration] the previous average session
+   * duration for previous time range
+   * @property {string} [averageDuration] the average session duration for
+   * current time range
    */
   constructor() {
   }

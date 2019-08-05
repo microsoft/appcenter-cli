@@ -41,7 +41,7 @@ class AppleCredentialsMultifactorSecretRequest extends models['AppleConnectionSe
   mapper() {
     return {
       required: false,
-      serializedName: 'credentials',
+      serializedName: 'AppleCredentialsMultifactorSecretRequest',
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {

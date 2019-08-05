@@ -16,9 +16,9 @@
 class Model {
   /**
    * Create a Model.
-   * @property {string} [modelName] Model's name.
-   * @property {number} [count] Count current of model.
-   * @property {number} [previousCount] Count of previous model.
+   * @property {string} [modelName] model's name
+   * @property {number} [count] count current of model
+   * @property {number} [previousCount] count of previous model
    */
   constructor() {
   }

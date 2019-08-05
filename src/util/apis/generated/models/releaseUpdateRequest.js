@@ -51,7 +51,7 @@ class ReleaseUpdateRequest {
    * @property {string} [build.commitMessage] The commit message of the build
    * producing the release
    * @property {boolean} [notifyTesters] A boolean which determines whether to
-   * notify testers of a new release, default to false. Default value: false .
+   * notify testers of a new release, default to true. Default value: true .
    */
   constructor() {
   }
@@ -145,7 +145,7 @@ class ReleaseUpdateRequest {
           notifyTesters: {
             required: false,
             serializedName: 'notify_testers',
-            defaultValue: false,
+            defaultValue: true,
             type: {
               name: 'Boolean'
             }

@@ -35,7 +35,7 @@ class GooglePlayConnectionSecretResponse extends models['SharedConnectionRespons
   mapper() {
     return {
       required: false,
-      serializedName: 'googleplay',
+      serializedName: 'GooglePlayConnectionSecretResponse',
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {

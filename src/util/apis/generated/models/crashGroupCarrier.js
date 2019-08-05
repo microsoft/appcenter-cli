@@ -16,8 +16,8 @@
 class CrashGroupCarrier {
   /**
    * Create a CrashGroupCarrier.
-   * @property {string} [carrierName] Carrier name.
-   * @property {number} [crashCount] Crash count of carrier.
+   * @property {string} [carrierName] carrier name
+   * @property {number} [crashCount] crash count of carrier
    */
   constructor() {
   }

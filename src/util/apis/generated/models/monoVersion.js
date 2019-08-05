@@ -11,36 +11,44 @@
 'use strict';
 
 /**
- * Class representing a OrganizationAadGroupPatchRequest.
+ * The Mono version
+ *
  */
-class OrganizationAadGroupPatchRequest {
+class MonoVersion {
   /**
-   * Create a OrganizationAadGroupPatchRequest.
-   * @property {string} [role] The user's role in the organizatiion. Possible
-   * values include: 'admin', 'collaborator', 'member'
+   * Create a MonoVersion.
+   * @property {string} [name] The version name
+   * @property {boolean} [current] If the Mono is latest stable
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of OrganizationAadGroupPatchRequest
+   * Defines the metadata of MonoVersion
    *
-   * @returns {object} metadata of OrganizationAadGroupPatchRequest
+   * @returns {object} metadata of MonoVersion
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'OrganizationAadGroupPatchRequest',
+      serializedName: 'MonoVersion',
       type: {
         name: 'Composite',
-        className: 'OrganizationAadGroupPatchRequest',
+        className: 'MonoVersion',
         modelProperties: {
-          role: {
+          name: {
             required: false,
-            serializedName: 'role',
+            serializedName: 'name',
             type: {
               name: 'String'
+            }
+          },
+          current: {
+            required: false,
+            serializedName: 'current',
+            type: {
+              name: 'Boolean'
             }
           }
         }
@@ -49,4 +57,4 @@ class OrganizationAadGroupPatchRequest {
   }
 }
 
-module.exports = OrganizationAadGroupPatchRequest;
+module.exports = MonoVersion;

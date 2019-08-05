@@ -21,8 +21,6 @@ class FeatureResponse {
    * @property {string} name The unique name of the feature
    * @property {number} state The state (unset, enabled, disabled) of the
    * feature
-   * @property {string} [createdAt] The creation date of the feature
-   * @property {string} [updatedAt] The date the feature was last updated at
    */
   constructor() {
   }
@@ -67,20 +65,6 @@ class FeatureResponse {
             serializedName: 'state',
             type: {
               name: 'Number'
-            }
-          },
-          createdAt: {
-            required: false,
-            serializedName: 'created_at',
-            type: {
-              name: 'String'
-            }
-          },
-          updatedAt: {
-            required: false,
-            serializedName: 'updated_at',
-            type: {
-              name: 'String'
             }
           }
         }

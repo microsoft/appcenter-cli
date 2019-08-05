@@ -19,11 +19,11 @@ class Event {
    * @property {string} [id]
    * @property {string} [name]
    * @property {number} [deviceCount]
-   * @property {number} [previousDeviceCount] The device count of previous time
-   * range of the event.
+   * @property {number} [previousDeviceCount] the device count of previous time
+   * range of the event
    * @property {number} [count]
-   * @property {number} [previousCount] The event count of previous time range
-   * of the event.
+   * @property {number} [previousCount] the event count of previous time range
+   * of the event
    * @property {number} [countPerDevice]
    * @property {number} [countPerSession]
    */

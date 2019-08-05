@@ -16,8 +16,8 @@
 class CrashGroupLanguage {
   /**
    * Create a CrashGroupLanguage.
-   * @property {string} [languageName] Language name.
-   * @property {number} [crashCount] Count of languages.
+   * @property {string} [languageName] language name
+   * @property {number} [crashCount] count of languages
    */
   constructor() {
   }

@@ -23,7 +23,7 @@ const WebResource = msRest.WebResource;
  *
  * @param {object} [options] Optional Parameters.
  *
- * @param {string} [options.acAuthorizationAADGraph] MSGraph Auth Token
+ * @param {string} [options.acAuthorizationMicrosoftGraph] MSGraph Auth Token
  *
  * @param {string} [options.searchTerm] User search term
  *
@@ -52,12 +52,12 @@ function _getUsers(ownerName, appName, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  let acAuthorizationAADGraph = (options && options.acAuthorizationAADGraph !== undefined) ? options.acAuthorizationAADGraph : undefined;
+  let acAuthorizationMicrosoftGraph = (options && options.acAuthorizationMicrosoftGraph !== undefined) ? options.acAuthorizationMicrosoftGraph : undefined;
   let searchTerm = (options && options.searchTerm !== undefined) ? options.searchTerm : undefined;
   // Validate
   try {
-    if (acAuthorizationAADGraph !== null && acAuthorizationAADGraph !== undefined && typeof acAuthorizationAADGraph.valueOf() !== 'string') {
-      throw new Error('acAuthorizationAADGraph must be of type string.');
+    if (acAuthorizationMicrosoftGraph !== null && acAuthorizationMicrosoftGraph !== undefined && typeof acAuthorizationMicrosoftGraph.valueOf() !== 'string') {
+      throw new Error('acAuthorizationMicrosoftGraph must be of type string.');
     }
     if (searchTerm !== null && searchTerm !== undefined && typeof searchTerm.valueOf() !== 'string') {
       throw new Error('searchTerm must be of type string.');
@@ -92,8 +92,8 @@ function _getUsers(ownerName, appName, options, callback) {
   httpRequest.headers = {};
   // Set Headers
   httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  if (acAuthorizationAADGraph !== undefined && acAuthorizationAADGraph !== null) {
-    httpRequest.headers['AC-Authorization-AAD-Graph'] = acAuthorizationAADGraph;
+  if (acAuthorizationMicrosoftGraph !== undefined && acAuthorizationMicrosoftGraph !== null) {
+    httpRequest.headers['AC-Authorization-Microsoft-Graph'] = acAuthorizationMicrosoftGraph;
   }
   if(options) {
     for(let headerName in options['customHeaders']) {
@@ -161,7 +161,7 @@ class Identity {
    *
    * @param {object} [options] Optional Parameters.
    *
-   * @param {string} [options.acAuthorizationAADGraph] MSGraph Auth Token
+   * @param {string} [options.acAuthorizationMicrosoftGraph] MSGraph Auth Token
    *
    * @param {string} [options.searchTerm] User search term
    *
@@ -198,7 +198,7 @@ class Identity {
    *
    * @param {object} [options] Optional Parameters.
    *
-   * @param {string} [options.acAuthorizationAADGraph] MSGraph Auth Token
+   * @param {string} [options.acAuthorizationMicrosoftGraph] MSGraph Auth Token
    *
    * @param {string} [options.searchTerm] User search term
    *

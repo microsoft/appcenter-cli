@@ -18,7 +18,7 @@ class ReleaseDailySessions {
    * Create a ReleaseDailySessions.
    * @property {number} [totalSessionCounts]
    * @property {number} [avgSessionsPerDay]
-   * @property {array} [sessions] Sessions per day.
+   * @property {array} [sessions] Sessions per day
    */
   constructor() {
   }

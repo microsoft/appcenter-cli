@@ -18,7 +18,6 @@ class AppRepoPatchRequest {
    * Create a AppRepoPatchRequest.
    * @property {string} [repoUrl] The absolute URL of the repository
    * @property {uuid} [userId] The unique id (UUID) of the user
-   * @property {string} [externalUserId] The external user id from the provider
    */
   constructor() {
   }
@@ -47,13 +46,6 @@ class AppRepoPatchRequest {
           userId: {
             required: false,
             serializedName: 'user_id',
-            type: {
-              name: 'String'
-            }
-          },
-          externalUserId: {
-            required: false,
-            serializedName: 'external_user_id',
             type: {
               name: 'String'
             }

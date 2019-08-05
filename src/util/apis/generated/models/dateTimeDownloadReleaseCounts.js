@@ -18,7 +18,7 @@ class DateTimeDownloadReleaseCounts {
    * Create a DateTimeDownloadReleaseCounts.
    * @property {number} [total]
    * @property {number} [unique]
-   * @property {array} [counts] Release counts per day.
+   * @property {array} [counts] Release Counts per day
    */
   constructor() {
   }

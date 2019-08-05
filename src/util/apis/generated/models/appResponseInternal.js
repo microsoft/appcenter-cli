@@ -22,7 +22,6 @@ class AppResponseInternal extends models['AppResponse'] {
    * @property {array} [featureFlags] The feature flags that are enabled for
    * this app
    * @property {array} [repositories] The repositories associated with this app
-   * @property {string} [cutoverFromHockeyappAt] The cutover date of this app
    */
   constructor() {
     super();
@@ -190,13 +189,6 @@ class AppResponseInternal extends models['AppResponse'] {
                     className: 'AppResponseInternalRepositoriesItem'
                   }
               }
-            }
-          },
-          cutoverFromHockeyappAt: {
-            required: false,
-            serializedName: 'cutover_from_hockeyapp_at',
-            type: {
-              name: 'String'
             }
           }
         }

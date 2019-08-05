@@ -35,7 +35,7 @@ class PrivateGooglePlayConnectionSecretResponse extends models['PrivateSharedCon
   mapper() {
     return {
       required: false,
-      serializedName: 'googleplay',
+      serializedName: 'PrivateGooglePlayConnectionSecretResponse',
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {

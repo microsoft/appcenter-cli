@@ -275,50 +275,36 @@ function _get(deploymentName, ownerName, appName, options, callback) {
  *
  * @param {string} deploymentName deployment name
  *
- * @param {object} uploadedRelease The necessary information required to
- * download the bundle and being the release process.
- *
- * @param {object} uploadedRelease.releaseUpload The upload metadata from the
- * release initialization step.
- *
- * @param {uuid} uploadedRelease.releaseUpload.id The ID for the newly created
- * upload. It is going to be required later in the process.
- *
- * @param {string} uploadedRelease.releaseUpload.uploadDomain The URL domain
- * used to upload the release.
- *
- * @param {string} uploadedRelease.releaseUpload.token The URL encoded token
- * used for upload permissions.
- *
- * @param {string} uploadedRelease.targetBinaryVersion the binary version of
- * the application
- *
- * @param {string} [uploadedRelease.deploymentName] This specifies which
- * deployment you want to release the update to. Default is Staging.
- *
- * @param {string} [uploadedRelease.description] This provides an optional
- * "change log" for the deployment.
- *
- * @param {boolean} [uploadedRelease.disabled] This specifies whether an update
- * should be downloadable by end users or not.
- *
- * @param {boolean} [uploadedRelease.mandatory] This specifies whether the
- * update should be considered mandatory or not (e.g. it includes a critical
- * security fix).
- *
- * @param {boolean} [uploadedRelease.noDuplicateReleaseError] This specifies
- * that if the update is identical to the latest release on the deployment, the
- * CLI should generate a warning instead of an error.
- *
- * @param {number} [uploadedRelease.rollout] This specifies the percentage of
- * users (as an integer between 1 and 100) that should be eligible to receive
- * this update.
- *
  * @param {string} ownerName The name of the owner
  *
  * @param {string} appName The name of the application
  *
+ * @param {string} targetBinaryVersion the binary version of the application
+ *
  * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.packageProperty] The upload zip file
+ *
+ * @param {string} [options.deploymentName1] This specifies which deployment
+ * you want to release the update to. Default is Staging.
+ *
+ * @param {string} [options.description] This provides an optional "change log"
+ * for the deployment.
+ *
+ * @param {boolean} [options.disabled] This specifies whether an update should
+ * be downloadable by end users or not.
+ *
+ * @param {boolean} [options.mandatory] This specifies whether the update
+ * should be considered mandatory or not (e.g. it includes a critical security
+ * fix).
+ *
+ * @param {boolean} [options.noDuplicateReleaseError] This specifies that if
+ * the update is identical to the latest release on the deployment, the CLI
+ * should generate a warning instead of an error.
+ *
+ * @param {number} [options.rollout] This specifies the percentage of users (as
+ * an integer between 1 and 100) that should be eligible to receive this
+ * update.
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -336,7 +322,7 @@ function _get(deploymentName, ownerName, appName, options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _create(deploymentName, uploadedRelease, ownerName, appName, options, callback) {
+function _create(deploymentName, ownerName, appName, targetBinaryVersion, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -346,19 +332,47 @@ function _create(deploymentName, uploadedRelease, ownerName, appName, options, c
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let packageProperty = (options && options.packageProperty !== undefined) ? options.packageProperty : undefined;
+  let deploymentName1 = (options && options.deploymentName1 !== undefined) ? options.deploymentName1 : undefined;
+  let description = (options && options.description !== undefined) ? options.description : undefined;
+  let disabled = (options && options.disabled !== undefined) ? options.disabled : undefined;
+  let mandatory = (options && options.mandatory !== undefined) ? options.mandatory : undefined;
+  let noDuplicateReleaseError = (options && options.noDuplicateReleaseError !== undefined) ? options.noDuplicateReleaseError : undefined;
+  let rollout = (options && options.rollout !== undefined) ? options.rollout : undefined;
   // Validate
   try {
     if (deploymentName === null || deploymentName === undefined || typeof deploymentName.valueOf() !== 'string') {
       throw new Error('deploymentName cannot be null or undefined and it must be of type string.');
-    }
-    if (uploadedRelease === null || uploadedRelease === undefined) {
-      throw new Error('uploadedRelease cannot be null or undefined.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+    if (packageParameter !== null && packageParameter !== undefined && typeof packageParameter.valueOf() !== 'object') {
+      throw new Error('packageParameter must be of type object.');
+    }
+    if (targetBinaryVersion === null || targetBinaryVersion === undefined || typeof targetBinaryVersion.valueOf() !== 'string') {
+      throw new Error('targetBinaryVersion cannot be null or undefined and it must be of type string.');
+    }
+    if (deploymentName1 !== null && deploymentName1 !== undefined && typeof deploymentName1.valueOf() !== 'string') {
+      throw new Error('deploymentName1 must be of type string.');
+    }
+    if (description !== null && description !== undefined && typeof description.valueOf() !== 'string') {
+      throw new Error('description must be of type string.');
+    }
+    if (disabled !== null && disabled !== undefined && typeof disabled !== 'boolean') {
+      throw new Error('disabled must be of type boolean.');
+    }
+    if (mandatory !== null && mandatory !== undefined && typeof mandatory !== 'boolean') {
+      throw new Error('mandatory must be of type boolean.');
+    }
+    if (noDuplicateReleaseError !== null && noDuplicateReleaseError !== undefined && typeof noDuplicateReleaseError !== 'boolean') {
+      throw new Error('noDuplicateReleaseError must be of type boolean.');
+    }
+    if (rollout !== null && rollout !== undefined && typeof rollout !== 'number') {
+      throw new Error('rollout must be of type number.');
     }
   } catch (error) {
     return callback(error);
@@ -377,7 +391,7 @@ function _create(deploymentName, uploadedRelease, ownerName, appName, options, c
   httpRequest.url = requestUrl;
   httpRequest.headers = {};
   // Set Headers
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  httpRequest.headers['Content-Type'] = 'multipart/form-data';
   if(options) {
     for(let headerName in options['customHeaders']) {
       if (options['customHeaders'].hasOwnProperty(headerName)) {
@@ -386,20 +400,32 @@ function _create(deploymentName, uploadedRelease, ownerName, appName, options, c
     }
   }
   // Serialize Request
-  let requestContent = null;
-  let requestModel = null;
-  try {
-    if (uploadedRelease !== null && uploadedRelease !== undefined) {
-      let requestModelMapper = new client.models['CodePushUploadedRelease']().mapper();
-      requestModel = client.serialize(requestModelMapper, uploadedRelease, 'uploadedRelease');
-      requestContent = JSON.stringify(requestModel);
-    }
-  } catch (error) {
-    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-        `payload - ${JSON.stringify(uploadedRelease, null, 2)}.`);
-    return callback(serializationError);
+  let formData = {};
+  if (packageParameter !== undefined && packageParameter !== null) {
+    formData['package'] = packageParameter;
   }
-  httpRequest.body = requestContent;
+  if (targetBinaryVersion !== undefined && targetBinaryVersion !== null) {
+    formData['targetBinaryVersion'] = targetBinaryVersion;
+  }
+  if (deploymentName1 !== undefined && deploymentName1 !== null) {
+    formData['deploymentName'] = deploymentName1;
+  }
+  if (description !== undefined && description !== null) {
+    formData['description'] = description;
+  }
+  if (disabled !== undefined && disabled !== null) {
+    formData['disabled'] = disabled.toString();
+  }
+  if (mandatory !== undefined && mandatory !== null) {
+    formData['mandatory'] = mandatory.toString();
+  }
+  if (noDuplicateReleaseError !== undefined && noDuplicateReleaseError !== null) {
+    formData['noDuplicateReleaseError'] = noDuplicateReleaseError.toString();
+  }
+  if (rollout !== undefined && rollout !== null) {
+    formData['rollout'] = rollout.toString();
+  }
+  httpRequest.formData = formData;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -653,50 +679,36 @@ class CodePushDeploymentReleases {
    *
    * @param {string} deploymentName deployment name
    *
-   * @param {object} uploadedRelease The necessary information required to
-   * download the bundle and being the release process.
-   *
-   * @param {object} uploadedRelease.releaseUpload The upload metadata from the
-   * release initialization step.
-   *
-   * @param {uuid} uploadedRelease.releaseUpload.id The ID for the newly created
-   * upload. It is going to be required later in the process.
-   *
-   * @param {string} uploadedRelease.releaseUpload.uploadDomain The URL domain
-   * used to upload the release.
-   *
-   * @param {string} uploadedRelease.releaseUpload.token The URL encoded token
-   * used for upload permissions.
-   *
-   * @param {string} uploadedRelease.targetBinaryVersion the binary version of
-   * the application
-   *
-   * @param {string} [uploadedRelease.deploymentName] This specifies which
-   * deployment you want to release the update to. Default is Staging.
-   *
-   * @param {string} [uploadedRelease.description] This provides an optional
-   * "change log" for the deployment.
-   *
-   * @param {boolean} [uploadedRelease.disabled] This specifies whether an update
-   * should be downloadable by end users or not.
-   *
-   * @param {boolean} [uploadedRelease.mandatory] This specifies whether the
-   * update should be considered mandatory or not (e.g. it includes a critical
-   * security fix).
-   *
-   * @param {boolean} [uploadedRelease.noDuplicateReleaseError] This specifies
-   * that if the update is identical to the latest release on the deployment, the
-   * CLI should generate a warning instead of an error.
-   *
-   * @param {number} [uploadedRelease.rollout] This specifies the percentage of
-   * users (as an integer between 1 and 100) that should be eligible to receive
-   * this update.
-   *
    * @param {string} ownerName The name of the owner
    *
    * @param {string} appName The name of the application
    *
+   * @param {string} targetBinaryVersion the binary version of the application
+   *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.packageProperty] The upload zip file
+   *
+   * @param {string} [options.deploymentName1] This specifies which deployment
+   * you want to release the update to. Default is Staging.
+   *
+   * @param {string} [options.description] This provides an optional "change log"
+   * for the deployment.
+   *
+   * @param {boolean} [options.disabled] This specifies whether an update should
+   * be downloadable by end users or not.
+   *
+   * @param {boolean} [options.mandatory] This specifies whether the update
+   * should be considered mandatory or not (e.g. it includes a critical security
+   * fix).
+   *
+   * @param {boolean} [options.noDuplicateReleaseError] This specifies that if
+   * the update is identical to the latest release on the deployment, the CLI
+   * should generate a warning instead of an error.
+   *
+   * @param {number} [options.rollout] This specifies the percentage of users (as
+   * an integer between 1 and 100) that should be eligible to receive this
+   * update.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -707,11 +719,11 @@ class CodePushDeploymentReleases {
    *
    * @reject {Error} - The error object.
    */
-  createWithHttpOperationResponse(deploymentName, uploadedRelease, ownerName, appName, options) {
+  createWithHttpOperationResponse(deploymentName, ownerName, appName, targetBinaryVersion, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._create(deploymentName, uploadedRelease, ownerName, appName, options, (err, result, request, response) => {
+      self._create(deploymentName, ownerName, appName, targetBinaryVersion, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -726,50 +738,36 @@ class CodePushDeploymentReleases {
    *
    * @param {string} deploymentName deployment name
    *
-   * @param {object} uploadedRelease The necessary information required to
-   * download the bundle and being the release process.
-   *
-   * @param {object} uploadedRelease.releaseUpload The upload metadata from the
-   * release initialization step.
-   *
-   * @param {uuid} uploadedRelease.releaseUpload.id The ID for the newly created
-   * upload. It is going to be required later in the process.
-   *
-   * @param {string} uploadedRelease.releaseUpload.uploadDomain The URL domain
-   * used to upload the release.
-   *
-   * @param {string} uploadedRelease.releaseUpload.token The URL encoded token
-   * used for upload permissions.
-   *
-   * @param {string} uploadedRelease.targetBinaryVersion the binary version of
-   * the application
-   *
-   * @param {string} [uploadedRelease.deploymentName] This specifies which
-   * deployment you want to release the update to. Default is Staging.
-   *
-   * @param {string} [uploadedRelease.description] This provides an optional
-   * "change log" for the deployment.
-   *
-   * @param {boolean} [uploadedRelease.disabled] This specifies whether an update
-   * should be downloadable by end users or not.
-   *
-   * @param {boolean} [uploadedRelease.mandatory] This specifies whether the
-   * update should be considered mandatory or not (e.g. it includes a critical
-   * security fix).
-   *
-   * @param {boolean} [uploadedRelease.noDuplicateReleaseError] This specifies
-   * that if the update is identical to the latest release on the deployment, the
-   * CLI should generate a warning instead of an error.
-   *
-   * @param {number} [uploadedRelease.rollout] This specifies the percentage of
-   * users (as an integer between 1 and 100) that should be eligible to receive
-   * this update.
-   *
    * @param {string} ownerName The name of the owner
    *
    * @param {string} appName The name of the application
    *
+   * @param {string} targetBinaryVersion the binary version of the application
+   *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.packageProperty] The upload zip file
+   *
+   * @param {string} [options.deploymentName1] This specifies which deployment
+   * you want to release the update to. Default is Staging.
+   *
+   * @param {string} [options.description] This provides an optional "change log"
+   * for the deployment.
+   *
+   * @param {boolean} [options.disabled] This specifies whether an update should
+   * be downloadable by end users or not.
+   *
+   * @param {boolean} [options.mandatory] This specifies whether the update
+   * should be considered mandatory or not (e.g. it includes a critical security
+   * fix).
+   *
+   * @param {boolean} [options.noDuplicateReleaseError] This specifies that if
+   * the update is identical to the latest release on the deployment, the CLI
+   * should generate a warning instead of an error.
+   *
+   * @param {number} [options.rollout] This specifies the percentage of users (as
+   * an integer between 1 and 100) that should be eligible to receive this
+   * update.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -796,7 +794,7 @@ class CodePushDeploymentReleases {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  create(deploymentName, uploadedRelease, ownerName, appName, options, optionalCallback) {
+  create(deploymentName, ownerName, appName, targetBinaryVersion, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -805,14 +803,14 @@ class CodePushDeploymentReleases {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._create(deploymentName, uploadedRelease, ownerName, appName, options, (err, result, request, response) => {
+        self._create(deploymentName, ownerName, appName, targetBinaryVersion, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._create(deploymentName, uploadedRelease, ownerName, appName, options, optionalCallback);
+      return self._create(deploymentName, ownerName, appName, targetBinaryVersion, options, optionalCallback);
     }
   }
 

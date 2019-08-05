@@ -17,7 +17,6 @@ class RepoInfo {
   /**
    * Create a RepoInfo.
    * @property {string} repoUrl The repository url
-   * @property {string} [externalUserId] The external user ID
    */
   constructor() {
   }
@@ -39,13 +38,6 @@ class RepoInfo {
           repoUrl: {
             required: true,
             serializedName: 'repo_url',
-            type: {
-              name: 'String'
-            }
-          },
-          externalUserId: {
-            required: false,
-            serializedName: 'external_user_id',
             type: {
               name: 'String'
             }

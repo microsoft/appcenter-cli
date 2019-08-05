@@ -16,10 +16,10 @@
 class Version {
   /**
    * Create a Version.
-   * @property {string} [version] Version.
-   * @property {number} [count] Version count.
-   * @property {number} [previousCount] The count of previous time range of the
-   * version.
+   * @property {string} [version] version
+   * @property {number} [count] version count
+   * @property {number} [previousCount] the count of previous time range of the
+   * version
    */
   constructor() {
   }

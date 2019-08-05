@@ -44,7 +44,7 @@ class AppleCertificateSecretDetailsResponse extends models['SharedConnectionResp
   mapper() {
     return {
       required: false,
-      serializedName: 'apple',
+      serializedName: 'AppleCertificateSecretDetailsResponse',
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {

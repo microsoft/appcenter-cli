@@ -11,16 +11,16 @@
 'use strict';
 
 /**
- * The place code and the count.
+ * The place code and the count
  *
  */
 class Place {
   /**
    * Create a Place.
-   * @property {string} [code] The place code.
-   * @property {number} [count] The count of the this place.
-   * @property {number} [previousCount] The count of previous time range of the
-   * place.
+   * @property {string} [code] the place code
+   * @property {number} [count] the count of the this place
+   * @property {number} [previousCount] the count of previous time range of the
+   * place
    */
   constructor() {
   }

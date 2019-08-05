@@ -11,14 +11,14 @@
 'use strict';
 
 /**
- * Event property value counts during the time range in descending order.
+ * Event property value counts during the time range in descending order
  *
  */
 class EventPropertyValues {
   /**
    * Create a EventPropertyValues.
-   * @property {number} [total] The total property value counts.
-   * @property {array} [values] The event property values.
+   * @property {number} [total] The total property value counts
+   * @property {array} [values] The event property values
    */
   constructor() {
   }

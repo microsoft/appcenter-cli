@@ -16,9 +16,9 @@
 class Language {
   /**
    * Create a Language.
-   * @property {string} [languageName] Language's name.
-   * @property {number} [count] Count current of language.
-   * @property {number} [previousCount] Count of previous lanugage.
+   * @property {string} [languageName] language's name
+   * @property {number} [count] count current of language
+   * @property {number} [previousCount] count of previous lanugage
    */
   constructor() {
   }

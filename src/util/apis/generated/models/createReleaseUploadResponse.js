@@ -18,9 +18,7 @@ class CreateReleaseUploadResponse {
    * Create a CreateReleaseUploadResponse.
    * @property {uuid} id The ID for the newly created upload. It is going to be
    * required later in the process.
-   * @property {string} uploadDomain The URL domain used to upload the release.
-   * @property {string} token The URL encoded token used for upload
-   * permissions.
+   * @property {string} uploadUrl The URL used to upload the release.
    */
   constructor() {
   }
@@ -46,16 +44,9 @@ class CreateReleaseUploadResponse {
               name: 'String'
             }
           },
-          uploadDomain: {
+          uploadUrl: {
             required: true,
-            serializedName: 'upload_domain',
-            type: {
-              name: 'String'
-            }
-          },
-          token: {
-            required: true,
-            serializedName: 'token',
+            serializedName: 'upload_url',
             type: {
               name: 'String'
             }

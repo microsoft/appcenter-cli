@@ -22,6 +22,7 @@ class AuthApplicationResponse {
    * @property {string} policyId
    * @property {uuid} scopeId
    * @property {string} scopeUrl
+   * @property {boolean} [isSdkConfigured]
    */
   constructor() {
   }
@@ -80,6 +81,13 @@ class AuthApplicationResponse {
             serializedName: 'scopeUrl',
             type: {
               name: 'String'
+            }
+          },
+          isSdkConfigured: {
+            required: false,
+            serializedName: 'isSdkConfigured',
+            type: {
+              name: 'Boolean'
             }
           }
         }

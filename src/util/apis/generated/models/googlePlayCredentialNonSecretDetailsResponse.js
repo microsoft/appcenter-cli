@@ -35,7 +35,7 @@ class GooglePlayCredentialNonSecretDetailsResponse extends models['GooglePlayCon
   mapper() {
     return {
       required: false,
-      serializedName: 'credentials',
+      serializedName: 'GooglePlayCredentialNonSecretDetailsResponse',
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {

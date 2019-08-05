@@ -34,7 +34,7 @@ class AppleConnectionSecretRequest extends models['SharedConnectionRequest'] {
   mapper() {
     return {
       required: false,
-      serializedName: 'apple',
+      serializedName: 'AppleConnectionSecretRequest',
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {

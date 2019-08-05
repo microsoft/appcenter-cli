@@ -35,7 +35,7 @@ const WebResource = msRest.WebResource;
  *
  * @param {string} app.platform The platform of the app. Possible values
  * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
- * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
+ * 'Xamarin', 'Unity', 'Electron'
  *
  * @param {object} [options] Optional Parameters.
  *
@@ -1774,7 +1774,7 @@ function _deleteMethod(appName, ownerName, options, callback) {
  *
  * @param {string} app.platform The platform of the app. Possible values
  * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
- * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
+ * 'Xamarin', 'Unity', 'Electron'
  *
  * @param {object} [options] Optional Parameters.
  *
@@ -2092,7 +2092,7 @@ class Apps {
    *
    * @param {string} app.platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
+   * 'Xamarin', 'Unity', 'Electron'
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -2141,7 +2141,7 @@ class Apps {
    *
    * @param {string} app.platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
+   * 'Xamarin', 'Unity', 'Electron'
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -3286,7 +3286,7 @@ class Apps {
    *
    * @param {string} app.platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
+   * 'Xamarin', 'Unity', 'Electron'
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -3333,7 +3333,7 @@ class Apps {
    *
    * @param {string} app.platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
+   * 'Xamarin', 'Unity', 'Electron'
    *
    * @param {object} [options] Optional Parameters.
    *

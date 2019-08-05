@@ -17,9 +17,9 @@ class InternalHockeyAppCutoverStatusResponse {
   /**
    * Create a InternalHockeyAppCutoverStatusResponse.
    * @property {string} id The ID of the app
-   * @property {string} status Does the HockeyApp app have crashes from within
-   * the last 90 days?. Possible values include: 'not_requested', 'requested',
-   * 'in_progress', 'failed', 'completed', 'cleaned'
+   * @property {string} [status] Does the HockeyApp app have crashes from
+   * within the last 90 days?. Possible values include: 'not_requested',
+   * 'requested', 'in_progress', 'completed'
    */
   constructor() {
   }
@@ -46,7 +46,7 @@ class InternalHockeyAppCutoverStatusResponse {
             }
           },
           status: {
-            required: true,
+            required: false,
             serializedName: 'status',
             type: {
               name: 'String'
