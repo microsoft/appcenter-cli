@@ -2,9 +2,10 @@ import * as fs from "fs";
 import * as path from "path";
 import chalk from "chalk";
 import * as xml2js from "xml2js";
-import { out } from "../../../util/interaction";
+import { out, isDebug } from "../../../util/interaction";
 import { isValidVersion } from "./validation-utils";
 import { fileDoesNotExistOrIsDirectory } from "./file-utils";
+
 const plist = require("plist");
 const g2js = require("gradle-to-js/lib/parser");
 const properties = require("properties");
@@ -262,7 +263,11 @@ export function runHermesEmitBinaryCommand(bundleName: string, outputFolder: str
   ]);
 
   if (sourcemapOutput) {
-      hermesArgs.push("-output-source-map");
+    hermesArgs.push("-output-source-map");
+  }
+
+  if (!isDebug()) {
+    hermesArgs.push("-w");
   }
 
   out.text(chalk.cyan("Converting JS bundle to byte code via Hermes, running command:\n"));
@@ -275,7 +280,7 @@ export function runHermesEmitBinaryCommand(bundleName: string, outputFolder: str
       });
 
       hermesProcess.stderr.on("data", (data: Buffer) => {
-        // Since hermes is printing lots of messages on stderr, we skip anything here.
+        console.error(data.toString().trim());
       });
 
       hermesProcess.on("close", (exitCode: number) => {

@@ -77,7 +77,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
   @hasArg
   public extraBundlerOptions: string | string[];
 
-  @help("Flag that gets passed to Hermes, JavaScript to byte codecompiler. Can be specified multiple times")
+  @help("Flag that gets passed to Hermes, the JavaScript to byte codecompiler from Facebook. Can be specified multiple times")
   @longName("extra-hermes-flag")
   @defaultValue([])
   @hasArg
