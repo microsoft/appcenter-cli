@@ -84,8 +84,8 @@
         "--debug-brk",
         "--no-timeouts",
         "--colors",
-        "--compilers",
-        "ts:ts-node/register",
+        "--require",
+        "ts-node/register",
         "--recursive",
         "./test/**/*-test.[tj]s"
       ], //you can specify paths to specific tests here
