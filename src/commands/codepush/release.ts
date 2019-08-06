@@ -1,5 +1,5 @@
 import { CommandResult, hasArg, help, longName, required, shortName } from "../../util/commandline";
-import CodePushReleaseCommandBase from "./lib/release-command-skeleton";
+import CodePushReleaseCommandBase from "./lib/codepush-release-command-base";
 import { AppCenterClient } from "../../util/apis";
 
 @help("Release an update to an app deployment")

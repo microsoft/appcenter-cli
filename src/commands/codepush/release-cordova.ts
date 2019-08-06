@@ -1,5 +1,5 @@
 import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName } from "../../util/commandline";
-import CodePushReleaseCommandBase from "./lib/release-command-skeleton";
+import CodePushReleaseCommandBase from "./lib/codepush-release-command-base";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";

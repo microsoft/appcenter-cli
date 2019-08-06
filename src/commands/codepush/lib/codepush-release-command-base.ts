@@ -6,9 +6,9 @@ import { inspect } from "util";
 import * as fs from "fs";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import chalk from "chalk";
-import { sign, zip } from "../lib/update-contents-tasks";
-import { isBinaryOrZip, getLastFolderInPath, moveReleaseFilesInTmpFolder, isDirectory } from "../lib/file-utils";
-import { isValidRange, isValidRollout, isValidDeployment, validateVersion } from "../lib/validation-utils";
+import { sign, zip } from "./update-contents-tasks";
+import { isBinaryOrZip, getLastFolderInPath, moveReleaseFilesInTmpFolder, isDirectory } from "./file-utils";
+import { isValidRange, isValidRollout, isValidDeployment, validateVersion } from "./validation-utils";
 import AppCenterCodePushRelease from "./appcenter-release";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-skeleton");
