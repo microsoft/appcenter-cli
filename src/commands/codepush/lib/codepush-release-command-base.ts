@@ -9,7 +9,8 @@ import chalk from "chalk";
 import { sign, zip } from "./update-contents-tasks";
 import { isBinaryOrZip, getLastFolderInPath, moveReleaseFilesInTmpFolder, isDirectory } from "./file-utils";
 import { isValidRange, isValidRollout, isValidDeployment, validateVersion } from "./validation-utils";
-import AppCenterCodePushRelease from "./appcenter-release";
+import FileUploadClient, { MessageLevel } from "appcenter-file-upload-client";
+import { DefaultApp } from "../../../util/profile";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-skeleton");
 
@@ -62,12 +63,12 @@ export default class CodePushReleaseCommandBase extends AppCommand {
 
   protected targetBinaryVersion: string;
 
-  private readonly releaseStrategy: AppCenterCodePushRelease;
+  private readonly fileUploadClient: FileUploadClient;
 
   constructor(args: CommandArgs) {
     super(args);
 
-    this.releaseStrategy = new AppCenterCodePushRelease();
+    this.fileUploadClient = new FileUploadClient();
   }
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
@@ -103,9 +104,9 @@ export default class CodePushReleaseCommandBase extends AppCommand {
 
       this.checkTargetBinaryVersion(this.targetBinaryVersion);
 
-      const releaseUpload = this.releaseStrategy.upload(client, app, this.deploymentName, updateContentsZipPath);
+      const releaseUpload = this.upload(client, app, this.deploymentName, updateContentsZipPath);
       await out.progress("Uploading bundle...", releaseUpload);
-      await out.progress("Creating CodePush release...",  this.releaseStrategy.release(client, app, this.deploymentName, {
+      await out.progress("Creating CodePush release...",  this.createRelease(client, app, this.deploymentName, {
         releaseUpload: await releaseUpload,
         targetBinaryVersion: this.targetBinaryVersion,
         description: this.description,
@@ -132,6 +133,48 @@ export default class CodePushReleaseCommandBase extends AppCommand {
     } finally {
       await pfs.rmDir(updateContentsZipPath);
     }
+  }
+
+  private async upload(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string): Promise<models.CodePushReleaseUpload> {
+    debug(`Starting release upload on deployment: ${deploymentName} with zip file: ${updateContentsZipPath}`);
+    const releaseUpload = (await clientRequest<models.CodePushReleaseUpload>(
+      (cb) => client.codePushDeploymentUpload.create(
+        deploymentName,
+        app.ownerName,
+        app.appName,
+        cb
+      )
+    )).result;
+
+    await this.uploadBundle(releaseUpload, updateContentsZipPath);
+    return releaseUpload;
+  }
+
+  public async createRelease(client: AppCenterClient, app: DefaultApp, deploymentName: string, uploadedRelease: models.CodePushUploadedRelease): Promise<void> {
+    debug(`Starting release process on deployment: ${deploymentName} with uploaded release metadata: ${inspect(uploadedRelease)}`);
+    await clientRequest<models.CodePushRelease>(
+      (cb) => client.codePushDeploymentReleases.create(
+        deploymentName,
+        uploadedRelease,
+        app.ownerName,
+        app.appName,
+        cb
+      )
+    );
+  }
+
+  private async uploadBundle(releaseUpload: models.CodePushReleaseUpload, bundleZipPath: string): Promise<void> {
+    debug(`Starting to upload the release bundle: ${bundleZipPath} with upload data: ${inspect(releaseUpload)}`);
+
+    await this.fileUploadClient.upload({
+      assetId: releaseUpload.id,
+      assetDomain: releaseUpload.uploadDomain,
+      assetToken: releaseUpload.token,
+      file: bundleZipPath,
+      onMessage: (message: string, level: MessageLevel) => {
+        debug(`Upload client message: ${message}`);
+      }
+    });
   }
 
   private checkTargetBinaryVersion(version: string): void {
