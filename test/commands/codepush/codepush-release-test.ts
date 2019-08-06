@@ -2,7 +2,7 @@ import * as Nock from "nock";
 import * as Temp from "temp";
 import * as Sinon from "sinon";
 import { expect } from "chai";
-import release from "../../../src/commands/codepush/release";
+import CodePushReleaseCommand from "../../../src/commands/codepush/release";
 import * as updateContentsTasks from "../../../src/commands/codepush/lib/update-contents-tasks";
 import { getFakeParamsForRequest, createFile, getCommandArgsForReleaseCommand, FakeParamsForRequests, nockPlatformRequest, getLastFolderForSignPath, nockRequestForValidation } from "./utils";
 import { CommandArgs } from "../../../src/util/commandline";
@@ -36,10 +36,11 @@ describe("CodePush release tests", () => {
         const args: CommandArgs = getCommandArgsForReleaseCommand(["-c", releaseFilePath, "-k", "fakePrivateKey.pem"], fakeParamsForRequests);
 
         // Act
-        const testRelaseSkeleton = new release(args);
-        await testRelaseSkeleton.execute();
+        const testRelaseSkeleton = new CodePushReleaseCommand(args);
+        const result = await testRelaseSkeleton.execute();
 
         // Assert
+        expect(result.succeeded).to.be.true;
         const lastFolderForSignPath = getLastFolderForSignPath(stubbedSign);
         expect(lastFolderForSignPath).to.eql("CodePush", "Last folder in path should be 'CodePush'");
         nockedRequests.done();
@@ -52,10 +53,11 @@ describe("CodePush release tests", () => {
         const args: CommandArgs = getCommandArgsForReleaseCommand(["-c", releaseFilePath, "-k", "fakePrivateKey.pem"], fakeParamsForRequests);
 
         // Act
-        const testRelaseSkeleton = new release(args);
-        await testRelaseSkeleton.execute();
+        const testRelaseSkeleton = new CodePushReleaseCommand(args);
+        const result = await testRelaseSkeleton.execute();
 
         // Assert
+        expect(result.succeeded).to.be.true;
         const lastFolderForSignPath = getLastFolderForSignPath(stubbedSign);
         expect(lastFolderForSignPath).to.not.eql("CodePush", "Last folder in path shouldn't be 'CodePush'");
         nockedRequests.done();
@@ -68,10 +70,11 @@ describe("CodePush release tests", () => {
         const args: CommandArgs = getCommandArgsForReleaseCommand(["-c", releaseFilePath, "-k", "fakePrivateKey.pem"], fakeParamsForRequests);
 
         // Act
-        const testRelaseSkeleton = new release(args);
-        await testRelaseSkeleton.execute();
+        const testRelaseSkeleton = new CodePushReleaseCommand(args);
+        const result = await testRelaseSkeleton.execute();
 
         // Assert
+        expect(result.succeeded).to.be.true;
         const lastFolderForSignPath = getLastFolderForSignPath(stubbedSign);
         expect(lastFolderForSignPath).to.not.eql("CodePush", "LastFolder in path shouldn't be 'CodePush'");
         nockedRequests.done();
