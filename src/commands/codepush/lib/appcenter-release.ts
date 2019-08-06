@@ -1,7 +1,5 @@
-import * as path from "path";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { DefaultApp } from "../../../util/profile/index";
-import { FileUploadServiceClient } from "../lib/file-upload-service-client";
 
 export default class AppCenterCodePushRelease {
   public async upload(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string): Promise<models.CodePushReleaseUpload> {
@@ -17,6 +15,7 @@ export default class AppCenterCodePushRelease {
     return releaseUpload;
   }
   public async release(client: AppCenterClient, app: DefaultApp, deploymentName: string, uploadedRelease: models.CodePushUploadedRelease): Promise<void> {
+
       await clientRequest<models.CodePushRelease>(
         (cb) => client.codePushDeploymentReleases.create(
           deploymentName,
@@ -28,15 +27,7 @@ export default class AppCenterCodePushRelease {
       );
   }
 
-  private async uploadBundle(releaseUpload: models.CodePushReleaseUpload, bundleZipFilePath: string): Promise<void> {
-    const fileName = path.basename(bundleZipFilePath);
-    const fileUploadServiceClient = new FileUploadServiceClient();
-
-    await fileUploadServiceClient.upload({
-      uploadDomain: releaseUpload.uploadDomain,
-      token: releaseUpload.token,
-      fileName: fileName,
-      filePath: bundleZipFilePath
-    });
+  private uploadBundle(releaseUpload: models.CodePushReleaseUpload, bundleZipPath: string): Promise<void> {
+    throw new Error("Not implemented yet.");
   }
 }
