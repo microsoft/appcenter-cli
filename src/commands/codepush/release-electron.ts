@@ -1,5 +1,5 @@
 import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, defaultValue } from "../../util/commandline";
-import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton";
+import CodePushReleaseCommandBase from "./lib/release-command-skeleton";
 import { AppCenterClient, clientRequest, models } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
@@ -14,7 +14,7 @@ import { getElectronProjectAppVersion, runWebPackBundleCommand, isValidOS, isEle
 const debug = require("debug")("appcenter-cli:commands:codepush:release-electron");
 
 @help("Release an Electron update to a deployment")
-export default class CodePushReleaseElectronCommand extends CodePushReleaseCommandSkeleton {
+export default class CodePushReleaseElectronCommand extends CodePushReleaseCommandBase {
   @help("Name of the generated JS bundle file. If unspecified, the standard bundle name will be used 'index.electron.bundle'")
   @shortName("b")
   @longName("bundle-name")

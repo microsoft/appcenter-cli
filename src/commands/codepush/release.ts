@@ -1,9 +1,9 @@
 import { CommandResult, hasArg, help, longName, required, shortName } from "../../util/commandline";
-import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton";
+import CodePushReleaseCommandBase from "./lib/release-command-skeleton";
 import { AppCenterClient } from "../../util/apis";
 
 @help("Release an update to an app deployment")
-export default class CodePushReleaseCommand extends CodePushReleaseCommandSkeleton {
+export default class CodePushReleaseCommand extends CodePushReleaseCommandBase {
   @help("Path to update contents folder")
   @shortName("c")
   @longName("update-contents-path")

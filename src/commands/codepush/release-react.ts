@@ -1,5 +1,5 @@
 import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, defaultValue } from "../../util/commandline";
-import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton";
+import CodePushReleaseCommandBase from "./lib/release-command-skeleton";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
@@ -14,7 +14,7 @@ import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBun
 const debug = require("debug")("appcenter-cli:commands:codepush:release-react");
 
 @help("Release a React Native update to an app deployment")
-export default class CodePushReleaseReactCommand extends CodePushReleaseCommandSkeleton {
+export default class CodePushReleaseReactCommand extends CodePushReleaseCommandBase {
   @help("Name of the generated JS bundle file. If unspecified, the standard bundle name will be used, depending on the specified platform: \"main.jsbundle\" (iOS), \"index.android.bundle\" (Android) or \"index.windows.bundle\" (Windows)")
   @shortName("b")
   @longName("bundle-name")

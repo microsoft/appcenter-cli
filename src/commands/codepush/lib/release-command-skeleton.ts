@@ -13,7 +13,7 @@ import AppCenterCodePushRelease from "./appcenter-release";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-skeleton");
 
-export default class CodePushReleaseCommandSkeleton extends AppCommand {
+export default class CodePushReleaseCommandBase extends AppCommand {
   @help("Deployment to release the update to")
   @shortName("d")
   @longName("deployment-name")
