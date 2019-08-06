@@ -247,7 +247,7 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
   });
 }
 
-export function runHermesEmitBinaryCommand(bundleName: string, outputFolder: string, sourcemapOutput: string, extraHermesOptions: string[]): Promise<void> {
+export function runHermesEmitBinaryCommand(bundleName: string, outputFolder: string, sourcemapOutput: string, extraHermesFlags: string[]): Promise<void> {
   const hermesArgs: string[] = [];
   const envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
 
@@ -259,7 +259,7 @@ export function runHermesEmitBinaryCommand(bundleName: string, outputFolder: str
       "-emit-binary",
       "-out", path.join(outputFolder, bundleName + ".hbc"),
       path.join(outputFolder, bundleName),
-      ...extraHermesOptions,
+      ...extraHermesFlags,
   ]);
 
   if (sourcemapOutput) {
@@ -288,14 +288,21 @@ export function runHermesEmitBinaryCommand(bundleName: string, outputFolder: str
               reject(new Error(`"hermes" command exited with code ${exitCode}.`));
           }
           // Copy HBC bundle to overwrite JS bundle
-          fs.copyFile(path.join(outputFolder, bundleName + ".hbc"), path.join(outputFolder, bundleName),
+          const source = path.join(outputFolder, bundleName + ".hbc");
+          const destination = path.join(outputFolder, bundleName);
+          fs.copyFile(source, destination,
             (err) => {
               if (err) {
                 console.error(err);
-                reject(new Error(`"hermes" command exited with code ${exitCode}.`));
+                reject(new Error(`Copying file ${source} to ${destination} failed. "hermes" previously exited with code ${exitCode}.`));
               }
-              fs.unlinkSync(path.join(outputFolder, bundleName + ".hbc"));
-              resolve(null as void);
+              fs.unlink(source, (err) => {
+                if (err) {
+                  console.error(err);
+                  reject(err);
+                }
+                resolve(null as void);
+              });
             }
           );
       });
