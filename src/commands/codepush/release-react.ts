@@ -9,7 +9,7 @@ import * as path from "path";
 import * as mkdirp from "mkdirp";
 import { fileDoesNotExistOrIsDirectory, createEmptyTmpReleaseFolder, removeReactTmpDir } from "./lib/file-utils";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";
-import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand, isValidOS, isValidPlatform, isReactNativeProject } from "./lib/react-native-utils";
+import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand, runHermesEmitBinaryCommand, getHermesEnabled, isValidOS, isValidPlatform, isReactNativeProject } from "./lib/react-native-utils";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-react");
 
@@ -76,6 +76,12 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
   @defaultValue([])
   @hasArg
   public extraBundlerOptions: string | string[];
+
+  @help("Flag that gets passed to Hermes, JavaScript to bytecode compiler. Can be specified multiple times")
+  @longName("extra-hermes-flag")
+  @defaultValue([])
+  @hasArg
+  public extraHermesFlags: string | string[];
 
   private os: string;
 
@@ -160,11 +166,21 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandS
       this.extraBundlerOptions = [this.extraBundlerOptions];
     }
 
+    if (typeof this.extraHermesFlags === "string") {
+      this.extraHermesFlags = [this.extraHermesFlags];
+    }
+
     try {
       createEmptyTmpReleaseFolder(this.updateContentsPath);
       removeReactTmpDir();
       await runReactNativeBundleCommand(this.bundleName, this.development, this.entryFile, this.updateContentsPath, this.os, this.sourcemapOutput, this.extraBundlerOptions);
-
+      // Check if we have to run hermes to compile JS to Byte Code if Hermes is enabled in build.gradle and we're releasing an Android build
+      if (this.os === "android") {
+        const isHermesEnabled = await getHermesEnabled(this.gradleFile);
+        if (isHermesEnabled) {
+          await runHermesEmitBinaryCommand(this.bundleName, this.updateContentsPath, this.sourcemapOutput, this.extraHermesFlags);
+        }
+      }
       out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));
 
       return await this.release(client);
