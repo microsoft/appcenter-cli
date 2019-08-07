@@ -12,7 +12,7 @@ import { isValidRange, isValidRollout, isValidDeployment, validateVersion } from
 import FileUploadClient, { MessageLevel } from "appcenter-file-upload-client";
 import { DefaultApp } from "../../../util/profile";
 
-const debug = require("debug")("appcenter-cli:commands:codepush:release-skeleton");
+const debug = require("debug")("appcenter-cli:commands:codepush:release-base");
 
 export default class CodePushReleaseCommandBase extends AppCommand {
   @help("Deployment to release the update to")
