@@ -66,7 +66,7 @@ describe.only("CodePush release tests", () => {
         disabled: false,
         rollout: 100
       })
-      .reply(200, {
+      .reply(201, {
           target_binary_range: "1.0",
           blob_url: "storagePackage.blobUrl",
           description: "storagePackage.description",
