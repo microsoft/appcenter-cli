@@ -137,6 +137,7 @@ export default class CodePushReleaseCommandBase extends AppCommand {
 
   private async upload(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string): Promise<models.CodePushReleaseUpload> {
     debug(`Starting release upload on deployment: ${deploymentName} with zip file: ${updateContentsZipPath}`);
+
     const releaseUpload = (await clientRequest<models.CodePushReleaseUpload>(
       (cb) => client.codePushDeploymentUpload.create(
         deploymentName,
@@ -152,6 +153,7 @@ export default class CodePushReleaseCommandBase extends AppCommand {
 
   public async createRelease(client: AppCenterClient, app: DefaultApp, deploymentName: string, uploadedRelease: models.CodePushUploadedRelease): Promise<void> {
     debug(`Starting release process on deployment: ${deploymentName} with uploaded release metadata: ${inspect(uploadedRelease)}`);
+
     await clientRequest<models.CodePushRelease>(
       (cb) => client.codePushDeploymentReleases.create(
         deploymentName,

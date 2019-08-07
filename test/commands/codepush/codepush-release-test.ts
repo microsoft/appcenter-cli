@@ -8,7 +8,7 @@ import * as updateContentsTasks from "../../../src/commands/codepush/lib/update-
 import { getFakeParamsForRequest, createFile, getCommandArgsForReleaseCommand, FakeParamsForRequests, nockPlatformRequest, getLastFolderForSignPath, releaseUploadResponse, setMetadataResponse } from "./utils";
 import { CommandArgs } from "../../../src/util/commandline";
 
-describe.only("CodePush release tests", () => {
+describe("CodePush release tests", () => {
   const tmpFolderPath = Temp.mkdirSync("releaseTest");
   const releaseFileName = "releaseBinaryFile";
   const releaseFileContent = "Hello World!";
@@ -93,7 +93,7 @@ describe.only("CodePush release tests", () => {
 
   describe("CodePush signed release", () => {
     describe("CodePush path generation", () => {
-      it.only("CodePush path generation for React-Native with private key", async () => {
+      it("CodePush path generation for React-Native with private key", async () => {
         // Arrange
         const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
         nockPlatformRequest("React-Native", fakeParamsForRequests, nockedApiGatewayRequests);

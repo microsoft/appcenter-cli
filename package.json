@@ -91,7 +91,7 @@
     "@types/mkdirp": "^0.5.2",
     "@types/wordwrap": "^1.0.0",
     "@types/yazl": "^2.4.1",
-    "appcenter-file-upload-client": "0.0.8",
+    "appcenter-file-upload-client": "0.0.9",
     "azure-storage": "^2.10.3",
     "bplist": "0.0.4",
     "chalk": "^2.4.2",
