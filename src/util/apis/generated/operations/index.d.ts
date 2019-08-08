@@ -18309,6 +18309,78 @@ export interface App {
 
 /**
  * @class
+ * CodePushDeploymentUpload
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface CodePushDeploymentUpload {
+
+
+    /**
+     * Create a new CodePush release upload for the specified deployment
+     *
+     * @param {string} deploymentName deployment name
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<CodePushReleaseUpload>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    createWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CodePushReleaseUpload>>;
+
+    /**
+     * Create a new CodePush release upload for the specified deployment
+     *
+     * @param {string} deploymentName deployment name
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {CodePushReleaseUpload} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {CodePushReleaseUpload} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link CodePushReleaseUpload} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    create(deploymentName: string, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CodePushReleaseUpload>;
+    create(deploymentName: string, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushReleaseUpload>): void;
+    create(deploymentName: string, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushReleaseUpload>): void;
+}
+
+/**
+ * @class
  * CodePushDeploymentRelease
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.
@@ -18623,36 +18695,50 @@ export interface CodePushDeploymentReleases {
      *
      * @param {string} deploymentName deployment name
      *
+     * @param {object} uploadedRelease The necessary information required to
+     * download the bundle and being the release process.
+     *
+     * @param {object} uploadedRelease.releaseUpload The upload metadata from the
+     * release initialization step.
+     *
+     * @param {uuid} uploadedRelease.releaseUpload.id The ID for the newly created
+     * upload. It is going to be required later in the process.
+     *
+     * @param {string} uploadedRelease.releaseUpload.uploadDomain The URL domain
+     * used to upload the release.
+     *
+     * @param {string} uploadedRelease.releaseUpload.token The URL encoded token
+     * used for upload permissions.
+     *
+     * @param {string} uploadedRelease.targetBinaryVersion the binary version of
+     * the application
+     *
+     * @param {string} [uploadedRelease.deploymentName] This specifies which
+     * deployment you want to release the update to. Default is Staging.
+     *
+     * @param {string} [uploadedRelease.description] This provides an optional
+     * "change log" for the deployment.
+     *
+     * @param {boolean} [uploadedRelease.disabled] This specifies whether an update
+     * should be downloadable by end users or not.
+     *
+     * @param {boolean} [uploadedRelease.mandatory] This specifies whether the
+     * update should be considered mandatory or not (e.g. it includes a critical
+     * security fix).
+     *
+     * @param {boolean} [uploadedRelease.noDuplicateReleaseError] This specifies
+     * that if the update is identical to the latest release on the deployment, the
+     * CLI should generate a warning instead of an error.
+     *
+     * @param {number} [uploadedRelease.rollout] This specifies the percentage of
+     * users (as an integer between 1 and 100) that should be eligible to receive
+     * this update.
+     *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} targetBinaryVersion the binary version of the application
-     *
      * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.packageProperty] The upload zip file
-     *
-     * @param {string} [options.deploymentName1] This specifies which deployment
-     * you want to release the update to. Default is Staging.
-     *
-     * @param {string} [options.description] This provides an optional "change log"
-     * for the deployment.
-     *
-     * @param {boolean} [options.disabled] This specifies whether an update should
-     * be downloadable by end users or not.
-     *
-     * @param {boolean} [options.mandatory] This specifies whether the update
-     * should be considered mandatory or not (e.g. it includes a critical security
-     * fix).
-     *
-     * @param {boolean} [options.noDuplicateReleaseError] This specifies that if
-     * the update is identical to the latest release on the deployment, the CLI
-     * should generate a warning instead of an error.
-     *
-     * @param {number} [options.rollout] This specifies the percentage of users (as
-     * an integer between 1 and 100) that should be eligible to receive this
-     * update.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -18663,43 +18749,57 @@ export interface CodePushDeploymentReleases {
      *
      * @reject {Error|ServiceError} - The error object.
      */
-    createWithHttpOperationResponse(deploymentName: string, ownerName: string, appName: string, targetBinaryVersion: string, options?: { packageProperty? : stream.Readable, deploymentName1? : string, description? : string, disabled? : boolean, mandatory? : boolean, noDuplicateReleaseError? : boolean, rollout? : number, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CodePushRelease>>;
+    createWithHttpOperationResponse(deploymentName: string, uploadedRelease: models.CodePushUploadedRelease, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.CodePushRelease>>;
 
     /**
      * Create a new CodePush release for the specified deployment
      *
      * @param {string} deploymentName deployment name
      *
+     * @param {object} uploadedRelease The necessary information required to
+     * download the bundle and being the release process.
+     *
+     * @param {object} uploadedRelease.releaseUpload The upload metadata from the
+     * release initialization step.
+     *
+     * @param {uuid} uploadedRelease.releaseUpload.id The ID for the newly created
+     * upload. It is going to be required later in the process.
+     *
+     * @param {string} uploadedRelease.releaseUpload.uploadDomain The URL domain
+     * used to upload the release.
+     *
+     * @param {string} uploadedRelease.releaseUpload.token The URL encoded token
+     * used for upload permissions.
+     *
+     * @param {string} uploadedRelease.targetBinaryVersion the binary version of
+     * the application
+     *
+     * @param {string} [uploadedRelease.deploymentName] This specifies which
+     * deployment you want to release the update to. Default is Staging.
+     *
+     * @param {string} [uploadedRelease.description] This provides an optional
+     * "change log" for the deployment.
+     *
+     * @param {boolean} [uploadedRelease.disabled] This specifies whether an update
+     * should be downloadable by end users or not.
+     *
+     * @param {boolean} [uploadedRelease.mandatory] This specifies whether the
+     * update should be considered mandatory or not (e.g. it includes a critical
+     * security fix).
+     *
+     * @param {boolean} [uploadedRelease.noDuplicateReleaseError] This specifies
+     * that if the update is identical to the latest release on the deployment, the
+     * CLI should generate a warning instead of an error.
+     *
+     * @param {number} [uploadedRelease.rollout] This specifies the percentage of
+     * users (as an integer between 1 and 100) that should be eligible to receive
+     * this update.
+     *
      * @param {string} ownerName The name of the owner
      *
      * @param {string} appName The name of the application
      *
-     * @param {string} targetBinaryVersion the binary version of the application
-     *
      * @param {object} [options] Optional Parameters.
-     *
-     * @param {object} [options.packageProperty] The upload zip file
-     *
-     * @param {string} [options.deploymentName1] This specifies which deployment
-     * you want to release the update to. Default is Staging.
-     *
-     * @param {string} [options.description] This provides an optional "change log"
-     * for the deployment.
-     *
-     * @param {boolean} [options.disabled] This specifies whether an update should
-     * be downloadable by end users or not.
-     *
-     * @param {boolean} [options.mandatory] This specifies whether the update
-     * should be considered mandatory or not (e.g. it includes a critical security
-     * fix).
-     *
-     * @param {boolean} [options.noDuplicateReleaseError] This specifies that if
-     * the update is identical to the latest release on the deployment, the CLI
-     * should generate a warning instead of an error.
-     *
-     * @param {number} [options.rollout] This specifies the percentage of users (as
-     * an integer between 1 and 100) that should be eligible to receive this
-     * update.
      *
      * @param {object} [options.customHeaders] Headers that will be added to the
      * request
@@ -18726,9 +18826,9 @@ export interface CodePushDeploymentReleases {
      *
      *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
      */
-    create(deploymentName: string, ownerName: string, appName: string, targetBinaryVersion: string, options?: { packageProperty? : stream.Readable, deploymentName1? : string, description? : string, disabled? : boolean, mandatory? : boolean, noDuplicateReleaseError? : boolean, rollout? : number, customHeaders? : { [headerName: string]: string; } }): Promise<models.CodePushRelease>;
-    create(deploymentName: string, ownerName: string, appName: string, targetBinaryVersion: string, callback: ServiceCallback<models.CodePushRelease>): void;
-    create(deploymentName: string, ownerName: string, appName: string, targetBinaryVersion: string, options: { packageProperty? : stream.Readable, deploymentName1? : string, description? : string, disabled? : boolean, mandatory? : boolean, noDuplicateReleaseError? : boolean, rollout? : number, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushRelease>): void;
+    create(deploymentName: string, uploadedRelease: models.CodePushUploadedRelease, ownerName: string, appName: string, options?: { customHeaders? : { [headerName: string]: string; } }): Promise<models.CodePushRelease>;
+    create(deploymentName: string, uploadedRelease: models.CodePushUploadedRelease, ownerName: string, appName: string, callback: ServiceCallback<models.CodePushRelease>): void;
+    create(deploymentName: string, uploadedRelease: models.CodePushUploadedRelease, ownerName: string, appName: string, options: { customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.CodePushRelease>): void;
 }
 
 /**

@@ -1,5 +1,5 @@
 import { CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName } from "../../util/commandline";
-import CodePushReleaseCommandSkeleton from "./lib/release-command-skeleton";
+import CodePushReleaseCommandBase from "./lib/codepush-release-command-base";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
@@ -15,7 +15,7 @@ export let execSync = childProcess.execSync;
 const debug = require("debug")("appcenter-cli:commands:codepush:release-cordova");
 
 @help("Release a Cordova update to an app deployment")
-export default class CodePushReleaseCordovaCommand extends CodePushReleaseCommandSkeleton {
+export default class CodePushReleaseCordovaCommand extends CodePushReleaseCommandBase {
   @help(`Invoke "cordova build" instead of "cordova prepare"`)
   @shortName("b")
   @longName("build")

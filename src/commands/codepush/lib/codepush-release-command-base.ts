@@ -2,31 +2,19 @@ import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName,
 import { CommandArgs } from "../../../util/commandline/command";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
-import { getUser, DefaultApp } from "../../../util/profile/index";
 import { inspect } from "util";
 import * as fs from "fs";
 import * as pfs from "../../../util/misc/promisfied-fs";
 import chalk from "chalk";
-import { sign, zip } from "../lib/update-contents-tasks";
-import { isBinaryOrZip, getLastFolderInPath, moveReleaseFilesInTmpFolder, isDirectory } from "../lib/file-utils";
-import { environments } from "../lib/environment";
-import { isValidRange, isValidRollout, isValidDeployment, validateVersion } from "../lib/validation-utils";
-import { LegacyCodePushRelease }  from "../lib/release-strategy/index";
-import { getTokenFromEnvironmentVar } from "../../../util/profile/environment-vars";
+import { sign, zip } from "./update-contents-tasks";
+import { isBinaryOrZip, getLastFolderInPath, moveReleaseFilesInTmpFolder, isDirectory } from "./file-utils";
+import { isValidRange, isValidRollout, isValidDeployment, validateVersion } from "./validation-utils";
+import FileUploadClient, { MessageLevel } from "appcenter-file-upload-client";
+import { DefaultApp } from "../../../util/profile";
 
-const debug = require("debug")("appcenter-cli:commands:codepush:release-skeleton");
+const debug = require("debug")("appcenter-cli:commands:codepush:release-base");
 
-export interface ReleaseStrategy {
-    release(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string, updateMetadata: {
-      appVersion?: string;
-      description?: string;
-      isDisabled?: boolean;
-      isMandatory?: boolean;
-      rollout?: number;
-    }, token?: string, serverUrl?: string): Promise<void>;
-}
-
-export default class CodePushReleaseCommandSkeleton extends AppCommand {
+export default class CodePushReleaseCommandBase extends AppCommand {
   @help("Deployment to release the update to")
   @shortName("d")
   @longName("deployment-name")
@@ -75,13 +63,12 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
 
   protected targetBinaryVersion: string;
 
-  private readonly releaseStrategy: ReleaseStrategy;
+  private readonly fileUploadClient: FileUploadClient;
 
   constructor(args: CommandArgs) {
     super(args);
 
-    // Сurrently use old service due to we have limitation of 1MB payload limit through bifrost service
-    this.releaseStrategy = new LegacyCodePushRelease();
+    this.fileUploadClient = new FileUploadClient();
   }
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
@@ -114,18 +101,19 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
 
     try {
       const app = this.app;
-      const serverUrl = this.getServerUrl();
-      const token = this.token || getTokenFromEnvironmentVar() || await getUser().accessToken;
 
       this.checkTargetBinaryVersion(this.targetBinaryVersion);
 
-      await out.progress("Creating CodePush release...",  this.releaseStrategy.release(client, app, this.deploymentName, updateContentsZipPath, {
-        appVersion: this.targetBinaryVersion,
+      const releaseUpload = this.upload(client, app, this.deploymentName, updateContentsZipPath);
+      await out.progress("Uploading bundle...", releaseUpload);
+      await out.progress("Creating CodePush release...",  this.createRelease(client, app, this.deploymentName, {
+        releaseUpload: await releaseUpload,
+        targetBinaryVersion: this.targetBinaryVersion,
         description: this.description,
-        isDisabled: this.disabled,
-        isMandatory: this.mandatory,
+        disabled: this.disabled,
+        mandatory: this.mandatory,
         rollout: this.rollout
-      }, token, serverUrl));
+      }));
 
       out.text(`Successfully released an update containing the "${this.updateContentsPath}" `
         + `${fs.lstatSync(this.updateContentsPath).isDirectory() ? "directory" : "file"}`
@@ -147,27 +135,55 @@ export default class CodePushReleaseCommandSkeleton extends AppCommand {
     }
   }
 
+  private async upload(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string): Promise<models.CodePushReleaseUpload> {
+    debug(`Starting release upload on deployment: ${deploymentName} with zip file: ${updateContentsZipPath}`);
+
+    const releaseUpload = (await clientRequest<models.CodePushReleaseUpload>(
+      (cb) => client.codePushDeploymentUpload.create(
+        deploymentName,
+        app.ownerName,
+        app.appName,
+        cb
+      )
+    )).result;
+
+    await this.uploadBundle(releaseUpload, updateContentsZipPath);
+    return releaseUpload;
+  }
+
+  public async createRelease(client: AppCenterClient, app: DefaultApp, deploymentName: string, uploadedRelease: models.CodePushUploadedRelease): Promise<void> {
+    debug(`Starting release process on deployment: ${deploymentName} with uploaded release metadata: ${inspect(uploadedRelease)}`);
+
+    await clientRequest<models.CodePushRelease>(
+      (cb) => client.codePushDeploymentReleases.create(
+        deploymentName,
+        uploadedRelease,
+        app.ownerName,
+        app.appName,
+        cb
+      )
+    );
+  }
+
+  private async uploadBundle(releaseUpload: models.CodePushReleaseUpload, bundleZipPath: string): Promise<void> {
+    debug(`Starting to upload the release bundle: ${bundleZipPath} with upload data: ${inspect(releaseUpload)}`);
+
+    await this.fileUploadClient.upload({
+      assetId: releaseUpload.id,
+      assetDomain: releaseUpload.uploadDomain,
+      assetToken: releaseUpload.token,
+      file: bundleZipPath,
+      onMessage: (message: string, level: MessageLevel) => {
+        debug(`Upload client message: ${message}`);
+      }
+    });
+  }
+
   private checkTargetBinaryVersion(version: string): void {
     const warningVersion = validateVersion(version);
 
     if (warningVersion) {
       out.text(`\nYour target-binary-version "${version}" will be treated as "${warningVersion}".\n`);
-    }
-  }
-
-  private getServerUrl(): string | undefined {
-    const environment = environments(this.getEnvironmentName());
-    return environment && environment.managementEndpoint;
-  }
-
-  private getEnvironmentName(): string | undefined {
-    if (this.environmentName) {
-      return this.environmentName;
-    }
-
-    const user = getUser();
-    if (user) {
-      return user.environment;
     }
   }
 

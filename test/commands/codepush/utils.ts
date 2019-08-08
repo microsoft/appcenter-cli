@@ -28,6 +28,21 @@ export function getFakeParamsForRequest(): FakeParamsForRequests {
   return fakeParamsForRequests;
 }
 
+export const releaseUploadResponse = {
+  id: "id",
+  token: "token",
+  upload_domain: "https://uploadDomain.test"
+};
+
+export const setMetadataResponse = {
+  error: false,
+  id: "123",
+  chunk_size: 512,
+  resume_restart: false,
+  blob_partitions: 1,
+  chunk_list: [0]
+};
+
 export function createTempPathWithFakeLastFolder(nameTmpFolder: string, lastFolderName: string): string {
   let testPath = temp.mkdirSync(nameTmpFolder);
   testPath = path.join(testPath, lastFolderName);

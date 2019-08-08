@@ -10458,6 +10458,11 @@ export interface TestGDPRTestRun {
   appIconUrl?: string;
 }
 
+export interface TestGDPRPipelineTest {
+  appUploadId?: string;
+  testParameters?: any;
+}
+
 export interface TestGDPRFileSetFile {
   path?: string;
   hashFileId?: string;
@@ -10465,9 +10470,57 @@ export interface TestGDPRFileSetFile {
   hashFileUrl?: string;
 }
 
-export interface TestGDPRPipelineTest {
-  appUploadId?: string;
-  testParameters?: any;
+export interface CodePushReleaseUpload {
+  /**
+   * The ID for the newly created upload. It is going to be required later in the process.
+  */
+  id: string;
+  /**
+   * The URL domain used to upload the release.
+  */
+  uploadDomain: string;
+  /**
+   * The URL encoded token used for upload permissions.
+  */
+  token: string;
+}
+
+export interface CodePushUploadedRelease {
+  /**
+   * The upload metadata from the release initialization step.
+  */
+  releaseUpload: CodePushReleaseUpload;
+  /**
+   * the binary version of the application
+  */
+  targetBinaryVersion: string;
+  /**
+   * This specifies which deployment you want to release the update to. Default is Staging.
+  */
+  deploymentName?: string;
+  /**
+   * This provides an optional "change log" for the deployment.
+  */
+  description?: string;
+  /**
+   * This specifies whether an update should be downloadable by end users or not.
+  */
+  disabled?: boolean;
+  /**
+   * This specifies whether the update should be considered mandatory or not (e.g. it includes a
+   * critical security fix).
+  */
+  mandatory?: boolean;
+  /**
+   * This specifies that if the update is identical to the latest release on the deployment, the
+   * CLI should generate a warning instead of an error.
+  */
+  noDuplicateReleaseError?: boolean;
+  /**
+   * This specifies the percentage of users (as an integer between 1 and 100) that should be
+   * eligible to receive this update.
+  */
+  rollout?: number;
 }
 
 export interface BlobInfo {
