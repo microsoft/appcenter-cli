@@ -1,7 +1,7 @@
 // Base class for all command handlers
 import * as Result from "./command-result";
 import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription, common } from "./option-decorators";
-import { parseOptions } from "./option-parser";
+import { parseOptions, OptionsDescription } from "./option-parser";
 import { setDebug, setQuiet, OutputFormatSupport, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
@@ -26,9 +26,11 @@ export class Command {
     parseOptions(flags, positionals, this, args.args);
     this.commandPath = args.commandPath;
     this.command = args.command;
+    this.commandOptions = flags;
     debug(`Starting command with path ${args.commandPath}, command ${args.command}`);
   }
 
+  protected commandOptions: OptionsDescription;
   // Used by help system to generate help messages
   protected command: string[];
   protected commandPath: string;
