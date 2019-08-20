@@ -183,13 +183,12 @@ export default class UploadSymbols extends AppCommand {
       return `${commaJoinedArgs} ${cnj} ${_.last(args)}`;
     };
 
-    const mutuallyExclusivePropsNames : (keyof UploadSymbols)[] = ["symbolsPath", "breakpadPath", "xcarchivePath", "sourceMapPath", "appxSymPath"];
+    const mutuallyExclusivePropsNames : (keyof UploadSymbols)[] = ["symbolsPath", "breakpadPath", "xcarchivePath", "appxSymPath"];
     const mutuallyExclusiveProps = mutuallyExclusivePropsNames.reduce((prev, next) => {
       prev[next] = this[next];
       return prev;
     }, {} as any);
     const providedOptions = _.keys(_.omitBy(mutuallyExclusiveProps, _.isNil));
-
     if (providedOptions.length === 0) {
       const args = joinArgs(mutuallyExclusivePropsNames, "or");
       throw failure(ErrorCodes.InvalidParameter, `specify either ${args} switch`);
@@ -198,6 +197,10 @@ export default class UploadSymbols extends AppCommand {
     if (providedOptions.length  > 1) {
       const args = joinArgs(providedOptions, "and");
       throw failure(ErrorCodes.InvalidParameter, `${args} switches are mutually exclusive`);
+    }
+
+    if (!_.isNil(this.breakpadPath) && !_.isNil(this.sourceMapPath)) {
+      throw failure(ErrorCodes.InvalidParameter, "'--breakpad' and '--sourcemap' switches are mutually exclusive");
     }
 
   }
