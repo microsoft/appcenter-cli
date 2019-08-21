@@ -73,6 +73,9 @@ export default class UploadSymbols extends AppCommand {
       zip = await out.progress("Preparing ZIP with Breakpad symbols...", this.prepareZipFromSymbols(this.breakpadPath));
       symbolType = SymbolType.Breakpad;
     } else if (!_.isNil(this.appxSymPath)) {
+      if (this.getLowerCasedFileExtension(this.appxSymPath) !== ".appxsym") {
+        throw failure(ErrorCodes.InvalidParameter, `${this.appxSymPath} is not a valid appxsym file`);
+      }
       zip = this.appxSymPath;
       symbolType = SymbolType.UWP;
     } else {
