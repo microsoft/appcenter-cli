@@ -87,6 +87,46 @@ describe("upload-symbols command", () => {
     });
   });
 
+  describe("when UWP network requests are successful", () => {
+    beforeEach(() => {
+      expectedRequestsScope = _.flow(setupSuccessfulUWPPatchUploadResponse, setupSuccessfulUWPPostUploadResponse)(Nock(fakeHost));
+      skippedRequestsScope = setupSuccessfulUWPAbortUploadResponse(Nock(fakeHost));
+    });
+
+    it("uploads .appxsym", async () => {
+      const appxsymFilePath = await createZipWithFile(`${fakeAppName}.appxsym`);
+      const result = await executeUploadCommand(["--appxsym", appxsymFilePath]);
+
+      testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+      const [url, uploadedZipPath] = AzureBlobUploadHelperMock.getUploadedArtifactUrlAndPath();
+      expect(url).to.eql(fakeFullUploadUrl, `appxsym file should be uploaded to ${fakeFullUploadUrl}`);
+      expect(uploadedZipPath).to.eql(appxsymFilePath, "appxsym file should be passed as it is");
+    });
+  });
+
+  describe("when UWP upload fails", () => {
+    before(() => {
+      AzureBlobUploadHelperMock.throwOnUpload = true;
+    });
+
+    beforeEach(() => {
+        expectedRequestsScope = _.flow(setupSuccessfulUWPAbortUploadResponse, setupSuccessfulUWPPostUploadResponse)(Nock(fakeHost));
+        skippedRequestsScope = setupSuccessfulUWPPatchUploadResponse(Nock(fakeHost));
+    });
+
+    it("aborts the symbol uploading", async () => {
+      const appxsymFilePath = await createZipWithFile(`${fakeAppName}.appxsym`);
+
+      const result = await expect(executeUploadCommand(["--appxsym", appxsymFilePath])).to.eventually.be.rejected;
+
+      testUploadFailure(result, expectedRequestsScope, skippedRequestsScope);
+    });
+
+    after(() => {
+      AzureBlobUploadHelperMock.throwOnUpload = false;
+    });
+  });
+
   describe("when Apple network requests are successful", () => {
     beforeEach(() => {
       expectedRequestsScope = _.flow(setupSuccessfulApplePatchUploadResponse, setupSuccessfulApplePostUploadResponse)(Nock(fakeHost));
@@ -281,12 +321,12 @@ describe("upload-symbols command", () => {
       executionScope.done(); // All normal API calls are executed
   }
 
-  async function createZipWithFile(): Promise<string> {
+  async function createZipWithFile(zipFileName?: string): Promise<string> {
     // creating temp contents file for zip
     const symbolsFilePath = createSymbolsFileInsideFolder(tmpFolderPath, symbolsFile1Name, symbolsFileContent);
 
     // packing temp contents file to the zip
-    const testZipFile = "testZip.zip";
+    const testZipFile = zipFileName || "testZip.zip";
     const testZipFilePath = Path.join(tmpFolderPath, testZipFile);
     const zip = new JsZip();
     const testFileContent = await Pfs.readFile(symbolsFilePath);
@@ -412,6 +452,19 @@ describe("upload-symbols command", () => {
     }));
   }
 
+  function setupSuccessfulUWPPostUploadResponse(nockScope: Nock.Scope): Nock.Scope {
+    return nockScope.post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads`, {
+      symbol_type: "UWP"
+    }).reply(200, ((uri: any, requestBody: any) => {
+      postSymbolSpy(requestBody);
+      return {
+        expiration_date: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+        symbol_upload_id: fakeSymbolUploadingId,
+        upload_url: fakeHost + fakeUploadUrl
+      };
+    }));
+  }
+
   function setupSuccessfulApplePatchUploadResponse(nockScope: Nock.Scope): Nock.Scope {
     return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
       status: "committed"
@@ -442,6 +495,21 @@ describe("upload-symbols command", () => {
     }));
   }
 
+  function setupSuccessfulUWPPatchUploadResponse(nockScope: Nock.Scope): Nock.Scope {
+    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
+      status: "committed"
+    }).reply(200, ((uri: any, requestBody: any) => {
+      patchSymbolSpy(requestBody);
+      return {
+        origin: "User",
+        status: "committed",
+        symbol_type: "UWP",
+        symbol_upload_id: fakeSymbolUploadingId,
+        symbols: new Array()
+      };
+    }));
+  }
+
   function setupSuccessfulAppleAbortUploadResponse(nockScope: Nock.Scope): Nock.Scope {
     return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
       status: "aborted"
@@ -466,6 +534,21 @@ describe("upload-symbols command", () => {
         origin: "User",
         status: "aborted",
         symbol_type: "Breakpad",
+        symbol_upload_id: fakeSymbolUploadingId,
+        symbols: new Array()
+      };
+    }));
+  }
+
+  function setupSuccessfulUWPAbortUploadResponse(nockScope: Nock.Scope): Nock.Scope {
+    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
+      status: "aborted"
+    }).reply(200, ((uri: any, requestBody: any) => {
+      abortSymbolUploadSpy(requestBody);
+      return {
+        origin: "User",
+        status: "aborted",
+        symbol_type: "UWP",
         symbol_upload_id: fakeSymbolUploadingId,
         symbols: new Array()
       };
