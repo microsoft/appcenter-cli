@@ -54,6 +54,11 @@ export default class UploadSymbols extends AppCommand {
   @hasArg
   public breakpadPath: string;
 
+  @help("Path to an appxsym file containing UWP symbols.")
+  @longName("appxsym")
+  @hasArg
+  public appxSymPath: string;
+
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
@@ -68,6 +73,12 @@ export default class UploadSymbols extends AppCommand {
     } else if (!_.isNil(this.breakpadPath)) {
       zip = await out.progress("Preparing ZIP with Breakpad symbols...", this.prepareZipFromSymbols(this.breakpadPath));
       symbolType = SymbolType.Breakpad;
+    } else if (!_.isNil(this.appxSymPath)) {
+      if (this.getLowerCasedFileExtension(this.appxSymPath) !== ".appxsym") {
+        throw failure(ErrorCodes.InvalidParameter, `${this.appxSymPath} is not a valid appxsym file`);
+      }
+      zip = this.appxSymPath;
+      symbolType = SymbolType.UWP;
     } else {
       // process -x switch value
       zip = await out.progress("Preparing ZIP with symbols from xcarchive...", this.prepareZipFromXcArchive(this.xcarchivePath));
@@ -170,18 +181,32 @@ export default class UploadSymbols extends AppCommand {
   }
 
   private validateParameters() {
-    // check that user have selected either --symbol or --xcarchive
-    if (_.isNil(this.symbolsPath) && _.isNil(this.xcarchivePath) && _.isNil(this.breakpadPath)) {
-      throw failure(ErrorCodes.InvalidParameter, "specify either '--symbol', '--xcarchive', or '--breakpad' switch");
-    } else if (!_.isNil(this.symbolsPath) && !_.isNil(this.xcarchivePath)) {
-      throw failure(ErrorCodes.InvalidParameter, "'--symbol' and '--xcarchive' switches are mutually exclusive");
-    } else if (!_.isNil(this.symbolsPath) && !_.isNil(this.breakpadPath)) {
-      throw failure(ErrorCodes.InvalidParameter, "'--symbol' and '--breakpad' switches are mutually exclusive");
-    } else if (!_.isNil(this.xcarchivePath) && !_.isNil(this.breakpadPath)) {
-      throw failure(ErrorCodes.InvalidParameter, "'--xcarchive' and '--breakpad' switches are mutually exclusive");
-    } else if (!_.isNil(this.breakpadPath) && !_.isNil(this.sourceMapPath)) {
+    const joinArgs = (args: Array<string>, cnj: string) => {
+      args = args.map((arg) => `'--${this.commandOptions[arg].longName}'`);
+      const commaJoinedArgs = args.slice(0, _.findLastIndex(args)).join(", ");
+      return `${commaJoinedArgs} ${cnj} ${_.last(args)}`;
+    };
+
+    const mutuallyExclusivePropsNames : (keyof UploadSymbols)[] = ["symbolsPath", "breakpadPath", "xcarchivePath", "appxSymPath"];
+    const mutuallyExclusiveProps = mutuallyExclusivePropsNames.reduce((prev, next) => {
+      prev[next] = this[next];
+      return prev;
+    }, {} as any);
+    const providedOptions = _.keys(_.omitBy(mutuallyExclusiveProps, _.isNil));
+    if (providedOptions.length === 0) {
+      const args = joinArgs(mutuallyExclusivePropsNames, "or");
+      throw failure(ErrorCodes.InvalidParameter, `specify either ${args} switch`);
+    }
+
+    if (providedOptions.length  > 1) {
+      const args = joinArgs(providedOptions, "and");
+      throw failure(ErrorCodes.InvalidParameter, `${args} switches are mutually exclusive`);
+    }
+
+    if (!_.isNil(this.breakpadPath) && !_.isNil(this.sourceMapPath)) {
       throw failure(ErrorCodes.InvalidParameter, "'--breakpad' and '--sourcemap' switches are mutually exclusive");
     }
+
   }
 
   private async addSourceMapFileToZip(path: string, zip: JsZip | string): Promise<JsZip> {

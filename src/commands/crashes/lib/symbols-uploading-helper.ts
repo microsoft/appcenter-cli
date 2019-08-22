@@ -8,7 +8,8 @@ import AzureBlobUploadHelper from "./azure-blob-upload-helper";
 export enum SymbolType {
   AndroidProGuard = "AndroidProguard",
   Apple = "Apple",
-  Breakpad = "Breakpad"
+  Breakpad = "Breakpad",
+  UWP = "UWP"
 }
 
 export default class SymbolsUploadingHelper {
