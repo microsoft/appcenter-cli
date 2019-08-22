@@ -58,6 +58,7 @@ export default class UploadSymbols extends AppCommand {
   @longName("appxsym")
   @hasArg
   public appxSymPath: string;
+
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
