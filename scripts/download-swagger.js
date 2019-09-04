@@ -6,7 +6,7 @@ const request = require('request');
 
 const endpoints = {
   prod: "https://api.appcenter.ms",
-  int: "https://bifrost-int.trafficmanager.net",
+  int: "https://api-gateway-core-integration.dev.avalanch.es",
   dev: "https://appcenter-api.dev.xtc.xmn.co"
 };
 
