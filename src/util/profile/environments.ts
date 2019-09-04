@@ -23,23 +23,11 @@ interface EnvironmentsFile {
 const environmentsData: EnvironmentsFile = {
   defaultEnvironment: "prod",
   environments: {
-    dev: {
-      endpoint: "https://bifrost-dev.trafficmanager.net",
-      loginEndpoint: "https://asgard-dev.trafficmanager.net/cli-login",
-      portalEndpoint: "https://asgard-dev.trafficmanager.net",
-      description: "Development"
-    },
     int: {
-      endpoint: "https://bifrost-int.trafficmanager.net",
+      endpoint: "https://api-gateway-core-integration.dev.avalanch.es",
       loginEndpoint: "https://portal-server-core-integration.dev.avalanch.es/cli-login",
       portalEndpoint: "https://portal-server-core-integration.dev.avalanch.es",
       description: "Integration"
-    },
-    staging: {
-      endpoint: "https://bifrost-staging.trafficmanager.net",
-      loginEndpoint: "https://asgard-staging.trafficmanager.net/cli-login",
-      portalEndpoint: "https://asgard-staging.trafficmanager.net",
-      description: "Staging"
     },
     prod: {
       endpoint: "https://api.appcenter.ms",
