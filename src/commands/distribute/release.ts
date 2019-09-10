@@ -45,6 +45,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @hasArg
   public releaseNotesFile: string;
 
+  @help("Do not notify testers of this release")
+  @longName("silent")
+  public silent: boolean;
+
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
@@ -82,7 +86,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const releaseId = this.extractReleaseId(releaseUrl);
 
     debug("Distributing the release");
-    await this.distributeRelease(client, app, releaseId, releaseNotesString);
+    await this.distributeRelease(client, app, releaseId, releaseNotesString, this.silent);
 
     debug("Retrieving the release");
     const releaseDetails = await this.getDistributeRelease(client, app, releaseId);
@@ -284,13 +288,13 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number, releaseNotesString: string): Promise<void> {
+  private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number, releaseNotesString: string, silent: boolean): Promise<void> {
     await this.putReleaseDetails(client, app, releaseId, releaseNotesString);
     const distributionGroupResponse = await getDistributionGroup({
       client, releaseId, app: this.app, destination: this.distributionGroup, destinationType: "group"
     });
     await addGroupToRelease({
-      client, releaseId, distributionGroup: distributionGroupResponse, app: this.app, destination: this.distributionGroup, destinationType: "group", mandatory: false, silent: false
+      client, releaseId, distributionGroup: distributionGroupResponse, app: this.app, destination: this.distributionGroup, destinationType: "group", mandatory: false, silent: silent
     });
   }
 }
