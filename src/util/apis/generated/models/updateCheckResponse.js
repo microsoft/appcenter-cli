@@ -10,25 +10,22 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a UpdateCheckResponse.
- * @extends models['CodePushReleaseInfo']
  */
-class UpdateCheckResponse extends models['CodePushReleaseInfo'] {
+class UpdateCheckResponse {
   /**
    * Create a UpdateCheckResponse.
-   * @property {string} [downloadUrl]
-   * @property {boolean} isAvailable
-   * @property {number} [packageSize]
-   * @property {boolean} [shouldRunBinaryVersion]
-   * @property {boolean} [updateAppVersion]
-   * @property {string} [packageHash]
-   * @property {string} [label]
+   * @property {object} updateInfo
+   * @property {string} [updateInfo.downloadUrl]
+   * @property {boolean} [updateInfo.isAvailable]
+   * @property {number} [updateInfo.packageSize]
+   * @property {boolean} [updateInfo.shouldRunBinaryVersion]
+   * @property {boolean} [updateInfo.updateAppVersion]
+   * @property {string} [updateInfo.packageHash]
+   * @property {string} [updateInfo.label]
    */
   constructor() {
-    super();
   }
 
   /**
@@ -45,92 +42,12 @@ class UpdateCheckResponse extends models['CodePushReleaseInfo'] {
         name: 'Composite',
         className: 'UpdateCheckResponse',
         modelProperties: {
-          targetBinaryRange: {
-            required: false,
-            serializedName: 'target_binary_range',
-            type: {
-              name: 'String'
-            }
-          },
-          description: {
-            required: false,
-            serializedName: 'description',
-            type: {
-              name: 'String'
-            }
-          },
-          isDisabled: {
-            required: false,
-            serializedName: 'is_disabled',
-            type: {
-              name: 'Boolean'
-            }
-          },
-          isMandatory: {
-            required: false,
-            serializedName: 'is_mandatory',
-            type: {
-              name: 'Boolean'
-            }
-          },
-          rollout: {
-            required: false,
-            serializedName: 'rollout',
-            constraints: {
-              InclusiveMaximum: 100,
-              InclusiveMinimum: 1
-            },
-            type: {
-              name: 'Number'
-            }
-          },
-          downloadUrl: {
-            required: false,
-            serializedName: 'download_url',
-            type: {
-              name: 'String'
-            }
-          },
-          isAvailable: {
+          updateInfo: {
             required: true,
-            serializedName: 'is_available',
+            serializedName: 'update_info',
             type: {
-              name: 'Boolean'
-            }
-          },
-          packageSize: {
-            required: false,
-            serializedName: 'package_size',
-            type: {
-              name: 'Number'
-            }
-          },
-          shouldRunBinaryVersion: {
-            required: false,
-            serializedName: 'should_run_binary_version',
-            type: {
-              name: 'Boolean'
-            }
-          },
-          updateAppVersion: {
-            required: false,
-            serializedName: 'update_app_version',
-            type: {
-              name: 'Boolean'
-            }
-          },
-          packageHash: {
-            required: false,
-            serializedName: 'package_hash',
-            type: {
-              name: 'String'
-            }
-          },
-          label: {
-            required: false,
-            serializedName: 'label',
-            type: {
-              name: 'String'
+              name: 'Composite',
+              className: 'UpdateInfoData'
             }
           }
         }

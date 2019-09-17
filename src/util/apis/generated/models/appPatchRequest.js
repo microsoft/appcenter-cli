@@ -23,6 +23,7 @@ class AppPatchRequest {
    * @property {string} [name] The name of the app used in URLs
    * @property {string} [iconUrl] The string representation of the URL pointing
    * to the app's icon
+   * @property {uuid} [iconAssetId] The uuid for the icon's asset id from ACFUS
    */
   constructor() {
   }
@@ -72,6 +73,13 @@ class AppPatchRequest {
           iconUrl: {
             required: false,
             serializedName: 'icon_url',
+            type: {
+              name: 'String'
+            }
+          },
+          iconAssetId: {
+            required: false,
+            serializedName: 'icon_asset_id',
             type: {
               name: 'String'
             }

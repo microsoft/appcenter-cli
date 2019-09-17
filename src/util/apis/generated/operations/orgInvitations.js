@@ -335,6 +335,9 @@ function _unnamedMethod(orgName, email, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {string} [options.role] The role of the user to be added. Possible
+ * values include: 'admin', 'collaborator', 'member'
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -360,6 +363,7 @@ function _sendNewInvitation(orgName, email, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let role = (options && options.role !== undefined) ? options.role : undefined;
   // Validate
   try {
     if (orgName === null || orgName === undefined || typeof orgName.valueOf() !== 'string') {
@@ -368,8 +372,16 @@ function _sendNewInvitation(orgName, email, options, callback) {
     if (email === null || email === undefined || typeof email.valueOf() !== 'string') {
       throw new Error('email cannot be null or undefined and it must be of type string.');
     }
+    if (role !== null && role !== undefined && typeof role.valueOf() !== 'string') {
+      throw new Error('role must be of type string.');
+    }
   } catch (error) {
     return callback(error);
+  }
+  let role1;
+  if (role !== null && role !== undefined) {
+    role1 = new client.models['AddUserAsRoleRequest']();
+    role1.role = role;
   }
 
   // Construct URL
@@ -392,7 +404,21 @@ function _sendNewInvitation(orgName, email, options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (role1 !== null && role1 !== undefined) {
+      let requestModelMapper = new client.models['AddUserAsRoleRequest']().mapper();
+      requestModel = client.serialize(requestModelMapper, role1, 'role1');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(role1, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -444,7 +470,7 @@ function _sendNewInvitation(orgName, email, options, callback) {
  * @param {object} [options] Optional Parameters.
  *
  * @param {string} [options.role] The user's role in the organizatiion.
- * Possible values include: 'admin', 'collaborator'
+ * Possible values include: 'admin', 'collaborator', 'member'
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -572,9 +598,12 @@ function _update(orgName, email, options, callback) {
  *
  * @param {string} orgName The organization's name
  *
- * @param {string} userEmail The user's email address'
+ * @param {string} userEmail The user's email address
  *
  * @param {object} [options] Optional Parameters.
+ *
+ * @param {string} [options.role] The user's role. Possible values include:
+ * 'admin', 'collaborator', 'member'
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -601,6 +630,7 @@ function _create(orgName, userEmail, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let role = (options && options.role !== undefined) ? options.role : undefined;
   // Validate
   try {
     if (orgName === null || orgName === undefined || typeof orgName.valueOf() !== 'string') {
@@ -609,13 +639,17 @@ function _create(orgName, userEmail, options, callback) {
     if (userEmail === null || userEmail === undefined || typeof userEmail.valueOf() !== 'string') {
       throw new Error('userEmail cannot be null or undefined and it must be of type string.');
     }
+    if (role !== null && role !== undefined && typeof role.valueOf() !== 'string') {
+      throw new Error('role must be of type string.');
+    }
   } catch (error) {
     return callback(error);
   }
   let userEmail1;
-  if (userEmail !== null && userEmail !== undefined) {
+  if ((userEmail !== null && userEmail !== undefined) || (role !== null && role !== undefined)) {
     userEmail1 = new client.models['UserEmailRequest']();
     userEmail1.userEmail = userEmail;
+    userEmail1.role = role;
   }
 
   // Construct URL
@@ -697,9 +731,12 @@ function _create(orgName, userEmail, options, callback) {
  *
  * @param {string} orgName The organization's name
  *
- * @param {string} userEmail The user's email address'
+ * @param {string} userEmail The user's email address
  *
  * @param {object} [options] Optional Parameters.
+ *
+ * @param {string} [options.role] The user's role. Possible values include:
+ * 'admin', 'collaborator', 'member'
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -726,6 +763,7 @@ function _deleteMethod(orgName, userEmail, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let role = (options && options.role !== undefined) ? options.role : undefined;
   // Validate
   try {
     if (orgName === null || orgName === undefined || typeof orgName.valueOf() !== 'string') {
@@ -734,13 +772,17 @@ function _deleteMethod(orgName, userEmail, options, callback) {
     if (userEmail === null || userEmail === undefined || typeof userEmail.valueOf() !== 'string') {
       throw new Error('userEmail cannot be null or undefined and it must be of type string.');
     }
+    if (role !== null && role !== undefined && typeof role.valueOf() !== 'string') {
+      throw new Error('role must be of type string.');
+    }
   } catch (error) {
     return callback(error);
   }
   let userEmail1;
-  if (userEmail !== null && userEmail !== undefined) {
+  if ((userEmail !== null && userEmail !== undefined) || (role !== null && role !== undefined)) {
     userEmail1 = new client.models['UserEmailRequest']();
     userEmail1.userEmail = userEmail;
+    userEmail1.role = role;
   }
 
   // Construct URL
@@ -1230,6 +1272,9 @@ class OrgInvitations {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {string} [options.role] The role of the user to be added. Possible
+   * values include: 'admin', 'collaborator', 'member'
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -1262,6 +1307,9 @@ class OrgInvitations {
    * reset mail to.
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {string} [options.role] The role of the user to be added. Possible
+   * values include: 'admin', 'collaborator', 'member'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -1318,7 +1366,7 @@ class OrgInvitations {
    * @param {object} [options] Optional Parameters.
    *
    * @param {string} [options.role] The user's role in the organizatiion.
-   * Possible values include: 'admin', 'collaborator'
+   * Possible values include: 'admin', 'collaborator', 'member'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -1354,7 +1402,7 @@ class OrgInvitations {
    * @param {object} [options] Optional Parameters.
    *
    * @param {string} [options.role] The user's role in the organizatiion.
-   * Possible values include: 'admin', 'collaborator'
+   * Possible values include: 'admin', 'collaborator', 'member'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -1405,9 +1453,12 @@ class OrgInvitations {
    *
    * @param {string} orgName The organization's name
    *
-   * @param {string} userEmail The user's email address'
+   * @param {string} userEmail The user's email address
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {string} [options.role] The user's role. Possible values include:
+   * 'admin', 'collaborator', 'member'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -1437,9 +1488,12 @@ class OrgInvitations {
    *
    * @param {string} orgName The organization's name
    *
-   * @param {string} userEmail The user's email address'
+   * @param {string} userEmail The user's email address
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {string} [options.role] The user's role. Possible values include:
+   * 'admin', 'collaborator', 'member'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -1490,9 +1544,12 @@ class OrgInvitations {
    *
    * @param {string} orgName The organization's name
    *
-   * @param {string} userEmail The user's email address'
+   * @param {string} userEmail The user's email address
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {string} [options.role] The user's role. Possible values include:
+   * 'admin', 'collaborator', 'member'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -1522,9 +1579,12 @@ class OrgInvitations {
    *
    * @param {string} orgName The organization's name
    *
-   * @param {string} userEmail The user's email address'
+   * @param {string} userEmail The user's email address
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {string} [options.role] The user's role. Possible values include:
+   * 'admin', 'collaborator', 'member'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

@@ -22,6 +22,8 @@ const WebResource = msRest.WebResource;
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {object} [options.payload]
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -48,8 +50,12 @@ function _create(ownerName, appName, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let payload = (options && options.payload !== undefined) ? options.payload : undefined;
   // Validate
   try {
+    if (payload !== null && payload !== undefined && typeof payload !== 'object') {
+      throw new Error('payload must be of type object.');
+    }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
@@ -80,7 +86,27 @@ function _create(ownerName, appName, options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (payload !== null && payload !== undefined) {
+      let requestModelMapper = {
+        required: false,
+        serializedName: 'payload',
+        type: {
+          name: 'Object'
+        }
+      };
+      requestModel = client.serialize(requestModelMapper, payload, 'payload');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(payload, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -158,6 +184,8 @@ class FileAssets {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {object} [options.payload]
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -189,6 +217,8 @@ class FileAssets {
    * @param {string} appName The name of the application
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.payload]
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

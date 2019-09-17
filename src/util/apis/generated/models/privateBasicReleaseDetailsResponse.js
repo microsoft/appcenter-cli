@@ -21,6 +21,8 @@ class PrivateBasicReleaseDetailsResponse {
    * @property {string} [version] The release's version.<br>
    * For iOS: CFBundleVersion from info.plist.<br>
    * For Android: android:versionCode from AppManifest.xml.
+   * @property {string} [origin] The release's origin. Possible values include:
+   * 'hockeyapp', 'appcenter'
    * @property {string} [shortVersion] The release's short version.<br>
    * For iOS: CFBundleShortVersionString from info.plist.<br>
    * For Android: android:versionName from AppManifest.xml.
@@ -33,7 +35,7 @@ class PrivateBasicReleaseDetailsResponse {
    * distribution_groups details will be returned.<br>
    * <b>store</b>: The release distributed to external stores and
    * distribution_stores details will be returned. <br>
-   * . Possible values include: 'group', 'store'
+   * . Possible values include: 'group', 'store', 'tester'
    * @property {boolean} [isLatest] Indicates if this is the latest release in
    * the group.
    * @property {boolean} [mandatoryUpdate] A boolean which determines whether
@@ -68,6 +70,13 @@ class PrivateBasicReleaseDetailsResponse {
           version: {
             required: false,
             serializedName: 'version',
+            type: {
+              name: 'String'
+            }
+          },
+          origin: {
+            required: false,
+            serializedName: 'origin',
             type: {
               name: 'String'
             }

@@ -17,7 +17,7 @@
 class ClientIdResponse {
   /**
    * Create a ClientIdResponse.
-   * @property {uuid} [clientId]
+   * @property {string} [clientId]
    */
   constructor() {
   }

@@ -14,9 +14,9 @@ const models = require('./index');
 
 /**
  * Class representing a DistributionGroup.
- * @extends models['DestinationId']
+ * @extends models['DistributionGroupWithoutIsLatest']
  */
-class DistributionGroup extends models['DestinationId'] {
+class DistributionGroup extends models['DistributionGroupWithoutIsLatest'] {
   /**
    * Create a DistributionGroup.
    * @property {boolean} [isLatest] Is the containing release the latest one in
@@ -40,16 +40,16 @@ class DistributionGroup extends models['DestinationId'] {
         name: 'Composite',
         className: 'DistributionGroup',
         modelProperties: {
-          name: {
-            required: false,
-            serializedName: 'name',
+          id: {
+            required: true,
+            serializedName: 'id',
             type: {
               name: 'String'
             }
           },
-          id: {
+          name: {
             required: false,
-            serializedName: 'id',
+            serializedName: 'name',
             type: {
               name: 'String'
             }

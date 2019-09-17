@@ -46,11 +46,12 @@ export default class AppCenterClient extends ServiceClient {
   dataSubjectRight: operations.DataSubjectRight;
   users: operations.Users;
   releases: operations.Releases;
+  apps: operations.Apps;
   distributionGroups: operations.DistributionGroups;
   teams: operations.Teams;
   azureSubscription: operations.AzureSubscription;
   organization: operations.Organization;
-  apps: operations.Apps;
+  aadGroup: operations.AadGroup;
   organizations: operations.Organizations;
   billingAggregatedInformation: operations.BillingAggregatedInformation;
   invitations: operations.Invitations;

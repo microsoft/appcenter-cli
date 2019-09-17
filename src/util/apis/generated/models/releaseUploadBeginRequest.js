@@ -20,6 +20,7 @@ class ReleaseUploadBeginRequest {
    * Create a ReleaseUploadBeginRequest.
    * @property {number} [releaseId] The ID of the release.
    * @property {string} [buildVersion] The build version of the uploaded binary
+   * @property {string} [buildNumber] The build number of the uploaded binary
    */
   constructor() {
   }
@@ -48,6 +49,13 @@ class ReleaseUploadBeginRequest {
           buildVersion: {
             required: false,
             serializedName: 'build_version',
+            type: {
+              name: 'String'
+            }
+          },
+          buildNumber: {
+            required: false,
+            serializedName: 'build_number',
             type: {
               name: 'String'
             }

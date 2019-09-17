@@ -17,14 +17,17 @@
 class ReleaseDetailsResponse {
   /**
    * Create a ReleaseDetailsResponse.
-   * @property {number} [id] ID identifying this unique release.
-   * @property {string} [appName] The app's name (extracted from the uploaded
+   * @property {number} id ID identifying this unique release.
+   * @property {string} appName The app's name (extracted from the uploaded
    * release).
-   * @property {string} [appDisplayName] The app's display name.
-   * @property {string} [version] The release's version.<br>
+   * @property {string} appDisplayName The app's display name.
+   * @property {string} [appOs] The app's OS.
+   * @property {string} version The release's version.<br>
    * For iOS: CFBundleVersion from info.plist.
    * For Android: android:versionCode from AppManifest.xml.
-   * @property {string} [shortVersion] The release's short version.<br>
+   * @property {string} [origin] The release's origin. Possible values include:
+   * 'hockeyapp', 'appcenter'
+   * @property {string} shortVersion The release's short version.<br>
    * For iOS: CFBundleShortVersionString from info.plist.
    * For Android: android:versionName from AppManifest.xml.
    * @property {string} [releaseNotes] The release's release notes.
@@ -44,12 +47,13 @@ class ReleaseDetailsResponse {
    * @property {string} [androidMinApiLevel] The release's minimum required
    * Android API level.
    * @property {string} [bundleIdentifier] The identifier of the apps bundle.
+   * @property {array} [packageHashes] Hashes for the packages.
    * @property {string} [fingerprint] MD5 checksum of the release binary.
-   * @property {string} [uploadedAt] UTC time in ISO 8601 format of the
-   * uploaded time.
+   * @property {string} uploadedAt UTC time in ISO 8601 format of the uploaded
+   * time.
    * @property {string} [downloadUrl] The URL that hosts the binary for this
    * release.
-   * @property {string} [appIconUrl] A URL to the app's icon.
+   * @property {string} appIconUrl A URL to the app's icon.
    * @property {string} [installUrl] The href required to install a release on
    * a mobile device. On iOS devices will be prefixed with
    * `itms-services://?action=download-manifest&url=`
@@ -77,14 +81,15 @@ class ReleaseDetailsResponse {
    * true, after a re-sign, the tester will be able to install the release from
    * his registered devices. Will not be returned for non-iOS platforms.
    * @property {object} [build]
-   * @property {string} [build.branch] The branch name of the build producing
-   * the release
+   * @property {string} [build.branchName] The branch name of the build
+   * producing the release
    * @property {string} [build.commitHash] The commit hash of the build
    * producing the release
    * @property {string} [build.commitMessage] The commit message of the build
    * producing the release
-   * @property {boolean} [enabled] This value determines the whether a release
+   * @property {boolean} enabled This value determines the whether a release
    * currently is enabled or disabled.
+   * @property {string} [status] Status of the release.
    */
   constructor() {
   }
@@ -104,35 +109,49 @@ class ReleaseDetailsResponse {
         className: 'ReleaseDetailsResponse',
         modelProperties: {
           id: {
-            required: false,
+            required: true,
             serializedName: 'id',
             type: {
               name: 'Number'
             }
           },
           appName: {
-            required: false,
+            required: true,
             serializedName: 'app_name',
             type: {
               name: 'String'
             }
           },
           appDisplayName: {
-            required: false,
+            required: true,
             serializedName: 'app_display_name',
             type: {
               name: 'String'
             }
           },
-          version: {
+          appOs: {
             required: false,
+            serializedName: 'app_os',
+            type: {
+              name: 'String'
+            }
+          },
+          version: {
+            required: true,
             serializedName: 'version',
             type: {
               name: 'String'
             }
           },
-          shortVersion: {
+          origin: {
             required: false,
+            serializedName: 'origin',
+            type: {
+              name: 'String'
+            }
+          },
+          shortVersion: {
+            required: true,
             serializedName: 'short_version',
             type: {
               name: 'String'
@@ -208,6 +227,20 @@ class ReleaseDetailsResponse {
               name: 'String'
             }
           },
+          packageHashes: {
+            required: false,
+            serializedName: 'package_hashes',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'StringElementType',
+                  type: {
+                    name: 'String'
+                  }
+              }
+            }
+          },
           fingerprint: {
             required: false,
             serializedName: 'fingerprint',
@@ -216,7 +249,7 @@ class ReleaseDetailsResponse {
             }
           },
           uploadedAt: {
-            required: false,
+            required: true,
             serializedName: 'uploaded_at',
             type: {
               name: 'String'
@@ -230,7 +263,7 @@ class ReleaseDetailsResponse {
             }
           },
           appIconUrl: {
-            required: false,
+            required: true,
             serializedName: 'app_icon_url',
             type: {
               name: 'String'
@@ -318,10 +351,17 @@ class ReleaseDetailsResponse {
             }
           },
           enabled: {
-            required: false,
+            required: true,
             serializedName: 'enabled',
             type: {
               name: 'Boolean'
+            }
+          },
+          status: {
+            required: false,
+            serializedName: 'status',
+            type: {
+              name: 'String'
             }
           }
         }

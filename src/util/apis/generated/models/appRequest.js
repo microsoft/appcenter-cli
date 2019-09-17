@@ -26,7 +26,7 @@ class AppRequest {
    * include: 'Android', 'iOS', 'macOS', 'Tizen', 'tvOS', 'Windows', 'Linux'
    * @property {string} platform The platform of the app. Possible values
    * include: 'Java', 'Objective-C-Swift', 'UWP', 'Cordova', 'React-Native',
-   * 'Xamarin', 'Unity', 'Electron'
+   * 'Xamarin', 'Unity', 'Electron', 'WPF', 'WinForms'
    */
   constructor() {
   }

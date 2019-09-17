@@ -41,7 +41,7 @@ class AppleCertificateNonSecretDetailsResponse extends models['AppleConnectionNo
   mapper() {
     return {
       required: false,
-      serializedName: 'AppleCertificateNonSecretDetailsResponse',
+      serializedName: 'certificate',
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {

@@ -132,8 +132,9 @@ function _listTesterApps(options, callback) {
 }
 
 /**
- * Get a release with hash 'release_hash' or the 'latest' from all the
- * distribution groups assigned to the current user.
+ * If 'latest' is not specified then it will return the specified release if
+ * it's enabled. If 'latest' is specified, regardless of whether a release hash
+ * is provided, the latest enabled release is returned.
  *
  * @param {string} appSecret The secret of the target application
  *
@@ -279,6 +280,133 @@ function _getLatestByHash(appSecret, releaseHash, options, callback) {
         deserializationError1.request = msRest.stripRequest(httpRequest);
         deserializationError1.response = msRest.stripResponse(response);
         return callback(deserializationError1);
+      }
+    }
+
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
+ * Delete the given tester from the all releases
+ *
+ * @param {string} testerId The id of the tester
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *                      See {@link ErrorDetails} for more information.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _deleteTesterFromDestinations(testerId, ownerName, appName, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (testerId === null || testerId === undefined || typeof testerId.valueOf() !== 'string') {
+      throw new Error('testerId cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/testers/{tester_id}';
+  requestUrl = requestUrl.replace('{tester_id}', encodeURIComponent(testerId));
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'DELETE';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.body = null;
+  // Send Request
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+    let statusCode = response.statusCode;
+    if (statusCode !== 200 && statusCode !== 404) {
+      let error = new Error(responseBody);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+    // Create Result
+    let result = null;
+    if (responseBody === '') responseBody = null;
+    // Deserialize Response
+    if (statusCode === 404) {
+      let parsedResponse = null;
+      try {
+        parsedResponse = JSON.parse(responseBody);
+        result = JSON.parse(responseBody);
+        if (parsedResponse !== null && parsedResponse !== undefined) {
+          let resultMapper = new client.models['ErrorDetails']().mapper();
+          result = client.deserialize(resultMapper, parsedResponse, 'result');
+        }
+      } catch (error) {
+        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
+        deserializationError.request = msRest.stripRequest(httpRequest);
+        deserializationError.response = msRest.stripResponse(response);
+        return callback(deserializationError);
       }
     }
 
@@ -1783,7 +1911,7 @@ function _getLatestByUser(releaseId, ownerName, appName, options, callback) {
  *
  * @param {object} [options.build]
  *
- * @param {string} [options.build.branch] The branch name of the build
+ * @param {string} [options.build.branchName] The branch name of the build
  * producing the release
  *
  * @param {string} [options.build.commitHash] The commit hash of the build
@@ -2018,8 +2146,8 @@ function _updateDetails(releaseId, ownerName, appName, options, callback) {
  *
  * @param {object} [body.build]
  *
- * @param {string} [body.build.branch] The branch name of the build producing
- * the release
+ * @param {string} [body.build.branchName] The branch name of the build
+ * producing the release
  *
  * @param {string} [body.build.commitHash] The commit hash of the build
  * producing the release
@@ -2028,7 +2156,7 @@ function _updateDetails(releaseId, ownerName, appName, options, callback) {
  * producing the release
  *
  * @param {boolean} [body.notifyTesters] A boolean which determines whether to
- * notify testers of a new release, default to true.
+ * notify testers of a new release, default to false.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -3259,6 +3387,7 @@ class Releases {
     this.client = client;
     this._listTesterApps = _listTesterApps;
     this._getLatestByHash = _getLatestByHash;
+    this._deleteTesterFromDestinations = _deleteTesterFromDestinations;
     this._putDistributionTester = _putDistributionTester;
     this._deleteDistributionTester = _deleteDistributionTester;
     this._addTesters = _addTesters;
@@ -3359,8 +3488,9 @@ class Releases {
   }
 
   /**
-   * Get a release with hash 'release_hash' or the 'latest' from all the
-   * distribution groups assigned to the current user.
+   * If 'latest' is not specified then it will return the specified release if
+   * it's enabled. If 'latest' is specified, regardless of whether a release hash
+   * is provided, the latest enabled release is returned.
    *
    * @param {string} appSecret The secret of the target application
    *
@@ -3398,8 +3528,9 @@ class Releases {
   }
 
   /**
-   * Get a release with hash 'release_hash' or the 'latest' from all the
-   * distribution groups assigned to the current user.
+   * If 'latest' is not specified then it will return the specified release if
+   * it's enabled. If 'latest' is specified, regardless of whether a release hash
+   * is provided, the latest enabled release is returned.
    *
    * @param {string} appSecret The secret of the target application
    *
@@ -3454,6 +3585,96 @@ class Releases {
       });
     } else {
       return self._getLatestByHash(appSecret, releaseHash, options, optionalCallback);
+    }
+  }
+
+  /**
+   * Delete the given tester from the all releases
+   *
+   * @param {string} testerId The id of the tester
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<ErrorDetails>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  deleteTesterFromDestinationsWithHttpOperationResponse(testerId, ownerName, appName, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._deleteTesterFromDestinations(testerId, ownerName, appName, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * Delete the given tester from the all releases
+   *
+   * @param {string} testerId The id of the tester
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {ErrorDetails} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *                      See {@link ErrorDetails} for more information.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  deleteTesterFromDestinations(testerId, ownerName, appName, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._deleteTesterFromDestinations(testerId, ownerName, appName, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._deleteTesterFromDestinations(testerId, ownerName, appName, options, optionalCallback);
     }
   }
 
@@ -4367,7 +4588,7 @@ class Releases {
    *
    * @param {object} [options.build]
    *
-   * @param {string} [options.build.branch] The branch name of the build
+   * @param {string} [options.build.branchName] The branch name of the build
    * producing the release
    *
    * @param {string} [options.build.commitHash] The commit hash of the build
@@ -4417,7 +4638,7 @@ class Releases {
    *
    * @param {object} [options.build]
    *
-   * @param {string} [options.build.branch] The branch name of the build
+   * @param {string} [options.build.branchName] The branch name of the build
    * producing the release
    *
    * @param {string} [options.build.commitHash] The commit hash of the build
@@ -4517,8 +4738,8 @@ class Releases {
    *
    * @param {object} [body.build]
    *
-   * @param {string} [body.build.branch] The branch name of the build producing
-   * the release
+   * @param {string} [body.build.branchName] The branch name of the build
+   * producing the release
    *
    * @param {string} [body.build.commitHash] The commit hash of the build
    * producing the release
@@ -4527,7 +4748,7 @@ class Releases {
    * producing the release
    *
    * @param {boolean} [body.notifyTesters] A boolean which determines whether to
-   * notify testers of a new release, default to true.
+   * notify testers of a new release, default to false.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -4605,8 +4826,8 @@ class Releases {
    *
    * @param {object} [body.build]
    *
-   * @param {string} [body.build.branch] The branch name of the build producing
-   * the release
+   * @param {string} [body.build.branchName] The branch name of the build
+   * producing the release
    *
    * @param {string} [body.build.commitHash] The commit hash of the build
    * producing the release
@@ -4615,7 +4836,7 @@ class Releases {
    * producing the release
    *
    * @param {boolean} [body.notifyTesters] A boolean which determines whether to
-   * notify testers of a new release, default to true.
+   * notify testers of a new release, default to false.
    *
    * @param {string} ownerName The name of the owner
    *

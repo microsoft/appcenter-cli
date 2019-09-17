@@ -38,7 +38,7 @@ class PrivateJiraConnectionSecretResponse extends models['PrivateSharedConnectio
   mapper() {
     return {
       required: false,
-      serializedName: 'PrivateJiraConnectionSecretResponse',
+      serializedName: 'jira',
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {

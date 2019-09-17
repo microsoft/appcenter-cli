@@ -17,8 +17,8 @@ class Events {
   /**
    * Create a Events.
    * @property {array} [events]
-   * @property {number} [total] the total count of events
-   * @property {number} [totalDevices] the active device over this period
+   * @property {number} [total] The total count of events.
+   * @property {number} [totalDevices] The active device over this period.
    */
   constructor() {
   }

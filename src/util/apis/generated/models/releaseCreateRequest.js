@@ -17,24 +17,27 @@
 class ReleaseCreateRequest {
   /**
    * Create a ReleaseCreateRequest.
-   * @property {string} [uploadedBy] The user that uploaded the build.
-   * @property {string} name The display name of the app, extracted from the
-   * build.
-   * @property {string} version The release's version.<br>
+   * @property {string} [version] The release's version.<br>
    * For iOS: CFBundleVersion from info.plist.<br>
    * For Android: android:versionCode from AppManifest.xml.
-   * @property {string} buildVersion The release's short version.<br>
+   * @property {string} [buildVersion] The release's short version.<br>
    * For iOS: CFBundleShortVersionString from info.plist.<br>
    * For Android: android:versionName from AppManifest.xml.
-   * @property {string} uniqueIdentifier The identifier of the app's bundle.
-   * @property {string} minimumOsVersion The release's minimum required
+   * @property {string} [uniqueIdentifier] The identifier of the app's bundle.
+   * @property {string} [minimumOsVersion] The release's minimum required
    * operating system.
    * @property {string} [deviceFamily] The release's device family.
    * @property {array} [languages] The languages supported by the release.
+   * Limited to 510 characters in a serialized array.
    * @property {string} fingerprint MD5 checksum of the release binary.
    * @property {number} size The release's size in bytes.
    * @property {string} packageUrl The URL to the release's binary.
-   * @property {string} [iconUrl] The URL to the release's icon.
+   * @property {string} [fileExtension] The file extension of the asset. Does
+   * not include the initial period.
+   * @property {string} uploadId The upload id associated with the release, to
+   * map to the releases upload table.
+   * @property {string} [iconAssetId] The assetId associated with the icon
+   * uploaded to app center file upload service.
    * @property {array} [ipaUuids] A list of UUIDs for architectures for an iOS
    * app.
    * @property {object} [provision]
@@ -67,43 +70,29 @@ class ReleaseCreateRequest {
         name: 'Composite',
         className: 'ReleaseCreateRequest',
         modelProperties: {
-          uploadedBy: {
-            required: false,
-            serializedName: 'uploaded_by',
-            type: {
-              name: 'String'
-            }
-          },
-          name: {
-            required: true,
-            serializedName: 'name',
-            type: {
-              name: 'String'
-            }
-          },
           version: {
-            required: true,
+            required: false,
             serializedName: 'version',
             type: {
               name: 'String'
             }
           },
           buildVersion: {
-            required: true,
+            required: false,
             serializedName: 'build_version',
             type: {
               name: 'String'
             }
           },
           uniqueIdentifier: {
-            required: true,
+            required: false,
             serializedName: 'unique_identifier',
             type: {
               name: 'String'
             }
           },
           minimumOsVersion: {
-            required: true,
+            required: false,
             serializedName: 'minimum_os_version',
             type: {
               name: 'String'
@@ -151,9 +140,23 @@ class ReleaseCreateRequest {
               name: 'String'
             }
           },
-          iconUrl: {
+          fileExtension: {
             required: false,
-            serializedName: 'icon_url',
+            serializedName: 'file_extension',
+            type: {
+              name: 'String'
+            }
+          },
+          uploadId: {
+            required: true,
+            serializedName: 'upload_id',
+            type: {
+              name: 'String'
+            }
+          },
+          iconAssetId: {
+            required: false,
+            serializedName: 'icon_asset_id',
             type: {
               name: 'String'
             }

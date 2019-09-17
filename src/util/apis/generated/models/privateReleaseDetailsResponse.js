@@ -32,6 +32,8 @@ class PrivateReleaseDetailsResponse {
    * @property {string} [version] The release's version.<br>
    * For iOS: CFBundleVersion from info.plist.
    * For Android: android:versionCode from AppManifest.xml.
+   * @property {string} [origin] The release's origin. Possible values include:
+   * 'hockeyapp', 'appcenter'
    * @property {string} [shortVersion] The release's short version.<br>
    * For iOS: CFBundleShortVersionString from info.plist.
    * For Android: android:versionName from AppManifest.xml.
@@ -68,7 +70,7 @@ class PrivateReleaseDetailsResponse {
    * distribution_groups details will be returned.<br>
    * <b>store</b>: The release distributed to external stores and
    * distribution_stores details will be returned. <br>
-   * . Possible values include: 'group', 'store'
+   * . Possible values include: 'group', 'store', 'tester'
    */
   constructor() {
   }
@@ -118,6 +120,13 @@ class PrivateReleaseDetailsResponse {
           version: {
             required: false,
             serializedName: 'version',
+            type: {
+              name: 'String'
+            }
+          },
+          origin: {
+            required: false,
+            serializedName: 'origin',
             type: {
               name: 'String'
             }

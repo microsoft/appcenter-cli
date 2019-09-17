@@ -17,12 +17,14 @@
 class BranchConfiguration {
   /**
    * Create a BranchConfiguration.
-   * @property {number} id
    * @property {string} [trigger] Possible values include: 'continous',
    * 'continuous', 'manual'
    * @property {boolean} [testsEnabled]
    * @property {boolean} [badgeIsEnabled]
    * @property {boolean} [signed]
+   * @property {string} [cloneFromBranch] A configured branch name to clone
+   * from. If provided, all other parameters will be ignored. Only supported in
+   * POST requests.
    * @property {object} [toolsets]
    * @property {object} [toolsets.xcode]
    * @property {string} [toolsets.xcode.projectOrWorkspacePath] Xcode
@@ -40,7 +42,9 @@ class BranchConfiguration {
    * @property {string} [toolsets.xcode.certificateUploadId]
    * @property {string} [toolsets.xcode.certificatePassword]
    * @property {string} [toolsets.xcode.scheme]
-   * @property {string} [toolsets.xcode.xcodeVersion]
+   * @property {string} [toolsets.xcode.xcodeVersion] Xcode version used to
+   * build. Available versions can be found in "/xcode_versions" API. Default
+   * is latest stable version, at the time when the configuration is set.
    * @property {string} [toolsets.xcode.provisioningProfileFilename]
    * @property {string} [toolsets.xcode.certificateFilename]
    * @property {string} [toolsets.xcode.teamId]
@@ -51,6 +55,11 @@ class BranchConfiguration {
    * configuration of the target to archive
    * @property {string} [toolsets.xcode.targetToArchive] The target id of the
    * selected scheme to archive
+   * @property {boolean} [toolsets.xcode.forceLegacyBuildSystem] Setting this
+   * to true forces the build to use Xcode legacy build system. Otherwise, the
+   * setting from workspace settings is used.
+   * By default new build system is used if workspace setting is not committed
+   * to the repository. Only used for iOS React Native app, with Xcode 10.
    * @property {object} [toolsets.javascript]
    * @property {string} [toolsets.javascript.packageJsonPath] Path to
    * package.json file for the main project, e.g. "package.json" or
@@ -61,7 +70,7 @@ class BranchConfiguration {
    * React Native from package.json files
    * @property {object} [toolsets.xamarin]
    * @property {string} [toolsets.xamarin.slnPath]
-   * @property {string} [toolsets.xamarin.isSimBuild]
+   * @property {boolean} [toolsets.xamarin.isSimBuild]
    * @property {string} [toolsets.xamarin.args]
    * @property {string} [toolsets.xamarin.configuration]
    * @property {string} [toolsets.xamarin.p12File]
@@ -131,13 +140,6 @@ class BranchConfiguration {
         },
         className: 'BranchConfiguration',
         modelProperties: {
-          id: {
-            required: true,
-            serializedName: 'id',
-            type: {
-              name: 'Number'
-            }
-          },
           trigger: {
             required: false,
             serializedName: 'trigger',
@@ -164,6 +166,13 @@ class BranchConfiguration {
             serializedName: 'signed',
             type: {
               name: 'Boolean'
+            }
+          },
+          cloneFromBranch: {
+            required: false,
+            serializedName: 'cloneFromBranch',
+            type: {
+              name: 'String'
             }
           },
           toolsets: {

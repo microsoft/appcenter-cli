@@ -16,7 +16,7 @@
 class CrashFreeDevicePercentages {
   /**
    * Create a CrashFreeDevicePercentages.
-   * @property {number} [averagePercentage] Average percentage
+   * @property {number} [averagePercentage] Average percentage.
    * @property {array} [dailyPercentages] The crash-free percentage per day.
    */
   constructor() {

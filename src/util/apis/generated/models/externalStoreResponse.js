@@ -23,7 +23,16 @@ class ExternalStoreResponse {
    * @property {string} [track] Store track. Possible values include:
    * 'production', 'alpha', 'beta', 'testflight-internal',
    * 'testflight-external'
-   * @property {array} [intuneDetails] store details for intune
+   * @property {object} [intuneDetails] Store details for intune
+   * @property {object} [intuneDetails.targetAudience]
+   * @property {string} [intuneDetails.targetAudience.name] display name for
+   * the target audience/group
+   * @property {string} [intuneDetails.targetAudience.id] ID for the target
+   * audience/group.
+   * @property {object} [intuneDetails.appCategory]
+   * @property {string} [intuneDetails.appCategory.name] display name for the
+   * app category
+   * @property {string} [intuneDetails.appCategory.id] ID for the category.
    * @property {string} [serviceConnectionId] Id for the shared service
    * connection. In case of Apple / GooglePlay stores, this connection will be
    * used to connect to the Apple / Google stores in App Center.
@@ -78,15 +87,8 @@ class ExternalStoreResponse {
             required: false,
             serializedName: 'intune_details',
             type: {
-              name: 'Sequence',
-              element: {
-                  required: false,
-                  serializedName: 'IntuneStoreResponseElementType',
-                  type: {
-                    name: 'Composite',
-                    className: 'IntuneStoreResponse'
-                  }
-              }
+              name: 'Composite',
+              className: 'IntuneStoreResponse'
             }
           },
           serviceConnectionId: {

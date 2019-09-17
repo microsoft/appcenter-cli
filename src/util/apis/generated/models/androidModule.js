@@ -17,6 +17,7 @@ class AndroidModule {
   /**
    * Create a AndroidModule.
    * @property {string} name Name of the Android module
+   * @property {boolean} [hasBundle] Module contains bundle settings
    * @property {array} [productFlavors] The product flavors of the Android
    * module
    * @property {array} [buildVariants] The detected build variants of the
@@ -48,6 +49,13 @@ class AndroidModule {
             serializedName: 'name',
             type: {
               name: 'String'
+            }
+          },
+          hasBundle: {
+            required: false,
+            serializedName: 'hasBundle',
+            type: {
+              name: 'Boolean'
             }
           },
           productFlavors: {

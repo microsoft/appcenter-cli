@@ -26,6 +26,8 @@ class StoresBasicReleaseDetails {
    * For Android: android:versionName from AppManifest.xml.
    * @property {string} [uploadedAt] UTC time in ISO 8601 format of the
    * uploaded time.
+   * @property {string} [destinationType] Destination for this release.
+   * Possible values include: 'group', 'store', 'tester'
    * @property {array} [distributionStores] a list of distribution stores that
    * are associated with this release.
    */
@@ -70,6 +72,13 @@ class StoresBasicReleaseDetails {
           uploadedAt: {
             required: false,
             serializedName: 'uploaded_at',
+            type: {
+              name: 'String'
+            }
+          },
+          destinationType: {
+            required: false,
+            serializedName: 'destination_type',
             type: {
               name: 'String'
             }

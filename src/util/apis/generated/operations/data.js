@@ -319,13 +319,125 @@ function _postResourceProvisioning(acAuthorizationARM, ownerName, appName, optio
 }
 
 /**
+ * @summary Gets general data about the provisioned database
+ *
+ * @param {string} acAuthorizationARM ARM access token.
+ *
+ * @param {string} ownerName The name of the owner
+ *
+ * @param {string} appName The name of the application
+ *
+ * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.customHeaders] Headers that will be added to the
+ * request
+ *
+ * @param {function} callback - The callback.
+ *
+ * @returns {function} callback(err, result, request, response)
+ *
+ *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+ *
+ *                      {object} [result]   - The deserialized result object if an error did not occur.
+ *
+ *                      {object} [request]  - The HTTP Request object if an error did not occur.
+ *
+ *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+ */
+function _getOverview(acAuthorizationARM, ownerName, appName, options, callback) {
+   /* jshint validthis: true */
+  let client = this.client;
+  if(!callback && typeof options === 'function') {
+    callback = options;
+    options = null;
+  }
+  if (!callback) {
+    throw new Error('callback cannot be null.');
+  }
+  // Validate
+  try {
+    if (acAuthorizationARM === null || acAuthorizationARM === undefined || typeof acAuthorizationARM.valueOf() !== 'string') {
+      throw new Error('acAuthorizationARM cannot be null or undefined and it must be of type string.');
+    }
+    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
+      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
+    }
+    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
+      throw new Error('appName cannot be null or undefined and it must be of type string.');
+    }
+  } catch (error) {
+    return callback(error);
+  }
+
+  // Construct URL
+  let baseUrl = this.client.baseUri;
+  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/data/overview';
+  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
+  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
+
+  // Create HTTP transport objects
+  let httpRequest = new WebResource();
+  httpRequest.method = 'GET';
+  httpRequest.url = requestUrl;
+  httpRequest.headers = {};
+  // Set Headers
+  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
+  if (acAuthorizationARM !== undefined && acAuthorizationARM !== null) {
+    httpRequest.headers['AC-Authorization-ARM'] = acAuthorizationARM;
+  }
+  if(options) {
+    for(let headerName in options['customHeaders']) {
+      if (options['customHeaders'].hasOwnProperty(headerName)) {
+        httpRequest.headers[headerName] = options['customHeaders'][headerName];
+      }
+    }
+  }
+  httpRequest.body = null;
+  // Send Request
+  httpRequest.streamedResponse = true;
+  return client.pipeline(httpRequest, (err, response, responseBody) => {
+    if (err) {
+      return callback(err);
+    }
+
+    let statusCode = response.statusCode;
+    if (statusCode !== 200 && statusCode !== 500) {
+      let error = new Error(`Unexpected status code: ${statusCode}`);
+      error.statusCode = response.statusCode;
+      error.request = msRest.stripRequest(httpRequest);
+      error.response = msRest.stripResponse(response);
+      if (responseBody === '') responseBody = null;
+      let parsedErrorResponse;
+      try {
+        if (responseBody !== undefined) parsedErrorResponse = JSON.parse(responseBody);
+        if (parsedErrorResponse) {
+          let internalError = null;
+          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
+          error.code = internalError ? internalError.code : parsedErrorResponse.code;
+          error.message = internalError ? internalError.message : parsedErrorResponse.message;
+        }
+      } catch (defaultError) {
+        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
+                         `- "${responseBody}" for the default response.`;
+        return callback(error);
+      }
+      return callback(error);
+    }
+
+    // Create Result
+    let result = response;
+    return callback(null, result, httpRequest, response);
+  });
+}
+
+/**
  * @summary Checks that the Azure Cosmos DB account name already exists. A
  * valid account name may contain only lowercase letters, numbers, and the '-'
  * character, and must be between 3 and 31 characters.
  *
- * @param {string} acAuthorizationARM
+ * @param {string} acAuthorizationARM ARM token
  *
- * @param {string} accountName
+ * @param {string} accountName Account Name
  *
  * @param {string} ownerName The name of the owner
  *
@@ -419,7 +531,7 @@ function _checkNameExists(acAuthorizationARM, accountName, ownerName, appName, o
     }
 
     let statusCode = response.statusCode;
-    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 401 && statusCode !== 404) {
+    if (statusCode !== 200 && statusCode !== 400 && statusCode !== 401 && statusCode !== 404 && statusCode !== 500) {
       let error = new Error(`Unexpected status code: ${statusCode}`);
       error.statusCode = response.statusCode;
       error.request = msRest.stripRequest(httpRequest);
@@ -458,6 +570,7 @@ class Data {
     this.client = client;
     this._getResourceProvisioning = _getResourceProvisioning;
     this._postResourceProvisioning = _postResourceProvisioning;
+    this._getOverview = _getOverview;
     this._checkNameExists = _checkNameExists;
   }
 
@@ -684,13 +797,102 @@ class Data {
   }
 
   /**
+   * @summary Gets general data about the provisioned database
+   *
+   * @param {string} acAuthorizationARM ARM access token.
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @returns {Promise} A promise is returned
+   *
+   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
+   *
+   * @reject {Error} - The error object.
+   */
+  getOverviewWithHttpOperationResponse(acAuthorizationARM, ownerName, appName, options) {
+    let client = this.client;
+    let self = this;
+    return new Promise((resolve, reject) => {
+      self._getOverview(acAuthorizationARM, ownerName, appName, options, (err, result, request, response) => {
+        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
+        httpOperationResponse.body = result;
+        if (err) { reject(err); }
+        else { resolve(httpOperationResponse); }
+        return;
+      });
+    });
+  }
+
+  /**
+   * @summary Gets general data about the provisioned database
+   *
+   * @param {string} acAuthorizationARM ARM access token.
+   *
+   * @param {string} ownerName The name of the owner
+   *
+   * @param {string} appName The name of the application
+   *
+   * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.customHeaders] Headers that will be added to the
+   * request
+   *
+   * @param {function} [optionalCallback] - The optional callback.
+   *
+   * @returns {function|Promise} If a callback was passed as the last parameter
+   * then it returns the callback else returns a Promise.
+   *
+   * {Promise} A promise is returned
+   *
+   *                      @resolve {Object} - The deserialized result object.
+   *
+   *                      @reject {Error} - The error object.
+   *
+   * {function} optionalCallback(err, result, request, response)
+   *
+   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
+   *
+   *                      {object} [result]   - The deserialized result object if an error did not occur.
+   *
+   *                      {object} [request]  - The HTTP Request object if an error did not occur.
+   *
+   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
+   */
+  getOverview(acAuthorizationARM, ownerName, appName, options, optionalCallback) {
+    let client = this.client;
+    let self = this;
+    if (!optionalCallback && typeof options === 'function') {
+      optionalCallback = options;
+      options = null;
+    }
+    if (!optionalCallback) {
+      return new Promise((resolve, reject) => {
+        self._getOverview(acAuthorizationARM, ownerName, appName, options, (err, result, request, response) => {
+          if (err) { reject(err); }
+          else { resolve(result); }
+          return;
+        });
+      });
+    } else {
+      return self._getOverview(acAuthorizationARM, ownerName, appName, options, optionalCallback);
+    }
+  }
+
+  /**
    * @summary Checks that the Azure Cosmos DB account name already exists. A
    * valid account name may contain only lowercase letters, numbers, and the '-'
    * character, and must be between 3 and 31 characters.
    *
-   * @param {string} acAuthorizationARM
+   * @param {string} acAuthorizationARM ARM token
    *
-   * @param {string} accountName
+   * @param {string} accountName Account Name
    *
    * @param {string} ownerName The name of the owner
    *
@@ -726,9 +928,9 @@ class Data {
    * valid account name may contain only lowercase letters, numbers, and the '-'
    * character, and must be between 3 and 31 characters.
    *
-   * @param {string} acAuthorizationARM
+   * @param {string} acAuthorizationARM ARM token
    *
-   * @param {string} accountName
+   * @param {string} accountName Account Name
    *
    * @param {string} ownerName The name of the owner
    *

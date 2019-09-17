@@ -16,8 +16,8 @@
 class DateTimePercentages {
   /**
    * Create a DateTimePercentages.
-   * @property {string} [datetime] the ISO 8601 datetime
-   * @property {number} [percentage] percentage of the object
+   * @property {string} [datetime] The ISO 8601 datetime.
+   * @property {number} [percentage] Percentage of the object.
    */
   constructor() {
   }

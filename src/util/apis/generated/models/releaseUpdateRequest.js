@@ -44,14 +44,14 @@ class ReleaseUpdateRequest {
    * @property {array} [destinations] Distribute this release under the
    * following list of destinations (store groups or distribution groups).
    * @property {object} [build]
-   * @property {string} [build.branch] The branch name of the build producing
-   * the release
+   * @property {string} [build.branchName] The branch name of the build
+   * producing the release
    * @property {string} [build.commitHash] The commit hash of the build
    * producing the release
    * @property {string} [build.commitMessage] The commit message of the build
    * producing the release
    * @property {boolean} [notifyTesters] A boolean which determines whether to
-   * notify testers of a new release, default to true. Default value: true .
+   * notify testers of a new release, default to false. Default value: false .
    */
   constructor() {
   }
@@ -145,7 +145,7 @@ class ReleaseUpdateRequest {
           notifyTesters: {
             required: false,
             serializedName: 'notify_testers',
-            defaultValue: true,
+            defaultValue: false,
             type: {
               name: 'Boolean'
             }

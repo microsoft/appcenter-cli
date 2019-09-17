@@ -768,6 +768,45 @@
         ]
       }
     },
+    "/v0.1/orgs/{org_name}/users/{user_name}/apps": {
+      "get": {
+        "description": "Get a user apps information from an organization by name",
+        "parameters": [
+          {
+            "$ref": "#/parameters/organization_name"
+          },
+          {
+            "$ref": "#/parameters/user_name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AppResponse"
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "operationId": "apps_getForOrgUser",
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "account"
+        ]
+      }
+    },
     "/v0.1/orgs/{org_name}/users/{user_name}": {
       "patch": {
         "description": "Updates the given organization user",
@@ -1708,7 +1747,7 @@
     },
     "/v0.1/orgs/{org_name}/distribution_groups/{distribution_group_name}/members/bulk_delete": {
       "post": {
-        "description": "Delete apps from distribution group in an org",
+        "description": "Delete testers from distribution group in an org",
         "parameters": [
           {
             "$ref": "#/parameters/organization_name"
@@ -3285,6 +3324,10 @@
     },
     "/v0.1/apps/{owner_name}/{app_name}/transfer/{destination_owner_name}": {
       "post": {
+        "consumes": [
+          "application/json",
+          "application/octet-stream"
+        ],
         "description": "Transfers ownership of an app to a different user or organization",
         "parameters": [
           {
@@ -5012,6 +5055,12 @@
             "required": false
           },
           {
+            "name": "service_connection_id",
+            "in": "query",
+            "type": "string",
+            "description": "The id of the service connection (private). Required for GitLab self-hosted repositories"
+          },
+          {
             "$ref": "#/parameters/form"
           },
           {
@@ -5097,7 +5146,7 @@
             "description": "The repository information",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/RepoInfo"
+              "$ref": "#/definitions/RepoConfigPostRequest"
             }
           },
           {
@@ -5132,7 +5181,7 @@
         ]
       },
       "delete": {
-        "description": "Removes the configuration for the respository",
+        "description": "Removes the configuration for the repository",
         "parameters": [
           {
             "$ref": "#/parameters/owner_name"
@@ -10691,7 +10740,7 @@
           {
             "name": "AC-Authorization-ARM",
             "in": "header",
-            "description": "ARM token",
+            "description": "ARM access token.",
             "required": true,
             "type": "string"
           },
@@ -10733,8 +10782,16 @@
         "consumes": [],
         "parameters": [
           {
+            "name": "AC-Authorization-ARM",
+            "in": "header",
+            "description": "ARM token",
+            "required": true,
+            "type": "string"
+          },
+          {
             "name": "accountName",
             "in": "path",
+            "description": "Account Name",
             "required": true,
             "type": "string",
             "maxLength": 31,
@@ -15021,6 +15078,11 @@
         "icon_url": {
           "description": "The string representation of the URL pointing to the app's icon",
           "type": "string"
+        },
+        "icon_asset_id": {
+          "description": "The uuid for the icon's asset id from ACFUS",
+          "format": "uuid",
+          "type": "string"
         }
       }
     },
@@ -15037,6 +15099,11 @@
         },
         "external_user_id": {
           "description": "The external user id from the provider",
+          "type": "string"
+        },
+        "service_connection_id": {
+          "description": "The id of the service connection stored in customer credential store",
+          "format": "uuid",
           "type": "string"
         }
       }
@@ -15072,6 +15139,11 @@
         },
         "external_user_id": {
           "description": "The external user id from the provider",
+          "type": "string"
+        },
+        "service_connection_id": {
+          "description": "The id of the service connection stored in customer credential store",
+          "format": "uuid",
           "type": "string"
         }
       },
@@ -16207,6 +16279,11 @@
         "external_user_id": {
           "description": "User id from the provider",
           "type": "string"
+        },
+        "service_connection_id": {
+          "description": "The id of the service connection stored in customer credential store",
+          "format": "uuid",
+          "type": "string"
         }
       },
       "required": [
@@ -16796,7 +16873,7 @@
         },
         "message": {
           "description": "The message of the result",
-          "type": "integer"
+          "type": "string"
         },
         "status": {
           "description": "The status code of the result",
@@ -17775,6 +17852,22 @@
         "origin"
       ]
     },
+    "UserProfileAdminResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/UserProfileResponse"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "add_to_all_apps": {
+              "description": "Indicating whether the user should be added as a Manager to all apps owned by the organization",
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
     "UserProfileResponseInternal": {
       "allOf": [
         {
@@ -18043,12 +18136,13 @@
           "type": "string"
         },
         "serviceType": {
-          "description": "service type of shared connection can be apple|googleplay|jira|applecertificate",
+          "description": "service type of shared connection can be apple|gitlab|googleplay|jira|applecertificate",
           "type": "string",
           "enum": [
             "apple",
             "jira",
-            "googleplay"
+            "googleplay",
+            "gitlab"
           ]
         },
         "credentialType": {
@@ -18079,12 +18173,13 @@
           "type": "string"
         },
         "serviceType": {
-          "description": "service type of shared connection can be apple|googleplay|jira",
+          "description": "service type of shared connection can be apple|gitlab|googleplay|jira",
           "type": "string",
           "enum": [
             "apple",
             "jira",
-            "googleplay"
+            "googleplay",
+            "gitlab"
           ]
         },
         "credentialType": {
@@ -18124,12 +18219,13 @@
           "type": "string"
         },
         "serviceType": {
-          "description": "service type of shared connection can be apple|googleplay|jira|applecertificate",
+          "description": "service type of shared connection can be apple|gitlab|googleplay|jira|applecertificate",
           "type": "string",
           "enum": [
             "apple",
             "jira",
-            "googleplay"
+            "googleplay",
+            "gitlab"
           ]
         },
         "isValid": {
@@ -18738,6 +18834,15 @@
         },
         "avatar_url": {
           "description": "The url at which the user's avatar can be reached",
+          "type": "string"
+        }
+      }
+    },
+    "MbaasSurveyDataResponse": {
+      "properties": {
+        "nextSurveyDate": {
+          "description": "The next mbaas survey date for the user",
+          "format": "dateTime",
           "type": "string"
         }
       }
@@ -19855,41 +19960,77 @@
       }
     },
     "RepoConfig": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/RepoConfigPostRequest"
+        }
+      ],
       "properties": {
+        "id": {
+          "description": "Repository configuration identifier",
+          "type": "string"
+        },
         "type": {
           "description": "Type of repository",
           "type": "string"
         },
         "state": {
-          "type": "string",
           "enum": [
             "unauthorized",
             "inactive",
             "active"
           ],
-          "description": "State of the configuration"
-        },
-        "repo_url": {
-          "type": "string",
-          "description": "URL of the repository"
-        },
-        "id": {
-          "type": "string",
-          "description": "Repository identifier"
+          "description": "State of the configuration",
+          "type": "string"
         },
         "user_email": {
-          "type": "string",
-          "description": "email of user, who linked repository"
-        },
-        "installation_id": {
-          "type": "string",
-          "description": "The GitHub Installation id"
+          "description": "Email of the user who linked the repository",
+          "type": "string"
         }
       },
       "required": [
+        "id",
         "type",
-        "state"
+        "state",
+        "repo_url"
       ]
+    },
+    "RepoConfigPostRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/RepoConfigCommon"
+        }
+      ],
+      "properties": {
+        "installation_id": {
+          "description": "The GitHub App Installation id. Required for repositories connected from GitHub App",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repo_url"
+      ]
+    },
+    "RepoConfigCommon": {
+      "properties": {
+        "repo_url": {
+          "description": "The repository's git url, must be a HTTPS URL",
+          "type": "string",
+          "example": "https://github.com/foo/bar.git"
+        },
+        "repo_id": {
+          "description": "The repository id from the repository provider. Required for repositories connected from GitHub App and GitLab.com",
+          "type": "string"
+        },
+        "external_user_id": {
+          "description": "The external user id from the repository provider. Required for GitLab.com repositories",
+          "type": "string"
+        },
+        "service_connection_id": {
+          "description": "The id of the service connection (private). Required for GitLab self-hosted repositories",
+          "type": "string"
+        }
+      }
     },
     "RepoConfigs": {
       "description": "A list of repo configurations",
@@ -20312,12 +20453,18 @@
         "token": {
           "description": "The URL encoded token used for upload permissions.",
           "type": "string"
+        },
+        "package_asset_id": {
+          "description": "The associated asset ID in the file management service associated with this uploaded.",
+          "type": "string",
+          "format": "uuid"
         }
       },
       "required": [
         "id",
         "upload_domain",
-        "token"
+        "token",
+        "package_asset_id"
       ]
     },
     "GetReleaseStatusResponse": {
@@ -20783,7 +20930,9 @@
         "id",
         "version",
         "enabled",
-        "uploaded_at"
+        "uploaded_at",
+        "short_version",
+        "mandatory_update"
       ]
     },
     "BasicReleaseDetailsResponse": {
@@ -20848,6 +20997,8 @@
           }
         },
         "build": {
+          "description": "Build information for the release\n",
+          "type": "object",
           "$ref": "#/definitions/BuildInfo"
         }
       },
@@ -20855,7 +21006,8 @@
         "id",
         "version",
         "enabled",
-        "uploaded_at"
+        "uploaded_at",
+        "short_version"
       ]
     },
     "ReleaseDetailsResponse": {
@@ -20871,6 +21023,10 @@
         },
         "app_display_name": {
           "description": "The app's display name.",
+          "type": "string"
+        },
+        "app_os": {
+          "description": "The app's OS.",
           "type": "string"
         },
         "version": {
@@ -20933,6 +21089,13 @@
         "bundle_identifier": {
           "description": "The identifier of the apps bundle.",
           "type": "string"
+        },
+        "package_hashes": {
+          "description": "Hashes for the packages.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "fingerprint": {
           "description": "MD5 checksum of the release binary.",
@@ -20998,8 +21161,22 @@
         "enabled": {
           "description": "This value determines the whether a release currently is enabled or disabled.",
           "type": "boolean"
+        },
+        "status": {
+          "description": "Status of the release.",
+          "type": "string"
         }
-      }
+      },
+      "required": [
+        "id",
+        "app_name",
+        "app_display_name",
+        "uploaded_at",
+        "version",
+        "short_version",
+        "app_icon_url",
+        "enabled"
+      ]
     },
     "ReleaseUploadBeginResponse": {
       "description": "A response containing information pertaining to starting a release upload process",
@@ -21054,6 +21231,10 @@
         },
         "build_version": {
           "description": "The build version of the uploaded binary",
+          "type": "string"
+        },
+        "build_number": {
+          "description": "The build number of the uploaded binary",
           "type": "string"
         }
       }
@@ -21129,13 +21310,17 @@
           "type": "string",
           "description": "The URL to the release's binary."
         },
+        "file_extension": {
+          "type": "string",
+          "description": "The file extension of the asset. Does not include the initial period."
+        },
         "upload_id": {
           "type": "string",
           "description": "The upload id associated with the release, to map to the releases upload table."
         },
-        "icon_url": {
+        "icon_asset_id": {
           "type": "string",
-          "description": "The URL to the release's icon."
+          "description": "The assetId associated with the icon uploaded to app center file upload service."
         },
         "ipa_uuids": {
           "type": "array",
@@ -21231,7 +21416,7 @@
       "type": "object",
       "description": "Contains metadata about the build that produced the release being uploaded",
       "properties": {
-        "branch": {
+        "branch_name": {
           "description": "The branch name of the build producing the release",
           "type": "string"
         },
@@ -21373,6 +21558,10 @@
                 "store",
                 "tester"
               ]
+            },
+            "display_name": {
+              "description": "Display name for the group or tester",
+              "type": "string"
             }
           }
         }
@@ -21396,7 +21585,7 @@
     "DistributionGroup": {
       "allOf": [
         {
-          "$ref": "#/definitions/DestinationId"
+          "$ref": "#/definitions/DistributionGroupWithoutIsLatest"
         },
         {
           "type": "object",
@@ -21419,12 +21608,15 @@
           "description": "A name identifying a unique distribution group.",
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "id"
+      ]
     },
     "DistributionStore": {
       "allOf": [
         {
-          "$ref": "#/definitions/DestinationId"
+          "$ref": "#/definitions/DistributionStoreWithoutIsLatest"
         },
         {
           "type": "object",
@@ -21432,19 +21624,6 @@
             "is_latest": {
               "description": "Is the containing release the latest one in this distribution store.",
               "type": "boolean"
-            },
-            "type": {
-              "description": "type of the distribution store currently stores type can be intune, googleplay or windows.",
-              "type": "string",
-              "enum": [
-                "intune",
-                "googleplay",
-                "windows"
-              ]
-            },
-            "publishing_status": {
-              "description": "publishing status of the release in the store.",
-              "type": "string"
             }
           }
         }
@@ -21466,14 +21645,18 @@
           "enum": [
             "intune",
             "googleplay",
-            "windows"
+            "apple",
+            "none"
           ]
         },
         "publishing_status": {
           "description": "publishing status of the release in the store.",
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "id"
+      ]
     },
     "ArchIdentifier": {
       "description": "An object containing a UUID for an architecture for an iOS app.",
@@ -21814,6 +21997,10 @@
         "notes": {
           "type": "string"
         },
+        "notify": {
+          "description": "Send out notifications to the destination groups and/or testers",
+          "type": "boolean"
+        },
         "distribution_group_ids": {
           "description": "List of DistributionGroup IDs the release is distributed to",
           "type": "array",
@@ -21950,6 +22137,29 @@
       },
       "required": [
         "xml"
+      ]
+    },
+    "DistributionSettingsResponse": {
+      "properties": {
+        "default_public": {
+          "description": "Is this app using the \"Default to Public Distribution Groups\" logic",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "default_public"
+      ]
+    },
+    "PublicDistributionGroupsResponse": {
+      "properties": {
+        "id": {
+          "description": "The id of the distribution group",
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "id"
       ]
     },
     "DeviceConfigurationResponse": {
@@ -22989,7 +23199,7 @@
           "description": "error Details",
           "type": "string"
         },
-        "is_logs_available": {
+        "is_log_available": {
           "description": "boolean property to tell if logs are available for download",
           "type": "boolean"
         }
@@ -23098,11 +23308,8 @@
           ]
         },
         "intune_details": {
-          "description": "store details for intune",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/IntuneStoreResponse"
-          }
+          "description": "Store details for intune",
+          "$ref": "#/definitions/IntuneStoreResponse"
         },
         "service_connection_id": {
           "description": "Id for the shared service connection. In case of Apple / GooglePlay stores, this connection will be used to connect to the Apple / Google stores in App Center.",
@@ -23266,6 +23473,15 @@
         "uploaded_at": {
           "description": "UTC time in ISO 8601 format of the uploaded time.",
           "type": "string"
+        },
+        "destination_type": {
+          "description": "Destination for this release.",
+          "type": "string",
+          "enum": [
+            "group",
+            "store",
+            "tester"
+          ]
         },
         "distribution_stores": {
           "description": "a list of distribution stores that are associated with this release.",
@@ -31089,6 +31305,16 @@
     },
     "UpdateCheckResponse": {
       "required": [
+        "update_info"
+      ],
+      "properties": {
+        "update_info": {
+          "$ref": "#/definitions/UpdateInfoData"
+        }
+      }
+    },
+    "UpdateInfoData": {
+      "required": [
         "is_available"
       ],
       "allOf": [
@@ -31163,6 +31389,118 @@
       },
       "required": [
         "success"
+      ]
+    },
+    "LegacyPatchDeploymentResponse": {
+      "properties": {
+        "key": {
+          "description": "Deployment key (aka Deployment Id)",
+          "type": "string"
+        },
+        "name": {
+          "description": "Updated deployment name",
+          "type": "string"
+        },
+        "package": {
+          "$ref": "#/definitions/LegacyCodePushRelease"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "LegacyCodePushRelease": {
+      "properties": {
+        "appVersion": {
+          "description": "The version of the release",
+          "type": "string"
+        },
+        "isDisabled": {
+          "description": "Flag used to determine if release is disabled",
+          "type": "boolean"
+        },
+        "isMandatory": {
+          "description": "Flag used to determine if release is mandatory",
+          "type": "boolean"
+        },
+        "rollout": {
+          "description": "Pecentage (out of 100) that release is deployed to",
+          "type": "integer"
+        },
+        "blobUrl": {
+          "description": "Location (URL) of release package",
+          "type": "string"
+        },
+        "size": {
+          "description": "Size of release package",
+          "type": "integer"
+        },
+        "releaseMethod": {
+          "description": "Method used to deploy release",
+          "type": "string"
+        },
+        "uploadTime": {
+          "description": "Release upload time as epoch Unix timestamp",
+          "type": "integer"
+        },
+        "label": {
+          "description": "Release label (aka release name)",
+          "type": "string"
+        },
+        "releasedByUserId": {
+          "description": "User ID that triggered most recent release",
+          "type": "string"
+        },
+        "diffPackageMap": {
+          "description": "Object containing URL and size of changed package hashes contained in the release",
+          "type": "object"
+        }
+      }
+    },
+    "LegacyCodePushReleaseModification": {
+      "properties": {
+        "packageInfo": {
+          "description": "The release package information",
+          "$ref": "#/definitions/LegacyCodePushReleaseInfo"
+        }
+      },
+      "required": [
+        "packageInfo"
+      ]
+    },
+    "LegacyCodePushReleaseInfo": {
+      "properties": {
+        "appVersion": {
+          "description": "The version of the release",
+          "type": "string"
+        },
+        "isDisabled": {
+          "description": "Flag used to determine if release is disabled",
+          "type": "boolean"
+        },
+        "isMandatory": {
+          "description": "Flag used to determine if release is mandatory",
+          "type": "boolean"
+        },
+        "rollout": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "label": {
+          "description": "Release label (aka release name)",
+          "type": "string"
+        }
+      }
+    },
+    "LegacyPatchCodePushReleaseResponse": {
+      "properties": {
+        "package": {
+          "$ref": "#/definitions/LegacyCodePushRelease"
+        }
+      },
+      "required": [
+        "package"
       ]
     },
     "AlertOperationResult": {
@@ -32414,7 +32752,6 @@
       "type": "object",
       "properties": {
         "clientId": {
-          "format": "uuid",
           "type": "string"
         }
       }
@@ -32517,16 +32854,19 @@
     "AuthApplicationResponse": {
       "required": [
         "id",
-        "tenantId",
-        "tenantName",
-        "policyId",
-        "scopeId",
-        "scopeUrl"
+        "provider"
       ],
       "type": "object",
       "properties": {
         "id": {
-          "format": "uuid",
+          "type": "string"
+        },
+        "provider": {
+          "enum": [
+            "AADB2C",
+            "Auth0",
+            "Firebase"
+          ],
           "type": "string"
         },
         "tenantId": {
@@ -32549,11 +32889,6 @@
       }
     },
     "AuthApplicationPatchRequest": {
-      "required": [
-        "policyId",
-        "scopeId",
-        "scopeUrl"
-      ],
       "type": "object",
       "properties": {
         "policyId": {
@@ -32565,17 +32900,23 @@
         },
         "scopeUrl": {
           "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "provider": {
+          "enum": [
+            "AADB2C",
+            "Auth0",
+            "Firebase"
+          ],
+          "type": "string"
         }
       }
     },
     "ExistingAuthApplicationPostRequest": {
       "required": [
-        "tenantId",
-        "tenantName",
-        "id",
-        "policyId",
-        "scopeId",
-        "scopeUrl"
+        "id"
       ],
       "type": "object",
       "properties": {
@@ -32586,8 +32927,15 @@
         "tenantName": {
           "type": "string"
         },
+        "provider": {
+          "enum": [
+            "AADB2C",
+            "Auth0",
+            "Firebase"
+          ],
+          "type": "string"
+        },
         "id": {
-          "format": "uuid",
           "type": "string"
         },
         "policyId": {
@@ -32619,6 +32967,87 @@
       "properties": {
         "id": {
           "type": "string"
+        }
+      }
+    },
+    "MetricsResponse": {
+      "type": "object",
+      "properties": {
+        "databaseLocation": {
+          "enum": [
+            "East Asia",
+            "Southeast Asia",
+            "Australia Central",
+            "Australia Central 2",
+            "Australia East",
+            "Australia Southeast",
+            "Brazil South",
+            "Canada Central",
+            "Canada East",
+            "Central India",
+            "South India",
+            "West India",
+            "North Europe",
+            "West Europe",
+            "France Central",
+            "France South",
+            "Germany Central",
+            "Germany Northeast",
+            "Japan East",
+            "Japan West",
+            "Korea Central",
+            "Korea South",
+            "South Africa North",
+            "South Africa West",
+            "UK South",
+            "UK West",
+            "Central US",
+            "East US",
+            "East US 2",
+            "US Gov Arizona",
+            "US Gov Texas",
+            "North Central US",
+            "South Central US",
+            "West US",
+            "West US 2",
+            "West Central US"
+          ],
+          "type": "string"
+        },
+        "accountName": {
+          "type": "string"
+        },
+        "databaseId": {
+          "type": "string"
+        },
+        "metrics": {
+          "$ref": "#/definitions/DatabaseMetrics"
+        }
+      }
+    },
+    "DatabaseMetrics": {
+      "description": "Represents database usage metrics.",
+      "type": "object",
+      "properties": {
+        "interval": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "totalRequests": {
+          "format": "double",
+          "type": "number"
+        },
+        "totalRequestUnits": {
+          "format": "double",
+          "type": "number"
+        },
+        "dataUsage": {
+          "format": "double",
+          "type": "number"
+        },
+        "indexUsage": {
+          "format": "double",
+          "type": "number"
         }
       }
     },
@@ -32794,6 +33223,23 @@
           "type": "string"
         },
         "name": {
+          "type": "string"
+        }
+      }
+    },
+    "DataResourceTokenResponse": {
+      "type": "object",
+      "properties": {
+        "databaseName": {
+          "type": "string"
+        },
+        "collectionName": {
+          "type": "string"
+        },
+        "accountName": {
+          "type": "string"
+        },
+        "token": {
           "type": "string"
         }
       }
@@ -33961,7 +34407,7 @@
       "x-ms-parameter-location": "method"
     },
     "ErrorAppBuildParameterOptional": {
-      "name": "appbuild",
+      "name": "app_build",
       "in": "query",
       "description": "app build",
       "required": false,

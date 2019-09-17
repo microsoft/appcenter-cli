@@ -43,6 +43,8 @@ class InternalHockeyAppCompatibilityResponse {
    * 'vso', 'jira5', 'github', 'other'
    * @property {array} [webhookTypes] Does the HockeyApp app have any webhooks
    * configured? Which types?
+   * @property {boolean} [hasAiExport] Does the HockeyApp app export any data
+   * to Application Insights?
    */
   constructor() {
   }
@@ -150,6 +152,13 @@ class InternalHockeyAppCompatibilityResponse {
                     name: 'String'
                   }
               }
+            }
+          },
+          hasAiExport: {
+            required: false,
+            serializedName: 'has_ai_export',
+            type: {
+              name: 'Boolean'
             }
           }
         }

@@ -51,10 +51,10 @@ class AppMembershipsResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AppMembershipsResponseMembershipsItemElementType',
+                  serializedName: 'AppMembershipElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AppMembershipsResponseMembershipsItem'
+                    className: 'AppMembership'
                   }
               }
             }
