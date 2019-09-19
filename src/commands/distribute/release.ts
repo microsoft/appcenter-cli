@@ -57,7 +57,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     this.validateParameters();
 
     debug("Loading prerequisites");
-    const [distributionGroupUsersCount, storeDetails, releaseBinaryFileBuffer, releaseNotesString] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
+    const [distributionGroupUsersCount, storeInformation, releaseBinaryFileBuffer, releaseNotesString] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
 
     debug("Creating release upload");
     const createdReleaseUpload = await this.createReleaseUpload(client, app);
@@ -93,9 +93,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
       debug("Distributing the release to a group");
       await this.distributeRelease(client, app, releaseId);
     }
-    if (!_.isNil(storeDetails)) {
+    if (!_.isNil(storeInformation)) {
       debug("Distributing the release to a store");
-      await this.publishToStore(client, app, storeDetails, releaseId);
+      await this.publishToStore(client, app, storeInformation, releaseId);
     }
 
     debug("Retrieving the release");
@@ -133,7 +133,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private getPrerequisites(client: AppCenterClient): Promise<[number | null, models.StoresDetails | null, Buffer, string]> {
+  private getPrerequisites(client: AppCenterClient): Promise<[number | null, models.ExternalStoreResponse | null, Buffer, string]> {
     // load release binary file
     const fileBuffer = this.getReleaseFileBuffer();
 
@@ -141,7 +141,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     const releaseNotesString = this.getReleaseNotesString();
 
     let distributionGroupUsersNumber: Promise<number | null>;
-    let storeDetails: Promise<models.StoresDetails | null>;
+    let storeInformation: Promise<models.ExternalStoreResponse | null>;
     if (!_.isNil(this.distributionGroup)) {
       // get number of distribution group users (and check distribution group existence)
       // return null if request has failed because of any reason except non-existing group name.
@@ -149,10 +149,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
     if (!_.isNil(this.storeName)) {
       // get distribution store type to check existence and further filtering
-      storeDetails = this.getStoreDetails(client);
+      storeInformation = this.getStoreDetails(client);
     }
 
-    return Promise.all([distributionGroupUsersNumber, storeDetails, fileBuffer, releaseNotesString]);
+    return Promise.all([distributionGroupUsersNumber, storeInformation, fileBuffer, releaseNotesString]);
   }
 
   private async getReleaseFileBuffer(): Promise<Buffer> {
@@ -204,9 +204,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return distributionGroupUsersRequestResponse.result.length;
   }
 
-  private async getStoreDetails(client: AppCenterClient): Promise<models.StoresDetails | null> {
+  private async getStoreDetails(client: AppCenterClient): Promise<models.ExternalStoreResponse | null> {
     try {
-      const storeDetailsResponse = await clientRequest<models.StoresDetails>(
+      const storeDetailsResponse = await clientRequest<models.ExternalStoreResponse>(
         (cb) => client.stores.get(this.storeName, this.app.ownerName, this.app.appName, cb));
       const statusCode = storeDetailsResponse.response.statusCode;
       if (statusCode >= 400) {
@@ -342,10 +342,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
     });
   }
 
-  private async publishToStore(client: AppCenterClient, app: DefaultApp, storeDetails: models.StoresDetails, releaseId: number): Promise<void> {
+  private async publishToStore(client: AppCenterClient, app: DefaultApp, storeInformation: models.ExternalStoreResponse, releaseId: number): Promise<void> {
     try {
-      const { result, response } = await out.progress(`Publishing to store '${storeDetails.name}'...`,
-        clientRequest<void>(async (cb) => client.releases.addStore(releaseId, app.ownerName, app.appName, storeDetails.id, cb))
+      const { result, response } = await out.progress(`Publishing to store '${storeInformation.name}'...`,
+        clientRequest<void>(async (cb) => client.releases.addStore(releaseId, app.ownerName, app.appName, storeInformation.id, cb))
       );
 
       const statusCode = response.statusCode;
