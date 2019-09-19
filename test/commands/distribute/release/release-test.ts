@@ -60,7 +60,7 @@ describe("release command", () => {
     distributeSpy = Sinon.spy();
   });
 
-  describe("when all network requests are successful", () => {
+  describe("when all network requests are successful (group)", () => {
     beforeEach(() => {
         expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
           setupSuccessfulPostUploadResponse(
@@ -227,7 +227,7 @@ describe("release command", () => {
       const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
 
       // Assert
-      testFailure(result, `failed to set distribution group and release notes for release ${fakeReleaseId}`, expectedRequestsScope, skippedRequestsScope);
+      testFailure(result, `failed to set distribution group for release ${fakeReleaseId}`, expectedRequestsScope, skippedRequestsScope);
     });
   });
 
@@ -281,6 +281,35 @@ describe("release command", () => {
 
       // Assert
       testFailure(result, `Could not find release ${fakeReleaseId}`, expectedRequestsScope);
+    });
+  });
+
+  describe("when using invalid arguments", () => {
+    let releaseFilePath: string;
+    let releaseNotesFilePath: string;
+
+    before(() => {
+      releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+      releaseNotesFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
+    });
+
+    it("fails if --file is not specified", async () => {
+      expect(() => new ReleaseBinaryCommand(getCommandArgs(["-R", releaseNotesFilePath, "-g", fakeDistributionGroupName]))).to.throw;
+    });
+
+    it("fails if neither --release-notes nor --release-notes-file is specified", async () => {
+      const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-g", fakeDistributionGroupName]));
+      await expect(command.execute()).to.eventually.be.rejected;
+    });
+
+    it("fails if both --release-notes and --release-notes-file are specified", async () => {
+      const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-r", releaseNotes, "-R", releaseNotesFilePath, "-g", fakeDistributionGroupName]));
+      await expect(command.execute()).to.eventually.be.rejected;
+    });
+
+    it("fails if neither --group nor --store is specified", async () => {
+      const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath]));
+      await expect(command.execute()).to.eventually.be.rejected;
     });
   });
 
