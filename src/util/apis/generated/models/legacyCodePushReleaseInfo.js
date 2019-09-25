@@ -17,6 +17,7 @@ class LegacyCodePushReleaseInfo {
   /**
    * Create a LegacyCodePushReleaseInfo.
    * @property {string} [appVersion] The version of the release
+   * @property {string} [description] The description of the release
    * @property {boolean} [isDisabled] Flag used to determine if release is
    * disabled
    * @property {boolean} [isMandatory] Flag used to determine if release is
@@ -48,6 +49,13 @@ class LegacyCodePushReleaseInfo {
               name: 'String'
             }
           },
+          description: {
+            required: false,
+            serializedName: 'description',
+            type: {
+              name: 'String'
+            }
+          },
           isDisabled: {
             required: false,
             serializedName: 'isDisabled',
@@ -65,10 +73,6 @@ class LegacyCodePushReleaseInfo {
           rollout: {
             required: false,
             serializedName: 'rollout',
-            constraints: {
-              InclusiveMaximum: 100,
-              InclusiveMinimum: 1
-            },
             type: {
               name: 'Number'
             }

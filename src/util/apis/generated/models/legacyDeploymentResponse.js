@@ -11,11 +11,14 @@
 'use strict';
 
 /**
- * Class representing a LegacyPatchDeploymentResponse.
+ * Class representing a LegacyDeploymentResponse.
  */
-class LegacyPatchDeploymentResponse {
+class LegacyDeploymentResponse {
   /**
-   * Create a LegacyPatchDeploymentResponse.
+   * Create a LegacyDeploymentResponse.
+   * @property {number} [createdTime] Time at which the deployment was created
+   * as a Unix timestamp.
+   * @property {string} [id] The ID of the deployment (internal use only).
    * @property {string} [key] Deployment key (aka Deployment Id)
    * @property {string} name Updated deployment name
    * @property {object} [packageProperty]
@@ -24,7 +27,7 @@ class LegacyPatchDeploymentResponse {
    * release is disabled
    * @property {boolean} [packageProperty.isMandatory] Flag used to determine
    * if release is mandatory
-   * @property {number} [packageProperty.rollout] Pecentage (out of 100) that
+   * @property {number} [packageProperty.rollout] Percentage (out of 100) that
    * release is deployed to
    * @property {string} [packageProperty.blobUrl] Location (URL) of release
    * package
@@ -37,6 +40,8 @@ class LegacyPatchDeploymentResponse {
    * name)
    * @property {string} [packageProperty.releasedByUserId] User ID that
    * triggered most recent release
+   * @property {string} [packageProperty.manifestBlobUrl] The URL location of
+   * the package's manifest file.
    * @property {object} [packageProperty.diffPackageMap] Object containing URL
    * and size of changed package hashes contained in the release
    */
@@ -44,19 +49,33 @@ class LegacyPatchDeploymentResponse {
   }
 
   /**
-   * Defines the metadata of LegacyPatchDeploymentResponse
+   * Defines the metadata of LegacyDeploymentResponse
    *
-   * @returns {object} metadata of LegacyPatchDeploymentResponse
+   * @returns {object} metadata of LegacyDeploymentResponse
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'LegacyPatchDeploymentResponse',
+      serializedName: 'LegacyDeploymentResponse',
       type: {
         name: 'Composite',
-        className: 'LegacyPatchDeploymentResponse',
+        className: 'LegacyDeploymentResponse',
         modelProperties: {
+          createdTime: {
+            required: false,
+            serializedName: 'createdTime',
+            type: {
+              name: 'Number'
+            }
+          },
+          id: {
+            required: false,
+            serializedName: 'id',
+            type: {
+              name: 'String'
+            }
+          },
           key: {
             required: false,
             serializedName: 'key',
@@ -85,4 +104,4 @@ class LegacyPatchDeploymentResponse {
   }
 }
 
-module.exports = LegacyPatchDeploymentResponse;
+module.exports = LegacyDeploymentResponse;

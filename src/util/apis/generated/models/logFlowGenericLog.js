@@ -77,6 +77,8 @@ class LogFlowGenericLog {
    * technology framework (Xamarin runtime version or ReactNative or Cordova
    * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or
    * ReactNative or other.
+   * @property {string} [authProvider] Auth service provider.
+   * @property {string} [accountId] Account ID of the authenticated user.
    */
   constructor() {
   }
@@ -164,6 +166,20 @@ class LogFlowGenericLog {
             type: {
               name: 'Composite',
               className: 'LogFlowDevice'
+            }
+          },
+          authProvider: {
+            required: false,
+            serializedName: 'auth_provider',
+            type: {
+              name: 'String'
+            }
+          },
+          accountId: {
+            required: false,
+            serializedName: 'account_id',
+            type: {
+              name: 'String'
             }
           }
         }

@@ -18,6 +18,8 @@ class LegacyCodePushReleaseModification {
    * Create a LegacyCodePushReleaseModification.
    * @property {object} packageInfo The release package information
    * @property {string} [packageInfo.appVersion] The version of the release
+   * @property {string} [packageInfo.description] The description of the
+   * release
    * @property {boolean} [packageInfo.isDisabled] Flag used to determine if
    * release is disabled
    * @property {boolean} [packageInfo.isMandatory] Flag used to determine if

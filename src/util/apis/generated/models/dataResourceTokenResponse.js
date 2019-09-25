@@ -16,10 +16,12 @@
 class DataResourceTokenResponse {
   /**
    * Create a DataResourceTokenResponse.
+   * @property {string} [databaseId]
    * @property {string} [databaseName]
    * @property {string} [collectionName]
    * @property {string} [accountName]
    * @property {string} [token]
+   * @property {date} [expiresOn]
    */
   constructor() {
   }
@@ -38,6 +40,13 @@ class DataResourceTokenResponse {
         name: 'Composite',
         className: 'DataResourceTokenResponse',
         modelProperties: {
+          databaseId: {
+            required: false,
+            serializedName: 'databaseId',
+            type: {
+              name: 'String'
+            }
+          },
           databaseName: {
             required: false,
             serializedName: 'databaseName',
@@ -64,6 +73,13 @@ class DataResourceTokenResponse {
             serializedName: 'token',
             type: {
               name: 'String'
+            }
+          },
+          expiresOn: {
+            required: false,
+            serializedName: 'expiresOn',
+            type: {
+              name: 'DateTime'
             }
           }
         }

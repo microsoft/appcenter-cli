@@ -8510,6 +8510,16 @@ export interface LogFlowGenericLog {
   */
   properties?: { [propertyName: string]: string };
   device: LogFlowDevice;
+  /**
+   * Auth service provider.
+
+  */
+  authProvider?: string;
+  /**
+   * Account ID of the authenticated user.
+
+  */
+  accountId?: string;
 }
 
 export interface LogFlowGenericLogContainer {
@@ -9808,8 +9818,9 @@ export interface NotificationTargetDevices extends NotificationTarget {
 }
 
 /**
- * Generic notification configuration. Is a base type and caller should choose one of the derived
- * types specified in the enum.
+ * Type of notification config (NotificationConfigAppleToken, NotificationConfigGoogle,
+ * NotificationConfigWindows). The 'type' property must be set to a valid value and the object must
+ * include the correct properties for the specified type.
 */
 export interface NotificationConfig {
   /**
@@ -9841,7 +9852,8 @@ export interface NotificationConfigApple extends NotificationConfig {
 }
 
 /**
- * Apple notification auth token configuration.
+ * Apple notification auth token configuration. The 'type' property must be set to
+ * 'apns_token_config'.
 */
 export interface NotificationConfigAppleToken extends NotificationConfig {
   /**
@@ -9867,7 +9879,7 @@ export interface NotificationConfigAppleToken extends NotificationConfig {
 }
 
 /**
- * Google notification configuration.
+ * Google notification configuration. The 'type' property must be set to 'gcm_config'
 */
 export interface NotificationConfigGoogle extends NotificationConfig {
   /**
@@ -9877,7 +9889,7 @@ export interface NotificationConfigGoogle extends NotificationConfig {
 }
 
 /**
- * WNS notification configuration.
+ * WNS notification configuration. The 'type' property must be set to 'wns_config'
 */
 export interface NotificationConfigWindows extends NotificationConfig {
   /**
@@ -11004,7 +11016,7 @@ export interface LegacyCodePushRelease {
   */
   isMandatory?: boolean;
   /**
-   * Pecentage (out of 100) that release is deployed to
+   * Percentage (out of 100) that release is deployed to
   */
   rollout?: number;
   /**
@@ -11032,12 +11044,24 @@ export interface LegacyCodePushRelease {
   */
   releasedByUserId?: string;
   /**
+   * The URL location of the package's manifest file.
+  */
+  manifestBlobUrl?: string;
+  /**
    * Object containing URL and size of changed package hashes contained in the release
   */
   diffPackageMap?: any;
 }
 
-export interface LegacyPatchDeploymentResponse {
+export interface LegacyDeploymentResponse {
+  /**
+   * Time at which the deployment was created as a Unix timestamp.
+  */
+  createdTime?: number;
+  /**
+   * The ID of the deployment (internal use only).
+  */
+  id?: string;
   /**
    * Deployment key (aka Deployment Id)
   */
@@ -11049,11 +11073,19 @@ export interface LegacyPatchDeploymentResponse {
   packageProperty?: LegacyCodePushRelease;
 }
 
+export interface LegacyDeploymentsResponse {
+  deployments?: LegacyDeploymentResponse[];
+}
+
 export interface LegacyCodePushReleaseInfo {
   /**
    * The version of the release
   */
   appVersion?: string;
+  /**
+   * The description of the release
+  */
+  description?: string;
   /**
    * Flag used to determine if release is disabled
   */
@@ -11076,7 +11108,7 @@ export interface LegacyCodePushReleaseModification {
   packageInfo: LegacyCodePushReleaseInfo;
 }
 
-export interface LegacyPatchCodePushReleaseResponse {
+export interface LegacyCodePushReleaseResponse {
   packageProperty: LegacyCodePushRelease;
 }
 
@@ -11860,6 +11892,7 @@ export interface ApplicationResponse {
   id?: string;
   createdAt?: Date;
   name?: string;
+  signInAudience?: string;
 }
 
 export interface ApplicationsResponse {
@@ -11880,7 +11913,7 @@ export interface ScopesResponse {
 export interface AuthApplicationResponse {
   id: string;
   /**
-   * Possible values include: 'AADB2C', 'Auth0', 'Firebase'
+   * Possible values include: 'AADB2C', 'Auth0', 'Firebase', 'AAD'
   */
   provider: string;
   tenantId?: string;
@@ -11888,6 +11921,7 @@ export interface AuthApplicationResponse {
   policyId?: string;
   scopeId?: string;
   scopeUrl?: string;
+  signInAudience?: string;
 }
 
 export interface AuthApplicationPatchRequest {
@@ -11896,7 +11930,7 @@ export interface AuthApplicationPatchRequest {
   scopeUrl?: string;
   id?: string;
   /**
-   * Possible values include: 'AADB2C', 'Auth0', 'Firebase'
+   * Possible values include: 'AADB2C', 'Auth0', 'Firebase', 'AAD'
   */
   provider?: string;
 }
@@ -11905,13 +11939,14 @@ export interface ExistingAuthApplicationPostRequest {
   tenantId?: string;
   tenantName?: string;
   /**
-   * Possible values include: 'AADB2C', 'Auth0', 'Firebase'
+   * Possible values include: 'AADB2C', 'Auth0', 'Firebase', 'AAD'
   */
   provider?: string;
   id: string;
   policyId?: string;
   scopeId?: string;
   scopeUrl?: string;
+  signInAudience?: string;
 }
 
 export interface TrustFrameworkPolicyResponse {
@@ -12006,10 +12041,12 @@ export interface DatabaseCollectionsResponse {
 }
 
 export interface DataResourceTokenResponse {
+  databaseId?: string;
   databaseName?: string;
   collectionName?: string;
   accountName?: string;
   token?: string;
+  expiresOn?: Date;
 }
 
 export interface UserResponse {
@@ -12044,6 +12081,18 @@ export interface DataProvisioningParameters {
 export interface ProvisionStatusResponse {
   /**
    * Possible values include: 'Empty', 'Accepted', 'Creating', 'Connected', 'Invalid'
+  */
+  status: string;
+  message?: string;
+}
+
+/**
+ * The Api response model for Cosmos Db Cors status
+*/
+export interface CosmosDbCorsStatusResponse {
+  /**
+   * Possible values include: 'Appended', 'HostDbInProgress', 'HostDbNotFound', 'Queued',
+   * 'InProgress', 'NotFound'
   */
   status: string;
   message?: string;

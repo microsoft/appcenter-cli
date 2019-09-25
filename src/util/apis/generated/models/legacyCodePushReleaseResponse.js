@@ -11,18 +11,18 @@
 'use strict';
 
 /**
- * Class representing a LegacyPatchCodePushReleaseResponse.
+ * Class representing a LegacyCodePushReleaseResponse.
  */
-class LegacyPatchCodePushReleaseResponse {
+class LegacyCodePushReleaseResponse {
   /**
-   * Create a LegacyPatchCodePushReleaseResponse.
+   * Create a LegacyCodePushReleaseResponse.
    * @property {object} packageProperty
    * @property {string} [packageProperty.appVersion] The version of the release
    * @property {boolean} [packageProperty.isDisabled] Flag used to determine if
    * release is disabled
    * @property {boolean} [packageProperty.isMandatory] Flag used to determine
    * if release is mandatory
-   * @property {number} [packageProperty.rollout] Pecentage (out of 100) that
+   * @property {number} [packageProperty.rollout] Percentage (out of 100) that
    * release is deployed to
    * @property {string} [packageProperty.blobUrl] Location (URL) of release
    * package
@@ -35,6 +35,8 @@ class LegacyPatchCodePushReleaseResponse {
    * name)
    * @property {string} [packageProperty.releasedByUserId] User ID that
    * triggered most recent release
+   * @property {string} [packageProperty.manifestBlobUrl] The URL location of
+   * the package's manifest file.
    * @property {object} [packageProperty.diffPackageMap] Object containing URL
    * and size of changed package hashes contained in the release
    */
@@ -42,18 +44,18 @@ class LegacyPatchCodePushReleaseResponse {
   }
 
   /**
-   * Defines the metadata of LegacyPatchCodePushReleaseResponse
+   * Defines the metadata of LegacyCodePushReleaseResponse
    *
-   * @returns {object} metadata of LegacyPatchCodePushReleaseResponse
+   * @returns {object} metadata of LegacyCodePushReleaseResponse
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'LegacyPatchCodePushReleaseResponse',
+      serializedName: 'LegacyCodePushReleaseResponse',
       type: {
         name: 'Composite',
-        className: 'LegacyPatchCodePushReleaseResponse',
+        className: 'LegacyCodePushReleaseResponse',
         modelProperties: {
           packageProperty: {
             required: true,
@@ -69,4 +71,4 @@ class LegacyPatchCodePushReleaseResponse {
   }
 }
 
-module.exports = LegacyPatchCodePushReleaseResponse;
+module.exports = LegacyCodePushReleaseResponse;
