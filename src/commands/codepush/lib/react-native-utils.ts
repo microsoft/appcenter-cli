@@ -271,8 +271,8 @@ export function runHermesEmitBinaryCommand(bundleName: string, outputFolder: str
   }
 
   out.text(chalk.cyan("Converting JS bundle to byte code via Hermes, running command:\n"));
-  const hermesProcess = spawn(path.join("node_modules", "hermesvm", getHermesOSBin(), "hermes"), hermesArgs);
-  out.text(`${path.join("node_modules", "hermesvm", getHermesOSBin(), "hermes")} ${hermesArgs.join(" ")}`);
+  const hermesProcess = spawn(path.join("node_modules", "hermes-engine", getHermesOSBin(), "hermes"), hermesArgs);
+  out.text(`${path.join("node_modules", "hermes-engine", getHermesOSBin(), "hermes")} ${hermesArgs.join(" ")}`);
 
   return new Promise<void>((resolve, reject) => {
       hermesProcess.stdout.on("data", (data: Buffer) => {
