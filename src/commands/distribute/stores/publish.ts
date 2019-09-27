@@ -7,8 +7,8 @@ import { isNil } from "lodash";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:stores:publish");
 
-@help("Publish a file to a store")
-export default class PublishStoresCommand extends AppCommand {
+@help("Publish an app file to a store")
+export default class PublishToStoreCommand extends AppCommand {
   @help("Path to binary file")
   @shortName("f")
   @longName("file")
