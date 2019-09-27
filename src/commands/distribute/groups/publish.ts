@@ -1,5 +1,4 @@
 import { isNil } from "lodash";
-import * as path from "path";
 import { AppCenterClient } from "../../../util/apis";
 import { AppCommand, CommandArgs, CommandResult, hasArg, help, longName, required, shortName } from "../../../util/commandline";
 import ReleaseBinaryCommand from "../release";
@@ -52,13 +51,10 @@ export default class PublishToGroupCommand extends AppCommand {
       releaseArgs.push("--release-notes-file", this.releaseNotesFile);
     }
 
-    // Move from <root>/commands/distribute/groups/publish.ts to <root>/commands/distribute/release.ts
-    const releaseCommandPath: string = path.join(path.dirname(path.dirname(this.commandPath)), "release.ts");
-
     const releaseCommandArgs: CommandArgs = {
       args: releaseArgs,
       command: ["distribute", "release"],
-      commandPath: releaseCommandPath
+      commandPath: undefined
     };
 
     debug("Forwarding to distribute release command");
