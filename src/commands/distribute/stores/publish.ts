@@ -1,9 +1,8 @@
-import { AppCommand, CommandResult, CommandArgs, hasArg, help, longName, required, shortName } from "../../../util/commandline";
-import { AppCenterClient } from "../../../util/apis";
-import ReleaseBinaryCommand from "../release";
-import * as path from "path";
-
 import { isNil } from "lodash";
+import * as path from "path";
+import { AppCenterClient } from "../../../util/apis";
+import { AppCommand, CommandArgs, CommandResult, hasArg, help, longName, required, shortName } from "../../../util/commandline";
+import ReleaseBinaryCommand from "../release";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:stores:publish");
 
