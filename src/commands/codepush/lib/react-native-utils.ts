@@ -271,8 +271,9 @@ export function runHermesEmitBinaryCommand(bundleName: string, outputFolder: str
   }
 
   out.text(chalk.cyan("Converting JS bundle to byte code via Hermes, running command:\n"));
-  const hermesProcess = spawn(path.join("node_modules", "hermesvm", getHermesOSBin(), "hermes"), hermesArgs);
-  out.text(`${path.join("node_modules", "hermesvm", getHermesOSBin(), "hermes")} ${hermesArgs.join(" ")}`);
+  const hermesCommand = getHermesCommand();
+  const hermesProcess = spawn(hermesCommand, hermesArgs);
+  out.text(`${hermesCommand} ${hermesArgs.join(" ")}`);
 
   return new Promise<void>((resolve, reject) => {
       hermesProcess.stdout.on("data", (data: Buffer) => {
@@ -343,6 +344,18 @@ function getHermesOSBin(): string {
     default:
       return "linux64-bin";
   }
+}
+
+function getHermesCommand(): string {
+  const fileExists = (file: string): boolean => {
+    try { return fs.statSync(file).isFile(); } catch (e) { return false; }
+  };
+  // assume if hermes-engine exists it should be used instead of hermesvm
+  const hermesEngine = path.join("node_modules", "hermes-engine", getHermesOSBin(), "hermes");
+  if (fileExists(hermesEngine)) {
+    return hermesEngine;
+  }
+  return path.join("node_modules", "hermesvm", getHermesOSBin(), "hermes");
 }
 
 export function isValidOS(os: string): boolean {
