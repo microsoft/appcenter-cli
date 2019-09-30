@@ -18,7 +18,6 @@ describe("distribute stores publish command", () => {
   const fakeReleaseNotesFile = "/fake/release_notes";
   const buildVersion = "123";
   const fakeCommandPath = "fake/distribute/groups/publish.ts";
-  const expectedReleaseCommandPath = "fake/distribute/release.ts";
 
   let sandbox: Sinon.SinonSandbox;
   let createReleaseStub: Sinon.SinonStub;
@@ -53,10 +52,6 @@ describe("distribute stores publish command", () => {
     // Make sure it created a ReleaseBinaryCommand and ran it
     Sinon.assert.calledOnce(createReleaseStub);
     Sinon.assert.calledOnce(runReleaseStub);
-
-    // Make sure it provided the correct path
-    const createArgs: CommandArgs = createReleaseStub.args[0][0] as CommandArgs;
-    expect(createArgs.commandPath).to.equal(expectedReleaseCommandPath);
 
     // Make sure all parameters were passed correctly to the aliased command, including the illegal combination of -r and -R
     const releaseCommand: FakeReleaseBinaryCommand = createReleaseStub.returnValues[0];
