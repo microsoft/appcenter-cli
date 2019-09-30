@@ -60,7 +60,7 @@ export default class AddDestinationCommand extends AppCommand {
     } catch (error) {
       throw error;
     }
-    out.text(`Distribution of ${this.mandatory ? "mandatory " : ""}release ${releaseId} to ${this.destinationType} was successful ${this.silent ? "without" : "with"} notification`);
+    out.text(`Distribution of ${this.mandatory ? "mandatory " : ""}release ${releaseId} to ${this.destinationType} '${this.destination}' was successful ${this.silent ? "without" : "with"} notification`);
     return success();
   }
 
