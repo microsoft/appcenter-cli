@@ -11,7 +11,7 @@ import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:release");
 
-@help("Upload release binary and trigger distribution")
+@help("Upload release binary and trigger distribution, at least one of --store or --group must be specified")
 export default class ReleaseBinaryCommand extends AppCommand {
   @help("Path to binary file")
   @shortName("f")
@@ -29,9 +29,14 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @help("Distribution group name")
   @shortName("g")
   @longName("group")
-  @required
   @hasArg
   public distributionGroup: string;
+
+  @help("Store name")
+  @shortName("s")
+  @longName("store")
+  @hasArg
+  public storeName: string;
 
   @help("Release notes text")
   @shortName("r")
@@ -56,7 +61,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     this.validateParameters();
 
     debug("Loading prerequisites");
-    const [distributionGroupUsersCount, releaseBinaryFileBuffer, releaseNotesString] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
+    const [distributionGroupUsersCount, storeInformation, releaseBinaryFileBuffer, releaseNotesString] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
 
     debug("Creating release upload");
     const createdReleaseUpload = await this.createReleaseUpload(client, app);
@@ -85,17 +90,38 @@ export default class ReleaseBinaryCommand extends AppCommand {
     debug("Extracting release ID from the release URL");
     const releaseId = this.extractReleaseId(releaseUrl);
 
-    debug("Distributing the release");
-    await this.distributeRelease(client, app, releaseId, releaseNotesString, this.silent);
+    debug("Setting release notes");
+    await this.putReleaseDetails(client, app, releaseId, releaseNotesString);
+
+    if (!_.isNil(this.distributionGroup)) {
+      debug("Distributing the release to a group");
+      await this.distributeRelease(client, app, releaseId, this.silent);
+    }
+    if (!_.isNil(storeInformation)) {
+      debug("Distributing the release to a store");
+      try {
+        await this.publishToStore(client, app, storeInformation, releaseId);
+      } catch (error) {
+        if (!_.isNil(this.distributionGroup)) {
+          out.text(`Release was successfully distributed to group '${this.distributionGroup}' but could not be published to store '${this.storeName}'.`);
+        }
+        throw error;
+      }
+    }
 
     debug("Retrieving the release");
     const releaseDetails = await this.getDistributeRelease(client, app, releaseId);
 
     if (releaseDetails) {
-      if (_.isNull(distributionGroupUsersCount)) {
-        out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${this.distributionGroup}`, releaseDetails);
+      if (!_.isNil(this.distributionGroup)) {
+        const storeComment = (!_.isNil(this.storeName)) ? ` and to store '${this.storeName}'` : "";
+        if (_.isNull(distributionGroupUsersCount)) {
+          out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${this.distributionGroup}${storeComment}`, releaseDetails);
+        } else {
+          out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${distributionGroupUsersCount} testers in ${this.distributionGroup}${storeComment}`, releaseDetails);
+        }
       } else {
-        out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${distributionGroupUsersCount} testers in ${this.distributionGroup}`, releaseDetails);
+        out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to store '${this.storeName}'`, releaseDetails);
       }
     } else {
       out.text(`Release was successfully released.`);
@@ -107,6 +133,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
     if (!_.isNil(this.releaseNotes) && !_.isNil(this.releaseNotesFile)) {
       throw failure(ErrorCodes.InvalidParameter, "'--release-notes' and '--release-notes-file' switches are mutually exclusive");
     }
+    if (_.isNil(this.distributionGroup) && _.isNil(this.storeName)) {
+      throw failure(ErrorCodes.InvalidParameter, "At least one of '--group' or '--store' must be specified");
+    }
     if (_.isNil(this.buildVersion)) {
       const extension = this.filePath.substring(this.filePath.lastIndexOf(".")).toLowerCase();
       if ([".zip", ".msi"].includes(extension)) {
@@ -115,18 +144,26 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private getPrerequisites(client: AppCenterClient): Promise<[number | null, Buffer, string]> {
+  private getPrerequisites(client: AppCenterClient): Promise<[number | null, models.ExternalStoreResponse | null, Buffer, string]> {
     // load release binary file
     const fileBuffer = this.getReleaseFileBuffer();
 
     // load release notes file or use provided release notes if none was specified
     const releaseNotesString = this.getReleaseNotesString();
 
-    // get number of distribution group users (and check distribution group existence)
-    // return null if request has failed because of any reason except non-existing group name.
-    const distributionGroupUsersNumber = this.getDistributionGroupUsersNumber(client);
+    let distributionGroupUsersNumber: Promise<number | null>;
+    let storeInformation: Promise<models.ExternalStoreResponse | null>;
+    if (!_.isNil(this.distributionGroup)) {
+      // get number of distribution group users (and check distribution group existence)
+      // return null if request has failed because of any reason except non-existing group name.
+      distributionGroupUsersNumber = this.getDistributionGroupUsersNumber(client);
+    }
+    if (!_.isNil(this.storeName)) {
+      // get distribution store type to check existence and further filtering
+      storeInformation = this.getStoreDetails(client);
+    }
 
-    return Promise.all([distributionGroupUsersNumber, fileBuffer, releaseNotesString]);
+    return Promise.all([distributionGroupUsersNumber, storeInformation, fileBuffer, releaseNotesString]);
   }
 
   private async getReleaseFileBuffer(): Promise<Buffer> {
@@ -176,6 +213,25 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
 
     return distributionGroupUsersRequestResponse.result.length;
+  }
+
+  private async getStoreDetails(client: AppCenterClient): Promise<models.ExternalStoreResponse | null> {
+    try {
+      const storeDetailsResponse = await clientRequest<models.ExternalStoreResponse>(
+        (cb) => client.stores.get(this.storeName, this.app.ownerName, this.app.appName, cb));
+      const statusCode = storeDetailsResponse.response.statusCode;
+      if (statusCode >= 400) {
+        throw { statusCode };
+      }
+      return storeDetailsResponse.result;
+    } catch (error) {
+      if (error.statusCode === 404) {
+        throw failure(ErrorCodes.InvalidParameter, `store '${this.storeName}' was not found`);
+      } else {
+        debug(`Failed to get store details for '${this.storeName}', returning null - ${inspect(error)}`);
+        return null;
+      }
+    }
   }
 
   private async createReleaseUpload(client: AppCenterClient, app: DefaultApp): Promise<models.ReleaseUploadBeginResponse> {
@@ -283,18 +339,34 @@ export default class ReleaseBinaryCommand extends AppCommand {
         throw failure(ErrorCodes.Exception, "changing distribution group is not supported");
       } else {
         debug(`Failed to distribute the release - ${inspect(error)}`);
-        throw failure(ErrorCodes.Exception, `failed to set distribution group and release notes for release ${releaseId}`);
+        throw failure(ErrorCodes.Exception, `failed to set distribution group for release ${releaseId}`);
       }
     }
   }
 
-  private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number, releaseNotesString: string, silent: boolean): Promise<void> {
-    await this.putReleaseDetails(client, app, releaseId, releaseNotesString);
+  private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number, silent: boolean): Promise<void> {
     const distributionGroupResponse = await getDistributionGroup({
       client, releaseId, app: this.app, destination: this.distributionGroup, destinationType: "group"
     });
     await addGroupToRelease({
       client, releaseId, distributionGroup: distributionGroupResponse, app: this.app, destination: this.distributionGroup, destinationType: "group", mandatory: false, silent: silent
     });
+  }
+
+  private async publishToStore(client: AppCenterClient, app: DefaultApp, storeInformation: models.ExternalStoreResponse, releaseId: number): Promise<void> {
+    try {
+      const { result, response } = await out.progress(`Publishing to store '${storeInformation.name}'...`,
+        clientRequest<void>(async (cb) => client.releases.addStore(releaseId, app.ownerName, app.appName, storeInformation.id, cb))
+      );
+
+      const statusCode = response.statusCode;
+      if (statusCode >= 400) {
+        throw result;
+      }
+      return result;
+    } catch (error) {
+      debug(`Failed to distribute the release to store - ${inspect(error)}`);
+      throw failure(ErrorCodes.Exception, error.message);
+    }
   }
 }

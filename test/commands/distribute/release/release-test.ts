@@ -23,7 +23,11 @@ describe("release command", () => {
   const fakeReleaseId = "1";
   const fakeReleaseUrl = "/fake/release/url/" + fakeReleaseId;
   const fakeDistributionGroupName = "fakeDistributionGroupName";
+  const fakeStoreName = "fakeStoreName";
   const fakeGroupId = "00000000-0000-0000-0000-000000000000";
+  const fakeStoreId = "00000000-0000-0000-0000-000000000000";
+  const fakeStoreType = "googleplay";
+  const fakeStoreTrack = "alpha";
   /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const version = "1.0";
@@ -60,7 +64,7 @@ describe("release command", () => {
     distributeSpy = Sinon.spy();
   });
 
-  describe("when all network requests are successful", () => {
+  describe("when all network requests are successful (group)", () => {
     beforeEach(() => {
         expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
           setupSuccessfulPostUploadResponse(
@@ -93,6 +97,48 @@ describe("release command", () => {
 
       // Act
       const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath, "-g", fakeDistributionGroupName]));
+      const result = await command.execute();
+
+      // Assert
+      testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+      testUploadedFormData();
+    });
+
+  });
+
+  describe("when all network requests are successful (store)", () => {
+    beforeEach(() => {
+        expectedRequestsScope =
+          setupSuccessfulGetStoreDetailsResponse(
+            setupSuccessfulPostUploadResponse(
+              setupSuccessfulUploadResponse(
+                setupSuccessfulPatchUploadResponse(
+                  setupSuccessfulCreateReleaseResponse(
+                    setupSuccessfulAddStoreResponse(
+                      Nock(fakeHost)))))));
+        skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
+    });
+
+    it("uploads release with release notes text", async () => {
+      // Arrange
+      const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+
+      // Act
+      const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-r", releaseNotes, "-s", fakeStoreName]));
+      const result = await command.execute();
+
+      // Assert
+      testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+      testUploadedFormData();
+    });
+
+    it("uploads release with release notes file", async () => {
+      // Arrange
+      const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+      const releaseNotesFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
+
+      // Act
+      const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath, "-s", fakeStoreName]));
       const result = await command.execute();
 
       // Assert
@@ -310,7 +356,7 @@ describe("release command", () => {
       const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
 
       // Assert
-      testFailure(result, `failed to set distribution group and release notes for release ${fakeReleaseId}`, expectedRequestsScope, skippedRequestsScope);
+      testFailure(result, `failed to set distribution group for release ${fakeReleaseId}`, expectedRequestsScope, skippedRequestsScope);
     });
   });
 
@@ -364,6 +410,35 @@ describe("release command", () => {
 
       // Assert
       testFailure(result, `Could not find release ${fakeReleaseId}`, expectedRequestsScope);
+    });
+  });
+
+  describe("when using invalid arguments", () => {
+    let releaseFilePath: string;
+    let releaseNotesFilePath: string;
+
+    before(() => {
+      releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+      releaseNotesFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
+    });
+
+    it("fails if --file is not specified", async () => {
+      expect(() => new ReleaseBinaryCommand(getCommandArgs(["-R", releaseNotesFilePath, "-g", fakeDistributionGroupName]))).to.throw;
+    });
+
+    it("fails if neither --release-notes nor --release-notes-file is specified", async () => {
+      const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-g", fakeDistributionGroupName]));
+      await expect(command.execute()).to.eventually.be.rejected;
+    });
+
+    it("fails if both --release-notes and --release-notes-file are specified", async () => {
+      const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-r", releaseNotes, "-R", releaseNotesFilePath, "-g", fakeDistributionGroupName]));
+      await expect(command.execute()).to.eventually.be.rejected;
+    });
+
+    it("fails if neither --group nor --store is specified", async () => {
+      const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath]));
+      await expect(command.execute()).to.eventually.be.rejected;
     });
   });
 
@@ -494,6 +569,30 @@ describe("release command", () => {
       id: fakeGroupId,
       mandatory_update: false,
       notify_testers: !silent
+    });
+  }
+
+  function setupSuccessfulGetStoreDetailsResponse(nockScope: Nock.Scope): Nock.Scope {
+    const getDistributionStoresUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_stores/${fakeStoreName}`;
+
+    return nockScope.get(getDistributionStoresUrl)
+    .reply(200, {
+      id: fakeStoreId,
+      name: fakeStoreName,
+      type: fakeStoreType,
+      track: fakeStoreTrack
+    });
+  }
+
+  function setupSuccessfulAddStoreResponse(nockScope: Nock.Scope): Nock.Scope {
+    const postAddReleaseStoreDestinationUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}/stores`;
+    const expectedBody = {
+      id: fakeStoreId
+    };
+
+    return nockScope.post(postAddReleaseStoreDestinationUrl, expectedBody)
+    .reply(201, {
+      id: fakeStoreId
     });
   }
 
