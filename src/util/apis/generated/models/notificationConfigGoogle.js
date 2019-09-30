@@ -13,7 +13,8 @@
 const models = require('./index');
 
 /**
- * Google notification configuration.
+ * Google notification configuration. The 'type' property must be set to
+ * 'gcm_config'
  *
  * @extends models['NotificationConfig']
  */

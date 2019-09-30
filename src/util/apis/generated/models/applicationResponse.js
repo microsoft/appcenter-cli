@@ -19,6 +19,7 @@ class ApplicationResponse {
    * @property {string} [id]
    * @property {date} [createdAt]
    * @property {string} [name]
+   * @property {string} [signInAudience]
    */
   constructor() {
   }
@@ -54,6 +55,13 @@ class ApplicationResponse {
           name: {
             required: false,
             serializedName: 'name',
+            type: {
+              name: 'String'
+            }
+          },
+          signInAudience: {
+            required: false,
+            serializedName: 'signInAudience',
             type: {
               name: 'String'
             }

@@ -11,8 +11,10 @@
 'use strict';
 
 /**
- * Generic notification configuration. Is a base type and caller should choose
- * one of the derived types specified in the enum.
+ * Type of notification config (NotificationConfigAppleToken,
+ * NotificationConfigGoogle, NotificationConfigWindows). The 'type' property
+ * must be set to a valid value and the object must include the correct
+ * properties for the specified type.
  *
  */
 class NotificationConfig {

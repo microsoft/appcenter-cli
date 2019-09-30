@@ -50,6 +50,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @hasArg
   public releaseNotesFile: string;
 
+  @help("Do not notify testers of this release")
+  @longName("silent")
+  public silent: boolean;
+
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
@@ -91,11 +95,18 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
     if (!_.isNil(this.distributionGroup)) {
       debug("Distributing the release to a group");
-      await this.distributeRelease(client, app, releaseId);
+      await this.distributeRelease(client, app, releaseId, this.silent);
     }
     if (!_.isNil(storeInformation)) {
       debug("Distributing the release to a store");
-      await this.publishToStore(client, app, storeInformation, releaseId);
+      try {
+        await this.publishToStore(client, app, storeInformation, releaseId);
+      } catch (error) {
+        if (!_.isNil(this.distributionGroup)) {
+          out.text(`Release was successfully distributed to group '${this.distributionGroup}' but could not be published to store '${this.storeName}'.`);
+        }
+        throw error;
+      }
     }
 
     debug("Retrieving the release");
@@ -103,7 +114,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
     if (releaseDetails) {
       if (!_.isNil(this.distributionGroup)) {
-        const storeComment = (!_.isNil(this.storeName)) ? ` and to store '${this.storeName}` : "";
+        const storeComment = (!_.isNil(this.storeName)) ? ` and to store '${this.storeName}'` : "";
         if (_.isNull(distributionGroupUsersCount)) {
           out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${this.distributionGroup}${storeComment}`, releaseDetails);
         } else {
@@ -210,11 +221,11 @@ export default class ReleaseBinaryCommand extends AppCommand {
         (cb) => client.stores.get(this.storeName, this.app.ownerName, this.app.appName, cb));
       const statusCode = storeDetailsResponse.response.statusCode;
       if (statusCode >= 400) {
-        throw statusCode;
+        throw { statusCode };
       }
       return storeDetailsResponse.result;
     } catch (error) {
-      if (error === 404) {
+      if (error.statusCode === 404) {
         throw failure(ErrorCodes.InvalidParameter, `store '${this.storeName}' was not found`);
       } else {
         debug(`Failed to get store details for '${this.storeName}', returning null - ${inspect(error)}`);
@@ -333,12 +344,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number): Promise<void> {
+  private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number, silent: boolean): Promise<void> {
     const distributionGroupResponse = await getDistributionGroup({
       client, releaseId, app: this.app, destination: this.distributionGroup, destinationType: "group"
     });
     await addGroupToRelease({
-      client, releaseId, distributionGroup: distributionGroupResponse, app: this.app, destination: this.distributionGroup, destinationType: "group", mandatory: false, silent: false
+      client, releaseId, distributionGroup: distributionGroupResponse, app: this.app, destination: this.distributionGroup, destinationType: "group", mandatory: false, silent: silent
     });
   }
 
@@ -350,12 +361,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
       const statusCode = response.statusCode;
       if (statusCode >= 400) {
-        throw statusCode;
+        throw result;
       }
       return result;
     } catch (error) {
       debug(`Failed to distribute the release to store - ${inspect(error)}`);
-      throw failure(ErrorCodes.Exception, `failed to distribute release ${releaseId} to store`);
+      throw failure(ErrorCodes.Exception, error.message);
     }
   }
 }
