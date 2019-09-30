@@ -21,7 +21,7 @@ class LegacyCodePushRelease {
    * disabled
    * @property {boolean} [isMandatory] Flag used to determine if release is
    * mandatory
-   * @property {number} [rollout] Pecentage (out of 100) that release is
+   * @property {number} [rollout] Percentage (out of 100) that release is
    * deployed to
    * @property {string} [blobUrl] Location (URL) of release package
    * @property {number} [size] Size of release package
@@ -31,6 +31,8 @@ class LegacyCodePushRelease {
    * @property {string} [label] Release label (aka release name)
    * @property {string} [releasedByUserId] User ID that triggered most recent
    * release
+   * @property {string} [manifestBlobUrl] The URL location of the package's
+   * manifest file.
    * @property {object} [diffPackageMap] Object containing URL and size of
    * changed package hashes contained in the release
    */
@@ -117,6 +119,13 @@ class LegacyCodePushRelease {
           releasedByUserId: {
             required: false,
             serializedName: 'releasedByUserId',
+            type: {
+              name: 'String'
+            }
+          },
+          manifestBlobUrl: {
+            required: false,
+            serializedName: 'manifestBlobUrl',
             type: {
               name: 'String'
             }

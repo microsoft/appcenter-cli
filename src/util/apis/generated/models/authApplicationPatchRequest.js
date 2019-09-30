@@ -21,7 +21,7 @@ class AuthApplicationPatchRequest {
    * @property {string} [scopeUrl]
    * @property {string} [id]
    * @property {string} [provider] Possible values include: 'AADB2C', 'Auth0',
-   * 'Firebase'
+   * 'Firebase', 'AAD'
    */
   constructor() {
   }

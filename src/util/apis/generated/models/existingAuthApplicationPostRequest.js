@@ -19,11 +19,12 @@ class ExistingAuthApplicationPostRequest {
    * @property {uuid} [tenantId]
    * @property {string} [tenantName]
    * @property {string} [provider] Possible values include: 'AADB2C', 'Auth0',
-   * 'Firebase'
+   * 'Firebase', 'AAD'
    * @property {string} id
    * @property {string} [policyId]
    * @property {uuid} [scopeId]
    * @property {string} [scopeUrl]
+   * @property {string} [signInAudience]
    */
   constructor() {
   }
@@ -87,6 +88,13 @@ class ExistingAuthApplicationPostRequest {
           scopeUrl: {
             required: false,
             serializedName: 'scopeUrl',
+            type: {
+              name: 'String'
+            }
+          },
+          signInAudience: {
+            required: false,
+            serializedName: 'signInAudience',
             type: {
               name: 'String'
             }

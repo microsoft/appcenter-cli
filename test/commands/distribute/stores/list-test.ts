@@ -11,7 +11,7 @@ import { CommandArgs } from "../../../../src/util/commandline";
 import { out } from "../../../../src/util/interaction";
 import { ExternalStoreResponse } from "../../../../src/util/apis/generated/models";
 
-describe("releases show command", () => {
+describe("stores list command", () => {
   const fakeAppOwner = "fakeAppOwner";
   const fakeAppName = "fakeAppName";
   const fakeAppIdentifier = `${fakeAppOwner}/${fakeAppName}`;

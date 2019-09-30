@@ -34,6 +34,20 @@ class MetricsResponse {
    * @property {number} [metrics.totalRequestUnits]
    * @property {number} [metrics.dataUsage]
    * @property {number} [metrics.indexUsage]
+   * @property {object} [metrics.latencyMetrics]
+   * @property {object} [metrics.latencyMetrics.readLatencyMetrics]
+   * @property {string} [metrics.latencyMetrics.readLatencyMetrics.name]
+   * @property {string} [metrics.latencyMetrics.readLatencyMetrics.unit]
+   * @property {date} [metrics.latencyMetrics.readLatencyMetrics.startTime]
+   * @property {date} [metrics.latencyMetrics.readLatencyMetrics.endTime]
+   * @property {array} [metrics.latencyMetrics.readLatencyMetrics.metricValues]
+   * @property {object} [metrics.latencyMetrics.writeLatencyMetrics]
+   * @property {string} [metrics.latencyMetrics.writeLatencyMetrics.name]
+   * @property {string} [metrics.latencyMetrics.writeLatencyMetrics.unit]
+   * @property {date} [metrics.latencyMetrics.writeLatencyMetrics.startTime]
+   * @property {date} [metrics.latencyMetrics.writeLatencyMetrics.endTime]
+   * @property {array}
+   * [metrics.latencyMetrics.writeLatencyMetrics.metricValues]
    */
   constructor() {
   }

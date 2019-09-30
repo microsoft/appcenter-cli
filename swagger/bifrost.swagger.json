@@ -7590,6 +7590,46 @@
         ]
       }
     },
+    "/v0.1/apps/{owner_name}/{app_name}/errors/upload": {
+      "post": {
+        "description": "Uploads a text error to ingest",
+        "summary": "Uploads a text error to ingest",
+        "operationId": "textError_upload",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/error_log"
+          },
+          {
+            "$ref": "#/parameters/error_user_id"
+          },
+          {
+            "$ref": "#/parameters/owner_name"
+          },
+          {
+            "$ref": "#/parameters/app_name"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          }
+        },
+        "security": [
+          {
+            "APIToken": []
+          }
+        ],
+        "tags": [
+          "crash"
+        ]
+      }
+    },
     "/v0.1/apps/{owner_name}/{app_name}/errors/search": {
       "get": {
         "operationId": "Errors_ErrorSearch",
@@ -25059,6 +25099,14 @@
         },
         "device": {
           "$ref": "#/definitions/Device"
+        },
+        "auth_provider": {
+          "type": "string",
+          "description": "Auth service provider.\n"
+        },
+        "account_id": {
+          "type": "string",
+          "description": "Account ID of the authenticated user.\n"
         }
       },
       "required": [
@@ -29284,7 +29332,7 @@
       ]
     },
     "NotificationConfig": {
-      "description": "Generic notification configuration. Is a base type and caller should choose one of the derived types specified in the enum.",
+      "description": "Type of notification config (NotificationConfigAppleToken, NotificationConfigGoogle, NotificationConfigWindows). The 'type' property must be set to a valid value and the object must include the correct properties for the specified type.",
       "type": "object",
       "discriminator": "type",
       "properties": {
@@ -29334,7 +29382,7 @@
       ]
     },
     "NotificationConfigAppleToken": {
-      "description": "Apple notification auth token configuration.",
+      "description": "Apple notification auth token configuration. The 'type' property must be set to 'apns_token_config'.",
       "x-ms-discriminator-value": "apns_token_config",
       "allOf": [
         {
@@ -29371,7 +29419,7 @@
       ]
     },
     "NotificationConfigGoogle": {
-      "description": "Google notification configuration.",
+      "description": "Google notification configuration. The 'type' property must be set to 'gcm_config'",
       "x-ms-discriminator-value": "gcm_config",
       "allOf": [
         {
@@ -29389,7 +29437,7 @@
       ]
     },
     "NotificationConfigWindows": {
-      "description": "WNS notification configuration.",
+      "description": "WNS notification configuration. The 'type' property must be set to 'wns_config'",
       "x-ms-discriminator-value": "wns_config",
       "allOf": [
         {
@@ -31391,8 +31439,26 @@
         "success"
       ]
     },
-    "LegacyPatchDeploymentResponse": {
+    "LegacyDeploymentsResponse": {
       "properties": {
+        "deployments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LegacyDeploymentResponse"
+          }
+        }
+      }
+    },
+    "LegacyDeploymentResponse": {
+      "properties": {
+        "createdTime": {
+          "description": "Time at which the deployment was created as a Unix timestamp.",
+          "type": "integer"
+        },
+        "id": {
+          "description": "The ID of the deployment (internal use only).",
+          "type": "string"
+        },
         "key": {
           "description": "Deployment key (aka Deployment Id)",
           "type": "string"
@@ -31407,6 +31473,75 @@
       },
       "required": [
         "name"
+      ]
+    },
+    "LegacyDeploymentHistoryResponse": {
+      "properties": {
+        "history": {
+          "description": "Array containing the deployment's package history.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LegacyDeploymentHistory"
+          }
+        }
+      }
+    },
+    "LegacyDeploymentHistory": {
+      "description": "Information about a specific release.",
+      "properties": {
+        "allOf": {
+          "$ref": "#/definitions/LegacyCodePushRelease"
+        },
+        "description": {
+          "description": "The description of the release.",
+          "type": "string"
+        },
+        "originalDeployment": {
+          "description": "The original deployment of the release, if it's ever been promoted.",
+          "type": "string"
+        },
+        "originalLabel": {
+          "description": "The original label of the release, if it's ever been updated.",
+          "type": "string"
+        },
+        "packageHash": {
+          "description": "The package's hash value (internal use).",
+          "type": "string"
+        }
+      }
+    },
+    "LegacyDeploymentMetricsResponse": {
+      "properties": {
+        "metrics": {
+          "description": "Object containing a property named after each release label, which contains an object that contains that release's metrics.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/LegacyDeploymentMetric"
+          }
+        }
+      }
+    },
+    "LegacyDeploymentMetric": {
+      "properties": {
+        "active": {
+          "description": "The number of devices that have this release installed currently",
+          "type": "integer"
+        },
+        "installed": {
+          "description": "The number of times this release has been installed on a device",
+          "type": "integer"
+        },
+        "downloaded": {
+          "description": "The number of times this release has been downloaded",
+          "type": "integer"
+        },
+        "failed": {
+          "description": "The number of times this release has failed to be installed on a device",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "active"
       ]
     },
     "LegacyCodePushRelease": {
@@ -31424,7 +31559,7 @@
           "type": "boolean"
         },
         "rollout": {
-          "description": "Pecentage (out of 100) that release is deployed to",
+          "description": "Percentage (out of 100) that release is deployed to",
           "type": "integer"
         },
         "blobUrl": {
@@ -31451,6 +31586,10 @@
           "description": "User ID that triggered most recent release",
           "type": "string"
         },
+        "manifestBlobUrl": {
+          "description": "The URL location of the package's manifest file.",
+          "type": "string"
+        },
         "diffPackageMap": {
           "description": "Object containing URL and size of changed package hashes contained in the release",
           "type": "object"
@@ -31474,6 +31613,10 @@
           "description": "The version of the release",
           "type": "string"
         },
+        "description": {
+          "description": "The description of the release",
+          "type": "string"
+        },
         "isDisabled": {
           "description": "Flag used to determine if release is disabled",
           "type": "boolean"
@@ -31483,9 +31626,7 @@
           "type": "boolean"
         },
         "rollout": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 100
+          "type": "integer"
         },
         "label": {
           "description": "Release label (aka release name)",
@@ -31493,7 +31634,7 @@
         }
       }
     },
-    "LegacyPatchCodePushReleaseResponse": {
+    "LegacyCodePushReleaseResponse": {
       "properties": {
         "package": {
           "$ref": "#/definitions/LegacyCodePushRelease"
@@ -32819,6 +32960,9 @@
         },
         "name": {
           "type": "string"
+        },
+        "signInAudience": {
+          "type": "string"
         }
       }
     },
@@ -32865,7 +33009,8 @@
           "enum": [
             "AADB2C",
             "Auth0",
-            "Firebase"
+            "Firebase",
+            "AAD"
           ],
           "type": "string"
         },
@@ -32884,6 +33029,9 @@
           "type": "string"
         },
         "scopeUrl": {
+          "type": "string"
+        },
+        "signInAudience": {
           "type": "string"
         }
       }
@@ -32908,7 +33056,8 @@
           "enum": [
             "AADB2C",
             "Auth0",
-            "Firebase"
+            "Firebase",
+            "AAD"
           ],
           "type": "string"
         }
@@ -32931,7 +33080,8 @@
           "enum": [
             "AADB2C",
             "Auth0",
-            "Firebase"
+            "Firebase",
+            "AAD"
           ],
           "type": "string"
         },
@@ -32946,6 +33096,9 @@
           "type": "string"
         },
         "scopeUrl": {
+          "type": "string"
+        },
+        "signInAudience": {
           "type": "string"
         }
       }
@@ -33047,6 +33200,59 @@
         },
         "indexUsage": {
           "format": "double",
+          "type": "number"
+        },
+        "latencyMetrics": {
+          "$ref": "#/definitions/LatencyMetrics"
+        }
+      }
+    },
+    "LatencyMetrics": {
+      "type": "object",
+      "properties": {
+        "readLatencyMetrics": {
+          "$ref": "#/definitions/LatencyData"
+        },
+        "writeLatencyMetrics": {
+          "$ref": "#/definitions/LatencyData"
+        }
+      }
+    },
+    "LatencyData": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "startTime": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "endTime": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "metricValues": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetricsData"
+          }
+        }
+      }
+    },
+    "MetricsData": {
+      "type": "object",
+      "properties": {
+        "timestamp": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "average": {
+          "format": "float",
           "type": "number"
         }
       }
@@ -33230,6 +33436,9 @@
     "DataResourceTokenResponse": {
       "type": "object",
       "properties": {
+        "databaseId": {
+          "type": "string"
+        },
         "databaseName": {
           "type": "string"
         },
@@ -33240,6 +33449,10 @@
           "type": "string"
         },
         "token": {
+          "type": "string"
+        },
+        "expiresOn": {
+          "format": "date-time",
           "type": "string"
         }
       }
@@ -33358,6 +33571,29 @@
             "Creating",
             "Connected",
             "Invalid"
+          ],
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "CosmosDbCorsStatusResponse": {
+      "description": "The Api response model for Cosmos Db Cors status",
+      "required": [
+        "status"
+      ],
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "Appended",
+            "HostDbInProgress",
+            "HostDbNotFound",
+            "Queued",
+            "InProgress",
+            "NotFound"
           ],
           "type": "string"
         },
@@ -33756,6 +33992,22 @@
       "in": "path",
       "required": true,
       "description": "attachment id",
+      "type": "string",
+      "x-ms-parameter-location": "method"
+    },
+    "error_log": {
+      "name": "log",
+      "required": true,
+      "in": "formData",
+      "type": "file",
+      "description": "File with the crash log. Note - the maximum allowed file size is 200kB!",
+      "x-ms-parameter-location": "method"
+    },
+    "error_user_id": {
+      "name": "error_user_id",
+      "in": "formData",
+      "required": false,
+      "description": "user account id",
       "type": "string",
       "x-ms-parameter-location": "method"
     },
