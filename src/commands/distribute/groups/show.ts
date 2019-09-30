@@ -27,7 +27,9 @@ export default class ShowDistributionGroupCommand extends AppCommand {
 
     // show spinner and wait for the requests to finish
     await out.progress("Loading distribution group information...",
-      Promise.all([distributionGroupMembersRequestResponse, basicReleasesDetailsRequestResponse].map((p) => p.catch(() => Promise.resolve()))));
+      Promise.all([distributionGroupMembersRequestResponse, basicReleasesDetailsRequestResponse].map(
+        (p: Promise<any>) => p.catch(() => Promise.resolve())
+      )));
 
     let distributionGroupMembers: models.DistributionGroupUserGetResponse[];
     try {
