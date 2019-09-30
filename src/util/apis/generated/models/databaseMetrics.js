@@ -22,6 +22,19 @@ class DatabaseMetrics {
    * @property {number} [totalRequestUnits]
    * @property {number} [dataUsage]
    * @property {number} [indexUsage]
+   * @property {object} [latencyMetrics]
+   * @property {object} [latencyMetrics.readLatencyMetrics]
+   * @property {string} [latencyMetrics.readLatencyMetrics.name]
+   * @property {string} [latencyMetrics.readLatencyMetrics.unit]
+   * @property {date} [latencyMetrics.readLatencyMetrics.startTime]
+   * @property {date} [latencyMetrics.readLatencyMetrics.endTime]
+   * @property {array} [latencyMetrics.readLatencyMetrics.metricValues]
+   * @property {object} [latencyMetrics.writeLatencyMetrics]
+   * @property {string} [latencyMetrics.writeLatencyMetrics.name]
+   * @property {string} [latencyMetrics.writeLatencyMetrics.unit]
+   * @property {date} [latencyMetrics.writeLatencyMetrics.startTime]
+   * @property {date} [latencyMetrics.writeLatencyMetrics.endTime]
+   * @property {array} [latencyMetrics.writeLatencyMetrics.metricValues]
    */
   constructor() {
   }
@@ -73,6 +86,14 @@ class DatabaseMetrics {
             serializedName: 'indexUsage',
             type: {
               name: 'Number'
+            }
+          },
+          latencyMetrics: {
+            required: false,
+            serializedName: 'latencyMetrics',
+            type: {
+              name: 'Composite',
+              className: 'LatencyMetrics'
             }
           }
         }

@@ -25099,6 +25099,14 @@
         },
         "device": {
           "$ref": "#/definitions/Device"
+        },
+        "auth_provider": {
+          "type": "string",
+          "description": "Auth service provider.\n"
+        },
+        "account_id": {
+          "type": "string",
+          "description": "Account ID of the authenticated user.\n"
         }
       },
       "required": [
@@ -27010,14 +27018,6 @@
         },
         "device": {
           "$ref": "#/definitions/LogFlowDevice"
-        },
-        "auth_provider": {
-          "type": "string",
-          "description": "Auth service provider.\n"
-        },
-        "account_id": {
-          "type": "string",
-          "description": "Account ID of the authenticated user.\n"
         }
       },
       "required": [
@@ -31475,6 +31475,75 @@
         "name"
       ]
     },
+    "LegacyDeploymentHistoryResponse": {
+      "properties": {
+        "history": {
+          "description": "Array containing the deployment's package history.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LegacyDeploymentHistory"
+          }
+        }
+      }
+    },
+    "LegacyDeploymentHistory": {
+      "description": "Information about a specific release.",
+      "properties": {
+        "allOf": {
+          "$ref": "#/definitions/LegacyCodePushRelease"
+        },
+        "description": {
+          "description": "The description of the release.",
+          "type": "string"
+        },
+        "originalDeployment": {
+          "description": "The original deployment of the release, if it's ever been promoted.",
+          "type": "string"
+        },
+        "originalLabel": {
+          "description": "The original label of the release, if it's ever been updated.",
+          "type": "string"
+        },
+        "packageHash": {
+          "description": "The package's hash value (internal use).",
+          "type": "string"
+        }
+      }
+    },
+    "LegacyDeploymentMetricsResponse": {
+      "properties": {
+        "metrics": {
+          "description": "Object containing a property named after each release label, which contains an object that contains that release's metrics.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/LegacyDeploymentMetric"
+          }
+        }
+      }
+    },
+    "LegacyDeploymentMetric": {
+      "properties": {
+        "active": {
+          "description": "The number of devices that have this release installed currently",
+          "type": "integer"
+        },
+        "installed": {
+          "description": "The number of times this release has been installed on a device",
+          "type": "integer"
+        },
+        "downloaded": {
+          "description": "The number of times this release has been downloaded",
+          "type": "integer"
+        },
+        "failed": {
+          "description": "The number of times this release has failed to be installed on a device",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "active"
+      ]
+    },
     "LegacyCodePushRelease": {
       "properties": {
         "appVersion": {
@@ -33131,6 +33200,59 @@
         },
         "indexUsage": {
           "format": "double",
+          "type": "number"
+        },
+        "latencyMetrics": {
+          "$ref": "#/definitions/LatencyMetrics"
+        }
+      }
+    },
+    "LatencyMetrics": {
+      "type": "object",
+      "properties": {
+        "readLatencyMetrics": {
+          "$ref": "#/definitions/LatencyData"
+        },
+        "writeLatencyMetrics": {
+          "$ref": "#/definitions/LatencyData"
+        }
+      }
+    },
+    "LatencyData": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "startTime": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "endTime": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "metricValues": {
+          "uniqueItems": false,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetricsData"
+          }
+        }
+      }
+    },
+    "MetricsData": {
+      "type": "object",
+      "properties": {
+        "timestamp": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "average": {
+          "format": "float",
           "type": "number"
         }
       }

@@ -7353,6 +7353,16 @@ export interface GenericLog {
   */
   properties?: { [propertyName: string]: string };
   device: Device;
+  /**
+   * Auth service provider.
+
+  */
+  authProvider?: string;
+  /**
+   * Account ID of the authenticated user.
+
+  */
+  accountId?: string;
 }
 
 export interface GenericLogContainer {
@@ -8510,16 +8520,6 @@ export interface LogFlowGenericLog {
   */
   properties?: { [propertyName: string]: string };
   device: LogFlowDevice;
-  /**
-   * Auth service provider.
-
-  */
-  authProvider?: string;
-  /**
-   * Account ID of the authenticated user.
-
-  */
-  accountId?: string;
 }
 
 export interface LogFlowGenericLogContainer {
@@ -11077,6 +11077,63 @@ export interface LegacyDeploymentsResponse {
   deployments?: LegacyDeploymentResponse[];
 }
 
+/**
+ * Information about a specific release.
+*/
+export interface LegacyDeploymentHistory {
+  allOf?: LegacyCodePushRelease;
+  /**
+   * The description of the release.
+  */
+  description?: string;
+  /**
+   * The original deployment of the release, if it's ever been promoted.
+  */
+  originalDeployment?: string;
+  /**
+   * The original label of the release, if it's ever been updated.
+  */
+  originalLabel?: string;
+  /**
+   * The package's hash value (internal use).
+  */
+  packageHash?: string;
+}
+
+export interface LegacyDeploymentHistoryResponse {
+  /**
+   * Array containing the deployment's package history.
+  */
+  history?: LegacyDeploymentHistory[];
+}
+
+export interface LegacyDeploymentMetric {
+  /**
+   * The number of devices that have this release installed currently
+  */
+  active: number;
+  /**
+   * The number of times this release has been installed on a device
+  */
+  installed?: number;
+  /**
+   * The number of times this release has been downloaded
+  */
+  downloaded?: number;
+  /**
+   * The number of times this release has failed to be installed on a device
+  */
+  failed?: number;
+}
+
+export interface LegacyDeploymentMetricsResponse {
+  /**
+   * Object containing a property named after each release label, which contains an object that
+   * contains that release's metrics.
+  */
+  metrics?: { [propertyName: string]: LegacyDeploymentMetric };
+}
+
 export interface LegacyCodePushReleaseInfo {
   /**
    * The version of the release
@@ -11957,6 +12014,24 @@ export interface TrustFrameworkPoliciesResponse {
   value?: TrustFrameworkPolicyResponse[];
 }
 
+export interface MetricsData {
+  timestamp?: Date;
+  average?: number;
+}
+
+export interface LatencyData {
+  name?: string;
+  unit?: string;
+  startTime?: Date;
+  endTime?: Date;
+  metricValues?: MetricsData[];
+}
+
+export interface LatencyMetrics {
+  readLatencyMetrics?: LatencyData;
+  writeLatencyMetrics?: LatencyData;
+}
+
 /**
  * Represents database usage metrics.
 */
@@ -11966,6 +12041,7 @@ export interface DatabaseMetrics {
   totalRequestUnits?: number;
   dataUsage?: number;
   indexUsage?: number;
+  latencyMetrics?: LatencyMetrics;
 }
 
 export interface MetricsResponse {
