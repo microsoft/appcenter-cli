@@ -26,18 +26,12 @@ export default class ListStoresCommand extends AppCommand {
       return failure(ErrorCodes.Exception, "failed to fetch list of all stores");
     }
 
-    const storesNames = _(storesListRequestResponse.result)
-      .sortBy((store) => [store.type, store.track, store.name])
-      .map((store) => store.name).value();
+    const sortedStores = _(storesListRequestResponse.result)
+      .sortBy((store) => [store.type, store.track, store.name]);
 
-    const storesTypes = _(storesListRequestResponse.result)
-      .sortBy((store) => [store.type, store.track, store.name])
-      .map((store) => store.type).value();
-
-    const storesTracks = _(storesListRequestResponse.result)
-      .sortBy((store) => [store.type, store.track, store.name])
-      .map((store) => store.track).value();
-
+    const storesNames = sortedStores.map((store) => store.name).value();
+    const storesTypes = sortedStores.map((store) => store.type).value();
+    const storesTracks = sortedStores.map((store) => store.track).value();
     const outputArray = _.zip(storesNames, storesTypes, storesTracks);
 
     // Printing the result table
