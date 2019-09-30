@@ -99,7 +99,14 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
     if (!_.isNil(storeInformation)) {
       debug("Distributing the release to a store");
-      await this.publishToStore(client, app, storeInformation, releaseId);
+      try {
+        await this.publishToStore(client, app, storeInformation, releaseId);
+      } catch (error) {
+        if (!_.isNil(this.distributionGroup)) {
+          out.text(`Release was successfully distributed to group '${this.distributionGroup}' but could not be published to store '${this.storeName}'.`);
+        }
+        throw error;
+      }
     }
 
     debug("Retrieving the release");
