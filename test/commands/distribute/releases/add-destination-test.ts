@@ -14,6 +14,7 @@ describe("releases add-destination command", () => {
   const fakeToken = "c1o3d3e7";
   const fakeReleaseId = "1";
   const fakeDistributionGroupName = "fakeDistributionGroupName";
+  const fakeStoreName = "fakeStore";
   /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
 
@@ -171,6 +172,89 @@ describe("releases add-destination command", () => {
       });
     });
 
+  });
+
+  describe.only("when distributing a store", () => {
+    const fakeStoreId = "00000000-0000-0000-0000-000000000000";
+    const getStoreUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_stores/${fakeStoreName}`;
+    const postAddReleaseStoreDestinationUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}/stores`;
+
+    describe("when the distribution is successful", function () {
+      beforeEach(() => {
+        nockScope.get(getStoreUrl)
+        .reply(200, {
+          id: fakeStoreId,
+          name: fakeStoreName,
+          display_name: "my store",
+          origin: "appcenter",
+          is_public: false
+        });
+      });
+
+      function successfulStoreMock() {
+        const expectedBody = {
+          id: fakeStoreId
+        };
+
+        nockScope.post(postAddReleaseStoreDestinationUrl, expectedBody)
+        .reply(201, {
+          id: fakeStoreId
+        });
+      }
+
+      it("reports the command as succeeded", async () => {
+        successfulStoreMock();
+
+        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "store", "--destination", fakeStoreName]));
+        const result = await command.execute();
+
+        expect(result.succeeded).to.be.true;
+
+        nockScope.done();
+      });
+    });
+
+  describe("when the store does not exist", () => {
+      beforeEach(() => {
+        nockScope.get(getStoreUrl)
+          .reply(404, {});
+      });
+
+      it("reports the command as failed", async () => {
+        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "store", "--destination", fakeStoreName]));
+        const result: CommandFailedResult = await command.execute() as CommandFailedResult;
+
+        expect(result.succeeded).to.be.false;
+        expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
+        expect(result.errorMessage).to.eql(`Could not find store ${fakeStoreName}`);
+      });
+    });
+
+    describe("when the release does not exist", function () {
+      beforeEach(() => {
+        nockScope.get(getStoreUrl)
+          .reply(200, {
+            id: "00000000-0000-0000-0000-000000000000",
+            name: fakeStoreName,
+            display_name: "my store",
+            origin: "appcenter",
+            is_public: false
+          });
+
+          nockScope.post(postAddReleaseStoreDestinationUrl)
+          .reply(404, {
+          });
+      });
+
+      it("reports the command as failed", async () => {
+        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "store", "--destination", fakeStoreName]));
+        const result: CommandFailedResult = await command.execute() as CommandFailedResult;
+
+        expect(result.succeeded).to.be.false;
+        expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
+        expect(result.errorMessage).to.eql(`Could not find release ${fakeReleaseId}`);
+      });
+    });
   });
 
   describe("when distributing a tester", () => {

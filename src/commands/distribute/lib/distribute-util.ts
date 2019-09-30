@@ -13,6 +13,13 @@ export interface GetDistributionGroupOptions {
   releaseId: number;
 }
 
+export interface GetExternalStoreToDistributeReleaseOptions {
+  client: AppCenterClient;
+  app: DefaultApp;
+  storeName: string;
+  releaseId: number;
+}
+
 export interface AddGroupToReleaseOptions {
   client: AppCenterClient;
   app: DefaultApp;
@@ -39,6 +46,24 @@ export async function getDistributionGroup(options: GetDistributionGroupOptions)
     } else {
       debug(`Failed to distribute the release - ${inspect(error)}`);
       throw failure( ErrorCodes.Exception, `Could not add ${destinationType} ${destination} to release ${releaseId}`);
+    }
+  }
+}
+
+export async function getExternalStoreToDistributeRelease(options: GetExternalStoreToDistributeReleaseOptions): Promise<models.ExternalStoreResponse> {
+  const { client, app, storeName, releaseId } = options;
+  try {
+    const { result } = await clientRequest<models.ExternalStoreResponse>(async (cb) => {
+      client.stores.get(storeName, app.ownerName, app.appName, cb);
+    });
+
+    return result;
+  } catch (error) {
+    if (error.statusCode === 404) {
+      throw failure(ErrorCodes.InvalidParameter, `Could not find store ${storeName}`);
+    } else {
+      debug(`Failed to distribute the release - ${inspect(error)}`);
+      throw failure( ErrorCodes.Exception, `Could not add store ${storeName} to release ${releaseId}`);
     }
   }
 }
