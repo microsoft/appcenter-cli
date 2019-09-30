@@ -107,7 +107,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
     if (releaseDetails) {
       if (!_.isNil(this.distributionGroup)) {
-        const storeComment = (!_.isNil(this.storeName)) ? ` and to store '${this.storeName}` : "";
+        const storeComment = (!_.isNil(this.storeName)) ? ` and to store '${this.storeName}'` : "";
         if (_.isNull(distributionGroupUsersCount)) {
           out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${this.distributionGroup}${storeComment}`, releaseDetails);
         } else {
@@ -214,11 +214,11 @@ export default class ReleaseBinaryCommand extends AppCommand {
         (cb) => client.stores.get(this.storeName, this.app.ownerName, this.app.appName, cb));
       const statusCode = storeDetailsResponse.response.statusCode;
       if (statusCode >= 400) {
-        throw statusCode;
+        throw { statusCode };
       }
       return storeDetailsResponse.result;
     } catch (error) {
-      if (error === 404) {
+      if (error.statusCode === 404) {
         throw failure(ErrorCodes.InvalidParameter, `store '${this.storeName}' was not found`);
       } else {
         debug(`Failed to get store details for '${this.storeName}', returning null - ${inspect(error)}`);
