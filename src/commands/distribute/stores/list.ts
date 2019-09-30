@@ -34,8 +34,12 @@ export default class ListStoresCommand extends AppCommand {
     const storesTracks = sortedStores.map((store) => store.track).value();
     const outputArray = _.zip(storesNames, storesTypes, storesTracks);
 
-    // Printing the result table
-    out.table(out.getCommandOutputTableOptions(["Store", "Type", "Track"]), outputArray);
+    if (!outputArray.length) {
+      out.text(`No stores configured for app '${app.ownerName}/${app.appName}'`);
+      out.table(out.getCommandOutputTableOptions([]), outputArray);
+    } else {
+      out.table(out.getCommandOutputTableOptions(["Store", "Type", "Track"]), outputArray);
+    }
 
     return success();
   }
