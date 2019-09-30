@@ -106,9 +106,11 @@ export default class AddDestinationCommand extends AppCommand {
       return result;
     } else if (response.statusCode === 404) {
       throw failure(ErrorCodes.InvalidParameter, `Could not find release ${this.releaseId}`);
+    } else if (response.statusCode === 400) {
+      throw failure(ErrorCodes.InvalidParameter, result.message);
     } else {
       debug(`Failed to distribute the release - ${inspect(result)}`);
-      throw failure(ErrorCodes.Exception, `Could not add ${this.destinationType} ${this.destination} to release ${this.releaseId}`);
+      throw failure(ErrorCodes.Exception, `Could not add ${this.destinationType} ${this.destination} to release ${this.releaseId}: ${response.statusMessage}`);
     }
   }
 }
