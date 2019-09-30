@@ -174,7 +174,7 @@ describe("releases add-destination command", () => {
 
   });
 
-  describe.only("when distributing a store", () => {
+  describe("when distributing a store", () => {
     const fakeStoreId = "00000000-0000-0000-0000-000000000000";
     const getStoreUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_stores/${fakeStoreName}`;
     const postAddReleaseStoreDestinationUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}/stores`;
