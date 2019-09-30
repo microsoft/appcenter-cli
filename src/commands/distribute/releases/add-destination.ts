@@ -58,7 +58,7 @@ export default class AddDestinationCommand extends AppCommand {
     try {
       await this.addDestination(client, releaseId);
     } catch (error) {
-      return error;
+      throw error;
     }
     out.text(`Distribution of ${this.mandatory ? "mandatory " : ""}release ${releaseId} to ${this.destinationType} was successful ${this.silent ? "without" : "with"} notification`);
     return success();
