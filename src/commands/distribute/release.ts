@@ -361,12 +361,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
       const statusCode = response.statusCode;
       if (statusCode >= 400) {
-        throw statusCode;
+        throw result;
       }
       return result;
     } catch (error) {
       debug(`Failed to distribute the release to store - ${inspect(error)}`);
-      throw failure(ErrorCodes.Exception, `failed to distribute release ${releaseId} to store`);
+      throw failure(ErrorCodes.Exception, error.message);
     }
   }
 }
