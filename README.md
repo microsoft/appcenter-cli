@@ -74,18 +74,21 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 | `appcenter crashes upload-missing-symbols` | Upload missing crash symbols for the application (only from macOS) |
 | `appcenter crashes upload-symbols` | Upload the crash symbols for the application |
 | | |
-| `appcenter distribute release` | Upload release binary and trigger distribution |
+| `appcenter distribute release` | Upload release binary and trigger distribution, at least one of --store or --group must be specified |
 | `appcenter distribute groups create` | Create new distribution group |
 | `appcenter distribute groups delete` | Deletes the distribution group |
 | `appcenter distribute groups download` | Download release package for the distribution group |
 | `appcenter distribute groups list` | Lists all distribution groups of the app |
+| `appcenter distribute groups publish` | Publish an app file to a group |
 | `appcenter distribute groups show` | Shows information about the distribution group |
 | `appcenter distribute groups update` | Update existing distribution group |
-| `appcenter distribute releases add-destination` | Distributes an existing release to an additional destination |
+| `appcenter distribute releases add-destination` | Distribute an existing release to an additional destination |
 | `appcenter distribute releases delete` | Deletes the release |
 | `appcenter distribute releases edit` | Toggles enabling and disabling the specified release |
 | `appcenter distribute releases list` | Shows the list of all releases for the application |
 | `appcenter distribute releases show` | Shows full details about release |
+| `appcenter distribute stores list` | Lists all stores of the app |
+| `appcenter distribute stores publish` | Publish an app file to a store |
 | | |
 | `appcenter orgs create` | Create a new organization |
 | `appcenter orgs list` | Lists organizations in which current user is collaborator |
