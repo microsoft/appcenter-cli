@@ -19,7 +19,7 @@ class DistributionGroupUserPostResponse {
    * @property {string} [code] The code of the result
    * @property {boolean} [invitePending] Whether the has accepted the invite.
    * Available when an invite is pending, and the value will be "true".
-   * @property {number} [message] The message of the result
+   * @property {string} [message] The message of the result
    * @property {number} status The status code of the result
    * @property {string} [userEmail] The email of the user
    */
@@ -58,7 +58,7 @@ class DistributionGroupUserPostResponse {
             required: false,
             serializedName: 'message',
             type: {
-              name: 'Number'
+              name: 'String'
             }
           },
           status: {

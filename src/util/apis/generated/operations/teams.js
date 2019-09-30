@@ -258,9 +258,12 @@ function _getUsers(orgName, teamName, options, callback) {
  *
  * @param {string} teamName The team's name
  *
- * @param {string} userEmail The user's email address'
+ * @param {string} userEmail The user's email address
  *
  * @param {object} [options] Optional Parameters.
+ *
+ * @param {string} [options.role] The user's role. Possible values include:
+ * 'admin', 'collaborator', 'member'
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -288,6 +291,7 @@ function _addUser(orgName, teamName, userEmail, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let role = (options && options.role !== undefined) ? options.role : undefined;
   // Validate
   try {
     if (orgName === null || orgName === undefined || typeof orgName.valueOf() !== 'string') {
@@ -299,13 +303,17 @@ function _addUser(orgName, teamName, userEmail, options, callback) {
     if (userEmail === null || userEmail === undefined || typeof userEmail.valueOf() !== 'string') {
       throw new Error('userEmail cannot be null or undefined and it must be of type string.');
     }
+    if (role !== null && role !== undefined && typeof role.valueOf() !== 'string') {
+      throw new Error('role must be of type string.');
+    }
   } catch (error) {
     return callback(error);
   }
   let userEmail1;
-  if (userEmail !== null && userEmail !== undefined) {
+  if ((userEmail !== null && userEmail !== undefined) || (role !== null && role !== undefined)) {
     userEmail1 = new client.models['UserEmailRequest']();
     userEmail1.userEmail = userEmail;
+    userEmail1.role = role;
   }
 
   // Construct URL
@@ -1865,9 +1873,12 @@ class Teams {
    *
    * @param {string} teamName The team's name
    *
-   * @param {string} userEmail The user's email address'
+   * @param {string} userEmail The user's email address
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {string} [options.role] The user's role. Possible values include:
+   * 'admin', 'collaborator', 'member'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -1899,9 +1910,12 @@ class Teams {
    *
    * @param {string} teamName The team's name
    *
-   * @param {string} userEmail The user's email address'
+   * @param {string} userEmail The user's email address
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {string} [options.role] The user's role. Possible values include:
+   * 'admin', 'collaborator', 'member'
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

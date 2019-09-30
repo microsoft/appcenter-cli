@@ -35,6 +35,12 @@ export default class AudienceCommand extends AppCommand {
   @hasArg
   public appVersion: string;
 
+  @help("Specify app build to show statistics for")
+  @shortName("b")
+  @longName("app-build")
+  @hasArg
+  public appBuild: string;
+
   @help("Show devices statistics")
   @longName("devices")
   public devices: boolean;
@@ -60,6 +66,7 @@ export default class AudienceCommand extends AppCommand {
     const app: DefaultApp = this.app;
 
     const appVersion = this.getAppVersion();
+    const appBuild = this.getAppBuild();
     const startDate = parseDate(this.startDate,
       new Date(new Date().setHours(0, 0, 0, 0)),
       `start date value ${this.startDate} is not a valid date string`);
@@ -88,7 +95,7 @@ export default class AudienceCommand extends AppCommand {
     }
 
     if (this.activeUsers) {
-      promises.push(this.loadActiveUsersStatistics(statistics, client, app, startDate, endDate, appVersion));
+      promises.push(this.loadActiveUsersStatistics(statistics, client, app, startDate, endDate, appVersion, appBuild));
     }
 
     await out.progress("Loading statistics...", Promise.all(promises));
@@ -100,6 +107,10 @@ export default class AudienceCommand extends AppCommand {
 
   private getAppVersion(): string[] {
     return !_.isNil(this.appVersion) ? [this.appVersion] : undefined;
+  }
+
+  private getAppBuild(): string {
+    return !_.isNil(this.appVersion) ? this.appVersion : undefined;
   }
 
   private async loadDevicesStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
@@ -159,9 +170,9 @@ export default class AudienceCommand extends AppCommand {
     }
   }
 
-  private async loadActiveUsersStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
+  private async loadActiveUsersStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[], appBuild?: string): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.ActiveDeviceCounts>((cb) => client.analytics.deviceCounts(startDate, app.ownerName, app.appName, {
+      const httpRequest = await clientRequest<models.ActiveDeviceCounts>((cb) => client.analytics.deviceCounts(startDate, appBuild, app.ownerName, app.appName, {
         end: endDate,
         versions: appVersion
       }, cb));

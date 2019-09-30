@@ -16,11 +16,11 @@
 class ActiveDeviceCounts {
   /**
    * Create a ActiveDeviceCounts.
-   * @property {array} [daily] the active device count for each interval
-   * @property {array} [weekly] the active device count for each interval with
-   * a week's retention
-   * @property {array} [monthly] the active device count for each interval with
-   * a month's retention
+   * @property {array} [daily] The active device count for each interval.
+   * @property {array} [weekly] The active device count for each interval with
+   * a week's retention.
+   * @property {array} [monthly] The active device count for each interval with
+   * a month's retention.
    */
   constructor() {
   }

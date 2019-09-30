@@ -59,11 +59,12 @@ class AppCenterClient extends ServiceClient {
     this.dataSubjectRight = new operations.DataSubjectRight(this);
     this.users = new operations.Users(this);
     this.releases = new operations.Releases(this);
+    this.apps = new operations.Apps(this);
     this.distributionGroups = new operations.DistributionGroups(this);
     this.teams = new operations.Teams(this);
     this.azureSubscription = new operations.AzureSubscription(this);
     this.organization = new operations.Organization(this);
-    this.apps = new operations.Apps(this);
+    this.aadGroup = new operations.AadGroup(this);
     this.organizations = new operations.Organizations(this);
     this.billingAggregatedInformation = new operations.BillingAggregatedInformation(this);
     this.invitations = new operations.Invitations(this);
@@ -82,6 +83,7 @@ class AppCenterClient extends ServiceClient {
     this.fileAssets = new operations.FileAssets(this);
     this.exportConfigurations = new operations.ExportConfigurations(this);
     this.errors = new operations.Errors(this);
+    this.textError = new operations.TextError(this);
     this.storeReleases = new operations.StoreReleases(this);
     this.storeReleasePublishLogs = new operations.StoreReleasePublishLogs(this);
     this.stores = new operations.Stores(this);

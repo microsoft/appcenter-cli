@@ -18,11 +18,6 @@ class Destination {
    * Create a Destination.
    * @property {boolean} [isLatest] Is the containing release the latest one in
    * this distribution group.
-   * @property {string} [type] type of the distribution store currently stores
-   * type can be intune, googleplay or windows. Possible values include:
-   * 'intune', 'googleplay', 'windows'
-   * @property {string} [publishingStatus] publishing status of the release in
-   * the store.
    * @property {string} [name] Name of a distribution group / distribution
    * store. The release will be associated with this distribution group or
    * store. If the distribution group / store doesn't exist a 400 is returned.
@@ -35,6 +30,7 @@ class Destination {
    * precedence.
    * @property {string} [destinationType] Destination can be either store or
    * group. Possible values include: 'group', 'store', 'tester'
+   * @property {string} [displayName] Display name for the group or tester
    */
   constructor() {
   }
@@ -60,20 +56,6 @@ class Destination {
               name: 'Boolean'
             }
           },
-          type: {
-            required: false,
-            serializedName: 'type',
-            type: {
-              name: 'String'
-            }
-          },
-          publishingStatus: {
-            required: false,
-            serializedName: 'publishing_status',
-            type: {
-              name: 'String'
-            }
-          },
           name: {
             required: false,
             serializedName: 'name',
@@ -91,6 +73,13 @@ class Destination {
           destinationType: {
             required: false,
             serializedName: 'destination_type',
+            type: {
+              name: 'String'
+            }
+          },
+          displayName: {
+            required: false,
+            serializedName: 'display_name',
             type: {
               name: 'String'
             }

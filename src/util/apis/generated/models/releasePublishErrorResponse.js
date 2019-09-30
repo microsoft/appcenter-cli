@@ -18,7 +18,7 @@ class ReleasePublishErrorResponse {
   /**
    * Create a ReleasePublishErrorResponse.
    * @property {string} [message] error Details
-   * @property {boolean} [isLogsAvailable] boolean property to tell if logs are
+   * @property {boolean} [isLogAvailable] boolean property to tell if logs are
    * available for download
    */
   constructor() {
@@ -45,9 +45,9 @@ class ReleasePublishErrorResponse {
               name: 'String'
             }
           },
-          isLogsAvailable: {
+          isLogAvailable: {
             required: false,
-            serializedName: 'is_logs_available',
+            serializedName: 'is_log_available',
             type: {
               name: 'Boolean'
             }

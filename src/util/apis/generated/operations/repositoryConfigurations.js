@@ -168,11 +168,25 @@ function _list(ownerName, appName, options, callback) {
 /**
  * Configures the repository for build
  *
+ * @param {object} repo The repository information
+ *
+ * @param {string} [repo.installationId] The GitHub App Installation id.
+ * Required for repositories connected from GitHub App
+ *
+ * @param {string} [repo.repoUrl] The repository's git url, must be a HTTPS URL
+ *
+ * @param {string} [repo.repoId] The repository id from the repository
+ * provider. Required for repositories connected from GitHub App and GitLab.com
+ *
+ * @param {string} [repo.externalUserId] The external user id from the
+ * repository provider. Required for GitLab.com repositories
+ *
+ * @param {string} [repo.serviceConnectionId] The id of the service connection
+ * (private). Required for GitLab self-hosted repositories
+ *
  * @param {string} ownerName The name of the owner
  *
  * @param {string} appName The name of the application
- *
- * @param {string} repoUrl The repository url
  *
  * @param {object} [options] Optional Parameters.
  *
@@ -192,7 +206,7 @@ function _list(ownerName, appName, options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _createOrUpdate(ownerName, appName, repoUrl, options, callback) {
+function _createOrUpdate(repo, ownerName, appName, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -204,22 +218,17 @@ function _createOrUpdate(ownerName, appName, repoUrl, options, callback) {
   }
   // Validate
   try {
+    if (repo === null || repo === undefined) {
+      throw new Error('repo cannot be null or undefined.');
+    }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
     if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
       throw new Error('appName cannot be null or undefined and it must be of type string.');
     }
-    if (repoUrl === null || repoUrl === undefined || typeof repoUrl.valueOf() !== 'string') {
-      throw new Error('repoUrl cannot be null or undefined and it must be of type string.');
-    }
   } catch (error) {
     return callback(error);
-  }
-  let repo;
-  if (repoUrl !== null && repoUrl !== undefined) {
-    repo = new client.models['RepoInfo']();
-    repo.repoUrl = repoUrl;
   }
 
   // Construct URL
@@ -247,7 +256,7 @@ function _createOrUpdate(ownerName, appName, repoUrl, options, callback) {
   let requestModel = null;
   try {
     if (repo !== null && repo !== undefined) {
-      let requestModelMapper = new client.models['RepoInfo']().mapper();
+      let requestModelMapper = new client.models['RepoConfigPostRequest']().mapper();
       requestModel = client.serialize(requestModelMapper, repo, 'repo');
       requestContent = JSON.stringify(requestModel);
     }
@@ -315,7 +324,7 @@ function _createOrUpdate(ownerName, appName, repoUrl, options, callback) {
 }
 
 /**
- * Removes the configuration for the respository
+ * Removes the configuration for the repository
  *
  * @param {string} ownerName The name of the owner
  *
@@ -546,11 +555,25 @@ class RepositoryConfigurations {
   /**
    * Configures the repository for build
    *
+   * @param {object} repo The repository information
+   *
+   * @param {string} [repo.installationId] The GitHub App Installation id.
+   * Required for repositories connected from GitHub App
+   *
+   * @param {string} [repo.repoUrl] The repository's git url, must be a HTTPS URL
+   *
+   * @param {string} [repo.repoId] The repository id from the repository
+   * provider. Required for repositories connected from GitHub App and GitLab.com
+   *
+   * @param {string} [repo.externalUserId] The external user id from the
+   * repository provider. Required for GitLab.com repositories
+   *
+   * @param {string} [repo.serviceConnectionId] The id of the service connection
+   * (private). Required for GitLab self-hosted repositories
+   *
    * @param {string} ownerName The name of the owner
    *
    * @param {string} appName The name of the application
-   *
-   * @param {string} repoUrl The repository url
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -563,11 +586,11 @@ class RepositoryConfigurations {
    *
    * @reject {Error} - The error object.
    */
-  createOrUpdateWithHttpOperationResponse(ownerName, appName, repoUrl, options) {
+  createOrUpdateWithHttpOperationResponse(repo, ownerName, appName, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._createOrUpdate(ownerName, appName, repoUrl, options, (err, result, request, response) => {
+      self._createOrUpdate(repo, ownerName, appName, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -580,11 +603,25 @@ class RepositoryConfigurations {
   /**
    * Configures the repository for build
    *
+   * @param {object} repo The repository information
+   *
+   * @param {string} [repo.installationId] The GitHub App Installation id.
+   * Required for repositories connected from GitHub App
+   *
+   * @param {string} [repo.repoUrl] The repository's git url, must be a HTTPS URL
+   *
+   * @param {string} [repo.repoId] The repository id from the repository
+   * provider. Required for repositories connected from GitHub App and GitLab.com
+   *
+   * @param {string} [repo.externalUserId] The external user id from the
+   * repository provider. Required for GitLab.com repositories
+   *
+   * @param {string} [repo.serviceConnectionId] The id of the service connection
+   * (private). Required for GitLab self-hosted repositories
+   *
    * @param {string} ownerName The name of the owner
    *
    * @param {string} appName The name of the application
-   *
-   * @param {string} repoUrl The repository url
    *
    * @param {object} [options] Optional Parameters.
    *
@@ -613,7 +650,7 @@ class RepositoryConfigurations {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  createOrUpdate(ownerName, appName, repoUrl, options, optionalCallback) {
+  createOrUpdate(repo, ownerName, appName, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -622,19 +659,19 @@ class RepositoryConfigurations {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._createOrUpdate(ownerName, appName, repoUrl, options, (err, result, request, response) => {
+        self._createOrUpdate(repo, ownerName, appName, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._createOrUpdate(ownerName, appName, repoUrl, options, optionalCallback);
+      return self._createOrUpdate(repo, ownerName, appName, options, optionalCallback);
     }
   }
 
   /**
-   * Removes the configuration for the respository
+   * Removes the configuration for the repository
    *
    * @param {string} ownerName The name of the owner
    *
@@ -666,7 +703,7 @@ class RepositoryConfigurations {
   }
 
   /**
-   * Removes the configuration for the respository
+   * Removes the configuration for the repository
    *
    * @param {string} ownerName The name of the owner
    *

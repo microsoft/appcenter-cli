@@ -16,8 +16,8 @@
 class Versions {
   /**
    * Create a Versions.
-   * @property {array} [versions] list of version count
-   * @property {number} [total] the total count of versions
+   * @property {array} [versions] List of version count.
+   * @property {number} [total] The total count of versions.
    */
   constructor() {
   }

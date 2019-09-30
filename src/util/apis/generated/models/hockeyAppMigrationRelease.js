@@ -27,7 +27,8 @@ class HockeyAppMigrationRelease {
    * @property {string} [buildUrl]
    * @property {string} [bundleIdentifier]
    * @property {string} [deviceFamily]
-   * @property {array} [languages]
+   * @property {array} [languages] The languages supported by the release.
+   * Limited to 510 characters in a serialized array.
    * @property {object} [uuids] For iOS apps, a dictionary of UUIDs for
    * architectures (in format `{"armv7":
    * "353df799-d450-3308-8492-928ecf1ebf53", "arm64":
@@ -38,6 +39,8 @@ class HockeyAppMigrationRelease {
    * to HockeyAppSchema.AppVersionStatus. Possible values: Deleted = -1, New =
    * 0, Inactive = 1, Active = 2, Hidden = 3, SonomaActive = 4
    * @property {string} [notes]
+   * @property {boolean} [notify] Send out notifications to the destination
+   * groups and/or testers
    * @property {array} [distributionGroupIds] List of DistributionGroup IDs the
    * release is distributed to
    * @property {array} [distributionUserIds] List of User IDs the release is
@@ -185,6 +188,13 @@ class HockeyAppMigrationRelease {
             serializedName: 'notes',
             type: {
               name: 'String'
+            }
+          },
+          notify: {
+            required: false,
+            serializedName: 'notify',
+            type: {
+              name: 'Boolean'
             }
           },
           distributionGroupIds: {

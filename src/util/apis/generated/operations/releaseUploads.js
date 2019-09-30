@@ -181,6 +181,9 @@ function _complete(uploadId, ownerName, appName, status, options, callback) {
  * @param {string} [options.buildVersion] The build version of the uploaded
  * binary
  *
+ * @param {string} [options.buildNumber] The build number of the uploaded
+ * binary
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -210,6 +213,7 @@ function _create(ownerName, appName, options, callback) {
   }
   let releaseId = (options && options.releaseId !== undefined) ? options.releaseId : undefined;
   let buildVersion = (options && options.buildVersion !== undefined) ? options.buildVersion : undefined;
+  let buildNumber = (options && options.buildNumber !== undefined) ? options.buildNumber : undefined;
   // Validate
   try {
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
@@ -224,14 +228,18 @@ function _create(ownerName, appName, options, callback) {
     if (buildVersion !== null && buildVersion !== undefined && typeof buildVersion.valueOf() !== 'string') {
       throw new Error('buildVersion must be of type string.');
     }
+    if (buildNumber !== null && buildNumber !== undefined && typeof buildNumber.valueOf() !== 'string') {
+      throw new Error('buildNumber must be of type string.');
+    }
   } catch (error) {
     return callback(error);
   }
   let body;
-  if ((releaseId !== null && releaseId !== undefined) || (buildVersion !== null && buildVersion !== undefined)) {
+  if ((releaseId !== null && releaseId !== undefined) || (buildVersion !== null && buildVersion !== undefined) || (buildNumber !== null && buildNumber !== undefined)) {
     body = new client.models['ReleaseUploadBeginRequest']();
     body.releaseId = releaseId;
     body.buildVersion = buildVersion;
+    body.buildNumber = buildNumber;
   }
 
   // Construct URL
@@ -447,6 +455,9 @@ class ReleaseUploads {
    * @param {string} [options.buildVersion] The build version of the uploaded
    * binary
    *
+   * @param {string} [options.buildNumber] The build number of the uploaded
+   * binary
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -482,6 +493,9 @@ class ReleaseUploads {
    * @param {number} [options.releaseId] The ID of the release.
    *
    * @param {string} [options.buildVersion] The build version of the uploaded
+   * binary
+   *
+   * @param {string} [options.buildNumber] The build number of the uploaded
    * binary
    *
    * @param {object} [options.customHeaders] Headers that will be added to the

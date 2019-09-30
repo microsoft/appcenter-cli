@@ -436,7 +436,7 @@ function _resendSharedInvite(orgName, distributionGroupName, options, callback) 
 }
 
 /**
- * Delete apps from distribution group in an org
+ * Delete testers from distribution group in an org
  *
  * @param {string} orgName The organization's name
  *
@@ -3618,7 +3618,7 @@ class DistributionGroups {
   }
 
   /**
-   * Delete apps from distribution group in an org
+   * Delete testers from distribution group in an org
    *
    * @param {string} orgName The organization's name
    *
@@ -3652,7 +3652,7 @@ class DistributionGroups {
   }
 
   /**
-   * Delete apps from distribution group in an org
+   * Delete testers from distribution group in an org
    *
    * @param {string} orgName The organization's name
    *

@@ -44,42 +44,49 @@ class TesterAppRelease extends models['DistributionGroupRelease'] {
         className: 'TesterAppRelease',
         modelProperties: {
           id: {
-            required: false,
+            required: true,
             serializedName: 'id',
             type: {
               name: 'Number'
             }
           },
           version: {
-            required: false,
+            required: true,
             serializedName: 'version',
             type: {
               name: 'String'
             }
           },
-          shortVersion: {
+          origin: {
             required: false,
+            serializedName: 'origin',
+            type: {
+              name: 'String'
+            }
+          },
+          shortVersion: {
+            required: true,
             serializedName: 'short_version',
             type: {
               name: 'String'
             }
           },
           mandatoryUpdate: {
-            required: false,
+            required: true,
             serializedName: 'mandatory_update',
             type: {
               name: 'Boolean'
             }
           },
           uploadedAt: {
-            required: false,
+            required: true,
             serializedName: 'uploaded_at',
             type: {
               name: 'String'
             }
           },
           enabled: {
-            required: false,
+            required: true,
             serializedName: 'enabled',
             type: {
               name: 'Boolean'

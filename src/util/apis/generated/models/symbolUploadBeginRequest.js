@@ -19,7 +19,7 @@ class SymbolUploadBeginRequest {
   /**
    * Create a SymbolUploadBeginRequest.
    * @property {string} symbolType The type of the symbol for the current
-   * symbol upload. Possible values include: 'Apple', 'Breakpad',
+   * symbol upload. Possible values include: 'Apple', 'JavaScript', 'Breakpad',
    * 'AndroidProguard', 'UWP'
    * @property {string} [clientCallback] The callback URL that the client can
    * optionally provide to get status updates for the current symbol upload

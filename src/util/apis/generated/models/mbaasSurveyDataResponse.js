@@ -11,33 +11,34 @@
 'use strict';
 
 /**
- * Class representing a TestGDPRUser.
+ * Class representing a MbaasSurveyDataResponse.
  */
-class TestGDPRUser {
+class MbaasSurveyDataResponse {
   /**
-   * Create a TestGDPRUser.
-   * @property {uuid} [id]
+   * Create a MbaasSurveyDataResponse.
+   * @property {string} [nextSurveyDate] The next mbaas survey date for the
+   * user
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of TestGDPRUser
+   * Defines the metadata of MbaasSurveyDataResponse
    *
-   * @returns {object} metadata of TestGDPRUser
+   * @returns {object} metadata of MbaasSurveyDataResponse
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'TestGDPRUser',
+      serializedName: 'MbaasSurveyDataResponse',
       type: {
         name: 'Composite',
-        className: 'TestGDPRUser',
+        className: 'MbaasSurveyDataResponse',
         modelProperties: {
-          id: {
+          nextSurveyDate: {
             required: false,
-            serializedName: 'id',
+            serializedName: 'nextSurveyDate',
             type: {
               name: 'String'
             }
@@ -48,4 +49,4 @@ class TestGDPRUser {
   }
 }
 
-module.exports = TestGDPRUser;
+module.exports = MbaasSurveyDataResponse;

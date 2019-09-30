@@ -452,6 +452,8 @@ function _get(storeName, releaseId, ownerName, appName, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {string} [options.body]
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -477,6 +479,7 @@ function _deleteMethod(storeName, releaseId, ownerName, appName, options, callba
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let body = (options && options.body !== undefined) ? options.body : undefined;
   // Validate
   try {
     if (storeName === null || storeName === undefined || typeof storeName.valueOf() !== 'string') {
@@ -484,6 +487,9 @@ function _deleteMethod(storeName, releaseId, ownerName, appName, options, callba
     }
     if (releaseId === null || releaseId === undefined || typeof releaseId.valueOf() !== 'string') {
       throw new Error('releaseId cannot be null or undefined and it must be of type string.');
+    }
+    if (body !== null && body !== undefined && typeof body.valueOf() !== 'string') {
+      throw new Error('body must be of type string.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -517,7 +523,27 @@ function _deleteMethod(storeName, releaseId, ownerName, appName, options, callba
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (body !== null && body !== undefined) {
+      let requestModelMapper = {
+        required: false,
+        serializedName: 'body',
+        type: {
+          name: 'String'
+        }
+      };
+      requestModel = client.serialize(requestModelMapper, body, 'body');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(body, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -1158,6 +1184,8 @@ class StoreReleases {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {string} [options.body]
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -1193,6 +1221,8 @@ class StoreReleases {
    * @param {string} appName The name of the application
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {string} [options.body]
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

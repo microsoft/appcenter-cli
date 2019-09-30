@@ -16,7 +16,7 @@ const WebResource = msRest.WebResource;
 /**
  * Count of active versions in the time range ordered by version.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -25,7 +25,7 @@ const WebResource = msRest.WebResource;
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {number} [options.top] The maximum number of results to return. (0
  * will fetch all results)
@@ -194,9 +194,9 @@ function _versionsMethod(start, ownerName, appName, options, callback) {
 }
 
 /**
- * Count of sessions per device in the time range
+ * Count of sessions per device in the time range.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} interval Size of interval in ISO 8601 duration format.
  * (PnYnMnDTnHnMnS|PnW|P<date>T<time>). The valid durations are 1 day (P1D), 1
@@ -209,7 +209,7 @@ function _versionsMethod(start, ownerName, appName, options, callback) {
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {array} [options.versions]
  *
@@ -362,9 +362,9 @@ function _perDeviceCounts(start, interval, ownerName, appName, options, callback
 }
 
 /**
- * Gets session duration .
+ * Gets session duration.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -373,7 +373,7 @@ function _perDeviceCounts(start, interval, ownerName, appName, options, callback
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {array} [options.versions]
  *
@@ -525,7 +525,7 @@ function _sessionDurationsDistributionMethod(start, ownerName, appName, options,
 /**
  * Count of sessions in the time range.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} interval Size of interval in ISO 8601 duration format.
  * (PnYnMnDTnHnMnS|PnW|P<date>T<time>). The valid durations are 1 day (P1D), 1
@@ -538,7 +538,7 @@ function _sessionDurationsDistributionMethod(start, ownerName, appName, options,
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {array} [options.versions]
  *
@@ -704,9 +704,9 @@ function _sessionCounts(start, interval, ownerName, appName, options, callback) 
 }
 
 /**
- * Places in the time range
+ * Places in the time range.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -715,7 +715,7 @@ function _sessionCounts(start, interval, ownerName, appName, options, callback) 
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {number} [options.top] The maximum number of results to return. (0
  * will fetch all results)
@@ -884,9 +884,9 @@ function _placeCounts(start, ownerName, appName, options, callback) {
 }
 
 /**
- * OSes in the time range
+ * OSes in the time range.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -895,7 +895,7 @@ function _placeCounts(start, ownerName, appName, options, callback) {
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {number} [options.top] The maximum number of results to return. (0
  * will fetch all results)
@@ -1064,9 +1064,9 @@ function _operatingSystemCounts(start, ownerName, appName, options, callback) {
 }
 
 /**
- * models in the time range
+ * Models in the time range.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -1075,7 +1075,7 @@ function _operatingSystemCounts(start, ownerName, appName, options, callback) {
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {number} [options.top] The maximum number of results to return. (0
  * will fetch all results)
@@ -1386,9 +1386,9 @@ function _logFlow(ownerName, appName, options, callback) {
 }
 
 /**
- * languages in the time range
+ * Languages in the time range.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -1397,7 +1397,7 @@ function _logFlow(ownerName, appName, options, callback) {
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {number} [options.top] The maximum number of results to return. (0
  * will fetch all results)
@@ -1710,13 +1710,12 @@ function _genericLogFlow(ownerName, appName, options, callback) {
 
 /**
  * Event properties value counts during the time range in descending order.
- * Limited up to 5 values.
  *
- * @param {string} eventName The id of the event
+ * @param {string} eventName The id of the event.
  *
- * @param {string} eventPropertyName The id of the event property
+ * @param {string} eventPropertyName The id of the event property.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -1725,11 +1724,12 @@ function _genericLogFlow(ownerName, appName, options, callback) {
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {array} [options.versions]
  *
- * @param {number} [options.top] The number of property values to return
+ * @param {number} [options.top] The number of property values to return. Set
+ * to 0 in order to fetch all results available.
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1759,7 +1759,7 @@ function _eventPropertyCounts(eventName, eventPropertyName, start, ownerName, ap
   }
   let end = (options && options.end !== undefined) ? options.end : undefined;
   let versions = (options && options.versions !== undefined) ? options.versions : undefined;
-  let top = (options && options.top !== undefined) ? options.top : 5;
+  let top = (options && options.top !== undefined) ? options.top : 10;
   // Validate
   try {
     if (eventName === null || eventName === undefined || typeof eventName.valueOf() !== 'string') {
@@ -1787,13 +1787,9 @@ function _eventPropertyCounts(eventName, eventPropertyName, start, ownerName, ap
       throw new Error('top must be of type number.');
     }
     if (top !== null && top !== undefined) {
-      if (top > 10)
+      if (top < 0)
       {
-        throw new Error('"top" should satisfy the constraint - "InclusiveMaximum": 10');
-      }
-      if (top < 1)
-      {
-        throw new Error('"top" should satisfy the constraint - "InclusiveMinimum": 1');
+        throw new Error('"top" should satisfy the constraint - "InclusiveMinimum": 0');
       }
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
@@ -1901,9 +1897,9 @@ function _eventPropertyCounts(eventName, eventPropertyName, start, ownerName, ap
 }
 
 /**
- * Event properties.  Up to the first 5 received properties.
+ * Event properties.
  *
- * @param {string} eventName The id of the event
+ * @param {string} eventName The id of the event.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -2034,9 +2030,9 @@ function _eventPropertiesMethod(eventName, ownerName, appName, options, callback
 /**
  * Count of events by interval in the time range.
  *
- * @param {string} eventName The id of the event
+ * @param {string} eventName The id of the event.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -2045,7 +2041,7 @@ function _eventPropertiesMethod(eventName, ownerName, appName, options, callback
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {array} [options.versions]
  *
@@ -2200,9 +2196,9 @@ function _eventCountMethod(eventName, start, ownerName, appName, options, callba
 /**
  * Count of devices for an event by interval in the time range.
  *
- * @param {string} eventName The id of the event
+ * @param {string} eventName The id of the event.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -2211,7 +2207,7 @@ function _eventCountMethod(eventName, start, ownerName, appName, options, callba
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {array} [options.versions]
  *
@@ -2366,9 +2362,9 @@ function _eventDeviceCountMethod(eventName, start, ownerName, appName, options, 
 /**
  * Count of events per session by interval in the time range.
  *
- * @param {string} eventName The id of the event
+ * @param {string} eventName The id of the event.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -2377,7 +2373,7 @@ function _eventDeviceCountMethod(eventName, start, ownerName, appName, options, 
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {array} [options.versions]
  *
@@ -2532,9 +2528,9 @@ function _eventPerSessionCount(eventName, start, ownerName, appName, options, ca
 /**
  * Count of events per device by interval in the time range.
  *
- * @param {string} eventName The id of the event
+ * @param {string} eventName The id of the event.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -2543,7 +2539,7 @@ function _eventPerSessionCount(eventName, start, ownerName, appName, options, ca
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {array} [options.versions]
  *
@@ -2696,9 +2692,9 @@ function _eventPerDeviceCount(eventName, start, ownerName, appName, options, cal
 }
 
 /**
- * Delete the set of Events with the specified event names
+ * Delete the set of Events with the specified event names.
  *
- * @param {string} eventName The id of the event
+ * @param {string} eventName The id of the event.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -2811,7 +2807,7 @@ function _eventsDelete(eventName, ownerName, appName, options, callback) {
 /**
  * Count of active events in the time range ordered by event.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -2820,11 +2816,11 @@ function _eventsDelete(eventName, ownerName, appName, options, callback) {
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {array} [options.versions]
  *
- * @param {array} [options.eventName] to select the specific events
+ * @param {array} [options.eventName] To select the specific events.
  *
  * @param {number} [options.top] The maximum number of results to return. (0
  * will fetch all results)
@@ -3040,9 +3036,9 @@ function _eventsMethod(start, ownerName, appName, options, callback) {
 }
 
 /**
- * Delete the set of Events with the specified event names
+ * Delete the set of Events with the specified event names.
  *
- * @param {string} eventName The id of the event
+ * @param {string} eventName The id of the event.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -3309,7 +3305,7 @@ function _distributionReleaseCounts(ownerName, appName, releases, options, callb
  * selected versions. Api will return -1 if crash devices is greater than
  * active devices.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} version
  *
@@ -3320,7 +3316,7 @@ function _distributionReleaseCounts(ownerName, appName, releases, options, callb
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -3466,7 +3462,7 @@ function _crashFreeDevicePercentagesMethod(start, version, ownerName, appName, o
  * Overall crashes and affected users count of the selected crash group with
  * selected version. Available for UWP apps only.
  *
- * @param {string} crashGroupId The id of the crash group
+ * @param {string} crashGroupId The id of the crash group.
  *
  * @param {string} version
  *
@@ -3607,10 +3603,10 @@ function _crashGroupTotals(crashGroupId, version, ownerName, appName, options, c
 /**
  * @summary Available for UWP apps only.
  *
- * top OSes of the selected crash group with selected version. Available for
+ * Top OSes of the selected crash group with selected version. Available for
  * UWP apps only.
  *
- * @param {string} crashGroupId The id of the crash group
+ * @param {string} crashGroupId The id of the crash group.
  *
  * @param {string} version
  *
@@ -3772,10 +3768,10 @@ function _crashGroupOperatingSystemCounts(crashGroupId, version, ownerName, appN
 /**
  * @summary Available for UWP apps only.
  *
- * top models of the selected crash group with selected version. Available for
+ * Top models of the selected crash group with selected version. Available for
  * UWP apps only.
  *
- * @param {string} crashGroupId The id of the crash group
+ * @param {string} crashGroupId The id of the crash group.
  *
  * @param {string} version
  *
@@ -3939,11 +3935,11 @@ function _crashGroupModelCounts(crashGroupId, version, ownerName, appName, optio
  * Count of crashes by day in the time range of the selected crash group with
  * selected version. Available for UWP apps only.
  *
- * @param {string} crashGroupId The id of the crash group
+ * @param {string} crashGroupId The id of the crash group.
  *
  * @param {string} version
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -3952,7 +3948,7 @@ function _crashGroupModelCounts(crashGroupId, version, ownerName, appName, optio
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -4097,7 +4093,7 @@ function _crashGroupCounts(crashGroupId, version, start, ownerName, appName, opt
 
 /**
  * Overall crashes and affected users count of the selected crash groups with
- * selected versions
+ * selected versions.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -4267,7 +4263,7 @@ function _crashGroupsTotals(ownerName, appName, crashGroups, options, callback) 
  * Count of crashes by day in the time range based the selected versions.
  * Available for UWP apps only.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
  *
  * @param {string} ownerName The name of the owner
  *
@@ -4276,7 +4272,7 @@ function _crashGroupsTotals(ownerName, appName, crashGroups, options, callback) 
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {array} [options.versions]
  *
@@ -5672,7 +5668,9 @@ function _listAudiences(ownerName, appName, options, callback) {
 /**
  * Count of active devices by interval in the time range.
  *
- * @param {date} start Start date time in data in ISO 8601 date time format
+ * @param {date} start Start date time in data in ISO 8601 date time format.
+ *
+ * @param {string} appBuild
  *
  * @param {string} ownerName The name of the owner
  *
@@ -5681,7 +5679,7 @@ function _listAudiences(ownerName, appName, options, callback) {
  * @param {object} [options] Optional Parameters.
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
- * format
+ * format.
  *
  * @param {array} [options.versions]
  *
@@ -5701,7 +5699,7 @@ function _listAudiences(ownerName, appName, options, callback) {
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _deviceCounts(start, ownerName, appName, options, callback) {
+function _deviceCounts(start, appBuild, ownerName, appName, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -5730,6 +5728,9 @@ function _deviceCounts(start, ownerName, appName, options, callback) {
         }
       }
     }
+    if (appBuild === null || appBuild === undefined || typeof appBuild.valueOf() !== 'string') {
+      throw new Error('appBuild cannot be null or undefined and it must be of type string.');
+    }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
     }
@@ -5753,6 +5754,7 @@ function _deviceCounts(start, ownerName, appName, options, callback) {
   if (versions !== null && versions !== undefined) {
     queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
   }
+  queryParameters.push('app_build=' + encodeURIComponent(appBuild));
   if (queryParameters.length > 0) {
     requestUrl += '?' + queryParameters.join('&');
   }
@@ -5879,7 +5881,7 @@ class Analytics {
   /**
    * Count of active versions in the time range ordered by version.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -5888,7 +5890,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
    * will fetch all results)
@@ -5921,7 +5923,7 @@ class Analytics {
   /**
    * Count of active versions in the time range ordered by version.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -5930,7 +5932,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
    * will fetch all results)
@@ -5983,9 +5985,9 @@ class Analytics {
   }
 
   /**
-   * Count of sessions per device in the time range
+   * Count of sessions per device in the time range.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} interval Size of interval in ISO 8601 duration format.
    * (PnYnMnDTnHnMnS|PnW|P<date>T<time>). The valid durations are 1 day (P1D), 1
@@ -5998,7 +6000,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -6026,9 +6028,9 @@ class Analytics {
   }
 
   /**
-   * Count of sessions per device in the time range
+   * Count of sessions per device in the time range.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} interval Size of interval in ISO 8601 duration format.
    * (PnYnMnDTnHnMnS|PnW|P<date>T<time>). The valid durations are 1 day (P1D), 1
@@ -6041,7 +6043,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -6091,9 +6093,9 @@ class Analytics {
   }
 
   /**
-   * Gets session duration .
+   * Gets session duration.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -6102,7 +6104,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -6130,9 +6132,9 @@ class Analytics {
   }
 
   /**
-   * Gets session duration .
+   * Gets session duration.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -6141,7 +6143,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -6194,7 +6196,7 @@ class Analytics {
   /**
    * Count of sessions in the time range.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} interval Size of interval in ISO 8601 duration format.
    * (PnYnMnDTnHnMnS|PnW|P<date>T<time>). The valid durations are 1 day (P1D), 1
@@ -6207,7 +6209,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -6237,7 +6239,7 @@ class Analytics {
   /**
    * Count of sessions in the time range.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} interval Size of interval in ISO 8601 duration format.
    * (PnYnMnDTnHnMnS|PnW|P<date>T<time>). The valid durations are 1 day (P1D), 1
@@ -6250,7 +6252,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -6299,9 +6301,9 @@ class Analytics {
   }
 
   /**
-   * Places in the time range
+   * Places in the time range.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -6310,7 +6312,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
    * will fetch all results)
@@ -6341,9 +6343,9 @@ class Analytics {
   }
 
   /**
-   * Places in the time range
+   * Places in the time range.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -6352,7 +6354,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
    * will fetch all results)
@@ -6405,9 +6407,9 @@ class Analytics {
   }
 
   /**
-   * OSes in the time range
+   * OSes in the time range.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -6416,7 +6418,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
    * will fetch all results)
@@ -6447,9 +6449,9 @@ class Analytics {
   }
 
   /**
-   * OSes in the time range
+   * OSes in the time range.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -6458,7 +6460,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
    * will fetch all results)
@@ -6511,9 +6513,9 @@ class Analytics {
   }
 
   /**
-   * models in the time range
+   * Models in the time range.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -6522,7 +6524,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
    * will fetch all results)
@@ -6553,9 +6555,9 @@ class Analytics {
   }
 
   /**
-   * models in the time range
+   * Models in the time range.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -6564,7 +6566,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
    * will fetch all results)
@@ -6713,9 +6715,9 @@ class Analytics {
   }
 
   /**
-   * languages in the time range
+   * Languages in the time range.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -6724,7 +6726,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
    * will fetch all results)
@@ -6755,9 +6757,9 @@ class Analytics {
   }
 
   /**
-   * languages in the time range
+   * Languages in the time range.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -6766,7 +6768,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
    * will fetch all results)
@@ -6917,13 +6919,12 @@ class Analytics {
 
   /**
    * Event properties value counts during the time range in descending order.
-   * Limited up to 5 values.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
-   * @param {string} eventPropertyName The id of the event property
+   * @param {string} eventPropertyName The id of the event property.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -6932,11 +6933,12 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
-   * @param {number} [options.top] The number of property values to return
+   * @param {number} [options.top] The number of property values to return. Set
+   * to 0 in order to fetch all results available.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -6963,13 +6965,12 @@ class Analytics {
 
   /**
    * Event properties value counts during the time range in descending order.
-   * Limited up to 5 values.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
-   * @param {string} eventPropertyName The id of the event property
+   * @param {string} eventPropertyName The id of the event property.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -6978,11 +6979,12 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
-   * @param {number} [options.top] The number of property values to return
+   * @param {number} [options.top] The number of property values to return. Set
+   * to 0 in order to fetch all results available.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -7030,9 +7032,9 @@ class Analytics {
   }
 
   /**
-   * Event properties.  Up to the first 5 received properties.
+   * Event properties.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7064,9 +7066,9 @@ class Analytics {
   }
 
   /**
-   * Event properties.  Up to the first 5 received properties.
+   * Event properties.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7122,9 +7124,9 @@ class Analytics {
   /**
    * Count of events by interval in the time range.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7133,7 +7135,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -7163,9 +7165,9 @@ class Analytics {
   /**
    * Count of events by interval in the time range.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7174,7 +7176,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -7226,9 +7228,9 @@ class Analytics {
   /**
    * Count of devices for an event by interval in the time range.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7237,7 +7239,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -7267,9 +7269,9 @@ class Analytics {
   /**
    * Count of devices for an event by interval in the time range.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7278,7 +7280,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -7330,9 +7332,9 @@ class Analytics {
   /**
    * Count of events per session by interval in the time range.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7341,7 +7343,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -7371,9 +7373,9 @@ class Analytics {
   /**
    * Count of events per session by interval in the time range.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7382,7 +7384,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -7434,9 +7436,9 @@ class Analytics {
   /**
    * Count of events per device by interval in the time range.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7445,7 +7447,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -7475,9 +7477,9 @@ class Analytics {
   /**
    * Count of events per device by interval in the time range.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7486,7 +7488,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -7536,9 +7538,9 @@ class Analytics {
   }
 
   /**
-   * Delete the set of Events with the specified event names
+   * Delete the set of Events with the specified event names.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7570,9 +7572,9 @@ class Analytics {
   }
 
   /**
-   * Delete the set of Events with the specified event names
+   * Delete the set of Events with the specified event names.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7627,7 +7629,7 @@ class Analytics {
   /**
    * Count of active events in the time range ordered by event.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7636,11 +7638,11 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
-   * @param {array} [options.eventName] to select the specific events
+   * @param {array} [options.eventName] To select the specific events.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
    * will fetch all results)
@@ -7682,7 +7684,7 @@ class Analytics {
   /**
    * Count of active events in the time range ordered by event.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7691,11 +7693,11 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
-   * @param {array} [options.eventName] to select the specific events
+   * @param {array} [options.eventName] To select the specific events.
    *
    * @param {number} [options.top] The maximum number of results to return. (0
    * will fetch all results)
@@ -7757,9 +7759,9 @@ class Analytics {
   }
 
   /**
-   * Delete the set of Events with the specified event names
+   * Delete the set of Events with the specified event names.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7791,9 +7793,9 @@ class Analytics {
   }
 
   /**
-   * Delete the set of Events with the specified event names
+   * Delete the set of Events with the specified event names.
    *
-   * @param {string} eventName The id of the event
+   * @param {string} eventName The id of the event.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -7940,7 +7942,7 @@ class Analytics {
    * selected versions. Api will return -1 if crash devices is greater than
    * active devices.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} version
    *
@@ -7951,7 +7953,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -7981,7 +7983,7 @@ class Analytics {
    * selected versions. Api will return -1 if crash devices is greater than
    * active devices.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} version
    *
@@ -7992,7 +7994,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -8046,7 +8048,7 @@ class Analytics {
    * Overall crashes and affected users count of the selected crash group with
    * selected version. Available for UWP apps only.
    *
-   * @param {string} crashGroupId The id of the crash group
+   * @param {string} crashGroupId The id of the crash group.
    *
    * @param {string} version
    *
@@ -8085,7 +8087,7 @@ class Analytics {
    * Overall crashes and affected users count of the selected crash group with
    * selected version. Available for UWP apps only.
    *
-   * @param {string} crashGroupId The id of the crash group
+   * @param {string} crashGroupId The id of the crash group.
    *
    * @param {string} version
    *
@@ -8143,10 +8145,10 @@ class Analytics {
   /**
    * @summary Available for UWP apps only.
    *
-   * top OSes of the selected crash group with selected version. Available for
+   * Top OSes of the selected crash group with selected version. Available for
    * UWP apps only.
    *
-   * @param {string} crashGroupId The id of the crash group
+   * @param {string} crashGroupId The id of the crash group.
    *
    * @param {string} version
    *
@@ -8185,10 +8187,10 @@ class Analytics {
   /**
    * @summary Available for UWP apps only.
    *
-   * top OSes of the selected crash group with selected version. Available for
+   * Top OSes of the selected crash group with selected version. Available for
    * UWP apps only.
    *
-   * @param {string} crashGroupId The id of the crash group
+   * @param {string} crashGroupId The id of the crash group.
    *
    * @param {string} version
    *
@@ -8250,10 +8252,10 @@ class Analytics {
   /**
    * @summary Available for UWP apps only.
    *
-   * top models of the selected crash group with selected version. Available for
+   * Top models of the selected crash group with selected version. Available for
    * UWP apps only.
    *
-   * @param {string} crashGroupId The id of the crash group
+   * @param {string} crashGroupId The id of the crash group.
    *
    * @param {string} version
    *
@@ -8292,10 +8294,10 @@ class Analytics {
   /**
    * @summary Available for UWP apps only.
    *
-   * top models of the selected crash group with selected version. Available for
+   * Top models of the selected crash group with selected version. Available for
    * UWP apps only.
    *
-   * @param {string} crashGroupId The id of the crash group
+   * @param {string} crashGroupId The id of the crash group.
    *
    * @param {string} version
    *
@@ -8359,11 +8361,11 @@ class Analytics {
    * Count of crashes by day in the time range of the selected crash group with
    * selected version. Available for UWP apps only.
    *
-   * @param {string} crashGroupId The id of the crash group
+   * @param {string} crashGroupId The id of the crash group.
    *
    * @param {string} version
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -8372,7 +8374,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -8403,11 +8405,11 @@ class Analytics {
    * Count of crashes by day in the time range of the selected crash group with
    * selected version. Available for UWP apps only.
    *
-   * @param {string} crashGroupId The id of the crash group
+   * @param {string} crashGroupId The id of the crash group.
    *
    * @param {string} version
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -8416,7 +8418,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -8465,7 +8467,7 @@ class Analytics {
 
   /**
    * Overall crashes and affected users count of the selected crash groups with
-   * selected versions
+   * selected versions.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -8500,7 +8502,7 @@ class Analytics {
 
   /**
    * Overall crashes and affected users count of the selected crash groups with
-   * selected versions
+   * selected versions.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -8560,7 +8562,7 @@ class Analytics {
    * Count of crashes by day in the time range based the selected versions.
    * Available for UWP apps only.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -8569,7 +8571,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -8602,7 +8604,7 @@ class Analytics {
    * Count of crashes by day in the time range based the selected versions.
    * Available for UWP apps only.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
    *
    * @param {string} ownerName The name of the owner
    *
@@ -8611,7 +8613,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -9512,7 +9514,9 @@ class Analytics {
   /**
    * Count of active devices by interval in the time range.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
+   *
+   * @param {string} appBuild
    *
    * @param {string} ownerName The name of the owner
    *
@@ -9521,7 +9525,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -9534,11 +9538,11 @@ class Analytics {
    *
    * @reject {Error} - The error object.
    */
-  deviceCountsWithHttpOperationResponse(start, ownerName, appName, options) {
+  deviceCountsWithHttpOperationResponse(start, appBuild, ownerName, appName, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._deviceCounts(start, ownerName, appName, options, (err, result, request, response) => {
+      self._deviceCounts(start, appBuild, ownerName, appName, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -9551,7 +9555,9 @@ class Analytics {
   /**
    * Count of active devices by interval in the time range.
    *
-   * @param {date} start Start date time in data in ISO 8601 date time format
+   * @param {date} start Start date time in data in ISO 8601 date time format.
+   *
+   * @param {string} appBuild
    *
    * @param {string} ownerName The name of the owner
    *
@@ -9560,7 +9566,7 @@ class Analytics {
    * @param {object} [options] Optional Parameters.
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
-   * format
+   * format.
    *
    * @param {array} [options.versions]
    *
@@ -9589,7 +9595,7 @@ class Analytics {
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  deviceCounts(start, ownerName, appName, options, optionalCallback) {
+  deviceCounts(start, appBuild, ownerName, appName, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -9598,14 +9604,14 @@ class Analytics {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._deviceCounts(start, ownerName, appName, options, (err, result, request, response) => {
+        self._deviceCounts(start, appBuild, ownerName, appName, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._deviceCounts(start, ownerName, appName, options, optionalCallback);
+      return self._deviceCounts(start, appBuild, ownerName, appName, options, optionalCallback);
     }
   }
 

@@ -37,7 +37,7 @@ class JiraCredentialNonSecretDetailsResponse extends models['GooglePlayConnectio
   mapper() {
     return {
       required: false,
-      serializedName: 'JiraCredentialNonSecretDetailsResponse',
+      serializedName: 'credentials',
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {

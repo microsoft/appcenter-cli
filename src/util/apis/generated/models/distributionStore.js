@@ -14,18 +14,13 @@ const models = require('./index');
 
 /**
  * Class representing a DistributionStore.
- * @extends models['DestinationId']
+ * @extends models['DistributionStoreWithoutIsLatest']
  */
-class DistributionStore extends models['DestinationId'] {
+class DistributionStore extends models['DistributionStoreWithoutIsLatest'] {
   /**
    * Create a DistributionStore.
    * @property {boolean} [isLatest] Is the containing release the latest one in
    * this distribution store.
-   * @property {string} [type] type of the distribution store currently stores
-   * type can be intune, googleplay or windows. Possible values include:
-   * 'intune', 'googleplay', 'windows'
-   * @property {string} [publishingStatus] publishing status of the release in
-   * the store.
    */
   constructor() {
     super();
@@ -45,25 +40,18 @@ class DistributionStore extends models['DestinationId'] {
         name: 'Composite',
         className: 'DistributionStore',
         modelProperties: {
-          name: {
-            required: false,
-            serializedName: 'name',
-            type: {
-              name: 'String'
-            }
-          },
           id: {
-            required: false,
+            required: true,
             serializedName: 'id',
             type: {
               name: 'String'
             }
           },
-          isLatest: {
+          name: {
             required: false,
-            serializedName: 'is_latest',
+            serializedName: 'name',
             type: {
-              name: 'Boolean'
+              name: 'String'
             }
           },
           type: {
@@ -78,6 +66,13 @@ class DistributionStore extends models['DestinationId'] {
             serializedName: 'publishing_status',
             type: {
               name: 'String'
+            }
+          },
+          isLatest: {
+            required: false,
+            serializedName: 'is_latest',
+            type: {
+              name: 'Boolean'
             }
           }
         }

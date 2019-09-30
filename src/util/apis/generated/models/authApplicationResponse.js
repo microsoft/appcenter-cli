@@ -16,13 +16,15 @@
 class AuthApplicationResponse {
   /**
    * Create a AuthApplicationResponse.
-   * @property {uuid} id
-   * @property {uuid} tenantId
-   * @property {string} tenantName
-   * @property {string} policyId
-   * @property {uuid} scopeId
-   * @property {string} scopeUrl
-   * @property {boolean} [isSdkConfigured]
+   * @property {string} id
+   * @property {string} provider Possible values include: 'AADB2C', 'Auth0',
+   * 'Firebase', 'AAD'
+   * @property {uuid} [tenantId]
+   * @property {string} [tenantName]
+   * @property {string} [policyId]
+   * @property {uuid} [scopeId]
+   * @property {string} [scopeUrl]
+   * @property {string} [signInAudience]
    */
   constructor() {
   }
@@ -48,46 +50,53 @@ class AuthApplicationResponse {
               name: 'String'
             }
           },
-          tenantId: {
+          provider: {
             required: true,
+            serializedName: 'provider',
+            type: {
+              name: 'String'
+            }
+          },
+          tenantId: {
+            required: false,
             serializedName: 'tenantId',
             type: {
               name: 'String'
             }
           },
           tenantName: {
-            required: true,
+            required: false,
             serializedName: 'tenantName',
             type: {
               name: 'String'
             }
           },
           policyId: {
-            required: true,
+            required: false,
             serializedName: 'policyId',
             type: {
               name: 'String'
             }
           },
           scopeId: {
-            required: true,
+            required: false,
             serializedName: 'scopeId',
             type: {
               name: 'String'
             }
           },
           scopeUrl: {
-            required: true,
+            required: false,
             serializedName: 'scopeUrl',
             type: {
               name: 'String'
             }
           },
-          isSdkConfigured: {
+          signInAudience: {
             required: false,
-            serializedName: 'isSdkConfigured',
+            serializedName: 'signInAudience',
             type: {
-              name: 'Boolean'
+              name: 'String'
             }
           }
         }

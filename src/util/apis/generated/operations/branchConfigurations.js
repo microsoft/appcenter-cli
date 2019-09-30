@@ -34,7 +34,8 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link BranchConfiguration} for more information.
+ *                      See {@link BranchConfigurationWithId} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -129,7 +130,7 @@ function _get(branch, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['BranchConfiguration']().mapper();
+          let resultMapper = new client.models['BranchConfigurationWithId']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -149,6 +150,160 @@ function _get(branch, ownerName, appName, options, callback) {
  *
  * @param {string} branch The branch name
  *
+ * @param {object} params Parameters of the configuration
+ *
+ * @param {string} [params.trigger] Possible values include: 'continous',
+ * 'continuous', 'manual'
+ *
+ * @param {boolean} [params.testsEnabled]
+ *
+ * @param {boolean} [params.badgeIsEnabled]
+ *
+ * @param {boolean} [params.signed]
+ *
+ * @param {string} [params.cloneFromBranch] A configured branch name to clone
+ * from. If provided, all other parameters will be ignored. Only supported in
+ * POST requests.
+ *
+ * @param {object} [params.toolsets]
+ *
+ * @param {object} [params.toolsets.xcode]
+ *
+ * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
+ * project/workspace path
+ *
+ * @param {string} [params.toolsets.xcode.podfilePath] Path to CococaPods file,
+ * if present
+ *
+ * @param {string} [params.toolsets.xcode.cartfilePath] Path to Carthage file,
+ * if present
+ *
+ * @param {string} [params.toolsets.xcode.provisioningProfileEncoded]
+ *
+ * @param {string} [params.toolsets.xcode.certificateEncoded]
+ *
+ * @param {string} [params.toolsets.xcode.provisioningProfileFileId]
+ *
+ * @param {string} [params.toolsets.xcode.certificateFileId]
+ *
+ * @param {string} [params.toolsets.xcode.provisioningProfileUploadId]
+ *
+ * @param {array} [params.toolsets.xcode.appExtensionProvisioningProfileFiles]
+ *
+ * @param {string} [params.toolsets.xcode.certificateUploadId]
+ *
+ * @param {string} [params.toolsets.xcode.certificatePassword]
+ *
+ * @param {string} [params.toolsets.xcode.scheme]
+ *
+ * @param {string} [params.toolsets.xcode.xcodeVersion] Xcode version used to
+ * build. Available versions can be found in "/xcode_versions" API. Default is
+ * latest stable version, at the time when the configuration is set.
+ *
+ * @param {string} [params.toolsets.xcode.provisioningProfileFilename]
+ *
+ * @param {string} [params.toolsets.xcode.certificateFilename]
+ *
+ * @param {string} [params.toolsets.xcode.teamId]
+ *
+ * @param {boolean} [params.toolsets.xcode.automaticSigning]
+ *
+ * @param {string} [params.toolsets.xcode.xcodeProjectSha] The selected
+ * pbxproject hash to the repositroy
+ *
+ * @param {string} [params.toolsets.xcode.archiveConfiguration] The build
+ * configuration of the target to archive
+ *
+ * @param {string} [params.toolsets.xcode.targetToArchive] The target id of the
+ * selected scheme to archive
+ *
+ * @param {boolean} [params.toolsets.xcode.forceLegacyBuildSystem] Setting this
+ * to true forces the build to use Xcode legacy build system. Otherwise, the
+ * setting from workspace settings is used.
+ * By default new build system is used if workspace setting is not committed to
+ * the repository. Only used for iOS React Native app, with Xcode 10.
+ *
+ *
+ * @param {object} [params.toolsets.javascript]
+ *
+ * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
+ * package.json file for the main project, e.g. "package.json" or
+ * "myapp/package.json"
+ *
+ * @param {boolean} [params.toolsets.javascript.runTests] Whether to run Jest
+ * unit tests, via npm test, during the build
+ *
+ * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
+ * React Native from package.json files
+ *
+ * @param {object} [params.toolsets.xamarin]
+ *
+ * @param {string} [params.toolsets.xamarin.slnPath]
+ *
+ * @param {boolean} [params.toolsets.xamarin.isSimBuild]
+ *
+ * @param {string} [params.toolsets.xamarin.args]
+ *
+ * @param {string} [params.toolsets.xamarin.configuration]
+ *
+ * @param {string} [params.toolsets.xamarin.p12File]
+ *
+ * @param {string} [params.toolsets.xamarin.p12Pwd]
+ *
+ * @param {string} [params.toolsets.xamarin.provProfile]
+ *
+ * @param {string} [params.toolsets.xamarin.monoVersion]
+ *
+ * @param {string} [params.toolsets.xamarin.sdkBundle]
+ *
+ * @param {string} [params.toolsets.xamarin.symlink] Symlink of the SDK Bundle
+ * and Mono installation.
+ * The build will use the associated Mono bundled with related Xamarin SDK. If
+ * both symlink and monoVersion or sdkBundle are passed, the symlink is taking
+ * precedence. If non-existing symlink is passed, the current stable Mono
+ * version will be configured for building.
+ *
+ *
+ * @param {object} [params.toolsets.android]
+ *
+ * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
+ * Gradle wrapper script
+ *
+ * @param {string} [params.toolsets.android.module] The Gradle module to build
+ *
+ * @param {string} [params.toolsets.android.buildVariant] The Android build
+ * variant to build
+ *
+ * @param {boolean} [params.toolsets.android.runTests] Whether to run unit
+ * tests during the build (default)
+ *
+ * @param {boolean} [params.toolsets.android.runLint] Whether to run lint
+ * checks during the build (default)
+ *
+ * @param {boolean} [params.toolsets.android.isRoot] Whether it is the root
+ * module or not
+ *
+ * @param {boolean} [params.toolsets.android.automaticSigning] Whether to apply
+ * automatic signing or not
+ *
+ * @param {string} [params.toolsets.android.keystorePassword] The password of
+ * the keystore
+ *
+ * @param {string} [params.toolsets.android.keyAlias] The key alias
+ *
+ * @param {string} [params.toolsets.android.keyPassword] The key password
+ *
+ * @param {string} [params.toolsets.android.keystoreFilename] The name of the
+ * keystore file
+ *
+ * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
+ * encoded value
+ *
+ * @param {object} [params.artifactVersioning]
+ *
+ * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
+ * values include: 'buildId', 'timestamp'
+ *
  * @param {string} ownerName The name of the owner
  *
  * @param {string} appName The name of the application
@@ -165,13 +320,14 @@ function _get(branch, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link BranchConfiguration} for more information.
+ *                      See {@link BranchConfigurationWithId} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _create(branch, ownerName, appName, options, callback) {
+function _create(branch, params, ownerName, appName, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -185,6 +341,9 @@ function _create(branch, ownerName, appName, options, callback) {
   try {
     if (branch === null || branch === undefined || typeof branch.valueOf() !== 'string') {
       throw new Error('branch cannot be null or undefined and it must be of type string.');
+    }
+    if (params === null || params === undefined) {
+      throw new Error('params cannot be null or undefined.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -217,7 +376,21 @@ function _create(branch, ownerName, appName, options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (params !== null && params !== undefined) {
+      let requestModelMapper = new client.models['BranchConfiguration']().mapper();
+      requestModel = client.serialize(requestModelMapper, params, 'params');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(params, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -256,7 +429,7 @@ function _create(branch, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['BranchConfiguration']().mapper();
+          let resultMapper = new client.models['BranchConfigurationWithId']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -276,6 +449,160 @@ function _create(branch, ownerName, appName, options, callback) {
  *
  * @param {string} branch The branch name
  *
+ * @param {object} params Parameters of the configuration
+ *
+ * @param {string} [params.trigger] Possible values include: 'continous',
+ * 'continuous', 'manual'
+ *
+ * @param {boolean} [params.testsEnabled]
+ *
+ * @param {boolean} [params.badgeIsEnabled]
+ *
+ * @param {boolean} [params.signed]
+ *
+ * @param {string} [params.cloneFromBranch] A configured branch name to clone
+ * from. If provided, all other parameters will be ignored. Only supported in
+ * POST requests.
+ *
+ * @param {object} [params.toolsets]
+ *
+ * @param {object} [params.toolsets.xcode]
+ *
+ * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
+ * project/workspace path
+ *
+ * @param {string} [params.toolsets.xcode.podfilePath] Path to CococaPods file,
+ * if present
+ *
+ * @param {string} [params.toolsets.xcode.cartfilePath] Path to Carthage file,
+ * if present
+ *
+ * @param {string} [params.toolsets.xcode.provisioningProfileEncoded]
+ *
+ * @param {string} [params.toolsets.xcode.certificateEncoded]
+ *
+ * @param {string} [params.toolsets.xcode.provisioningProfileFileId]
+ *
+ * @param {string} [params.toolsets.xcode.certificateFileId]
+ *
+ * @param {string} [params.toolsets.xcode.provisioningProfileUploadId]
+ *
+ * @param {array} [params.toolsets.xcode.appExtensionProvisioningProfileFiles]
+ *
+ * @param {string} [params.toolsets.xcode.certificateUploadId]
+ *
+ * @param {string} [params.toolsets.xcode.certificatePassword]
+ *
+ * @param {string} [params.toolsets.xcode.scheme]
+ *
+ * @param {string} [params.toolsets.xcode.xcodeVersion] Xcode version used to
+ * build. Available versions can be found in "/xcode_versions" API. Default is
+ * latest stable version, at the time when the configuration is set.
+ *
+ * @param {string} [params.toolsets.xcode.provisioningProfileFilename]
+ *
+ * @param {string} [params.toolsets.xcode.certificateFilename]
+ *
+ * @param {string} [params.toolsets.xcode.teamId]
+ *
+ * @param {boolean} [params.toolsets.xcode.automaticSigning]
+ *
+ * @param {string} [params.toolsets.xcode.xcodeProjectSha] The selected
+ * pbxproject hash to the repositroy
+ *
+ * @param {string} [params.toolsets.xcode.archiveConfiguration] The build
+ * configuration of the target to archive
+ *
+ * @param {string} [params.toolsets.xcode.targetToArchive] The target id of the
+ * selected scheme to archive
+ *
+ * @param {boolean} [params.toolsets.xcode.forceLegacyBuildSystem] Setting this
+ * to true forces the build to use Xcode legacy build system. Otherwise, the
+ * setting from workspace settings is used.
+ * By default new build system is used if workspace setting is not committed to
+ * the repository. Only used for iOS React Native app, with Xcode 10.
+ *
+ *
+ * @param {object} [params.toolsets.javascript]
+ *
+ * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
+ * package.json file for the main project, e.g. "package.json" or
+ * "myapp/package.json"
+ *
+ * @param {boolean} [params.toolsets.javascript.runTests] Whether to run Jest
+ * unit tests, via npm test, during the build
+ *
+ * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
+ * React Native from package.json files
+ *
+ * @param {object} [params.toolsets.xamarin]
+ *
+ * @param {string} [params.toolsets.xamarin.slnPath]
+ *
+ * @param {boolean} [params.toolsets.xamarin.isSimBuild]
+ *
+ * @param {string} [params.toolsets.xamarin.args]
+ *
+ * @param {string} [params.toolsets.xamarin.configuration]
+ *
+ * @param {string} [params.toolsets.xamarin.p12File]
+ *
+ * @param {string} [params.toolsets.xamarin.p12Pwd]
+ *
+ * @param {string} [params.toolsets.xamarin.provProfile]
+ *
+ * @param {string} [params.toolsets.xamarin.monoVersion]
+ *
+ * @param {string} [params.toolsets.xamarin.sdkBundle]
+ *
+ * @param {string} [params.toolsets.xamarin.symlink] Symlink of the SDK Bundle
+ * and Mono installation.
+ * The build will use the associated Mono bundled with related Xamarin SDK. If
+ * both symlink and monoVersion or sdkBundle are passed, the symlink is taking
+ * precedence. If non-existing symlink is passed, the current stable Mono
+ * version will be configured for building.
+ *
+ *
+ * @param {object} [params.toolsets.android]
+ *
+ * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
+ * Gradle wrapper script
+ *
+ * @param {string} [params.toolsets.android.module] The Gradle module to build
+ *
+ * @param {string} [params.toolsets.android.buildVariant] The Android build
+ * variant to build
+ *
+ * @param {boolean} [params.toolsets.android.runTests] Whether to run unit
+ * tests during the build (default)
+ *
+ * @param {boolean} [params.toolsets.android.runLint] Whether to run lint
+ * checks during the build (default)
+ *
+ * @param {boolean} [params.toolsets.android.isRoot] Whether it is the root
+ * module or not
+ *
+ * @param {boolean} [params.toolsets.android.automaticSigning] Whether to apply
+ * automatic signing or not
+ *
+ * @param {string} [params.toolsets.android.keystorePassword] The password of
+ * the keystore
+ *
+ * @param {string} [params.toolsets.android.keyAlias] The key alias
+ *
+ * @param {string} [params.toolsets.android.keyPassword] The key password
+ *
+ * @param {string} [params.toolsets.android.keystoreFilename] The name of the
+ * keystore file
+ *
+ * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
+ * encoded value
+ *
+ * @param {object} [params.artifactVersioning]
+ *
+ * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
+ * values include: 'buildId', 'timestamp'
+ *
  * @param {string} ownerName The name of the owner
  *
  * @param {string} appName The name of the application
@@ -292,13 +619,14 @@ function _create(branch, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link BranchConfiguration} for more information.
+ *                      See {@link BranchConfigurationWithId} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
  *                      {stream} [response] - The HTTP Response stream if an error did not occur.
  */
-function _update(branch, ownerName, appName, options, callback) {
+function _update(branch, params, ownerName, appName, options, callback) {
    /* jshint validthis: true */
   let client = this.client;
   if(!callback && typeof options === 'function') {
@@ -312,6 +640,9 @@ function _update(branch, ownerName, appName, options, callback) {
   try {
     if (branch === null || branch === undefined || typeof branch.valueOf() !== 'string') {
       throw new Error('branch cannot be null or undefined and it must be of type string.');
+    }
+    if (params === null || params === undefined) {
+      throw new Error('params cannot be null or undefined.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -344,7 +675,21 @@ function _update(branch, ownerName, appName, options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (params !== null && params !== undefined) {
+      let requestModelMapper = new client.models['BranchConfiguration']().mapper();
+      requestModel = client.serialize(requestModelMapper, params, 'params');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(params, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -383,7 +728,7 @@ function _update(branch, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['BranchConfiguration']().mapper();
+          let resultMapper = new client.models['BranchConfigurationWithId']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -408,6 +753,8 @@ function _update(branch, ownerName, appName, options, callback) {
  * @param {string} appName The name of the application
  *
  * @param {object} [options] Optional Parameters.
+ *
+ * @param {object} [options.payload]
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -435,10 +782,14 @@ function _deleteMethod(branch, ownerName, appName, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let payload = (options && options.payload !== undefined) ? options.payload : undefined;
   // Validate
   try {
     if (branch === null || branch === undefined || typeof branch.valueOf() !== 'string') {
       throw new Error('branch cannot be null or undefined and it must be of type string.');
+    }
+    if (payload !== null && payload !== undefined && typeof payload !== 'object') {
+      throw new Error('payload must be of type object.');
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -471,7 +822,27 @@ function _deleteMethod(branch, ownerName, appName, options, callback) {
       }
     }
   }
-  httpRequest.body = null;
+  // Serialize Request
+  let requestContent = null;
+  let requestModel = null;
+  try {
+    if (payload !== null && payload !== undefined) {
+      let requestModelMapper = {
+        required: false,
+        serializedName: 'payload',
+        type: {
+          name: 'Object'
+        }
+      };
+      requestModel = client.serialize(requestModelMapper, payload, 'payload');
+      requestContent = JSON.stringify(requestModel);
+    }
+  } catch (error) {
+    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
+        `payload - ${JSON.stringify(payload, null, 2)}.`);
+    return callback(serializationError);
+  }
+  httpRequest.body = requestContent;
   // Send Request
   return client.pipeline(httpRequest, (err, response, responseBody) => {
     if (err) {
@@ -555,7 +926,7 @@ class BranchConfigurations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<BranchConfiguration>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<BranchConfigurationWithId>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -594,7 +965,7 @@ class BranchConfigurations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {BranchConfiguration} - The deserialized result object.
+   *                      @resolve {BranchConfigurationWithId} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -603,7 +974,8 @@ class BranchConfigurations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link BranchConfiguration} for more information.
+   *                      See {@link BranchConfigurationWithId} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -634,6 +1006,160 @@ class BranchConfigurations {
    *
    * @param {string} branch The branch name
    *
+   * @param {object} params Parameters of the configuration
+   *
+   * @param {string} [params.trigger] Possible values include: 'continous',
+   * 'continuous', 'manual'
+   *
+   * @param {boolean} [params.testsEnabled]
+   *
+   * @param {boolean} [params.badgeIsEnabled]
+   *
+   * @param {boolean} [params.signed]
+   *
+   * @param {string} [params.cloneFromBranch] A configured branch name to clone
+   * from. If provided, all other parameters will be ignored. Only supported in
+   * POST requests.
+   *
+   * @param {object} [params.toolsets]
+   *
+   * @param {object} [params.toolsets.xcode]
+   *
+   * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
+   * project/workspace path
+   *
+   * @param {string} [params.toolsets.xcode.podfilePath] Path to CococaPods file,
+   * if present
+   *
+   * @param {string} [params.toolsets.xcode.cartfilePath] Path to Carthage file,
+   * if present
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileEncoded]
+   *
+   * @param {string} [params.toolsets.xcode.certificateEncoded]
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileFileId]
+   *
+   * @param {string} [params.toolsets.xcode.certificateFileId]
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileUploadId]
+   *
+   * @param {array} [params.toolsets.xcode.appExtensionProvisioningProfileFiles]
+   *
+   * @param {string} [params.toolsets.xcode.certificateUploadId]
+   *
+   * @param {string} [params.toolsets.xcode.certificatePassword]
+   *
+   * @param {string} [params.toolsets.xcode.scheme]
+   *
+   * @param {string} [params.toolsets.xcode.xcodeVersion] Xcode version used to
+   * build. Available versions can be found in "/xcode_versions" API. Default is
+   * latest stable version, at the time when the configuration is set.
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileFilename]
+   *
+   * @param {string} [params.toolsets.xcode.certificateFilename]
+   *
+   * @param {string} [params.toolsets.xcode.teamId]
+   *
+   * @param {boolean} [params.toolsets.xcode.automaticSigning]
+   *
+   * @param {string} [params.toolsets.xcode.xcodeProjectSha] The selected
+   * pbxproject hash to the repositroy
+   *
+   * @param {string} [params.toolsets.xcode.archiveConfiguration] The build
+   * configuration of the target to archive
+   *
+   * @param {string} [params.toolsets.xcode.targetToArchive] The target id of the
+   * selected scheme to archive
+   *
+   * @param {boolean} [params.toolsets.xcode.forceLegacyBuildSystem] Setting this
+   * to true forces the build to use Xcode legacy build system. Otherwise, the
+   * setting from workspace settings is used.
+   * By default new build system is used if workspace setting is not committed to
+   * the repository. Only used for iOS React Native app, with Xcode 10.
+   *
+   *
+   * @param {object} [params.toolsets.javascript]
+   *
+   * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
+   * package.json file for the main project, e.g. "package.json" or
+   * "myapp/package.json"
+   *
+   * @param {boolean} [params.toolsets.javascript.runTests] Whether to run Jest
+   * unit tests, via npm test, during the build
+   *
+   * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
+   * React Native from package.json files
+   *
+   * @param {object} [params.toolsets.xamarin]
+   *
+   * @param {string} [params.toolsets.xamarin.slnPath]
+   *
+   * @param {boolean} [params.toolsets.xamarin.isSimBuild]
+   *
+   * @param {string} [params.toolsets.xamarin.args]
+   *
+   * @param {string} [params.toolsets.xamarin.configuration]
+   *
+   * @param {string} [params.toolsets.xamarin.p12File]
+   *
+   * @param {string} [params.toolsets.xamarin.p12Pwd]
+   *
+   * @param {string} [params.toolsets.xamarin.provProfile]
+   *
+   * @param {string} [params.toolsets.xamarin.monoVersion]
+   *
+   * @param {string} [params.toolsets.xamarin.sdkBundle]
+   *
+   * @param {string} [params.toolsets.xamarin.symlink] Symlink of the SDK Bundle
+   * and Mono installation.
+   * The build will use the associated Mono bundled with related Xamarin SDK. If
+   * both symlink and monoVersion or sdkBundle are passed, the symlink is taking
+   * precedence. If non-existing symlink is passed, the current stable Mono
+   * version will be configured for building.
+   *
+   *
+   * @param {object} [params.toolsets.android]
+   *
+   * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
+   * Gradle wrapper script
+   *
+   * @param {string} [params.toolsets.android.module] The Gradle module to build
+   *
+   * @param {string} [params.toolsets.android.buildVariant] The Android build
+   * variant to build
+   *
+   * @param {boolean} [params.toolsets.android.runTests] Whether to run unit
+   * tests during the build (default)
+   *
+   * @param {boolean} [params.toolsets.android.runLint] Whether to run lint
+   * checks during the build (default)
+   *
+   * @param {boolean} [params.toolsets.android.isRoot] Whether it is the root
+   * module or not
+   *
+   * @param {boolean} [params.toolsets.android.automaticSigning] Whether to apply
+   * automatic signing or not
+   *
+   * @param {string} [params.toolsets.android.keystorePassword] The password of
+   * the keystore
+   *
+   * @param {string} [params.toolsets.android.keyAlias] The key alias
+   *
+   * @param {string} [params.toolsets.android.keyPassword] The key password
+   *
+   * @param {string} [params.toolsets.android.keystoreFilename] The name of the
+   * keystore file
+   *
+   * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
+   * encoded value
+   *
+   * @param {object} [params.artifactVersioning]
+   *
+   * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
+   * values include: 'buildId', 'timestamp'
+   *
    * @param {string} ownerName The name of the owner
    *
    * @param {string} appName The name of the application
@@ -645,15 +1171,15 @@ class BranchConfigurations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<BranchConfiguration>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<BranchConfigurationWithId>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
-  createWithHttpOperationResponse(branch, ownerName, appName, options) {
+  createWithHttpOperationResponse(branch, params, ownerName, appName, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._create(branch, ownerName, appName, options, (err, result, request, response) => {
+      self._create(branch, params, ownerName, appName, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -668,6 +1194,160 @@ class BranchConfigurations {
    *
    * @param {string} branch The branch name
    *
+   * @param {object} params Parameters of the configuration
+   *
+   * @param {string} [params.trigger] Possible values include: 'continous',
+   * 'continuous', 'manual'
+   *
+   * @param {boolean} [params.testsEnabled]
+   *
+   * @param {boolean} [params.badgeIsEnabled]
+   *
+   * @param {boolean} [params.signed]
+   *
+   * @param {string} [params.cloneFromBranch] A configured branch name to clone
+   * from. If provided, all other parameters will be ignored. Only supported in
+   * POST requests.
+   *
+   * @param {object} [params.toolsets]
+   *
+   * @param {object} [params.toolsets.xcode]
+   *
+   * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
+   * project/workspace path
+   *
+   * @param {string} [params.toolsets.xcode.podfilePath] Path to CococaPods file,
+   * if present
+   *
+   * @param {string} [params.toolsets.xcode.cartfilePath] Path to Carthage file,
+   * if present
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileEncoded]
+   *
+   * @param {string} [params.toolsets.xcode.certificateEncoded]
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileFileId]
+   *
+   * @param {string} [params.toolsets.xcode.certificateFileId]
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileUploadId]
+   *
+   * @param {array} [params.toolsets.xcode.appExtensionProvisioningProfileFiles]
+   *
+   * @param {string} [params.toolsets.xcode.certificateUploadId]
+   *
+   * @param {string} [params.toolsets.xcode.certificatePassword]
+   *
+   * @param {string} [params.toolsets.xcode.scheme]
+   *
+   * @param {string} [params.toolsets.xcode.xcodeVersion] Xcode version used to
+   * build. Available versions can be found in "/xcode_versions" API. Default is
+   * latest stable version, at the time when the configuration is set.
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileFilename]
+   *
+   * @param {string} [params.toolsets.xcode.certificateFilename]
+   *
+   * @param {string} [params.toolsets.xcode.teamId]
+   *
+   * @param {boolean} [params.toolsets.xcode.automaticSigning]
+   *
+   * @param {string} [params.toolsets.xcode.xcodeProjectSha] The selected
+   * pbxproject hash to the repositroy
+   *
+   * @param {string} [params.toolsets.xcode.archiveConfiguration] The build
+   * configuration of the target to archive
+   *
+   * @param {string} [params.toolsets.xcode.targetToArchive] The target id of the
+   * selected scheme to archive
+   *
+   * @param {boolean} [params.toolsets.xcode.forceLegacyBuildSystem] Setting this
+   * to true forces the build to use Xcode legacy build system. Otherwise, the
+   * setting from workspace settings is used.
+   * By default new build system is used if workspace setting is not committed to
+   * the repository. Only used for iOS React Native app, with Xcode 10.
+   *
+   *
+   * @param {object} [params.toolsets.javascript]
+   *
+   * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
+   * package.json file for the main project, e.g. "package.json" or
+   * "myapp/package.json"
+   *
+   * @param {boolean} [params.toolsets.javascript.runTests] Whether to run Jest
+   * unit tests, via npm test, during the build
+   *
+   * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
+   * React Native from package.json files
+   *
+   * @param {object} [params.toolsets.xamarin]
+   *
+   * @param {string} [params.toolsets.xamarin.slnPath]
+   *
+   * @param {boolean} [params.toolsets.xamarin.isSimBuild]
+   *
+   * @param {string} [params.toolsets.xamarin.args]
+   *
+   * @param {string} [params.toolsets.xamarin.configuration]
+   *
+   * @param {string} [params.toolsets.xamarin.p12File]
+   *
+   * @param {string} [params.toolsets.xamarin.p12Pwd]
+   *
+   * @param {string} [params.toolsets.xamarin.provProfile]
+   *
+   * @param {string} [params.toolsets.xamarin.monoVersion]
+   *
+   * @param {string} [params.toolsets.xamarin.sdkBundle]
+   *
+   * @param {string} [params.toolsets.xamarin.symlink] Symlink of the SDK Bundle
+   * and Mono installation.
+   * The build will use the associated Mono bundled with related Xamarin SDK. If
+   * both symlink and monoVersion or sdkBundle are passed, the symlink is taking
+   * precedence. If non-existing symlink is passed, the current stable Mono
+   * version will be configured for building.
+   *
+   *
+   * @param {object} [params.toolsets.android]
+   *
+   * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
+   * Gradle wrapper script
+   *
+   * @param {string} [params.toolsets.android.module] The Gradle module to build
+   *
+   * @param {string} [params.toolsets.android.buildVariant] The Android build
+   * variant to build
+   *
+   * @param {boolean} [params.toolsets.android.runTests] Whether to run unit
+   * tests during the build (default)
+   *
+   * @param {boolean} [params.toolsets.android.runLint] Whether to run lint
+   * checks during the build (default)
+   *
+   * @param {boolean} [params.toolsets.android.isRoot] Whether it is the root
+   * module or not
+   *
+   * @param {boolean} [params.toolsets.android.automaticSigning] Whether to apply
+   * automatic signing or not
+   *
+   * @param {string} [params.toolsets.android.keystorePassword] The password of
+   * the keystore
+   *
+   * @param {string} [params.toolsets.android.keyAlias] The key alias
+   *
+   * @param {string} [params.toolsets.android.keyPassword] The key password
+   *
+   * @param {string} [params.toolsets.android.keystoreFilename] The name of the
+   * keystore file
+   *
+   * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
+   * encoded value
+   *
+   * @param {object} [params.artifactVersioning]
+   *
+   * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
+   * values include: 'buildId', 'timestamp'
+   *
    * @param {string} ownerName The name of the owner
    *
    * @param {string} appName The name of the application
@@ -684,7 +1364,7 @@ class BranchConfigurations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {BranchConfiguration} - The deserialized result object.
+   *                      @resolve {BranchConfigurationWithId} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -693,13 +1373,14 @@ class BranchConfigurations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link BranchConfiguration} for more information.
+   *                      See {@link BranchConfigurationWithId} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  create(branch, ownerName, appName, options, optionalCallback) {
+  create(branch, params, ownerName, appName, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -708,14 +1389,14 @@ class BranchConfigurations {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._create(branch, ownerName, appName, options, (err, result, request, response) => {
+        self._create(branch, params, ownerName, appName, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._create(branch, ownerName, appName, options, optionalCallback);
+      return self._create(branch, params, ownerName, appName, options, optionalCallback);
     }
   }
 
@@ -723,6 +1404,160 @@ class BranchConfigurations {
    * Reconfigures the branch for build
    *
    * @param {string} branch The branch name
+   *
+   * @param {object} params Parameters of the configuration
+   *
+   * @param {string} [params.trigger] Possible values include: 'continous',
+   * 'continuous', 'manual'
+   *
+   * @param {boolean} [params.testsEnabled]
+   *
+   * @param {boolean} [params.badgeIsEnabled]
+   *
+   * @param {boolean} [params.signed]
+   *
+   * @param {string} [params.cloneFromBranch] A configured branch name to clone
+   * from. If provided, all other parameters will be ignored. Only supported in
+   * POST requests.
+   *
+   * @param {object} [params.toolsets]
+   *
+   * @param {object} [params.toolsets.xcode]
+   *
+   * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
+   * project/workspace path
+   *
+   * @param {string} [params.toolsets.xcode.podfilePath] Path to CococaPods file,
+   * if present
+   *
+   * @param {string} [params.toolsets.xcode.cartfilePath] Path to Carthage file,
+   * if present
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileEncoded]
+   *
+   * @param {string} [params.toolsets.xcode.certificateEncoded]
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileFileId]
+   *
+   * @param {string} [params.toolsets.xcode.certificateFileId]
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileUploadId]
+   *
+   * @param {array} [params.toolsets.xcode.appExtensionProvisioningProfileFiles]
+   *
+   * @param {string} [params.toolsets.xcode.certificateUploadId]
+   *
+   * @param {string} [params.toolsets.xcode.certificatePassword]
+   *
+   * @param {string} [params.toolsets.xcode.scheme]
+   *
+   * @param {string} [params.toolsets.xcode.xcodeVersion] Xcode version used to
+   * build. Available versions can be found in "/xcode_versions" API. Default is
+   * latest stable version, at the time when the configuration is set.
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileFilename]
+   *
+   * @param {string} [params.toolsets.xcode.certificateFilename]
+   *
+   * @param {string} [params.toolsets.xcode.teamId]
+   *
+   * @param {boolean} [params.toolsets.xcode.automaticSigning]
+   *
+   * @param {string} [params.toolsets.xcode.xcodeProjectSha] The selected
+   * pbxproject hash to the repositroy
+   *
+   * @param {string} [params.toolsets.xcode.archiveConfiguration] The build
+   * configuration of the target to archive
+   *
+   * @param {string} [params.toolsets.xcode.targetToArchive] The target id of the
+   * selected scheme to archive
+   *
+   * @param {boolean} [params.toolsets.xcode.forceLegacyBuildSystem] Setting this
+   * to true forces the build to use Xcode legacy build system. Otherwise, the
+   * setting from workspace settings is used.
+   * By default new build system is used if workspace setting is not committed to
+   * the repository. Only used for iOS React Native app, with Xcode 10.
+   *
+   *
+   * @param {object} [params.toolsets.javascript]
+   *
+   * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
+   * package.json file for the main project, e.g. "package.json" or
+   * "myapp/package.json"
+   *
+   * @param {boolean} [params.toolsets.javascript.runTests] Whether to run Jest
+   * unit tests, via npm test, during the build
+   *
+   * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
+   * React Native from package.json files
+   *
+   * @param {object} [params.toolsets.xamarin]
+   *
+   * @param {string} [params.toolsets.xamarin.slnPath]
+   *
+   * @param {boolean} [params.toolsets.xamarin.isSimBuild]
+   *
+   * @param {string} [params.toolsets.xamarin.args]
+   *
+   * @param {string} [params.toolsets.xamarin.configuration]
+   *
+   * @param {string} [params.toolsets.xamarin.p12File]
+   *
+   * @param {string} [params.toolsets.xamarin.p12Pwd]
+   *
+   * @param {string} [params.toolsets.xamarin.provProfile]
+   *
+   * @param {string} [params.toolsets.xamarin.monoVersion]
+   *
+   * @param {string} [params.toolsets.xamarin.sdkBundle]
+   *
+   * @param {string} [params.toolsets.xamarin.symlink] Symlink of the SDK Bundle
+   * and Mono installation.
+   * The build will use the associated Mono bundled with related Xamarin SDK. If
+   * both symlink and monoVersion or sdkBundle are passed, the symlink is taking
+   * precedence. If non-existing symlink is passed, the current stable Mono
+   * version will be configured for building.
+   *
+   *
+   * @param {object} [params.toolsets.android]
+   *
+   * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
+   * Gradle wrapper script
+   *
+   * @param {string} [params.toolsets.android.module] The Gradle module to build
+   *
+   * @param {string} [params.toolsets.android.buildVariant] The Android build
+   * variant to build
+   *
+   * @param {boolean} [params.toolsets.android.runTests] Whether to run unit
+   * tests during the build (default)
+   *
+   * @param {boolean} [params.toolsets.android.runLint] Whether to run lint
+   * checks during the build (default)
+   *
+   * @param {boolean} [params.toolsets.android.isRoot] Whether it is the root
+   * module or not
+   *
+   * @param {boolean} [params.toolsets.android.automaticSigning] Whether to apply
+   * automatic signing or not
+   *
+   * @param {string} [params.toolsets.android.keystorePassword] The password of
+   * the keystore
+   *
+   * @param {string} [params.toolsets.android.keyAlias] The key alias
+   *
+   * @param {string} [params.toolsets.android.keyPassword] The key password
+   *
+   * @param {string} [params.toolsets.android.keystoreFilename] The name of the
+   * keystore file
+   *
+   * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
+   * encoded value
+   *
+   * @param {object} [params.artifactVersioning]
+   *
+   * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
+   * values include: 'buildId', 'timestamp'
    *
    * @param {string} ownerName The name of the owner
    *
@@ -735,15 +1570,15 @@ class BranchConfigurations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<BranchConfiguration>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<BranchConfigurationWithId>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
-  updateWithHttpOperationResponse(branch, ownerName, appName, options) {
+  updateWithHttpOperationResponse(branch, params, ownerName, appName, options) {
     let client = this.client;
     let self = this;
     return new Promise((resolve, reject) => {
-      self._update(branch, ownerName, appName, options, (err, result, request, response) => {
+      self._update(branch, params, ownerName, appName, options, (err, result, request, response) => {
         let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
         httpOperationResponse.body = result;
         if (err) { reject(err); }
@@ -758,6 +1593,160 @@ class BranchConfigurations {
    *
    * @param {string} branch The branch name
    *
+   * @param {object} params Parameters of the configuration
+   *
+   * @param {string} [params.trigger] Possible values include: 'continous',
+   * 'continuous', 'manual'
+   *
+   * @param {boolean} [params.testsEnabled]
+   *
+   * @param {boolean} [params.badgeIsEnabled]
+   *
+   * @param {boolean} [params.signed]
+   *
+   * @param {string} [params.cloneFromBranch] A configured branch name to clone
+   * from. If provided, all other parameters will be ignored. Only supported in
+   * POST requests.
+   *
+   * @param {object} [params.toolsets]
+   *
+   * @param {object} [params.toolsets.xcode]
+   *
+   * @param {string} [params.toolsets.xcode.projectOrWorkspacePath] Xcode
+   * project/workspace path
+   *
+   * @param {string} [params.toolsets.xcode.podfilePath] Path to CococaPods file,
+   * if present
+   *
+   * @param {string} [params.toolsets.xcode.cartfilePath] Path to Carthage file,
+   * if present
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileEncoded]
+   *
+   * @param {string} [params.toolsets.xcode.certificateEncoded]
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileFileId]
+   *
+   * @param {string} [params.toolsets.xcode.certificateFileId]
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileUploadId]
+   *
+   * @param {array} [params.toolsets.xcode.appExtensionProvisioningProfileFiles]
+   *
+   * @param {string} [params.toolsets.xcode.certificateUploadId]
+   *
+   * @param {string} [params.toolsets.xcode.certificatePassword]
+   *
+   * @param {string} [params.toolsets.xcode.scheme]
+   *
+   * @param {string} [params.toolsets.xcode.xcodeVersion] Xcode version used to
+   * build. Available versions can be found in "/xcode_versions" API. Default is
+   * latest stable version, at the time when the configuration is set.
+   *
+   * @param {string} [params.toolsets.xcode.provisioningProfileFilename]
+   *
+   * @param {string} [params.toolsets.xcode.certificateFilename]
+   *
+   * @param {string} [params.toolsets.xcode.teamId]
+   *
+   * @param {boolean} [params.toolsets.xcode.automaticSigning]
+   *
+   * @param {string} [params.toolsets.xcode.xcodeProjectSha] The selected
+   * pbxproject hash to the repositroy
+   *
+   * @param {string} [params.toolsets.xcode.archiveConfiguration] The build
+   * configuration of the target to archive
+   *
+   * @param {string} [params.toolsets.xcode.targetToArchive] The target id of the
+   * selected scheme to archive
+   *
+   * @param {boolean} [params.toolsets.xcode.forceLegacyBuildSystem] Setting this
+   * to true forces the build to use Xcode legacy build system. Otherwise, the
+   * setting from workspace settings is used.
+   * By default new build system is used if workspace setting is not committed to
+   * the repository. Only used for iOS React Native app, with Xcode 10.
+   *
+   *
+   * @param {object} [params.toolsets.javascript]
+   *
+   * @param {string} [params.toolsets.javascript.packageJsonPath] Path to
+   * package.json file for the main project, e.g. "package.json" or
+   * "myapp/package.json"
+   *
+   * @param {boolean} [params.toolsets.javascript.runTests] Whether to run Jest
+   * unit tests, via npm test, during the build
+   *
+   * @param {string} [params.toolsets.javascript.reactNativeVersion] Version of
+   * React Native from package.json files
+   *
+   * @param {object} [params.toolsets.xamarin]
+   *
+   * @param {string} [params.toolsets.xamarin.slnPath]
+   *
+   * @param {boolean} [params.toolsets.xamarin.isSimBuild]
+   *
+   * @param {string} [params.toolsets.xamarin.args]
+   *
+   * @param {string} [params.toolsets.xamarin.configuration]
+   *
+   * @param {string} [params.toolsets.xamarin.p12File]
+   *
+   * @param {string} [params.toolsets.xamarin.p12Pwd]
+   *
+   * @param {string} [params.toolsets.xamarin.provProfile]
+   *
+   * @param {string} [params.toolsets.xamarin.monoVersion]
+   *
+   * @param {string} [params.toolsets.xamarin.sdkBundle]
+   *
+   * @param {string} [params.toolsets.xamarin.symlink] Symlink of the SDK Bundle
+   * and Mono installation.
+   * The build will use the associated Mono bundled with related Xamarin SDK. If
+   * both symlink and monoVersion or sdkBundle are passed, the symlink is taking
+   * precedence. If non-existing symlink is passed, the current stable Mono
+   * version will be configured for building.
+   *
+   *
+   * @param {object} [params.toolsets.android]
+   *
+   * @param {string} [params.toolsets.android.gradleWrapperPath] Path to the
+   * Gradle wrapper script
+   *
+   * @param {string} [params.toolsets.android.module] The Gradle module to build
+   *
+   * @param {string} [params.toolsets.android.buildVariant] The Android build
+   * variant to build
+   *
+   * @param {boolean} [params.toolsets.android.runTests] Whether to run unit
+   * tests during the build (default)
+   *
+   * @param {boolean} [params.toolsets.android.runLint] Whether to run lint
+   * checks during the build (default)
+   *
+   * @param {boolean} [params.toolsets.android.isRoot] Whether it is the root
+   * module or not
+   *
+   * @param {boolean} [params.toolsets.android.automaticSigning] Whether to apply
+   * automatic signing or not
+   *
+   * @param {string} [params.toolsets.android.keystorePassword] The password of
+   * the keystore
+   *
+   * @param {string} [params.toolsets.android.keyAlias] The key alias
+   *
+   * @param {string} [params.toolsets.android.keyPassword] The key password
+   *
+   * @param {string} [params.toolsets.android.keystoreFilename] The name of the
+   * keystore file
+   *
+   * @param {string} [params.toolsets.android.keystoreEncoded] The keystore
+   * encoded value
+   *
+   * @param {object} [params.artifactVersioning]
+   *
+   * @param {string} [params.artifactVersioning.buildNumberFormat] Possible
+   * values include: 'buildId', 'timestamp'
+   *
    * @param {string} ownerName The name of the owner
    *
    * @param {string} appName The name of the application
@@ -774,7 +1763,7 @@ class BranchConfigurations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {BranchConfiguration} - The deserialized result object.
+   *                      @resolve {BranchConfigurationWithId} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -783,13 +1772,14 @@ class BranchConfigurations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link BranchConfiguration} for more information.
+   *                      See {@link BranchConfigurationWithId} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
    *                      {stream} [response] - The HTTP Response stream if an error did not occur.
    */
-  update(branch, ownerName, appName, options, optionalCallback) {
+  update(branch, params, ownerName, appName, options, optionalCallback) {
     let client = this.client;
     let self = this;
     if (!optionalCallback && typeof options === 'function') {
@@ -798,14 +1788,14 @@ class BranchConfigurations {
     }
     if (!optionalCallback) {
       return new Promise((resolve, reject) => {
-        self._update(branch, ownerName, appName, options, (err, result, request, response) => {
+        self._update(branch, params, ownerName, appName, options, (err, result, request, response) => {
           if (err) { reject(err); }
           else { resolve(result); }
           return;
         });
       });
     } else {
-      return self._update(branch, ownerName, appName, options, optionalCallback);
+      return self._update(branch, params, ownerName, appName, options, optionalCallback);
     }
   }
 
@@ -819,6 +1809,8 @@ class BranchConfigurations {
    * @param {string} appName The name of the application
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.payload]
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -853,6 +1845,8 @@ class BranchConfigurations {
    * @param {string} appName The name of the application
    *
    * @param {object} [options] Optional Parameters.
+   *
+   * @param {object} [options.payload]
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request

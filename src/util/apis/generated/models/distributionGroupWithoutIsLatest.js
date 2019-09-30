@@ -16,7 +16,7 @@
 class DistributionGroupWithoutIsLatest {
   /**
    * Create a DistributionGroupWithoutIsLatest.
-   * @property {string} [id] ID identifying a unique distribution group.
+   * @property {string} id ID identifying a unique distribution group.
    * @property {string} [name] A name identifying a unique distribution group.
    */
   constructor() {
@@ -37,7 +37,7 @@ class DistributionGroupWithoutIsLatest {
         className: 'DistributionGroupWithoutIsLatest',
         modelProperties: {
           id: {
-            required: false,
+            required: true,
             serializedName: 'id',
             type: {
               name: 'String'

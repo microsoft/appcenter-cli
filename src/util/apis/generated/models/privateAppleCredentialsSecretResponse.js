@@ -38,7 +38,7 @@ class PrivateAppleCredentialsSecretResponse extends models['PrivateAppleSecretRe
   mapper() {
     return {
       required: false,
-      serializedName: 'PrivateAppleCredentialsSecretResponse',
+      serializedName: 'certificate',
       type: {
         name: 'Composite',
         polymorphicDiscriminator: {

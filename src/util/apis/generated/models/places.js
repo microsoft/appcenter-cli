@@ -11,7 +11,7 @@
 'use strict';
 
 /**
- * Places and count during the time range in descending order
+ * Places and count during the time range in descending order.
  *
  */
 class Places {

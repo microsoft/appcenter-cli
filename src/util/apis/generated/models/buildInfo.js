@@ -17,7 +17,7 @@
 class BuildInfo {
   /**
    * Create a BuildInfo.
-   * @property {string} [branch] The branch name of the build producing the
+   * @property {string} [branchName] The branch name of the build producing the
    * release
    * @property {string} [commitHash] The commit hash of the build producing the
    * release
@@ -41,9 +41,9 @@ class BuildInfo {
         name: 'Composite',
         className: 'BuildInfo',
         modelProperties: {
-          branch: {
+          branchName: {
             required: false,
-            serializedName: 'branch',
+            serializedName: 'branch_name',
             type: {
               name: 'String'
             }

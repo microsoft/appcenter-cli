@@ -16,9 +16,12 @@
 class AuthApplicationPatchRequest {
   /**
    * Create a AuthApplicationPatchRequest.
-   * @property {string} policyId
-   * @property {uuid} scopeId
-   * @property {string} scopeUrl
+   * @property {string} [policyId]
+   * @property {uuid} [scopeId]
+   * @property {string} [scopeUrl]
+   * @property {string} [id]
+   * @property {string} [provider] Possible values include: 'AADB2C', 'Auth0',
+   * 'Firebase', 'AAD'
    */
   constructor() {
   }
@@ -38,22 +41,36 @@ class AuthApplicationPatchRequest {
         className: 'AuthApplicationPatchRequest',
         modelProperties: {
           policyId: {
-            required: true,
+            required: false,
             serializedName: 'policyId',
             type: {
               name: 'String'
             }
           },
           scopeId: {
-            required: true,
+            required: false,
             serializedName: 'scopeId',
             type: {
               name: 'String'
             }
           },
           scopeUrl: {
-            required: true,
+            required: false,
             serializedName: 'scopeUrl',
+            type: {
+              name: 'String'
+            }
+          },
+          id: {
+            required: false,
+            serializedName: 'id',
+            type: {
+              name: 'String'
+            }
+          },
+          provider: {
+            required: false,
+            serializedName: 'provider',
             type: {
               name: 'String'
             }

@@ -31,7 +31,9 @@ class BranchConfigurationToolsets {
    * @property {string} [xcode.certificateUploadId]
    * @property {string} [xcode.certificatePassword]
    * @property {string} [xcode.scheme]
-   * @property {string} [xcode.xcodeVersion]
+   * @property {string} [xcode.xcodeVersion] Xcode version used to build.
+   * Available versions can be found in "/xcode_versions" API. Default is
+   * latest stable version, at the time when the configuration is set.
    * @property {string} [xcode.provisioningProfileFilename]
    * @property {string} [xcode.certificateFilename]
    * @property {string} [xcode.teamId]
@@ -42,6 +44,11 @@ class BranchConfigurationToolsets {
    * the target to archive
    * @property {string} [xcode.targetToArchive] The target id of the selected
    * scheme to archive
+   * @property {boolean} [xcode.forceLegacyBuildSystem] Setting this to true
+   * forces the build to use Xcode legacy build system. Otherwise, the setting
+   * from workspace settings is used.
+   * By default new build system is used if workspace setting is not committed
+   * to the repository. Only used for iOS React Native app, with Xcode 10.
    * @property {object} [javascript]
    * @property {string} [javascript.packageJsonPath] Path to package.json file
    * for the main project, e.g. "package.json" or "myapp/package.json"
@@ -51,7 +58,7 @@ class BranchConfigurationToolsets {
    * from package.json files
    * @property {object} [xamarin]
    * @property {string} [xamarin.slnPath]
-   * @property {string} [xamarin.isSimBuild]
+   * @property {boolean} [xamarin.isSimBuild]
    * @property {string} [xamarin.args]
    * @property {string} [xamarin.configuration]
    * @property {string} [xamarin.p12File]

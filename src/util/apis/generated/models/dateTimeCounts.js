@@ -16,8 +16,8 @@
 class DateTimeCounts {
   /**
    * Create a DateTimeCounts.
-   * @property {string} [datetime] the ISO 8601 datetime
-   * @property {number} [count] count of the object
+   * @property {string} [datetime] The ISO 8601 datetime.
+   * @property {number} [count] Count of the object.
    */
   constructor() {
   }

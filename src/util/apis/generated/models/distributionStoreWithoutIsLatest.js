@@ -16,11 +16,11 @@
 class DistributionStoreWithoutIsLatest {
   /**
    * Create a DistributionStoreWithoutIsLatest.
-   * @property {string} [id] ID identifying a unique distribution store.
+   * @property {string} id ID identifying a unique distribution store.
    * @property {string} [name] A name identifying a unique distribution store.
    * @property {string} [type] type of the distribution store currently stores
    * type can be intune, googleplay or windows. Possible values include:
-   * 'intune', 'googleplay', 'windows'
+   * 'intune', 'googleplay', 'apple', 'none'
    * @property {string} [publishingStatus] publishing status of the release in
    * the store.
    */
@@ -42,7 +42,7 @@ class DistributionStoreWithoutIsLatest {
         className: 'DistributionStoreWithoutIsLatest',
         modelProperties: {
           id: {
-            required: false,
+            required: true,
             serializedName: 'id',
             type: {
               name: 'String'

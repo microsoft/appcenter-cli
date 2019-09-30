@@ -1082,6 +1082,8 @@ function _getRetentionSettings(ownerName, appName, options, callback) {
  *
  * @param {array} [options.versions]
  *
+ * @param {string} [options.appBuild] app build
+ *
  * @param {string} [options.errorType] Type of error (handled vs unhandled),
  * excluding All. Possible values include: 'unhandledError', 'handledError'
  *
@@ -1114,6 +1116,7 @@ function _errorFreeDevicePercentagesMethod(start, ownerName, appName, options, c
   }
   let end = (options && options.end !== undefined) ? options.end : undefined;
   let versions = (options && options.versions !== undefined) ? options.versions : undefined;
+  let appBuild = (options && options.appBuild !== undefined) ? options.appBuild : undefined;
   let errorType = (options && options.errorType !== undefined) ? options.errorType : undefined;
   // Validate
   try {
@@ -1131,6 +1134,9 @@ function _errorFreeDevicePercentagesMethod(start, ownerName, appName, options, c
           throw new Error('versions[i] must be of type string.');
         }
       }
+    }
+    if (appBuild !== null && appBuild !== undefined && typeof appBuild.valueOf() !== 'string') {
+      throw new Error('appBuild must be of type string.');
     }
     if (errorType !== null && errorType !== undefined && typeof errorType.valueOf() !== 'string') {
       throw new Error('errorType must be of type string.');
@@ -1157,6 +1163,9 @@ function _errorFreeDevicePercentagesMethod(start, ownerName, appName, options, c
   }
   if (versions !== null && versions !== undefined) {
     queryParameters.push('versions=' + encodeURIComponent(versions.join('|')));
+  }
+  if (appBuild !== null && appBuild !== undefined) {
+    queryParameters.push('app_build=' + encodeURIComponent(appBuild));
   }
   if (errorType !== null && errorType !== undefined) {
     queryParameters.push('errorType=' + encodeURIComponent(errorType));
@@ -3494,6 +3503,8 @@ function _errorGroupsSearch(ownerName, appName, options, callback) {
  *
  * @param {string} [options.version]
  *
+ * @param {string} [options.appBuild] app build
+ *
  * @param {string} [options.groupState]
  *
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
@@ -3536,6 +3547,7 @@ function _groupList(start, ownerName, appName, options, callback) {
     throw new Error('callback cannot be null.');
   }
   let version = (options && options.version !== undefined) ? options.version : undefined;
+  let appBuild = (options && options.appBuild !== undefined) ? options.appBuild : undefined;
   let groupState = (options && options.groupState !== undefined) ? options.groupState : undefined;
   let end = (options && options.end !== undefined) ? options.end : undefined;
   let orderby = (options && options.orderby !== undefined) ? options.orderby : 'count desc';
@@ -3545,6 +3557,9 @@ function _groupList(start, ownerName, appName, options, callback) {
   try {
     if (version !== null && version !== undefined && typeof version.valueOf() !== 'string') {
       throw new Error('version must be of type string.');
+    }
+    if (appBuild !== null && appBuild !== undefined && typeof appBuild.valueOf() !== 'string') {
+      throw new Error('appBuild must be of type string.');
     }
     if (groupState !== null && groupState !== undefined && typeof groupState.valueOf() !== 'string') {
       throw new Error('groupState must be of type string.');
@@ -3594,6 +3609,9 @@ function _groupList(start, ownerName, appName, options, callback) {
   let queryParameters = [];
   if (version !== null && version !== undefined) {
     queryParameters.push('version=' + encodeURIComponent(version));
+  }
+  if (appBuild !== null && appBuild !== undefined) {
+    queryParameters.push('app_build=' + encodeURIComponent(appBuild));
   }
   if (groupState !== null && groupState !== undefined) {
     queryParameters.push('groupState=' + encodeURIComponent(groupState));
@@ -3705,6 +3723,8 @@ function _groupList(start, ownerName, appName, options, callback) {
  * @param {date} [options.end] Last date time in data in ISO 8601 date time
  * format
  *
+ * @param {string} [options.appBuild] app build
+ *
  * @param {string} [options.errorType] Type of error (handled vs unhandled),
  * excluding All. Possible values include: 'unhandledError', 'handledError'
  *
@@ -3736,6 +3756,7 @@ function _countsPerDay(start, ownerName, appName, options, callback) {
   }
   let version = (options && options.version !== undefined) ? options.version : undefined;
   let end = (options && options.end !== undefined) ? options.end : undefined;
+  let appBuild = (options && options.appBuild !== undefined) ? options.appBuild : undefined;
   let errorType = (options && options.errorType !== undefined) ? options.errorType : undefined;
   // Validate
   try {
@@ -3750,6 +3771,9 @@ function _countsPerDay(start, ownerName, appName, options, callback) {
         (typeof end.valueOf() === 'string' && !isNaN(Date.parse(end))))) {
           throw new Error('end must be of type date.');
         }
+    if (appBuild !== null && appBuild !== undefined && typeof appBuild.valueOf() !== 'string') {
+      throw new Error('appBuild must be of type string.');
+    }
     if (errorType !== null && errorType !== undefined && typeof errorType.valueOf() !== 'string') {
       throw new Error('errorType must be of type string.');
     }
@@ -3775,6 +3799,9 @@ function _countsPerDay(start, ownerName, appName, options, callback) {
   queryParameters.push('start=' + encodeURIComponent(client.serializeObject(start)));
   if (end !== null && end !== undefined) {
     queryParameters.push('end=' + encodeURIComponent(client.serializeObject(end)));
+  }
+  if (appBuild !== null && appBuild !== undefined) {
+    queryParameters.push('app_build=' + encodeURIComponent(appBuild));
   }
   if (errorType !== null && errorType !== undefined) {
     queryParameters.push('errorType=' + encodeURIComponent(errorType));
@@ -4808,6 +4835,8 @@ class Errors {
    *
    * @param {array} [options.versions]
    *
+   * @param {string} [options.appBuild] app build
+   *
    * @param {string} [options.errorType] Type of error (handled vs unhandled),
    * excluding All. Possible values include: 'unhandledError', 'handledError'
    *
@@ -4852,6 +4881,8 @@ class Errors {
    * format
    *
    * @param {array} [options.versions]
+   *
+   * @param {string} [options.appBuild] app build
    *
    * @param {string} [options.errorType] Type of error (handled vs unhandled),
    * excluding All. Possible values include: 'unhandledError', 'handledError'
@@ -6393,6 +6424,8 @@ class Errors {
    *
    * @param {string} [options.version]
    *
+   * @param {string} [options.appBuild] app build
+   *
    * @param {string} [options.groupState]
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
@@ -6443,6 +6476,8 @@ class Errors {
    * @param {object} [options] Optional Parameters.
    *
    * @param {string} [options.version]
+   *
+   * @param {string} [options.appBuild] app build
    *
    * @param {string} [options.groupState]
    *
@@ -6522,6 +6557,8 @@ class Errors {
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
    * format
    *
+   * @param {string} [options.appBuild] app build
+   *
    * @param {string} [options.errorType] Type of error (handled vs unhandled),
    * excluding All. Possible values include: 'unhandledError', 'handledError'
    *
@@ -6565,6 +6602,8 @@ class Errors {
    *
    * @param {date} [options.end] Last date time in data in ISO 8601 date time
    * format
+   *
+   * @param {string} [options.appBuild] app build
    *
    * @param {string} [options.errorType] Type of error (handled vs unhandled),
    * excluding All. Possible values include: 'unhandledError', 'handledError'

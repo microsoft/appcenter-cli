@@ -17,13 +17,13 @@
 class XamarinBranchConfigurationProperties {
   /**
    * Create a XamarinBranchConfigurationProperties.
-   * @property {string} slnPath
-   * @property {string} isSimBuild
-   * @property {string} args
-   * @property {string} configuration
-   * @property {string} p12File
-   * @property {string} p12Pwd
-   * @property {string} provProfile
+   * @property {string} [slnPath]
+   * @property {boolean} [isSimBuild]
+   * @property {string} [args]
+   * @property {string} [configuration]
+   * @property {string} [p12File]
+   * @property {string} [p12Pwd]
+   * @property {string} [provProfile]
    * @property {string} [monoVersion]
    * @property {string} [sdkBundle]
    * @property {string} [symlink] Symlink of the SDK Bundle and Mono
@@ -51,49 +51,49 @@ class XamarinBranchConfigurationProperties {
         className: 'XamarinBranchConfigurationProperties',
         modelProperties: {
           slnPath: {
-            required: true,
+            required: false,
             serializedName: 'slnPath',
             type: {
               name: 'String'
             }
           },
           isSimBuild: {
-            required: true,
+            required: false,
             serializedName: 'isSimBuild',
             type: {
-              name: 'String'
+              name: 'Boolean'
             }
           },
           args: {
-            required: true,
+            required: false,
             serializedName: 'args',
             type: {
               name: 'String'
             }
           },
           configuration: {
-            required: true,
+            required: false,
             serializedName: 'configuration',
             type: {
               name: 'String'
             }
           },
           p12File: {
-            required: true,
+            required: false,
             serializedName: 'p12File',
             type: {
               name: 'String'
             }
           },
           p12Pwd: {
-            required: true,
+            required: false,
             serializedName: 'p12Pwd',
             type: {
               name: 'String'
             }
           },
           provProfile: {
-            required: true,
+            required: false,
             serializedName: 'provProfile',
             type: {
               name: 'String'

@@ -17,7 +17,7 @@ const WebResource = msRest.WebResource;
  * Gets the repositories available from the source code host
  *
  * @param {string} sourceHost The source host. Possible values include:
- * 'github', 'bitbucket', 'vsts'
+ * 'github', 'bitbucket', 'vsts', 'gitlab'
  *
  * @param {string} ownerName The name of the owner
  *
@@ -30,6 +30,9 @@ const WebResource = msRest.WebResource;
  *
  * @param {string} [options.vstsProjectId] Filter repositories only for
  * specified account and project, "vstsAccountName" is required
+ *
+ * @param {string} [options.serviceConnectionId] The id of the service
+ * connection (private). Required for GitLab self-hosted repositories
  *
  * @param {string} [options.form] The selected form of the object. Possible
  * values include: 'lite', 'full'
@@ -61,6 +64,7 @@ function _list(sourceHost, ownerName, appName, options, callback) {
   }
   let vstsAccountName = (options && options.vstsAccountName !== undefined) ? options.vstsAccountName : undefined;
   let vstsProjectId = (options && options.vstsProjectId !== undefined) ? options.vstsProjectId : undefined;
+  let serviceConnectionId = (options && options.serviceConnectionId !== undefined) ? options.serviceConnectionId : undefined;
   let form = (options && options.form !== undefined) ? options.form : undefined;
   // Validate
   try {
@@ -72,6 +76,9 @@ function _list(sourceHost, ownerName, appName, options, callback) {
     }
     if (vstsProjectId !== null && vstsProjectId !== undefined && typeof vstsProjectId.valueOf() !== 'string') {
       throw new Error('vstsProjectId must be of type string.');
+    }
+    if (serviceConnectionId !== null && serviceConnectionId !== undefined && typeof serviceConnectionId.valueOf() !== 'string') {
+      throw new Error('serviceConnectionId must be of type string.');
     }
     if (form !== null && form !== undefined && typeof form.valueOf() !== 'string') {
       throw new Error('form must be of type string.');
@@ -98,6 +105,9 @@ function _list(sourceHost, ownerName, appName, options, callback) {
   }
   if (vstsProjectId !== null && vstsProjectId !== undefined) {
     queryParameters.push('vstsProjectId=' + encodeURIComponent(vstsProjectId));
+  }
+  if (serviceConnectionId !== null && serviceConnectionId !== undefined) {
+    queryParameters.push('service_connection_id=' + encodeURIComponent(serviceConnectionId));
   }
   if (form !== null && form !== undefined) {
     queryParameters.push('form=' + encodeURIComponent(form));
@@ -207,7 +217,7 @@ class Repositories {
    * Gets the repositories available from the source code host
    *
    * @param {string} sourceHost The source host. Possible values include:
-   * 'github', 'bitbucket', 'vsts'
+   * 'github', 'bitbucket', 'vsts', 'gitlab'
    *
    * @param {string} ownerName The name of the owner
    *
@@ -220,6 +230,9 @@ class Repositories {
    *
    * @param {string} [options.vstsProjectId] Filter repositories only for
    * specified account and project, "vstsAccountName" is required
+   *
+   * @param {string} [options.serviceConnectionId] The id of the service
+   * connection (private). Required for GitLab self-hosted repositories
    *
    * @param {string} [options.form] The selected form of the object. Possible
    * values include: 'lite', 'full'
@@ -251,7 +264,7 @@ class Repositories {
    * Gets the repositories available from the source code host
    *
    * @param {string} sourceHost The source host. Possible values include:
-   * 'github', 'bitbucket', 'vsts'
+   * 'github', 'bitbucket', 'vsts', 'gitlab'
    *
    * @param {string} ownerName The name of the owner
    *
@@ -264,6 +277,9 @@ class Repositories {
    *
    * @param {string} [options.vstsProjectId] Filter repositories only for
    * specified account and project, "vstsAccountName" is required
+   *
+   * @param {string} [options.serviceConnectionId] The id of the service
+   * connection (private). Required for GitLab self-hosted repositories
    *
    * @param {string} [options.form] The selected form of the object. Possible
    * values include: 'lite', 'full'

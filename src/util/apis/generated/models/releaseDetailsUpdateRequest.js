@@ -21,8 +21,8 @@ class ReleaseDetailsUpdateRequest {
    * distribute/download or not.
    * @property {string} [releaseNotes] Release notes for this release.
    * @property {object} [build]
-   * @property {string} [build.branch] The branch name of the build producing
-   * the release
+   * @property {string} [build.branchName] The branch name of the build
+   * producing the release
    * @property {string} [build.commitHash] The commit hash of the build
    * producing the release
    * @property {string} [build.commitMessage] The commit message of the build

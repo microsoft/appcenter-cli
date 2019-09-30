@@ -18,11 +18,14 @@ class AppRepoPostRequest {
    * Create a AppRepoPostRequest.
    * @property {string} repoUrl The absolute URL of the repository
    * @property {string} [repoProvider] The provider of the repository. Possible
-   * values include: 'github', 'bitbucket', 'vsts'
+   * values include: 'github', 'bitbucket', 'vsts', 'gitlab'
    * @property {uuid} userId The unique id (UUID) of the user who configured
    * the repository
    * @property {string} [installationId] Installation id from the provider
    * @property {string} [repoId] Repository id from the provider
+   * @property {string} [externalUserId] The external user id from the provider
+   * @property {uuid} [serviceConnectionId] The id of the service connection
+   * stored in customer credential store
    */
   constructor() {
   }
@@ -72,6 +75,20 @@ class AppRepoPostRequest {
           repoId: {
             required: false,
             serializedName: 'repo_id',
+            type: {
+              name: 'String'
+            }
+          },
+          externalUserId: {
+            required: false,
+            serializedName: 'external_user_id',
+            type: {
+              name: 'String'
+            }
+          },
+          serviceConnectionId: {
+            required: false,
+            serializedName: 'service_connection_id',
             type: {
               name: 'String'
             }

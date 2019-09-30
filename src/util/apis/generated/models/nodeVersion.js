@@ -11,37 +11,44 @@
 'use strict';
 
 /**
- * This response contains the location of the resource URI for 201 or 202
- * responses.
+ * The Node version
  *
  */
-class LocationResponse {
+class NodeVersion {
   /**
-   * Create a LocationResponse.
-   * @property {string} [location]
+   * Create a NodeVersion.
+   * @property {string} [name] The version name
+   * @property {boolean} [current] If the Node version is default for AppCenter
    */
   constructor() {
   }
 
   /**
-   * Defines the metadata of LocationResponse
+   * Defines the metadata of NodeVersion
    *
-   * @returns {object} metadata of LocationResponse
+   * @returns {object} metadata of NodeVersion
    *
    */
   mapper() {
     return {
       required: false,
-      serializedName: 'LocationResponse',
+      serializedName: 'NodeVersion',
       type: {
         name: 'Composite',
-        className: 'LocationResponse',
+        className: 'NodeVersion',
         modelProperties: {
-          location: {
+          name: {
             required: false,
-            serializedName: 'location',
+            serializedName: 'name',
             type: {
               name: 'String'
+            }
+          },
+          current: {
+            required: false,
+            serializedName: 'current',
+            type: {
+              name: 'Boolean'
             }
           }
         }
@@ -50,4 +57,4 @@ class LocationResponse {
   }
 }
 
-module.exports = LocationResponse;
+module.exports = NodeVersion;

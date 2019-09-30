@@ -16,6 +16,8 @@ describe("releases show command", () => {
   const fakeAppIdentifier = `${fakeAppOwner}/${fakeAppName}`;
   const fakeToken = "c1o3d3e7";
   const fakeReleaseId = 1;
+  const fakeVersion = "1.0";
+  const fakeUploadAt = (new Date()).toISOString();
   /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const releaseUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`;
@@ -75,14 +77,26 @@ describe("releases show command", () => {
       id: fakeReleaseId,
       android_min_api_level: "5",
       app_name: fakeAppName,
-      destinations: apiDestinations
+      destinations: apiDestinations,
+      app_display_name: fakeAppName,
+      version: fakeVersion,
+      short_version: fakeVersion,
+      uploaded_at: fakeUploadAt,
+      app_icon_url: "icon_url",
+      enabled: true
     };
 
     const releaseDetails: ReleaseDetailsResponse = {
       id: apiReleaseDetails.id,
       androidMinApiLevel: apiReleaseDetails.android_min_api_level,
       appName: apiReleaseDetails.app_name,
-      destinations: destinations
+      destinations: destinations,
+      appDisplayName: apiReleaseDetails.app_display_name,
+      version: apiReleaseDetails.version,
+      shortVersion: apiReleaseDetails.short_version,
+      uploadedAt: apiReleaseDetails.uploaded_at,
+      appIconUrl: apiReleaseDetails.app_icon_url,
+      enabled: apiReleaseDetails.enabled
     };
 
     beforeEach(() => {

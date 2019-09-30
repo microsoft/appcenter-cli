@@ -13,7 +13,8 @@
 const models = require('./index');
 
 /**
- * Apple notification auth token configuration.
+ * Apple notification auth token configuration. The 'type' property must be set
+ * to 'apns_token_config'.
  *
  * @extends models['NotificationConfig']
  */
