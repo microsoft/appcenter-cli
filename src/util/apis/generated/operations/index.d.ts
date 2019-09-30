@@ -17749,6 +17749,88 @@ export interface Errors {
 
 /**
  * @class
+ * TextError
+ * __NOTE__: An instance of this class is automatically created for an
+ * instance of the AppCenterClient.
+ */
+export interface TextError {
+
+
+    /**
+     * @summary Uploads a text error to ingest
+     *
+     * Uploads a text error to ingest
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} log File with the crash log. Note - the maximum allowed file
+     * size is 200kB!
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.errorUserId] user account id
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @returns {Promise} A promise is returned
+     *
+     * @resolve {HttpOperationResponse<Failure>} - The deserialized result object.
+     *
+     * @reject {Error|ServiceError} - The error object.
+     */
+    uploadWithHttpOperationResponse(ownerName: string, log: string, appName: string, options?: { errorUserId? : string, customHeaders? : { [headerName: string]: string; } }): Promise<HttpOperationResponse<models.Failure>>;
+
+    /**
+     * @summary Uploads a text error to ingest
+     *
+     * Uploads a text error to ingest
+     *
+     * @param {string} ownerName The name of the owner
+     *
+     * @param {string} log File with the crash log. Note - the maximum allowed file
+     * size is 200kB!
+     *
+     * @param {string} appName The name of the application
+     *
+     * @param {object} [options] Optional Parameters.
+     *
+     * @param {string} [options.errorUserId] user account id
+     *
+     * @param {object} [options.customHeaders] Headers that will be added to the
+     * request
+     *
+     * @param {ServiceCallback} [optionalCallback] - The optional callback.
+     *
+     * @returns {ServiceCallback|Promise} If a callback was passed as the last
+     * parameter then it returns the callback else returns a Promise.
+     *
+     * {Promise} A promise is returned.
+     *
+     *                      @resolve {Failure} - The deserialized result object.
+     *
+     *                      @reject {Error|ServiceError} - The error object.
+     *
+     * {ServiceCallback} optionalCallback(err, result, request, response)
+     *
+     *                      {Error|ServiceError}  err        - The Error object if an error occurred, null otherwise.
+     *
+     *                      {Failure} [result]   - The deserialized result object if an error did not occur.
+     *                      See {@link Failure} for more information.
+     *
+     *                      {WebResource} [request]  - The HTTP Request object if an error did not occur.
+     *
+     *                      {http.IncomingMessage} [response] - The HTTP Response stream if an error did not occur.
+     */
+    upload(ownerName: string, log: string, appName: string, options?: { errorUserId? : string, customHeaders? : { [headerName: string]: string; } }): Promise<models.Failure>;
+    upload(ownerName: string, log: string, appName: string, callback: ServiceCallback<models.Failure>): void;
+    upload(ownerName: string, log: string, appName: string, options: { errorUserId? : string, customHeaders? : { [headerName: string]: string; } }, callback: ServiceCallback<models.Failure>): void;
+}
+
+/**
+ * @class
  * StoreReleases
  * __NOTE__: An instance of this class is automatically created for an
  * instance of the AppCenterClient.

@@ -83,6 +83,7 @@ class AppCenterClient extends ServiceClient {
     this.fileAssets = new operations.FileAssets(this);
     this.exportConfigurations = new operations.ExportConfigurations(this);
     this.errors = new operations.Errors(this);
+    this.textError = new operations.TextError(this);
     this.storeReleases = new operations.StoreReleases(this);
     this.storeReleasePublishLogs = new operations.StoreReleasePublishLogs(this);
     this.stores = new operations.Stores(this);

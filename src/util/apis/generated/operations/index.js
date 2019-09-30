@@ -47,6 +47,7 @@ exports.Push = require('./push');
 exports.FileAssets = require('./fileAssets');
 exports.ExportConfigurations = require('./exportConfigurations');
 exports.Errors = require('./errors');
+exports.TextError = require('./textError');
 exports.StoreReleases = require('./storeReleases');
 exports.StoreReleasePublishLogs = require('./storeReleasePublishLogs');
 exports.Stores = require('./stores');

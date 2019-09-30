@@ -70,6 +70,7 @@ export default class AppCenterClient extends ServiceClient {
   fileAssets: operations.FileAssets;
   exportConfigurations: operations.ExportConfigurations;
   errors: operations.Errors;
+  textError: operations.TextError;
   storeReleases: operations.StoreReleases;
   storeReleasePublishLogs: operations.StoreReleasePublishLogs;
   stores: operations.Stores;

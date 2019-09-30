@@ -13,7 +13,8 @@
 const models = require('./index');
 
 /**
- * WNS notification configuration.
+ * WNS notification configuration. The 'type' property must be set to
+ * 'wns_config'
  *
  * @extends models['NotificationConfig']
  */

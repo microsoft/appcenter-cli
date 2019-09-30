@@ -18,12 +18,13 @@ class AuthApplicationResponse {
    * Create a AuthApplicationResponse.
    * @property {string} id
    * @property {string} provider Possible values include: 'AADB2C', 'Auth0',
-   * 'Firebase'
+   * 'Firebase', 'AAD'
    * @property {uuid} [tenantId]
    * @property {string} [tenantName]
    * @property {string} [policyId]
    * @property {uuid} [scopeId]
    * @property {string} [scopeUrl]
+   * @property {string} [signInAudience]
    */
   constructor() {
   }
@@ -87,6 +88,13 @@ class AuthApplicationResponse {
           scopeUrl: {
             required: false,
             serializedName: 'scopeUrl',
+            type: {
+              name: 'String'
+            }
+          },
+          signInAudience: {
+            required: false,
+            serializedName: 'signInAudience',
             type: {
               name: 'String'
             }
