@@ -15,10 +15,6 @@
   "bin": {
     "appcenter": "./bin/appcenter.js"
   },
-  "pkg": {
-    "scripts": [ "dist/**/*.js", "bin/**/*.js" ],
-    "assets": [ "dist/**/*.txt" ]
-  },
   "preferGlobal": true,
   "scripts": {
     "build": "npm run tslint && gulp build:raw",
