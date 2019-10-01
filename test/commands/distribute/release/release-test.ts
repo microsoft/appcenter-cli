@@ -115,7 +115,8 @@ describe("release command", () => {
                 setupSuccessfulPatchUploadResponse(
                   setupSuccessfulCreateReleaseResponse(
                     setupSuccessfulAddStoreResponse(
-                      Nock(fakeHost)))))));
+                      Nock(fakeHost))
+                  , false)))));
         skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
     });
 
@@ -146,6 +147,19 @@ describe("release command", () => {
       testUploadedFormData();
     });
 
+    it("uploads release with neither release notes nor file to Google Play Store", async () => {
+      // Arrange
+      const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
+
+      // Act
+      const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-s", fakeStoreName]));
+      const result = await command.execute();
+      console.log(result);
+
+      // Assert
+      testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+      testUploadedFormData();
+    });
   });
 
   context("build-version", () => {
@@ -440,6 +454,24 @@ describe("release command", () => {
       const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath]));
       await expect(command.execute()).to.eventually.be.rejected;
     });
+
+    describe("when publishing to an 'apple' type store", () => {
+      beforeEach(() => {
+          expectedRequestsScope = setupSuccessfulGetStoreDetailsResponse(Nock(fakeHost), "apple");
+      });
+
+      it("fails if neither --release-notes nor --release-notes-file is specified", async () => {
+        // Arrange
+        const expectedErrorMessage = "At least one of '--release-notes' or '--release-notes-file' must be specified when publishing to an Apple store.";
+
+        // Act
+        const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-s", fakeStoreName]));
+        const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
+
+        // Assert
+        testFailure(result, expectedErrorMessage, expectedRequestsScope);
+      });
+    });
   });
 
   afterEach(() => {
@@ -572,14 +604,14 @@ describe("release command", () => {
     });
   }
 
-  function setupSuccessfulGetStoreDetailsResponse(nockScope: Nock.Scope): Nock.Scope {
+  function setupSuccessfulGetStoreDetailsResponse(nockScope: Nock.Scope, storeType: string = fakeStoreType): Nock.Scope {
     const getDistributionStoresUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_stores/${fakeStoreName}`;
 
     return nockScope.get(getDistributionStoresUrl)
     .reply(200, {
       id: fakeStoreId,
       name: fakeStoreName,
-      type: fakeStoreType,
+      type: storeType,
       track: fakeStoreTrack
     });
   }
