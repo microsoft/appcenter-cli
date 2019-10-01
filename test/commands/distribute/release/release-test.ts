@@ -13,7 +13,7 @@ import { CommandArgs, CommandResult, CommandFailedResult } from "../../../../src
 
 Temp.track();
 
-describe.only("release command", () => {
+describe("release command", () => {
   const fakeAppOwner = "fakeAppOwner";
   const fakeAppName = "fakeAppName";
   const fakeAppIdentifier = `${fakeAppOwner}/${fakeAppName}`;
