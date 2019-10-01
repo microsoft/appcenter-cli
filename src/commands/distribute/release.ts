@@ -57,11 +57,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
-    debug("Check that user hasn't selected both --release-notes and --release-notes-file");
     this.validateParameters();
 
     debug("Loading prerequisites");
     const [distributionGroupUsersCount, storeInformation, releaseBinaryFileBuffer, releaseNotesString] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
+
+    this.validateParametersWithPrerequisites(storeInformation);
 
     debug("Creating release upload");
     const createdReleaseUpload = await this.createReleaseUpload(client, app);
@@ -130,6 +131,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   }
 
   private validateParameters(): void {
+    debug("Checking for invalid parameter combinations");
     if (!_.isNil(this.releaseNotes) && !_.isNil(this.releaseNotesFile)) {
       throw failure(ErrorCodes.InvalidParameter, "'--release-notes' and '--release-notes-file' switches are mutually exclusive");
     }
@@ -141,6 +143,13 @@ export default class ReleaseBinaryCommand extends AppCommand {
       if ([".zip", ".msi"].includes(extension)) {
         throw failure(ErrorCodes.InvalidParameter, "--build-version parameter must be specified when uploading .zip or .msi file");
       }
+    }
+  }
+
+  private validateParametersWithPrerequisites(storeInformation: models.ExternalStoreResponse): void {
+    debug("Checking for invalid parameter combinations with prerequisites");
+    if (!_.isNil(this.storeName) && storeInformation.type === "apple" && _.isNil(this.releaseNotes) && _.isNil(this.releaseNotesFile)) {
+      throw failure(ErrorCodes.InvalidParameter, "At least one of '--release-notes' or '--release-notes-file' must be specified when publishing to an Apple store.");
     }
   }
 
