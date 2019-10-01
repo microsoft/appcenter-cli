@@ -1,14 +1,14 @@
-# Introduction
+# App Center Command Line Interface (CLI)
 
-Visual Studio App Center command line interface (cli) is a unified tool for running App Center services from the command line.
+Visual Studio App Center command line interface (CLI) is a unified tool for running App Center services from the command line.
 Our aim is to offer a concise and powerful tool for our developers to use App Center services and easily script a sequence of
 commands that they'd like to execute. You can currently login and view/configure all the apps that you have access to in App Center.
 
-# Prerequisites
+## Prerequisites
 
 App Center CLI requires Node.js version 10 or better.
 
-# Installation
+## Installation
 
 ```
 npm install -g appcenter-cli
@@ -16,7 +16,7 @@ npm install -g appcenter-cli
 
 Once installed, use the `appcenter` command. See below for the available commands.
 
-# Getting Help
+## Getting Help
 
 To get a top level list of the available commands, run `appcenter help`.
 
@@ -24,7 +24,7 @@ To get help on a specific command or category, run `appcenter help command` or p
 
 App Center SDK support is provided directly within the App Center portal. Any time you need help, just log in to [App Center](https://appcenter.ms), then click the blue chat button in the lower-right corner of any page and our dedicated support team will respond to your questions and feedback. For additional information, see the [App Center Help Center](https://intercom.help/appcenter/getting-started/welcome-to-app-center-support).
 
-# Commands
+## Commands
 
 Below is the list of commands currently supported by Visual Studio App Center CLI:
 
@@ -128,11 +128,11 @@ Below is the list of commands currently supported by Visual Studio App Center CL
 
 Please use the `appcenter help` command to get more information about each one.
 
-# Contributing
+## Contributing
 
 Please see the [contributing](./contributing.md) file
 for an introduction to the codebase and what the various moving parts are.
 
-# Code of Conduct
+## Code of Conduct
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact opencode@microsoft.com with any additional questions or comments.
