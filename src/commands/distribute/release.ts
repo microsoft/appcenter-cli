@@ -148,7 +148,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
   private validateParametersWithPrerequisites(storeInformation: models.ExternalStoreResponse): void {
     debug("Checking for invalid parameter combinations with prerequisites");
-    if (!_.isNil(this.storeName) && storeInformation.type === "apple" && _.isNil(this.releaseNotes) && _.isNil(this.releaseNotesFile)) {
+    if (storeInformation && storeInformation.type === "apple" && _.isNil(this.releaseNotes) && _.isNil(this.releaseNotesFile)) {
       throw failure(ErrorCodes.InvalidParameter, "At least one of '--release-notes' or '--release-notes-file' must be specified when publishing to an Apple store.");
     }
   }
