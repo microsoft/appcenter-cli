@@ -25,3 +25,7 @@ tools
 
 # Users Environment Variables
 .lock-wscript
+
+# Package
+/appcenter-cli-*.tgz
+

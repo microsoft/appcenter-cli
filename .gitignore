@@ -38,3 +38,7 @@ src/commands/test/lib/templates/uitest/android/AppCenter.UITest.Android/obj
 src/commands/test/lib/templates/uitest/ios/.vs
 src/commands/test/lib/templates/uitest/ios/AppCenter.UITest.iOS/bin
 src/commands/test/lib/templates/uitest/ios/AppCenter.UITest.iOS/obj
+
+# Package
+/appcenter-cli-*.tgz
+
