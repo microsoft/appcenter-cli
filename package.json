@@ -36,6 +36,11 @@
   "bugs": {
     "url": "https://github.com/Microsoft/appcenter-cli/issues"
   },
+  "files": [
+    "package-lock.json",
+    "bin",
+    "dist"
+  ],
   "devDependencies": {
     "@types/async": "^3.0.2",
     "@types/chai": "^4.2.3",
