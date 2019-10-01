@@ -115,7 +115,8 @@ describe.only("release command", () => {
                 setupSuccessfulPatchUploadResponse(
                   setupSuccessfulCreateReleaseResponse(
                     setupSuccessfulAddStoreResponse(
-                      Nock(fakeHost)))))));
+                      Nock(fakeHost))
+                  , false)))));
         skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
     });
 
@@ -456,16 +457,7 @@ describe.only("release command", () => {
 
     describe("when publishing to an 'apple' type store", () => {
       beforeEach(() => {
-          expectedRequestsScope =
-            setupSuccessfulGetStoreDetailsResponse(
-              setupSuccessfulPostUploadResponse(
-                setupSuccessfulUploadResponse(
-                  setupSuccessfulPatchUploadResponse(
-                    setupSuccessfulCreateReleaseResponse(
-                      setupSuccessfulAddStoreResponse(
-                        Nock(fakeHost)))))),
-              "apple");
-          skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
+          expectedRequestsScope = setupSuccessfulGetStoreDetailsResponse(Nock(fakeHost), "apple");
       });
 
       it("fails if neither --release-notes nor --release-notes-file is specified", async () => {
@@ -477,7 +469,7 @@ describe.only("release command", () => {
         const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
 
         // Assert
-        testFailure(result, expectedErrorMessage, skippedRequestsScope);
+        testFailure(result, expectedErrorMessage, expectedRequestsScope);
       });
     });
   });
