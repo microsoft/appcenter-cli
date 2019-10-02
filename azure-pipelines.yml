@@ -53,6 +53,7 @@ jobs:
   - task: ArchiveFiles@2
     inputs:
       rootFolderOrFile: '$(Build.SourcesDirectory)'
+      includeRootFolder: false
       archiveType: 'tar'
       archiveFile: '$(Build.ArtifactStagingDirectory)/npm/$(Build.BuildId).tgz'
       replaceExistingArchive: true
