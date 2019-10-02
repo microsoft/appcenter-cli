@@ -49,6 +49,7 @@ jobs:
   - task: DeleteFiles@1
     inputs:
       contents: node_modules
+    displayName: 'Delete node_modules'
 
   - task: ArchiveFiles@2
     inputs:
@@ -58,6 +59,7 @@ jobs:
       archiveFile: '$(Build.ArtifactStagingDirectory)/npm/$(Build.BuildId).tgz'
       replaceExistingArchive: true
       verbose: true
+    displayName: 'Prepare npm artifact'
 
   - task: PublishBuildArtifacts@1
     inputs:
