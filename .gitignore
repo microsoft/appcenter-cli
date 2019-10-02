@@ -43,4 +43,4 @@ src/commands/test/lib/templates/uitest/ios/AppCenter.UITest.iOS/obj
 /appcenter-cli-*.tgz
 
 # Pester output
-/test/functional/Test-Pester.XML
+/test/functional/testresult.XML
