@@ -25,8 +25,7 @@
     "autorest": "npm run autorest:clean && node scripts/autorest.js",
     "clean": "gulp clean",
     "prepublishOnly": "npm run tslint && gulp prepublish",
-    "download-swagger": "gulp download-swagger",
-    "functional": "npm run tslint && npm link && pwsh -Command Invoke-Pester ./test/functional"
+    "download-swagger": "gulp download-swagger"
   },
   "repository": {
     "type": "git",
