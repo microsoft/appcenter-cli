@@ -235,6 +235,21 @@ describe("release command", () => {
         // Assert
         testFailure(result, expectedErrorMessage, skippedRequestsScope);
       });
+
+      it("passes with aab for stores", async () => {
+        const command = new ReleaseBinaryCommand(getCommandArgs(["-f", "valid.aab", "-r", "release notes", "--store", fakeStoreName]));
+        await expect(command.execute()).to.eventually.be.rejected;
+      });
+
+      it("passes with apk for stores", async () => {
+        const command = new ReleaseBinaryCommand(getCommandArgs(["-f", "valid.apk", "-r", "release notes", "--store", fakeStoreName]));
+        await expect(command.execute()).to.eventually.be.rejected;
+      });
+
+      it("passes with ipa for stores", async () => {
+        const command = new ReleaseBinaryCommand(getCommandArgs(["-f", "valid.ipa", "-r", "release notes", "--store", fakeStoreName]));
+        await expect(command.execute()).to.eventually.be.rejected;
+      });
     });
 
   });
