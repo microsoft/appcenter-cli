@@ -49,9 +49,9 @@ jobs:
   - task: CopyFiles@2
     inputs:
       sourceFolder: '$(Build.SourcesDirectory)'
-      contents: '*.tgz'
+      contents: '*'
       targetFolder: $(Build.ArtifactStagingDirectory)/npm
-    displayName: 'Copy npm package'
+    displayName: 'Copy npm package and sources'
 
   - task: PublishBuildArtifacts@1
     inputs:
