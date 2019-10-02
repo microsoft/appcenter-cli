@@ -138,9 +138,18 @@ export default class ReleaseBinaryCommand extends AppCommand {
     if (_.isNil(this.distributionGroup) && _.isNil(this.storeName)) {
       throw failure(ErrorCodes.InvalidParameter, "At least one of '--group' or '--store' must be specified");
     }
+    if (!_.isNil(this.distributionGroup)) {
+      if ([".aab"].includes(this.fileExtension)) {
+        throw failure(ErrorCodes.InvalidParameter, `Files of type '${this.fileExtension}' can not be distributed to groups`);
+      }
+    }
+    if (!_.isNil(this.storeName)) {
+      if (![".aab", ".apk", ".ipa"].includes(this.fileExtension)) {
+        throw failure(ErrorCodes.InvalidParameter, `Files of type '${this.fileExtension}' can not be distributed to stores`);
+      }
+    }
     if (_.isNil(this.buildVersion)) {
-      const extension = this.filePath.substring(this.filePath.lastIndexOf(".")).toLowerCase();
-      if ([".zip", ".msi"].includes(extension)) {
+      if ([".zip", ".msi"].includes(this.fileExtension)) {
         throw failure(ErrorCodes.InvalidParameter, "--build-version parameter must be specified when uploading .zip or .msi file");
       }
     }
@@ -377,5 +386,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
       debug(`Failed to distribute the release to store - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, error.message);
     }
+  }
+
+  private get fileExtension(): string {
+    return Path.parse(this.filePath).ext.toLowerCase();
   }
 }
