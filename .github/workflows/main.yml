@@ -11,11 +11,10 @@ jobs:
     steps:
       - uses: rytswd/respost@v0.1.0
         with:
-          title: "Respost: Comment about '/AzurePipelines /run' for maintainers."
+          title: |
+            Note to maintainers: Review code and then comment "/azp /run".
           body: |
-            Hello, I'm a bot! Thanks for your contribution to appcenter-cli!
-            Note to maintainers:
-              - Please verify code changes first,
-              - Then run functional tests by commenting: /AzurePipelines /run
+            Hello, I'm a bot! 🤖
+            Thanks for your contribution to appcenter-cli! We will review this shortly.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
