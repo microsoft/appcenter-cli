@@ -49,7 +49,7 @@ jobs:
   - task: CopyFiles@2
     inputs:
       sourceFolder: '$(Build.SourcesDirectory)'
-      contents: '*'
+      contents: '**'
       targetFolder: $(Build.ArtifactStagingDirectory)/npm
     displayName: 'Copy npm package and sources'
 
