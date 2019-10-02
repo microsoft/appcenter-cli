@@ -33,8 +33,8 @@ describe("release command", () => {
   const version = "1.0";
   const shortVersion = "1";
 
-  const releaseFileName = "releaseBinaryFile";
-  const releaseNotesFileName = "releaseNotesFile";
+  const releaseFileName = "releaseBinaryFile.apk";
+  const releaseNotesFileName = "releaseNotesFile.txt";
 
   const releaseFileContent = "Hello World!";
 
@@ -452,6 +452,16 @@ describe("release command", () => {
 
     it("fails if neither --group nor --store is specified", async () => {
       const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-R", releaseNotesFilePath]));
+      await expect(command.execute()).to.eventually.be.rejected;
+    });
+
+    it("fails if distributing invalid file type to store", async () => {
+      const command = new ReleaseBinaryCommand(getCommandArgs(["-f", "invalid.ext", "-R", releaseNotesFilePath, "--store", fakeStoreName]));
+      await expect(command.execute()).to.eventually.be.rejected;
+    });
+
+    it("fails if distributing invalid file type to group", async () => {
+      const command = new ReleaseBinaryCommand(getCommandArgs(["-f", "invalid.aab", "-R", releaseNotesFilePath, "--group", fakeStoreName]));
       await expect(command.execute()).to.eventually.be.rejected;
     });
 
