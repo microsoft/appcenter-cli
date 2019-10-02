@@ -5,8 +5,15 @@ Describe "help" {
       $helpOutput | Should -Be $noCommandOutput
   }
 
-  It "lists usage for all commands" {
+  It "lists usage for commands" {
     $commands = "analytics", "apps", "orgs"
     $commands | ForEach-Object { $help = appcenter help $_; $help -match "Usage" | Should -BeTrue -Because "Usage for $_ should be explained" }
+  }
+
+  It "has the right version" {
+    $packageJsonPath = $env:CLI_ROOT + "/package.json"
+    $version = (Get-Content $packageJsonPath | ConvertFrom-Json).version
+    $output = appcenter
+    ($output -match "Version")[0] | Should -Be "Version $version"
   }
 }
