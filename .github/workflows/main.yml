@@ -13,7 +13,7 @@ jobs:
         with:
           title: |
             ⚠️ Note to maintainers:
-            Review code and then comment: /azp /run
+            Review code and then comment: /azp run
           body: |
             Hello, I'm a bot! 🤖
             Thanks for your contribution to appcenter-cli! We will review this shortly.
