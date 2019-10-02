@@ -51,10 +51,11 @@ jobs:
   - task: PublishTestResults@2
     inputs:
       testResultsFormat: 'NUnit'
-      testResultsFiles: '**/testoutput.xml'
+      testResultsFiles: '**/testresult.xml'
       searchFolder: '$(Build.SourcesDirectory)/test'
       failTaskOnFailedTests: true
       testRunTitle: 'Verify functional test result'
+    displayName: 'Verify functional test result'
 
   - script: |
       npm pack
