@@ -46,6 +46,10 @@ jobs:
       npm pack
     displayName: 'Package for npm release'
 
+  - task: DeleteFiles@1
+    inputs:
+      contents: node_modules
+
   - task: CopyFiles@2
     inputs:
       sourceFolder: '$(Build.SourcesDirectory)'
