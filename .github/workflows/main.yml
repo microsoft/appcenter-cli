@@ -1,0 +1,21 @@
+name: "Bot: Write comment about Azure Pipelines"
+
+on:
+  pull_request:
+    branches:
+      - 'master'
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: rytswd/respost@v0.1.0
+        with:
+          title: |
+            ⚠️ Note to maintainers:
+            Review code and then comment: /azp /run
+          body: |
+            Hello, I'm a bot! 🤖
+            Thanks for your contribution to appcenter-cli! We will review this shortly.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
