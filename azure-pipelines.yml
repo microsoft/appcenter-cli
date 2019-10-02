@@ -50,12 +50,14 @@ jobs:
     inputs:
       contents: node_modules
 
-  - task: CopyFiles@2
+  - task: ArchiveFiles@2
     inputs:
-      sourceFolder: '$(Build.SourcesDirectory)'
-      contents: '**'
-      targetFolder: $(Build.ArtifactStagingDirectory)/npm
-    displayName: 'Copy npm package and sources'
+      rootFolderOrFile: '$(Build.SourcesDirectory)'
+      includeRootFolder: true
+      archiveType: 'tar'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/npm/$(Build.BuildId).tgz'
+      replaceExistingArchive: true
+      verbose: true
 
   - task: PublishBuildArtifacts@1
     inputs:
