@@ -1,0 +1,21 @@
+name: Respost - Write comment to new PR event
+
+on:
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: rytswd/respost@v0.1.0
+        with:
+          title: "Respost: Comment about '/AzurePipelines /run' for maintainers."
+          body: |
+            Hello, I'm a bot! Thanks for your contribution to appcenter-cli!
+            Note to maintainers:
+              - Please verify code changes first,
+              - Then run functional tests by commenting: /AzurePipelines /run
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
