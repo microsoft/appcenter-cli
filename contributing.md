@@ -6,17 +6,17 @@ local CI configurations).
 
 ## Technologies Used
 
-App Center cli is written using Node.js version 10 and [Typescript](http://typescriptlang.org). 
-Wrappers over the App Center HTTP API are generated using the [AutoRest](https://github.com/Azure/autorest) code generator. 
+App Center cli is written using Node.js version 10 and [Typescript](http://typescriptlang.org).
+Wrappers over the App Center HTTP API are generated using the [AutoRest](https://github.com/Azure/autorest) code generator.
 And the usual plethora of npm modules.
 
 We use [mocha](https://http://mochajs.org/) for a test runner / framework. [Chai](http://http://chaijs.com/) is
 the assertion library. [Sinon](http://sinonjs.org) is the general mocking library, and [nock](https://github.com/node-nock/nock)
 is used to record and playback mock http traffic.
 
-# Setting Up
+## Setting Up
 
-## Prerequisites
+### Prerequisites
 
 Install the latest version of Node 10 from [here](https://nodejs.org). If you are on a Mac, we recommend
 a 64-bit version.
@@ -58,12 +58,12 @@ correctly.
 If you want to regenerate the HTTP client code from a non-Windows machine, you'll need mono installed and on your path.
 see the [Mono download page](http://www.mono-project.com/download/) for downloads and installation instructions.
 
-## Troubleshooting
+### Troubleshooting
 
 If you are running on a Mac and have to use `sudo` to install global npm modules (for example, `npm install -g typescript`),
 then please check out [this tutorial](https://docs.npmjs.com/getting-started/fixing-npm-permissions).
 
-# Building
+## Building
 
 After installing node and cloning the repo, do:
 
@@ -73,7 +73,7 @@ After installing node and cloning the repo, do:
 To run the test suite, do:
  3. `npm test`
 
-# Running the cli in development
+## Running the cli in development
 
 If you're using node directly, do:
 
@@ -84,7 +84,7 @@ If you've installed `ts-node` as mentioned above, you can skip the build step an
 
  1. `ts-node src/index.ts <command...> <args...>`
 
-# Scripts
+## Scripts
 
 There are a bunch of scripts in package.json file. Here's what they are and what they do:
 
@@ -99,7 +99,7 @@ There are a bunch of scripts in package.json file. Here's what they are and what
 
 There will be more over time.
 
-## Gulp targets
+### Gulp targets
 
 The gulpfile.js file contains the following targets that can be called manually if you desire
 
@@ -116,9 +116,9 @@ The gulpfile.js file contains the following targets that can be called manually 
 | `copy-generated-client` | | Copies the generated HTTP client code to dist |
 | `prepublish` | `prepublish` | Runs the `clean` and `build:raw` tasks before publishing to npm |
 
-# Touring the codebase
+## Touring the codebase
 
-## General design principles
+### General design principles
 
 Use promises for async operations. Use `async`/`await` in Typescript for handling typical promises.
 
@@ -140,7 +140,7 @@ This is where the source code for the CLI lives.
 
 #### src/commands
 
-The implementation of each command is in this directory. Each category (distribute, build, app, etc) will be a subdirectory of 
+The implementation of each command is in this directory. Each category (distribute, build, app, etc) will be a subdirectory of
 this directory. Each command lives in an individual source file with the same name as the command.
 
 For example:
@@ -151,19 +151,19 @@ For example:
 | `appcenter profile configure` | src/commands/profile/configure.ts |
 | `appcenter apps list` | src/commands/apps/list.ts |
 
-The command line parser and dispatcher uses the directory structure and file names to determine which code to run, so the 
+The command line parser and dispatcher uses the directory structure and file names to determine which code to run, so the
 naming conventions are important.
 
 In addition, place a `category.txt` file in your category directory. The contents of
 this file will be displayed by the help system when getting help for the category.
 
-If you have shared code across commands in your category, you can add a directory named `lib` in your category's directory and 
-put that code there. The command line dispatcher will explicitly ignore this directory and not try to accidentally run your 
+If you have shared code across commands in your category, you can add a directory named `lib` in your category's directory and
+put that code there. The command line dispatcher will explicitly ignore this directory and not try to accidentally run your
 utility code from the command line.
 
 #### src/util
 
-This contains framework and utility code used across all the commands. See readme files in each directory for specific details 
+This contains framework and utility code used across all the commands. See readme files in each directory for specific details
 of each one. (Working on these.)
 
 #### src/util/apis
@@ -183,7 +183,7 @@ The command line parser and dispatching code, along with base class and decorato
 Central point for all user I/O done by commands. Use `interaction.prompt` to get input from a user, and
 `interaction.out` to output various forms of results.
 
-Commands should use these rather than directly using `console.log` because the interaction library handles output formats 
+Commands should use these rather than directly using `console.log` because the interaction library handles output formats
 (the `--format` switch) and the `--quiet` switch transparently to the command author.
 
 #### src/util/profile
@@ -196,17 +196,23 @@ Support files for build and packaging.
 
 #### test
 
-Test code lives here. For new tests create a subdirectory structure corresponding to the `src` folder. Test code will be 
-automatically run if you name the file `<testname>-test.ts` or `<testname>-test.js`. We recommend using Typescript for 
+Test code lives here. For new tests create a subdirectory structure corresponding to the `src` folder. Test code will be
+automatically run if you name the file `<testname>-test.ts` or `<testname>-test.js`. We recommend using Typescript for
 you tests to keep things consistent across the entire codebase.
+
+#### test/functional
+
+Tests that call the appcenter-cli from PowerShell to execute against an App Center internal test environment live here.
+Files called *Tests.ps1 run automatically. The [Pester test runner](https://github.com/pester/Pester/wiki/Pester) is used
+to run the tests. You can run theses tests locally by running the Main.ps1 file in test/functional using PowerShell.
 
 #### typings
 
-Stores type definitions for the external Javascript libraries used. These are checked in rather than dynamically 
+Stores type definitions for the external Javascript libraries used. These are checked in rather than dynamically
 downloaded in case we need to edit them.
 
-# Naming conventions
-To get consistent user experience among commands for all beacons, the command line argument names should follow 
+## Naming conventions
+To get consistent user experience among commands for all beacons, the command line argument names should follow
 the following conventions.
 
 1. **All argument names**: lower-case nouns, separated by dash "-".
@@ -235,16 +241,16 @@ the following conventions.
    - `--manifest-path`
    - `--app-path`
 
-# Development Processes
+## Development Processes
 
-We follow the standard GitHub flow. Each person working on the cli should create their own fork of the repo. Work in 
-your own repo (preferably on a feature branch). When ready, send a pull request to the master 
+We follow the standard GitHub flow. Each person working on the cli should create their own fork of the repo. Work in
+your own repo (preferably on a feature branch). When ready, send a pull request to the master
 Microsoft/MobileCenter-cli repo against the master branch. After review, the pull request will be merged.
 
-# Submitting a PR
+## Submitting a PR
 
-PR submitters should include a description of the change they would like to include in the 
-[changelog](https://docs.microsoft.com/en-us/appcenter/general/changelog). Each time a PR is merged and the next 
+PR submitters should include a description of the change they would like to include in the
+[changelog](https://docs.microsoft.com/en-us/appcenter/general/changelog). Each time a PR is merged and the next
 version of the CLI is released, the first paragraph in the PR description will be copied into the changelog.
 
 A good description should include:
@@ -252,11 +258,10 @@ A good description should include:
 - Friendly description of the fixes/changes made
 - Details of the change
 
-An example of a good description is: "Distribute your app via the CLI: Users can now create & manage your 
+An example of a good description is: "Distribute your app via the CLI: Users can now create & manage your
 distribution groups, upload your release and distribute it"
 
-# Building Installers
+## Building Installers
 
-TBD. We'll need builds for a Mac installer, Windows MSI, and at least one format of Linux package, 
+TBD. We'll need builds for a Mac installer, Windows MSI, and at least one format of Linux package,
 plus be able to push to NPM.
-
