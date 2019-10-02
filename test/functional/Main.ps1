@@ -20,4 +20,4 @@ $workingDir = Get-ScriptDirectory
 $env:PATH = "$(Get-ScriptDirectory)/bin:" + $env:PATH
 $env:CLI_ROOT = Get-Root
 
-Invoke-Pester $workingDir -OutputFile $workingDir/Test-Pester.XML -OutputFormat NUnitXML
+Invoke-Pester $workingDir -OutputFile $workingDir/testresult.xml -OutputFormat NUnitXML
