@@ -263,5 +263,5 @@ distribution groups, upload your release and distribute it"
 
 ## Building Installers
 
-TBD. We'll need builds for a Mac installer, Windows MSI, and at least one format of Linux package,
-plus be able to push to NPM.
+This package is published on npmjs.org, using manual steps (to be automated further).
+TBD. We'll need builds for a Mac installer, Windows MSI, and at least one format of Linux package.
