@@ -41,6 +41,20 @@ jobs:
   - script: |
       npm test
     displayName: 'Run tests'
+    
+  - task: PowerShell@2
+    inputs:
+      filePath: '$(Build.SourcesDirectory)/test/functional/Main.ps1'
+      pwsh: true
+    displayName: 'Run functional tests'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'NUnit'
+      testResultsFiles: '**/testoutput.xml'
+      searchFolder: '$(Build.SourcesDirectory)/test'
+      failTaskOnFailedTests: true
+      testRunTitle: 'Verify functional test result'
 
   - script: |
       npm pack
