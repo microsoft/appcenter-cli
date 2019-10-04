@@ -10,6 +10,10 @@ Describe "help" {
     $commands | ForEach-Object { $help = appcenter help $_; $help -match "Usage" | Should -BeTrue -Because "Usage for $_ should be explained" }
   }
 
+  It "fails miserably" {
+    1337 | Should -Be 42
+  }
+
   It "has the right version" {
     $packageJsonPath = $env:CLI_ROOT + "/package.json"
     $version = (Get-Content $packageJsonPath | ConvertFrom-Json).version

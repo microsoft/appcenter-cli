@@ -11,6 +11,11 @@ jobs:
     steps:
       - uses: rytswd/respost@v0.1.0
         with:
-          body: /azp run
+          title: |
+            ⚠️ Note to maintainers:
+            Review code and then comment: /azp run
+          body: |
+            Hello, I'm a bot! 🤖
+            Thanks for your contribution to appcenter-cli! We will review this shortly.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
