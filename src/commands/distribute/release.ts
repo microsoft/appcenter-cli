@@ -8,6 +8,8 @@ import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../util/profile";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
+import * as fs from "fs";
+import * as stream from "stream";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:release");
 
@@ -60,7 +62,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     this.validateParameters();
 
     debug("Loading prerequisites");
-    const [distributionGroupUsersCount, storeInformation, releaseBinaryFileBuffer, releaseNotesString] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
+    const [distributionGroupUsersCount, storeInformation, releaseBinaryFileStream, releaseBinaryFileStats, releaseNotesString] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
 
     this.validateParametersWithPrerequisites(storeInformation);
 
@@ -72,7 +74,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     let releaseUrl: string;
     try {
       debug("Uploading release binary");
-      await out.progress("Uploading release binary...", this.uploadFileToUri(uploadUri, releaseBinaryFileBuffer, Path.basename(this.filePath)));
+      await out.progress("Uploading release binary...", this.uploadFileToUri(uploadUri, releaseBinaryFileStream, releaseBinaryFileStats, Path.basename(this.filePath)));
 
       debug("Finishing release upload");
       releaseUrl = await this.finishReleaseUpload(client, app, uploadId);
@@ -162,9 +164,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private getPrerequisites(client: AppCenterClient): Promise<[number | null, models.ExternalStoreResponse | null, Buffer, string]> {
+  private getPrerequisites(client: AppCenterClient): Promise<[number | null, models.ExternalStoreResponse | null, stream.Stream, fs.Stats, string]> {
     // load release binary file
-    const fileBuffer = this.getReleaseFileBuffer();
+    const fileStream = this.getReleaseFileStream();
+    const fileStats = this.getReleaseFileStats();
 
     // load release notes file or use provided release notes if none was specified
     const releaseNotesString = this.getReleaseNotesString();
@@ -181,12 +184,24 @@ export default class ReleaseBinaryCommand extends AppCommand {
       storeInformation = this.getStoreDetails(client);
     }
 
-    return Promise.all([distributionGroupUsersNumber, storeInformation, fileBuffer, releaseNotesString]);
+    return Promise.all([distributionGroupUsersNumber, storeInformation, fileStream, fileStats, releaseNotesString]);
   }
 
-  private async getReleaseFileBuffer(): Promise<Buffer> {
+  private async getReleaseFileStream(): Promise<stream.Stream> {
     try {
-      return await Pfs.readFile(this.filePath);
+      return await fs.createReadStream(this.filePath);
+    } catch (error) {
+      if (error.code === "ENOENT") {
+        throw failure(ErrorCodes.InvalidParameter, `binary file '${this.filePath}' doesn't exist`);
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  private async getReleaseFileStats(): Promise<fs.Stats> {
+    try {
+      return await Pfs.stat(this.filePath);
     } catch (error) {
       if (error.code === "ENOENT") {
         throw failure(ErrorCodes.InvalidParameter, `binary file '${this.filePath}' doesn't exist`);
@@ -264,7 +279,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return createReleaseUploadRequestResponse.result;
   }
 
-  private uploadFileToUri(uploadUrl: string, fileBuffer: Buffer, filename: string): Promise<void> {
+  private uploadFileToUri(uploadUrl: string, fileStream: stream.Stream, fileStats: fs.Stats, filename: string): Promise<void> {
     debug("Uploading the release binary");
     return new Promise<void>((resolve, reject) => {
       Request.post({
@@ -272,9 +287,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
           ipa: {
             options: {
               filename,
-              contentType: "application/octet-stream"
+              contentType: "application/octet-stream",
+              knownLength: fileStats.size
             },
-            value: fileBuffer
+            value: fileStream
           }
         },
         url: uploadUrl
