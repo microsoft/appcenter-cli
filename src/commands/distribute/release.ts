@@ -359,10 +359,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
       return result;
     } catch (error) {
       if (error === 400) {
-        throw failure(ErrorCodes.Exception, "changing distribution group is not supported");
+        throw failure(ErrorCodes.Exception, "failed to set the release notes");
       } else {
         debug(`Failed to distribute the release - ${inspect(error)}`);
-        throw failure(ErrorCodes.Exception, `failed to set distribution group for release ${releaseId}`);
+        throw failure(ErrorCodes.Exception, `failed to set release notes for release ${releaseId}`);
       }
     }
   }
