@@ -164,9 +164,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private getPrerequisites(client: AppCenterClient): Promise<[number | null, models.ExternalStoreResponse | null, stream.Stream, fs.Stats, string]> {
+  private async getPrerequisites(client: AppCenterClient): Promise<[number | null, models.ExternalStoreResponse | null, stream.Stream, fs.Stats, string]> {
     // load release binary file
-    const [fileStats, fileStream] = this.getReleaseFileStream();
+    const [fileStats, fileStream] = await this.getReleaseFileStream();
 
     // load release notes file or use provided release notes if none was specified
     const releaseNotesString = this.getReleaseNotesString();
@@ -186,9 +186,11 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return Promise.all([distributionGroupUsersNumber, storeInformation, fileStream, fileStats, releaseNotesString]);
   }
 
-  private getReleaseFileStream(): [fs.Stats, stream.Stream] {
+  private async getReleaseFileStream(): Promise<[fs.Stats, stream.Stream]> {
     try {
-      return [fs.statSync(this.filePath), fs.createReadStream(this.filePath)];
+      const fileStats = await Pfs.stat(this.filePath);
+      const fileStream = fs.createReadStream(this.filePath);
+      return Promise.all([fileStats, fileStream]);
     } catch (error) {
       if (error.code === "ENOENT") {
         throw failure(ErrorCodes.InvalidParameter, `binary file '${this.filePath}' doesn't exist`);
