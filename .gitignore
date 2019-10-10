@@ -42,5 +42,6 @@ src/commands/test/lib/templates/uitest/ios/AppCenter.UITest.iOS/obj
 # Package
 /appcenter-cli-*.tgz
 
-# Pester output
-/test/functional/testresult.XML
+# mocha unit tests & pester functional tests results
+/test-results.xml
+/test/functional/testresult.xml
