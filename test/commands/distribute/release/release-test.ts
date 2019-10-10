@@ -172,11 +172,10 @@ describe("release command", () => {
         expectedRequestsScope = setupSuccessfulGetDistributionGroupUsersResponse(
           setupSuccessfulPostUploadResponse(
             setupSuccessfulUploadResponse(
-              setupSuccessfulPatchUploadResponse(
                 setupSuccessfulCreateReleaseResponse(
                   setupSuccessfulAddGroupResponse(
                     setupSuccsessFulGetDistributionGroupResponse(
-                      Nock(fakeHost))), false)))));
+                      Nock(fakeHost))), false))));
         skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
       });
 
