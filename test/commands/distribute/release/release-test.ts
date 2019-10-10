@@ -146,7 +146,19 @@ describe("release command", () => {
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
       testUploadedFormData();
     });
+  });
 
+  describe("when all network requests are successful (no release notes)", () => {
+    beforeEach(() => {
+        expectedRequestsScope =
+          setupSuccessfulGetStoreDetailsResponse(
+            setupSuccessfulPostUploadResponse(
+              setupSuccessfulUploadResponse(
+                setupSuccessfulPatchUploadResponse(
+                  setupSuccessfulAddStoreResponse(
+                    Nock(fakeHost))))));
+        skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
+    });
     it("uploads release with neither release notes nor file to Google Play Store", async () => {
       // Arrange
       const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
@@ -154,7 +166,6 @@ describe("release command", () => {
       // Act
       const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-s", fakeStoreName]));
       const result = await command.execute();
-      console.log(result);
 
       // Assert
       testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
@@ -173,10 +184,9 @@ describe("release command", () => {
           setupSuccessfulPostUploadResponse(
             setupSuccessfulUploadResponse(
               setupSuccessfulPatchUploadResponse(
-                setupSuccessfulCreateReleaseResponse(
-                  setupSuccessfulAddGroupResponse(
-                    setupSuccsessFulGetDistributionGroupResponse(
-                      Nock(fakeHost))), false)))));
+                setupSuccessfulAddGroupResponse(
+                  setupSuccsessFulGetDistributionGroupResponse(
+                    Nock(fakeHost)))))));
         skippedRequestsScope = setupSuccessfulAbortUploadResponse(Nock(fakeHost));
       });
 
@@ -375,7 +385,7 @@ describe("release command", () => {
         setupSuccessfulAddGroupResponse(Nock(fakeHost)));
     });
 
-    it("does not try to add the group to the release", async () => {
+    it("does not try to set the release notes for the release", async () => {
       // Arrange
       const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
       const releaseNotesFilePath = createFile(tmpFolderPath, releaseNotesFileName, releaseNotes);
@@ -385,7 +395,7 @@ describe("release command", () => {
       const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
 
       // Assert
-      testFailure(result, `failed to set distribution group for release ${fakeReleaseId}`, expectedRequestsScope, skippedRequestsScope);
+      testFailure(result, `failed to set release notes for release ${fakeReleaseId}`, expectedRequestsScope, skippedRequestsScope);
     });
   });
 
