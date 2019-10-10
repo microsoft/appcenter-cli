@@ -189,6 +189,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
   private async getReleaseFileStream(): Promise<stream.Stream> {
     try {
+      fs.statSync(this.filePath);
       return await fs.createReadStream(this.filePath);
     } catch (error) {
       if (error.code === "ENOENT") {
