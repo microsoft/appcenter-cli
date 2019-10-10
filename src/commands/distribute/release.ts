@@ -91,8 +91,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
     debug("Extracting release ID from the release URL");
     const releaseId = this.extractReleaseId(releaseUrl);
 
-    debug("Setting release notes");
-    await this.putReleaseDetails(client, app, releaseId, releaseNotesString);
+    if (releaseNotesString && releaseNotesString.length > 0) {
+      debug("Setting release notes");
+      await this.putReleaseDetails(client, app, releaseId, releaseNotesString);
+    } else {
+      debug("Skipping empty release notes");
+    }
 
     if (!_.isNil(this.distributionGroup)) {
       debug("Distributing the release to a group");
@@ -349,6 +353,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
       const statusCode = response.statusCode;
       if (statusCode >= 400) {
+        debug(`Got error response: ${inspect(response)}`);
         throw statusCode;
       }
       return result;
