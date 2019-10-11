@@ -39,9 +39,18 @@ jobs:
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
   - script: |
-      npm test
-    displayName: 'Run tests'
-    
+      npm run test:ci || true
+    displayName: 'Run tests (with JUnit output)'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: 'test-results.xml'
+      searchFolder: '$(Build.SourcesDirectory)'
+      failTaskOnFailedTests: true
+      testRunTitle: 'Verify unit test result'
+    displayName: 'Verify unit test result'
+
   - task: PowerShell@2
     inputs:
       filePath: '$(Build.SourcesDirectory)/test/functional/Main.ps1'
