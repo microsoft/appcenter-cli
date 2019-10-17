@@ -176,7 +176,10 @@ describe("release command", () => {
   context("build-version", () => {
     const zipFileName = "binary.zip";
     const msiFileName = "binary.msi";
+    const pkgFileName = "binary.pkg";
+    const dmgFileName = "binary.dmg";
     const buildVersion = "sample-build-version";
+    const buildNumber = "sample-build-number";
 
     describe("when build version specified", () => {
       beforeEach(() => {
@@ -215,6 +218,32 @@ describe("release command", () => {
         testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
         Sinon.assert.calledWith(postSymbolSpy, Sinon.match(JSON.stringify({build_version: buildVersion})));
       });
+
+      it("should return success for pkg file", async () => {
+        // Arrange
+        const releaseFilePath = createFile(tmpFolderPath, pkgFileName, releaseFileContent);
+
+        // Act
+        const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-g", fakeDistributionGroupName, "-b", buildVersion, "-n", buildNumber]));
+        const result = await command.execute();
+
+        // Assert
+        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        Sinon.assert.calledWith(postSymbolSpy, Sinon.match(JSON.stringify({build_version: buildVersion, build_number: buildNumber})));
+      });
+
+      it("should return success for dmg file", async () => {
+        // Arrange
+        const releaseFilePath = createFile(tmpFolderPath, dmgFileName, releaseFileContent);
+
+        // Act
+        const command = new ReleaseBinaryCommand(getCommandArgs(["-f", releaseFilePath, "-g", fakeDistributionGroupName, "-b", buildVersion, "-n", buildNumber]));
+        const result = await command.execute();
+
+        // Assert
+        testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
+        Sinon.assert.calledWith(postSymbolSpy, Sinon.match(JSON.stringify({build_version: buildVersion, build_number: buildNumber})));
+      });
     });
 
     describe("when validates input arguments", () => {
@@ -224,7 +253,7 @@ describe("release command", () => {
 
       it("raises error when zip file uploading and no --build-version specified", async () => {
         // Arrange
-        const expectedErrorMessage = "--build-version parameter must be specified when uploading .zip or .msi file";
+        const expectedErrorMessage = "--build-version parameter must be specified when uploading .zip files";
 
         // Act
         const command = new ReleaseBinaryCommand(getCommandArgs(["-f", zipFileName, "-g", fakeDistributionGroupName]));
@@ -236,10 +265,34 @@ describe("release command", () => {
 
       it("raises error when msi file uploading and no --build-version specified", async () => {
         // Arrange
-        const expectedErrorMessage = "--build-version parameter must be specified when uploading .zip or .msi file";
+        const expectedErrorMessage = "--build-version parameter must be specified when uploading .msi files";
 
         // Act
         const command = new ReleaseBinaryCommand(getCommandArgs(["-f", msiFileName, "-g", fakeDistributionGroupName]));
+        const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
+
+        // Assert
+        testFailure(result, expectedErrorMessage, skippedRequestsScope);
+      });
+
+      it("raises error when pkg file uploading and no --build-version specified", async () => {
+        // Arrange
+        const expectedErrorMessage = "--build-version and --build-number must both be specified when uploading .pkg files";
+
+        // Act
+        const command = new ReleaseBinaryCommand(getCommandArgs(["-f", pkgFileName, "-g", fakeDistributionGroupName]));
+        const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
+
+        // Assert
+        testFailure(result, expectedErrorMessage, skippedRequestsScope);
+      });
+
+      it("raises error when pkg file uploading and no --build-number specified", async () => {
+        // Arrange
+        const expectedErrorMessage = "--build-version and --build-number must both be specified when uploading .pkg files";
+
+        // Act
+        const command = new ReleaseBinaryCommand(getCommandArgs(["-f", pkgFileName, "-g", fakeDistributionGroupName, "-b", buildVersion]));
         const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
 
         // Assert

@@ -22,11 +22,17 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @hasArg
   public filePath: string;
 
-  @help("Build version parameter required for .zip and .msi files")
+  @help("Build version parameter required for .zip, .msi, .pkg and .dmg files")
   @shortName("b")
   @longName("build-version")
   @hasArg
   public buildVersion: string;
+
+  @help("Build number parameter required for macOS .pkg and .dmg files")
+  @shortName("n")
+  @longName("build-number")
+  @hasArg
+  public buildNumber: string;
 
   @help("Distribution group name")
   @shortName("g")
@@ -156,7 +162,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
     if (_.isNil(this.buildVersion)) {
       if ([".zip", ".msi"].includes(this.fileExtension)) {
-        throw failure(ErrorCodes.InvalidParameter, "--build-version parameter must be specified when uploading .zip or .msi file");
+        throw failure(ErrorCodes.InvalidParameter, `--build-version parameter must be specified when uploading ${this.fileExtension} files`);
+      }
+    }
+    if (_.isNil(this.buildNumber) || _.isNil(this.buildVersion)) {
+      if ([".pkg", ".dmg"].includes(this.fileExtension)) {
+        throw failure(ErrorCodes.InvalidParameter, `--build-version and --build-number must both be specified when uploading ${this.fileExtension} files`);
       }
     }
   }
@@ -263,8 +274,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async createReleaseUpload(client: AppCenterClient, app: DefaultApp): Promise<models.ReleaseUploadBeginResponse> {
     let createReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadBeginResponse>;
     try {
+      const options = {
+        buildVersion: this.buildVersion,
+        buildNumber: this.buildNumber
+      };
       createReleaseUploadRequestResponse = await out.progress("Creating release upload...",
-        clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.releaseUploads.create(app.ownerName, app.appName, { buildVersion: this.buildVersion }, cb)));
+        clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.releaseUploads.create(app.ownerName, app.appName, options, cb)));
     } catch (error) {
       throw failure(ErrorCodes.Exception, `failed to create release upload for ${this.filePath}`);
     }
