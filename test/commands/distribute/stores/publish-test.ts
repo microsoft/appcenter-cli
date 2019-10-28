@@ -16,7 +16,6 @@ describe("distribute stores publish command", () => {
   const fakeStoreName = "myFakeStore";
   const releaseNotes = "Fake release";
   const fakeReleaseNotesFile = "/fake/release_notes";
-  const buildVersion = "123";
   const fakeCommandPath = "fake/distribute/groups/publish.ts";
 
   let sandbox: Sinon.SinonSandbox;
@@ -46,7 +45,7 @@ describe("distribute stores publish command", () => {
   });
 
   it("passes all non-common parameters to distribute release", async () => {
-    const command = new PublishToStoreCommand(getCommandArgs(["-b", buildVersion, "-r", releaseNotes, "-R", fakeReleaseNotesFile]));
+    const command = new PublishToStoreCommand(getCommandArgs(["-r", releaseNotes, "-R", fakeReleaseNotesFile]));
     await command.execute();
 
     // Make sure it created a ReleaseBinaryCommand and ran it
@@ -57,7 +56,6 @@ describe("distribute stores publish command", () => {
     const releaseCommand: FakeReleaseBinaryCommand = createReleaseStub.returnValues[0];
     expect(releaseCommand.app.identifier).equals(fakeAppIdentifier);
     expect(releaseCommand.filePath).equals(fakeFilePath);
-    expect(releaseCommand.buildVersion).equals(buildVersion);
     expect(releaseCommand.distributionGroup).to.be.undefined;
     expect(releaseCommand.storeName).equals(fakeStoreName);
     expect(releaseCommand.releaseNotes).equals(releaseNotes);
@@ -65,7 +63,7 @@ describe("distribute stores publish command", () => {
   });
 
   it("returns the return value of 'distribute release'", async () => {
-    const command = new PublishToStoreCommand(getCommandArgs(["-b", buildVersion, "-r", releaseNotes]));
+    const command = new PublishToStoreCommand(getCommandArgs(["-r", releaseNotes]));
     const result = await command.execute();
 
     expect(isCommandFailedResult(result)).to.be.true;

@@ -14,11 +14,17 @@ export default class PublishToGroupCommand extends AppCommand {
   @hasArg
   public filePath: string;
 
-  @help("Build version parameter required for .zip and .msi files")
+  @help("Build version parameter required for .zip, .msi, .pkg and .dmg files")
   @shortName("b")
   @longName("build-version")
   @hasArg
   public buildVersion: string;
+
+  @help("Build number parameter required for macOS .pkg and .dmg files")
+  @shortName("n")
+  @longName("build-number")
+  @hasArg
+  public buildNumber: string;
 
   @help("Distribution group name")
   @shortName("g")
@@ -43,6 +49,9 @@ export default class PublishToGroupCommand extends AppCommand {
     const releaseArgs = ["--app", this.app.identifier, "--file", this.filePath, "--group", this.distributionGroup];
     if (!isNil(this.buildVersion)) {
       releaseArgs.push("--build-version", this.buildVersion);
+    }
+    if (!isNil(this.buildNumber)) {
+      releaseArgs.push("--build-number", this.buildNumber);
     }
     if (!isNil(this.releaseNotes)) {
       releaseArgs.push("--release-notes", this.releaseNotes);
