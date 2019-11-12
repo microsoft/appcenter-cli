@@ -42,13 +42,13 @@ export default class UploadSymbols extends AppCommand {
   @hasArg
   public xcarchivePath: string;
 
-  @help("Path to a React Native sourcemap file. Only supported in combination with --symbol or --xcarchive")
+  @help("Path to a React Native sourcemap file. Only supported in combination with --symbol or --xcarchive.")
   @shortName("m")
   @longName("sourcemap")
   @hasArg
   public sourceMapPath: string;
 
-  @help("Path to a zip file containing Breakpad symbols.")
+  @help("Path to a zip file containing Breakpad symbols, or native binaries from which to generate Breakpad symbols.")
   @shortName("b")
   @longName("breakpad")
   @hasArg
