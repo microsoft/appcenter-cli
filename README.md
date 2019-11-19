@@ -133,6 +133,10 @@ Please use the `appcenter help` command to get more information about each one.
 Please see the [contributing](./contributing.md) file
 for an introduction to the codebase and what the various moving parts are.
 
+## Known issues
+
+Check out [known issues](./KNOWN_ISSUES.md) for a list of known issues, and potential workarounds.
+
 ## Security
 
 Check out [SECURITY.md](SECURITY.md) for any security concern with this project.
