@@ -28,12 +28,29 @@ export class StateChecker {
 
   public async checkUntilCompleted(timeoutSec: number = null): Promise<number> {
     let exitCode = 0;
+    let errorCount = 0;
+    const maxErrors = 60;
+    const errorRetryWait = 2;
     const startTime = process.hrtime();
     if (this.isInternalStreamingOutput) {
       this.streamingOutput.start();
     }
     while (true) {
-      const state = await out.progress("Checking status...", this.getTestRunState(this.client, this.testRunId));
+      let state;
+      try {
+        state = await out.progress("Checking status...", this.getTestRunState(this.client, this.testRunId));
+      } catch (error) {
+        errorCount++;
+        if (errorCount >= maxErrors) {
+          throw error;
+        }
+
+        await out.progress("Status check failed, retrying...", this.delay(1000 * errorRetryWait));
+        continue;
+      }
+
+      errorCount = 0;
+
       if (state && state.message) {
         this.streamingOutput.text((state) => `Current test status: ${state.message.join(os.EOL)}`, state);
       }
