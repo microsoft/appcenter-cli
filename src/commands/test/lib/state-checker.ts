@@ -45,6 +45,11 @@ export class StateChecker {
           throw error;
         }
 
+        if (this.timeIsUp(timeoutSec, startTime, errorRetryWait)) {
+          exitCode = ExitCodes.Timeout;
+          break;
+        }
+
         await out.progress("Status check failed, retrying...", this.delay(1000 * errorRetryWait));
         continue;
       }
@@ -60,13 +65,9 @@ export class StateChecker {
         break;
       }
 
-      if (timeoutSec) {
-        const elapsedSeconds = process.hrtime(startTime)[0];
-        if (elapsedSeconds + state.waitTime > timeoutSec) {
-          exitCode = ExitCodes.Timeout;
-          this.streamingOutput.text((timeoutSec) => `After ${timeoutSec} seconds, command timed out waiting for tests to finish.`, timeoutSec);
-          break;
-        }
+      if (this.timeIsUp(timeoutSec, startTime, state.waitTime)) {
+        exitCode = ExitCodes.Timeout;
+        break;
       }
 
       await out.progress(`Waiting ${state.waitTime} seconds...`, this.delay(1000 * state.waitTime));
@@ -76,6 +77,17 @@ export class StateChecker {
     }
 
     return exitCode;
+  }
+
+  public timeIsUp(timeoutSec: number, startTime: [number, number], waitTime: number): Boolean {
+    if (timeoutSec) {
+      const elapsedSeconds = process.hrtime(startTime)[0];
+      if (elapsedSeconds + waitTime > timeoutSec) {
+        this.streamingOutput.text((timeoutSec) => `After ${timeoutSec} seconds, command timed out waiting for tests to finish.`, timeoutSec);
+        return true;
+      }
+    }
+    return false;
   }
 
   public async checkOnce(): Promise<number> {
