@@ -30,7 +30,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Xamarin.UITest">
-      <HintPath>..\packages\Xamarin.UITest.3.0.3\lib\net45\Xamarin.UITest.dll</HintPath>
+      <HintPath>..\packages\Xamarin.UITest.3.0.4\lib\net45\Xamarin.UITest.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
