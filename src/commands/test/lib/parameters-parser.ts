@@ -4,7 +4,14 @@ export function parseTestParameters(testParameters: string[]) {
   if (testParameters) {
     testParameters.forEach((p) => {
       const parsedParameter = parseTestParameter(p);
-      result[parsedParameter.key] = parsedParameter.value;
+      if (result[parsedParameter.key] != null && (parsedParameter.key === "test_env" || parsedParameter.key === "app_env")) {
+        const combinedValue = `${result[parsedParameter.key]}|${parsedParameter.value}`;
+        result[parsedParameter.key] = combinedValue;
+      } else if (result[parsedParameter.key] == null) {
+        result[parsedParameter.key] = parsedParameter.value;
+      } else {
+        throw new Error(`duplicate --test-parameter: ${parsedParameter.key}`);
+      }
     });
   }
 
