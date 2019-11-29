@@ -84,6 +84,21 @@ If you've installed `ts-node` as mentioned above, you can skip the build step an
 
  1. `ts-node src/index.ts <command...> <args...>`
 
+## Enabling debug logs
+
+In the code you'll find debug logs such as the following:
+```typescript
+debug(`Failed to get list of application versions - ${inspect(error)}`);
+```
+Those are not visible even with `--debug` enabled. To see these logs, pass on the `DEBUG` environment variable. Example:
+```bash
+DEBUG="appcenter-cli:*" appcenter
+```
+More precise filtering can be enabled, as for example:
+```bash
+DEBUG="appcenter-cli:commands:*" appcenter apps list
+```
+
 ## Scripts
 
 There are a bunch of scripts in package.json file. Here's what they are and what they do:
