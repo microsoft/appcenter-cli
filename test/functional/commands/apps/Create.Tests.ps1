@@ -11,7 +11,7 @@ Describe "apps create" {
 
     # Assert
     $app.displayName | Should -Be $appDisplayName
-    $app.os | Should -Be @appOs
+    $app.os | Should -Be $appOs
     $app.platform | Should -Be $appPlatform
 
     $newNumberOfApps = (appcenter apps list --output json | ConvertFrom-Json).Count
