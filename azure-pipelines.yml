@@ -59,7 +59,8 @@ jobs:
 
   - task: PowerShell@2
     inputs:
-      filePath: '$(Build.SourcesDirectory)/test/functional/Main.ps1 -Token $(ac-cli-account-api-token)'
+      filePath: '$(Build.SourcesDirectory)/test/functional/Main.ps1'
+      arguments: '-Token $(ac-cli-account-api-token)'
       pwsh: true
     displayName: 'Run functional tests'
 
