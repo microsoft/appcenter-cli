@@ -17,7 +17,7 @@ Describe "apps create" {
     $newNumberOfApps = (appcenter apps list --output json | ConvertFrom-Json).Count
     $newNumberOfApps | Should -Be ($previousNumberOfApps + 1)
 
-    # Aftermath
+    # Cleanup
     $appFullName = $app.owner.name + "/" + $app.name
     appcenter apps delete --app $appFullName --quiet
   }
