@@ -6,6 +6,9 @@ param
   [string]$Token
 )
 
+## DO NOT CHECK THIS IN
+Write-Host "Token: $Token"
+
 function Get-ScriptDirectory {
   Split-Path -parent $PSCommandPath
 }
