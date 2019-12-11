@@ -26,6 +26,11 @@ $workingDir = Get-ScriptDirectory
 $env:PATH = "$(Get-ScriptDirectory)/bin:" + $env:PATH
 $env:CLI_ROOT = Get-Root
 
-appcenter login --env int --token $Token
+Write-Host "Signing in to App Center"
+$loginResult = appcenter login --env int --token $Token
+
+if($null -ne $loginResult) {
+  throw "Login failed: $loginResult"
+}
 
 Invoke-Pester $workingDir -OutputFile $workingDir/testresult.xml -OutputFormat NUnitXML
