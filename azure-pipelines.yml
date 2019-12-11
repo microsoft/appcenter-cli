@@ -53,14 +53,14 @@ jobs:
 
   - task: AzureKeyVault@1
     inputs:
-      azureSubscription: 'AppCenter - INT'
-      KeyVaultName: 'distributionStoresInt'
-      SecretsFilter: 'ac-cli-account-api-token'
+      azureSubscription: '$(API_TOKEN_KEY_VAULT_AZURE_SUBSCRIPTION)'
+      KeyVaultName: '$(API_TOKEN_KEY_VAULT)'
+      SecretsFilter: '$(API_TOKEN_SECRET_NAME)'
 
   - task: PowerShell@2
     inputs:
       filePath: '$(Build.SourcesDirectory)/test/functional/Invoke-FunctionalTests.ps1'
-      arguments: '-Token $(ac-cli-account-api-token)'
+      arguments: '-Token $($(API_TOKEN_SECRET_NAME))'
       pwsh: true
     displayName: 'Run functional tests'
 
