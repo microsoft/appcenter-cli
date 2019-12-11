@@ -29,7 +29,7 @@ $env:CLI_ROOT = Get-Root
 Write-Host "Signing in to App Center"
 $loginResult = appcenter login --env int --token $Token
 
-if($null -ne $loginResult) {
+if(!$loginResult.StartsWith("Logged in as")) {
   throw "Login failed: $loginResult"
 }
 
