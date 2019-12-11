@@ -8,6 +8,7 @@ param
 
 ## DO NOT CHECK THIS IN
 Write-Host "Token: $Token"
+gci env: | % { Write-Host "$($_.Name) - $($_.Value)" }
 
 function Get-ScriptDirectory {
   Split-Path -parent $PSCommandPath
