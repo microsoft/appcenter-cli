@@ -51,9 +51,16 @@ jobs:
       testRunTitle: 'Verify unit test result'
     displayName: 'Verify unit test result'
 
+  - task: AzureKeyVault@1
+    inputs:
+      azureSubscription: '$(API_TOKEN_KEY_VAULT_AZURE_SUBSCRIPTION)'
+      KeyVaultName: '$(API_TOKEN_KEY_VAULT)'
+      SecretsFilter: 'ac-cli-account-api-token'
+
   - task: PowerShell@2
     inputs:
-      filePath: '$(Build.SourcesDirectory)/test/functional/Main.ps1'
+      filePath: '$(Build.SourcesDirectory)/test/functional/Invoke-FunctionalTests.ps1'
+      arguments: '-Token $(ac-cli-account-api-token)'
       pwsh: true
     displayName: 'Run functional tests'
 
