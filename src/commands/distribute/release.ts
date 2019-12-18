@@ -62,6 +62,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @longName("silent")
   public silent: boolean;
 
+  @help("Whether the release is mandatory for the testers (Not used for stores)")
+  @longName("mandatory")
+  public mandatory: boolean;
+
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
@@ -392,7 +396,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       client, releaseId, app: this.app, destination: this.distributionGroup, destinationType: "group"
     });
     await addGroupToRelease({
-      client, releaseId, distributionGroup: distributionGroupResponse, app: this.app, destination: this.distributionGroup, destinationType: "group", mandatory: false, silent: silent
+      client, releaseId, distributionGroup: distributionGroupResponse, app: this.app, destination: this.distributionGroup, destinationType: "group", mandatory: this.mandatory, silent: silent
     });
   }
 

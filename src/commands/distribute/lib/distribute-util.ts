@@ -73,7 +73,7 @@ export async function addGroupToRelease(options: AddGroupToReleaseOptions): Prom
 
   const { result, response } = await clientRequest<models.ReleaseDestinationResponse>(async (cb) => {
     client.releases.addDistributionGroup(releaseId, app.ownerName, app.appName, distributionGroup.id, {
-      mandatoryUpdate: mandatory,
+      mandatoryUpdate: !!mandatory,
       notifyTesters: !silent
     }, cb);
   });
