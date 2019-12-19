@@ -62,7 +62,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @longName("silent")
   public silent: boolean;
 
-  @help("Whether the release is mandatory for the testers (Not used for stores)")
+  @help("Make the release mandatory for the testers (default is false)")
   @longName("mandatory")
   public mandatory: boolean;
 
