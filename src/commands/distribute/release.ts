@@ -8,6 +8,8 @@ import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../util/profile";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
+import * as fs from "fs";
+import * as stream from "stream";
 
 const debug = require("debug")("appcenter-cli:commands:distribute:release");
 
@@ -20,11 +22,17 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @hasArg
   public filePath: string;
 
-  @help("Build version parameter required for .zip and .msi files")
+  @help("Build version parameter required for .zip, .msi, .pkg and .dmg files")
   @shortName("b")
   @longName("build-version")
   @hasArg
   public buildVersion: string;
+
+  @help("Build number parameter required for macOS .pkg and .dmg files")
+  @shortName("n")
+  @longName("build-number")
+  @hasArg
+  public buildNumber: string;
 
   @help("Distribution group name")
   @shortName("g")
@@ -54,13 +62,17 @@ export default class ReleaseBinaryCommand extends AppCommand {
   @longName("silent")
   public silent: boolean;
 
+  @help("Make the release mandatory for the testers (default is false)")
+  @longName("mandatory")
+  public mandatory: boolean;
+
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
     this.validateParameters();
 
     debug("Loading prerequisites");
-    const [distributionGroupUsersCount, storeInformation, releaseBinaryFileBuffer, releaseNotesString] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
+    const [distributionGroupUsersCount, storeInformation, releaseBinaryFileStream, releaseBinaryFileStats, releaseNotesString] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
 
     this.validateParametersWithPrerequisites(storeInformation);
 
@@ -72,7 +84,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     let releaseUrl: string;
     try {
       debug("Uploading release binary");
-      await out.progress("Uploading release binary...", this.uploadFileToUri(uploadUri, releaseBinaryFileBuffer, Path.basename(this.filePath)));
+      await out.progress("Uploading release binary...", this.uploadFileToUri(uploadUri, releaseBinaryFileStream, releaseBinaryFileStats, Path.basename(this.filePath)));
 
       debug("Finishing release upload");
       releaseUrl = await this.finishReleaseUpload(client, app, uploadId);
@@ -91,8 +103,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
     debug("Extracting release ID from the release URL");
     const releaseId = this.extractReleaseId(releaseUrl);
 
-    debug("Setting release notes");
-    await this.putReleaseDetails(client, app, releaseId, releaseNotesString);
+    if (releaseNotesString && releaseNotesString.length > 0) {
+      debug("Setting release notes");
+      await this.putReleaseDetails(client, app, releaseId, releaseNotesString);
+    } else {
+      debug("Skipping empty release notes");
+    }
 
     if (!_.isNil(this.distributionGroup)) {
       debug("Distributing the release to a group");
@@ -138,10 +154,24 @@ export default class ReleaseBinaryCommand extends AppCommand {
     if (_.isNil(this.distributionGroup) && _.isNil(this.storeName)) {
       throw failure(ErrorCodes.InvalidParameter, "At least one of '--group' or '--store' must be specified");
     }
+    if (!_.isNil(this.distributionGroup)) {
+      if ([".aab"].includes(this.fileExtension)) {
+        throw failure(ErrorCodes.InvalidParameter, `Files of type '${this.fileExtension}' can not be distributed to groups`);
+      }
+    }
+    if (!_.isNil(this.storeName)) {
+      if (![".aab", ".apk", ".ipa"].includes(this.fileExtension)) {
+        throw failure(ErrorCodes.InvalidParameter, `Files of type '${this.fileExtension}' can not be distributed to stores`);
+      }
+    }
     if (_.isNil(this.buildVersion)) {
-      const extension = this.filePath.substring(this.filePath.lastIndexOf(".")).toLowerCase();
-      if ([".zip", ".msi"].includes(extension)) {
-        throw failure(ErrorCodes.InvalidParameter, "--build-version parameter must be specified when uploading .zip or .msi file");
+      if ([".zip", ".msi"].includes(this.fileExtension)) {
+        throw failure(ErrorCodes.InvalidParameter, `--build-version parameter must be specified when uploading ${this.fileExtension} files`);
+      }
+    }
+    if (_.isNil(this.buildNumber) || _.isNil(this.buildVersion)) {
+      if ([".pkg", ".dmg"].includes(this.fileExtension)) {
+        throw failure(ErrorCodes.InvalidParameter, `--build-version and --build-number must both be specified when uploading ${this.fileExtension} files`);
       }
     }
   }
@@ -153,9 +183,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
   }
 
-  private getPrerequisites(client: AppCenterClient): Promise<[number | null, models.ExternalStoreResponse | null, Buffer, string]> {
+  private async getPrerequisites(client: AppCenterClient): Promise<[number | null, models.ExternalStoreResponse | null, stream.Stream, fs.Stats, string]> {
     // load release binary file
-    const fileBuffer = this.getReleaseFileBuffer();
+    const [fileStats, fileStream] = await this.getReleaseFileStream();
 
     // load release notes file or use provided release notes if none was specified
     const releaseNotesString = this.getReleaseNotesString();
@@ -172,12 +202,14 @@ export default class ReleaseBinaryCommand extends AppCommand {
       storeInformation = this.getStoreDetails(client);
     }
 
-    return Promise.all([distributionGroupUsersNumber, storeInformation, fileBuffer, releaseNotesString]);
+    return Promise.all([distributionGroupUsersNumber, storeInformation, fileStream, fileStats, releaseNotesString]);
   }
 
-  private async getReleaseFileBuffer(): Promise<Buffer> {
+  private async getReleaseFileStream(): Promise<[fs.Stats, stream.Stream]> {
     try {
-      return await Pfs.readFile(this.filePath);
+      const fileStats = await Pfs.stat(this.filePath);
+      const fileStream = fs.createReadStream(this.filePath);
+      return Promise.all([fileStats, fileStream]);
     } catch (error) {
       if (error.code === "ENOENT") {
         throw failure(ErrorCodes.InvalidParameter, `binary file '${this.filePath}' doesn't exist`);
@@ -246,8 +278,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async createReleaseUpload(client: AppCenterClient, app: DefaultApp): Promise<models.ReleaseUploadBeginResponse> {
     let createReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadBeginResponse>;
     try {
+      const options = {
+        buildVersion: this.buildVersion,
+        buildNumber: this.buildNumber
+      };
       createReleaseUploadRequestResponse = await out.progress("Creating release upload...",
-        clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.releaseUploads.create(app.ownerName, app.appName, { buildVersion: this.buildVersion }, cb)));
+        clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.releaseUploads.create(app.ownerName, app.appName, options, cb)));
     } catch (error) {
       throw failure(ErrorCodes.Exception, `failed to create release upload for ${this.filePath}`);
     }
@@ -255,7 +291,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return createReleaseUploadRequestResponse.result;
   }
 
-  private uploadFileToUri(uploadUrl: string, fileBuffer: Buffer, filename: string): Promise<void> {
+  private uploadFileToUri(uploadUrl: string, fileStream: stream.Stream, fileStats: fs.Stats, filename: string): Promise<void> {
     debug("Uploading the release binary");
     return new Promise<void>((resolve, reject) => {
       Request.post({
@@ -263,9 +299,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
           ipa: {
             options: {
               filename,
-              contentType: "application/octet-stream"
+              contentType: "application/octet-stream",
+              knownLength: fileStats.size
             },
-            value: fileBuffer
+            value: fileStream
           }
         },
         url: uploadUrl
@@ -340,15 +377,16 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
       const statusCode = response.statusCode;
       if (statusCode >= 400) {
+        debug(`Got error response: ${inspect(response)}`);
         throw statusCode;
       }
       return result;
     } catch (error) {
       if (error === 400) {
-        throw failure(ErrorCodes.Exception, "changing distribution group is not supported");
+        throw failure(ErrorCodes.Exception, "failed to set the release notes");
       } else {
         debug(`Failed to distribute the release - ${inspect(error)}`);
-        throw failure(ErrorCodes.Exception, `failed to set distribution group for release ${releaseId}`);
+        throw failure(ErrorCodes.Exception, `failed to set release notes for release ${releaseId}`);
       }
     }
   }
@@ -358,7 +396,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       client, releaseId, app: this.app, destination: this.distributionGroup, destinationType: "group"
     });
     await addGroupToRelease({
-      client, releaseId, distributionGroup: distributionGroupResponse, app: this.app, destination: this.distributionGroup, destinationType: "group", mandatory: false, silent: silent
+      client, releaseId, distributionGroup: distributionGroupResponse, app: this.app, destination: this.distributionGroup, destinationType: "group", mandatory: this.mandatory, silent: silent
     });
   }
 
@@ -377,5 +415,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
       debug(`Failed to distribute the release to store - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, error.message);
     }
+  }
+
+  private get fileExtension(): string {
+    return Path.parse(this.filePath).ext.toLowerCase();
   }
 }

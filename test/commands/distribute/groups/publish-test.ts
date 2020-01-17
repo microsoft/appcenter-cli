@@ -17,6 +17,7 @@ describe("distribute groups publish command", () => {
   const releaseNotes = "Fake release";
   const fakeReleaseNotesFile = "/fake/release_notes";
   const buildVersion = "123";
+  const buildNumber = "1234";
   const fakeCommandPath = "fake/distribute/groups/publish.ts";
   const originalReleaseBinaryCommandPrototype = Object.getPrototypeOf(ReleaseBinaryCommand);
 
@@ -48,7 +49,7 @@ describe("distribute groups publish command", () => {
   });
 
   it("passes all non-common parameters to distribute release", async () => {
-    const command = new PublishToGroupCommand(getCommandArgs(["-b", buildVersion, "-r", releaseNotes, "-R", fakeReleaseNotesFile]));
+    const command = new PublishToGroupCommand(getCommandArgs(["-b", buildVersion, "-n", buildNumber, "-r", releaseNotes, "-R", fakeReleaseNotesFile]));
     await command.execute();
 
     // Make sure it created a ReleaseBinaryCommand and ran it
@@ -60,6 +61,7 @@ describe("distribute groups publish command", () => {
     expect(releaseCommand.app.identifier).equals(fakeAppIdentifier);
     expect(releaseCommand.filePath).equals(fakeFilePath);
     expect(releaseCommand.buildVersion).equals(buildVersion);
+    expect(releaseCommand.buildNumber).equals(buildNumber);
     expect(releaseCommand.distributionGroup).equals(fakeGroupName);
     expect(releaseCommand.storeName).to.be.undefined;
     expect(releaseCommand.releaseNotes).equals(releaseNotes);
@@ -68,6 +70,14 @@ describe("distribute groups publish command", () => {
 
   it("returns the return value of 'distribute release'", async () => {
     const command = new PublishToGroupCommand(getCommandArgs(["-b", buildVersion, "-r", releaseNotes]));
+    const result = await command.execute();
+
+    expect(isCommandFailedResult(result)).to.be.true;
+    expect((result as CommandFailedResult).errorMessage).to.equal("Command 42 not found");
+  });
+
+  it("returns the return value of 'distribute release'", async () => {
+    const command = new PublishToGroupCommand(getCommandArgs(["-b", buildVersion, "-n", buildNumber, "-r", releaseNotes]));
     const result = await command.execute();
 
     expect(isCommandFailedResult(result)).to.be.true;

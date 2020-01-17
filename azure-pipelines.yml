@@ -39,19 +39,58 @@ jobs:
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
 
   - script: |
-      npm test
-    displayName: 'Run tests'
+      npm run test:ci || true
+    displayName: 'Run tests (with JUnit output)'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: 'test-results.xml'
+      searchFolder: '$(Build.SourcesDirectory)'
+      failTaskOnFailedTests: true
+      testRunTitle: 'Verify unit test result'
+    displayName: 'Verify unit test result'
+
+  - task: AzureKeyVault@1
+    inputs:
+      azureSubscription: '$(API_TOKEN_KEY_VAULT_AZURE_SUBSCRIPTION)'
+      KeyVaultName: '$(API_TOKEN_KEY_VAULT)'
+      SecretsFilter: 'ac-cli-account-api-token'
+
+  - task: PowerShell@2
+    inputs:
+      filePath: '$(Build.SourcesDirectory)/test/functional/Invoke-FunctionalTests.ps1'
+      arguments: '-Token $(ac-cli-account-api-token)'
+      pwsh: true
+    displayName: 'Run functional tests'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'NUnit'
+      testResultsFiles: '**/testresult.xml'
+      searchFolder: '$(Build.SourcesDirectory)/test'
+      failTaskOnFailedTests: true
+      testRunTitle: 'Verify functional test result'
+    displayName: 'Verify functional test result'
 
   - script: |
       npm pack
     displayName: 'Package for npm release'
 
-  - task: CopyFiles@2
+  - task: DeleteFiles@1
     inputs:
-      sourceFolder: '$(Build.SourcesDirectory)'
-      contents: '*.tgz'
-      targetFolder: $(Build.ArtifactStagingDirectory)/npm
-    displayName: 'Copy npm package'
+      contents: node_modules
+    displayName: 'Delete node_modules'
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)'
+      includeRootFolder: false
+      archiveType: 'tar'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/npm/$(Build.BuildId).tgz'
+      replaceExistingArchive: true
+      verbose: true
+    displayName: 'Prepare npm artifact'
 
   - task: PublishBuildArtifacts@1
     inputs:

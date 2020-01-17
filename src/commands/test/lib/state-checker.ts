@@ -28,12 +28,34 @@ export class StateChecker {
 
   public async checkUntilCompleted(timeoutSec: number = null): Promise<number> {
     let exitCode = 0;
+    let errorCount = 0;
+    const maxErrors = 60;
+    const errorRetryWait = 2;
     const startTime = process.hrtime();
     if (this.isInternalStreamingOutput) {
       this.streamingOutput.start();
     }
     while (true) {
-      const state = await out.progress("Checking status...", this.getTestRunState(this.client, this.testRunId));
+      let state;
+      try {
+        state = await out.progress("Checking status...", this.getTestRunState(this.client, this.testRunId));
+      } catch (error) {
+        errorCount++;
+        if (errorCount >= maxErrors) {
+          throw error;
+        }
+
+        if (this.timeIsUp(timeoutSec, startTime, errorRetryWait)) {
+          exitCode = ExitCodes.Timeout;
+          break;
+        }
+
+        await out.progress("Status check failed, retrying...", this.delay(1000 * errorRetryWait));
+        continue;
+      }
+
+      errorCount = 0;
+
       if (state && state.message) {
         this.streamingOutput.text((state) => `Current test status: ${state.message.join(os.EOL)}`, state);
       }
@@ -43,13 +65,9 @@ export class StateChecker {
         break;
       }
 
-      if (timeoutSec) {
-        const elapsedSeconds = process.hrtime(startTime)[0];
-        if (elapsedSeconds + state.waitTime > timeoutSec) {
-          exitCode = ExitCodes.Timeout;
-          this.streamingOutput.text((timeoutSec) => `After ${timeoutSec} seconds, command timed out waiting for tests to finish.`, timeoutSec);
-          break;
-        }
+      if (this.timeIsUp(timeoutSec, startTime, state.waitTime)) {
+        exitCode = ExitCodes.Timeout;
+        break;
       }
 
       await out.progress(`Waiting ${state.waitTime} seconds...`, this.delay(1000 * state.waitTime));
@@ -59,6 +77,17 @@ export class StateChecker {
     }
 
     return exitCode;
+  }
+
+  public timeIsUp(timeoutSec: number, startTime: [number, number], waitTime: number): Boolean {
+    if (timeoutSec) {
+      const elapsedSeconds = process.hrtime(startTime)[0];
+      if (elapsedSeconds + waitTime > timeoutSec) {
+        this.streamingOutput.text((timeoutSec) => `After ${timeoutSec} seconds, command timed out waiting for tests to finish.`, timeoutSec);
+        return true;
+      }
+    }
+    return false;
   }
 
   public async checkOnce(): Promise<number> {

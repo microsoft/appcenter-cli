@@ -133,6 +133,14 @@ Please use the `appcenter help` command to get more information about each one.
 Please see the [contributing](./contributing.md) file
 for an introduction to the codebase and what the various moving parts are.
 
+## Known issues
+
+Check out [known issues](./KNOWN_ISSUES.md) for a list of known issues, and potential workarounds.
+
+## Security
+
+Check out [SECURITY.md](SECURITY.md) for any security concern with this project.
+
 ## Code of Conduct
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact opencode@microsoft.com with any additional questions or comments.
