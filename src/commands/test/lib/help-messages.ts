@@ -51,11 +51,11 @@ export module Messages {
       export const RunDSymDir = "Path to the directory with iOS symbol files. This option is deprecated and ignored";
       export const RunLocale = "The system locale for the test run. For example, en_US";
       export const RunLanguage = "Override the language (iOS only) for the test run";
-      export const Fixture = "NUnit fixture / namespace to run. If used with include / exclude the fixture filter is applied first (Can be used multiple times)";
+      export const Fixture = "NUnit fixture / namespace to run. If used with include- / exclude-category the fixture filter is applied first (Can be used multiple times)";
       export const IncludeCategory = "NUnit category to run. (Can be used multiple times)";
       export const ExcludeCategory = "NUnit category to not run. (Can be used multiple times) (When include and/or fixture are combined with exclude, all tests with the included categories are run, except for those also marked with the excluded categories)";
       export const TestChunk = "Run tests in parallel by method";
-      export const FixtureChunk = "Run tests in parallel by fixture";
+      export const FixtureChunk = "Run tests in parallel by fixture, but will ignore include- / exlude-category";
       export const RunTestSeries = "Name of the test series";
       export const RunAsync = "Exit the command when tests are uploaded, without waiting for test results";
       export const Timeout = "Maximum time (in seconds) to wait for test results";
