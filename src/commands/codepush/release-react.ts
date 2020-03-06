@@ -48,7 +48,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   @hasArg
   public plistFilePrefix: string;
 
-  @help("Name of Build configuration which specifies the binary version you want to target this release at (iOS only)")
+  @help("Name of build configuration which specifies the binary version you want to target this release at. For example, \"Debug\" or \"Release\" (iOS only)")
   @shortName("c")
   @hasArg
   @longName("build-configuration-name")
