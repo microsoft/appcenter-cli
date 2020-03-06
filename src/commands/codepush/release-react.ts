@@ -52,6 +52,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   @shortName("c")
   @hasArg
   @longName("build-configuration-name")
+  @defaultValue("Release")
   public buildConfigurationName: string;
 
   @help("Path to where the sourcemap for the resulting bundle should be written. If omitted, a sourcemap will not be generated")

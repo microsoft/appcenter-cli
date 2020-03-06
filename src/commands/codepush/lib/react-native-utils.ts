@@ -103,7 +103,7 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         }
         const xcodeProj = xcode.project(resolvedPbxprojFile).parseSync();
         // If the build configuration name is not defined in the release-command, then "Release" build configuration is used by default.
-        const buildConfigurationName = versionSearchParams.buildConfigurationName || "Release";
+        const buildConfigurationName = versionSearchParams.buildConfigurationName;
         const configsObj: XCBuildConfiguration = xcodeProj.getBuildConfigByName(buildConfigurationName);
         if (Object.keys(configsObj).length === 0) {
           throw new Error(`Unable to find the build configuration with "${buildConfigurationName}" name.`);
