@@ -90,7 +90,7 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         if (parsedPlist.CFBundleShortVersionString !== "$(MARKETING_VERSION)") {
           throw new Error(`The "CFBundleShortVersionString" key in the "${resolvedPlistFile}" file needs to specify a valid semver string, containing both a major and minor version (e.g. 1.3.2, 1.1).`);
         }
-        
+
         const iOSDirectory = "ios";
         const xcodeprojDirectory = `${projectName}.xcodeproj`;
         const pbxprojFileName = "project.pbxproj";
