@@ -90,6 +90,7 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         if (parsedPlist.CFBundleShortVersionString !== "$(MARKETING_VERSION)") {
           throw new Error(`The "CFBundleShortVersionString" key in the "${resolvedPlistFile}" file needs to specify a valid semver string, containing both a major and minor version (e.g. 1.3.2, 1.1).`);
         }
+        
         const iOSDirectory = "ios";
         const xcodeprojDirectory = `${projectName}.xcodeproj`;
         const pbxprojFileName = "project.pbxproj";
@@ -101,6 +102,7 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         if (!resolvedPbxprojFile) {
           throw new Error(`Unable to find either of the following pbxproj files in order to infer your app's binary version: "${pbxprojKnownLocations.join("\", \"")}".`);
         }
+
         const xcodeProj = xcode.project(resolvedPbxprojFile).parseSync();
         // If the build configuration name is not defined in the release-command, then "Release" build configuration is used by default.
         const buildConfigurationName = versionSearchParams.buildConfigurationName;
@@ -108,13 +110,14 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         if (Object.keys(configsObj).length === 0) {
           throw new Error(`Unable to find the build configuration with "${buildConfigurationName}" name.`);
         }
+
         const marketingVersion = Object.values(configsObj).find((c) => c.buildSettings["MARKETING_VERSION"]).buildSettings.MARKETING_VERSION;
-        if (isValidVersion(marketingVersion)) {
-          out.text(`Using the target binary version value "${marketingVersion}" from "${resolvedPbxprojFile}".\n`);
-          return Promise.resolve(marketingVersion);
-        } else {
+        if (!isValidVersion(marketingVersion)) {
           throw new Error(`The "MARKETING_VERSION" key in the "${resolvedPbxprojFile}" file needs to specify a valid semver string, containing both a major and minor version (e.g. 1.3.2, 1.1).`);
         }
+        out.text(`Using the target binary version value "${marketingVersion}" from "${resolvedPbxprojFile}".\n`);
+
+        return Promise.resolve(marketingVersion);
       }
     } else {
       throw new Error(`The "CFBundleShortVersionString" key doesn't exist within the "${resolvedPlistFile}" file.`);
