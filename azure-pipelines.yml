@@ -24,7 +24,7 @@ jobs:
     inputs:
       scanType: 'Register'
       verbosity: 'Verbose'
-      alertWarningLevel: 'Medium'
+      alertWarningLevel: 'High'
       failOnAlert: true
       ignoreDirectories: '$(COMPONENT_GOVERNANCE_IGNORE_DIRS)'
     condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
