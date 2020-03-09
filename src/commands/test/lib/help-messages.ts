@@ -55,7 +55,7 @@ export module Messages {
       export const IncludeCategory = "NUnit category to run. (Can be used multiple times)";
       export const ExcludeCategory = "NUnit category to not run. (Can be used multiple times) (When include and/or fixture are combined with exclude, all tests with the included categories are run, except for those also marked with the excluded categories)";
       export const TestChunk = "Run tests in parallel by method";
-      export const FixtureChunk = "Run tests in parallel by fixture, but will ignore include- / exclude-category";
+      export const FixtureChunk = "Run tests in parallel by fixture, ignore the use of include- / exclude-category";
       export const RunTestSeries = "Name of the test series";
       export const RunAsync = "Exit the command when tests are uploaded, without waiting for test results";
       export const Timeout = "Maximum time (in seconds) to wait for test results";
