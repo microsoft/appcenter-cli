@@ -40,7 +40,7 @@ export const setMetadataResponse = {
   chunk_size: 512,
   resume_restart: false,
   blob_partitions: 1,
-  chunk_list: [0]
+  chunk_list: [1]
 };
 
 export function createTempPathWithFakeLastFolder(nameTmpFolder: string, lastFolderName: string): string {
