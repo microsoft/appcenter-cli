@@ -93,7 +93,7 @@ describe("CodePush release tests", () => {
 
   describe("CodePush signed release", () => {
     describe("CodePush path generation", () => {
-      it("CodePush path generation for React-Native with private key", async function () {
+      it("CodePush path generation for React-Native with private key", async () => {
         // Arrange
         const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
         nockPlatformRequest("React-Native", fakeParamsForRequests, nockedApiGatewayRequests);
