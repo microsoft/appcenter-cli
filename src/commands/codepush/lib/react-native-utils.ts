@@ -6,6 +6,7 @@ import { out, isDebug } from "../../../util/interaction";
 import { isValidVersion } from "./validation-utils";
 import { fileDoesNotExistOrIsDirectory } from "./file-utils";
 
+const xcode = require("xcode");
 const plist = require("plist");
 const g2js = require("gradle-to-js/lib/parser");
 const properties = require("properties");
@@ -18,6 +19,15 @@ export interface VersionSearchParams {
   plistFile: string;
   plistFilePrefix: string;
   gradleFile: string;
+  buildConfigurationName: string;
+}
+
+interface XCBuildConfiguration {
+  isa: string;
+  baseConfigurationReference: string;
+  baseConfigurationReference_comment: string;
+  buildSettings: Object;
+  name: string;
 }
 
 export async function getReactNativeProjectAppVersion(versionSearchParams: VersionSearchParams, projectRoot?: string): Promise<string> {
@@ -77,7 +87,37 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         out.text(`Using the target binary version value "${parsedPlist.CFBundleShortVersionString}" from "${resolvedPlistFile}".\n`);
         return Promise.resolve(parsedPlist.CFBundleShortVersionString);
       } else {
-        throw new Error(`The "CFBundleShortVersionString" key in the "${resolvedPlistFile}" file needs to specify a valid semver string, containing both a major and minor version (e.g. 1.3.2, 1.1).`);
+        if (parsedPlist.CFBundleShortVersionString !== "$(MARKETING_VERSION)") {
+          throw new Error(`The "CFBundleShortVersionString" key in the "${resolvedPlistFile}" file needs to specify a valid semver string, containing both a major and minor version (e.g. 1.3.2, 1.1).`);
+        }
+
+        const iOSDirectory = "ios";
+        const xcodeprojDirectory = `${projectName}.xcodeproj`;
+        const pbxprojFileName = "project.pbxproj";
+        const pbxprojKnownLocations = [
+          path.join(iOSDirectory, xcodeprojDirectory, pbxprojFileName),
+          path.join(iOSDirectory, pbxprojFileName)
+        ];
+        const resolvedPbxprojFile = pbxprojKnownLocations.find(fileExists);
+        if (!resolvedPbxprojFile) {
+          throw new Error(`Unable to find either of the following pbxproj files in order to infer your app's binary version: "${pbxprojKnownLocations.join("\", \"")}".`);
+        }
+
+        const xcodeProj = xcode.project(resolvedPbxprojFile).parseSync();
+        // If the build configuration name is not defined in the release-command, then "Release" build configuration is used by default.
+        const buildConfigurationName = versionSearchParams.buildConfigurationName;
+        const configsObj: XCBuildConfiguration = xcodeProj.getBuildConfigByName(buildConfigurationName);
+        if (Object.keys(configsObj).length === 0) {
+          throw new Error(`Unable to find the build configuration with "${buildConfigurationName}" name.`);
+        }
+
+        const marketingVersion = Object.values(configsObj).find((c) => c.buildSettings["MARKETING_VERSION"]).buildSettings.MARKETING_VERSION;
+        if (!isValidVersion(marketingVersion)) {
+          throw new Error(`The "MARKETING_VERSION" key in the "${resolvedPbxprojFile}" file needs to specify a valid semver string, containing both a major and minor version (e.g. 1.3.2, 1.1).`);
+        }
+        out.text(`Using the target binary version value "${marketingVersion}" from "${resolvedPbxprojFile}".\n`);
+
+        return Promise.resolve(marketingVersion);
       }
     } else {
       throw new Error(`The "CFBundleShortVersionString" key doesn't exist within the "${resolvedPlistFile}" file.`);
@@ -207,21 +247,21 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
   const envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
 
   if (typeof envNodeArgs !== "undefined") {
-      Array.prototype.push.apply(reactNativeBundleArgs, envNodeArgs.trim().split(/\s+/));
+    Array.prototype.push.apply(reactNativeBundleArgs, envNodeArgs.trim().split(/\s+/));
   }
 
   Array.prototype.push.apply(reactNativeBundleArgs, [
-      path.join("node_modules", ".bin", "react-native"), "bundle",
-      "--assets-dest", outputFolder,
-      "--bundle-output", path.join(outputFolder, bundleName),
-      "--dev", development,
-      "--entry-file", entryFile,
-      "--platform", platform,
-      ...extraBundlerOptions,
+    path.join("node_modules", ".bin", "react-native"), "bundle",
+    "--assets-dest", outputFolder,
+    "--bundle-output", path.join(outputFolder, bundleName),
+    "--dev", development,
+    "--entry-file", entryFile,
+    "--platform", platform,
+    ...extraBundlerOptions,
   ]);
 
   if (sourcemapOutput) {
-      reactNativeBundleArgs.push("--sourcemap-output", sourcemapOutput);
+    reactNativeBundleArgs.push("--sourcemap-output", sourcemapOutput);
   }
 
   out.text(chalk.cyan("Running \"react-native bundle\" command:\n"));
@@ -229,21 +269,21 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
   out.text(`node ${reactNativeBundleArgs.join(" ")}`);
 
   return new Promise<void>((resolve, reject) => {
-      reactNativeBundleProcess.stdout.on("data", (data: Buffer) => {
-        out.text(data.toString().trim());
-      });
+    reactNativeBundleProcess.stdout.on("data", (data: Buffer) => {
+      out.text(data.toString().trim());
+    });
 
-      reactNativeBundleProcess.stderr.on("data", (data: Buffer) => {
-          console.error(data.toString().trim());
-      });
+    reactNativeBundleProcess.stderr.on("data", (data: Buffer) => {
+      console.error(data.toString().trim());
+    });
 
-      reactNativeBundleProcess.on("close", (exitCode: number) => {
-          if (exitCode) {
-              reject(new Error(`"react-native bundle" command exited with code ${exitCode}.`));
-          }
+    reactNativeBundleProcess.on("close", (exitCode: number) => {
+      if (exitCode) {
+        reject(new Error(`"react-native bundle" command exited with code ${exitCode}.`));
+      }
 
-          resolve(null as void);
-      });
+      resolve(null as void);
+    });
   });
 }
 
@@ -252,14 +292,14 @@ export function runHermesEmitBinaryCommand(bundleName: string, outputFolder: str
   const envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
 
   if (typeof envNodeArgs !== "undefined") {
-      Array.prototype.push.apply(hermesArgs, envNodeArgs.trim().split(/\s+/));
+    Array.prototype.push.apply(hermesArgs, envNodeArgs.trim().split(/\s+/));
   }
 
   Array.prototype.push.apply(hermesArgs, [
-      "-emit-binary",
-      "-out", path.join(outputFolder, bundleName + ".hbc"),
-      path.join(outputFolder, bundleName),
-      ...extraHermesFlags,
+    "-emit-binary",
+    "-out", path.join(outputFolder, bundleName + ".hbc"),
+    path.join(outputFolder, bundleName),
+    ...extraHermesFlags,
   ]);
 
   if (sourcemapOutput) {
@@ -276,37 +316,37 @@ export function runHermesEmitBinaryCommand(bundleName: string, outputFolder: str
   out.text(`${hermesCommand} ${hermesArgs.join(" ")}`);
 
   return new Promise<void>((resolve, reject) => {
-      hermesProcess.stdout.on("data", (data: Buffer) => {
-        out.text(data.toString().trim());
-      });
+    hermesProcess.stdout.on("data", (data: Buffer) => {
+      out.text(data.toString().trim());
+    });
 
-      hermesProcess.stderr.on("data", (data: Buffer) => {
-        console.error(data.toString().trim());
-      });
+    hermesProcess.stderr.on("data", (data: Buffer) => {
+      console.error(data.toString().trim());
+    });
 
-      hermesProcess.on("close", (exitCode: number) => {
-          if (exitCode) {
-              reject(new Error(`"hermes" command exited with code ${exitCode}.`));
+    hermesProcess.on("close", (exitCode: number) => {
+      if (exitCode) {
+        reject(new Error(`"hermes" command exited with code ${exitCode}.`));
+      }
+      // Copy HBC bundle to overwrite JS bundle
+      const source = path.join(outputFolder, bundleName + ".hbc");
+      const destination = path.join(outputFolder, bundleName);
+      fs.copyFile(source, destination,
+        (err) => {
+          if (err) {
+            console.error(err);
+            reject(new Error(`Copying file ${source} to ${destination} failed. "hermes" previously exited with code ${exitCode}.`));
           }
-          // Copy HBC bundle to overwrite JS bundle
-          const source = path.join(outputFolder, bundleName + ".hbc");
-          const destination = path.join(outputFolder, bundleName);
-          fs.copyFile(source, destination,
-            (err) => {
-              if (err) {
-                console.error(err);
-                reject(new Error(`Copying file ${source} to ${destination} failed. "hermes" previously exited with code ${exitCode}.`));
-              }
-              fs.unlink(source, (err) => {
-                if (err) {
-                  console.error(err);
-                  reject(err);
-                }
-                resolve(null as void);
-              });
+          fs.unlink(source, (err) => {
+            if (err) {
+              console.error(err);
+              reject(err);
             }
-          );
-      });
+            resolve(null as void);
+          });
+        }
+      );
+    });
   });
 }
 
