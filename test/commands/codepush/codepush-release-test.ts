@@ -37,7 +37,7 @@ describe("CodePush release tests", () => {
       .post(`/upload/upload_chunk/${releaseUploadResponse.id}`)
       .query({
         token: releaseUploadResponse.token,
-        block_number: 0
+        block_number: 1
       })
       .reply(200, {
         error: false,
@@ -58,7 +58,7 @@ describe("CodePush release tests", () => {
         state: "Done"
       });
 
-      nockedApiGatewayRequests
+    nockedApiGatewayRequests
       .post(`/${fakeParamsForRequests.appVersion}/apps/${fakeParamsForRequests.userName}/${fakeParamsForRequests.appName}/deployments/Staging/releases`, {
         release_upload: releaseUploadResponse,
         target_binary_version: "1.0",
@@ -67,20 +67,20 @@ describe("CodePush release tests", () => {
         rollout: 100
       })
       .reply(201, {
-          target_binary_range: "1.0",
-          blob_url: "storagePackage.blobUrl",
-          description: "storagePackage.description",
-          is_disabled: "storagePackage.isDisabled",
-          is_mandatory: false,
-          label: "storagePackage.label",
-          original_deployment: "storagePackage.originalDeployment",
-          original_label: "storagePackage.originalLabel",
-          package_hash: "storagePackage.packageHash",
-          released_by: "userEmail",
-          release_method: "releaseMethod",
-          rollout: 100,
-          size: 512,
-          upload_time: "uploadTime"
+        target_binary_range: "1.0",
+        blob_url: "storagePackage.blobUrl",
+        description: "storagePackage.description",
+        is_disabled: "storagePackage.isDisabled",
+        is_mandatory: false,
+        label: "storagePackage.label",
+        original_deployment: "storagePackage.originalDeployment",
+        original_label: "storagePackage.originalLabel",
+        package_hash: "storagePackage.packageHash",
+        released_by: "userEmail",
+        release_method: "releaseMethod",
+        rollout: 100,
+        size: 512,
+        upload_time: "uploadTime"
       });
 
     stubbedSign = Sinon.stub(updateContentsTasks, "sign");
