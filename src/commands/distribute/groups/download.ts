@@ -5,7 +5,7 @@ import { DefaultApp } from "../../../util/profile";
 import { cwd } from "process";
 import * as Path from "path";
 import * as _ from "lodash";
-import * as MkDirP from "mkdirp";
+import * as mkdirp from "mkdirp";
 import { inspect } from "util";
 import * as Url from "url";
 import * as Request from "request";
@@ -61,7 +61,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     }
 
     const directoryPath = await this.getDirectoryPath(this.directory);
-    const filePath = this.getFileFullPath(this.fileName, directoryPath, app.appName, downloadUrl);
+    const filePath = this.getFileFullPath(this.fileName, directoryPath, downloadUrl);
 
     await out.progress("Downloading release...", this.downloadReleasePackageToFile(downloadUrl, filePath));
     out.text((obj) => `Release was saved to ${obj.path}`, {path: filePath});
@@ -148,37 +148,37 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     }
   }
 
-  private getDirectoryPath(directoryPath: string): Promise<string> {
+  private async getDirectoryPath(directoryPath: string): Promise<string> {
     if (!_.isNil(directoryPath)) {
       const normalizedPath = Path.normalize(directoryPath);
 
       debug("Checking that specified directories exist and creating them if not");
-      return new Promise<string> ((resolve, reject) => {
-        MkDirP(normalizedPath, (error: NodeJS.ErrnoException) => {
-          if (!_.isNil(error)) {
-            if (error.code === "EEXIST") {
-              reject(failure(ErrorCodes.InvalidParameter, `file ${directoryPath} already exists - directory path is expected`));
-            } else {
-              debug(`Failed to create/access directory ${directoryPath} - ${inspect(error)}`);
-              reject(failure(ErrorCodes.Exception, `failed to create/access directory ${directoryPath}`));
-            }
-          } else {
-            resolve(normalizedPath);
-          }
-        });
-      });
+      try {
+        return await mkdirp(normalizedPath);
+      } catch (error) {
+        if (error.code === "EEXIST") {
+          throw failure(ErrorCodes.InvalidParameter, `file ${directoryPath} already exists - directory path is expected`);
+        } else {
+          debug(`Failed to create/access directory ${directoryPath} - ${inspect(error)}`);
+          throw failure(ErrorCodes.Exception, `failed to create/access directory ${directoryPath}`);
+        }
+      }
     } else {
       // using current working directory by default
       return Promise.resolve(cwd());
     }
   }
 
-  private getFileFullPath(passedFileName: string, directoryPath: string, appName: string, downloadUrl: string): string {
+  private getFilenameFromDownloadUrl(downloadUrl: string): string {
+    const filename = Url.parse(downloadUrl).pathname?.split("/").slice(-1)[0];
+    debug(`Got filename from URL: ${filename}`);
+    return filename;
+  }
+
+  private getFileFullPath(passedFileName: string, directoryPath: string, downloadUrl: string): string {
     if (_.isNil(passedFileName)) {
-      // creating default file name from app name and "format" query key value of download url
-      const ext = "." + Url.parse(downloadUrl, true).query.format as string;
-      const name = appName;
-      return Path.format({ dir: directoryPath, name, ext, base: null, root: null });
+      const name = this.getFilenameFromDownloadUrl(downloadUrl);
+      return Path.format({ dir: directoryPath, name, base: null, root: null });
     } else {
       return Path.join(directoryPath, passedFileName);
     }
