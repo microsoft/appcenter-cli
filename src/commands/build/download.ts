@@ -4,13 +4,13 @@ import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
 import * as Process from "process";
-import * as Request from "request";
 import * as JsZip from "jszip";
 import * as JsZipHelper from "../../util/misc/jszip-helper";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import * as mkdirp from "mkdirp";
 import { DefaultApp } from "../../util/profile";
+const got = require("got");
 
 const debug = require("debug")("appcenter-cli:commands:build:download");
 
@@ -21,6 +21,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   private static readonly buildType = "build";
   private static readonly logsType = "logs";
   private static readonly symbolsType = "symbols";
+  private static readonly mappingType = "mapping";
 
   private static readonly failedResult = "failed";
 
@@ -33,7 +34,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   @hasArg
   public buildId: string;
 
-  @help(`Type of download. '${DownloadBuildStatusCommand.buildType}', '${DownloadBuildStatusCommand.logsType}', and '${DownloadBuildStatusCommand.symbolsType}' are allowed values`)
+  @help(`Type of download. '${DownloadBuildStatusCommand.buildType}', '${DownloadBuildStatusCommand.logsType}', ${DownloadBuildStatusCommand.mappingType} and '${DownloadBuildStatusCommand.symbolsType}' are allowed values`)
   @shortName("t")
   @longName("type")
   @required
@@ -100,16 +101,9 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     return success();
   }
 
-  private downloadFile(uri: string): Promise<ClientResponse<Buffer>> {
-    return new Promise<ClientResponse<Buffer>>((resolve, reject) => {
-      Request.get(uri, {encoding: null}, (error, response, body: Buffer) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve({result: body, response});
-        }
-      });
-    });
+  private async downloadFile(uri: string): Promise<ClientResponse<Buffer>> {
+    const response = await got(uri, { responseType: "buffer" });
+    return { result: response.body, response } as ClientResponse<Buffer>;
   }
 
   private async generateNameForOutputFile(branchName: string, extension: string): Promise<string> {
@@ -122,7 +116,8 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     let id = 1;
     let newFileName: string;
     do {
-      newFileName = `${this.type}_${branchName}_${this.buildId}_${id++}.${extension}`;
+      const cleanBranchName = branchName.replace(/[\/\\]/g, "_");
+      newFileName = `${this.type}_${cleanBranchName}_${this.buildId}_${id++}.${extension}`;
     }
     while (_.includes(filesInDirectory, newFileName.toLowerCase()));
 
@@ -133,9 +128,10 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     const lowerCaseType = type.toLowerCase();
     if (lowerCaseType !== DownloadBuildStatusCommand.buildType
           && lowerCaseType !== DownloadBuildStatusCommand.logsType
+          && lowerCaseType !== DownloadBuildStatusCommand.mappingType
           && lowerCaseType !== DownloadBuildStatusCommand.symbolsType) {
       throw failure(ErrorCodes.InvalidParameter,
-        `download type should be '${DownloadBuildStatusCommand.buildType}', '${DownloadBuildStatusCommand.logsType}' or '${DownloadBuildStatusCommand.symbolsType}'`);
+        `download type should be '${DownloadBuildStatusCommand.buildType}', '${DownloadBuildStatusCommand.logsType}', '${DownloadBuildStatusCommand.mappingType}' or '${DownloadBuildStatusCommand.symbolsType}'`);
     }
 
     return lowerCaseType;

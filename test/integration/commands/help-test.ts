@@ -3,10 +3,11 @@ import HelpCommand from "../../../src/commands/help";
 import { CommandArgs } from "../../../src/util/commandline";
 import { expect } from "chai";
 
-describe("Validating help command", () => {
+describe("Validating help command", function () {
 
   let stubbedConsole: Sinon.SinonStub;
 
+  this.timeout(10000);
   beforeEach(() => {
     stubbedConsole = Sinon.stub(console, "log");
   });
