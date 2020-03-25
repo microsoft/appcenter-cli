@@ -154,7 +154,8 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
 
       debug("Checking that specified directories exist and creating them if not");
       try {
-        return await mkdirp(normalizedPath);
+        await mkdirp(normalizedPath);
+        return normalizedPath;
       } catch (error) {
         if (error.code === "EEXIST") {
           throw failure(ErrorCodes.InvalidParameter, `file ${directoryPath} already exists - directory path is expected`);
