@@ -2,6 +2,7 @@ import { expect } from "chai";
 import * as Sinon from "sinon";
 import * as path from "path";
 import * as pfs from "../../../../src/util/misc/promisfied-fs";
+import * as mkdirp from "mkdirp";
 import { CommandArgs } from "../../../../src/util/commandline";
 import GenerateUITestCommand from "../../../../src/commands/test/generate/uitest";
 
@@ -12,7 +13,7 @@ describe("Validating UITest template generation", () => {
 
   beforeEach(async () => {
     sandbox = Sinon.createSandbox();
-    await pfs.mkdirp(path.join(__dirname, tempTemplateDir));
+    await mkdirp(path.join(__dirname, tempTemplateDir));
 
     await pfs.cpDir(path.join(__dirname, templateDir),
                     path.join(__dirname, tempTemplateDir));
