@@ -10,10 +10,10 @@ import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import * as fs from "fs";
 import * as stream from "stream";
 import * as FormData from "form-data";
+import * as http from "http";
+import * as https from "https";
 const got = require("got");
-const http = require('http');
-const https = require('https');
-const urlToOptions = require('got/dist/source/utils/url-to-options').default;
+const urlToOptions = require("got/dist/source/utils/url-to-options").default;
 
 const debug = require("debug")("appcenter-cli:commands:distribute:release");
 
