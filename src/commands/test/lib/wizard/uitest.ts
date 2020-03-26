@@ -4,7 +4,6 @@ import { CommandArgs, CommandResult, AppCommand } from "../../../../util/command
 import { AppCenterClient } from "../../../../util/apis";
 import { prompt, out } from "../../../../util/interaction";
 import RunUITestsCommand from "../../run/uitest";
-import { Questions } from "inquirer";
 import { directoryExistsSync } from "../../../../util/misc/fs-helper";
 
 interface BuildFolder {
@@ -39,7 +38,7 @@ export default class RunUitestWizardTestCommand extends AppCommand {
   }
 
   private async promptMergeXml(): Promise<boolean> {
-    const questions: Questions = [
+    const questions = [
       {
         type: "list",
         name: "merge",
@@ -114,7 +113,7 @@ export default class RunUitestWizardTestCommand extends AppCommand {
       name: "Enter path manually",
       value: "manual"
     });
-    const questions: Questions = [
+    const questions = [
       {
         type: "list",
         name: "folderPath",
