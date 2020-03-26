@@ -251,7 +251,7 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
   }
 
   Array.prototype.push.apply(reactNativeBundleArgs, [
-    path.join("node_modules", ".bin", "react-native"), "bundle",
+    path.join("node_modules", "react-native", "local-cli", "cli.js"), "bundle",
     "--assets-dest", outputFolder,
     "--bundle-output", path.join(outputFolder, bundleName),
     "--dev", development,
