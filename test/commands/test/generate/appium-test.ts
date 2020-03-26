@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import * as path from "path";
 import * as pfs from "../../../../src/util/misc/promisfied-fs";
+import * as mkdirp from "mkdirp";
 import { CommandArgs } from "../../../../src/util/commandline";
 import GenerateAppiumCommand from "../../../../src/commands/test/generate/appium";
 
@@ -8,7 +9,7 @@ describe("Validating Appium template generation", () => {
   const tempTemplateDir: string = "../resources/appium-template-files-tmp";
 
   beforeEach(async () => {
-    await pfs.mkdirp(path.join(__dirname, tempTemplateDir));
+    await mkdirp(path.join(__dirname, tempTemplateDir));
   });
 
   afterEach(async () => {
