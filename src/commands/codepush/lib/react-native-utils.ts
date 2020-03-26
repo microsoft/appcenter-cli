@@ -245,13 +245,18 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
 export function runReactNativeBundleCommand(bundleName: string, development: boolean, entryFile: string, outputFolder: string, platform: string, sourcemapOutput: string, extraBundlerOptions: string[]): Promise<void> {
   const reactNativeBundleArgs: string[] = [];
   const envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
+  let cliPath: string;
 
   if (typeof envNodeArgs !== "undefined") {
     Array.prototype.push.apply(reactNativeBundleArgs, envNodeArgs.trim().split(/\s+/));
   }
-
+  if (process.platform === "darwin") {
+    cliPath = path.join("node_modules", ".bin", "react-native");
+  } else {
+    cliPath = path.join("node_modules", "react-native", "local-cli", "cli.js");
+  }
   Array.prototype.push.apply(reactNativeBundleArgs, [
-    path.join("node_modules", "react-native", "local-cli", "cli.js"), "bundle",
+    cliPath, "bundle",
     "--assets-dest", outputFolder,
     "--bundle-output", path.join(outputFolder, bundleName),
     "--dev", development,
