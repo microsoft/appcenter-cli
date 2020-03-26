@@ -2,6 +2,7 @@ import * as JSZip from "jszip";
 import * as Path from "path";
 import * as Pfs from "./promisfied-fs";
 import * as fs from "fs";
+import * as mkdirp from "mkdirp";
 
 /**
  * Unpacks ZIP file contents to the specified folder (it should already exist)
@@ -14,11 +15,11 @@ export async function unpackZipToPath(path: string, zip: JSZip, root: string = "
     const zipPath = entry.name.substring(root.length);
 
     if (entry.dir) {
-      await Pfs.mkdirp(Path.join(path, zipPath));
+      await mkdirp(Path.join(path, zipPath));
     } else {
       const fileDirPath = Path.join(path, Path.dirname(zipPath));
       // Creating directory path if needed
-      await Pfs.mkdirp(fileDirPath);
+      await mkdirp(fileDirPath);
 
       const buffer: Buffer = await entry.async("nodebuffer");
       await Pfs.writeFile(Path.join(fileDirPath, Path.basename(zipPath)), buffer);
