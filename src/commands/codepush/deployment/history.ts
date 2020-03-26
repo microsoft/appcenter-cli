@@ -4,8 +4,8 @@ import { inspect } from "util";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { formatDate } from "./lib/date-helper";
 import { scriptName } from "../../../util/misc";
-import chalk from "chalk";
 
+const chalk = require("chalk");
 const debug = require("debug")("appcenter-cli:commands:codepush:deployments:history");
 
 @help("Display the release history for a CodePush deployment")

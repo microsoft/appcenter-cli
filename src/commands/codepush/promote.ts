@@ -2,9 +2,9 @@ import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, succ
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
-import chalk from "chalk";
 import { isValidRollout, isValidRange } from "./lib/validation-utils";
 
+const chalk = require("chalk");
 const debug = require("debug")("appcenter-cli:commands:codepush:promote");
 
 @help("Create a new release for the destination deployment, which includes the exact code and metadata from the latest release of the source deployment")

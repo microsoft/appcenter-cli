@@ -5,7 +5,7 @@ import {
 } from "./util/commandline";
 
 import * as path from "path";
-import chalk from "chalk";
+const chalk = require("chalk");
 
 const runner = commandRunner(path.join(__dirname, "commands"));
 runner(process.argv.slice(2))

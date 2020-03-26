@@ -2,10 +2,10 @@ import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, succ
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
-import chalk from "chalk";
 import { scriptName } from "../../../util/misc";
 import { formatDate } from "./lib/date-helper";
 
+const chalk = require("chalk");
 const debug = require("debug")("appcenter-cli:commands:codepush:deployments:list");
 
 @help("List the deployments associated with an app")

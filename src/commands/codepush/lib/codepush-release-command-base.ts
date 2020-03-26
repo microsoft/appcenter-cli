@@ -5,13 +5,13 @@ import { out } from "../../../util/interaction";
 import { inspect } from "util";
 import * as fs from "fs";
 import * as pfs from "../../../util/misc/promisfied-fs";
-import chalk from "chalk";
 import { sign, zip } from "./update-contents-tasks";
 import { isBinaryOrZip, getLastFolderInPath, moveReleaseFilesInTmpFolder, isDirectory } from "./file-utils";
 import { isValidRange, isValidRollout, isValidDeployment, validateVersion } from "./validation-utils";
 import FileUploadClient, { MessageLevel } from "appcenter-file-upload-client";
 import { DefaultApp } from "../../../util/profile";
 
+const chalk = require("chalk");
 const debug = require("debug")("appcenter-cli:commands:codepush:release-base");
 
 export default class CodePushReleaseCommandBase extends AppCommand {

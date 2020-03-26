@@ -5,8 +5,8 @@ import { CommandResult, success } from "./command-result";
 import { out } from "../interaction";
 import { scriptName } from "../misc";
 import { getClassHelpText } from "./option-decorators";
-import chalk from "chalk";
 
+const chalk = require("chalk");
 const Table = require("cli-table3");
 const debug = require("debug")("appcenter-cli:util:commandline:category-command");
 
