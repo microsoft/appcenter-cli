@@ -450,7 +450,7 @@ describe("release command", () => {
       const result = await expect(command.execute()).to.eventually.be.rejected as CommandFailedResult;
 
       // Assert
-      testFailure(result, "release binary file uploading failed: HTTP 500 null", expectedRequestsScope, skippedRequestsScope);
+      testFailure(result, "release binary file uploading failed: HTTPError: Response code 500 (Internal Server Error)", expectedRequestsScope, skippedRequestsScope);
     });
   });
 

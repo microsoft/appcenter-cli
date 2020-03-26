@@ -3,13 +3,14 @@ import { AppCenterClient, models, clientRequest, ClientResponse } from "../../ut
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as _ from "lodash";
-import * as Request from "request";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
 import { DefaultApp } from "../../util/profile";
 import { getDistributionGroup, addGroupToRelease } from "./lib/distribute-util";
 import * as fs from "fs";
 import * as stream from "stream";
+import * as FormData from "form-data";
+const got = require("got");
 
 const debug = require("debug")("appcenter-cli:commands:distribute:release");
 
@@ -291,33 +292,22 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return createReleaseUploadRequestResponse.result;
   }
 
-  private uploadFileToUri(uploadUrl: string, fileStream: stream.Stream, fileStats: fs.Stats, filename: string): Promise<void> {
+  private async uploadFileToUri(uploadUrl: string, fileStream: stream.Stream, fileStats: fs.Stats, filename: string): Promise<void> {
     debug("Uploading the release binary");
-    return new Promise<void>((resolve, reject) => {
-      Request.post({
-        formData: {
-          ipa: {
-            options: {
-              filename,
-              contentType: "application/octet-stream",
-              knownLength: fileStats.size
-            },
-            value: fileStream
-          }
-        },
-        url: uploadUrl
-      })
-      .on("error", (error) => {
-        reject(failure(ErrorCodes.Exception, `release binary uploading failed: ${error.message}`));
-      })
-      .on("response", (response) => {
-        if (response.statusCode < 400) {
-          resolve();
-        } else {
-          reject(failure(ErrorCodes.Exception, `release binary file uploading failed: HTTP ${response.statusCode} ${response.statusMessage}`));
-        }
-      });
-    });
+    const body = new FormData();
+    body.append("ipa", fileStream);
+    const options = {
+      filename,
+      body,
+      contentType: "application/octet-stream",
+      knownLength: fileStats.size,
+    };
+
+    try {
+      await got.post(uploadUrl, options);
+    } catch (error) {
+      throw failure(ErrorCodes.Exception, `release binary file uploading failed: ${error}`);
+    }
   }
 
   private async finishReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<string> {
