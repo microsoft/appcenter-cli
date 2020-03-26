@@ -9,6 +9,7 @@ import * as JsZip from "jszip";
 import * as JsZipHelper from "../../util/misc/jszip-helper";
 import * as Path from "path";
 import * as Pfs from "../../util/misc/promisfied-fs";
+import * as mkdirp from "mkdirp";
 import { DefaultApp } from "../../util/profile";
 
 const debug = require("debug")("appcenter-cli:commands:build:download");
@@ -73,7 +74,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     const downloadedContent = await this.downloadContent(uri);
 
     debug(`Creating (if necessary) destination folder ${this.directory}`);
-    await out.progress("Creating destination folder... ", Pfs.mkdirp(this.directory));
+    await out.progress("Creating destination folder... ", mkdirp(this.directory));
 
     let outputPath: string;
     if (this.type === DownloadBuildStatusCommand.buildType) {
@@ -233,7 +234,7 @@ export default class DownloadBuildStatusCommand extends AppCommand {
 
     debug(`Writing xcarchive directory ${directoryName}`);
     const directoryPath: string = Path.join(this.directory, directoryName);
-    await Pfs.mkdirp(directoryPath);
+    await mkdirp(directoryPath);
     await JsZipHelper.unpackZipToPath(directoryPath, directoryZip, root);
     return directoryPath;
   }
