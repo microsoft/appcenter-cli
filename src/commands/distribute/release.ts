@@ -11,6 +11,9 @@ import * as fs from "fs";
 import * as stream from "stream";
 import * as FormData from "form-data";
 const got = require("got");
+const http = require('http');
+const https = require('https');
+const urlToOptions = require('got/dist/source/utils/url-to-options').default;
 
 const debug = require("debug")("appcenter-cli:commands:distribute:release");
 
@@ -304,7 +307,17 @@ export default class ReleaseBinaryCommand extends AppCommand {
     };
 
     try {
-      await got.post(uploadUrl, options);
+      // This fixes Nock usage with got v10
+      // https://github.com/sindresorhus/got/issues/876#issuecomment-573348808
+      const instance = got.extend({
+        request: (url: { protocol: string; }, options: any, callback: any) => {
+          if (url.protocol === "https:") {
+            return https.request({...options, ...urlToOptions(url)}, callback);
+          }
+          return http.request({...options, ...urlToOptions(url)}, callback);
+        }
+      });
+      await instance.post(uploadUrl, options);
     } catch (error) {
       throw failure(ErrorCodes.Exception, `release binary file uploading failed: ${error}`);
     }

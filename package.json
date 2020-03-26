@@ -111,7 +111,7 @@
     "form-data": "^3.0.0",
     "from2": "2.3.0",
     "glob": "7.1.6",
-    "got": "9.6.0",
+    "got": "10.7.0",
     "gradle-to-js": "2.0.0",
     "inquirer": "6.5.2",
     "iso8601-duration": "1.2.0",
