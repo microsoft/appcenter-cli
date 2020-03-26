@@ -122,7 +122,8 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     let id = 1;
     let newFileName: string;
     do {
-      newFileName = `${this.type}_${branchName}_${this.buildId}_${id++}.${extension}`;
+      const encodedBranchName = encodeURIComponent(branchName);
+      newFileName = `${this.type}_${encodedBranchName}_${this.buildId}_${id++}.${extension}`;
     }
     while (_.includes(filesInDirectory, newFileName.toLowerCase()));
 
