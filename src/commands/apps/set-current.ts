@@ -33,7 +33,7 @@ export default class SetCurrentAppCommand extends Command {
 
     if (!profile) {
       return failure(ErrorCodes.InvalidParameter,
-        `Could not find a logged in profile, please note that this command is not compatible with the '--token' parameter or the token environment variable.`);
+        `Could not find a logged in profile, please note that this command is not compatible with the '--token' parameter or the token environment variable. Use environment variable 'MOBILE_CENTER_CURRENT_APP' to set the default app instead.`);
     }
 
     profile.defaultApp = newDefault;
