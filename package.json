@@ -88,7 +88,7 @@
     "mocha": "7.1.1",
     "mocha-junit-reporter": "1.23.3",
     "mock-require": "3.0.3",
-    "nock": "11.9.1",
+    "nock": "12.0.3",
     "sinon": "9.0.1",
     "ts-node": "8.8.1",
     "tslint": "6.1.0",
