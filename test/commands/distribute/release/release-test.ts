@@ -203,7 +203,7 @@ describe("release command", () => {
 
         // Assert
         testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-        Sinon.assert.calledWith(postSymbolSpy, Sinon.match(JSON.stringify({build_version: buildVersion})));
+        Sinon.assert.calledWith(postSymbolSpy, Sinon.match({build_version: buildVersion}));
       });
 
       it("should return success for msi file", async () => {
@@ -216,7 +216,7 @@ describe("release command", () => {
 
         // Assert
         testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-        Sinon.assert.calledWith(postSymbolSpy, Sinon.match(JSON.stringify({build_version: buildVersion})));
+        Sinon.assert.calledWith(postSymbolSpy, Sinon.match({build_version: buildVersion}));
       });
 
       it("should return success for pkg file", async () => {
@@ -229,7 +229,7 @@ describe("release command", () => {
 
         // Assert
         testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-        Sinon.assert.calledWith(postSymbolSpy, Sinon.match(JSON.stringify({build_version: buildVersion, build_number: buildNumber})));
+        Sinon.assert.calledWith(postSymbolSpy, Sinon.match({build_version: buildVersion, build_number: buildNumber}));
       });
 
       it("should return success for dmg file", async () => {
@@ -242,7 +242,7 @@ describe("release command", () => {
 
         // Assert
         testCommandSuccess(result, expectedRequestsScope, skippedRequestsScope);
-        Sinon.assert.calledWith(postSymbolSpy, Sinon.match(JSON.stringify({build_version: buildVersion, build_number: buildNumber})));
+        Sinon.assert.calledWith(postSymbolSpy, Sinon.match({build_version: buildVersion, build_number: buildNumber}));
       });
     });
 
