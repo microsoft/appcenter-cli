@@ -401,7 +401,7 @@ function getHermesCommand(): string {
 function getCliPath(): string {
   if (process.platform === "win32") {
     return path.join("node_modules", "react-native", "local-cli", "cli.js");
-  } 
+  }
 
   return path.join("node_modules", ".bin", "react-native");
 }
