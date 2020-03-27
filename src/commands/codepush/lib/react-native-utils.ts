@@ -245,18 +245,13 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
 export function runReactNativeBundleCommand(bundleName: string, development: boolean, entryFile: string, outputFolder: string, platform: string, sourcemapOutput: string, extraBundlerOptions: string[]): Promise<void> {
   const reactNativeBundleArgs: string[] = [];
   const envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
-  let cliPath: string;
 
   if (typeof envNodeArgs !== "undefined") {
     Array.prototype.push.apply(reactNativeBundleArgs, envNodeArgs.trim().split(/\s+/));
   }
-  if (process.platform === "darwin") {
-    cliPath = path.join("node_modules", ".bin", "react-native");
-  } else {
-    cliPath = path.join("node_modules", "react-native", "local-cli", "cli.js");
-  }
+
   Array.prototype.push.apply(reactNativeBundleArgs, [
-    cliPath, "bundle",
+    getCliPath(), "bundle",
     "--assets-dest", outputFolder,
     "--bundle-output", path.join(outputFolder, bundleName),
     "--dev", development,
@@ -401,6 +396,14 @@ function getHermesCommand(): string {
     return hermesEngine;
   }
   return path.join("node_modules", "hermesvm", getHermesOSBin(), "hermes");
+}
+
+function getCliPath(): string {
+  if (process.platform === "win32") {
+    return path.join("node_modules", "react-native", "local-cli", "cli.js");
+  } 
+
+  return path.join("node_modules", ".bin", "react-native");
 }
 
 export function isValidOS(os: string): boolean {
