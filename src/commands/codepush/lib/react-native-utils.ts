@@ -251,7 +251,7 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
   }
 
   Array.prototype.push.apply(reactNativeBundleArgs, [
-    path.join("node_modules", ".bin", "react-native"), "bundle",
+    getCliPath(), "bundle",
     "--assets-dest", outputFolder,
     "--bundle-output", path.join(outputFolder, bundleName),
     "--dev", development,
@@ -396,6 +396,14 @@ function getHermesCommand(): string {
     return hermesEngine;
   }
   return path.join("node_modules", "hermesvm", getHermesOSBin(), "hermes");
+}
+
+function getCliPath(): string {
+  if (process.platform === "win32") {
+    return path.join("node_modules", "react-native", "local-cli", "cli.js");
+  }
+
+  return path.join("node_modules", ".bin", "react-native");
 }
 
 export function isValidOS(os: string): boolean {
