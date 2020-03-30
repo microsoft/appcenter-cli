@@ -1,6 +1,7 @@
 import * as path from "path";
 import { out } from "../../../util/interaction";
-const chalk = require("chalk");
+import * as chalk from "chalk";
+
 const childProcess = require("child_process");
 
 export let spawn = childProcess.spawn;

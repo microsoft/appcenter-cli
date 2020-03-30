@@ -8,8 +8,8 @@ import * as fs from "fs";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";
 import { isValidOS, isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectAppVersion } from "./lib/cordova-utils";
 import * as childProcess from "child_process";
+import * as chalk from "chalk";
 
-const chalk = require("chalk");
 export let execSync = childProcess.execSync;
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-cordova");

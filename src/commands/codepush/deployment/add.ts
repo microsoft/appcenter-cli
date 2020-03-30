@@ -4,7 +4,8 @@ import { inspect } from "util";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { scriptName } from "../../../util/misc";
 import * as _ from "lodash";
-const chalk = require("chalk");
+import * as chalk from "chalk";
+
 const debug = require("debug")("appcenter-cli:commands:codepush:deployments:add");
 
 @help("Add a new deployment to an app")

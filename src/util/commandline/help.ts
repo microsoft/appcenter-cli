@@ -3,10 +3,9 @@
 import * as _ from "lodash";
 import * as os from "os";
 import { isatty } from "tty";
+import * as chalk from "chalk";
 
-const chalk = require("chalk");
 const debug = require("debug")("appcenter-cli:util:commandline:help");
-
 const Table = require("cli-table3");
 
 import {

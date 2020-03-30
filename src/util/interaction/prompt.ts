@@ -2,7 +2,6 @@
 
 import * as inquirer from "inquirer";
 import { isQuiet } from "./io-options";
-export { Question, Answers, Separator } from "inquirer";
 
 export function prompt(message: string): Promise<string> {
   return prompt.question([

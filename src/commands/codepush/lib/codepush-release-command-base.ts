@@ -10,8 +10,8 @@ import { isBinaryOrZip, getLastFolderInPath, moveReleaseFilesInTmpFolder, isDire
 import { isValidRange, isValidRollout, isValidDeployment, validateVersion } from "./validation-utils";
 import FileUploadClient, { MessageLevel } from "appcenter-file-upload-client";
 import { DefaultApp } from "../../../util/profile";
+import * as chalk from "chalk";
 
-const chalk = require("chalk");
 const debug = require("debug")("appcenter-cli:commands:codepush:release-base");
 
 export default class CodePushReleaseCommandBase extends AppCommand {

@@ -9,8 +9,8 @@ import * as mkdirp from "mkdirp";
 import { fileDoesNotExistOrIsDirectory, createEmptyTmpReleaseFolder, removeReactTmpDir } from "./lib/file-utils";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";
 import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand, runHermesEmitBinaryCommand, getHermesEnabled, isValidOS, isValidPlatform, isReactNativeProject } from "./lib/react-native-utils";
+import * as chalk from "chalk";
 
-const chalk = require("chalk");
 const debug = require("debug")("appcenter-cli:commands:codepush:release-react");
 
 @help("Release a React Native update to an app deployment")

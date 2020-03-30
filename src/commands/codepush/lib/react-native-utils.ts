@@ -4,8 +4,8 @@ import * as xml2js from "xml2js";
 import { out, isDebug } from "../../../util/interaction";
 import { isValidVersion } from "./validation-utils";
 import { fileDoesNotExistOrIsDirectory } from "./file-utils";
+import * as chalk from "chalk";
 
-const chalk = require("chalk");
 const xcode = require("xcode");
 const plist = require("plist");
 const g2js = require("gradle-to-js/lib/parser");

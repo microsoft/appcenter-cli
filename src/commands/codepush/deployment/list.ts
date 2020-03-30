@@ -4,8 +4,8 @@ import { inspect } from "util";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { scriptName } from "../../../util/misc";
 import { formatDate } from "./lib/date-helper";
+import * as chalk from "chalk";
 
-const chalk = require("chalk");
 const debug = require("debug")("appcenter-cli:commands:codepush:deployments:list");
 
 @help("List the deployments associated with an app")
