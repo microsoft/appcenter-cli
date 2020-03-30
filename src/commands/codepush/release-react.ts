@@ -4,12 +4,12 @@ import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import * as pfs from "../../util/misc/promisfied-fs";
-import chalk from "chalk";
 import * as path from "path";
 import * as mkdirp from "mkdirp";
 import { fileDoesNotExistOrIsDirectory, createEmptyTmpReleaseFolder, removeReactTmpDir } from "./lib/file-utils";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";
 import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand, runHermesEmitBinaryCommand, getHermesEnabled, isValidOS, isValidPlatform, isReactNativeProject } from "./lib/react-native-utils";
+import * as chalk from "chalk";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-react");
 

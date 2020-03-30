@@ -4,7 +4,6 @@ import { CommandArgs, CommandResult, AppCommand } from "../../../../util/command
 import { AppCenterClient } from "../../../../util/apis";
 import { prompt, out } from "../../../../util/interaction";
 import RunAppiumTestsCommand from "../../run/appium";
-import { Questions } from "inquirer";
 import { directoryExistsSync } from "../../../../util/misc/fs-helper";
 
 // Used to sort the found folders in the order of their predicted probability of containing the appium tests.
@@ -51,7 +50,7 @@ export default class RunAppiumWizardTestCommand extends AppCommand {
   }
 
   private async promptMergeXml(): Promise<boolean> {
-    const questions: Questions = [
+    const questions = [
       {
         type: "list",
         name: "merge",
@@ -184,7 +183,7 @@ export default class RunAppiumWizardTestCommand extends AppCommand {
       name: "Enter path manually",
       value: "manual"
     });
-    const questions: Questions = [
+    const questions = [
       {
         type: "list",
         name: "folderPath",

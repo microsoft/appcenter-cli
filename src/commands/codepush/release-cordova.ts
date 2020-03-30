@@ -3,12 +3,12 @@ import CodePushReleaseCommandBase from "./lib/codepush-release-command-base";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
-import chalk from "chalk";
 import * as path from "path";
 import * as fs from "fs";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";
 import { isValidOS, isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectAppVersion } from "./lib/cordova-utils";
 import * as childProcess from "child_process";
+import * as chalk from "chalk";
 
 export let execSync = childProcess.execSync;
 

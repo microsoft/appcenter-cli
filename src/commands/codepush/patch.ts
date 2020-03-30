@@ -2,10 +2,10 @@ import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, succ
 import { out } from "../../util/interaction";
 import { inspect } from "util";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
-import chalk from "chalk";
 import { isValidRollout, isValidRange } from "./lib/validation-utils";
 import { DefaultApp } from "../../util/profile";
 import { scriptName } from "../../util/misc";
+import * as chalk from "chalk";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:patch");
 

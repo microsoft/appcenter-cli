@@ -6,7 +6,7 @@ export function formatDate(unixOffset: number): string {
     if (differenceInMinutes(Date.now(), date) < 2) {
       formattedDateString = "Just now";
     } else {
-      formattedDateString = format(date, "MMM DD, hh:mm A");
+      formattedDateString = format(date, "MMM dd, hh:mm a");
     }
     return formattedDateString;
 }

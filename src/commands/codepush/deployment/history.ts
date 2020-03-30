@@ -4,7 +4,7 @@ import { inspect } from "util";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { formatDate } from "./lib/date-helper";
 import { scriptName } from "../../../util/misc";
-import chalk from "chalk";
+import * as chalk from "chalk";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:deployments:history");
 

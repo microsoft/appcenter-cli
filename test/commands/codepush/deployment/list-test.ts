@@ -6,8 +6,8 @@ import * as Sinon from "sinon";
 import * as Nock from "nock";
 import { formatDate } from "../../../../src/commands/codepush/deployment/lib/date-helper";
 import { getFakeParamsForRequest, FakeParamsForRequests } from "../utils";
-import chalk from "chalk";
 import { out } from "../../../../src/util/interaction/index";
+import * as chalk from "chalk";
 
 // Have to use `require` because of this: https://github.com/chalk/strip-ansi/issues/11
 const stripAnsi = require("strip-ansi");

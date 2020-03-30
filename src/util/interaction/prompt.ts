@@ -2,7 +2,6 @@
 
 import * as inquirer from "inquirer";
 import { isQuiet } from "./io-options";
-export { Questions, Answers, Separator } from "inquirer";
 
 export function prompt(message: string): Promise<string> {
   return prompt.question([
@@ -64,7 +63,7 @@ export namespace prompt {
     .then((answers) => answers["result"].toString());
   }
 
-  export function question(questions: inquirer.Questions): Promise<inquirer.Answers> {
+  export function question(questions: inquirer.Question[]): Promise<inquirer.Answers> {
     if (isQuiet()) {
       if (!Array.isArray(questions)) {
         // Casting is done here due to incompatibility between typings and @types package

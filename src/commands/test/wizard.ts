@@ -2,7 +2,6 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import { prompt, out } from "../../util/interaction";
-import { Questions } from "inquirer";
 import { help, CommandArgs, AppCommand, CommandResult } from "../../util/commandline";
 import { Messages } from "./lib/help-messages";
 import { AppCenterClient, clientCall, models } from "../../util/apis";
@@ -121,7 +120,7 @@ export default class WizardTestCommand extends AppCommand {
         value: TestFramework[framework as any]
       };
     });
-    const questions: Questions = [
+    const questions = [
       {
         type: "list",
         name: "framework",
@@ -148,7 +147,7 @@ export default class WizardTestCommand extends AppCommand {
       name: "Enter path manually",
       value: "manual"
     });
-    const questions: Questions = [
+    const questions = [
       {
         type: "list",
         name: "appPath",
@@ -174,7 +173,7 @@ export default class WizardTestCommand extends AppCommand {
   }
 
   private async isAsync(): Promise<boolean> {
-    const questions: Questions = [
+    const questions = [
       {
         type: "list",
         name: "isAsync",
@@ -218,7 +217,7 @@ export default class WizardTestCommand extends AppCommand {
       };
     });
 
-    const question: Questions = [
+    const question = [
       {
         type: "list",
         name: "app",
@@ -256,7 +255,7 @@ export default class WizardTestCommand extends AppCommand {
         value: "manual"
       });
     }
-    const questions: Questions = [
+    const questions = [
       {
         type: "list",
         name: "deviceSlug",
