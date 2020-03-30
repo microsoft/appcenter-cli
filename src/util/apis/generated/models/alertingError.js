@@ -10,22 +10,19 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Alerting service error
  *
- * @extends models['AlertOperationResult']
  */
-class AlertingError extends models['AlertOperationResult'] {
+class AlertingError {
   /**
    * Create a AlertingError.
+   * @property {string} requestId Unique request identifier for tracking
    * @property {number} code The status code return by the API. It can be 400
    * or 404 or 409 or 500.
    * @property {string} [message] The reason for the request failed
    */
   constructor() {
-    super();
   }
 
   /**

@@ -10,21 +10,21 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ReleaseUpdateError.
- * @extends models['ErrorDetails']
  */
-class ReleaseUpdateError extends models['ErrorDetails'] {
+class ReleaseUpdateError {
   /**
    * Create a ReleaseUpdateError.
+   * @property {string} code Possible values include: 'BadRequest', 'Conflict',
+   * 'NotAcceptable', 'NotFound', 'InternalServerError', 'Unauthorized',
+   * 'TooManyRequests'
+   * @property {string} message
    * @property {string} [releaseNotes]
    * @property {boolean} [mandatoryUpdate]
    * @property {array} [destinations]
    */
   constructor() {
-    super();
   }
 
   /**
@@ -76,10 +76,10 @@ class ReleaseUpdateError extends models['ErrorDetails'] {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DestinationErrorElementType',
+                  serializedName: 'ReleaseUpdateErrorDestinationsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DestinationError'
+                    className: 'ReleaseUpdateErrorDestinationsItem'
                   }
               }
             }

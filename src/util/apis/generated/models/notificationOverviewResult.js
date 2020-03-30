@@ -19,7 +19,10 @@ class NotificationOverviewResult {
    * Create a NotificationOverviewResult.
    * @property {string} notificationId Notification id.
    * @property {string} [name] Notification name
-   * @property {object} [notificationTarget]
+   * @property {object} [notificationTarget] Type of Notification target
+   * (audiences, devices, user ids, account ids or broadcast). The object must
+   * include the correct properties for the specified target type except for
+   * broadcast.
    * @property {string} [notificationTarget.type] Polymorphic Discriminator
    * @property {date} [sendTime] Notification send time
    * @property {number} [pnsSendFailure] Number of the notifications failed to
@@ -72,8 +75,8 @@ class NotificationOverviewResult {
                 serializedName: 'type',
                 clientName: 'type'
               },
-              uberParent: 'NotificationTarget',
-              className: 'NotificationTarget'
+              uberParent: 'NotificationOverviewResultNotificationTarget',
+              className: 'NotificationOverviewResultNotificationTarget'
             }
           },
           sendTime: {

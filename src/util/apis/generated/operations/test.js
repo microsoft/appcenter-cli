@@ -34,7 +34,8 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link DeviceSet} for more information.
+ *                      See {@link GetDeviceSetOfUserOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -125,7 +126,7 @@ function _getDeviceSetOfUser(id, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DeviceSet']().mapper();
+          let resultMapper = new client.models['GetDeviceSetOfUserOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -207,7 +208,7 @@ function _updateDeviceSetOfUser(id, ownerName, appName, devices, name, options, 
   }
   let deviceSet;
   if ((devices !== null && devices !== undefined) || (name !== null && name !== undefined)) {
-    deviceSet = new client.models['DeviceSetUpdate']();
+    deviceSet = new client.models['DeviceSetModelModel']();
     deviceSet.devices = devices;
     deviceSet.name = name;
   }
@@ -238,7 +239,7 @@ function _updateDeviceSetOfUser(id, ownerName, appName, devices, name, options, 
   let requestModel = null;
   try {
     if (deviceSet !== null && deviceSet !== undefined) {
-      let requestModelMapper = new client.models['DeviceSetUpdate']().mapper();
+      let requestModelMapper = new client.models['DeviceSetModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, deviceSet, 'deviceSet');
       requestContent = JSON.stringify(requestModel);
     }
@@ -286,7 +287,7 @@ function _updateDeviceSetOfUser(id, ownerName, appName, devices, name, options, 
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DeviceSet']().mapper();
+          let resultMapper = new client.models['UpdateDeviceSetOfUserOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -303,7 +304,7 @@ function _updateDeviceSetOfUser(id, ownerName, appName, devices, name, options, 
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestCloudErrorDetails']().mapper();
+          let resultMapper = new client.models['UpdateDeviceSetOfUserBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -539,10 +540,10 @@ function _listDeviceSetsOfUser(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DeviceSetElementType',
+                  serializedName: 'ListDeviceSetsOfUserOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DeviceSet'
+                    className: 'ListDeviceSetsOfUserOKResponseItem'
                   }
               }
             }
@@ -623,7 +624,7 @@ function _createDeviceSetOfUser(ownerName, appName, devices, name, options, call
   }
   let deviceSet;
   if ((devices !== null && devices !== undefined) || (name !== null && name !== undefined)) {
-    deviceSet = new client.models['DeviceSetUpdate']();
+    deviceSet = new client.models['DeviceSetModelModel']();
     deviceSet.devices = devices;
     deviceSet.name = name;
   }
@@ -653,7 +654,7 @@ function _createDeviceSetOfUser(ownerName, appName, devices, name, options, call
   let requestModel = null;
   try {
     if (deviceSet !== null && deviceSet !== undefined) {
-      let requestModelMapper = new client.models['DeviceSetUpdate']().mapper();
+      let requestModelMapper = new client.models['DeviceSetModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, deviceSet, 'deviceSet');
       requestContent = JSON.stringify(requestModel);
     }
@@ -701,7 +702,7 @@ function _createDeviceSetOfUser(ownerName, appName, devices, name, options, call
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DeviceSet']().mapper();
+          let resultMapper = new client.models['CreateDeviceSetOfUserCreatedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -718,7 +719,7 @@ function _createDeviceSetOfUser(ownerName, appName, devices, name, options, call
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestCloudErrorDetails']().mapper();
+          let resultMapper = new client.models['CreateDeviceSetOfUserBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -851,10 +852,10 @@ function _getAllTestRunsForSeries(testSeriesSlug, ownerName, appName, options, c
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'TestRunElementType',
+                  serializedName: 'GetAllTestRunsForSeriesOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'TestRun'
+                    className: 'GetAllTestRunsForSeriesOKResponseItem'
                   }
               }
             }
@@ -1005,7 +1006,8 @@ function _deleteTestSeries(testSeriesSlug, ownerName, appName, options, callback
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestSeries} for more information.
+ *                      See {@link PatchTestSeriesOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1040,7 +1042,7 @@ function _patchTestSeries(testSeriesSlug, ownerName, appName, name, options, cal
   }
   let name1;
   if (name !== null && name !== undefined) {
-    name1 = new client.models['TestSeriesName']();
+    name1 = new client.models['Name']();
     name1.name = name;
   }
 
@@ -1070,7 +1072,7 @@ function _patchTestSeries(testSeriesSlug, ownerName, appName, name, options, cal
   let requestModel = null;
   try {
     if (name1 !== null && name1 !== undefined) {
-      let requestModelMapper = new client.models['TestSeriesName']().mapper();
+      let requestModelMapper = new client.models['Name']().mapper();
       requestModel = client.serialize(requestModelMapper, name1, 'name1');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1118,7 +1120,7 @@ function _patchTestSeries(testSeriesSlug, ownerName, appName, name, options, cal
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestSeries']().mapper();
+          let resultMapper = new client.models['PatchTestSeriesOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1258,10 +1260,10 @@ function _getAllTestSeries(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'TestSeriesElementType',
+                  serializedName: 'GetAllTestSeriesOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'TestSeries'
+                    className: 'GetAllTestSeriesOKResponseItem'
                   }
               }
             }
@@ -1332,7 +1334,7 @@ function _createTestSeries(ownerName, appName, name, options, callback) {
   }
   let testSeriesName;
   if (name !== null && name !== undefined) {
-    testSeriesName = new client.models['TestSeriesName']();
+    testSeriesName = new client.models['TestSeriesNameModel']();
     testSeriesName.name = name;
   }
 
@@ -1361,7 +1363,7 @@ function _createTestSeries(ownerName, appName, name, options, callback) {
   let requestModel = null;
   try {
     if (testSeriesName !== null && testSeriesName !== undefined) {
-      let requestModelMapper = new client.models['TestSeriesName']().mapper();
+      let requestModelMapper = new client.models['TestSeriesNameModel']().mapper();
       requestModel = client.serialize(requestModelMapper, testSeriesName, 'testSeriesName');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1409,7 +1411,7 @@ function _createTestSeries(ownerName, appName, name, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestSeries']().mapper();
+          let resultMapper = new client.models['CreateTestSeriesOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1426,7 +1428,7 @@ function _createTestSeries(ownerName, appName, name, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestCloudErrorDetails']().mapper();
+          let resultMapper = new client.models['CreateTestSeriesBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1462,7 +1464,7 @@ function _createTestSeries(ownerName, appName, name, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestRun} for more information.
+ *                      See {@link StopTestRunOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1553,7 +1555,7 @@ function _stopTestRun(testRunId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestRun']().mapper();
+          let resultMapper = new client.models['StopTestRunOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1589,7 +1591,8 @@ function _stopTestRun(testRunId, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestRunState} for more information.
+ *                      See {@link GetTestRunStateOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1680,7 +1683,7 @@ function _getTestRunState(testRunId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestRunState']().mapper();
+          let resultMapper = new client.models['GetTestRunStateOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1733,7 +1736,7 @@ function _getTestRunState(testRunId, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestCloudStartTestRunResult} for more
+ *                      See {@link StartTestRunOKResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -1794,7 +1797,7 @@ function _startTestRun(testRunId, startOptions, ownerName, appName, options, cal
   let requestModel = null;
   try {
     if (startOptions !== null && startOptions !== undefined) {
-      let requestModelMapper = new client.models['TestCloudStartTestRunOptions']().mapper();
+      let requestModelMapper = new client.models['StartOptions']().mapper();
       requestModel = client.serialize(requestModelMapper, startOptions, 'startOptions');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1842,7 +1845,7 @@ function _startTestRun(testRunId, startOptions, ownerName, appName, options, cal
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestCloudStartTestRunResult']().mapper();
+          let resultMapper = new client.models['StartTestRunOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1878,7 +1881,8 @@ function _startTestRun(testRunId, startOptions, ownerName, appName, options, cal
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestReport} for more information.
+ *                      See {@link GetTestReportOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1969,7 +1973,7 @@ function _getTestReport(testRunId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestReport']().mapper();
+          let resultMapper = new client.models['GetTestReportOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -2070,10 +2074,10 @@ function _uploadHashesBatch(testRunId, fileInfo, ownerName, appName, options, ca
           name: 'Sequence',
           element: {
               required: false,
-              serializedName: 'TestCloudFileHashElementType',
+              serializedName: 'FileInfoItemElementType',
               type: {
                 name: 'Composite',
-                className: 'TestCloudFileHash'
+                className: 'FileInfoItem'
               }
           }
         }
@@ -2132,10 +2136,10 @@ function _uploadHashesBatch(testRunId, fileInfo, ownerName, appName, options, ca
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'TestCloudFileHashResponseElementType',
+                  serializedName: 'UploadHashesBatchOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'TestCloudFileHashResponse'
+                    className: 'UploadHashesBatchOKResponseItem'
                   }
               }
             }
@@ -2246,7 +2250,7 @@ function _uploadHash(testRunId, fileInfo, ownerName, appName, options, callback)
   let requestModel = null;
   try {
     if (fileInfo !== null && fileInfo !== undefined) {
-      let requestModelMapper = new client.models['TestCloudFileHashDeprecated']().mapper();
+      let requestModelMapper = new client.models['FileInfo']().mapper();
       requestModel = client.serialize(requestModelMapper, fileInfo, 'fileInfo');
       requestContent = JSON.stringify(requestModel);
     }
@@ -2422,7 +2426,7 @@ function _startUploadingFile(testRunId, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestRun} for more information.
+ *                      See {@link GetTestRunOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -2513,7 +2517,7 @@ function _getTestRun(testRunId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestRun']().mapper();
+          let resultMapper = new client.models['GetTestRunOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -2549,7 +2553,8 @@ function _getTestRun(testRunId, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestRun} for more information.
+ *                      See {@link ArchiveTestRunOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -2640,7 +2645,7 @@ function _archiveTestRun(testRunId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestRun']().mapper();
+          let resultMapper = new client.models['ArchiveTestRunOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -2767,10 +2772,10 @@ function _getTestRuns(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'TestRunElementType',
+                  serializedName: 'GetTestRunsOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'TestRun'
+                    className: 'GetTestRunsOKResponseItem'
                   }
               }
             }
@@ -2911,7 +2916,8 @@ function _createTestRun(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestGDPRTestRun} for more information.
+ *                      See {@link GdprExportTestRunOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -2998,7 +3004,7 @@ function _gdprExportTestRun(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestGDPRTestRun']().mapper();
+          let resultMapper = new client.models['GdprExportTestRunOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3032,7 +3038,8 @@ function _gdprExportTestRun(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestGDPRPipelineTest} for more information.
+ *                      See {@link GdprExportPipelineTestOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -3119,7 +3126,7 @@ function _gdprExportPipelineTest(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestGDPRPipelineTest']().mapper();
+          let resultMapper = new client.models['GdprExportPipelineTestOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3153,7 +3160,8 @@ function _gdprExportPipelineTest(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestGDPRHashFile} for more information.
+ *                      See {@link GdprExportHashFileOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -3240,7 +3248,7 @@ function _gdprExportHashFile(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestGDPRHashFile']().mapper();
+          let resultMapper = new client.models['GdprExportHashFileOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3274,7 +3282,8 @@ function _gdprExportHashFile(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestGDPRFileSetFile} for more information.
+ *                      See {@link GdprExportFileSetFileOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -3361,7 +3370,7 @@ function _gdprExportFileSetFile(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestGDPRFileSetFile']().mapper();
+          let resultMapper = new client.models['GdprExportFileSetFileOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3395,7 +3404,8 @@ function _gdprExportFileSetFile(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestGDPRResourceList} for more information.
+ *                      See {@link GdprExportAppsOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -3482,7 +3492,7 @@ function _gdprExportApps(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestGDPRResourceList']().mapper();
+          let resultMapper = new client.models['GdprExportAppsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3516,7 +3526,8 @@ function _gdprExportApps(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Subscription} for more information.
+ *                      See {@link GetSubscriptionsOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -3603,7 +3614,7 @@ function _getSubscriptions(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Subscription']().mapper();
+          let resultMapper = new client.models['GetSubscriptionsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3637,7 +3648,8 @@ function _getSubscriptions(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Subscription} for more information.
+ *                      See {@link CreateSubscriptionCreatedResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -3724,7 +3736,7 @@ function _createSubscription(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Subscription']().mapper();
+          let resultMapper = new client.models['CreateSubscriptionCreatedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3760,7 +3772,8 @@ function _createSubscription(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link DeviceSet} for more information.
+ *                      See {@link GetDeviceSetOfOwnerOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -3851,7 +3864,7 @@ function _getDeviceSetOfOwner(id, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DeviceSet']().mapper();
+          let resultMapper = new client.models['GetDeviceSetOfOwnerOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3933,7 +3946,7 @@ function _updateDeviceSetOfOwner(id, ownerName, appName, devices, name, options,
   }
   let deviceSet;
   if ((devices !== null && devices !== undefined) || (name !== null && name !== undefined)) {
-    deviceSet = new client.models['DeviceSetUpdate']();
+    deviceSet = new client.models['DeviceSetModelModel']();
     deviceSet.devices = devices;
     deviceSet.name = name;
   }
@@ -3964,7 +3977,7 @@ function _updateDeviceSetOfOwner(id, ownerName, appName, devices, name, options,
   let requestModel = null;
   try {
     if (deviceSet !== null && deviceSet !== undefined) {
-      let requestModelMapper = new client.models['DeviceSetUpdate']().mapper();
+      let requestModelMapper = new client.models['DeviceSetModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, deviceSet, 'deviceSet');
       requestContent = JSON.stringify(requestModel);
     }
@@ -4012,7 +4025,7 @@ function _updateDeviceSetOfOwner(id, ownerName, appName, devices, name, options,
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DeviceSet']().mapper();
+          let resultMapper = new client.models['UpdateDeviceSetOfOwnerOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -4029,7 +4042,7 @@ function _updateDeviceSetOfOwner(id, ownerName, appName, devices, name, options,
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestCloudErrorDetails']().mapper();
+          let resultMapper = new client.models['UpdateDeviceSetOfOwnerBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -4265,10 +4278,10 @@ function _listDeviceSetsOfOwner(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DeviceSetElementType',
+                  serializedName: 'ListDeviceSetsOfOwnerOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DeviceSet'
+                    className: 'ListDeviceSetsOfOwnerOKResponseItem'
                   }
               }
             }
@@ -4349,7 +4362,7 @@ function _createDeviceSetOfOwner(ownerName, appName, devices, name, options, cal
   }
   let deviceSet;
   if ((devices !== null && devices !== undefined) || (name !== null && name !== undefined)) {
-    deviceSet = new client.models['DeviceSetUpdate']();
+    deviceSet = new client.models['DeviceSetModelModel']();
     deviceSet.devices = devices;
     deviceSet.name = name;
   }
@@ -4379,7 +4392,7 @@ function _createDeviceSetOfOwner(ownerName, appName, devices, name, options, cal
   let requestModel = null;
   try {
     if (deviceSet !== null && deviceSet !== undefined) {
-      let requestModelMapper = new client.models['DeviceSetUpdate']().mapper();
+      let requestModelMapper = new client.models['DeviceSetModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, deviceSet, 'deviceSet');
       requestContent = JSON.stringify(requestModel);
     }
@@ -4427,7 +4440,7 @@ function _createDeviceSetOfOwner(ownerName, appName, devices, name, options, cal
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DeviceSet']().mapper();
+          let resultMapper = new client.models['CreateDeviceSetOfOwnerCreatedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -4444,7 +4457,7 @@ function _createDeviceSetOfOwner(ownerName, appName, devices, name, options, cal
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestCloudErrorDetails']().mapper();
+          let resultMapper = new client.models['CreateDeviceSetOfOwnerBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -4516,7 +4529,7 @@ function _createDeviceSelection(ownerName, appName, devices, options, callback) 
   }
   let deviceList;
   if (devices !== null && devices !== undefined) {
-    deviceList = new client.models['DeviceList']();
+    deviceList = new client.models['DeviceListModel']();
     deviceList.devices = devices;
   }
 
@@ -4545,7 +4558,7 @@ function _createDeviceSelection(ownerName, appName, devices, options, callback) 
   let requestModel = null;
   try {
     if (deviceList !== null && deviceList !== undefined) {
-      let requestModelMapper = new client.models['DeviceList']().mapper();
+      let requestModelMapper = new client.models['DeviceListModel']().mapper();
       requestModel = client.serialize(requestModelMapper, deviceList, 'deviceList');
       requestContent = JSON.stringify(requestModel);
     }
@@ -4593,7 +4606,7 @@ function _createDeviceSelection(ownerName, appName, devices, options, callback) 
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DeviceSelection']().mapper();
+          let resultMapper = new client.models['CreateDeviceSelectionCreatedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -4610,7 +4623,7 @@ function _createDeviceSelection(ownerName, appName, devices, options, callback) 
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestCloudErrorDetails']().mapper();
+          let resultMapper = new client.models['CreateDeviceSelectionBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -4750,10 +4763,10 @@ function _getDeviceConfigurations(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DeviceConfigurationElementType',
+                  serializedName: 'GetDeviceConfigurationsOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DeviceConfiguration'
+                    className: 'GetDeviceConfigurationsOKResponseItem'
                   }
               }
             }
@@ -4787,7 +4800,8 @@ function _getDeviceConfigurations(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestGDPRFeatureFlag} for more information.
+ *                      See {@link GdprExportFeatureFlagOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -4861,7 +4875,7 @@ function _gdprExportFeatureFlag(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestGDPRFeatureFlag']().mapper();
+          let resultMapper = new client.models['GdprExportFeatureFlagOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -4891,7 +4905,8 @@ function _gdprExportFeatureFlag(options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestGDPRAccount} for more information.
+ *                      See {@link GdprExportAccountOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -4965,7 +4980,7 @@ function _gdprExportAccount(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestGDPRAccount']().mapper();
+          let resultMapper = new client.models['GdprExportAccountOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -4995,7 +5010,8 @@ function _gdprExportAccount(options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TestGDPRResourceList} for more information.
+ *                      See {@link GdprExportAccountsOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -5069,7 +5085,7 @@ function _gdprExportAccounts(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TestGDPRResourceList']().mapper();
+          let resultMapper = new client.models['GdprExportAccountsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -5148,7 +5164,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<DeviceSet>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetDeviceSetOfUserOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -5187,7 +5203,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {DeviceSet} - The deserialized result object.
+   *                      @resolve {GetDeviceSetOfUserOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -5196,7 +5212,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link DeviceSet} for more information.
+   *                      See {@link GetDeviceSetOfUserOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -5782,7 +5799,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestSeries>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<PatchTestSeriesOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -5823,7 +5840,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestSeries} - The deserialized result object.
+   *                      @resolve {PatchTestSeriesOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -5832,7 +5849,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestSeries} for more information.
+   *                      See {@link PatchTestSeriesOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -6052,7 +6070,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestRun>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<StopTestRunOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6091,7 +6109,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestRun} - The deserialized result object.
+   *                      @resolve {StopTestRunOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -6100,7 +6118,7 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestRun} for more information.
+   *                      See {@link StopTestRunOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -6142,7 +6160,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestRunState>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetTestRunStateOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6181,7 +6199,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestRunState} - The deserialized result object.
+   *                      @resolve {GetTestRunStateOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -6190,7 +6208,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestRunState} for more information.
+   *                      See {@link GetTestRunStateOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -6249,7 +6268,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestCloudStartTestRunResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<StartTestRunOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6305,7 +6324,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestCloudStartTestRunResult} - The deserialized result object.
+   *                      @resolve {StartTestRunOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -6314,7 +6333,7 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestCloudStartTestRunResult} for more
+   *                      See {@link StartTestRunOKResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -6357,7 +6376,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestReport>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetTestReportOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6396,7 +6415,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestReport} - The deserialized result object.
+   *                      @resolve {GetTestReportOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -6405,7 +6424,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestReport} for more information.
+   *                      See {@link GetTestReportOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -6742,7 +6762,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestRun>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetTestRunOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6781,7 +6801,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestRun} - The deserialized result object.
+   *                      @resolve {GetTestRunOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -6790,7 +6810,7 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestRun} for more information.
+   *                      See {@link GetTestRunOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -6832,7 +6852,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestRun>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ArchiveTestRunOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6871,7 +6891,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestRun} - The deserialized result object.
+   *                      @resolve {ArchiveTestRunOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -6880,7 +6900,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestRun} for more information.
+   *                      See {@link ArchiveTestRunOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7090,7 +7111,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestGDPRTestRun>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GdprExportTestRunOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7127,7 +7148,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestGDPRTestRun} - The deserialized result object.
+   *                      @resolve {GdprExportTestRunOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7136,7 +7157,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestGDPRTestRun} for more information.
+   *                      See {@link GdprExportTestRunOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7176,7 +7198,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestGDPRPipelineTest>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GdprExportPipelineTestOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7213,7 +7235,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestGDPRPipelineTest} - The deserialized result object.
+   *                      @resolve {GdprExportPipelineTestOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7222,7 +7244,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestGDPRPipelineTest} for more information.
+   *                      See {@link GdprExportPipelineTestOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7262,7 +7285,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestGDPRHashFile>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GdprExportHashFileOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7299,7 +7322,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestGDPRHashFile} - The deserialized result object.
+   *                      @resolve {GdprExportHashFileOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7308,7 +7331,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestGDPRHashFile} for more information.
+   *                      See {@link GdprExportHashFileOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7348,7 +7372,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestGDPRFileSetFile>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GdprExportFileSetFileOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7385,7 +7409,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestGDPRFileSetFile} - The deserialized result object.
+   *                      @resolve {GdprExportFileSetFileOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7394,7 +7418,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestGDPRFileSetFile} for more information.
+   *                      See {@link GdprExportFileSetFileOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7434,7 +7459,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestGDPRResourceList>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GdprExportAppsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7471,7 +7496,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestGDPRResourceList} - The deserialized result object.
+   *                      @resolve {GdprExportAppsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7480,7 +7505,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestGDPRResourceList} for more information.
+   *                      See {@link GdprExportAppsOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7520,7 +7546,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Subscription>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetSubscriptionsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7557,7 +7583,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Subscription} - The deserialized result object.
+   *                      @resolve {GetSubscriptionsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7566,7 +7592,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Subscription} for more information.
+   *                      See {@link GetSubscriptionsOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7606,7 +7633,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Subscription>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateSubscriptionCreatedResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7643,7 +7670,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Subscription} - The deserialized result object.
+   *                      @resolve {CreateSubscriptionCreatedResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7652,7 +7679,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Subscription} for more information.
+   *                      See {@link CreateSubscriptionCreatedResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7694,7 +7722,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<DeviceSet>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetDeviceSetOfOwnerOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7733,7 +7761,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {DeviceSet} - The deserialized result object.
+   *                      @resolve {GetDeviceSetOfOwnerOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7742,7 +7770,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link DeviceSet} for more information.
+   *                      See {@link GetDeviceSetOfOwnerOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -8320,7 +8349,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestGDPRFeatureFlag>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GdprExportFeatureFlagOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -8353,7 +8382,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestGDPRFeatureFlag} - The deserialized result object.
+   *                      @resolve {GdprExportFeatureFlagOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -8362,7 +8391,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestGDPRFeatureFlag} for more information.
+   *                      See {@link GdprExportFeatureFlagOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -8398,7 +8428,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestGDPRAccount>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GdprExportAccountOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -8431,7 +8461,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestGDPRAccount} - The deserialized result object.
+   *                      @resolve {GdprExportAccountOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -8440,7 +8470,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestGDPRAccount} for more information.
+   *                      See {@link GdprExportAccountOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -8476,7 +8507,7 @@ class Test {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TestGDPRResourceList>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GdprExportAccountsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -8509,7 +8540,7 @@ class Test {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TestGDPRResourceList} - The deserialized result object.
+   *                      @resolve {GdprExportAccountsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -8518,7 +8549,8 @@ class Test {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TestGDPRResourceList} for more information.
+   *                      See {@link GdprExportAccountsOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

@@ -58,7 +58,7 @@ class CrashesOverallItem {
             serializedName: 'overall',
             type: {
               name: 'Composite',
-              className: 'CrashOverall'
+              className: 'CrashesOverallItemOverall'
             }
           }
         }

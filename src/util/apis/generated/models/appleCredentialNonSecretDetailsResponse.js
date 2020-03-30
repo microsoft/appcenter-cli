@@ -10,21 +10,26 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Apple credentials non-secret details
  *
- * @extends models['AppleConnectionNonSecretResponse']
  */
-class AppleCredentialNonSecretDetailsResponse extends models['AppleConnectionNonSecretResponse'] {
+class AppleCredentialNonSecretDetailsResponse {
   /**
    * Create a AppleCredentialNonSecretDetailsResponse.
+   * @property {string} id id of the shared connection
+   * @property {string} [displayName] display name of shared connection
+   * @property {string} serviceType service type of shared connection can be
+   * apple|gitlab|googleplay|jira. Possible values include: 'apple', 'jira',
+   * 'googleplay', 'gitlab'
+   * @property {string} credentialType the type of the credential. Possible
+   * values include: 'credentials', 'certificate'
+   * @property {boolean} [isValid] whether the credentials are valid or not
+   * @property {boolean} [is2FA] if the account is a 2FA account or not
    * @property {object} data Apple credentials non-secret data
    * @property {string} [data.username] username to connect to apple store
    */
   constructor() {
-    super();
   }
 
   /**
@@ -39,11 +44,6 @@ class AppleCredentialNonSecretDetailsResponse extends models['AppleConnectionNon
       serializedName: 'credentials',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'serviceType',
-          clientName: 'serviceType'
-        },
-        uberParent: 'SharedConnectionResponse',
         className: 'AppleCredentialNonSecretDetailsResponse',
         modelProperties: {
           id: {
@@ -56,6 +56,13 @@ class AppleCredentialNonSecretDetailsResponse extends models['AppleConnectionNon
           displayName: {
             required: false,
             serializedName: 'displayName',
+            type: {
+              name: 'String'
+            }
+          },
+          serviceType: {
+            required: true,
+            serializedName: 'serviceType',
             type: {
               name: 'String'
             }
@@ -81,20 +88,12 @@ class AppleCredentialNonSecretDetailsResponse extends models['AppleConnectionNon
               name: 'Boolean'
             }
           },
-          serviceType: {
-            required: true,
-            serializedName: 'serviceType',
-            isPolymorphicDiscriminator: true,
-            type: {
-              name: 'String'
-            }
-          },
           data: {
             required: true,
             serializedName: 'data',
             type: {
               name: 'Composite',
-              className: 'AppleSecretDetailsResponse'
+              className: 'AppleCredentialNonSecretDetailsResponseData'
             }
           }
         }

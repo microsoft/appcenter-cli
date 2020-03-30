@@ -20,6 +20,9 @@ class ExportConfiguration {
    * @property {array} [exportEntities]
    * @property {string} [resourceName] The resource name on azure
    * @property {string} [resourceGroup] The resource group name on azure
+   * @property {boolean} [backfill] Field to determine if backfilling should
+   * occur. The default value is true. If set to false export starts from date
+   * and time of config creation.
    * @property {string} type Polymorphic Discriminator
    */
   constructor() {
@@ -54,7 +57,7 @@ class ExportConfiguration {
                   serializedName: 'ExportEntityElementType',
                   type: {
                     name: 'Enum',
-                    allowedValues: [ 'crashes', 'errors', 'attachments' ]
+                    allowedValues: [ 'crashes', 'errors', 'attachments', 'no_logs' ]
                   }
               }
             }
@@ -71,6 +74,13 @@ class ExportConfiguration {
             serializedName: 'resource_group',
             type: {
               name: 'String'
+            }
+          },
+          backfill: {
+            required: false,
+            serializedName: 'backfill',
+            type: {
+              name: 'Boolean'
             }
           },
           type: {

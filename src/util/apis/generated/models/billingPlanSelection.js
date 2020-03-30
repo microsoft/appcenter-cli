@@ -18,7 +18,7 @@ class BillingPlanSelection {
   /**
    * Create a BillingPlanSelection.
    * @property {number} [count] Number of instances of the billing plan.
-   * @property {object} [plan]
+   * @property {object} [plan] Billing Plan
    * @property {string} [plan.id] The Billing Plan ID
    * @property {string} [plan.version] Version of the Billing Plan schema
    * @property {number} [plan.price] Price of the Billing Plan
@@ -27,8 +27,8 @@ class BillingPlanSelection {
    * 'Xtc'
    * @property {string} [plan.service] Name of the service that the plan
    * applies to. Possible values include: 'Build', 'Test'
-   * @property {object} [plan.limits]
-   * @property {object} [plan.attributes]
+   * @property {object} [plan.limits] A collection of named numeric values
+   * @property {object} [plan.attributes] Collection of attribute values.
    * @property {string} [plan.parentId]
    */
   constructor() {
@@ -60,7 +60,7 @@ class BillingPlanSelection {
             serializedName: 'plan',
             type: {
               name: 'Composite',
-              className: 'BillingPlan'
+              className: 'BillingPlanSelectionPlan'
             }
           }
         }

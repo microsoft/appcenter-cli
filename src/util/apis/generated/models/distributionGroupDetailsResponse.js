@@ -10,15 +10,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a DistributionGroupDetailsResponse.
- * @extends models['DistributionGroupResponse']
  */
-class DistributionGroupDetailsResponse extends models['DistributionGroupResponse'] {
+class DistributionGroupDetailsResponse {
   /**
    * Create a DistributionGroupDetailsResponse.
+   * @property {uuid} id The unique ID of the distribution group
+   * @property {string} name The name of the distribution group used in URLs
+   * @property {string} [displayName] The name of the distribution group
+   * @property {string} origin The creation origin of this distribution group.
+   * Possible values include: 'appcenter', 'hockeyapp'
+   * @property {boolean} isPublic Whether the distribution group is public
    * @property {boolean} isShared Whether the distribution group is shared
    * group or not
    * @property {number} totalAppsCount The count of apps associated with this
@@ -33,7 +36,6 @@ class DistributionGroupDetailsResponse extends models['DistributionGroupResponse
    * @property {array} users The distribution group users
    */
   constructor() {
-    super();
   }
 
   /**
@@ -127,10 +129,10 @@ class DistributionGroupDetailsResponse extends models['DistributionGroupResponse
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupUserGetResponseElementType',
+                  serializedName: 'DistributionGroupDetailsResponseUsersItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionGroupUserGetResponse'
+                    className: 'DistributionGroupDetailsResponseUsersItem'
                   }
               }
             }

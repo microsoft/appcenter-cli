@@ -10,21 +10,19 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Google notification configuration. The 'type' property must be set to
  * 'gcm_config'
  *
- * @extends models['NotificationConfig']
  */
-class NotificationConfigGoogle extends models['NotificationConfig'] {
+class NotificationConfigGoogle {
   /**
    * Create a NotificationConfigGoogle.
+   * @property {string} type Possible values include: 'apns_token_config',
+   * 'gcm_config', 'wns_config'
    * @property {string} googleApiKey GCM API key.
    */
   constructor() {
-    super();
   }
 
   /**
@@ -39,17 +37,11 @@ class NotificationConfigGoogle extends models['NotificationConfig'] {
       serializedName: 'gcm_config',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'NotificationConfig',
         className: 'NotificationConfigGoogle',
         modelProperties: {
           type: {
             required: true,
             serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

@@ -40,7 +40,7 @@ class CrashDetails {
   mapper() {
     return {
       required: false,
-      serializedName: 'CrashDetails',
+      serializedName: 'Crash_details',
       type: {
         name: 'Composite',
         className: 'CrashDetails',

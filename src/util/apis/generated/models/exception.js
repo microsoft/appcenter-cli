@@ -65,10 +65,10 @@ class Exception {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'StackFrameElementType',
+                  serializedName: 'ExceptionFramesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'StackFrame'
+                    className: 'ExceptionFramesItem'
                   }
               }
             }

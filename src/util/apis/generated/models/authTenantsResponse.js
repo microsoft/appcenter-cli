@@ -42,10 +42,10 @@ class AuthTenantsResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AuthTenantElementType',
+                  serializedName: 'AuthTenantsResponseValueItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AuthTenant'
+                    className: 'AuthTenantsResponseValueItem'
                   }
               }
             }

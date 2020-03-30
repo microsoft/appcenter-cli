@@ -10,19 +10,17 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Clear an existing property.
  *
- * @extends models['LogFlowCustomProperty']
  */
-class LogFlowClearProperty extends models['LogFlowCustomProperty'] {
+class LogFlowClearProperty {
   /**
    * Create a LogFlowClearProperty.
+   * @property {string} type
+   * @property {string} name
    */
   constructor() {
-    super();
   }
 
   /**
@@ -37,13 +35,15 @@ class LogFlowClearProperty extends models['LogFlowCustomProperty'] {
       serializedName: 'clear',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'LogFlowCustomProperty',
         className: 'LogFlowClearProperty',
         modelProperties: {
+          type: {
+            required: true,
+            serializedName: 'type',
+            type: {
+              name: 'String'
+            }
+          },
           name: {
             required: true,
             serializedName: 'name',
@@ -51,14 +51,6 @@ class LogFlowClearProperty extends models['LogFlowCustomProperty'] {
               MaxLength: 128,
               Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
-            type: {
-              name: 'String'
-            }
-          },
-          type: {
-            required: true,
-            serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

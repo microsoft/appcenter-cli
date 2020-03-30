@@ -10,20 +10,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ReleaseWithDistributionGroupAndUserId.
- * @extends models['ReleaseWithDistributionGroup']
  */
-class ReleaseWithDistributionGroupAndUserId extends models['ReleaseWithDistributionGroup'] {
+class ReleaseWithDistributionGroupAndUserId {
   /**
    * Create a ReleaseWithDistributionGroupAndUserId.
+   * @property {string} release Release Id.
+   * @property {string} [distributionGroup] Distribution group Id.
    * @property {uuid} [userId] Unique user Id.  Will generate a new user Id if
    * not provided.
    */
   constructor() {
-    super();
   }
 
   /**

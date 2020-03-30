@@ -22,6 +22,7 @@ class DataResourceTokenResponse {
    * @property {string} [accountName]
    * @property {string} [token]
    * @property {date} [expiresOn]
+   * @property {boolean} [isReadOnlyToken]
    */
   constructor() {
   }
@@ -80,6 +81,13 @@ class DataResourceTokenResponse {
             serializedName: 'expiresOn',
             type: {
               name: 'DateTime'
+            }
+          },
+          isReadOnlyToken: {
+            required: false,
+            serializedName: 'isReadOnlyToken',
+            type: {
+              name: 'Boolean'
             }
           }
         }

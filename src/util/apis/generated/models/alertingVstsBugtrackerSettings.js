@@ -10,16 +10,17 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * VSTS bugtracker specific settings
  *
- * @extends models['AlertingBugtrackerSettings']
  */
-class AlertingVstsBugtrackerSettings extends models['AlertingBugtrackerSettings'] {
+class AlertingVstsBugtrackerSettings {
   /**
    * Create a AlertingVstsBugtrackerSettings.
+   * @property {string} [callbackUrl]
+   * @property {string} ownerName
+   * @property {string} type type of bugtracker. Possible values include:
+   * 'github', 'vsts', 'jira'
    * @property {string} vstsProjectId
    * @property {string} vstsProjectUri
    * @property {string} [vstsProjectName]
@@ -28,7 +29,6 @@ class AlertingVstsBugtrackerSettings extends models['AlertingBugtrackerSettings'
    * @property {object} [vstsDefaultPayload]
    */
   constructor() {
-    super();
   }
 
   /**
@@ -43,11 +43,6 @@ class AlertingVstsBugtrackerSettings extends models['AlertingBugtrackerSettings'
       serializedName: 'vsts',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'AlertingBugtrackerSettings',
         className: 'AlertingVstsBugtrackerSettings',
         modelProperties: {
           callbackUrl: {
@@ -67,7 +62,6 @@ class AlertingVstsBugtrackerSettings extends models['AlertingBugtrackerSettings'
           type: {
             required: true,
             serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

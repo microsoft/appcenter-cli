@@ -42,10 +42,10 @@ class DistributionGroupAppAddRequest {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AppAddRequestElementType',
+                  serializedName: 'DistributionGroupAppAddRequestAppsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AppAddRequest'
+                    className: 'DistributionGroupAppAddRequestAppsItem'
                   }
               }
             }

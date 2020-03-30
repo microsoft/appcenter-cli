@@ -10,23 +10,24 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * private Apple connection secrets response
  *
- * @extends models['PrivateAppleSecretResponse']
  */
-class PrivateAppleCredentialsSecretResponse extends models['PrivateAppleSecretResponse'] {
+class PrivateAppleCredentialsSecretResponse {
   /**
    * Create a PrivateAppleCredentialsSecretResponse.
+   * @property {string} id id of the shared connection
+   * @property {string} [displayName] display name of shared connection
+   * @property {boolean} [isValid] whether the credentials are valid or not
+   * @property {boolean} [is2FA] if the account is a 2FA account or not
    * @property {object} data apple secret details
    * @property {string} [data.username] username to connect to apple store.
    * @property {string} [data.authCode] 6 digit auth code
    * @property {string} [data.password] password to connect to apple store.
+   * @property {string} serviceType Polymorphic Discriminator
    */
   constructor() {
-    super();
   }
 
   /**
@@ -45,7 +46,7 @@ class PrivateAppleCredentialsSecretResponse extends models['PrivateAppleSecretRe
           serializedName: 'serviceType',
           clientName: 'serviceType'
         },
-        uberParent: 'PrivateSharedConnectionResponse',
+        uberParent: 'PrivateAppleCredentialsSecretResponse',
         className: 'PrivateAppleCredentialsSecretResponse',
         modelProperties: {
           id: {
@@ -76,20 +77,20 @@ class PrivateAppleCredentialsSecretResponse extends models['PrivateAppleSecretRe
               name: 'Boolean'
             }
           },
+          data: {
+            required: true,
+            serializedName: 'data',
+            type: {
+              name: 'Composite',
+              className: 'PrivateAppleCredentialsSecretResponseData'
+            }
+          },
           serviceType: {
             required: true,
             serializedName: 'serviceType',
             isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
-            }
-          },
-          data: {
-            required: true,
-            serializedName: 'data',
-            type: {
-              name: 'Composite',
-              className: 'AppleSecretDetails'
             }
           }
         }

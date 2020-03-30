@@ -10,15 +10,17 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a CodePushRelease.
- * @extends models['CodePushReleaseInfo']
  */
-class CodePushRelease extends models['CodePushReleaseInfo'] {
+class CodePushRelease {
   /**
    * Create a CodePushRelease.
+   * @property {string} [targetBinaryRange]
+   * @property {string} [description]
+   * @property {boolean} [isDisabled]
+   * @property {boolean} [isMandatory]
+   * @property {number} [rollout]
    * @property {string} [label]
    * @property {string} [packageHash]
    * @property {string} [blobUrl]
@@ -32,7 +34,6 @@ class CodePushRelease extends models['CodePushReleaseInfo'] {
    * @property {number} [uploadTime]
    */
   constructor() {
-    super();
   }
 
   /**
@@ -116,10 +117,10 @@ class CodePushRelease extends models['CodePushReleaseInfo'] {
               name: 'Dictionary',
               value: {
                   required: false,
-                  serializedName: 'BlobInfoElementType',
+                  serializedName: 'CodePushReleaseDiffPackageMapValueElementType',
                   type: {
                     name: 'Composite',
-                    className: 'BlobInfo'
+                    className: 'CodePushReleaseDiffPackageMapValue'
                   }
               }
             }

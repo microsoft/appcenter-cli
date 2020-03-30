@@ -40,7 +40,7 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AggregatedBillingInformation} for more
+ *                      See {@link GetForOrgOKResponseModelModel} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -133,7 +133,7 @@ function _getForOrg(orgName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['BillingError']().mapper();
+          let resultMapper = new client.models['GetForOrgErrorModel1']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -153,7 +153,7 @@ function _getForOrg(orgName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AggregatedBillingInformation']().mapper();
+          let resultMapper = new client.models['GetForOrgOKResponseModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -194,8 +194,7 @@ function _getForOrg(orgName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AllAccountsAggregatedBillingInformation} for
- *                      more information.
+ *                      See {@link GetAllOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -283,7 +282,7 @@ function _getAll(options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['BillingError']().mapper();
+          let resultMapper = new client.models['GetAllErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -303,7 +302,7 @@ function _getAll(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AllAccountsAggregatedBillingInformation']().mapper();
+          let resultMapper = new client.models['GetAllOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -347,8 +346,7 @@ function _getAll(options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AggregatedBillingInformation} for more
- *                      information.
+ *                      See {@link GetByAppOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -444,7 +442,7 @@ function _getByApp(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['BillingError']().mapper();
+          let resultMapper = new client.models['GetByAppErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -464,7 +462,7 @@ function _getByApp(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AggregatedBillingInformation']().mapper();
+          let resultMapper = new client.models['GetByAppOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -514,7 +512,7 @@ class BillingAggregatedInformation {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AggregatedBillingInformation>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetForOrgOKResponseModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -559,7 +557,7 @@ class BillingAggregatedInformation {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AggregatedBillingInformation} - The deserialized result object.
+   *                      @resolve {GetForOrgOKResponseModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -568,7 +566,7 @@ class BillingAggregatedInformation {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AggregatedBillingInformation} for more
+   *                      See {@link GetForOrgOKResponseModelModel} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -616,7 +614,7 @@ class BillingAggregatedInformation {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AllAccountsAggregatedBillingInformation>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetAllOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -660,7 +658,7 @@ class BillingAggregatedInformation {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AllAccountsAggregatedBillingInformation} - The deserialized result object.
+   *                      @resolve {GetAllOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -669,8 +667,7 @@ class BillingAggregatedInformation {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AllAccountsAggregatedBillingInformation} for
-   *                      more information.
+   *                      See {@link GetAllOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -720,7 +717,7 @@ class BillingAggregatedInformation {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AggregatedBillingInformation>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetByAppOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -767,7 +764,7 @@ class BillingAggregatedInformation {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AggregatedBillingInformation} - The deserialized result object.
+   *                      @resolve {GetByAppOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -776,8 +773,7 @@ class BillingAggregatedInformation {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AggregatedBillingInformation} for more
-   *                      information.
+   *                      See {@link GetByAppOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

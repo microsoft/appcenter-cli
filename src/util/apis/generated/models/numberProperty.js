@@ -10,20 +10,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Number property.
  *
- * @extends models['CustomProperty']
  */
-class NumberProperty extends models['CustomProperty'] {
+class NumberProperty {
   /**
    * Create a NumberProperty.
+   * @property {string} type
+   * @property {string} name
    * @property {number} value Number property value.
    */
   constructor() {
-    super();
   }
 
   /**
@@ -38,13 +36,15 @@ class NumberProperty extends models['CustomProperty'] {
       serializedName: 'number',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'CustomProperty',
         className: 'NumberProperty',
         modelProperties: {
+          type: {
+            required: true,
+            serializedName: 'type',
+            type: {
+              name: 'String'
+            }
+          },
           name: {
             required: true,
             serializedName: 'name',
@@ -52,14 +52,6 @@ class NumberProperty extends models['CustomProperty'] {
               MaxLength: 128,
               Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
-            type: {
-              name: 'String'
-            }
-          },
-          type: {
-            required: true,
-            serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

@@ -232,10 +232,10 @@ class HockeyAppMigrationRelease {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ProvisioningProfileMigrationElementType',
+                  serializedName: 'HockeyAppMigrationReleaseProvisioningProfilesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ProvisioningProfileMigration'
+                    className: 'HockeyAppMigrationReleaseProvisioningProfilesItem'
                   }
               }
             }

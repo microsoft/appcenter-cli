@@ -17,11 +17,11 @@
 class GitHubMarketplacePurchase {
   /**
    * Create a GitHubMarketplacePurchase.
-   * @property {object} [account]
+   * @property {object} [account] GitHub account information
    * @property {number} [account.id] Id of GitHub account
    * @property {string} [account.accountType] Type of GitHub account. Possible
    * values include: 'User', 'Organization'
-   * @property {object} [plan]
+   * @property {object} [plan] GitHub Marketplace plan
    * @property {number} [plan.id] Id of the GitHub plan
    */
   constructor() {
@@ -46,7 +46,7 @@ class GitHubMarketplacePurchase {
             serializedName: 'account',
             type: {
               name: 'Composite',
-              className: 'GitHubAccount'
+              className: 'GitHubMarketplacePurchaseAccount'
             }
           },
           plan: {
@@ -54,7 +54,7 @@ class GitHubMarketplacePurchase {
             serializedName: 'plan',
             type: {
               name: 'Composite',
-              className: 'GitHubMarketplacePlan'
+              className: 'GitHubMarketplacePurchasePlan'
             }
           }
         }

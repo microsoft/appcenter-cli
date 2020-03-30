@@ -10,22 +10,20 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * WNS notification configuration. The 'type' property must be set to
  * 'wns_config'
  *
- * @extends models['NotificationConfig']
  */
-class NotificationConfigWindows extends models['NotificationConfig'] {
+class NotificationConfigWindows {
   /**
    * Create a NotificationConfigWindows.
+   * @property {string} type Possible values include: 'apns_token_config',
+   * 'gcm_config', 'wns_config'
    * @property {string} packageSid Package security identifier (SID).
    * @property {string} secretKey Secret key.
    */
   constructor() {
-    super();
   }
 
   /**
@@ -40,17 +38,11 @@ class NotificationConfigWindows extends models['NotificationConfig'] {
       serializedName: 'wns_config',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'NotificationConfig',
         className: 'NotificationConfigWindows',
         modelProperties: {
           type: {
             required: true,
             serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

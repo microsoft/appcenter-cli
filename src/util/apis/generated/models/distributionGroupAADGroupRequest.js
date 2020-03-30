@@ -42,10 +42,10 @@ class DistributionGroupAADGroupRequest {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupAADGroupBaseElementType',
+                  serializedName: 'DistributionGroupAADGroupRequestAadGroupsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionGroupAADGroupBase'
+                    className: 'DistributionGroupAADGroupRequestAadGroupsItem'
                   }
               }
             }

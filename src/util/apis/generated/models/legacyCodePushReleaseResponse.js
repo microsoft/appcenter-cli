@@ -62,7 +62,7 @@ class LegacyCodePushReleaseResponse {
             serializedName: 'package',
             type: {
               name: 'Composite',
-              className: 'LegacyCodePushRelease'
+              className: 'LegacyCodePushReleaseResponsePackage'
             }
           }
         }

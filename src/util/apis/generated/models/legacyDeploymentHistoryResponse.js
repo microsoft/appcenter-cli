@@ -43,10 +43,10 @@ class LegacyDeploymentHistoryResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'LegacyDeploymentHistoryElementType',
+                  serializedName: 'LegacyDeploymentHistoryResponseHistoryItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'LegacyDeploymentHistory'
+                    className: 'LegacyDeploymentHistoryResponseHistoryItem'
                   }
               }
             }

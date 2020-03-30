@@ -25,8 +25,8 @@ class BillingPlan {
    * 'Xtc'
    * @property {string} [service] Name of the service that the plan applies to.
    * Possible values include: 'Build', 'Test'
-   * @property {object} [limits]
-   * @property {object} [attributes]
+   * @property {object} [limits] A collection of named numeric values
+   * @property {object} [attributes] Collection of attribute values.
    * @property {string} [parentId]
    */
   constructor() {

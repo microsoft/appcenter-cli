@@ -19,6 +19,11 @@ class Deployment {
    * @property {string} [key]
    * @property {string} name
    * @property {object} [latestRelease]
+   * @property {string} [latestRelease.targetBinaryRange]
+   * @property {string} [latestRelease.description]
+   * @property {boolean} [latestRelease.isDisabled]
+   * @property {boolean} [latestRelease.isMandatory]
+   * @property {number} [latestRelease.rollout]
    * @property {string} [latestRelease.label]
    * @property {string} [latestRelease.packageHash]
    * @property {string} [latestRelease.blobUrl]
@@ -69,7 +74,7 @@ class Deployment {
             serializedName: 'latest_release',
             type: {
               name: 'Composite',
-              className: 'CodePushRelease'
+              className: 'DeploymentLatestRelease'
             }
           }
         }

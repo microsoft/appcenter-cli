@@ -58,10 +58,10 @@ class ReleaseDailySessions {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DailySessionElementType',
+                  serializedName: 'ReleaseDailySessionsSessionsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DailySession'
+                    className: 'ReleaseDailySessionsSessionsItem'
                   }
               }
             }

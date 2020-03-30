@@ -93,7 +93,7 @@ class DatabaseMetrics {
             serializedName: 'latencyMetrics',
             type: {
               name: 'Composite',
-              className: 'LatencyMetrics'
+              className: 'DatabaseMetricsLatencyMetrics'
             }
           }
         }

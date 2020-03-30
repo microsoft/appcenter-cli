@@ -28,7 +28,7 @@ class MetricsResponse {
    * US 2', 'West Central US'
    * @property {string} [accountName]
    * @property {string} [databaseId]
-   * @property {object} [metrics]
+   * @property {object} [metrics] Represents database usage metrics.
    * @property {number} [metrics.interval]
    * @property {number} [metrics.totalRequests]
    * @property {number} [metrics.totalRequestUnits]
@@ -92,7 +92,7 @@ class MetricsResponse {
             serializedName: 'metrics',
             type: {
               name: 'Composite',
-              className: 'DatabaseMetrics'
+              className: 'MetricsResponseMetrics'
             }
           }
         }

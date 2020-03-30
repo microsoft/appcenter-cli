@@ -183,10 +183,10 @@ class StoresReleaseDetails {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'StoresBasicDetailsElementType',
+                  serializedName: 'StoresReleaseDetailsDistributionStoresItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'StoresBasicDetails'
+                    className: 'StoresReleaseDetailsDistributionStoresItem'
                   }
               }
             }

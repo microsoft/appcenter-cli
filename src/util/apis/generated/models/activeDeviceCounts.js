@@ -46,10 +46,10 @@ class ActiveDeviceCounts {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DateTimeCountsElementType',
+                  serializedName: 'ActiveDeviceCountsDailyItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DateTimeCounts'
+                    className: 'ActiveDeviceCountsDailyItem'
                   }
               }
             }
@@ -61,10 +61,10 @@ class ActiveDeviceCounts {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DateTimeCountsElementType',
+                  serializedName: 'ActiveDeviceCountsWeeklyItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DateTimeCounts'
+                    className: 'ActiveDeviceCountsWeeklyItem'
                   }
               }
             }
@@ -76,10 +76,10 @@ class ActiveDeviceCounts {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DateTimeCountsElementType',
+                  serializedName: 'ActiveDeviceCountsMonthlyItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DateTimeCounts'
+                    className: 'ActiveDeviceCountsMonthlyItem'
                   }
               }
             }

@@ -50,10 +50,10 @@ class ErrorCounts {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ErrorDateTimeCountsElementType',
+                  serializedName: 'ErrorCountsErrorsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ErrorDateTimeCounts'
+                    className: 'ErrorCountsErrorsItem'
                   }
               }
             }

@@ -65,10 +65,10 @@ class DiagnosticsException {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DiagnosticsStackFrameElementType',
+                  serializedName: 'DiagnosticsExceptionFramesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DiagnosticsStackFrame'
+                    className: 'DiagnosticsExceptionFramesItem'
                   }
               }
             }

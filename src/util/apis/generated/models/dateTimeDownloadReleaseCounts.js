@@ -58,10 +58,10 @@ class DateTimeDownloadReleaseCounts {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DateTimeDownloadReleaseCountElementType',
+                  serializedName: 'DateTimeDownloadReleaseCountsCountsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DateTimeDownloadReleaseCount'
+                    className: 'DateTimeDownloadReleaseCountsCountsItem'
                   }
               }
             }

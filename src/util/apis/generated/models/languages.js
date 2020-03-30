@@ -50,10 +50,10 @@ class Languages {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'LanguageElementType',
+                  serializedName: 'LanguagesLanguagesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'Language'
+                    className: 'LanguagesLanguagesItem'
                   }
               }
             }

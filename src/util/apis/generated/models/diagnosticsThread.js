@@ -68,10 +68,10 @@ class DiagnosticsThread {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DiagnosticsStackFrameElementType',
+                  serializedName: 'DiagnosticsThreadFramesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DiagnosticsStackFrame'
+                    className: 'DiagnosticsThreadFramesItem'
                   }
               }
             }

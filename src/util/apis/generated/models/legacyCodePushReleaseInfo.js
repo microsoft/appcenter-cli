@@ -16,14 +16,11 @@
 class LegacyCodePushReleaseInfo {
   /**
    * Create a LegacyCodePushReleaseInfo.
-   * @property {string} [appVersion] The version of the release
-   * @property {string} [description] The description of the release
-   * @property {boolean} [isDisabled] Flag used to determine if release is
-   * disabled
-   * @property {boolean} [isMandatory] Flag used to determine if release is
-   * mandatory
+   * @property {string} [appVersion]
+   * @property {string} [description]
+   * @property {boolean} [isDisabled]
+   * @property {boolean} [isMandatory]
    * @property {number} [rollout]
-   * @property {string} [label] Release label (aka release name)
    */
   constructor() {
   }
@@ -75,13 +72,6 @@ class LegacyCodePushReleaseInfo {
             serializedName: 'rollout',
             type: {
               name: 'Number'
-            }
-          },
-          label: {
-            required: false,
-            serializedName: 'label',
-            type: {
-              name: 'String'
             }
           }
         }

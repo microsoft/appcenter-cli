@@ -102,7 +102,7 @@ function _listXcodeVersions(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ValidationErrorResponse']().mapper();
+          let resultMapper = new client.models['ListXcodeVersionsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -129,10 +129,10 @@ function _listXcodeVersions(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'XcodeVersionElementType',
+                  serializedName: 'ListXcodeVersionsOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'XcodeVersion'
+                    className: 'ListXcodeVersionsOKResponseItem'
                   }
               }
             }
@@ -240,7 +240,7 @@ function _listXamarinSDKBundles(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ValidationErrorResponse']().mapper();
+          let resultMapper = new client.models['ListXamarinSDKBundlesErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -267,10 +267,10 @@ function _listXamarinSDKBundles(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'XamarinSDKBundleElementType',
+                  serializedName: 'ListXamarinSDKBundlesOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'XamarinSDKBundle'
+                    className: 'ListXamarinSDKBundlesOKResponseItem'
                   }
               }
             }
@@ -311,7 +311,8 @@ function _listXamarinSDKBundles(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Toolsets} for more information.
+ *                      See {@link ListToolsetsOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -393,7 +394,7 @@ function _listToolsets(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ValidationErrorResponse']().mapper();
+          let resultMapper = new client.models['ListToolsetsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -413,7 +414,7 @@ function _listToolsets(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Toolsets']().mapper();
+          let resultMapper = new client.models['ListToolsetsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -449,7 +450,7 @@ function _listToolsets(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link BuildLog} for more information.
+ *                      See {@link GetLogOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -546,7 +547,7 @@ function _getLog(buildId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['BuildLog']().mapper();
+          let resultMapper = new client.models['GetLogOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -585,7 +586,8 @@ function _getLog(buildId, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link DownloadContainer} for more information.
+ *                      See {@link GetDownloadUriOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -686,7 +688,7 @@ function _getDownloadUri(buildId, downloadType, ownerName, appName, options, cal
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DownloadContainer']().mapper();
+          let resultMapper = new client.models['GetDownloadUriOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -734,7 +736,7 @@ function _getDownloadUri(buildId, downloadType, ownerName, appName, options, cal
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link DistributionResponse} for more information.
+ *                      See {@link DistributeOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -800,7 +802,7 @@ function _distribute(buildId, distributeInfo, ownerName, appName, options, callb
   let requestModel = null;
   try {
     if (distributeInfo !== null && distributeInfo !== undefined) {
-      let requestModelMapper = new client.models['DistributionRequest']().mapper();
+      let requestModelMapper = new client.models['DistributeInfo']().mapper();
       requestModel = client.serialize(requestModelMapper, distributeInfo, 'distributeInfo');
       requestContent = JSON.stringify(requestModel);
     }
@@ -848,7 +850,7 @@ function _distribute(buildId, distributeInfo, ownerName, appName, options, callb
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DistributionResponse']().mapper();
+          let resultMapper = new client.models['DistributeOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -884,7 +886,9 @@ function _distribute(buildId, distributeInfo, ownerName, appName, options, callb
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Build} for more information.
+ *                      See {@link
+ *                      GetOKResponseModelModelModelModelModelModelModelModelModelModelModel}
+ *                      for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -981,7 +985,7 @@ function _get(buildId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Build']().mapper();
+          let resultMapper = new client.models['GetOKResponseModelModelModelModelModelModelModelModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1020,7 +1024,9 @@ function _get(buildId, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Build} for more information.
+ *                      See {@link
+ *                      UpdateOKResponseModelModelModelModelModelModelModel}
+ *                      for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1062,7 +1068,7 @@ function _update(buildId, ownerName, appName, options, callback) {
   }
   let properties;
   if (status !== null && status !== undefined) {
-    properties = new client.models['BuildPatch']();
+    properties = new client.models['PropertiesModelModelModelModel']();
     properties.status = status;
   }
 
@@ -1092,7 +1098,7 @@ function _update(buildId, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (properties !== null && properties !== undefined) {
-      let requestModelMapper = new client.models['BuildPatch']().mapper();
+      let requestModelMapper = new client.models['PropertiesModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, properties, 'properties');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1140,7 +1146,7 @@ function _update(buildId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Build']().mapper();
+          let resultMapper = new client.models['UpdateOKResponseModelModelModelModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1174,7 +1180,8 @@ function _update(buildId, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link BuildServiceStatus} for more information.
+ *                      See {@link GetStatusByAppIdOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1261,7 +1268,7 @@ function _getStatusByAppId(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['BuildServiceStatus']().mapper();
+          let resultMapper = new client.models['GetStatusByAppIdOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1294,6 +1301,9 @@ function _getStatusByAppId(ownerName, appName, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
+ * @param {number} [options.maxSearchDepth] The depth of the repository to
+ * search for project files
+ *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -1304,7 +1314,8 @@ function _getStatusByAppId(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ToolsetProjects} for more information.
+ *                      See {@link ListToolsetProjectsOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1320,6 +1331,7 @@ function _listToolsetProjects(branch, os, platform, ownerName, appName, options,
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
+  let maxSearchDepth = (options && options.maxSearchDepth !== undefined) ? options.maxSearchDepth : undefined;
   // Validate
   try {
     if (branch === null || branch === undefined || typeof branch.valueOf() !== 'string') {
@@ -1330,6 +1342,19 @@ function _listToolsetProjects(branch, os, platform, ownerName, appName, options,
     }
     if (platform === null || platform === undefined || typeof platform.valueOf() !== 'string') {
       throw new Error('platform cannot be null or undefined and it must be of type string.');
+    }
+    if (maxSearchDepth !== null && maxSearchDepth !== undefined && typeof maxSearchDepth !== 'number') {
+      throw new Error('maxSearchDepth must be of type number.');
+    }
+    if (maxSearchDepth !== null && maxSearchDepth !== undefined) {
+      if (maxSearchDepth > 10)
+      {
+        throw new Error('"maxSearchDepth" should satisfy the constraint - "InclusiveMaximum": 10');
+      }
+      if (maxSearchDepth < 1)
+      {
+        throw new Error('"maxSearchDepth" should satisfy the constraint - "InclusiveMinimum": 1');
+      }
     }
     if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
       throw new Error('ownerName cannot be null or undefined and it must be of type string.');
@@ -1350,6 +1375,9 @@ function _listToolsetProjects(branch, os, platform, ownerName, appName, options,
   let queryParameters = [];
   queryParameters.push('os=' + encodeURIComponent(os));
   queryParameters.push('platform=' + encodeURIComponent(platform));
+  if (maxSearchDepth !== null && maxSearchDepth !== undefined) {
+    queryParameters.push('maxSearchDepth=' + encodeURIComponent(maxSearchDepth.toString()));
+  }
   if (queryParameters.length > 0) {
     requestUrl += '?' + queryParameters.join('&');
   }
@@ -1407,7 +1435,7 @@ function _listToolsetProjects(branch, os, platform, ownerName, appName, options,
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ToolsetProjects']().mapper();
+          let resultMapper = new client.models['ListToolsetProjectsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1540,10 +1568,10 @@ function _listByBranch(branch, ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'BuildElementType',
+                  serializedName: 'ListByBranchOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'Build'
+                    className: 'ListByBranchOKResponseItem'
                   }
               }
             }
@@ -1588,7 +1616,8 @@ function _listByBranch(branch, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Build} for more information.
+ *                      See {@link CreateOKResponseModelModelModelModel} for
+ *                      more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1628,7 +1657,7 @@ function _create(branch, ownerName, appName, options, callback) {
   }
   let params;
   if ((sourceVersion !== null && sourceVersion !== undefined) || (debug !== null && debug !== undefined)) {
-    params = new client.models['BuildParams']();
+    params = new client.models['ParamsModel']();
     params.sourceVersion = sourceVersion;
     params.debug = debug;
   }
@@ -1659,7 +1688,7 @@ function _create(branch, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (params !== null && params !== undefined) {
-      let requestModelMapper = new client.models['BuildParams']().mapper();
+      let requestModelMapper = new client.models['ParamsModel']().mapper();
       requestModel = client.serialize(requestModelMapper, params, 'params');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1707,7 +1736,7 @@ function _create(branch, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Build']().mapper();
+          let resultMapper = new client.models['CreateOKResponseModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1811,7 +1840,7 @@ function _listBranches(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ValidationErrorResponse']().mapper();
+          let resultMapper = new client.models['ListBranchesErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1838,7 +1867,7 @@ function _listBranches(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'BranchStatusElementType',
+                  serializedName: 'ListBranchesOKResponseItemElementType',
                   type: {
                     name: 'Composite',
                     additionalProperties: {
@@ -1846,15 +1875,15 @@ function _listBranches(ownerName, appName, options, callback) {
                         name: 'Dictionary',
                         value: {
                             required: false,
-                            serializedName: 'BranchPropertiesElementType',
+                            serializedName: 'ListBranchesOKResponseItemValueElementType',
                             type: {
                               name: 'Composite',
-                              className: 'BranchProperties'
+                              className: 'ListBranchesOKResponseItemValue'
                             }
                         }
                       }
                     },
-                    className: 'BranchStatus'
+                    className: 'ListBranchesOKResponseItem'
                   }
               }
             }
@@ -2083,7 +2112,7 @@ class Builds {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Toolsets>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ListToolsetsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2123,7 +2152,7 @@ class Builds {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Toolsets} - The deserialized result object.
+   *                      @resolve {ListToolsetsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2132,7 +2161,8 @@ class Builds {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Toolsets} for more information.
+   *                      See {@link ListToolsetsOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2174,7 +2204,7 @@ class Builds {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<BuildLog>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetLogOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2213,7 +2243,7 @@ class Builds {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {BuildLog} - The deserialized result object.
+   *                      @resolve {GetLogOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2222,7 +2252,7 @@ class Builds {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link BuildLog} for more information.
+   *                      See {@link GetLogOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2267,7 +2297,7 @@ class Builds {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<DownloadContainer>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetDownloadUriOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2309,7 +2339,7 @@ class Builds {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {DownloadContainer} - The deserialized result object.
+   *                      @resolve {GetDownloadUriOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2318,7 +2348,8 @@ class Builds {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link DownloadContainer} for more information.
+   *                      See {@link GetDownloadUriOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2372,7 +2403,7 @@ class Builds {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<DistributionResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<DistributeOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2423,7 +2454,7 @@ class Builds {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {DistributionResponse} - The deserialized result object.
+   *                      @resolve {DistributeOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2432,7 +2463,7 @@ class Builds {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link DistributionResponse} for more information.
+   *                      See {@link DistributeOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2474,7 +2505,7 @@ class Builds {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Build>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModelModelModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2513,7 +2544,7 @@ class Builds {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Build} - The deserialized result object.
+   *                      @resolve {GetOKResponseModelModelModelModelModelModelModelModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2522,7 +2553,9 @@ class Builds {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Build} for more information.
+   *                      See {@link
+   *                      GetOKResponseModelModelModelModelModelModelModelModelModelModelModel}
+   *                      for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2567,7 +2600,7 @@ class Builds {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Build>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<UpdateOKResponseModelModelModelModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2609,7 +2642,7 @@ class Builds {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Build} - The deserialized result object.
+   *                      @resolve {UpdateOKResponseModelModelModelModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2618,7 +2651,9 @@ class Builds {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Build} for more information.
+   *                      See {@link
+   *                      UpdateOKResponseModelModelModelModelModelModelModel}
+   *                      for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2658,7 +2693,7 @@ class Builds {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<BuildServiceStatus>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetStatusByAppIdOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2695,7 +2730,7 @@ class Builds {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {BuildServiceStatus} - The deserialized result object.
+   *                      @resolve {GetStatusByAppIdOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2704,7 +2739,8 @@ class Builds {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link BuildServiceStatus} for more information.
+   *                      See {@link GetStatusByAppIdOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2748,12 +2784,15 @@ class Builds {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {number} [options.maxSearchDepth] The depth of the repository to
+   * search for project files
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ToolsetProjects>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ListToolsetProjectsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2789,6 +2828,9 @@ class Builds {
    *
    * @param {object} [options] Optional Parameters.
    *
+   * @param {number} [options.maxSearchDepth] The depth of the repository to
+   * search for project files
+   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -2799,7 +2841,7 @@ class Builds {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ToolsetProjects} - The deserialized result object.
+   *                      @resolve {ListToolsetProjectsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2808,7 +2850,8 @@ class Builds {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ToolsetProjects} for more information.
+   *                      See {@link ListToolsetProjectsOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2944,7 +2987,7 @@ class Builds {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Build>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateOKResponseModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2988,7 +3031,7 @@ class Builds {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Build} - The deserialized result object.
+   *                      @resolve {CreateOKResponseModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2997,7 +3040,8 @@ class Builds {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Build} for more information.
+   *                      See {@link CreateOKResponseModelModelModelModel} for
+   *                      more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

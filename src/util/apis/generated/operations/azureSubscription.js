@@ -96,7 +96,7 @@ function _listForOrg(orgName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListForOrgErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -123,10 +123,10 @@ function _listForOrg(orgName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AzureSubscriptionResponseElementType',
+                  serializedName: 'ListForOrgOKResponseItemModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AzureSubscriptionResponse'
+                    className: 'ListForOrgOKResponseItemModel'
                   }
               }
             }
@@ -217,7 +217,7 @@ function _listForUser(options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListForUserErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -244,10 +244,10 @@ function _listForUser(options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AzureSubscriptionResponseElementType',
+                  serializedName: 'ListForUserOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AzureSubscriptionResponse'
+                    className: 'ListForUserOKResponseItem'
                   }
               }
             }
@@ -362,7 +362,7 @@ function _deleteForApp(azureSubscriptionId, ownerName, appName, options, callbac
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteForAppErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -469,7 +469,7 @@ function _listForApp(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListForAppErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -496,10 +496,10 @@ function _listForApp(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AzureSubscriptionResponseElementType',
+                  serializedName: 'ListForAppOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AzureSubscriptionResponse'
+                    className: 'ListForAppOKResponseItem'
                   }
               }
             }
@@ -570,7 +570,7 @@ function _linkForApp(ownerName, appName, subscriptionId, options, callback) {
   }
   let azureSubscriptionToAppData;
   if (subscriptionId !== null && subscriptionId !== undefined) {
-    azureSubscriptionToAppData = new client.models['AzureSubscriptionAddToAppRequest']();
+    azureSubscriptionToAppData = new client.models['AzureSubscriptionToAppData']();
     azureSubscriptionToAppData.subscriptionId = subscriptionId;
   }
 
@@ -599,7 +599,7 @@ function _linkForApp(ownerName, appName, subscriptionId, options, callback) {
   let requestModel = null;
   try {
     if (azureSubscriptionToAppData !== null && azureSubscriptionToAppData !== undefined) {
-      let requestModelMapper = new client.models['AzureSubscriptionAddToAppRequest']().mapper();
+      let requestModelMapper = new client.models['AzureSubscriptionToAppData']().mapper();
       requestModel = client.serialize(requestModelMapper, azureSubscriptionToAppData, 'azureSubscriptionToAppData');
       requestContent = JSON.stringify(requestModel);
     }
@@ -631,7 +631,7 @@ function _linkForApp(ownerName, appName, subscriptionId, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['LinkForAppErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {

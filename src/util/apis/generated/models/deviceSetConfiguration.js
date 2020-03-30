@@ -64,7 +64,7 @@ class DeviceSetConfiguration {
             serializedName: 'model',
             type: {
               name: 'Composite',
-              className: 'DeviceSetModel'
+              className: 'DeviceSetConfigurationModel'
             }
           },
           os: {

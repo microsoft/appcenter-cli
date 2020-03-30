@@ -104,7 +104,7 @@ function _getAppVersions(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetAppVersionsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -131,295 +131,14 @@ function _getAppVersions(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AppVersionElementType',
+                  serializedName: 'GetAppVersionsOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AppVersion'
+                    className: 'GetAppVersionsOKResponseItem'
                   }
               }
             }
           };
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-}
-
-/**
- * @summary Gets the state of HockeyApp Crash forwarding for SxS apps
- *
- * Gets the state of HockeyApp Crash forwarding for SxS apps
- *
- * @param {string} ownerName The name of the owner
- *
- * @param {string} appName The name of the application
- *
- * @param {object} [options] Optional Parameters.
- *
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- *
- * @param {function} callback - The callback.
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link HockeyAppCrashForwardingInfo} for more
- *                      information.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-function _getHockeyAppCrashForwardingStatus(ownerName, appName, options, callback) {
-   /* jshint validthis: true */
-  let client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  // Validate
-  try {
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-
-  // Construct URL
-  let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/hockeyapp_crash_forwarding';
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  let httpRequest = new WebResource();
-  httpRequest.method = 'GET';
-  httpRequest.url = requestUrl;
-  httpRequest.headers = {};
-  // Set Headers
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  if(options) {
-    for(let headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  httpRequest.body = null;
-  // Send Request
-  return client.pipeline(httpRequest, (err, response, responseBody) => {
-    if (err) {
-      return callback(err);
-    }
-    let statusCode = response.statusCode;
-    if (statusCode !== 200) {
-      let error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      let parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          let internalError = null;
-          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-          error.code = internalError ? internalError.code : parsedErrorResponse.code;
-          error.message = internalError ? internalError.message : parsedErrorResponse.message;
-        }
-        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
-          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-        }
-      } catch (defaultError) {
-        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                         `- "${responseBody}" for the default response.`;
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    let result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      let parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['HockeyAppCrashForwardingInfo']().mapper();
-          result = client.deserialize(resultMapper, parsedResponse, 'result');
-        }
-      } catch (error) {
-        let deserializationError = new Error(`Error ${error} occurred in deserializing the responseBody - ${responseBody}`);
-        deserializationError.request = msRest.stripRequest(httpRequest);
-        deserializationError.response = msRest.stripResponse(response);
-        return callback(deserializationError);
-      }
-    }
-
-    return callback(null, result, httpRequest, response);
-  });
-}
-
-/**
- * @summary Enable HockeyApp crash forwarding for SxS apps
- *
- * Enable HockeyApp crash forwarding for SxS apps
- *
- * @param {string} ownerName The name of the owner
- *
- * @param {string} appName The name of the application
- *
- * @param {object} [options] Optional Parameters.
- *
- * @param {boolean} [options.enableForwarding]
- *
- * @param {object} [options.customHeaders] Headers that will be added to the
- * request
- *
- * @param {function} callback - The callback.
- *
- * @returns {function} callback(err, result, request, response)
- *
- *                      {Error}  err        - The Error object if an error occurred, null otherwise.
- *
- *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link HockeyAppCrashForwardingInfo} for more
- *                      information.
- *
- *                      {object} [request]  - The HTTP Request object if an error did not occur.
- *
- *                      {stream} [response] - The HTTP Response stream if an error did not occur.
- */
-function _updateHockeyAppCrashForwarding(ownerName, appName, options, callback) {
-   /* jshint validthis: true */
-  let client = this.client;
-  if(!callback && typeof options === 'function') {
-    callback = options;
-    options = null;
-  }
-  if (!callback) {
-    throw new Error('callback cannot be null.');
-  }
-  let enableForwarding = (options && options.enableForwarding !== undefined) ? options.enableForwarding : undefined;
-  // Validate
-  try {
-    if (ownerName === null || ownerName === undefined || typeof ownerName.valueOf() !== 'string') {
-      throw new Error('ownerName cannot be null or undefined and it must be of type string.');
-    }
-    if (appName === null || appName === undefined || typeof appName.valueOf() !== 'string') {
-      throw new Error('appName cannot be null or undefined and it must be of type string.');
-    }
-    if (enableForwarding !== null && enableForwarding !== undefined && typeof enableForwarding !== 'boolean') {
-      throw new Error('enableForwarding must be of type boolean.');
-    }
-  } catch (error) {
-    return callback(error);
-  }
-  let body;
-  if (enableForwarding !== null && enableForwarding !== undefined) {
-    body = new client.models['HockeyAppCrashForwardingChange']();
-    body.enableForwarding = enableForwarding;
-  }
-
-  // Construct URL
-  let baseUrl = this.client.baseUri;
-  let requestUrl = baseUrl + (baseUrl.endsWith('/') ? '' : '/') + 'v0.1/apps/{owner_name}/{app_name}/hockeyapp_crash_forwarding';
-  requestUrl = requestUrl.replace('{owner_name}', encodeURIComponent(ownerName));
-  requestUrl = requestUrl.replace('{app_name}', encodeURIComponent(appName));
-
-  // Create HTTP transport objects
-  let httpRequest = new WebResource();
-  httpRequest.method = 'PATCH';
-  httpRequest.url = requestUrl;
-  httpRequest.headers = {};
-  // Set Headers
-  httpRequest.headers['Content-Type'] = 'application/json; charset=utf-8';
-  if(options) {
-    for(let headerName in options['customHeaders']) {
-      if (options['customHeaders'].hasOwnProperty(headerName)) {
-        httpRequest.headers[headerName] = options['customHeaders'][headerName];
-      }
-    }
-  }
-  // Serialize Request
-  let requestContent = null;
-  let requestModel = null;
-  try {
-    if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['HockeyAppCrashForwardingChange']().mapper();
-      requestModel = client.serialize(requestModelMapper, body, 'body');
-      requestContent = JSON.stringify(requestModel);
-    }
-  } catch (error) {
-    let serializationError = new Error(`Error "${error.message}" occurred in serializing the ` +
-        `payload - ${JSON.stringify(body, null, 2)}.`);
-    return callback(serializationError);
-  }
-  httpRequest.body = requestContent;
-  // Send Request
-  return client.pipeline(httpRequest, (err, response, responseBody) => {
-    if (err) {
-      return callback(err);
-    }
-    let statusCode = response.statusCode;
-    if (statusCode !== 200) {
-      let error = new Error(responseBody);
-      error.statusCode = response.statusCode;
-      error.request = msRest.stripRequest(httpRequest);
-      error.response = msRest.stripResponse(response);
-      if (responseBody === '') responseBody = null;
-      let parsedErrorResponse;
-      try {
-        parsedErrorResponse = JSON.parse(responseBody);
-        if (parsedErrorResponse) {
-          let internalError = null;
-          if (parsedErrorResponse.error) internalError = parsedErrorResponse.error;
-          error.code = internalError ? internalError.code : parsedErrorResponse.code;
-          error.message = internalError ? internalError.message : parsedErrorResponse.message;
-        }
-        if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
-          error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
-        }
-      } catch (defaultError) {
-        error.message = `Error "${defaultError.message}" occurred in deserializing the responseBody ` +
-                         `- "${responseBody}" for the default response.`;
-        return callback(error);
-      }
-      return callback(error);
-    }
-    // Create Result
-    let result = null;
-    if (responseBody === '') responseBody = null;
-    // Deserialize Response
-    if (statusCode === 200) {
-      let parsedResponse = null;
-      try {
-        parsedResponse = JSON.parse(responseBody);
-        result = JSON.parse(responseBody);
-        if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['HockeyAppCrashForwardingInfo']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -455,7 +174,8 @@ function _updateHockeyAppCrashForwarding(ownerName, appName, options, callback) 
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AppCrashesInfo} for more information.
+ *                      See {@link GetAppCrashesInfoOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -526,7 +246,7 @@ function _getAppCrashesInfo(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetAppCrashesInfoErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -546,7 +266,7 @@ function _getAppCrashesInfo(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AppCrashesInfo']().mapper();
+          let resultMapper = new client.models['GetAppCrashesInfoOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -584,7 +304,8 @@ function _getAppCrashesInfo(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link GenericLogContainer} for more information.
+ *                      See {@link ListSessionLogsOKResponseModel} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -671,7 +392,7 @@ function _listSessionLogs(crashId, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListSessionLogsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -691,7 +412,7 @@ function _listSessionLogs(crashId, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['GenericLogContainer']().mapper();
+          let resultMapper = new client.models['ListSessionLogsOKResponseModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -809,7 +530,7 @@ function _getCrashTextAttachmentContent(crashId, attachmentId, ownerName, appNam
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetCrashTextAttachmentContentErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -876,8 +597,8 @@ function _getCrashTextAttachmentContent(crashId, attachmentId, ownerName, appNam
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link CrashAttachmentLocation} for more
- *                      information.
+ *                      See {@link GetCrashAttachmentLocationOKResponse} for
+ *                      more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -956,7 +677,7 @@ function _getCrashAttachmentLocation(crashId, attachmentId, ownerName, appName, 
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetCrashAttachmentLocationErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -976,7 +697,7 @@ function _getCrashAttachmentLocation(crashId, attachmentId, ownerName, appName, 
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['CrashAttachmentLocation']().mapper();
+          let resultMapper = new client.models['GetCrashAttachmentLocationOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1088,7 +809,7 @@ function _listAttachments(crashId, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['ListAttachmentsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1115,10 +836,10 @@ function _listAttachments(crashId, ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'CrashAttachmentElementType',
+                  serializedName: 'ListAttachmentsOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'CrashAttachment'
+                    className: 'ListAttachmentsOKResponseItem'
                   }
               }
             }
@@ -1255,7 +976,7 @@ function _getStacktrace(crashGroupId, crashId, ownerName, appName, options, call
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetStacktraceErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1316,7 +1037,8 @@ function _getStacktrace(crashGroupId, crashId, ownerName, appName, options, call
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link CrashRawLocation} for more information.
+ *                      See {@link GetRawCrashLocationOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1395,7 +1117,7 @@ function _getRawCrashLocation(crashGroupId, crashId, ownerName, appName, options
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetRawCrashLocationErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1415,7 +1137,7 @@ function _getRawCrashLocation(crashGroupId, crashId, ownerName, appName, options
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['CrashRawLocation']().mapper();
+          let resultMapper = new client.models['GetRawCrashLocationOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1534,7 +1256,7 @@ function _getNativeCrashDownload(crashGroupId, crashId, ownerName, appName, opti
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetNativeCrashDownloadErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1678,7 +1400,7 @@ function _getNativeCrash(crashGroupId, crashId, ownerName, appName, options, cal
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetNativeCrashErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1877,7 +1599,7 @@ function _get(crashGroupId, crashId, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetErrorModel8']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1941,7 +1663,8 @@ function _get(crashGroupId, crashId, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link CrashDeleteCounter} for more information.
+ *                      See {@link DeleteOKResponseModelModel} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -2031,7 +1754,7 @@ function _deleteMethod(crashGroupId, crashId, ownerName, appName, options, callb
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['DeleteErrorModel6']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -2051,7 +1774,7 @@ function _deleteMethod(crashGroupId, crashId, ownerName, appName, options, callb
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['CrashDeleteCounter']().mapper();
+          let resultMapper = new client.models['DeleteOKResponseModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -2226,7 +1949,7 @@ function _list(crashGroupId, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['ListErrorModel7']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -2284,8 +2007,6 @@ class Crashes {
   constructor(client) {
     this.client = client;
     this._getAppVersions = _getAppVersions;
-    this._getHockeyAppCrashForwardingStatus = _getHockeyAppCrashForwardingStatus;
-    this._updateHockeyAppCrashForwarding = _updateHockeyAppCrashForwarding;
     this._getAppCrashesInfo = _getAppCrashesInfo;
     this._listSessionLogs = _listSessionLogs;
     this._getCrashTextAttachmentContent = _getCrashTextAttachmentContent;
@@ -2390,192 +2111,6 @@ class Crashes {
   }
 
   /**
-   * @summary Gets the state of HockeyApp Crash forwarding for SxS apps
-   *
-   * Gets the state of HockeyApp Crash forwarding for SxS apps
-   *
-   * @param {string} ownerName The name of the owner
-   *
-   * @param {string} appName The name of the application
-   *
-   * @param {object} [options] Optional Parameters.
-   *
-   * @param {object} [options.customHeaders] Headers that will be added to the
-   * request
-   *
-   * @returns {Promise} A promise is returned
-   *
-   * @resolve {HttpOperationResponse<HockeyAppCrashForwardingInfo>} - The deserialized result object.
-   *
-   * @reject {Error} - The error object.
-   */
-  getHockeyAppCrashForwardingStatusWithHttpOperationResponse(ownerName, appName, options) {
-    let client = this.client;
-    let self = this;
-    return new Promise((resolve, reject) => {
-      self._getHockeyAppCrashForwardingStatus(ownerName, appName, options, (err, result, request, response) => {
-        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
-        httpOperationResponse.body = result;
-        if (err) { reject(err); }
-        else { resolve(httpOperationResponse); }
-        return;
-      });
-    });
-  }
-
-  /**
-   * @summary Gets the state of HockeyApp Crash forwarding for SxS apps
-   *
-   * Gets the state of HockeyApp Crash forwarding for SxS apps
-   *
-   * @param {string} ownerName The name of the owner
-   *
-   * @param {string} appName The name of the application
-   *
-   * @param {object} [options] Optional Parameters.
-   *
-   * @param {object} [options.customHeaders] Headers that will be added to the
-   * request
-   *
-   * @param {function} [optionalCallback] - The optional callback.
-   *
-   * @returns {function|Promise} If a callback was passed as the last parameter
-   * then it returns the callback else returns a Promise.
-   *
-   * {Promise} A promise is returned
-   *
-   *                      @resolve {HockeyAppCrashForwardingInfo} - The deserialized result object.
-   *
-   *                      @reject {Error} - The error object.
-   *
-   * {function} optionalCallback(err, result, request, response)
-   *
-   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link HockeyAppCrashForwardingInfo} for more
-   *                      information.
-   *
-   *                      {object} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
-   */
-  getHockeyAppCrashForwardingStatus(ownerName, appName, options, optionalCallback) {
-    let client = this.client;
-    let self = this;
-    if (!optionalCallback && typeof options === 'function') {
-      optionalCallback = options;
-      options = null;
-    }
-    if (!optionalCallback) {
-      return new Promise((resolve, reject) => {
-        self._getHockeyAppCrashForwardingStatus(ownerName, appName, options, (err, result, request, response) => {
-          if (err) { reject(err); }
-          else { resolve(result); }
-          return;
-        });
-      });
-    } else {
-      return self._getHockeyAppCrashForwardingStatus(ownerName, appName, options, optionalCallback);
-    }
-  }
-
-  /**
-   * @summary Enable HockeyApp crash forwarding for SxS apps
-   *
-   * Enable HockeyApp crash forwarding for SxS apps
-   *
-   * @param {string} ownerName The name of the owner
-   *
-   * @param {string} appName The name of the application
-   *
-   * @param {object} [options] Optional Parameters.
-   *
-   * @param {boolean} [options.enableForwarding]
-   *
-   * @param {object} [options.customHeaders] Headers that will be added to the
-   * request
-   *
-   * @returns {Promise} A promise is returned
-   *
-   * @resolve {HttpOperationResponse<HockeyAppCrashForwardingInfo>} - The deserialized result object.
-   *
-   * @reject {Error} - The error object.
-   */
-  updateHockeyAppCrashForwardingWithHttpOperationResponse(ownerName, appName, options) {
-    let client = this.client;
-    let self = this;
-    return new Promise((resolve, reject) => {
-      self._updateHockeyAppCrashForwarding(ownerName, appName, options, (err, result, request, response) => {
-        let httpOperationResponse = new msRest.HttpOperationResponse(request, response);
-        httpOperationResponse.body = result;
-        if (err) { reject(err); }
-        else { resolve(httpOperationResponse); }
-        return;
-      });
-    });
-  }
-
-  /**
-   * @summary Enable HockeyApp crash forwarding for SxS apps
-   *
-   * Enable HockeyApp crash forwarding for SxS apps
-   *
-   * @param {string} ownerName The name of the owner
-   *
-   * @param {string} appName The name of the application
-   *
-   * @param {object} [options] Optional Parameters.
-   *
-   * @param {boolean} [options.enableForwarding]
-   *
-   * @param {object} [options.customHeaders] Headers that will be added to the
-   * request
-   *
-   * @param {function} [optionalCallback] - The optional callback.
-   *
-   * @returns {function|Promise} If a callback was passed as the last parameter
-   * then it returns the callback else returns a Promise.
-   *
-   * {Promise} A promise is returned
-   *
-   *                      @resolve {HockeyAppCrashForwardingInfo} - The deserialized result object.
-   *
-   *                      @reject {Error} - The error object.
-   *
-   * {function} optionalCallback(err, result, request, response)
-   *
-   *                      {Error}  err        - The Error object if an error occurred, null otherwise.
-   *
-   *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link HockeyAppCrashForwardingInfo} for more
-   *                      information.
-   *
-   *                      {object} [request]  - The HTTP Request object if an error did not occur.
-   *
-   *                      {stream} [response] - The HTTP Response stream if an error did not occur.
-   */
-  updateHockeyAppCrashForwarding(ownerName, appName, options, optionalCallback) {
-    let client = this.client;
-    let self = this;
-    if (!optionalCallback && typeof options === 'function') {
-      optionalCallback = options;
-      options = null;
-    }
-    if (!optionalCallback) {
-      return new Promise((resolve, reject) => {
-        self._updateHockeyAppCrashForwarding(ownerName, appName, options, (err, result, request, response) => {
-          if (err) { reject(err); }
-          else { resolve(result); }
-          return;
-        });
-      });
-    } else {
-      return self._updateHockeyAppCrashForwarding(ownerName, appName, options, optionalCallback);
-    }
-  }
-
-  /**
    * @summary Available for UWP apps only.
    *
    * Gets whether the application has any crashes. Available for UWP apps only.
@@ -2591,7 +2126,7 @@ class Crashes {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AppCrashesInfo>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetAppCrashesInfoOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2630,7 +2165,7 @@ class Crashes {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AppCrashesInfo} - The deserialized result object.
+   *                      @resolve {GetAppCrashesInfoOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2639,7 +2174,8 @@ class Crashes {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AppCrashesInfo} for more information.
+   *                      See {@link GetAppCrashesInfoOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2683,7 +2219,7 @@ class Crashes {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<GenericLogContainer>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ListSessionLogsOKResponseModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2724,7 +2260,7 @@ class Crashes {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {GenericLogContainer} - The deserialized result object.
+   *                      @resolve {ListSessionLogsOKResponseModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2733,7 +2269,8 @@ class Crashes {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link GenericLogContainer} for more information.
+   *                      See {@link ListSessionLogsOKResponseModel} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2877,7 +2414,7 @@ class Crashes {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<CrashAttachmentLocation>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetCrashAttachmentLocationOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2921,7 +2458,7 @@ class Crashes {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {CrashAttachmentLocation} - The deserialized result object.
+   *                      @resolve {GetCrashAttachmentLocationOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2930,8 +2467,8 @@ class Crashes {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link CrashAttachmentLocation} for more
-   *                      information.
+   *                      See {@link GetCrashAttachmentLocationOKResponse} for
+   *                      more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -3175,7 +2712,7 @@ class Crashes {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<CrashRawLocation>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetRawCrashLocationOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -3219,7 +2756,7 @@ class Crashes {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {CrashRawLocation} - The deserialized result object.
+   *                      @resolve {GetRawCrashLocationOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -3228,7 +2765,8 @@ class Crashes {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link CrashRawLocation} for more information.
+   *                      See {@link GetRawCrashLocationOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -3602,7 +3140,7 @@ class Crashes {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<CrashDeleteCounter>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<DeleteOKResponseModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -3649,7 +3187,7 @@ class Crashes {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {CrashDeleteCounter} - The deserialized result object.
+   *                      @resolve {DeleteOKResponseModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -3658,7 +3196,8 @@ class Crashes {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link CrashDeleteCounter} for more information.
+   *                      See {@link DeleteOKResponseModelModel} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

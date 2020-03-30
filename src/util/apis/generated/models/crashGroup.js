@@ -29,7 +29,8 @@ class CrashGroup {
    * @property {date} lastOccurrence
    * @property {string} [exception]
    * @property {string} crashReason
-   * @property {object} [reasonFrame]
+   * @property {object} [reasonFrame] frame belonging to the reason of the
+   * crash
    * @property {string} [reasonFrame.className] name of the class
    * @property {string} [reasonFrame.method] name of the method
    * @property {boolean} [reasonFrame.classMethod] is a class method
@@ -157,7 +158,7 @@ class CrashGroup {
             serializedName: 'reason_frame',
             type: {
               name: 'Composite',
-              className: 'ReasonStackFrame'
+              className: 'CrashGroupReasonFrame'
             }
           },
           fatal: {

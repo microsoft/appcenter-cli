@@ -50,7 +50,7 @@ class IntuneStoreRequest {
             serializedName: 'secret_json',
             type: {
               name: 'Composite',
-              className: 'IntuneSecretDetails'
+              className: 'IntuneStoreRequestSecretJson'
             }
           },
           targetAudience: {
@@ -58,7 +58,7 @@ class IntuneStoreRequest {
             serializedName: 'target_audience',
             type: {
               name: 'Composite',
-              className: 'IntuneTargetAudience'
+              className: 'IntuneStoreRequestTargetAudience'
             }
           },
           appCategory: {
@@ -66,7 +66,7 @@ class IntuneStoreRequest {
             serializedName: 'app_category',
             type: {
               name: 'Composite',
-              className: 'IntuneAppCategory'
+              className: 'IntuneStoreRequestAppCategory'
             }
           },
           tenantId: {

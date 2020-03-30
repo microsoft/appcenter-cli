@@ -78,7 +78,7 @@
     "@types/xml2js": "0.4.5",
     "@types/xmldom": "0.1.29",
     "@types/yazl": "2.4.2",
-    "autorest": "2.0.4407",
+    "autorest": "^2.0.4413",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "gulp": "4.0.2",

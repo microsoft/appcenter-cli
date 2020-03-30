@@ -17,15 +17,15 @@
 class GitHubPullRequestLite {
   /**
    * Create a GitHubPullRequestLite.
-   * @property {object} [head]
+   * @property {object} [head] The lite version of GitHub branch
    * @property {string} [head.ref] The repository name
    * @property {string} [head.sha] The discription of repository
-   * @property {object} [head.repo]
+   * @property {object} [head.repo] The lite version of GitHub repository
    * @property {number} [head.repo.id] The repository id
-   * @property {object} [base]
+   * @property {object} [base] The lite version of GitHub branch
    * @property {string} [base.ref] The repository name
    * @property {string} [base.sha] The discription of repository
-   * @property {object} [base.repo]
+   * @property {object} [base.repo] The lite version of GitHub repository
    * @property {number} [base.repo.id] The repository id
    */
   constructor() {
@@ -50,7 +50,7 @@ class GitHubPullRequestLite {
             serializedName: 'head',
             type: {
               name: 'Composite',
-              className: 'GitHubBranchLite'
+              className: 'GitHubPullRequestLiteHead'
             }
           },
           base: {
@@ -58,7 +58,7 @@ class GitHubPullRequestLite {
             serializedName: 'base',
             type: {
               name: 'Composite',
-              className: 'GitHubBranchLite'
+              className: 'GitHubPullRequestLiteBase'
             }
           }
         }

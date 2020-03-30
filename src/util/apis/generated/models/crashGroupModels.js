@@ -50,10 +50,10 @@ class CrashGroupModels {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'CrashGroupModelElementType',
+                  serializedName: 'CrashGroupModelsModelsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'CrashGroupModel'
+                    className: 'CrashGroupModelsModelsItem'
                   }
               }
             }

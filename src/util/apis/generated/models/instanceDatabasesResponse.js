@@ -42,10 +42,10 @@ class InstanceDatabasesResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'InstanceDatabaseElementType',
+                  serializedName: 'InstanceDatabasesResponseValueItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'InstanceDatabase'
+                    className: 'InstanceDatabasesResponseValueItem'
                   }
               }
             }

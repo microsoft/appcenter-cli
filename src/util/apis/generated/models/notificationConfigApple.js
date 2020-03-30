@@ -10,24 +10,22 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Apple notification certificate configuration.
  *
- * @extends models['NotificationConfig']
  */
-class NotificationConfigApple extends models['NotificationConfig'] {
+class NotificationConfigApple {
   /**
    * Create a NotificationConfigApple.
-   * @property {string} endpointType Possible values include: 'production',
-   * 'sandbox'
+   * @property {string} type Possible values include: 'apns_token_config',
+   * 'gcm_config', 'wns_config'
+   * @property {string} endpointType Type of endpoint the certificate or token
+   * are associated with. Possible values include: 'production', 'sandbox'
    * @property {string} certEncoded Base64 encoded certificate string.
    * @property {string} certFilename Certificate file name
    * @property {string} certKey Certificate password
    */
   constructor() {
-    super();
   }
 
   /**
@@ -42,17 +40,11 @@ class NotificationConfigApple extends models['NotificationConfig'] {
       serializedName: 'apns_config',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'NotificationConfig',
         className: 'NotificationConfigApple',
         modelProperties: {
           type: {
             required: true,
             serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

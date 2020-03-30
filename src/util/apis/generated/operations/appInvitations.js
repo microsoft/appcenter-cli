@@ -97,7 +97,7 @@ function _reject(invitationToken, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['RejectErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -199,7 +199,7 @@ function _accept(invitationToken, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['AcceptErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -312,7 +312,7 @@ function _createByEmail(ownerName, appName, userEmail, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['CreateByEmailErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -393,7 +393,7 @@ function _updatePermissions(ownerName, appName, userEmail, permissions, options,
   }
   let userInvitationPermissionsData;
   if (permissions !== null && permissions !== undefined) {
-    userInvitationPermissionsData = new client.models['UserInvitationPermissionsUpdateRequest']();
+    userInvitationPermissionsData = new client.models['UserInvitationPermissionsData']();
     userInvitationPermissionsData.permissions = permissions;
   }
 
@@ -423,7 +423,7 @@ function _updatePermissions(ownerName, appName, userEmail, permissions, options,
   let requestModel = null;
   try {
     if (userInvitationPermissionsData !== null && userInvitationPermissionsData !== undefined) {
-      let requestModelMapper = new client.models['UserInvitationPermissionsUpdateRequest']().mapper();
+      let requestModelMapper = new client.models['UserInvitationPermissionsData']().mapper();
       requestModel = client.serialize(requestModelMapper, userInvitationPermissionsData, 'userInvitationPermissionsData');
       requestContent = JSON.stringify(requestModel);
     }
@@ -455,7 +455,7 @@ function _updatePermissions(ownerName, appName, userEmail, permissions, options,
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['UpdatePermissionsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -568,7 +568,7 @@ function _deleteMethod(ownerName, appName, userEmail, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -645,7 +645,7 @@ function _create(ownerName, appName, userEmail, options, callback) {
   }
   let userEmail1;
   if ((userEmail !== null && userEmail !== undefined) || (role !== null && role !== undefined)) {
-    userEmail1 = new client.models['UserEmailRequest']();
+    userEmail1 = new client.models['UserEmailModel']();
     userEmail1.userEmail = userEmail;
     userEmail1.role = role;
   }
@@ -675,7 +675,7 @@ function _create(ownerName, appName, userEmail, options, callback) {
   let requestModel = null;
   try {
     if (userEmail1 !== null && userEmail1 !== undefined) {
-      let requestModelMapper = new client.models['UserEmailRequest']().mapper();
+      let requestModelMapper = new client.models['UserEmailModel']().mapper();
       requestModel = client.serialize(requestModelMapper, userEmail1, 'userEmail1');
       requestContent = JSON.stringify(requestModel);
     }
@@ -707,7 +707,7 @@ function _create(ownerName, appName, userEmail, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['CreateErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -744,7 +744,7 @@ function _create(ownerName, appName, userEmail, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AppInvitationDetailResponse} for more
+ *                      See {@link ListOKResponseModelModel} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -816,7 +816,7 @@ function _list(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -836,7 +836,7 @@ function _list(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AppInvitationDetailResponse']().mapper();
+          let resultMapper = new client.models['ListOKResponseModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1416,7 +1416,7 @@ class AppInvitations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AppInvitationDetailResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ListOKResponseModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1453,7 +1453,7 @@ class AppInvitations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AppInvitationDetailResponse} - The deserialized result object.
+   *                      @resolve {ListOKResponseModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1462,7 +1462,7 @@ class AppInvitations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AppInvitationDetailResponse} for more
+   *                      See {@link ListOKResponseModelModel} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.

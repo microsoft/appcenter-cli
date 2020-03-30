@@ -22,8 +22,10 @@ class AndroidModule {
    * module
    * @property {array} [buildVariants] The detected build variants of the
    * Android module (matrix of product flavor + build type (debug|release))
-   * @property {array} [buildTypes] The detected build types fo the Android
+   * @property {array} [buildTypes] The detected build types of the Android
    * module
+   * @property {array} [buildConfigurations] The detected build configurations
+   * of the Android module
    * @property {boolean} [isRoot] Whether the module is at the root level of
    * the project
    */
@@ -96,6 +98,21 @@ class AndroidModule {
                   serializedName: 'StringElementType',
                   type: {
                     name: 'String'
+                  }
+              }
+            }
+          },
+          buildConfigurations: {
+            required: false,
+            serializedName: 'buildConfigurations',
+            type: {
+              name: 'Sequence',
+              element: {
+                  required: false,
+                  serializedName: 'AndroidModuleBuildConfigurationsItemElementType',
+                  type: {
+                    name: 'Composite',
+                    className: 'AndroidModuleBuildConfigurationsItem'
                   }
               }
             }

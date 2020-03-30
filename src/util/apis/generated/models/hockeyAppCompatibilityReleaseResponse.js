@@ -26,6 +26,8 @@ class HockeyAppCompatibilityReleaseResponse {
    * @property {boolean} [external]
    * @property {string} [deviceFamily]
    * @property {string} [minimumOsVersion]
+   * @property {string} [installUrl]
+   * @property {string} [bundleIdentifier]
    */
   constructor() {
   }
@@ -110,6 +112,20 @@ class HockeyAppCompatibilityReleaseResponse {
           minimumOsVersion: {
             required: false,
             serializedName: 'minimum_os_version',
+            type: {
+              name: 'String'
+            }
+          },
+          installUrl: {
+            required: false,
+            serializedName: 'install_url',
+            type: {
+              name: 'String'
+            }
+          },
+          bundleIdentifier: {
+            required: false,
+            serializedName: 'bundle_identifier',
             type: {
               name: 'String'
             }

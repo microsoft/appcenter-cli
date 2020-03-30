@@ -50,10 +50,10 @@ class CrashCounts {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DateTimeCountsElementType',
+                  serializedName: 'CrashCountsCrashesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DateTimeCounts'
+                    className: 'CrashCountsCrashesItem'
                   }
               }
             }

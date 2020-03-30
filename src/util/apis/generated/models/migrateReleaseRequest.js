@@ -43,10 +43,10 @@ class MigrateReleaseRequest {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'HockeyAppMigrationReleaseElementType',
+                  serializedName: 'MigrateReleaseRequestReleasesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'HockeyAppMigrationRelease'
+                    className: 'MigrateReleaseRequestReleasesItem'
                   }
               }
             }

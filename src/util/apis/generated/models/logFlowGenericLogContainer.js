@@ -64,10 +64,10 @@ class LogFlowGenericLogContainer {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'LogFlowGenericLogElementType',
+                  serializedName: 'LogFlowGenericLogContainerLogsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'LogFlowGenericLog'
+                    className: 'LogFlowGenericLogContainerLogsItem'
                   }
               }
             }

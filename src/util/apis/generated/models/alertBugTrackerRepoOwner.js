@@ -33,7 +33,7 @@ class AlertBugTrackerRepoOwner {
   mapper() {
     return {
       required: false,
-      serializedName: 'AlertBugTrackerRepoOwner',
+      serializedName: 'AlertBugTrackerRepo_owner',
       type: {
         name: 'Composite',
         className: 'AlertBugTrackerRepoOwner',

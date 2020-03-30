@@ -108,7 +108,7 @@ function _removeUser(orgName, teamName, userName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['RemoveUserErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -145,7 +145,7 @@ function _removeUser(orgName, teamName, userName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TeamUserResponse} for more information.
+ *                      See {@link GetUsersOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -216,7 +216,7 @@ function _getUsers(orgName, teamName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['GetUsersErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -236,7 +236,7 @@ function _getUsers(orgName, teamName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TeamUserResponse']().mapper();
+          let resultMapper = new client.models['GetUsersOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -262,9 +262,6 @@ function _getUsers(orgName, teamName, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
- * @param {string} [options.role] The user's role. Possible values include:
- * 'admin', 'collaborator', 'member'
- *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
  *
@@ -275,7 +272,8 @@ function _getUsers(orgName, teamName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TeamUserResponse} for more information.
+ *                      See {@link AddUserCreatedResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -291,7 +289,6 @@ function _addUser(orgName, teamName, userEmail, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  let role = (options && options.role !== undefined) ? options.role : undefined;
   // Validate
   try {
     if (orgName === null || orgName === undefined || typeof orgName.valueOf() !== 'string') {
@@ -303,17 +300,13 @@ function _addUser(orgName, teamName, userEmail, options, callback) {
     if (userEmail === null || userEmail === undefined || typeof userEmail.valueOf() !== 'string') {
       throw new Error('userEmail cannot be null or undefined and it must be of type string.');
     }
-    if (role !== null && role !== undefined && typeof role.valueOf() !== 'string') {
-      throw new Error('role must be of type string.');
-    }
   } catch (error) {
     return callback(error);
   }
   let userEmail1;
-  if ((userEmail !== null && userEmail !== undefined) || (role !== null && role !== undefined)) {
-    userEmail1 = new client.models['UserEmailRequest']();
+  if (userEmail !== null && userEmail !== undefined) {
+    userEmail1 = new client.models['UserEmail']();
     userEmail1.userEmail = userEmail;
-    userEmail1.role = role;
   }
 
   // Construct URL
@@ -341,7 +334,7 @@ function _addUser(orgName, teamName, userEmail, options, callback) {
   let requestModel = null;
   try {
     if (userEmail1 !== null && userEmail1 !== undefined) {
-      let requestModelMapper = new client.models['UserEmailRequest']().mapper();
+      let requestModelMapper = new client.models['UserEmail']().mapper();
       requestModel = client.serialize(requestModelMapper, userEmail1, 'userEmail1');
       requestContent = JSON.stringify(requestModel);
     }
@@ -373,7 +366,7 @@ function _addUser(orgName, teamName, userEmail, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['AddUserErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -393,7 +386,7 @@ function _addUser(orgName, teamName, userEmail, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TeamUserResponse']().mapper();
+          let resultMapper = new client.models['AddUserCreatedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -432,7 +425,7 @@ function _addUser(orgName, teamName, userEmail, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AppWithTeamPermissionsResponse} for more
+ *                      See {@link UpdatePermissionsOKResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -473,7 +466,7 @@ function _updatePermissions(orgName, teamName, appName, permissions, options, ca
   }
   let team;
   if (permissions !== null && permissions !== undefined) {
-    team = new client.models['TeamAppUpdateRequest']();
+    team = new client.models['Team']();
     team.permissions = permissions;
   }
 
@@ -503,7 +496,7 @@ function _updatePermissions(orgName, teamName, appName, permissions, options, ca
   let requestModel = null;
   try {
     if (team !== null && team !== undefined) {
-      let requestModelMapper = new client.models['TeamAppUpdateRequest']().mapper();
+      let requestModelMapper = new client.models['Team']().mapper();
       requestModel = client.serialize(requestModelMapper, team, 'team');
       requestContent = JSON.stringify(requestModel);
     }
@@ -535,7 +528,7 @@ function _updatePermissions(orgName, teamName, appName, permissions, options, ca
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['UpdatePermissionsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -555,7 +548,7 @@ function _updatePermissions(orgName, teamName, appName, permissions, options, ca
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AppWithTeamPermissionsResponse']().mapper();
+          let resultMapper = new client.models['UpdatePermissionsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -665,7 +658,7 @@ function _removeApp(orgName, teamName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['RemoveAppErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -705,8 +698,7 @@ function _removeApp(orgName, teamName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AppWithTeamPermissionsResponse} for more
- *                      information.
+ *                      See {@link AddAppCreatedResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -738,7 +730,7 @@ function _addApp(orgName, teamName, name, options, callback) {
   }
   let app;
   if (name !== null && name !== undefined) {
-    app = new client.models['AppAddRequest']();
+    app = new client.models['App']();
     app.name = name;
   }
 
@@ -767,7 +759,7 @@ function _addApp(orgName, teamName, name, options, callback) {
   let requestModel = null;
   try {
     if (app !== null && app !== undefined) {
-      let requestModelMapper = new client.models['AppAddRequest']().mapper();
+      let requestModelMapper = new client.models['App']().mapper();
       requestModel = client.serialize(requestModelMapper, app, 'app');
       requestContent = JSON.stringify(requestModel);
     }
@@ -799,7 +791,7 @@ function _addApp(orgName, teamName, name, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['AddAppErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -819,7 +811,7 @@ function _addApp(orgName, teamName, name, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AppWithTeamPermissionsResponse']().mapper();
+          let resultMapper = new client.models['AddAppCreatedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -923,7 +915,7 @@ function _listApps(orgName, teamName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListAppsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -950,10 +942,10 @@ function _listApps(orgName, teamName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AppWithTeamPermissionsResponseElementType',
+                  serializedName: 'ListAppsOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AppWithTeamPermissionsResponse'
+                    className: 'ListAppsOKResponseItem'
                   }
               }
             }
@@ -991,7 +983,7 @@ function _listApps(orgName, teamName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TeamResponse} for more information.
+ *                      See {@link GetTeamOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1062,7 +1054,7 @@ function _getTeam(orgName, teamName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['GetTeamErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1082,7 +1074,7 @@ function _getTeam(orgName, teamName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TeamResponse']().mapper();
+          let resultMapper = new client.models['GetTeamOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1186,7 +1178,7 @@ function _deleteMethod(orgName, teamName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1211,13 +1203,9 @@ function _deleteMethod(orgName, teamName, options, callback) {
  *
  * @param {string} teamName The team's name
  *
- * @param {string} displayName The display name of the team
+ * @param {string} displayName The new display name of the team
  *
  * @param {object} [options] Optional Parameters.
- *
- * @param {string} [options.name] The name of the team
- *
- * @param {string} [options.description] The description of the team
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -1229,7 +1217,7 @@ function _deleteMethod(orgName, teamName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link TeamResponse} for more information.
+ *                      See {@link UpdateOKResponseModel} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1245,8 +1233,6 @@ function _update(orgName, teamName, displayName, options, callback) {
   if (!callback) {
     throw new Error('callback cannot be null.');
   }
-  let name = (options && options.name !== undefined) ? options.name : undefined;
-  let description = (options && options.description !== undefined) ? options.description : undefined;
   // Validate
   try {
     if (orgName === null || orgName === undefined || typeof orgName.valueOf() !== 'string') {
@@ -1258,21 +1244,13 @@ function _update(orgName, teamName, displayName, options, callback) {
     if (displayName === null || displayName === undefined || typeof displayName.valueOf() !== 'string') {
       throw new Error('displayName cannot be null or undefined and it must be of type string.');
     }
-    if (name !== null && name !== undefined && typeof name.valueOf() !== 'string') {
-      throw new Error('name must be of type string.');
-    }
-    if (description !== null && description !== undefined && typeof description.valueOf() !== 'string') {
-      throw new Error('description must be of type string.');
-    }
   } catch (error) {
     return callback(error);
   }
   let team;
-  if ((displayName !== null && displayName !== undefined) || (name !== null && name !== undefined) || (description !== null && description !== undefined)) {
-    team = new client.models['TeamRequest']();
+  if (displayName !== null && displayName !== undefined) {
+    team = new client.models['TeamModel']();
     team.displayName = displayName;
-    team.name = name;
-    team.description = description;
   }
 
   // Construct URL
@@ -1300,7 +1278,7 @@ function _update(orgName, teamName, displayName, options, callback) {
   let requestModel = null;
   try {
     if (team !== null && team !== undefined) {
-      let requestModelMapper = new client.models['TeamRequest']().mapper();
+      let requestModelMapper = new client.models['TeamModel']().mapper();
       requestModel = client.serialize(requestModelMapper, team, 'team');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1332,7 +1310,7 @@ function _update(orgName, teamName, displayName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['UpdateErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1352,7 +1330,7 @@ function _update(orgName, teamName, displayName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['TeamResponse']().mapper();
+          let resultMapper = new client.models['UpdateOKResponseModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1450,7 +1428,7 @@ function _listAll(orgName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListAllErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1477,10 +1455,10 @@ function _listAll(orgName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'TeamResponseElementType',
+                  serializedName: 'ListAllOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'TeamResponse'
+                    className: 'ListAllOKResponseItem'
                   }
               }
             }
@@ -1558,7 +1536,7 @@ function _createTeam(orgName, displayName, options, callback) {
   }
   let team;
   if ((displayName !== null && displayName !== undefined) || (name !== null && name !== undefined) || (description !== null && description !== undefined)) {
-    team = new client.models['TeamRequest']();
+    team = new client.models['TeamModelModel']();
     team.displayName = displayName;
     team.name = name;
     team.description = description;
@@ -1588,7 +1566,7 @@ function _createTeam(orgName, displayName, options, callback) {
   let requestModel = null;
   try {
     if (team !== null && team !== undefined) {
-      let requestModelMapper = new client.models['TeamRequest']().mapper();
+      let requestModelMapper = new client.models['TeamModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, team, 'team');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1620,7 +1598,7 @@ function _createTeam(orgName, displayName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['CreateTeamErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1647,10 +1625,10 @@ function _createTeam(orgName, displayName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'TeamResponseElementType',
+                  serializedName: 'CreateTeamCreatedResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'TeamResponse'
+                    className: 'CreateTeamCreatedResponseItem'
                   }
               }
             }
@@ -1794,7 +1772,7 @@ class Teams {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TeamUserResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetUsersOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1831,7 +1809,7 @@ class Teams {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TeamUserResponse} - The deserialized result object.
+   *                      @resolve {GetUsersOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1840,7 +1818,7 @@ class Teams {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TeamUserResponse} for more information.
+   *                      See {@link GetUsersOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1877,15 +1855,12 @@ class Teams {
    *
    * @param {object} [options] Optional Parameters.
    *
-   * @param {string} [options.role] The user's role. Possible values include:
-   * 'admin', 'collaborator', 'member'
-   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TeamUserResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<AddUserCreatedResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -1914,9 +1889,6 @@ class Teams {
    *
    * @param {object} [options] Optional Parameters.
    *
-   * @param {string} [options.role] The user's role. Possible values include:
-   * 'admin', 'collaborator', 'member'
-   *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
@@ -1927,7 +1899,7 @@ class Teams {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TeamUserResponse} - The deserialized result object.
+   *                      @resolve {AddUserCreatedResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -1936,7 +1908,8 @@ class Teams {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TeamUserResponse} for more information.
+   *                      See {@link AddUserCreatedResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -1981,7 +1954,7 @@ class Teams {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AppWithTeamPermissionsResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<UpdatePermissionsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2023,7 +1996,7 @@ class Teams {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AppWithTeamPermissionsResponse} - The deserialized result object.
+   *                      @resolve {UpdatePermissionsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2032,7 +2005,7 @@ class Teams {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AppWithTeamPermissionsResponse} for more
+   *                      See {@link UpdatePermissionsOKResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -2165,7 +2138,7 @@ class Teams {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AppWithTeamPermissionsResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<AddAppCreatedResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2205,7 +2178,7 @@ class Teams {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AppWithTeamPermissionsResponse} - The deserialized result object.
+   *                      @resolve {AddAppCreatedResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2214,8 +2187,7 @@ class Teams {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AppWithTeamPermissionsResponse} for more
-   *                      information.
+   *                      See {@link AddAppCreatedResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2340,7 +2312,7 @@ class Teams {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TeamResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetTeamOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2377,7 +2349,7 @@ class Teams {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TeamResponse} - The deserialized result object.
+   *                      @resolve {GetTeamOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2386,7 +2358,7 @@ class Teams {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TeamResponse} for more information.
+   *                      See {@link GetTeamOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -2504,20 +2476,16 @@ class Teams {
    *
    * @param {string} teamName The team's name
    *
-   * @param {string} displayName The display name of the team
+   * @param {string} displayName The new display name of the team
    *
    * @param {object} [options] Optional Parameters.
-   *
-   * @param {string} [options.name] The name of the team
-   *
-   * @param {string} [options.description] The description of the team
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<TeamResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<UpdateOKResponseModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -2542,13 +2510,9 @@ class Teams {
    *
    * @param {string} teamName The team's name
    *
-   * @param {string} displayName The display name of the team
+   * @param {string} displayName The new display name of the team
    *
    * @param {object} [options] Optional Parameters.
-   *
-   * @param {string} [options.name] The name of the team
-   *
-   * @param {string} [options.description] The description of the team
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -2560,7 +2524,7 @@ class Teams {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {TeamResponse} - The deserialized result object.
+   *                      @resolve {UpdateOKResponseModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -2569,7 +2533,7 @@ class Teams {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link TeamResponse} for more information.
+   *                      See {@link UpdateOKResponseModel} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

@@ -33,7 +33,8 @@ class ToolsetProjects {
    * @property {array} [android.androidModules] Android Gradle modules
    * @property {string} [android.gradleWrapperPath] The path of the Gradle
    * wrapper
-   * @property {object} [buildscripts]
+   * @property {object} [buildscripts] A collection of detected pre/post
+   * buildscripts for current platform toolset
    * @property {object} [uwp]
    * @property {array} [uwp.uwpSolutions] The UWP solutions detected
    * @property {object} [testcloud]
@@ -68,7 +69,7 @@ class ToolsetProjects {
             serializedName: 'xcode',
             type: {
               name: 'Composite',
-              className: 'XcodeToolset'
+              className: 'ToolsetProjectsXcode'
             }
           },
           javascript: {
@@ -76,7 +77,7 @@ class ToolsetProjects {
             serializedName: 'javascript',
             type: {
               name: 'Composite',
-              className: 'JavaScriptToolset'
+              className: 'ToolsetProjectsJavascript'
             }
           },
           xamarin: {
@@ -84,7 +85,7 @@ class ToolsetProjects {
             serializedName: 'xamarin',
             type: {
               name: 'Composite',
-              className: 'XamarinToolset'
+              className: 'ToolsetProjectsXamarin'
             }
           },
           android: {
@@ -92,7 +93,7 @@ class ToolsetProjects {
             serializedName: 'android',
             type: {
               name: 'Composite',
-              className: 'AndroidProject'
+              className: 'ToolsetProjectsAndroid'
             }
           },
           buildscripts: {
@@ -102,10 +103,10 @@ class ToolsetProjects {
               name: 'Dictionary',
               value: {
                   required: false,
-                  serializedName: 'ToolsetProjectElementType',
+                  serializedName: 'ToolsetProjectsBuildscriptsValueElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ToolsetProject'
+                    className: 'ToolsetProjectsBuildscriptsValue'
                   }
               }
             }
@@ -115,7 +116,7 @@ class ToolsetProjects {
             serializedName: 'uwp',
             type: {
               name: 'Composite',
-              className: 'UWPToolset'
+              className: 'ToolsetProjectsUwp'
             }
           },
           testcloud: {
@@ -123,7 +124,7 @@ class ToolsetProjects {
             serializedName: 'testcloud',
             type: {
               name: 'Composite',
-              className: 'TestCloudToolset'
+              className: 'ToolsetProjectsTestcloud'
             }
           }
         }

@@ -16,18 +16,15 @@
 class Destination {
   /**
    * Create a Destination.
+   * @property {string} id ID identifying a unique distribution group.
+   * @property {string} [name] A name identifying a unique distribution group.
    * @property {boolean} [isLatest] Is the containing release the latest one in
    * this distribution group.
-   * @property {string} [name] Name of a distribution group / distribution
-   * store. The release will be associated with this distribution group or
-   * store. If the distribution group / store doesn't exist a 400 is returned.
-   * If both distribution group / store name and id are passed, the id is
-   * taking precedence.
-   * @property {string} [id] Id of a distribution group / store. The release
-   * will be associated with this distribution group / store. If the
-   * distribution group / store doesn't exist a 400 is returned. If both
-   * distribution group / store name and id are passed, the id is taking
-   * precedence.
+   * @property {string} [type] type of the distribution store currently stores
+   * type can be intune, googleplay or windows. Possible values include:
+   * 'intune', 'googleplay', 'apple', 'none'
+   * @property {string} [publishingStatus] publishing status of the release in
+   * the store.
    * @property {string} [destinationType] Destination can be either store or
    * group. Possible values include: 'group', 'store', 'tester'
    * @property {string} [displayName] Display name for the group or tester
@@ -49,11 +46,11 @@ class Destination {
         name: 'Composite',
         className: 'Destination',
         modelProperties: {
-          isLatest: {
-            required: false,
-            serializedName: 'is_latest',
+          id: {
+            required: true,
+            serializedName: 'id',
             type: {
-              name: 'Boolean'
+              name: 'String'
             }
           },
           name: {
@@ -63,9 +60,23 @@ class Destination {
               name: 'String'
             }
           },
-          id: {
+          isLatest: {
             required: false,
-            serializedName: 'id',
+            serializedName: 'is_latest',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          type: {
+            required: false,
+            serializedName: 'type',
+            type: {
+              name: 'String'
+            }
+          },
+          publishingStatus: {
+            required: false,
+            serializedName: 'publishing_status',
             type: {
               name: 'String'
             }

@@ -116,7 +116,7 @@ function _list(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ValidationErrorResponse']().mapper();
+          let resultMapper = new client.models['ListErrorModel3']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -143,10 +143,10 @@ function _list(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'RepoConfigElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'RepoConfig'
+                    className: 'ListOKResponseItemModelModelModelModelModel'
                   }
               }
             }
@@ -170,10 +170,7 @@ function _list(ownerName, appName, options, callback) {
  *
  * @param {object} repo The repository information
  *
- * @param {string} [repo.installationId] The GitHub App Installation id.
- * Required for repositories connected from GitHub App
- *
- * @param {string} [repo.repoUrl] The repository's git url, must be a HTTPS URL
+ * @param {string} repo.repoUrl The repository's git url, must be a HTTPS URL
  *
  * @param {string} [repo.repoId] The repository id from the repository
  * provider. Required for repositories connected from GitHub App and GitLab.com
@@ -183,6 +180,9 @@ function _list(ownerName, appName, options, callback) {
  *
  * @param {string} [repo.serviceConnectionId] The id of the service connection
  * (private). Required for GitLab self-hosted repositories
+ *
+ * @param {string} [repo.installationId] The GitHub App Installation id.
+ * Required for repositories connected from GitHub App
  *
  * @param {string} ownerName The name of the owner
  *
@@ -200,7 +200,8 @@ function _list(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link SuccessResponse} for more information.
+ *                      See {@link CreateOrUpdateOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -256,7 +257,7 @@ function _createOrUpdate(repo, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (repo !== null && repo !== undefined) {
-      let requestModelMapper = new client.models['RepoConfigPostRequest']().mapper();
+      let requestModelMapper = new client.models['Repo']().mapper();
       requestModel = client.serialize(requestModelMapper, repo, 'repo');
       requestContent = JSON.stringify(requestModel);
     }
@@ -288,7 +289,7 @@ function _createOrUpdate(repo, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ValidationErrorResponse']().mapper();
+          let resultMapper = new client.models['CreateOrUpdateErrorModel1']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -308,7 +309,7 @@ function _createOrUpdate(repo, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['SuccessResponse']().mapper();
+          let resultMapper = new client.models['CreateOrUpdateOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -342,7 +343,7 @@ function _createOrUpdate(repo, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link SuccessResponse} for more information.
+ *                      See {@link DeleteOKResponseModel} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -413,7 +414,7 @@ function _deleteMethod(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ValidationErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteErrorModel1']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -433,7 +434,7 @@ function _deleteMethod(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['SuccessResponse']().mapper();
+          let resultMapper = new client.models['DeleteOKResponseModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -557,10 +558,7 @@ class RepositoryConfigurations {
    *
    * @param {object} repo The repository information
    *
-   * @param {string} [repo.installationId] The GitHub App Installation id.
-   * Required for repositories connected from GitHub App
-   *
-   * @param {string} [repo.repoUrl] The repository's git url, must be a HTTPS URL
+   * @param {string} repo.repoUrl The repository's git url, must be a HTTPS URL
    *
    * @param {string} [repo.repoId] The repository id from the repository
    * provider. Required for repositories connected from GitHub App and GitLab.com
@@ -570,6 +568,9 @@ class RepositoryConfigurations {
    *
    * @param {string} [repo.serviceConnectionId] The id of the service connection
    * (private). Required for GitLab self-hosted repositories
+   *
+   * @param {string} [repo.installationId] The GitHub App Installation id.
+   * Required for repositories connected from GitHub App
    *
    * @param {string} ownerName The name of the owner
    *
@@ -582,7 +583,7 @@ class RepositoryConfigurations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<SuccessResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateOrUpdateOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -605,10 +606,7 @@ class RepositoryConfigurations {
    *
    * @param {object} repo The repository information
    *
-   * @param {string} [repo.installationId] The GitHub App Installation id.
-   * Required for repositories connected from GitHub App
-   *
-   * @param {string} [repo.repoUrl] The repository's git url, must be a HTTPS URL
+   * @param {string} repo.repoUrl The repository's git url, must be a HTTPS URL
    *
    * @param {string} [repo.repoId] The repository id from the repository
    * provider. Required for repositories connected from GitHub App and GitLab.com
@@ -618,6 +616,9 @@ class RepositoryConfigurations {
    *
    * @param {string} [repo.serviceConnectionId] The id of the service connection
    * (private). Required for GitLab self-hosted repositories
+   *
+   * @param {string} [repo.installationId] The GitHub App Installation id.
+   * Required for repositories connected from GitHub App
    *
    * @param {string} ownerName The name of the owner
    *
@@ -635,7 +636,7 @@ class RepositoryConfigurations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {SuccessResponse} - The deserialized result object.
+   *                      @resolve {CreateOrUpdateOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -644,7 +645,8 @@ class RepositoryConfigurations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link SuccessResponse} for more information.
+   *                      See {@link CreateOrUpdateOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -684,7 +686,7 @@ class RepositoryConfigurations {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<SuccessResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<DeleteOKResponseModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -721,7 +723,7 @@ class RepositoryConfigurations {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {SuccessResponse} - The deserialized result object.
+   *                      @resolve {DeleteOKResponseModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -730,7 +732,7 @@ class RepositoryConfigurations {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link SuccessResponse} for more information.
+   *                      See {@link DeleteOKResponseModel} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

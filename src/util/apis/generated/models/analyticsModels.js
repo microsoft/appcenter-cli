@@ -50,10 +50,10 @@ class AnalyticsModels {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ModelElementType',
+                  serializedName: 'AnalyticsModelsModelsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'Model'
+                    className: 'AnalyticsModelsModelsItem'
                   }
               }
             }

@@ -10,20 +10,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Date and time property.
  *
- * @extends models['CustomPropertyDiagnostics']
  */
-class DateTimePropertyDiagnostics extends models['CustomPropertyDiagnostics'] {
+class DateTimePropertyDiagnostics {
   /**
    * Create a DateTimePropertyDiagnostics.
+   * @property {string} type
+   * @property {string} name
    * @property {date} value Date time property value.
    */
   constructor() {
-    super();
   }
 
   /**
@@ -38,13 +36,15 @@ class DateTimePropertyDiagnostics extends models['CustomPropertyDiagnostics'] {
       serializedName: 'date_time',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'CustomPropertyDiagnostics',
         className: 'DateTimePropertyDiagnostics',
         modelProperties: {
+          type: {
+            required: true,
+            serializedName: 'type',
+            type: {
+              name: 'String'
+            }
+          },
           name: {
             required: true,
             serializedName: 'name',
@@ -52,14 +52,6 @@ class DateTimePropertyDiagnostics extends models['CustomPropertyDiagnostics'] {
               MaxLength: 128,
               Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
-            type: {
-              name: 'String'
-            }
-          },
-          type: {
-            required: true,
-            serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

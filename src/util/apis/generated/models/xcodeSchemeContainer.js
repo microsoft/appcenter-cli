@@ -57,10 +57,10 @@ class XcodeSchemeContainer {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'XcodeSchemeElementType',
+                  serializedName: 'XcodeSchemeContainerSharedSchemesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'XcodeScheme'
+                    className: 'XcodeSchemeContainerSharedSchemesItem'
                   }
               }
             }
@@ -100,10 +100,10 @@ class XcodeSchemeContainer {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'IosAppExtensionInfoElementType',
+                  serializedName: 'XcodeSchemeContainerAppExtensionTargetsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'IosAppExtensionInfo'
+                    className: 'XcodeSchemeContainerAppExtensionTargetsItem'
                   }
               }
             }

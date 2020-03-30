@@ -23,9 +23,7 @@ class AlertingBugtracker {
    * 'enabled', 'disabled', 'unauthorized'
    * @property {string} [tokenId] ID of OAuth token
    * @property {array} [eventTypes] Event types enabled for bugtracker
-   * @property {number} [crashCountThreshold] Threshold for the number of
-   * crashes at which to create a bug
-   * @property {object} [settings]
+   * @property {object} [settings] Bugtracker specific settings
    * @property {string} [settings.callbackUrl]
    * @property {string} [settings.ownerName]
    * @property {string} [settings.type] Polymorphic Discriminator
@@ -82,13 +80,6 @@ class AlertingBugtracker {
               }
             }
           },
-          crashCountThreshold: {
-            required: false,
-            serializedName: 'crash_count_threshold',
-            type: {
-              name: 'Number'
-            }
-          },
           settings: {
             required: false,
             serializedName: 'settings',
@@ -98,8 +89,8 @@ class AlertingBugtracker {
                 serializedName: 'type',
                 clientName: 'type'
               },
-              uberParent: 'AlertingBugtrackerSettings',
-              className: 'AlertingBugtrackerSettings'
+              uberParent: 'AlertingBugtrackerSettingsModel',
+              className: 'AlertingBugtrackerSettingsModel'
             }
           }
         }

@@ -66,7 +66,7 @@ class LegacyDeploymentHistory {
             serializedName: 'allOf',
             type: {
               name: 'Composite',
-              className: 'LegacyCodePushRelease'
+              className: 'LegacyDeploymentHistoryAllOf'
             }
           },
           description: {

@@ -44,10 +44,10 @@ class AudienceListResult {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AudienceSummaryElementType',
+                  serializedName: 'AudienceListResultValuesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AudienceSummary'
+                    className: 'AudienceListResultValuesItem'
                   }
               }
             }

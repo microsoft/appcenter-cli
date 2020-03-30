@@ -50,10 +50,10 @@ class ActiveCrashingAppDetails {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'CrashingAppDetailElementType',
+                  serializedName: 'ActiveCrashingAppDetailsAppsWithCrashesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'CrashingAppDetail'
+                    className: 'ActiveCrashingAppDetailsAppsWithCrashesItem'
                   }
               }
             }

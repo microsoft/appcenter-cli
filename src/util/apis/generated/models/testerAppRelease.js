@@ -10,15 +10,29 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a TesterAppRelease.
- * @extends models['DistributionGroupRelease']
  */
-class TesterAppRelease extends models['DistributionGroupRelease'] {
+class TesterAppRelease {
   /**
    * Create a TesterAppRelease.
+   * @property {number} id ID identifying this unique release.
+   * @property {string} version The release's version.<br>
+   * For iOS: CFBundleVersion from info.plist.<br>
+   * For Android: android:versionCode from AppManifest.xml.
+   * @property {string} [origin] The release's origin. Possible values include:
+   * 'hockeyapp', 'appcenter'
+   * @property {string} shortVersion The release's short version.<br>
+   * For iOS: CFBundleShortVersionString from info.plist.<br>
+   * For Android: android:versionName from AppManifest.xml.
+   * @property {boolean} mandatoryUpdate A boolean which determines whether the
+   * release is a mandatory update or not.
+   * @property {string} uploadedAt UTC time in ISO 8601 format of the uploaded
+   * time.
+   * @property {boolean} enabled This value determines the whether a release
+   * currently is enabled or disabled.
+   * @property {boolean} [isExternalBuild] This value determines if a release
+   * is external or not.
    * @property {number} size The release's size in bytes.
    * @property {string} [installUrl] The href required to install a release on
    * a mobile device. On iOS devices will be prefixed with
@@ -26,7 +40,6 @@ class TesterAppRelease extends models['DistributionGroupRelease'] {
    * @property {string} [releaseNotes] The release's release notes.
    */
   constructor() {
-    super();
   }
 
   /**
@@ -88,6 +101,13 @@ class TesterAppRelease extends models['DistributionGroupRelease'] {
           enabled: {
             required: true,
             serializedName: 'enabled',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          isExternalBuild: {
+            required: false,
+            serializedName: 'is_external_build',
             type: {
               name: 'Boolean'
             }

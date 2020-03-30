@@ -49,7 +49,8 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link CodePushRelease} for more information.
+ *                      See {@link UpdateOKResponseModelModelModelModelModel}
+ *                      for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -113,7 +114,7 @@ function _update(deploymentName, releaseLabel, release, ownerName, appName, opti
   let requestModel = null;
   try {
     if (release !== null && release !== undefined) {
-      let requestModelMapper = new client.models['CodePushReleaseModification']().mapper();
+      let requestModelMapper = new client.models['ReleaseModel']().mapper();
       requestModel = client.serialize(requestModelMapper, release, 'release');
       requestContent = JSON.stringify(requestModel);
     }
@@ -145,7 +146,7 @@ function _update(deploymentName, releaseLabel, release, ownerName, appName, opti
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['UpdateErrorModel1']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -165,7 +166,7 @@ function _update(deploymentName, releaseLabel, release, ownerName, appName, opti
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['CodePushRelease']().mapper();
+          let resultMapper = new client.models['UpdateOKResponseModelModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -222,7 +223,7 @@ class DeploymentReleases {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<CodePushRelease>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<UpdateOKResponseModelModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -276,7 +277,7 @@ class DeploymentReleases {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {CodePushRelease} - The deserialized result object.
+   *                      @resolve {UpdateOKResponseModelModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -285,7 +286,8 @@ class DeploymentReleases {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link CodePushRelease} for more information.
+   *                      See {@link UpdateOKResponseModelModelModelModelModel}
+   *                      for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

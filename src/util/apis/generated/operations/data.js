@@ -221,7 +221,7 @@ function _postResourceProvisioning(acAuthorizationARM, ownerName, appName, optio
   let requestModel = null;
   try {
     if (provisionDatabaseParameters !== null && provisionDatabaseParameters !== undefined) {
-      let requestModelMapper = new client.models['DataProvisioningParameters']().mapper();
+      let requestModelMapper = new client.models['ProvisionDatabaseParameters']().mapper();
       requestModel = client.serialize(requestModelMapper, provisionDatabaseParameters, 'provisionDatabaseParameters');
       requestContent = JSON.stringify(requestModel);
     }
@@ -269,7 +269,7 @@ function _postResourceProvisioning(acAuthorizationARM, ownerName, appName, optio
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ProvisionStatusResponse']().mapper();
+          let resultMapper = new client.models['PostResourceProvisioningAcceptedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -286,7 +286,7 @@ function _postResourceProvisioning(acAuthorizationARM, ownerName, appName, optio
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['PostResourceProvisioningBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -303,7 +303,7 @@ function _postResourceProvisioning(acAuthorizationARM, ownerName, appName, optio
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['PostResourceProvisioningInternalServerErrorResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {

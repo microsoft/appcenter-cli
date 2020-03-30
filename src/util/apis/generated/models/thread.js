@@ -68,10 +68,10 @@ class Thread {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'StackFrameElementType',
+                  serializedName: 'ThreadFramesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'StackFrame'
+                    className: 'ThreadFramesItem'
                   }
               }
             }

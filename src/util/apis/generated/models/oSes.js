@@ -50,10 +50,10 @@ class OSes {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'OSElementType',
+                  serializedName: 'OSesOsesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'OS'
+                    className: 'OSesOsesItem'
                   }
               }
             }

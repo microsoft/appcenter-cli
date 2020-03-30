@@ -50,10 +50,10 @@ class CrashGroupOperatingSystems {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'CrashGroupOperatingSystemElementType',
+                  serializedName: 'CrashGroupOperatingSystemsOperatingSystemsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'CrashGroupOperatingSystem'
+                    className: 'CrashGroupOperatingSystemsOperatingSystemsItem'
                   }
               }
             }

@@ -17,6 +17,11 @@ class UpdateCheckResponse {
   /**
    * Create a UpdateCheckResponse.
    * @property {object} updateInfo
+   * @property {string} [updateInfo.targetBinaryRange]
+   * @property {string} [updateInfo.description]
+   * @property {boolean} [updateInfo.isDisabled]
+   * @property {boolean} [updateInfo.isMandatory]
+   * @property {number} [updateInfo.rollout]
    * @property {string} [updateInfo.downloadUrl]
    * @property {boolean} [updateInfo.isAvailable]
    * @property {number} [updateInfo.packageSize]
@@ -47,7 +52,7 @@ class UpdateCheckResponse {
             serializedName: 'update_info',
             type: {
               name: 'Composite',
-              className: 'UpdateInfoData'
+              className: 'UpdateCheckResponseUpdateInfo'
             }
           }
         }

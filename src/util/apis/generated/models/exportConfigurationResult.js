@@ -32,12 +32,15 @@ class ExportConfigurationResult {
    * account/App Insights resource
    * @property {string} [resourceName] Storage accout or Appinsights resource
    * name
-   * @property {object} [exportConfiguration]
+   * @property {object} [exportConfiguration] Export configuration
    * @property {array} [exportConfiguration.exportEntities]
    * @property {string} [exportConfiguration.resourceName] The resource name on
    * azure
    * @property {string} [exportConfiguration.resourceGroup] The resource group
    * name on azure
+   * @property {boolean} [exportConfiguration.backfill] Field to determine if
+   * backfilling should occur. The default value is true. If set to false
+   * export starts from date and time of config creation.
    * @property {string} [exportConfiguration.type] Polymorphic Discriminator
    */
   constructor() {
@@ -96,7 +99,7 @@ class ExportConfigurationResult {
                   serializedName: 'ExportEntityElementType',
                   type: {
                     name: 'Enum',
-                    allowedValues: [ 'crashes', 'errors', 'attachments' ]
+                    allowedValues: [ 'crashes', 'errors', 'attachments', 'no_logs' ]
                   }
               }
             }
@@ -139,8 +142,8 @@ class ExportConfigurationResult {
                 serializedName: 'type',
                 clientName: 'type'
               },
-              uberParent: 'ExportConfiguration',
-              className: 'ExportConfiguration'
+              uberParent: 'ExportConfigurationResultExportConfiguration',
+              className: 'ExportConfigurationResultExportConfiguration'
             }
           }
         }

@@ -50,10 +50,10 @@ class ErrorGroupOperatingSystems {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ErrorGroupOperatingSystemElementType',
+                  serializedName: 'ErrorGroupOperatingSystemsOperatingSystemsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ErrorGroupOperatingSystem'
+                    className: 'ErrorGroupOperatingSystemsOperatingSystemsItem'
                   }
               }
             }

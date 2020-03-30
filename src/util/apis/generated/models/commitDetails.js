@@ -10,15 +10,14 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a CommitDetails.
- * @extends models['Commit']
  */
-class CommitDetails extends models['Commit'] {
+class CommitDetails {
   /**
    * Create a CommitDetails.
+   * @property {string} [sha] The commit SHA
+   * @property {string} [url] The URL to the commit
    * @property {object} [commit]
    * @property {string} [commit.message] Commit message
    * @property {object} [commit.author]
@@ -27,7 +26,6 @@ class CommitDetails extends models['Commit'] {
    * @property {string} [commit.author.email] Author's email
    */
   constructor() {
-    super();
   }
 
   /**

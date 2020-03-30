@@ -21,12 +21,10 @@ class AppUserPermissionResponse {
    * @property {string} userEmail The email of the user
    * @property {uuid} userId The unique id (UUID) of the user
    * @property {string} appOrigin The creation origin of this app. Possible
-   * values include: 'appcenter', 'hockeyapp', 'codepush'
+   * values include: 'appcenter', 'codepush'
    * @property {string} appSecret A unique and secret key used to identify the
    * app in communication with the ingestion endpoint for crash reporting and
    * analytics
-   * @property {boolean} isCutoverFromHockeyapp Whether the app had a
-   * 'hockeyapp' origin before being "cut over" to App Center
    */
   constructor() {
   }
@@ -92,13 +90,6 @@ class AppUserPermissionResponse {
             serializedName: 'app_secret',
             type: {
               name: 'String'
-            }
-          },
-          isCutoverFromHockeyapp: {
-            required: true,
-            serializedName: 'is_cutover_from_hockeyapp',
-            type: {
-              name: 'Boolean'
             }
           }
         }

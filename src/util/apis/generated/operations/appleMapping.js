@@ -102,7 +102,7 @@ function _testFlightGroups(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['TestFlightGroupsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -129,10 +129,10 @@ function _testFlightGroups(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AppleTestFlightGroupsResponseElementType',
+                  serializedName: 'TestFlightGroupsOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AppleTestFlightGroupsResponse'
+                    className: 'TestFlightGroupsOKResponseItem'
                   }
               }
             }
@@ -170,7 +170,9 @@ function _testFlightGroups(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AppleMappingResponse} for more information.
+ *                      See {@link
+ *                      GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModel}
+ *                      for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -241,7 +243,7 @@ function _get(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['GetErrorModel11']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -261,7 +263,7 @@ function _get(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AppleMappingResponse']().mapper();
+          let resultMapper = new client.models['GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -391,7 +393,7 @@ function _deleteMethod(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['DeleteErrorModel7']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -444,7 +446,9 @@ function _deleteMethod(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AppleMappingResponse} for more information.
+ *                      See {@link
+ *                      CreateCreatedResponseModelModelModelModelModel} for
+ *                      more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -500,7 +504,7 @@ function _create(body, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['AppleMappingRequest']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -532,7 +536,7 @@ function _create(body, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['CreateErrorModel6']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -552,7 +556,7 @@ function _create(body, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AppleMappingResponse']().mapper();
+          let resultMapper = new client.models['CreateCreatedResponseModelModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -680,7 +684,7 @@ class AppleMapping {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AppleMappingResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -717,7 +721,7 @@ class AppleMapping {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AppleMappingResponse} - The deserialized result object.
+   *                      @resolve {GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -726,7 +730,9 @@ class AppleMapping {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AppleMappingResponse} for more information.
+   *                      See {@link
+   *                      GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModel}
+   *                      for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -871,7 +877,7 @@ class AppleMapping {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AppleMappingResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateCreatedResponseModelModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -924,7 +930,7 @@ class AppleMapping {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AppleMappingResponse} - The deserialized result object.
+   *                      @resolve {CreateCreatedResponseModelModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -933,7 +939,9 @@ class AppleMapping {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AppleMappingResponse} for more information.
+   *                      See {@link
+   *                      CreateCreatedResponseModelModelModelModelModel} for
+   *                      more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

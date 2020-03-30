@@ -10,24 +10,21 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Apple notification auth token configuration result.
  *
- * @extends models['NotificationConfigResult']
  */
-class NotificationConfigAppleTokenResult extends models['NotificationConfigResult'] {
+class NotificationConfigAppleTokenResult {
   /**
    * Create a NotificationConfigAppleTokenResult.
+   * @property {string} type
    * @property {string} keyId A 10-character key identifier (kid).
    * @property {string} id Application ID.
    * @property {string} prefix Application Prefix.
-   * @property {string} endpointType Possible values include: 'production',
-   * 'sandbox'
+   * @property {string} endpointType Type of endpoint the certificate or token
+   * are associated with. Possible values include: 'production', 'sandbox'
    */
   constructor() {
-    super();
   }
 
   /**
@@ -42,17 +39,11 @@ class NotificationConfigAppleTokenResult extends models['NotificationConfigResul
       serializedName: 'apns_token_config',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'NotificationConfigResult',
         className: 'NotificationConfigAppleTokenResult',
         modelProperties: {
           type: {
             required: true,
             serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }
