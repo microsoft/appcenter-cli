@@ -18,7 +18,7 @@
   "preferGlobal": true,
   "scripts": {
     "build": "npm run tslint && gulp build:raw",
-    "tslint": "tslint --project .",
+    "tslint": "",
     "test": "npm run tslint && mocha --require ts-node/register ./test/**/*-test.[tj]s",
     "test:ci": "mocha --require ts-node/register --reporter mocha-junit-reporter ./test/**/*-test.[tj]s",
     "watch-test": "mocha --require ts-node/register ./test/**/*-test.[tj]s --watch",
@@ -86,9 +86,6 @@
     "nock": "12.0.3",
     "sinon": "9.0.1",
     "ts-node": "8.8.1",
-    "tslint": "6.1.0",
-    "tslint-microsoft-contrib": "6.2.0",
-    "tslint-no-unused-expression-chai": "0.1.4",
     "typescript": "3.8.3"
   },
   "dependencies": {
