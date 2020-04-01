@@ -19,7 +19,15 @@ interface IMdfindParameters {
   limit?: number;
 }
 
-export function mdfind({ query = null, attributes = [], names = [], directories = [], live = false, interpret = false, limit = null }: IMdfindParameters = {}) {
+export function mdfind({
+  query = null,
+  attributes = [],
+  names = [],
+  directories = [],
+  live = false,
+  interpret = false,
+  limit = null,
+}: IMdfindParameters = {}) {
   const dirArgs = makeArgs(directories, "-onlyin");
   const nameArgs = makeArgs(names, "-name");
   const attrArgs = makeArgs(attributes, "-attr");
@@ -38,19 +46,21 @@ export function mdfind({ query = null, attributes = [], names = [], directories 
     output: child.stdout
       .pipe(split("\0"))
       .pipe(through(filterEmpty))
-      .pipe(through(function (data, enc, done) {
-        times++;
-        if (limit && times === limit) {
-          child.kill();
-        }
+      .pipe(
+        through(function (data, enc, done) {
+          times++;
+          if (limit && times === limit) {
+            child.kill();
+          }
 
-        if (limit && times > limit) {
-          return done();
-        }
-        done(null, data);
-      }))
+          if (limit && times > limit) {
+            return done();
+          }
+          done(null, data);
+        })
+      )
       .pipe(through(jsonify)),
-    terminate: () => child.kill()
+    terminate: () => child.kill(),
   };
 }
 
@@ -98,7 +108,9 @@ function filterEmpty(data: string, enc: any, done: Function) {
 
 function makeArgs(array: object[], argName: string) {
   return _.chain(array)
-    .map((item: object) => { return [argName, item]; })
+    .map((item: object) => {
+      return [argName, item];
+    })
     .flatten()
     .value();
 }

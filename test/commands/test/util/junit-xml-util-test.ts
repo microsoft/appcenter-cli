@@ -6,26 +6,26 @@ import { JUnitXmlUtil } from "../../../../src/commands/test/lib/junit-xml-util";
 
 describe("junit xml util", function () {
   const strXml: string =
-'<?xml version="1.0" encoding="utf-8"?>\
+    '<?xml version="1.0" encoding="utf-8"?>\
 <testsuite tests="2" failures="1" name="com.microsoft.altframeworktraining.StartAppTest" time="56.187" errors="8" skipped="1">\
 <testcase classname="com.microsoft.altframeworktraining.StartAppTest" name="canStartAppInTest" time="33.5"/>\
 <testcase classname="com.microsoft.altframeworktraining.StartAppTest" name="canStartAppInTest2" time="22.687"/>\
 </testsuite>';
 
   const strXml2: string =
-'<?xml version="1.0" encoding="utf-8"?>\
+    '<?xml version="1.0" encoding="utf-8"?>\
 <testsuite tests="2" failures="0" name="com.microsoft.altframeworktraining.StartAppTest" time="72.079" errors="0" skipped="0">\
 </testsuite>';
 
   const strXml3: string =
-'<?xml version="1.0" encoding="utf-8"?>\
+    '<?xml version="1.0" encoding="utf-8"?>\
 <testsuite tests="2" failures="0" name="com.microsoft.altframeworktraining.StartAppTest" time="72.079" errors="0" skipped="0">\
   <testsuite tests="2" failures="0" name="com.microsoft.altframeworktraining.StartAppTest" time="72.079" errors="0" skipped="0">\
   </testsuite>\
 </testsuite>';
 
   const strXml5: string =
-'<?xml version="1.0" encoding="utf-8"?>\
+    '<?xml version="1.0" encoding="utf-8"?>\
 <testsuite tests="2" failures="0" name="com.microsoft.altframeworktraining.AdditionalAppTest" time="72.079" errors="0" skipped="1">\
   <testcase classname="com.microsoft.altframeworktraining.AdditionalAppTest" name="canStartAppInTest" time="47.273">\
     <skipped/>\
@@ -56,10 +56,8 @@ describe("junit xml util", function () {
     xmlUtil.appendToTestNameTransformation(xml, "_new_test_case_postfix");
     const testCases: Element[] = xmlUtil.collectAllElements(xml.documentElement, "testcase");
 
-    expect(testCases[0].attributes.getNamedItem("name").value)
-      .to.eql("canStartAppInTest_new_test_case_postfix");
-    expect(testCases[1].attributes.getNamedItem("name").value)
-      .to.eql("canStartAppInTest2_new_test_case_postfix");
+    expect(testCases[0].attributes.getNamedItem("name").value).to.eql("canStartAppInTest_new_test_case_postfix");
+    expect(testCases[1].attributes.getNamedItem("name").value).to.eql("canStartAppInTest2_new_test_case_postfix");
   });
 
   it("should not throw an exception while appending postfix to a non-existent node", () => {
@@ -71,7 +69,6 @@ describe("junit xml util", function () {
   });
 
   it("should remove ignored transformation", () => {
-
     // If
     const xml: Document = new DOMParser().parseFromString(strXml5);
 
@@ -99,10 +96,10 @@ describe("junit xml util", function () {
   });
 
   it("should count all children", () => {
-   const xml: Document = new DOMParser().parseFromString(strXml);
-   const testResults: Element = xmlUtil.collectChildren(xml.documentElement, "testsuite")[0];
+    const xml: Document = new DOMParser().parseFromString(strXml);
+    const testResults: Element = xmlUtil.collectChildren(xml.documentElement, "testsuite")[0];
 
-   expect(xmlUtil.countChildren(testResults)).to.eql(2);
+    expect(xmlUtil.countChildren(testResults)).to.eql(2);
   });
 
   it("should not throw an exception if get null values", () => {
@@ -122,7 +119,6 @@ describe("junit xml util", function () {
   });
 
   it("should combine xmls correctly", async () => {
-
     // If
     const pathToArchive: string = path.join(__dirname, "../resources/junit_xml_zip.zip");
 

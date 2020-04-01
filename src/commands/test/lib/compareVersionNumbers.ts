@@ -1,4 +1,4 @@
- // From appcenter testCloud utils
+// From appcenter testCloud utils
 
 /**
  * Compare version numbers.

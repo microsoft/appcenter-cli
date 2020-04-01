@@ -39,24 +39,23 @@ export class AppiumPreparer {
   }
 
   private async validateBuildDirExists() {
-    await this.validatePathExists(
-      this.buildDir,
-      false,
-      `Appium build directory "${this.buildDir}" doesn't exist`);
+    await this.validatePathExists(this.buildDir, false, `Appium build directory "${this.buildDir}" doesn't exist`);
   }
 
   private validatePomFile(): Promise<void> {
     return this.validatePathExists(
       path.join(this.buildDir, "pom.xml"),
       true,
-      `Appium build directory "${this.buildDir}" must contain file "pom.xml"`);
+      `Appium build directory "${this.buildDir}" must contain file "pom.xml"`
+    );
   }
 
   private validateDependencyJarsDirectory(): Promise<void> {
     return this.validatePathExists(
       path.join(this.buildDir, "dependency-jars"),
       false,
-      `Appium build directory "${this.buildDir}" must contain directory "dependency-jars"`);
+      `Appium build directory "${this.buildDir}" must contain directory "dependency-jars"`
+    );
   }
 
   private async validateTestClassesDirectory(): Promise<void> {
@@ -64,10 +63,13 @@ export class AppiumPreparer {
     await this.validatePathExists(
       path.join(this.buildDir, "test-classes"),
       false,
-      `Appium build directory "${this.buildDir}" must contain directory "test-classes"`);
+      `Appium build directory "${this.buildDir}" must contain directory "test-classes"`
+    );
 
-    if (! (await this.hasClassFile(testClassesDir))) {
-      throw new Error(`The "test-classes" directory inside Appium build directory "${this.buildDir}" must contain at least one "*.class" file`);
+    if (!(await this.hasClassFile(testClassesDir))) {
+      throw new Error(
+        `The "test-classes" directory inside Appium build directory "${this.buildDir}" must contain at least one "*.class" file`
+      );
     }
   }
 
@@ -106,11 +108,11 @@ export class AppiumPreparer {
   private async createAppiumManifest(): Promise<any> {
     const result = {
       schemaVersion: "1.0.0",
-      files: [ "pom.xml", "dependency-jars", "test-classes" ],
+      files: ["pom.xml", "dependency-jars", "test-classes"],
       testFramework: {
         name: "appium",
-        data: { }
-      }
+        data: {},
+      },
     };
 
     return result;

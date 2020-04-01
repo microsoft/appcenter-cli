@@ -1,4 +1,15 @@
-import { AppCommand, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success } from "../../util/commandline";
+import {
+  AppCommand,
+  CommandArgs,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  hasArg,
+  help,
+  longName,
+  shortName,
+  success,
+} from "../../util/commandline";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out, supportsCsv } from "../../util/interaction";
 import { inspect } from "util";
@@ -67,12 +78,12 @@ export default class AudienceCommand extends AppCommand {
 
     const appVersion = this.getAppVersion();
     const appBuild = this.getAppBuild();
-    const startDate = parseDate(this.startDate,
+    const startDate = parseDate(
+      this.startDate,
       new Date(new Date().setHours(0, 0, 0, 0)),
-      `start date value ${this.startDate} is not a valid date string`);
-    const endDate = parseDate(this.endDate,
-      new Date(),
-      `end date value ${this.endDate} is not a valid date string`);
+      `start date value ${this.startDate} is not a valid date string`
+    );
+    const endDate = parseDate(this.endDate, new Date(), `end date value ${this.endDate} is not a valid date string`);
 
     if (!this.devices && !this.countries && !this.languages && !this.activeUsers) {
       // when no switches are specified, all the data should be shown
@@ -113,18 +124,33 @@ export default class AudienceCommand extends AppCommand {
     return !_.isNil(this.appVersion) ? this.appVersion : undefined;
   }
 
-  private async loadDevicesStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
+  private async loadDevicesStatistics(
+    statisticsObject: IStatisticsObject,
+    client: AppCenterClient,
+    app: DefaultApp,
+    startDate: Date,
+    endDate: Date,
+    appVersion?: string[]
+  ): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.AnalyticsModels>((cb) => client.analytics.modelCounts(startDate, app.ownerName, app.appName, {
-        end: endDate,
-        versions: appVersion
-      }, cb));
+      const httpRequest = await clientRequest<models.AnalyticsModels>((cb) =>
+        client.analytics.modelCounts(
+          startDate,
+          app.ownerName,
+          app.appName,
+          {
+            end: endDate,
+            versions: appVersion,
+          },
+          cb
+        )
+      );
 
       const result = httpRequest.result;
       statisticsObject.devices = result.modelsProperty.map((model) => ({
         count: model.count,
         value: model.modelName,
-        percentage: calculatePercentage(model.count, result.total)
+        percentage: calculatePercentage(model.count, result.total),
       }));
     } catch (error) {
       debug(`Failed to get devices count statistics - ${inspect(error)}`);
@@ -132,18 +158,33 @@ export default class AudienceCommand extends AppCommand {
     }
   }
 
-  private async loadCountriesStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
+  private async loadCountriesStatistics(
+    statisticsObject: IStatisticsObject,
+    client: AppCenterClient,
+    app: DefaultApp,
+    startDate: Date,
+    endDate: Date,
+    appVersion?: string[]
+  ): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.Places>((cb) => client.analytics.placeCounts(startDate, app.ownerName, app.appName, {
-        end: endDate,
-        versions: appVersion
-      }, cb));
+      const httpRequest = await clientRequest<models.Places>((cb) =>
+        client.analytics.placeCounts(
+          startDate,
+          app.ownerName,
+          app.appName,
+          {
+            end: endDate,
+            versions: appVersion,
+          },
+          cb
+        )
+      );
 
       const result = httpRequest.result;
       statisticsObject.countries = result.places.map((place) => ({
         count: place.count,
         value: place.code,
-        percentage: calculatePercentage(place.count, result.total)
+        percentage: calculatePercentage(place.count, result.total),
       }));
     } catch (error) {
       debug(`Failed to get countries statistics - ${inspect(error)}`);
@@ -151,18 +192,33 @@ export default class AudienceCommand extends AppCommand {
     }
   }
 
-  private async loadLanguagesStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<void> {
+  private async loadLanguagesStatistics(
+    statisticsObject: IStatisticsObject,
+    client: AppCenterClient,
+    app: DefaultApp,
+    startDate: Date,
+    endDate: Date,
+    appVersion?: string[]
+  ): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.Languages>((cb) => client.analytics.languageCounts(startDate, app.ownerName, app.appName, {
-        end: endDate,
-        versions: appVersion
-      }, cb));
+      const httpRequest = await clientRequest<models.Languages>((cb) =>
+        client.analytics.languageCounts(
+          startDate,
+          app.ownerName,
+          app.appName,
+          {
+            end: endDate,
+            versions: appVersion,
+          },
+          cb
+        )
+      );
 
       const result = httpRequest.result;
       statisticsObject.languages = result.languages.map((language) => ({
         count: language.count,
         value: language.languageName,
-        percentage: calculatePercentage(language.count, result.total)
+        percentage: calculatePercentage(language.count, result.total),
       }));
     } catch (error) {
       debug(`Failed to get languages statistics - ${inspect(error)}`);
@@ -170,12 +226,29 @@ export default class AudienceCommand extends AppCommand {
     }
   }
 
-  private async loadActiveUsersStatistics(statisticsObject: IStatisticsObject, client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[], appBuild?: string): Promise<void> {
+  private async loadActiveUsersStatistics(
+    statisticsObject: IStatisticsObject,
+    client: AppCenterClient,
+    app: DefaultApp,
+    startDate: Date,
+    endDate: Date,
+    appVersion?: string[],
+    appBuild?: string
+  ): Promise<void> {
     try {
-      const httpRequest = await clientRequest<models.ActiveDeviceCounts>((cb) => client.analytics.deviceCounts(startDate, appBuild, app.ownerName, app.appName, {
-        end: endDate,
-        versions: appVersion
-      }, cb));
+      const httpRequest = await clientRequest<models.ActiveDeviceCounts>((cb) =>
+        client.analytics.deviceCounts(
+          startDate,
+          appBuild,
+          app.ownerName,
+          app.appName,
+          {
+            end: endDate,
+            versions: appVersion,
+          },
+          cb
+        )
+      );
 
       const result = httpRequest.result;
 
@@ -183,7 +256,7 @@ export default class AudienceCommand extends AppCommand {
         date: new Date(dailyData.datetime),
         daily: dailyData.count,
         weekly: result.weekly[index].count,
-        monthly: result.monthly[index].count
+        monthly: result.monthly[index].count,
       }));
     } catch (error) {
       debug(`Failed to get active users statistics - ${inspect(error)}`);
@@ -198,34 +271,41 @@ export default class AudienceCommand extends AppCommand {
       if (stats.devices) {
         tableArray.push({
           name: "Devices",
-          content: [["", "Count", "Change"]].concat(stats.devices.map((device) => toArray(device, numberFormatter, percentageFormatter)))
+          content: [["", "Count", "Change"]].concat(
+            stats.devices.map((device) => toArray(device, numberFormatter, percentageFormatter))
+          ),
         });
       }
 
       if (stats.countries) {
         tableArray.push({
           name: "Countries",
-          content: [["", "Count", "Change"]].concat(stats.countries.map((country) => toArray(country, numberFormatter, percentageFormatter)))
+          content: [["", "Count", "Change"]].concat(
+            stats.countries.map((country) => toArray(country, numberFormatter, percentageFormatter))
+          ),
         });
       }
 
       if (stats.languages) {
         tableArray.push({
           name: "Languages",
-          content: [["", "Count", "Change"]].concat(stats.languages.map((language) => toArray(language, numberFormatter, percentageFormatter)))
+          content: [["", "Count", "Change"]].concat(
+            stats.languages.map((language) => toArray(language, numberFormatter, percentageFormatter))
+          ),
         });
       }
 
       if (stats.activeUsers) {
         tableArray.push({
           name: "Active Users",
-          content: [["Date", "Monthly", "Weekly", "Daily"]]
-            .concat(stats.activeUsers.map((activeUsersStatistics) => [
+          content: [["Date", "Monthly", "Weekly", "Daily"]].concat(
+            stats.activeUsers.map((activeUsersStatistics) => [
               dateFormatter(activeUsersStatistics.date),
               numberFormatter(activeUsersStatistics.monthly),
               numberFormatter(activeUsersStatistics.weekly),
-              numberFormatter(activeUsersStatistics.daily)
-            ]))
+              numberFormatter(activeUsersStatistics.daily),
+            ])
+          ),
         });
       }
 
@@ -247,12 +327,16 @@ interface IStatisticsForValue {
   percentage: number;
 }
 
-function toArray(stats: IStatisticsForValue, numberFormatter: (num: number) => string, percentageFormatter: (percentage: number) => string): string[] {
+function toArray(
+  stats: IStatisticsForValue,
+  numberFormatter: (num: number) => string,
+  percentageFormatter: (percentage: number) => string
+): string[] {
   return [stats.value, numberFormatter(stats.count), percentageFormatter(stats.percentage)];
 }
 
 function calculatePercentage(count: number, total: number): number {
-  return count / total * 100;
+  return (count / total) * 100;
 }
 
 interface IActiveUsersCount {

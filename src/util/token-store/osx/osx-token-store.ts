@@ -22,15 +22,16 @@ const oldServiceName = "mobile-center-cli";
 
 export class OsxTokenStore implements TokenStore {
   list(): rx.Observable<TokenEntry> {
-
     return rx.Observable.create((observer: rx.Observer<TokenEntry>) => {
       const securityProcess = childProcess.spawn(securityPath, ["dump-keychain"]);
 
       const securityStream = securityProcess.stdout
         .pipe(split())
-        .pipe(through(function (line: Buffer, enc: any, done: Function) {
-          done(null, line.toString().replace(/\\134/g, "\\"));
-        }))
+        .pipe(
+          through(function (line: Buffer, enc: any, done: Function) {
+            done(null, line.toString().replace(/\\134/g, "\\"));
+          })
+        )
         .pipe(new OsxSecurityParsingStream());
 
       securityStream.on("data", (data: any) => {
@@ -44,32 +45,33 @@ export class OsxTokenStore implements TokenStore {
         // Have to get specific token to get tokens, but we have ids
         const accessToken: TokenValueType = {
           id: data.gena,
-          token: null
+          token: null,
         };
         debug(`Outputting ${inspect({ key, accessToken })}`);
         observer.next({ key, accessToken });
       });
       securityStream.on("end", (err: Error) => {
         debug(`output from security program complete`);
-        if (err) { observer.error(err); } else { observer.complete(); }
+        if (err) {
+          observer.error(err);
+        } else {
+          observer.complete();
+        }
       });
     });
   }
 
   get(key: TokenKeyType, useOldName: boolean = false): Promise<TokenEntry> {
-    const args = [
-      "find-generic-password",
-      "-a", key,
-      "-s", useOldName ? oldServiceName : serviceName,
-      "-g"
-    ];
+    const args = ["find-generic-password", "-a", key, "-s", useOldName ? oldServiceName : serviceName, "-g"];
 
     return new Promise<TokenEntry>((resolve, reject) => {
       resolve = _.once(resolve);
       reject = _.once(reject);
 
       childProcess.execFile(securityPath, args, (err: Error, stdout: string, stderr: string) => {
-        if (err) { return reject(err); }
+        if (err) {
+          return reject(err);
+        }
         const match = /^password: (?:0x[0-9A-F]+. )?"(.*)"$/m.exec(stderr);
         if (match) {
           const accessToken = match[1].replace(/\\134/g, "\\");
@@ -77,16 +79,15 @@ export class OsxTokenStore implements TokenStore {
           debug(`stdout for security program = "${stdout}"`);
           debug(`parsing stdout`);
           // Parse the rest of the information from stdout to get user & token ID
-          const parsed = from([stdout])
-            .pipe(createOsxSecurityParsingStream());
+          const parsed = from([stdout]).pipe(createOsxSecurityParsingStream());
           parsed.on("data", (data: any) => {
             debug(`got data on key lookup: ${inspect(data)}`);
             resolve({
               key: data.acct,
               accessToken: {
                 id: data.gena,
-                token: accessToken
-              }
+                token: accessToken,
+              },
             });
           });
           parsed.on("error", (err: Error) => {
@@ -101,16 +102,11 @@ export class OsxTokenStore implements TokenStore {
   }
 
   set(key: TokenKeyType, value: TokenValueType): Promise<void> {
-    const args = [
-      "add-generic-password",
-      "-a", key,
-      "-D", "appcenter cli password",
-      "-s", serviceName,
-      "-w", value.token,
-      "-U"
-    ];
+    const args = ["add-generic-password", "-a", key, "-D", "appcenter cli password", "-s", serviceName, "-w", value.token, "-U"];
 
-    if (value.id) { args.push("-G", value.id); }
+    if (value.id) {
+      args.push("-G", value.id);
+    }
 
     return new Promise<void>((resolve, reject) => {
       childProcess.execFile(securityPath, args, function (err, stdout, stderr) {
@@ -123,11 +119,7 @@ export class OsxTokenStore implements TokenStore {
   }
 
   remove(key: TokenKeyType): Promise<void> {
-    const args = [
-      "delete-generic-password",
-      "-a", key,
-      "-s", serviceName
-    ];
+    const args = ["delete-generic-password", "-a", key, "-s", serviceName];
 
     return new Promise<void>((resolve, reject) => {
       childProcess.execFile(securityPath, args, function (err, stdout, stderr) {

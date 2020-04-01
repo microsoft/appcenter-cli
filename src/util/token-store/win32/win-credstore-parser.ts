@@ -30,12 +30,11 @@ class WinCredStoreParsingStream extends Transform {
   currentEntry: any;
 
   constructor() {
-    super({objectMode: true});
+    super({ objectMode: true });
     this.currentEntry = null;
   }
 
-  _transform(chunk: any, encoding: string, callback: {(err?: Error): void}): void {
-
+  _transform(chunk: any, encoding: string, callback: { (err?: Error): void }): void {
     const line = chunk.toString();
 
     if (line === "") {
@@ -54,7 +53,7 @@ class WinCredStoreParsingStream extends Transform {
     return callback();
   }
 
-  _flush(callback: {(err?: Error): void}): void {
+  _flush(callback: { (err?: Error): void }): void {
     if (this.currentEntry) {
       this.push(this.currentEntry);
       this.currentEntry = null;

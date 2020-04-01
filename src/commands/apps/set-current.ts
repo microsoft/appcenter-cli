@@ -1,9 +1,22 @@
-import { Command, CommandArgs, CommandResult, success, failure, name, help, position, required, ErrorCodes } from "../../util/commandline";
+import {
+  Command,
+  CommandArgs,
+  CommandResult,
+  success,
+  failure,
+  name,
+  help,
+  position,
+  required,
+  ErrorCodes,
+} from "../../util/commandline";
 import { AppCenterClient, models, clientCall } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { toDefaultApp, getUser } from "../../util/profile";
 
-@help("Set default application for all CLI commands. Not compatible when authenticating with '--token' or an environment variable. Use environment variable 'MOBILE_CENTER_CURRENT_APP' to set the default app instead.")
+@help(
+  "Set default application for all CLI commands. Not compatible when authenticating with '--token' or an environment variable. Use environment variable 'MOBILE_CENTER_CURRENT_APP' to set the default app instead."
+)
 export default class SetCurrentAppCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);
@@ -21,8 +34,10 @@ export default class SetCurrentAppCommand extends Command {
       return failure(ErrorCodes.InvalidParameter, `'${this.appId}' is not a valid application.`);
     }
 
-    const apps = await out.progress("Reading available apps...",
-      clientCall<models.AppResponse[]>((cb) => client.apps.list(cb)));
+    const apps = await out.progress(
+      "Reading available apps...",
+      clientCall<models.AppResponse[]>((cb) => client.apps.list(cb))
+    );
 
     const found = apps.find((app) => app.name === newDefault.appName && app.owner.name === newDefault.ownerName);
     if (!found) {
@@ -32,8 +47,10 @@ export default class SetCurrentAppCommand extends Command {
     const profile = getUser();
 
     if (!profile) {
-      return failure(ErrorCodes.InvalidParameter,
-        `Could not find a logged in profile, please note that this command is not compatible with the '--token' parameter or the token environment variable. Use environment variable 'MOBILE_CENTER_CURRENT_APP' to set the default app instead.`);
+      return failure(
+        ErrorCodes.InvalidParameter,
+        `Could not find a logged in profile, please note that this command is not compatible with the '--token' parameter or the token environment variable. Use environment variable 'MOBILE_CENTER_CURRENT_APP' to set the default app instead.`
+      );
     }
 
     profile.defaultApp = newDefault;

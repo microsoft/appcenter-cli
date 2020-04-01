@@ -34,7 +34,7 @@ export class EspressoPreparer {
   public async prepare(): Promise<string> {
     this.validateEitherBuildDirOrTestApkPath();
     if (this.testApkPath) {
-      if (!await pfs.fileExists(this.testApkPath)) {
+      if (!(await pfs.fileExists(this.testApkPath))) {
         throw new Error(`File not found for test apk path: "${this.testApkPath}"`);
       }
       await pfs.cpFile(this.testApkPath, path.join(this.artifactsDir, path.basename(this.testApkPath)));
@@ -56,7 +56,7 @@ export class EspressoPreparer {
   }
 
   private async validateBuildDirExists() {
-    if (!await pfs.directoryExists(this.buildDir)) {
+    if (!(await pfs.directoryExists(this.buildDir))) {
       throw new Error(`Espresso build directory "${this.buildDir}" doesn't exist`);
     }
   }
@@ -70,9 +70,13 @@ export class EspressoPreparer {
     const files = await pglob.glob(apkPattern);
 
     if (files.length === 0) {
-       throw new Error(`An apk with name matching "*androidTest.apk" was not found inside directory inside build directory "${this.buildDir}"`);
+      throw new Error(
+        `An apk with name matching "*androidTest.apk" was not found inside directory inside build directory "${this.buildDir}"`
+      );
     } else if (files.length >= 2) {
-       throw new Error(`Multiple apks with name matching "*androidTest.apk" were found inside build directory "${this.buildDir}". A unique match is required.`);
+      throw new Error(
+        `Multiple apks with name matching "*androidTest.apk" were found inside build directory "${this.buildDir}". A unique match is required.`
+      );
     } else {
       const apkPath = files[files.length - 1];
       return apkPath;
@@ -87,8 +91,8 @@ export class EspressoPreparer {
       files: [apkArtifactsPath],
       testFramework: {
         name: "espresso",
-        data: { }
-      }
+        data: {},
+      },
     };
 
     return result;

@@ -60,7 +60,7 @@ describe("CodePush deployment list tests", () => {
     rollout: fakeRollout,
     size: fakeSize,
     upload_time: fakeUploadTime,
-    diff_package_map: {}
+    diff_package_map: {},
   };
   const noUpdatesString = "No updates released";
   const noMetricsString = "No installs recorded";
@@ -70,11 +70,16 @@ describe("CodePush deployment list tests", () => {
     key: "fakeDeploymentKey",
   };
   const fakeDeploymentWithRelease: models.Deployment = Object.assign({ latest_release: fakeReleaseForRequest }, fakeDeployment);
-  const expectedGeneratedMetadataString = "Label: " + fakeLabel +
-    "\nApp Version: " + fakeTargetBinaryRange +
+  const expectedGeneratedMetadataString =
+    "Label: " +
+    fakeLabel +
+    "\nApp Version: " +
+    fakeTargetBinaryRange +
     "\nMandatory: No" +
-    "\nRelease Time: " + formatDate(fakeUploadTime) +
-    "\nReleased By: " + fakeReleasedBy;
+    "\nRelease Time: " +
+    formatDate(fakeUploadTime) +
+    "\nReleased By: " +
+    fakeReleasedBy;
 
   const expectedOutputHelperText = "Note: To display deployment keys add -k|--displayKeys option";
   const expectedErrorMessage = `The app ${fakeParamsForRequest.userName}/${fakeParamsForRequest.appName} does not exist.`;
@@ -112,13 +117,14 @@ describe("CodePush deployment list tests", () => {
       it("should return correct metrics for any% active releases", () => {
         // Arrange
         const command = new CodePushDeploymentListListCommand(defaultCommandArgsForListCommand);
-        const generateMetricsString: (releaseMetrics: models.CodePushReleaseMetric, releasesTotalActive: number) => string = command["generateMetricsString"];
+        const generateMetricsString: (releaseMetrics: models.CodePushReleaseMetric, releasesTotalActive: number) => string =
+          command["generateMetricsString"];
         const fakeReleaseMetrics = {
           active: 1,
           downloaded: 1,
           failed: 0,
           installed: 1,
-          label: fakeLabel
+          label: fakeLabel,
         };
 
         const fakeActiveString: string = "33% (1 of 3)";
@@ -136,7 +142,8 @@ describe("CodePush deployment list tests", () => {
       it("should return correct metrics for 0% active releases", () => {
         // Arrange
         const command = new CodePushDeploymentListListCommand(defaultCommandArgsForListCommand);
-        const generateMetricsString: (releaseMetrics: models.CodePushReleaseMetric, releasesTotalActive: number) => string = command["generateMetricsString"];
+        const generateMetricsString: (releaseMetrics: models.CodePushReleaseMetric, releasesTotalActive: number) => string =
+          command["generateMetricsString"];
         const fakeReleaseMetrics = {
           active: 0,
           downloaded: 1,
@@ -159,7 +166,8 @@ describe("CodePush deployment list tests", () => {
       it("should return correct metrics for 100% active releases", () => {
         // Arrange
         const command = new CodePushDeploymentListListCommand(defaultCommandArgsForListCommand);
-        const generateMetricsString: (releaseMetrics: models.CodePushReleaseMetric, releasesTotalActive: number) => string = command["generateMetricsString"];
+        const generateMetricsString: (releaseMetrics: models.CodePushReleaseMetric, releasesTotalActive: number) => string =
+          command["generateMetricsString"];
         const fakeReleaseMetrics = {
           active: 3,
           downloaded: 3,
@@ -183,7 +191,8 @@ describe("CodePush deployment list tests", () => {
     it("should return correct metrics with pending releases", () => {
       // Arrange
       const command = new CodePushDeploymentListListCommand(defaultCommandArgsForListCommand);
-      const generateMetricsString: (releaseMetrics: models.CodePushReleaseMetric, releasesTotalActive: number) => string = command["generateMetricsString"];
+      const generateMetricsString: (releaseMetrics: models.CodePushReleaseMetric, releasesTotalActive: number) => string =
+        command["generateMetricsString"];
       const fakeReleaseMetrics = {
         active: 3,
         downloaded: 5,
@@ -207,7 +216,8 @@ describe("CodePush deployment list tests", () => {
     it("should return correct string for empty metrics", () => {
       // Arrange
       const command = new CodePushDeploymentListListCommand(defaultCommandArgsForListCommand);
-      const generateMetricsString: (releaseMetrics: models.CodePushReleaseMetric, releasesTotalActive: number) => string = command["generateMetricsString"];
+      const generateMetricsString: (releaseMetrics: models.CodePushReleaseMetric, releasesTotalActive: number) => string =
+        command["generateMetricsString"];
       const expectedMetrics = noMetricsString;
 
       // Act
@@ -228,10 +238,10 @@ describe("CodePush deployment list tests", () => {
       nockScope = Nock(fakeHost);
     });
 
-    afterEach((() => {
+    afterEach(() => {
       sandbox.restore();
       Nock.cleanAll();
-    }));
+    });
 
     it("should output table without releases and metrics", async () => {
       // Arrange
@@ -299,12 +309,23 @@ describe("CodePush deployment list tests", () => {
         label: fakeLabel,
       };
       setupNockGetDeploymentsResponse(nockScope, fakeParamsForRequest, [fakeDeploymentWithRelease, fakeDeploymentWithRelease]);
-      setupNockGetDeploymentMetricsResponse(nockScope, fakeParamsForRequest, [fakeReleaseMetrics], fakeDeployment, successfulStatus, 2);
+      setupNockGetDeploymentMetricsResponse(
+        nockScope,
+        fakeParamsForRequest,
+        [fakeReleaseMetrics],
+        fakeDeployment,
+        successfulStatus,
+        2
+      );
 
       const fakeActiveString = "100% (3 of 3)";
       const fakeInstalled = "3";
       const fakePending = " (2 pending)";
-      const expectedLine = [fakeDeployment.name, expectedGeneratedMetadataString, getExpectedMetricsString(fakeActiveString, fakeInstalled, fakePending)];
+      const expectedLine = [
+        fakeDeployment.name,
+        expectedGeneratedMetadataString,
+        getExpectedMetricsString(fakeActiveString, fakeInstalled, fakePending),
+      ];
       const expectedOutputTable = [expectedLine, expectedLine];
 
       const spyOutTable = sandbox.stub(out, "table");
@@ -364,7 +385,7 @@ describe("CodePush deployment list tests", () => {
   });
 
   function getExpectedMetricsString(fakeActiveString: string, fakeInstalled: string, pendingString?: string): string {
-    let metricsString =  "Active: " + fakeActiveString + "\nInstalled: " + fakeInstalled;
+    let metricsString = "Active: " + fakeActiveString + "\nInstalled: " + fakeInstalled;
     if (pendingString) {
       metricsString += pendingString;
     }
@@ -373,34 +394,37 @@ describe("CodePush deployment list tests", () => {
   }
 
   function setupNockGetDeploymentsResponse(
-      nockScope: Nock.Scope,
-      fakeParamsForRequest: FakeParamsForRequests,
-      returnDeployments: models.Deployment[] | {},
-      statusCode: number = 200
-    ): void {
-    nockScope.get(`/${fakeParamsForRequest.appVersion}/apps/${fakeParamsForRequest.userName}/${fakeParamsForRequest.appName}/deployments`)
-      .reply((uri: any, requestBody: any)  => {
+    nockScope: Nock.Scope,
+    fakeParamsForRequest: FakeParamsForRequests,
+    returnDeployments: models.Deployment[] | {},
+    statusCode: number = 200
+  ): void {
+    nockScope
+      .get(`/${fakeParamsForRequest.appVersion}/apps/${fakeParamsForRequest.userName}/${fakeParamsForRequest.appName}/deployments`)
+      .reply((uri: any, requestBody: any) => {
         return [statusCode, returnDeployments];
-      }
-    );
+      });
   }
 
   function setupNockGetDeploymentMetricsResponse(
-      nockScope: Nock.Scope,
-      fakeParamsForRequest: FakeParamsForRequests,
-      returnMetrics: models.CodePushReleaseMetric[] | {},
-      fakeDeployment: models.Deployment,
-      statusCode: number = 200,
-      times: number = 1
-    ): void {
-    nockScope.get(`/${fakeParamsForRequest.appVersion}/apps/${fakeParamsForRequest.userName}/${fakeParamsForRequest.appName}/deployments/${fakeDeployment.name}/metrics`).times(times)
-      .reply((uri: any, requestBody: any): any  => {
+    nockScope: Nock.Scope,
+    fakeParamsForRequest: FakeParamsForRequests,
+    returnMetrics: models.CodePushReleaseMetric[] | {},
+    fakeDeployment: models.Deployment,
+    statusCode: number = 200,
+    times: number = 1
+  ): void {
+    nockScope
+      .get(
+        `/${fakeParamsForRequest.appVersion}/apps/${fakeParamsForRequest.userName}/${fakeParamsForRequest.appName}/deployments/${fakeDeployment.name}/metrics`
+      )
+      .times(times)
+      .reply((uri: any, requestBody: any): any => {
         return [statusCode, returnMetrics];
-      }
-    );
+      });
   }
 
-  function removeColorFromText(text: string): string  {
+  function removeColorFromText(text: string): string {
     return stripAnsi(text);
   }
 
@@ -409,7 +433,14 @@ describe("CodePush deployment list tests", () => {
   }
 
   function getCommandArgsForListCommand(fakeConsts: FakeParamsForRequests, additionalArgs: string[] = []): CommandArgs {
-    const args: string[] = ["-a", `${fakeConsts.userName}/${fakeConsts.appName}`, "--token", fakeConsts.token, "--env", "local"].concat(additionalArgs);
+    const args: string[] = [
+      "-a",
+      `${fakeConsts.userName}/${fakeConsts.appName}`,
+      "--token",
+      fakeConsts.token,
+      "--env",
+      "local",
+    ].concat(additionalArgs);
     return {
       args,
       command: ["codepush", "deployment", "list"],

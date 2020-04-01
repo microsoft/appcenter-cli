@@ -39,7 +39,6 @@ function getLocalOptionsDescription(target: any): OptionsDescription {
 }
 
 export function getPositionalOptionsDescription(target: any): PositionalOptionsDescription {
-
   function getRecursive(accumulator: PositionalOptionsDescription, target: any): PositionalOptionsDescription {
     if (!target || !target.hasOwnProperty(positionalDescriptionKey)) {
       return accumulator;
@@ -114,11 +113,11 @@ function makeStringDecorator(descriptionFieldName: string): PropertyDecoratorBui
 
 function makeBoolDecorator(descriptionFieldName: string): PropertyDecorator {
   return function paramDecorator(proto: any, propertyKey: string): void {
-      const optionsDescription = getLocalOptionsDescription(proto);
-      const option = optionsDescription[propertyKey] || {};
-      (option as any)[descriptionFieldName] = true;
-      updateUnknowns(option, propertyKey, proto);
-      optionsDescription[propertyKey] = option;
+    const optionsDescription = getLocalOptionsDescription(proto);
+    const option = optionsDescription[propertyKey] || {};
+    (option as any)[descriptionFieldName] = true;
+    updateUnknowns(option, propertyKey, proto);
+    optionsDescription[propertyKey] = option;
   };
 }
 
@@ -152,22 +151,28 @@ export const name = makePositionalDecorator<string>("name");
 // flag arguments. Needs to be slightly special since we may not
 // know which one the parameter is until a later decorator runs.
 //
-function saveDecoratedValue(proto: any, propertyKey: string | Symbol, descriptionProperty: string, value: any, unknownFieldKey: Symbol) {
-    const flagOpts: any = getLocalOptionsDescription(proto);
-    if (flagOpts.hasOwnProperty(propertyKey.toString())) {
-      flagOpts[propertyKey.toString()][descriptionProperty] = value;
-      return;
-    }
+function saveDecoratedValue(
+  proto: any,
+  propertyKey: string | Symbol,
+  descriptionProperty: string,
+  value: any,
+  unknownFieldKey: Symbol
+) {
+  const flagOpts: any = getLocalOptionsDescription(proto);
+  if (flagOpts.hasOwnProperty(propertyKey.toString())) {
+    flagOpts[propertyKey.toString()][descriptionProperty] = value;
+    return;
+  }
 
-    const positionalOpts: any[] = getLocalPositionalOptionsDescription(proto);
-    const opt = positionalOpts.find((opt) => opt.propertyName === propertyKey);
-    if (opt !== undefined) {
-      opt[descriptionProperty] = value;
-      return;
-    }
+  const positionalOpts: any[] = getLocalPositionalOptionsDescription(proto);
+  const opt = positionalOpts.find((opt) => opt.propertyName === propertyKey);
+  if (opt !== undefined) {
+    opt[descriptionProperty] = value;
+    return;
+  }
 
-    const unknownValues = proto[unknownFieldKey as any] = proto[unknownFieldKey as any] || new Map<string, string>();
-    unknownValues.set(propertyKey.toString(), value);
+  const unknownValues = (proto[unknownFieldKey as any] = proto[unknownFieldKey as any] || new Map<string, string>());
+  unknownValues.set(propertyKey.toString(), value);
 }
 
 // Required is special, since it has to work on both flag and positional parameters.
@@ -186,7 +191,7 @@ export function defaultValue(value: string | string[]): PropertyDecorator {
 }
 
 // Decorator factory to give a consolidated helptext API across class & parameter
-export function help(helpText: string) : {(...args: any[]): any} {
+export function help(helpText: string): { (...args: any[]): any } {
   return function helpDecoratorFactory(...args: any[]): any {
     debug(`@help decorator called with ${args.length} arguments: ${inspect(args)}`);
     if (args.length === 1) {

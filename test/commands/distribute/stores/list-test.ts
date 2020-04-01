@@ -28,7 +28,7 @@ describe("stores list command", () => {
       type: "googleplay",
       serviceConnectionId: "123456789-123456789",
       createdBy: fakeAppOwner,
-      intuneDetails: undefined
+      intuneDetails: undefined,
     },
     {
       id: "345678765432",
@@ -37,7 +37,7 @@ describe("stores list command", () => {
       type: "googleplay",
       serviceConnectionId: "123456789-987654321",
       createdBy: fakeAppOwner,
-      intuneDetails: undefined
+      intuneDetails: undefined,
     },
   ];
 
@@ -67,8 +67,7 @@ describe("stores list command", () => {
 
   describe("when everything works as expected", () => {
     beforeEach(() => {
-      nockScope.get(storesListUrl)
-      .reply(200, fakeStores);
+      nockScope.get(storesListUrl).reply(200, fakeStores);
     });
 
     it("reports the command as succeeded", async () => {
@@ -85,14 +84,11 @@ describe("stores list command", () => {
       await command.execute();
 
       const storesReport = [
-        Object.values(_.pick(fakeStores[0], [ "name", "type", "track" ])),
-        Object.values(_.pick(fakeStores[1], [ "name", "type", "track" ]))
+        Object.values(_.pick(fakeStores[0], ["name", "type", "track"])),
+        Object.values(_.pick(fakeStores[1], ["name", "type", "track"])),
       ];
 
-      Sinon.assert.calledWithMatch(reportStub,
-        { head: [ "Store", "Type", "Track"] },
-        storesReport
-      );
+      Sinon.assert.calledWithMatch(reportStub, { head: ["Store", "Type", "Track"] }, storesReport);
 
       nockScope.done();
     });
@@ -103,7 +99,7 @@ describe("stores list command", () => {
     return {
       args,
       command: ["distribute", "stores", "list"],
-      commandPath: "FAKE"
+      commandPath: "FAKE",
     };
   }
 });

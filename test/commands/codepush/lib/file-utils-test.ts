@@ -3,7 +3,6 @@ import { expect } from "chai";
 import { createTempPathWithFakeLastFolder, createFile } from "../utils";
 
 describe("file-utils test", () => {
-
   const releaseFileName = "releaseBinaryFile";
   const releaseFileContent = "Hello World!";
   let testPath: string;
@@ -17,11 +16,12 @@ describe("file-utils test", () => {
       const nonexistentPath = "nonexistent/path";
 
       // Act
-      const throwErrorMethod = function () { getLastFolderInPath(nonexistentPath); };
+      const throwErrorMethod = function () {
+        getLastFolderInPath(nonexistentPath);
+      };
 
       // Assert
-      expect(throwErrorMethod)
-        .to.throw("ENOENT: no such file or directory");
+      expect(throwErrorMethod).to.throw("ENOENT: no such file or directory");
     });
 
     it("test for folder", () => {

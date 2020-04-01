@@ -10,12 +10,10 @@ export default class NockHelper {
   }
 
   async runTest(outputFile: string, test: TestCode) {
-    await Nock.back(
-      "org-list-data.json",
-      {}).then(async ({ nockDone }) => {
-        await test();
-        nockDone();
-      });
+    await Nock.back("org-list-data.json", {}).then(async ({ nockDone }) => {
+      await test();
+      nockDone();
+    });
   }
 
   finishTest() {

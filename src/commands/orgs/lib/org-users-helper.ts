@@ -1,7 +1,11 @@
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { handleHttpError } from "../../../util/apis/create-client";
 
-export async function getOrgUsers(client: AppCenterClient, organization: string, debug: Function): Promise<models.OrganizationUserResponse[]> {
+export async function getOrgUsers(
+  client: AppCenterClient,
+  organization: string,
+  debug: Function
+): Promise<models.OrganizationUserResponse[]> {
   try {
     const httpResponse = await clientRequest<models.OrganizationUserResponse[]>((cb) => client.users.listForOrg(organization, cb));
     if (httpResponse.response.statusCode < 400) {
@@ -10,8 +14,7 @@ export async function getOrgUsers(client: AppCenterClient, organization: string,
       throw httpResponse.response;
     }
   } catch (error) {
-    await handleHttpError(error, true, "failed to load list of organization users",
-    `organization ${organization} doesn't exist`);
+    await handleHttpError(error, true, "failed to load list of organization users", `organization ${organization} doesn't exist`);
   }
 }
 
@@ -22,7 +25,7 @@ export async function getOrgsNamesList(client: AppCenterClient): Promise<IEntity
       return httpResponse.result.map((org) => ({
         name: org.name,
         displayName: org.displayName,
-        origin: org.origin
+        origin: org.origin,
       }));
     } else {
       throw httpResponse.response;

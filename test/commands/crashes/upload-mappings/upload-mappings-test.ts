@@ -13,7 +13,7 @@ use(ChaiAsPromised);
 // Mocking AzureBlobUploadHelper
 import AzureBlobUploadHelperMock from "../lib/azure-blob-uploader-helper-mock";
 MockRequire("../../../../src/commands/crashes/lib/azure-blob-upload-helper", {
-  default: AzureBlobUploadHelperMock
+  default: AzureBlobUploadHelperMock,
 });
 import UploadMappingsCommand from "../../../../src/commands/crashes/upload-mappings";
 MockRequire.stopAll();
@@ -126,7 +126,10 @@ describe("upload-mappings command", () => {
 
   describe("when AndroidProguard network requests are successful", () => {
     beforeEach(() => {
-      expectedRequestsScope = _.flow(setupSuccessfulAndroidProguardPatchUploadResponse, setupSuccessfulAndroidProguardPostUploadResponse)(Nock(fakeHost));
+      expectedRequestsScope = _.flow(
+        setupSuccessfulAndroidProguardPatchUploadResponse,
+        setupSuccessfulAndroidProguardPostUploadResponse
+      )(Nock(fakeHost));
       skippedRequestsScope = setupSuccessfulAndroidProguardAbortUploadResponse(Nock(fakeHost));
     });
 
@@ -165,8 +168,11 @@ describe("upload-mappings command", () => {
     });
 
     beforeEach(() => {
-        expectedRequestsScope = _.flow(setupSuccessfulAndroidProguardAbortUploadResponse, setupSuccessfulAndroidProguardPostUploadResponse)(Nock(fakeHost));
-        skippedRequestsScope = setupSuccessfulAndroidProguardPatchUploadResponse(Nock(fakeHost));
+      expectedRequestsScope = _.flow(
+        setupSuccessfulAndroidProguardAbortUploadResponse,
+        setupSuccessfulAndroidProguardPostUploadResponse
+      )(Nock(fakeHost));
+      skippedRequestsScope = setupSuccessfulAndroidProguardPatchUploadResponse(Nock(fakeHost));
     });
 
     it("aborts the symbol uploading", async () => {
@@ -201,9 +207,9 @@ describe("upload-mappings command", () => {
   }
 
   function testCommandSuccess(result: CommandResult, executionScope: Nock.Scope, abortScope: Nock.Scope) {
-      expect(result.succeeded).to.eql(true, "Command should be successfully completed");
-      expect(abortScope.isDone()).to.eql(false, "Upload should not be aborted");
-      executionScope.done(); // All normal API calls are executed
+    expect(result.succeeded).to.eql(true, "Command should be successfully completed");
+    expect(abortScope.isDone()).to.eql(false, "Upload should not be aborted");
+    executionScope.done(); // All normal API calls are executed
   }
 
   function getCommandArgs(additionalArgs: string[]): CommandArgs {
@@ -211,7 +217,7 @@ describe("upload-mappings command", () => {
     return {
       args,
       command: ["crashes", "upload-mappings"],
-      commandPath: "FAKE"
+      commandPath: "FAKE",
     };
   }
 
@@ -223,46 +229,54 @@ describe("upload-mappings command", () => {
   }
 
   function setupSuccessfulAndroidProguardPostUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads`, {
-      symbol_type: "AndroidProguard", file_name: /.+\.txt/, build: "1", version: "1.0"
-    }).reply(200, ((uri: any, requestBody: any) => {
-      postSymbolSpy(requestBody);
-      return {
-        expiration_date: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-        symbol_upload_id: fakeSymbolUploadingId,
-        upload_url: fakeHost + fakeUploadUrl
-      };
-    }));
+    return nockScope
+      .post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads`, {
+        symbol_type: "AndroidProguard",
+        file_name: /.+\.txt/,
+        build: "1",
+        version: "1.0",
+      })
+      .reply(200, (uri: any, requestBody: any) => {
+        postSymbolSpy(requestBody);
+        return {
+          expiration_date: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+          symbol_upload_id: fakeSymbolUploadingId,
+          upload_url: fakeHost + fakeUploadUrl,
+        };
+      });
   }
 
   function setupSuccessfulAndroidProguardPatchUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
-      status: "committed"
-    }).reply(200, ((uri: any, requestBody: any) => {
-      patchSymbolSpy(requestBody);
-      return {
-        origin: "User",
+    return nockScope
+      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
         status: "committed",
-        symbol_type: "AndroidProguard",
-        symbol_upload_id: fakeSymbolUploadingId,
-        symbols: new Array()
-      };
-    }));
+      })
+      .reply(200, (uri: any, requestBody: any) => {
+        patchSymbolSpy(requestBody);
+        return {
+          origin: "User",
+          status: "committed",
+          symbol_type: "AndroidProguard",
+          symbol_upload_id: fakeSymbolUploadingId,
+          symbols: new Array(),
+        };
+      });
   }
 
   function setupSuccessfulAndroidProguardAbortUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
-      status: "aborted"
-    }).reply(200, ((uri: any, requestBody: any) => {
-      abortSymbolUploadSpy(requestBody);
-      return {
-        origin: "User",
+    return nockScope
+      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
         status: "aborted",
-        symbol_type: "AndroidProguard",
-        symbol_upload_id: fakeSymbolUploadingId,
-        symbols: new Array()
-      };
-    }));
+      })
+      .reply(200, (uri: any, requestBody: any) => {
+        abortSymbolUploadSpy(requestBody);
+        return {
+          origin: "User",
+          status: "aborted",
+          symbol_type: "AndroidProguard",
+          symbol_upload_id: fakeSymbolUploadingId,
+          symbols: new Array(),
+        };
+      });
   }
-
 });

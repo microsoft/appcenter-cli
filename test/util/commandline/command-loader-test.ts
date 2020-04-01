@@ -14,8 +14,7 @@ describe("Loading commands", function () {
   it("should return class when the command exists", function () {
     const commandLoader = loader(finder(path.join(__dirname, "sample-commands")));
     const { commandFactory: command } = commandLoader(["cmd1"]);
-    expect(command).to.be.a("function")
-      .and.property("name", "Command1");
+    expect(command).to.be.a("function").and.property("name", "Command1");
   });
 
   it("should return null if command doesn't exist", function () {
@@ -40,8 +39,7 @@ describe("Loading commands", function () {
     const commandLoader = loader(finder(path.join(__dirname, "sample-commands")));
     /* tslint:disable-next-line:no-unused-variable */
     const { commandFactory: command, args: remainingArgs } = commandLoader(["subcommands", "cmd2"]);
-    expect(command).to.be.a("function")
-      .and.property("name", "Command2");
+    expect(command).to.be.a("function").and.property("name", "Command2");
     expect(remainingArgs).to.deep.equal([]);
   });
 });

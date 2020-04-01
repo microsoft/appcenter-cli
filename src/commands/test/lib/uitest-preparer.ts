@@ -102,16 +102,22 @@ export class UITestPreparer {
       case 19:
         return `There were test failures.`;
       case 20:
-        return `The version of UITest.dll and the tools are incompatible. ` +
-          `Please make sure --uitest-tools-dir points to the same version of UITest as the dll in your assembly directory.`;
+        return (
+          `The version of UITest.dll and the tools are incompatible. ` +
+          `Please make sure --uitest-tools-dir points to the same version of UITest as the dll in your assembly directory.`
+        );
       case 21:
         return `No tests would run given the current parameters${tryAgain}`;
       case 22:
-        return `A specified data file was outside the assembly directory. ` +
-          `Please make sure all referenced data files exist within your assembly directory and try again.`;
+        return (
+          `A specified data file was outside the assembly directory. ` +
+          `Please make sure all referenced data files exist within your assembly directory and try again.`
+        );
       case 23:
-        return `A specified data file was not found, please check your data files exist and try again. ` +
-        `If this error happens again, please contact support.`;
+        return (
+          `A specified data file was not found, please check your data files exist and try again. ` +
+          `If this error happens again, please contact support.`
+        );
       case 24:
         return `The test run did not pass validation${tryAgain}`;
       case 25:
@@ -128,7 +134,9 @@ export class UITestPreparer {
   private validateArguments() {
     if (this.storeFile || this.storePassword || this.keyAlias || this.keyPassword) {
       if (!(this.storeFile && this.storePassword && this.keyAlias && this.keyPassword)) {
-        throw new Error("If keystore is used, all of the following arguments must be set: --store-file, --store-password, --key-alias, --key-password");
+        throw new Error(
+          "If keystore is used, all of the following arguments must be set: --store-file, --store-password, --key-alias, --key-password"
+        );
       }
     }
   }
@@ -182,22 +190,26 @@ export class UITestPreparer {
   }
 
   private async getTestCloudExecutablePath(): Promise<string> {
-    const toolsDir = this.uiTestToolsDir || await UITestPreparer.findXamarinUITestNugetDir(this.buildDir);
+    const toolsDir = this.uiTestToolsDir || (await UITestPreparer.findXamarinUITestNugetDir(this.buildDir));
 
-    if (!await directoryExists(toolsDir)) {
-      throw new Error(`Cannot find test-cloud.exe, the path specified by "--uitest-tools-dir" was not found.${os.EOL}` +
-        `Please check that "${toolsDir}" is a valid directory and contains test-cloud.exe.${os.EOL}` +
-        `Minimum required version is "${UITestPreparer.getMinimumVersionString()}".`);
+    if (!(await directoryExists(toolsDir))) {
+      throw new Error(
+        `Cannot find test-cloud.exe, the path specified by "--uitest-tools-dir" was not found.${os.EOL}` +
+          `Please check that "${toolsDir}" is a valid directory and contains test-cloud.exe.${os.EOL}` +
+          `Minimum required version is "${UITestPreparer.getMinimumVersionString()}".`
+      );
     }
 
     let testCloudPath = path.join(toolsDir, "test-cloud.exe");
 
-    if (!await fileExists(testCloudPath)) {
+    if (!(await fileExists(testCloudPath))) {
       testCloudPath = path.join(toolsDir, "Xamarin.UITest.CLI.exe");
-      if (!await fileExists(testCloudPath)) {
-        throw new Error(`Cannot find test-cloud.exe, the exe was not found in the path specified by "--uitest-tools-dir".${os.EOL}` +
-          `Please check that ${testCloudPath} points to a test-cloud.exe.${os.EOL}` +
-          `Minimum required version is "${UITestPreparer.getMinimumVersionString()}".`);
+      if (!(await fileExists(testCloudPath))) {
+        throw new Error(
+          `Cannot find test-cloud.exe, the exe was not found in the path specified by "--uitest-tools-dir".${os.EOL}` +
+            `Please check that ${testCloudPath} points to a test-cloud.exe.${os.EOL}` +
+            `Minimum required version is "${UITestPreparer.getMinimumVersionString()}".`
+        );
       }
     }
 
@@ -215,32 +227,38 @@ export class UITestPreparer {
     const files = (await glob(possibleNugetDirPattern)).sort();
 
     if (files.length === 0) {
-       const parentDir = path.dirname(root);
+      const parentDir = path.dirname(root);
 
-       if (parentDir === root) {
-         throw new Error(`Cannot find test-cloud.exe, which is required to prepare UI tests.${os.EOL}` +
-          `We have searched for directory "packages${path.sep}Xamarin.UITest.*${path.sep}tools" inside ` +
-          `"${buildDir || parentDir}" and all of its parent directories.${os.EOL}` +
-          `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` +
-          `Minimum required version is "${this.getMinimumVersionString()}".`);
-       } else {
-         return await UITestPreparer.findXamarinUITestNugetDir(parentDir, buildDir);
-       }
+      if (parentDir === root) {
+        throw new Error(
+          `Cannot find test-cloud.exe, which is required to prepare UI tests.${os.EOL}` +
+            `We have searched for directory "packages${path.sep}Xamarin.UITest.*${path.sep}tools" inside ` +
+            `"${buildDir || parentDir}" and all of its parent directories.${os.EOL}` +
+            `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` +
+            `Minimum required version is "${this.getMinimumVersionString()}".`
+        );
+      } else {
+        return await UITestPreparer.findXamarinUITestNugetDir(parentDir, buildDir);
+      }
     } else {
       const latestTestCloudPath = files[files.length - 1];
       const match = latestTestCloudPath.match(/Xamarin\.UITest\.(\d+)\.(\d+)\.(\d+)/);
 
       if (!match) {
-        throw new Error(`Found test-cloud.exe at "${path.dirname(latestTestCloudPath)}", but cannot recognize its version.${os.EOL}` +
-          `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` +
-          `Minimum required version is "${this.getMinimumVersionString()}".`);
+        throw new Error(
+          `Found test-cloud.exe at "${path.dirname(latestTestCloudPath)}", but cannot recognize its version.${os.EOL}` +
+            `Please use option "--uitest-tools-dir" to manually specify location of this tool.${os.EOL}` +
+            `Minimum required version is "${this.getMinimumVersionString()}".`
+        );
       }
 
       const [, major, minor, build] = match;
       if (!this.hasMinimumTestCloudVersion(parseInt(major, 10), parseInt(minor, 10), parseInt(build, 10))) {
-        throw new Error(`The latest version of test-cloud.exe, found at "${path.dirname(latestTestCloudPath)}", ` +
-          `is too old.${os.EOL}` +
-          `Please upgrade the NuGet package to version ${this.getMinimumVersionString()} or higher.`);
+        throw new Error(
+          `The latest version of test-cloud.exe, found at "${path.dirname(latestTestCloudPath)}", ` +
+            `is too old.${os.EOL}` +
+            `Please upgrade the NuGet package to version ${this.getMinimumVersionString()} or higher.`
+        );
       } else {
         return path.dirname(latestTestCloudPath);
       }

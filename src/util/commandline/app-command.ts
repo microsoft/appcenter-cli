@@ -26,21 +26,23 @@ export class AppCommand extends Command {
       if (!result) {
         throw new Error(`'${this.appOption}' is not a valid application id`);
       }
-    // Environment variable
+      // Environment variable
     } else if (process.env[currentAppVar]) {
       result = toDefaultApp(process.env[currentAppVar]);
       if (!result) {
         throw new Error(`'${process.env[currentAppVar]}' (read from ${currentAppVar}) is not a valid application id`);
       }
-    // Default app in profile
+      // Default app in profile
     } else {
       const profile = getUser();
       if (profile.defaultApp) {
         result = profile.defaultApp;
 
-      // Couldn't find one, fail.
+        // Couldn't find one, fail.
       } else {
-        throw new Error(`Could not find application to work on. Specify the '--app' switch, use '${scriptName} apps set-current', or set the ${currentAppVar} environment variable.`);
+        throw new Error(
+          `Could not find application to work on. Specify the '--app' switch, use '${scriptName} apps set-current', or set the ${currentAppVar} environment variable.`
+        );
       }
     }
 
@@ -53,13 +55,13 @@ export class AppCommand extends Command {
 }
 
 export function getCurrentApp(optValue: string): ResultOrValue<DefaultApp> {
-
   function fromCommandLineOpt(): ResultOrValue<DefaultApp> {
     if (optValue) {
       const result = toDefaultApp(optValue);
       if (!result) {
-        return ResultOrValue.fromResult<DefaultApp>(failure(ErrorCodes.InvalidParameter,
-          `'${optValue}' is not a valid application id`));
+        return ResultOrValue.fromResult<DefaultApp>(
+          failure(ErrorCodes.InvalidParameter, `'${optValue}' is not a valid application id`)
+        );
       }
       return ResultOrValue.fromValue(result);
     }
@@ -69,8 +71,12 @@ export function getCurrentApp(optValue: string): ResultOrValue<DefaultApp> {
     if (process.env[currentAppVar]) {
       const result = toDefaultApp(process.env[currentAppVar]);
       if (!result) {
-        return ResultOrValue.fromResult<DefaultApp>(failure(ErrorCodes.InvalidParameter,
-          `'${process.env[currentAppVar]}' (read from environment ${currentAppVar}) is not a valid application id`));
+        return ResultOrValue.fromResult<DefaultApp>(
+          failure(
+            ErrorCodes.InvalidParameter,
+            `'${process.env[currentAppVar]}' (read from environment ${currentAppVar}) is not a valid application id`
+          )
+        );
       }
       return ResultOrValue.fromValue(result);
     }
@@ -83,7 +89,15 @@ export function getCurrentApp(optValue: string): ResultOrValue<DefaultApp> {
     }
   }
 
-  return fromCommandLineOpt() || fromEnvironment() || fromProfile() ||
-    ResultOrValue.fromResult<DefaultApp>(failure(ErrorCodes.InvalidParameter,
-        `Could not find application to work on. Specify the '--app' switch, use '${scriptName} apps set-current', or set the ${currentAppVar} environment variable.`));
+  return (
+    fromCommandLineOpt() ||
+    fromEnvironment() ||
+    fromProfile() ||
+    ResultOrValue.fromResult<DefaultApp>(
+      failure(
+        ErrorCodes.InvalidParameter,
+        `Could not find application to work on. Specify the '--app' switch, use '${scriptName} apps set-current', or set the ${currentAppVar} environment variable.`
+      )
+    )
+  );
 }

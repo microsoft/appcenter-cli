@@ -6,9 +6,7 @@ import * as temp from "temp";
 import * as pfs from "../../../util/misc/promisfied-fs";
 
 export function isBinaryOrZip(path: string): boolean {
-  return path.search(/\.zip$/i) !== -1
-      || path.search(/\.apk$/i) !== -1
-      || path.search(/\.ipa$/i) !== -1;
+  return path.search(/\.zip$/i) !== -1 || path.search(/\.apk$/i) !== -1 || path.search(/\.ipa$/i) !== -1;
 }
 
 export function isDirectory(path: string): boolean {
@@ -29,22 +27,26 @@ export function copyFileToTmpDir(filePath: string): string {
 }
 
 export async function moveReleaseFilesInTmpFolder(updateContentsPath: string): Promise<string> {
-    let tmpUpdateContentsPath: string = temp.mkdirSync("code-push");
-    tmpUpdateContentsPath = path.join(tmpUpdateContentsPath, "CodePush");
-    fs.mkdirSync(tmpUpdateContentsPath);
+  let tmpUpdateContentsPath: string = temp.mkdirSync("code-push");
+  tmpUpdateContentsPath = path.join(tmpUpdateContentsPath, "CodePush");
+  fs.mkdirSync(tmpUpdateContentsPath);
 
-    if (isDirectory(updateContentsPath)) {
-      await pfs.cp(normalizePath(updateContentsPath), normalizePath(tmpUpdateContentsPath));
-    } else {
-      const targetFileName = path.parse(updateContentsPath).base;
-      await pfs.cpFile(normalizePath(updateContentsPath), path.join(tmpUpdateContentsPath, targetFileName));
-    }
+  if (isDirectory(updateContentsPath)) {
+    await pfs.cp(normalizePath(updateContentsPath), normalizePath(tmpUpdateContentsPath));
+  } else {
+    const targetFileName = path.parse(updateContentsPath).base;
+    await pfs.cpFile(normalizePath(updateContentsPath), path.join(tmpUpdateContentsPath, targetFileName));
+  }
 
-    return tmpUpdateContentsPath;
+  return tmpUpdateContentsPath;
 }
 
 export function getLastFolderInPath(path: string): string {
-  const splittedPath = normalizePath(path).split("/").filter((el) => { return el !== ""; });
+  const splittedPath = normalizePath(path)
+    .split("/")
+    .filter((el) => {
+      return el !== "";
+    });
   if (isDirectory(path)) {
     return splittedPath[splittedPath.length - 1];
   } else {
@@ -66,9 +68,9 @@ export function generateRandomFilename(length: number): string {
 
 export function fileDoesNotExistOrIsDirectory(path: string): boolean {
   try {
-      return isDirectory(path);
+    return isDirectory(path);
   } catch (error) {
-      return true;
+    return true;
   }
 }
 

@@ -17,7 +17,7 @@ export default class AppsListCommand extends Command {
   formatApp(defaultApp: DefaultApp, app: models.AppResponse): string {
     let prefix = "  ";
     let suffix = "";
-    if (defaultApp && (defaultApp.appName === app.name && defaultApp.ownerName === app.owner.name)) {
+    if (defaultApp && defaultApp.appName === app.name && defaultApp.ownerName === app.owner.name) {
       prefix = "* ";
       suffix = " (current app)";
     }
@@ -25,8 +25,10 @@ export default class AppsListCommand extends Command {
   }
 
   async run(client: AppCenterClient): Promise<CommandResult> {
-    const appsResponse = await out.progress("Getting app list ...",
-      clientRequest<models.AppResponse[]>((cb) => client.apps.list(cb)));
+    const appsResponse = await out.progress(
+      "Getting app list ...",
+      clientRequest<models.AppResponse[]>((cb) => client.apps.list(cb))
+    );
 
     if (appsResponse.response.statusCode >= 400) {
       return failure(ErrorCodes.Exception, "Unknown error when loading apps");

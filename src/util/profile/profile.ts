@@ -46,7 +46,8 @@ class ProfileImpl implements Profile {
   tokenSuppliedByUser: boolean;
 
   get accessTokenId(): Promise<string> {
-    return tokenStore.get(this.userName)
+    return tokenStore
+      .get(this.userName)
       .then((entry) => entry.accessToken.id)
       .catch((err: Error) => {
         debug(`Failed to get token id from profile, error: ${err.message}`);
@@ -55,8 +56,7 @@ class ProfileImpl implements Profile {
   }
 
   get accessToken(): Promise<string> {
-    const getter = tokenStore.get(this.userName)
-      .catch((err: Error) => tokenStore.get(this.userName, true));
+    const getter = tokenStore.get(this.userName).catch((err: Error) => tokenStore.get(this.userName, true));
 
     return getter
       .then((entry) => entry.accessToken.token)
@@ -90,7 +90,7 @@ class ProfileImpl implements Profile {
       email: this.email,
       environment: this.environment,
       defaultApp: this.defaultApp,
-      tokenSuppliedByUser: this.tokenSuppliedByUser
+      tokenSuppliedByUser: this.tokenSuppliedByUser,
     };
 
     mkdirp.sync(getProfileDir());
@@ -123,7 +123,7 @@ export function toDefaultApp(app: string): DefaultApp {
     return {
       ownerName: matches[1],
       appName: matches[2],
-      identifier: `${matches[1]}/${matches[2]}`
+      identifier: `${matches[1]}/${matches[2]}`,
     };
   }
   return null;
@@ -160,12 +160,11 @@ export function getUser(): Profile | null {
 }
 
 export function saveUser(user: any, token: TokenValueType, environment: string, tokenSuppliedByUser: boolean): Promise<Profile> {
-  return tokenStore.set(user.name, token)
-    .then(() => {
-      const profile = new ProfileImpl(Object.assign({}, user, { environment, tokenSuppliedByUser }));
-      profile.save();
-      return profile;
-    });
+  return tokenStore.set(user.name, token).then(() => {
+    const profile = new ProfileImpl(Object.assign({}, user, { environment, tokenSuppliedByUser }));
+    profile.save();
+    return profile;
+  });
 }
 
 export async function deleteUser(): Promise<void> {

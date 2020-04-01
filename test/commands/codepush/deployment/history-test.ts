@@ -12,11 +12,11 @@ import * as testData from "./history-test-data";
 const stripAnsi = require("strip-ansi");
 
 describe("CodePush deployment history", () => {
-
   describe("deployment history unit tests", () => {
     it("generateReleaseAdditionalInfoString", () => {
       // Arrange
-      const generateReleaseAdditionalInfoString: (release: models.CodePushRelease) => string = testData.fakeCommand["generateReleaseAdditionalInfoString"];
+      const generateReleaseAdditionalInfoString: (release: models.CodePushRelease) => string =
+        testData.fakeCommand["generateReleaseAdditionalInfoString"];
 
       testData.fakeReleases.forEach((fakeRelease, index) => {
         // Act
@@ -46,7 +46,6 @@ describe("CodePush deployment history", () => {
   });
 
   describe("deployment history command", () => {
-
     let requestReleasesSpy: Sinon.SinonSpy;
     let requestMetricsSpy: Sinon.SinonSpy;
 
@@ -60,19 +59,33 @@ describe("CodePush deployment history", () => {
 
       Nock(testData.fakeHost)
         .get(`/v0.1/apps/${testData.fakeAppIdentifier}/deployments/${testData.fakeDeploymentName}/releases`)
-        .reply((uri, requestBody) => { requestReleasesSpy(); return [200, testData.fakeReleasesResponse]; } )
+        .reply((uri, requestBody) => {
+          requestReleasesSpy();
+          return [200, testData.fakeReleasesResponse];
+        })
         .get(`/v0.1/apps/${testData.fakeAppIdentifier}/deployments/${testData.fakeDeploymentName}/metrics`)
-        .reply((uri, requestBody) => { requestMetricsSpy(); return [200, testData.fakeMetricsResponse]; })
+        .reply((uri, requestBody) => {
+          requestMetricsSpy();
+          return [200, testData.fakeMetricsResponse];
+        })
         .get(`/v0.1/apps/${testData.fakeAppIdentifier}/deployments/${testData.fakeNonExistentDeploymentName}/releases`)
-        .reply((uri, requestBody) => { requestReleasesSpy(); return [400, {}]; })
+        .reply((uri, requestBody) => {
+          requestReleasesSpy();
+          return [400, {}];
+        })
         .get(`/v0.1/apps/${testData.fakeNonExistentAppIdentifier}/deployments/${testData.fakeDeploymentName}/releases`)
-        .reply((uri, requestBody) => { requestReleasesSpy(); return [404, {}]; });
+        .reply((uri, requestBody) => {
+          requestReleasesSpy();
+          return [404, {}];
+        });
     });
 
     it("should output table with correct data", async () => {
       // Arrange
       const stubbedOutTable = Sinon.stub(out, "table");
-      const command = new CodePushDeploymentHistoryCommand(getDeploymentHistoryCommandArgs(testData.fakeAppIdentifier, testData.fakeDeploymentName));
+      const command = new CodePushDeploymentHistoryCommand(
+        getDeploymentHistoryCommandArgs(testData.fakeAppIdentifier, testData.fakeDeploymentName)
+      );
 
       // Act
       const result = await command.execute();
@@ -94,7 +107,9 @@ describe("CodePush deployment history", () => {
 
     it("should output an error when app does not exist", async () => {
       // Arrange
-      const command = new CodePushDeploymentHistoryCommand(getDeploymentHistoryCommandArgs(testData.fakeNonExistentAppIdentifier, testData.fakeDeploymentName));
+      const command = new CodePushDeploymentHistoryCommand(
+        getDeploymentHistoryCommandArgs(testData.fakeNonExistentAppIdentifier, testData.fakeDeploymentName)
+      );
 
       // Act
       const result = await command.execute();
@@ -108,7 +123,9 @@ describe("CodePush deployment history", () => {
 
     it("should output an error when deployment does not exist", async () => {
       // Arrange
-      const command = new CodePushDeploymentHistoryCommand(getDeploymentHistoryCommandArgs(testData.fakeAppIdentifier, testData.fakeNonExistentDeploymentName));
+      const command = new CodePushDeploymentHistoryCommand(
+        getDeploymentHistoryCommandArgs(testData.fakeAppIdentifier, testData.fakeNonExistentDeploymentName)
+      );
 
       // Act
       const result = await command.execute();
@@ -133,7 +150,7 @@ describe("CodePush deployment history", () => {
     return {
       command: ["codepush", "deployment", "history"],
       args: ["-a", appIdentifier, deploymentName, "--token", testData.fakeToken, "--env", "local"],
-      commandPath: "FAKE"
+      commandPath: "FAKE",
     };
   }
 });

@@ -1,4 +1,15 @@
-import { AppCommand, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success } from "../../util/commandline";
+import {
+  AppCommand,
+  CommandArgs,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  hasArg,
+  help,
+  longName,
+  shortName,
+  success,
+} from "../../util/commandline";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { out, supportsCsv } from "../../util/interaction";
 import { inspect } from "util";
@@ -54,12 +65,12 @@ export default class SessionCommand extends AppCommand {
     const app: DefaultApp = this.app;
 
     const appVersion = this.getAppVersion();
-    const startDate = parseDate(this.startDate,
+    const startDate = parseDate(
+      this.startDate,
       new Date(new Date().setHours(0, 0, 0, 0)),
-      `start date value ${this.startDate} is not a valid date string`);
-    const endDate = parseDate(this.endDate,
-      new Date(),
-      `end date value ${this.endDate} is not a valid date string`);
+      `start date value ${this.startDate} is not a valid date string`
+    );
+    const endDate = parseDate(this.endDate, new Date(), `end date value ${this.endDate} is not a valid date string`);
 
     if (!this.duration && !this.statistics) {
       // when no switches are specified, all the data should be shown
@@ -70,18 +81,27 @@ export default class SessionCommand extends AppCommand {
     const requestResult: IRequestsResult = {};
 
     // durations statistics required for both "duration" and "statistics" switches
-    promises.push(this.loadSessionDurationsStatistics(client, app, startDate, endDate, appVersion)
-      .then((distributions) => requestResult.sessionDurationsDistribution = distributions));
+    promises.push(
+      this.loadSessionDurationsStatistics(client, app, startDate, endDate, appVersion).then(
+        (distributions) => (requestResult.sessionDurationsDistribution = distributions)
+      )
+    );
 
     if (this.statistics) {
-      promises.push(this.loadSessionCountsStatistics(client, app, startDate, endDate, appVersion)
-        .then((counts: models.DateTimeCounts[]) => requestResult.sessionCounts = counts));
+      promises.push(
+        this.loadSessionCountsStatistics(client, app, startDate, endDate, appVersion).then(
+          (counts: models.DateTimeCounts[]) => (requestResult.sessionCounts = counts)
+        )
+      );
 
       // get session counts for the previous interval of the same length
       const previousEndDate = startDate;
       const previousStartDate = new Date(previousEndDate.valueOf() - (endDate.valueOf() - startDate.valueOf()));
-      promises.push(this.loadSessionCountsStatistics(client, app, previousStartDate, previousEndDate, appVersion)
-        .then((counts: models.DateTimeCounts[]) => requestResult.previousSessionCounts = counts));
+      promises.push(
+        this.loadSessionCountsStatistics(client, app, previousStartDate, previousEndDate, appVersion).then(
+          (counts: models.DateTimeCounts[]) => (requestResult.previousSessionCounts = counts)
+        )
+      );
     }
 
     await out.progress("Loading statistics...", Promise.all(promises));
@@ -97,24 +117,55 @@ export default class SessionCommand extends AppCommand {
     return !_.isNil(this.appVersion) ? [this.appVersion] : undefined;
   }
 
-  private async loadSessionDurationsStatistics(client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<models.SessionDurationsDistribution> {
+  private async loadSessionDurationsStatistics(
+    client: AppCenterClient,
+    app: DefaultApp,
+    startDate: Date,
+    endDate: Date,
+    appVersion?: string[]
+  ): Promise<models.SessionDurationsDistribution> {
     try {
-      return (await clientRequest<models.SessionDurationsDistribution>((cb) => client.analytics.sessionDurationsDistributionMethod(startDate, app.ownerName, app.appName, {
-        end: endDate,
-        versions: appVersion
-      }, cb))).result;
+      return (
+        await clientRequest<models.SessionDurationsDistribution>((cb) =>
+          client.analytics.sessionDurationsDistributionMethod(
+            startDate,
+            app.ownerName,
+            app.appName,
+            {
+              end: endDate,
+              versions: appVersion,
+            },
+            cb
+          )
+        )
+      ).result;
     } catch (error) {
       debug(`Failed to get sessions duration distributions - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, "failed to get sessions duration distributions");
     }
   }
 
-  private async loadSessionCountsStatistics(client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, appVersion?: string[]): Promise<models.DateTimeCounts[]> {
+  private async loadSessionCountsStatistics(
+    client: AppCenterClient,
+    app: DefaultApp,
+    startDate: Date,
+    endDate: Date,
+    appVersion?: string[]
+  ): Promise<models.DateTimeCounts[]> {
     try {
-      const httpResponse = await clientRequest<models.DateTimeCounts[]>((cb) => client.analytics.sessionCounts(startDate, "P1D", app.ownerName, app.appName, {
-        end: endDate,
-        versions: appVersion
-      }, cb));
+      const httpResponse = await clientRequest<models.DateTimeCounts[]>((cb) =>
+        client.analytics.sessionCounts(
+          startDate,
+          "P1D",
+          app.ownerName,
+          app.appName,
+          {
+            end: endDate,
+            versions: appVersion,
+          },
+          cb
+        )
+      );
 
       return httpResponse.result;
     } catch (error) {
@@ -131,28 +182,32 @@ export default class SessionCommand extends AppCommand {
     }
 
     if (this.statistics) {
-      const totalSessionsCount = _.sumBy(requestsResult.sessionCounts, ((dateTimeCounts) => dateTimeCounts.count));
-      const previousTotalSessionsCount = _.sumBy(requestsResult.previousSessionCounts, ((dateTimeCounts) => dateTimeCounts.count));
+      const totalSessionsCount = _.sumBy(requestsResult.sessionCounts, (dateTimeCounts) => dateTimeCounts.count);
+      const previousTotalSessionsCount = _.sumBy(requestsResult.previousSessionCounts, (dateTimeCounts) => dateTimeCounts.count);
 
       const averageSessionsPerDay = totalSessionsCount / requestsResult.sessionCounts.length;
       const previousAverageSessionsPerDay = previousTotalSessionsCount / requestsResult.previousSessionCounts.length;
 
-      const averageSessionDuration: number = IsoDuration.toSeconds(IsoDuration.parse(requestsResult.sessionDurationsDistribution.averageDuration));
-      const previousAverageSessionDuration: number = IsoDuration.toSeconds(IsoDuration.parse(requestsResult.sessionDurationsDistribution.previousAverageDuration));
+      const averageSessionDuration: number = IsoDuration.toSeconds(
+        IsoDuration.parse(requestsResult.sessionDurationsDistribution.averageDuration)
+      );
+      const previousAverageSessionDuration: number = IsoDuration.toSeconds(
+        IsoDuration.parse(requestsResult.sessionDurationsDistribution.previousAverageDuration)
+      );
 
       jsonOutput.statistics = {
         totalSessions: {
           count: totalSessionsCount,
-          percentage: calculatePercentChange(totalSessionsCount, previousTotalSessionsCount)
+          percentage: calculatePercentChange(totalSessionsCount, previousTotalSessionsCount),
         },
         averageSessionsPerDay: {
           count: averageSessionsPerDay,
-          percentage: calculatePercentChange(averageSessionsPerDay, previousAverageSessionsPerDay)
+          percentage: calculatePercentChange(averageSessionsPerDay, previousAverageSessionsPerDay),
         },
         averageSessionsLength: {
           seconds: averageSessionDuration,
-          percentage: calculatePercentChange(averageSessionDuration, previousAverageSessionDuration)
-        }
+          percentage: calculatePercentChange(averageSessionDuration, previousAverageSessionDuration),
+        },
       };
     }
 
@@ -166,8 +221,8 @@ export default class SessionCommand extends AppCommand {
       if (stats.sessions) {
         tableArray.push({
           name: "Session Durations",
-          content: [["", "Count"]].concat(stats.sessions.map((group) => [group.bucket, numberFormatter(group.count)]))
-      });
+          content: [["", "Count"]].concat(stats.sessions.map((group) => [group.bucket, numberFormatter(group.count)])),
+        });
       }
 
       if (stats.statistics) {
@@ -177,8 +232,12 @@ export default class SessionCommand extends AppCommand {
             ["", "Count", "Change"],
             ["Total Sessions"].concat(toArray(stats.statistics.totalSessions, numberFormatter, percentageFormatter)),
             ["Average Sessions Per Day"].concat(toArray(stats.statistics.averageSessionsPerDay, numberFormatter, percentageFormatter)),
-            ["Average Session Length (sec)", numberFormatter(stats.statistics.averageSessionsLength.seconds), percentageFormatter(stats.statistics.averageSessionsLength.percentage)]
-          ]
+            [
+              "Average Session Length (sec)",
+              numberFormatter(stats.statistics.averageSessionsLength.seconds),
+              percentageFormatter(stats.statistics.averageSessionsLength.percentage),
+            ],
+          ],
         });
       }
 
@@ -199,9 +258,9 @@ interface IJsonOutput {
     totalSessions: IChangingCount;
     averageSessionsPerDay: IChangingCount;
     averageSessionsLength: {
-      seconds: number,
+      seconds: number;
       percentage: number;
-    }
+    };
   };
 }
 
@@ -210,6 +269,10 @@ interface IChangingCount {
   percentage: number;
 }
 
-function toArray(changingCount: IChangingCount, numberFormatter: (num: number) => string, percentageFormatter: (value: number) => string): string[] {
+function toArray(
+  changingCount: IChangingCount,
+  numberFormatter: (num: number) => string,
+  percentageFormatter: (value: number) => string
+): string[] {
   return [numberFormatter(changingCount.count), percentageFormatter(changingCount.percentage)];
 }

@@ -4,14 +4,15 @@ import * as fs from "fs";
 import { DOMParser } from "xmldom";
 
 export class NUnitXmlUtil extends XmlUtil {
-
   async mergeXmlResults(pathToArchive: string): Promise<Document> {
     const tempPath: string = await pfs.mkTempDir("appcenter-uitestreports");
     let mainXml: Document = null;
 
     const self: NUnitXmlUtil = this;
 
-    const outputXml: Promise<Document> = this.getMergeXmlResultsPromise(pathToArchive, tempPath,
+    const outputXml: Promise<Document> = this.getMergeXmlResultsPromise(
+      pathToArchive,
+      tempPath,
       (fullPath: string, relativePath: string) => {
         const xml: Document = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
 
@@ -113,7 +114,7 @@ export class NUnitXmlUtil extends XmlUtil {
     const elements: Element[] = this.collectAllElements(xml.documentElement, "test-case");
     elements.forEach((element: Element) => {
       const resultAttr: Attr = element.attributes.getNamedItem("result");
-      if (resultAttr && resultAttr.value === "Ignored" ||  resultAttr.value === "Skipped") {
+      if ((resultAttr && resultAttr.value === "Ignored") || resultAttr.value === "Skipped") {
         element.parentNode.removeChild(element);
       }
     });

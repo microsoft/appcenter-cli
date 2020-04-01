@@ -7,12 +7,11 @@ import * as path from "path";
 
 @help(Messages.TestCloud.Commands.GenerateUITest)
 export default class GenerateUITestCommand extends GenerateCommand {
-
   constructor(args: CommandArgs) {
     super(args);
   }
 
-  protected templatePathAndroid = path.join(__dirname, "../lib/templates/uitest/android");
+  protected templatePathAndroid = path.join(__dirname, "../lib/templates/uitest/android");
   protected templatePathiOS = path.join(__dirname, "../lib/templates/uitest/ios");
 
   protected async processTemplate(): Promise<void> {
@@ -47,21 +46,26 @@ export default class GenerateUITestCommand extends GenerateCommand {
     return new Promise<string>((resolve, reject) => {
       const UITestNugetApiUrl = "https://api.nuget.org/v3-flatcontainer/Xamarin.UITest/index.json";
 
-      request({
-        url: UITestNugetApiUrl,
-        json: true
-      }, (error, response, body) => {
-        if (!error && response.statusCode === 200) {
-          const stableVersions: string[] = (body.versions as string[]).filter((version) => version.indexOf("dev") === -1 && version.indexOf("beta") === -1);
-          if (stableVersions.length) {
-            resolve(stableVersions[stableVersions.length - 1]);
+      request(
+        {
+          url: UITestNugetApiUrl,
+          json: true,
+        },
+        (error, response, body) => {
+          if (!error && response.statusCode === 200) {
+            const stableVersions: string[] = (body.versions as string[]).filter(
+              (version) => version.indexOf("dev") === -1 && version.indexOf("beta") === -1
+            );
+            if (stableVersions.length) {
+              resolve(stableVersions[stableVersions.length - 1]);
+            } else {
+              reject("Can't load latest UITest NuGet version number: response does not contain valid versions");
+            }
           } else {
-            reject("Can't load latest UITest NuGet version number: response does not contain valid versions");
+            reject(`Can't load latest UITest NuGet version number: ${response.statusCode}: ${error}`);
           }
-        } else {
-          reject(`Can't load latest UITest NuGet version number: ${response.statusCode}: ${error}`);
         }
-      });
+      );
     });
   }
 

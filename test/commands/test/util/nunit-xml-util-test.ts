@@ -8,7 +8,7 @@ import { XmlUtil } from "../../../../src/commands/test/lib/xml-util";
 
 describe("nunit xml util", function () {
   const strXml: string =
-'<?xml version="1.0" encoding="utf-8"?>\
+    '<?xml version="1.0" encoding="utf-8"?>\
 <test-results ignored="1" not-run="1">\
 <test-suite>\
 <test-case name="CreditCardValidator.Droid.UITests.Tests.Test0" executed="True" result="Success">\
@@ -27,7 +27,7 @@ describe("nunit xml util", function () {
 </test-results>';
 
   const strXml1: string =
-'<?xml version="1.0" encoding="utf-8"?>\
+    '<?xml version="1.0" encoding="utf-8"?>\
 <test-results ignored="1" not-run="1">\
 <test-suite>\
   <test-suite>\
@@ -67,10 +67,12 @@ describe("nunit xml util", function () {
     xmlUtil.appendToTestNameTransformation(xml, "_new_test_case_postfix");
     const testCases: Element[] = xmlUtil.collectAllElements(xml.documentElement, "test-case");
 
-    expect(testCases[0].attributes.getNamedItem("name").value)
-      .to.eql("CreditCardValidator.Droid.UITests.Tests.Test0_new_test_case_postfix");
-    expect(testCases[1].attributes.getNamedItem("name").value)
-      .to.eql("CreditCardValidator.Droid.UITests.Tests.Test1_new_test_case_postfix");
+    expect(testCases[0].attributes.getNamedItem("name").value).to.eql(
+      "CreditCardValidator.Droid.UITests.Tests.Test0_new_test_case_postfix"
+    );
+    expect(testCases[1].attributes.getNamedItem("name").value).to.eql(
+      "CreditCardValidator.Droid.UITests.Tests.Test1_new_test_case_postfix"
+    );
   });
 
   it("should not throw an exception while appending postfix to a non-existent node", () => {
@@ -114,10 +116,10 @@ describe("nunit xml util", function () {
   });
 
   it("should count all children", () => {
-   const xml: Document = new DOMParser().parseFromString(strXml);
-   const testResults: Element = xmlUtil.collectChildren(xml.documentElement, "test-results")[0];
+    const xml: Document = new DOMParser().parseFromString(strXml);
+    const testResults: Element = xmlUtil.collectChildren(xml.documentElement, "test-results")[0];
 
-   expect(xmlUtil.countChildren(testResults)).to.eql(8);
+    expect(xmlUtil.countChildren(testResults)).to.eql(8);
   });
 
   it("should not throw an exception if get null values", () => {
@@ -137,7 +139,6 @@ describe("nunit xml util", function () {
   });
 
   it("should should identify nunit2 xml correctly", async () => {
-
     // If
     const pathToArchive: string = path.join(__dirname, "../resources/nunit2_report.xml");
     const xml: Document = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(pathToArchive, "utf-8"), "text/xml");
@@ -150,7 +151,6 @@ describe("nunit xml util", function () {
   });
 
   it("should should identify nunit3 xml correctly", async () => {
-
     // If
     const pathToArchive: string = path.join(__dirname, "../resources/nunit3_report.xml");
     const xml: Document = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(pathToArchive, "utf-8"), "text/xml");
@@ -163,7 +163,6 @@ describe("nunit xml util", function () {
   });
 
   it("should combine nunit2 xmls correctly", async () => {
-
     // If
     const pathToArchive: string = path.join(__dirname, "../resources/nunit2_xml_zip.zip");
 
@@ -178,7 +177,6 @@ describe("nunit xml util", function () {
   });
 
   it("should combine nunit3 xmls correctly", async () => {
-
     // If
     const pathToArchive: string = path.join(__dirname, "../resources/nunit3_xml_zip.zip");
 

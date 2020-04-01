@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  help,
+  success,
+  shortName,
+  longName,
+  required,
+  hasArg,
+} from "../../../util/commandline";
 import { AppCenterClient, clientRequest } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
@@ -17,14 +28,16 @@ export default class DeleteDistributionGroupCommand extends AppCommand {
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
-    if (!await prompt.confirm(`Do you really want to delete distribution group ${this.distributionGroup}?`)) {
+    if (!(await prompt.confirm(`Do you really want to delete distribution group ${this.distributionGroup}?`))) {
       out.text(`Deletion of distribution group ${this.distributionGroup} was cancelled`);
       return success();
     }
 
     try {
-      const httpResponse = await out.progress(`Removing the distribution group...`,
-        clientRequest((cb) => client.distributionGroups.deleteMethod(app.appName, app.ownerName, this.distributionGroup, cb)));
+      const httpResponse = await out.progress(
+        `Removing the distribution group...`,
+        clientRequest((cb) => client.distributionGroups.deleteMethod(app.appName, app.ownerName, this.distributionGroup, cb))
+      );
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.response.statusCode;
       }

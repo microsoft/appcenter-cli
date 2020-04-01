@@ -19,22 +19,24 @@ function generateAndSave() {
   Fs.writeFileSync(treeFilePath, JSON.stringify(treeObject), "utf8");
 }
 
-/** 
+/**
  * Constructs autocomplete tree from FS structure
- * @param {string} path 
+ * @param {string} path
  * @param {object} treeObject
  * @returns {object | string[]}
  */
 function generateAutoCompleteTree(path) {
   let dirEntries;
-  if (dirEntries = getDirEntriesOrNull(path)) {
+  if ((dirEntries = getDirEntriesOrNull(path))) {
     // path points to directory (category)
     const treeObject = {};
-    const filteredDirEntries = dirEntries.filter((entry) => entry !== "lib" && entry !== "category.txt" && Path.extname(entry) !== ".map");
+    const filteredDirEntries = dirEntries.filter(
+      (entry) => entry !== "lib" && entry !== "category.txt" && Path.extname(entry) !== ".map"
+    );
 
     filteredDirEntries.forEach((entry) => {
       treeObject[Path.parse(entry).name] = generateAutoCompleteTree(Path.join(path, entry));
-    })
+    });
 
     return treeObject;
   } else {
@@ -45,7 +47,7 @@ function generateAutoCompleteTree(path) {
 
 /**
  * Returns directory content or null for files
- * @param {string} path 
+ * @param {string} path
  * @return {string[] | null}
  */
 function getDirEntriesOrNull(path) {
@@ -63,7 +65,7 @@ function getDirEntriesOrNull(path) {
 
 /**
  * Returns options for the specified command
- * @param {string} path 
+ * @param {string} path
  * @returns {object[]}
  */
 function getOptionsForCommand(path) {
@@ -72,12 +74,12 @@ function getOptionsForCommand(path) {
   // getting command options
   const optionsDescriptionsObject = OptionDecorators.getOptionsDescription(command.prototype);
   const optionsDescriptions = Object.keys(optionsDescriptionsObject).map((key) => optionsDescriptionsObject[key]);
-  return optionsDescriptions.map((option) => ({ 
+  return optionsDescriptions.map((option) => ({
     short: option.shortName ? "-" + option.shortName : undefined,
-    long: option.longName ? "--" + option.longName : undefined
+    long: option.longName ? "--" + option.longName : undefined,
   }));
 }
 
 module.exports = {
-  generateAndSave
-}
+  generateAndSave,
+};

@@ -13,23 +13,29 @@ export function downloadFileAndSave(downloadUrl: string, filePath: string): Prom
   debug(`Downloading file from ${downloadUrl} to the path ${filePath}`);
   return new Promise<void>((resolve, reject) => {
     Request.get(downloadUrl)
-    .on("error", (error) => {
-      debug(`Failed to download the file from ${downloadUrl} - ${inspect(error)}`);
-      reject(failure(ErrorCodes.Exception, `failed to download the file from ${downloadUrl}`));
-    })
-    .pipe(
-      Fs.createWriteStream(filePath)
-      .on("error", (error: Error) => {
-        debug(`Failed to save the file to ${filePath} - ${inspect(error)}`);
-        reject(failure(ErrorCodes.Exception, `failed to save the file to ${filePath}`));
+      .on("error", (error) => {
+        debug(`Failed to download the file from ${downloadUrl} - ${inspect(error)}`);
+        reject(failure(ErrorCodes.Exception, `failed to download the file from ${downloadUrl}`));
       })
-      .on("finish", () => resolve()));
+      .pipe(
+        Fs.createWriteStream(filePath)
+          .on("error", (error: Error) => {
+            debug(`Failed to save the file to ${filePath} - ${inspect(error)}`);
+            reject(failure(ErrorCodes.Exception, `failed to save the file to ${filePath}`));
+          })
+          .on("finish", () => resolve())
+      );
   });
 }
 
-export async function downloadArtifacts(command: AppCommand, streamingOutput: StreamingArrayOutput, outputDir: string, testRunId: string, artifacts: { [propertyName: string]: string }): Promise<void> {
+export async function downloadArtifacts(
+  command: AppCommand,
+  streamingOutput: StreamingArrayOutput,
+  outputDir: string,
+  testRunId: string,
+  artifacts: { [propertyName: string]: string }
+): Promise<void> {
   for (const key in artifacts) {
-
     const reportPath: string = fsHelper.generateAbsolutePath(outputDir);
     const pathToArchive: string = path.join(reportPath, `${key.toString()}.zip`);
     fsHelper.createLongPath(reportPath);

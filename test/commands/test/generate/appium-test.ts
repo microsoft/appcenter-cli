@@ -21,7 +21,7 @@ describe("Validating Appium template generation", () => {
     const args: CommandArgs = {
       command: ["test", "generate", "appium"],
       commandPath: "Test",
-      args: ["--platform", "iOS", "--output-path", path.join(__dirname, tempTemplateDir)]
+      args: ["--platform", "iOS", "--output-path", path.join(__dirname, tempTemplateDir)],
     };
 
     const command = new GenerateAppiumCommand(args);

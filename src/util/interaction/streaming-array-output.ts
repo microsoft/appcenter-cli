@@ -10,7 +10,7 @@ export default class StreamingArrayOutput {
     }
   }
 
-  public text<T>(converter: {(data: T): string}, data: T): void {
+  public text<T>(converter: { (data: T): string }, data: T): void {
     if (this.counter) {
       if (IoOptions.formatIsJson()) {
         console.log(",");

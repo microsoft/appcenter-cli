@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  help,
+  success,
+  shortName,
+  longName,
+  required,
+  hasArg,
+} from "../../../util/commandline";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
@@ -12,7 +23,6 @@ const ValidDestinationTypes = ["store", "group", "tester"];
 
 @help("Distribute an existing release to an additional destination")
 export default class AddDestinationCommand extends AppCommand {
-
   @help("The ID of the release")
   @shortName("r")
   @longName("release-id")
@@ -51,16 +61,25 @@ export default class AddDestinationCommand extends AppCommand {
     }
 
     if (ValidDestinationTypes.indexOf(this.destinationType) === -1) {
-      return failure(ErrorCodes.InvalidParameter, `${this.destinationType} is not a valid destination type. Available types are: ${ValidDestinationTypes.join(", ")}`);
+      return failure(
+        ErrorCodes.InvalidParameter,
+        `${this.destinationType} is not a valid destination type. Available types are: ${ValidDestinationTypes.join(", ")}`
+      );
     }
-    debug(`Distributing release ${releaseId} to destination ${this.destination} of type ${this.destinationType} to release ${releaseId}`);
+    debug(
+      `Distributing release ${releaseId} to destination ${this.destination} of type ${this.destinationType} to release ${releaseId}`
+    );
 
     try {
       await this.addDestination(client, releaseId);
     } catch (error) {
       return error;
     }
-    out.text(`Distribution of ${this.mandatory ? "mandatory " : ""}release ${releaseId} to ${this.destinationType} '${this.destination}' was successful ${this.silent ? "without" : "with"} notification`);
+    out.text(
+      `Distribution of ${this.mandatory ? "mandatory " : ""}release ${releaseId} to ${this.destinationType} '${
+        this.destination
+      }' was successful ${this.silent ? "without" : "with"} notification`
+    );
     return success();
   }
 
@@ -68,21 +87,44 @@ export default class AddDestinationCommand extends AppCommand {
     if (this.destinationType === "store") {
       await out.progress(`Distributing release to store ${this.destination}...`, this.addStoreToRelease(client, releaseId));
     } else if (this.destinationType === "group") {
-      const distributionGroup = await out.progress(`Fetching distribution group information ...`, getDistributionGroup({
-        client, releaseId, app: this.app, destination: this.destination, destinationType: this.destinationType
-      }));
-      await out.progress(`Distributing release to group ${this.destination}...`, addGroupToRelease({
-        client, releaseId, distributionGroup, app: this.app, destination: this.destination, destinationType: this.destinationType, mandatory: this.mandatory, silent: this.silent
-      }));
+      const distributionGroup = await out.progress(
+        `Fetching distribution group information ...`,
+        getDistributionGroup({
+          client,
+          releaseId,
+          app: this.app,
+          destination: this.destination,
+          destinationType: this.destinationType,
+        })
+      );
+      await out.progress(
+        `Distributing release to group ${this.destination}...`,
+        addGroupToRelease({
+          client,
+          releaseId,
+          distributionGroup,
+          app: this.app,
+          destination: this.destination,
+          destinationType: this.destinationType,
+          mandatory: this.mandatory,
+          silent: this.silent,
+        })
+      );
     } else if (this.destinationType === "tester") {
       await out.progress(`Distributing release to tester ${this.destination}...`, this.addTesterToRelease(client, releaseId));
     }
   }
 
   private async addStoreToRelease(client: AppCenterClient, releaseId: number): Promise<void> {
-    const store = await out.progress("Fetching store information...", getExternalStoreToDistributeRelease({
-      client, app: this.app, storeName: this.destination, releaseId
-    }));
+    const store = await out.progress(
+      "Fetching store information...",
+      getExternalStoreToDistributeRelease({
+        client,
+        app: this.app,
+        storeName: this.destination,
+        releaseId,
+      })
+    );
     const { result, response } = await clientRequest<any>(async (cb) => {
       client.releases.addStore(releaseId, this.app.ownerName, this.app.appName, store.id, cb);
     });
@@ -92,10 +134,17 @@ export default class AddDestinationCommand extends AppCommand {
 
   private async addTesterToRelease(client: AppCenterClient, releaseId: number) {
     const { result, response } = await clientRequest<models.ReleaseDetailsResponse>(async (cb) => {
-      client.releases.addTesters(releaseId, this.app.ownerName, this.app.appName, this.destination, {
-        mandatoryUpdate: this.mandatory,
-        notifyTesters: !this.silent
-      }, cb);
+      client.releases.addTesters(
+        releaseId,
+        this.app.ownerName,
+        this.app.appName,
+        this.destination,
+        {
+          mandatoryUpdate: this.mandatory,
+          notifyTesters: !this.silent,
+        },
+        cb
+      );
     });
 
     this.handleAddDestinationResponse(result, response);
@@ -111,7 +160,10 @@ export default class AddDestinationCommand extends AppCommand {
     } else {
       debug(`Failed to distribute the release - ${inspect(result)}`);
       const extraInfo = response.statusMessage ? `: ${response.statusMessage}` : "";
-      throw failure(ErrorCodes.Exception, `Could not add ${this.destinationType} ${this.destination} to release ${this.releaseId}${extraInfo}`);
+      throw failure(
+        ErrorCodes.Exception,
+        `Could not add ${this.destinationType} ${this.destination} to release ${this.releaseId}${extraInfo}`
+      );
     }
   }
 }

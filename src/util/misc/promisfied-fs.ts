@@ -14,15 +14,21 @@ export async function open(path: string | Buffer, flags: string | number, mode: 
   return (await callFs(fs.open, path, flags, mode))[0];
 }
 
-export async function read(fd: number, buffer: Buffer, offset: number, length: number, position: number): Promise<{buffer: Buffer, bytesRead: number}> {
+export async function read(
+  fd: number,
+  buffer: Buffer,
+  offset: number,
+  length: number,
+  position: number
+): Promise<{ buffer: Buffer; bytesRead: number }> {
   const result = await callFs(fs.read, fd, buffer, offset, length, position);
   return { bytesRead: result[0], buffer: result[1] };
 }
 
 export function readFile(filename: string): Promise<Buffer>;
 export function readFile(filename: string, encoding: string): Promise<string>;
-export function readFile(filename: string, options: { flag?: string; }): Promise<Buffer>;
-export function readFile(filename: string, options?: string | { encoding: string; flag?: string; }): Promise<string>;
+export function readFile(filename: string, options: { flag?: string }): Promise<Buffer>;
+export function readFile(filename: string, options?: string | { encoding: string; flag?: string }): Promise<string>;
 export async function readFile(...args: any[]): Promise<any> {
   return (await callFs(fs.readFile, ...args))[0];
 }
@@ -40,23 +46,25 @@ export async function write(fd: number, data: Buffer): Promise<void> {
 }
 
 export function exists(path: string | Buffer): Promise<boolean> {
-   return new Promise((resolve, reject) => {
-     fs.stat(path, (err) => {
-       if (err) {
-          if (err.code === "ENOENT") {
-            resolve(false);
-          } else {
-            reject(err);
-          }
-       } else {
-           resolve(true);
-       }
-     });
- });
+  return new Promise((resolve, reject) => {
+    fs.stat(path, (err) => {
+      if (err) {
+        if (err.code === "ENOENT") {
+          resolve(false);
+        } else {
+          reject(err);
+        }
+      } else {
+        resolve(true);
+      }
+    });
+  });
 }
 
 export function mkdir(path: string | Buffer): Promise<void> {
-  return callFs(fs.mkdir, path).then(() => { return; });
+  return callFs(fs.mkdir, path).then(() => {
+    return;
+  });
 }
 
 export function mkTempDir(affixes: string): Promise<string> {
@@ -73,7 +81,7 @@ export async function cp(source: string, target: string): Promise<void> {
 }
 
 export async function cpDir(source: string, target: string): Promise<void> {
-  if (!await exists(target)) {
+  if (!(await exists(target))) {
     createLongPath(target);
   }
   const files = await readdir(source);
@@ -114,46 +122,54 @@ export function rmDir(source: string, recursive: boolean = true): Promise<void> 
       });
     });
   } else {
-    return callFs(fs.rmdir, source).then(() => { return; });
+    return callFs(fs.rmdir, source).then(() => {
+      return;
+    });
   }
 }
 
 export function unlink(filePath: string): Promise<void> {
-  return callFs(fs.unlink, filePath).then(() => { return; });
+  return callFs(fs.unlink, filePath).then(() => {
+    return;
+  });
 }
 
 export function close(fd: number): Promise<void> {
-  return callFs(fs.close, fd).then(() => { return; });
+  return callFs(fs.close, fd).then(() => {
+    return;
+  });
 }
 
-export function openTempFile(prefix: string): Promise<{path: string, fd: number}>;
-export function openTempFile(options: { prefix?: string, suffix?: string, dir?: string}): Promise<{path: string, fd: number}>;
-export function openTempFile(...args: any[]): Promise<{path: string, fd: number}> {
+export function openTempFile(prefix: string): Promise<{ path: string; fd: number }>;
+export function openTempFile(options: { prefix?: string; suffix?: string; dir?: string }): Promise<{ path: string; fd: number }>;
+export function openTempFile(...args: any[]): Promise<{ path: string; fd: number }> {
   return callTemp(temp.open, ...args);
 }
 
- export async function fileExists(path: string): Promise<boolean> {
-   return await pathExists(path, true);
- }
+export async function fileExists(path: string): Promise<boolean> {
+  return await pathExists(path, true);
+}
 
 export async function directoryExists(path: string): Promise<boolean> {
-   return await pathExists(path, false);
- }
+  return await pathExists(path, false);
+}
 
 export async function access(path: string | Buffer, mode: number): Promise<void> {
-  return callFs(fs.access, path, mode).then(() => { return; });
+  return callFs(fs.access, path, mode).then(() => {
+    return;
+  });
 }
 
 export async function walk(dir: string): Promise<string[]> {
   const stats = await stat(dir);
   if (stats.isDirectory()) {
-      let files: string[] = [];
-      for (const file of await readdir(dir)) {
-          files = files.concat(await walk(path.join(dir, file)));
-      }
-      return files;
+    let files: string[] = [];
+    for (const file of await readdir(dir)) {
+      files = files.concat(await walk(path.join(dir, file)));
+    }
+    return files;
   } else {
-      return [dir];
+    return [dir];
   }
 }
 
@@ -186,28 +202,34 @@ function createLongPath(target: string) {
 
 function callFs(func: (...args: any[]) => void, ...args: any[]): Promise<any[]> {
   return new Promise<any[]>((resolve, reject) => {
-    func.apply(fs, _.concat(args, [
-      (err: any, ...args: any[]) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(args);
-        }
-      }
-    ]));
+    func.apply(
+      fs,
+      _.concat(args, [
+        (err: any, ...args: any[]) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(args);
+          }
+        },
+      ])
+    );
   });
 }
 
 function callTemp<TResult>(func: (...args: any[]) => void, ...args: any[]): Promise<TResult> {
   return new Promise<TResult>((resolve, reject) => {
-    func.apply(temp, _.concat(args, [
-      (err: any, result: TResult) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      }
-    ]));
+    func.apply(
+      temp,
+      _.concat(args, [
+        (err: any, result: TResult) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        },
+      ])
+    );
   });
 }

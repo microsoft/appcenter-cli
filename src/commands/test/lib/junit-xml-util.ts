@@ -4,14 +4,15 @@ import * as fs from "fs";
 import { DOMParser } from "xmldom";
 
 export class JUnitXmlUtil extends XmlUtil {
-
   async mergeXmlResults(pathToArchive: string): Promise<Document> {
     const tempPath: string = await pfs.mkTempDir("appcenter-junittestreports");
     let mainXml: Document = this.getEmptyXmlDocument();
 
     const self: JUnitXmlUtil = this;
 
-    return this.getMergeXmlResultsPromise(pathToArchive, tempPath,
+    return this.getMergeXmlResultsPromise(
+      pathToArchive,
+      tempPath,
       (fullPath: string, relativePath: string) => {
         const xml: Document = new DOMParser(XmlUtil.DOMParserConfig).parseFromString(fs.readFileSync(fullPath, "utf-8"), "text/xml");
 
@@ -55,7 +56,6 @@ export class JUnitXmlUtil extends XmlUtil {
       xml1testSuites.every((xml1TestSuite: Element) => {
         const suiteNameAttr: Attr = xml1TestSuite.attributes.getNamedItem("name");
         if (!suiteNameAttr || suiteNameAttr.value !== testSuiteName) {
-
           // Take the next test suite
           return true;
         }
@@ -86,8 +86,11 @@ export class JUnitXmlUtil extends XmlUtil {
   }
 
   getEmptyXmlDocument(): Document {
-    return new DOMParser().parseFromString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
-<testsuites tests=\"0\" failures=\"0\" time=\"0\" errors=\"0\" skipped=\"0\"></testsuites>", "text/xml");
+    return new DOMParser().parseFromString(
+      '<?xml version="1.0" encoding="UTF-8"?>\
+<testsuites tests="0" failures="0" time="0" errors="0" skipped="0"></testsuites>',
+      "text/xml"
+    );
   }
 
   appendToTestNameTransformation(xml: Document, text: string): void {

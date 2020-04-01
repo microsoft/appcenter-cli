@@ -15,7 +15,7 @@ export class PathResolver {
       return this.resolveSinglePattern(pattern);
     }
 
-    const allFiles = await Promise.all(pattern.map((p) => this.resolveSinglePattern(p))) as _.List<string[]>;
+    const allFiles = (await Promise.all(pattern.map((p) => this.resolveSinglePattern(p)))) as _.List<string[]>;
     return _.uniq(_.union.apply(_, allFiles) as _.List<string>).sort();
   }
 

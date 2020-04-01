@@ -4,7 +4,6 @@ import { AppCenterClient } from "../../../../util/apis";
 import { out } from "../../../../util/interaction";
 
 export default class RunEspressoWizardTestCommand extends AppCommand {
-
   private _args: CommandArgs;
   constructor(args: CommandArgs, interactiveArgs: string[]) {
     super(args);

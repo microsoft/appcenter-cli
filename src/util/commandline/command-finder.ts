@@ -12,7 +12,7 @@ function toFullPath(dispatchRoot: string, pathParts: string[]): string {
   return path.join.apply(null, [dispatchRoot].concat(pathParts));
 }
 
-function checkStats(dispatchRoot: string, pathParts: string[], check: {(stats: fs.Stats): boolean}): boolean {
+function checkStats(dispatchRoot: string, pathParts: string[], check: { (stats: fs.Stats): boolean }): boolean {
   try {
     const filePath = toFullPath(dispatchRoot, pathParts);
     debug(`Checking stats for ${filePath}`);
@@ -82,7 +82,7 @@ function commandNotFound(commandParts: string[]): CommandFinderResult {
     isCategory: false,
     commandPath: null,
     commandParts,
-    unusedArgs: []
+    unusedArgs: [],
   };
 }
 
@@ -93,7 +93,7 @@ function commandFound(commandPath: string, commandParts: string[], unusedArgs: s
     isCategory: false,
     commandPath,
     commandParts: commandParts.map(stripExtension),
-    unusedArgs
+    unusedArgs,
   };
 }
 
@@ -104,7 +104,7 @@ function categoryFound(commandPath: string, commandParts: string[], unusedArgs: 
     isCategory: true,
     commandPath,
     commandParts,
-    unusedArgs
+    unusedArgs,
   };
 }
 
@@ -139,8 +139,7 @@ export function finder(dispatchRoot: string): CommandFinder {
       // can ignore any potential file extensions.
       const files = fs.readdirSync(toFullPath(dispatchRoot, commandDir));
 
-      const matching = files.filter((file) =>
-        path.parse(file).name === commandName);
+      const matching = files.filter((file) => path.parse(file).name === commandName);
 
       if (matching.length > 1) {
         throw new Error(`Ambiguous match for command '${commandLineArgs.join(" ")}'`);
@@ -156,7 +155,6 @@ export function finder(dispatchRoot: string): CommandFinder {
     }
 
     while (command.length > 0) {
-
       const commandName = normalizeCommandNames(command.slice(-1))[0];
       const commandDir = normalizeCommandNames(command.slice(0, -1));
 

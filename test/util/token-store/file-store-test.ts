@@ -48,7 +48,7 @@ describe("File token store", function () {
 
     before(function () {
       store = createFileTokenStore(storePath) as FileTokenStore;
-      store.set("user1", { id: "123", token: "token1"} );
+      store.set("user1", { id: "123", token: "token1" });
       store.set("user2", { id: "234", token: "a different token" });
     });
 
@@ -57,22 +57,21 @@ describe("File token store", function () {
     });
 
     it("should retrieve the stored tokens", function () {
-      return store.get("user1")
-        .then((token: TokenEntry) => {
-          expect(token).to.not.be.null;
-          expect(token.accessToken.token).to.equal("token1");
-        });
+      return store.get("user1").then((token: TokenEntry) => {
+        expect(token).to.not.be.null;
+        expect(token.accessToken.token).to.equal("token1");
+      });
     });
 
     it("should return null if no token present", function () {
-      return store.get("nosuchuser")
-        .then((token: TokenEntry) => {
-          expect(token).to.be.null;
-        });
+      return store.get("nosuchuser").then((token: TokenEntry) => {
+        expect(token).to.be.null;
+      });
     });
 
     it("should return null for removed token", function () {
-      return store.remove("user1")
+      return store
+        .remove("user1")
         .then(() => store.get("user1"))
         .then((token: TokenEntry) => {
           expect(token).to.be.null;

@@ -4,24 +4,28 @@ import * as inquirer from "inquirer";
 import { isQuiet } from "./io-options";
 
 export function prompt(message: string): Promise<string> {
-  return prompt.question([
-    {
-      name: "result", message: message
-    }])
+  return prompt
+    .question([
+      {
+        name: "result",
+        message: message,
+      },
+    ])
     .then((answers) => answers["result"].toString());
 }
 
 export namespace prompt {
   export function confirm(message: string, defaultResponse?: boolean): Promise<boolean> {
-    return prompt.question([
-      {
-        type: "confirm",
-        name: "confirm",
-        message: message,
-        default: !!defaultResponse
-      }
-    ])
-    .then((answers) => !!answers["confirm"]);
+    return prompt
+      .question([
+        {
+          type: "confirm",
+          name: "confirm",
+          message: message,
+          default: !!defaultResponse,
+        },
+      ])
+      .then((answers) => !!answers["confirm"]);
   }
 
   export function confirmWithTimeout(message: string, timeoutMS: number, defaultResponse?: boolean): Promise<boolean> {
@@ -33,7 +37,7 @@ export namespace prompt {
         type: "confirm",
         name: "confirm",
         message: message,
-        default: !!defaultResponse
+        default: !!defaultResponse,
       });
 
       const promptCompleted = confirmPrompt.then((answers: any) => {
@@ -54,13 +58,15 @@ export namespace prompt {
   }
 
   export function password(message: string): Promise<string> {
-    return prompt.question([
-      {
-        type: "password",
-        name: "result",
-        message: message
-      }])
-    .then((answers) => answers["result"].toString());
+    return prompt
+      .question([
+        {
+          type: "password",
+          name: "result",
+          message: message,
+        },
+      ])
+      .then((answers) => answers["result"].toString());
   }
 
   export function question(questions: inquirer.Question[]): Promise<inquirer.Answers> {
@@ -68,7 +74,6 @@ export namespace prompt {
       if (!Array.isArray(questions)) {
         // Casting is done here due to incompatibility between typings and @types package
         questions = [questions as inquirer.Question];
-
       }
       const answers: any = (questions as inquirer.Question[]).reduce((answers: any, q: inquirer.Question) => {
         if (answers instanceof Error) {

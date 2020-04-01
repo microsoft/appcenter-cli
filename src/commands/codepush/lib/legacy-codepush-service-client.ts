@@ -18,37 +18,41 @@ export default class LegacyCodePushServiceClient {
   private static API_VERSION: number = 2;
 
   constructor(private accessKey: string, private serverUrl: string, private app: DefaultApp) {
-    if (!accessKey) { throw new Error("A token must be specified to execute server calls."); }
-    if (!serverUrl) { throw new Error("A server url must be specified to execute server calls."); }
+    if (!accessKey) {
+      throw new Error("A token must be specified to execute server calls.");
+    }
+    if (!serverUrl) {
+      throw new Error("A server url must be specified to execute server calls.");
+    }
   }
 
   public release(deploymentName: string, filePath: string, updateMetadata: PackageInfo): Promise<void> {
     const appName = this.app.identifier;
     return new Promise<void>((resolve, reject) => {
-        const options = {
-          url: this.serverUrl + this.urlEncode(`/apps/${this.appNameParam(appName)}/deployments/${deploymentName}/release`),
-          headers: {
-            Accept: `application/vnd.code-push.v${LegacyCodePushServiceClient.API_VERSION}+json`,
-            Authorization: `Bearer ${this.accessKey}`
-          },
-          formData: {
-            packageInfo: JSON.stringify(updateMetadata),
-            package: fs.createReadStream(filePath)
-          }
-        };
+      const options = {
+        url: this.serverUrl + this.urlEncode(`/apps/${this.appNameParam(appName)}/deployments/${deploymentName}/release`),
+        headers: {
+          Accept: `application/vnd.code-push.v${LegacyCodePushServiceClient.API_VERSION}+json`,
+          Authorization: `Bearer ${this.accessKey}`,
+        },
+        formData: {
+          packageInfo: JSON.stringify(updateMetadata),
+          package: fs.createReadStream(filePath),
+        },
+      };
 
-        request.post(options, (err, httpResponse) => {
-          if (err) {
-            reject(this.getErrorMessage(err, httpResponse));
-            return;
-          }
-          if (httpResponse.statusCode === 201) {
-            resolve(null as void);
-          } else {
-            reject({ request: request, response: httpResponse });
-            return;
-          }
-        });
+      request.post(options, (err, httpResponse) => {
+        if (err) {
+          reject(this.getErrorMessage(err, httpResponse));
+          return;
+        }
+        if (httpResponse.statusCode === 201) {
+          resolve(null as void);
+        } else {
+          reject({ request: request, response: httpResponse });
+          return;
+        }
+      });
     });
   }
 
@@ -56,10 +60,10 @@ export default class LegacyCodePushServiceClient {
   private urlEncode(strings: any, ...values: string[]): string {
     let result = "";
     for (let i = 0; i < strings.length; i++) {
-        result += strings[i];
-        if (i < values.length) {
-            result += encodeURIComponent(values[i]);
-        }
+      result += strings[i];
+      if (i < values.length) {
+        result += encodeURIComponent(values[i]);
+      }
     }
 
     return result;

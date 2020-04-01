@@ -8,14 +8,25 @@ import * as path from "path";
 import * as mkdirp from "mkdirp";
 import { fileDoesNotExistOrIsDirectory, createEmptyTmpReleaseFolder, removeReactTmpDir } from "./lib/file-utils";
 import { isValidRange, isValidDeployment } from "./lib/validation-utils";
-import { VersionSearchParams, getReactNativeProjectAppVersion, runReactNativeBundleCommand, runHermesEmitBinaryCommand, getHermesEnabled, isValidOS, isValidPlatform, isReactNativeProject } from "./lib/react-native-utils";
+import {
+  VersionSearchParams,
+  getReactNativeProjectAppVersion,
+  runReactNativeBundleCommand,
+  runHermesEmitBinaryCommand,
+  getHermesEnabled,
+  isValidOS,
+  isValidPlatform,
+  isReactNativeProject,
+} from "./lib/react-native-utils";
 import * as chalk from "chalk";
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-react");
 
 @help("Release a React Native update to an app deployment")
 export default class CodePushReleaseReactCommand extends CodePushReleaseCommandBase {
-  @help("Name of the generated JS bundle file. If unspecified, the standard bundle name will be used, depending on the specified platform: \"main.jsbundle\" (iOS), \"index.android.bundle\" (Android) or \"index.windows.bundle\" (Windows)")
+  @help(
+    'Name of the generated JS bundle file. If unspecified, the standard bundle name will be used, depending on the specified platform: "main.jsbundle" (iOS), "index.android.bundle" (Android) or "index.windows.bundle" (Windows)'
+  )
   @shortName("b")
   @longName("bundle-name")
   @hasArg
@@ -25,7 +36,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   @longName("development")
   public development: boolean;
 
-  @help("Path to the app's entry Javascript file. If omitted, \"index.<platform>.js\" and then \"index.js\" will be used (if they exist)")
+  @help('Path to the app\'s entry Javascript file. If omitted, "index.<platform>.js" and then "index.js" will be used (if they exist)')
   @shortName("e")
   @longName("entry-file")
   @hasArg
@@ -48,7 +59,9 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   @hasArg
   public plistFilePrefix: string;
 
-  @help("Name of build configuration which specifies the binary version you want to target this release at. For example, \"Debug\" or \"Release\" (iOS only)")
+  @help(
+    'Name of build configuration which specifies the binary version you want to target this release at. For example, "Debug" or "Release" (iOS only)'
+  )
   @shortName("c")
   @hasArg
   @longName("build-configuration-name")
@@ -61,7 +74,9 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
   @hasArg
   public sourcemapOutput: string;
 
-  @help("Path to folder where the sourcemap for the resulting bundle should be written. Name of sourcemap file will be generated automatically. This argument will be ignored if \"sourcemap-output\" argument is provided. If omitted, a sourcemap will not be generated")
+  @help(
+    'Path to folder where the sourcemap for the resulting bundle should be written. Name of sourcemap file will be generated automatically. This argument will be ignored if "sourcemap-output" argument is provided. If omitted, a sourcemap will not be generated'
+  )
   @longName("sourcemap-output-dir")
   @hasArg
   public sourcemapOutputDir: string;
@@ -105,12 +120,16 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
       this.deploymentName = this.specifiedDeploymentName;
     }
 
-    const appInfo = (await out.progress("Getting app info...", clientRequest<models.AppResponse>(
-      (cb) => client.apps.get(this.app.ownerName, this.app.appName, cb)))).result;
+    const appInfo = (
+      await out.progress(
+        "Getting app info...",
+        clientRequest<models.AppResponse>((cb) => client.apps.get(this.app.ownerName, this.app.appName, cb))
+      )
+    ).result;
     this.os = appInfo.os.toLowerCase();
     this.platform = appInfo.platform.toLowerCase();
 
-    this.updateContentsPath = this.outputDir || await pfs.mkTempDir("code-push");
+    this.updateContentsPath = this.outputDir || (await pfs.mkTempDir("code-push"));
 
     // we have to add "CodePush" root folder to make update contents file structure
     // to be compatible with React Native client SDK
@@ -126,9 +145,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
     }
 
     if (!this.bundleName) {
-      this.bundleName = this.os === "ios"
-        ? "main.jsbundle"
-        : `index.${this.os}.bundle`;
+      this.bundleName = this.os === "ios" ? "main.jsbundle" : `index.${this.os}.bundle`;
     }
 
     if (!this.entryFile) {
@@ -147,7 +164,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
     }
 
     if (this.sourcemapOutputDir && this.sourcemapOutput) {
-      out.text(("\n\"sourcemap-output-dir\" argument will be ignored as \"sourcemap-output\" argument is provided.\n"));
+      out.text('\n"sourcemap-output-dir" argument will be ignored as "sourcemap-output" argument is provided.\n');
     }
 
     if ((this.outputDir || this.sourcemapOutputDir) && !this.sourcemapOutput) {
@@ -165,7 +182,7 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
         plistFile: this.plistFile,
         plistFilePrefix: this.plistFilePrefix,
         gradleFile: this.gradleFile,
-        buildConfigurationName: this.buildConfigurationName
+        buildConfigurationName: this.buildConfigurationName,
       } as VersionSearchParams;
       this.targetBinaryVersion = await getReactNativeProjectAppVersion(versionSearchParams);
     }
@@ -181,7 +198,15 @@ export default class CodePushReleaseReactCommand extends CodePushReleaseCommandB
     try {
       createEmptyTmpReleaseFolder(this.updateContentsPath);
       removeReactTmpDir();
-      await runReactNativeBundleCommand(this.bundleName, this.development, this.entryFile, this.updateContentsPath, this.os, this.sourcemapOutput, this.extraBundlerOptions);
+      await runReactNativeBundleCommand(
+        this.bundleName,
+        this.development,
+        this.entryFile,
+        this.updateContentsPath,
+        this.os,
+        this.sourcemapOutput,
+        this.extraBundlerOptions
+      );
       // Check if we have to run hermes to compile JS to Byte Code if Hermes is enabled in build.gradle and we're releasing an Android build
       if (this.os === "android") {
         const isHermesEnabled = await getHermesEnabled(this.gradleFile);

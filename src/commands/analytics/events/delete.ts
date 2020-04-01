@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, required, success } from "../../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  hasArg,
+  help,
+  longName,
+  shortName,
+  required,
+  success,
+} from "../../../util/commandline";
 import { AppCenterClient, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
@@ -19,7 +30,10 @@ export default class DeleteCommand extends AppCommand {
     const app: DefaultApp = this.app;
 
     try {
-      await out.progress("Deleting event...", clientRequest((cb) => client.analytics.eventsDelete(this.eventName, app.ownerName, app.appName, cb)));
+      await out.progress(
+        "Deleting event...",
+        clientRequest((cb) => client.analytics.eventsDelete(this.eventName, app.ownerName, app.appName, cb))
+      );
     } catch (error) {
       debug(`Failed to delete event ${this.eventName} - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, `failed to delete event ${this.eventName}`);
@@ -29,5 +43,4 @@ export default class DeleteCommand extends AppCommand {
 
     return success();
   }
-
 }

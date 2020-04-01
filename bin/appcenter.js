@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var util = require('util');
+var util = require("util");
 
 // Verify user has minimum required version of node installed
 var minMajorVersion = 10;
@@ -29,33 +29,32 @@ function ensureNodeVersion() {
 }
 
 function runCli() {
-  var path = require('path');
-  var commandLine = require('../dist/util/commandline');
+  var path = require("path");
+  var commandLine = require("../dist/util/commandline");
 
-  var runner = commandLine.runner(path.join(__dirname, '..', 'dist', 'commands'));
+  var runner = commandLine.runner(path.join(__dirname, "..", "dist", "commands"));
   var args = process.argv.slice(2);
 
-  if (args.indexOf('--quiet') === -1) {
-    const updateNotifier = require('update-notifier');
-    const pkg = require(path.join(__dirname, '..', 'package.json'));
+  if (args.indexOf("--quiet") === -1) {
+    const updateNotifier = require("update-notifier");
+    const pkg = require(path.join(__dirname, "..", "package.json"));
 
-    const notifier = updateNotifier({pkg});
+    const notifier = updateNotifier({ pkg });
     notifier.notify();
   }
 
-  runner(args)
-    .then(function (result) {
-      if (commandLine.failed(result)) {
-        const chalk = require("chalk");
-        console.log(`${chalk.bold.red("Error:")} ${result.errorMessage}`);
-        process.exit(result.errorCode);
-      }
-    });
+  runner(args).then(function (result) {
+    if (commandLine.failed(result)) {
+      const chalk = require("chalk");
+      console.log(`${chalk.bold.red("Error:")} ${result.errorMessage}`);
+      process.exit(result.errorCode);
+    }
+  });
 }
 
 if (ensureNodeVersion()) {
-  var commandLine = require('../dist/util/commandline');
-  commandLine.executeAutoComplete();   // if it is an autocomplete run, then it exits here
+  var commandLine = require("../dist/util/commandline");
+  commandLine.executeAutoComplete(); // if it is an autocomplete run, then it exits here
   runCli();
 } else {
   process.exit(1);

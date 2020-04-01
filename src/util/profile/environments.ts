@@ -15,7 +15,7 @@ export interface EnvironmentInfo {
 interface EnvironmentsFile {
   defaultEnvironment: string;
   environments: {
-    [environmentName: string]: EnvironmentInfo
+    [environmentName: string]: EnvironmentInfo;
   };
 }
 
@@ -27,23 +27,23 @@ const environmentsData: EnvironmentsFile = {
       endpoint: "https://api-gateway-core-integration.dev.avalanch.es",
       loginEndpoint: "https://portal-server-core-integration.dev.avalanch.es/cli-login",
       portalEndpoint: "https://portal-server-core-integration.dev.avalanch.es",
-      description: "Integration"
+      description: "Integration",
     },
     prod: {
       endpoint: "https://api.appcenter.ms",
       loginEndpoint: "https://appcenter.ms/cli-login",
       portalEndpoint: "https://appcenter.ms",
-      description: "Production"
+      description: "Production",
     },
     local: {
       /* tslint:disable:no-http-string */
       endpoint: process.env[appCenterEndpointEnvVar] || "http://localhost:1700",
       loginEndpoint: process.env[appCenterLoginEndpointEnvVar] || null,
       portalEndpoint: process.env[appCenterPortalEndpointEnvVar] || "http://localhost:8080",
-      description: "Local Development"
+      description: "Local Development",
       /* tslint:enable:no-http-string */
-    }
-  }
+    },
+  },
 };
 
 export function environments(environmentName: string = environmentsData.defaultEnvironment): EnvironmentInfo {

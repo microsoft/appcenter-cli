@@ -40,15 +40,15 @@ export function getChildrenDsymFolderPaths(parentPath: string, debug: Function):
   return childrenEntriesList
     .map((childPath) => Path.join(parentPath, childPath))
     .filter((childPath) => {
-        if (Path.extname(childPath).toLowerCase() !== ".dsym") {
-          return false;
-        }
-        try {
-          const childStats = Fs.statSync(childPath);
-          return childStats.isDirectory();
-        } catch (error) {
-          debug(`Error when getting statistics for the file ${parentPath} - ${inspect(error)}`);
-          throw failure(ErrorCodes.Exception, `error when getting statistics for the file ${parentPath}`);
-        }
+      if (Path.extname(childPath).toLowerCase() !== ".dsym") {
+        return false;
+      }
+      try {
+        const childStats = Fs.statSync(childPath);
+        return childStats.isDirectory();
+      } catch (error) {
+        debug(`Error when getting statistics for the file ${parentPath} - ${inspect(error)}`);
+        throw failure(ErrorCodes.Exception, `error when getting statistics for the file ${parentPath}`);
+      }
     });
 }

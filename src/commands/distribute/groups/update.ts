@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  help,
+  success,
+  shortName,
+  longName,
+  required,
+  hasArg,
+} from "../../../util/commandline";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
@@ -59,7 +70,10 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     const newDistributionGroupNameValidation = this.isDistributionGroupNameFree(client, app, this.newDistributionGroupName);
 
     // showing spinner while parameters are validated
-    const [testersToAddEmails, testersToDeleteEmails] = await out.progress("Validating parameters...", Promise.all([testersToAdd, testersToDelete, newDistributionGroupNameValidation]));
+    const [testersToAddEmails, testersToDeleteEmails] = await out.progress(
+      "Validating parameters...",
+      Promise.all([testersToAdd, testersToDelete, newDistributionGroupNameValidation])
+    );
 
     let deletedTestersEmails: string[];
     if (testersToDeleteEmails.length) {
@@ -89,13 +103,23 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
       out.text("Updating the list of testers was partially successful");
     }
 
-    out.text((result) => `Distribution group ${result.name} was successfully updated`, { name: currentGroupName, addedTesters: addedTestersEmails, deletedTesters: deletedTestersEmails});
+    out.text((result) => `Distribution group ${result.name} was successfully updated`, {
+      name: currentGroupName,
+      addedTesters: addedTestersEmails,
+      deletedTesters: deletedTestersEmails,
+    });
 
     return success();
   }
 
   private validateParameters() {
-    if (_.isNil(this.newDistributionGroupName) && _.isNil(this.testersToAdd) && _.isNil(this.testersToAddListFile) && _.isNil(this.testersToDelete) && _.isNil(this.testersToDeleteListFile)) {
+    if (
+      _.isNil(this.newDistributionGroupName) &&
+      _.isNil(this.testersToAdd) &&
+      _.isNil(this.testersToAddListFile) &&
+      _.isNil(this.testersToDelete) &&
+      _.isNil(this.testersToDeleteListFile)
+    ) {
       throw failure(ErrorCodes.InvalidParameter, "nothing to update");
     }
     if (!_.isNil(this.testersToAdd) && !_.isNil(this.testersToAddListFile)) {
@@ -109,7 +133,9 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
   private async isDistributionGroupNameFree(client: AppCenterClient, app: DefaultApp, name: string) {
     if (!_.isNil(name)) {
       try {
-        const httpRequest = await clientRequest<models.DistributionGroupResponse>((cb) => client.distributionGroups.get(app.ownerName, app.appName, name, cb));
+        const httpRequest = await clientRequest<models.DistributionGroupResponse>((cb) =>
+          client.distributionGroups.get(app.ownerName, app.appName, name, cb)
+        );
 
         // Throw an exception if 404 error was not thrown during clientRequest
         throw httpRequest.response.statusCode;
@@ -131,10 +157,20 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
 
   private async deleteTestersFromDistributionGroup(client: AppCenterClient, app: DefaultApp, userEmails: string[]): Promise<string[]> {
     try {
-      const httpResponse = await out.progress("Deleting testers from the distribution group...",
-        clientRequest<models.DistributionGroupUserDeleteResponse[]>((cb) => client.distributionGroups.removeUser(app.ownerName, app.appName, this.distributionGroup, {
-          userEmails
-        }, cb)));
+      const httpResponse = await out.progress(
+        "Deleting testers from the distribution group...",
+        clientRequest<models.DistributionGroupUserDeleteResponse[]>((cb) =>
+          client.distributionGroups.removeUser(
+            app.ownerName,
+            app.appName,
+            this.distributionGroup,
+            {
+              userEmails,
+            },
+            cb
+          )
+        )
+      );
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.response.statusCode;
       } else {
@@ -152,10 +188,20 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
 
   private async addTestersToDistributionGroup(client: AppCenterClient, app: DefaultApp, userEmails: string[]): Promise<string[]> {
     try {
-      const httpResponse = await out.progress("Adding testers to the distribution group...",
-        clientRequest<models.DistributionGroupUserPostResponse[]>((cb) => client.distributionGroups.addUser(app.ownerName, app.appName, this.distributionGroup, {
-          userEmails
-        }, cb)));
+      const httpResponse = await out.progress(
+        "Adding testers to the distribution group...",
+        clientRequest<models.DistributionGroupUserPostResponse[]>((cb) =>
+          client.distributionGroups.addUser(
+            app.ownerName,
+            app.appName,
+            this.distributionGroup,
+            {
+              userEmails,
+            },
+            cb
+          )
+        )
+      );
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.response.statusCode;
       } else {
@@ -173,10 +219,20 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
 
   private async renameDistributionGroup(client: AppCenterClient, app: DefaultApp, newName: string): Promise<string> {
     try {
-      const httpResponse = await out.progress("Renaming the distribution group...",
-        clientRequest<models.DistributionGroupResponse>((cb) => client.distributionGroups.update(app.ownerName, app.appName, this.distributionGroup, {
-          name: newName,
-        }, cb)));
+      const httpResponse = await out.progress(
+        "Renaming the distribution group...",
+        clientRequest<models.DistributionGroupResponse>((cb) =>
+          client.distributionGroups.update(
+            app.ownerName,
+            app.appName,
+            this.distributionGroup,
+            {
+              name: newName,
+            },
+            cb
+          )
+        )
+      );
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.response.statusCode;
       } else {

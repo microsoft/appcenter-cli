@@ -5,7 +5,16 @@ import * as util from "util";
 import { expect } from "chai";
 import CodePushReleaseCommand from "../../../src/commands/codepush/release";
 import * as updateContentsTasks from "../../../src/commands/codepush/lib/update-contents-tasks";
-import { getFakeParamsForRequest, createFile, getCommandArgsForReleaseCommand, FakeParamsForRequests, nockPlatformRequest, getLastFolderForSignPath, releaseUploadResponse, setMetadataResponse } from "./utils";
+import {
+  getFakeParamsForRequest,
+  createFile,
+  getCommandArgsForReleaseCommand,
+  FakeParamsForRequests,
+  nockPlatformRequest,
+  getLastFolderForSignPath,
+  releaseUploadResponse,
+  setMetadataResponse,
+} from "./utils";
 import { CommandArgs } from "../../../src/util/commandline";
 
 describe("CodePush release tests", () => {
@@ -21,11 +30,17 @@ describe("CodePush release tests", () => {
 
   beforeEach(() => {
     nockedApiGatewayRequests = Nock(fakeParamsForRequests.host)
-      .get(`/${fakeParamsForRequests.appVersion}/apps/${fakeParamsForRequests.userName}/${fakeParamsForRequests.appName}/deployments/Staging`)
-      .reply(200, (uri: any, requestBody: any) => { return {}; });
+      .get(
+        `/${fakeParamsForRequests.appVersion}/apps/${fakeParamsForRequests.userName}/${fakeParamsForRequests.appName}/deployments/Staging`
+      )
+      .reply(200, (uri: any, requestBody: any) => {
+        return {};
+      });
 
     nockedApiGatewayRequests
-      .post(`/${fakeParamsForRequests.appVersion}/apps/${fakeParamsForRequests.userName}/${fakeParamsForRequests.appName}/deployments/Staging/uploads`)
+      .post(
+        `/${fakeParamsForRequests.appVersion}/apps/${fakeParamsForRequests.userName}/${fakeParamsForRequests.appName}/deployments/Staging/uploads`
+      )
       .reply(200, releaseUploadResponse);
 
     nockedFileUploadServiceRequests = Nock(releaseUploadResponse.upload_domain)
@@ -37,35 +52,38 @@ describe("CodePush release tests", () => {
       .post(`/upload/upload_chunk/${releaseUploadResponse.id}`)
       .query({
         token: releaseUploadResponse.token,
-        block_number: 1
+        block_number: 1,
       })
       .reply(200, {
         error: false,
         chunk_num: 0,
         error_code: "None",
-        state: "Done"
+        state: "Done",
       });
 
     nockedFileUploadServiceRequests
       .post(`/upload/finished/${releaseUploadResponse.id}`)
       .query({
-        token: releaseUploadResponse.token
+        token: releaseUploadResponse.token,
       })
       .reply(200, {
         error: false,
         chunk_num: 0,
         error_code: "None",
-        state: "Done"
+        state: "Done",
       });
 
     nockedApiGatewayRequests
-      .post(`/${fakeParamsForRequests.appVersion}/apps/${fakeParamsForRequests.userName}/${fakeParamsForRequests.appName}/deployments/Staging/releases`, {
-        release_upload: releaseUploadResponse,
-        target_binary_version: "1.0",
-        mandatory: false,
-        disabled: false,
-        rollout: 100
-      })
+      .post(
+        `/${fakeParamsForRequests.appVersion}/apps/${fakeParamsForRequests.userName}/${fakeParamsForRequests.appName}/deployments/Staging/releases`,
+        {
+          release_upload: releaseUploadResponse,
+          target_binary_version: "1.0",
+          mandatory: false,
+          disabled: false,
+          rollout: 100,
+        }
+      )
       .reply(201, {
         target_binary_range: "1.0",
         blob_url: "storagePackage.blobUrl",
@@ -80,7 +98,7 @@ describe("CodePush release tests", () => {
         release_method: "releaseMethod",
         rollout: 100,
         size: 512,
-        upload_time: "uploadTime"
+        upload_time: "uploadTime",
       });
 
     stubbedSign = Sinon.stub(updateContentsTasks, "sign");
@@ -98,7 +116,10 @@ describe("CodePush release tests", () => {
         const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
         nockPlatformRequest("React-Native", fakeParamsForRequests, nockedApiGatewayRequests);
 
-        const args: CommandArgs = getCommandArgsForReleaseCommand(["-c", releaseFilePath, "-k", "fakePrivateKey.pem"], fakeParamsForRequests);
+        const args: CommandArgs = getCommandArgsForReleaseCommand(
+          ["-c", releaseFilePath, "-k", "fakePrivateKey.pem"],
+          fakeParamsForRequests
+        );
 
         // Act
         const testRelaseSkeleton = new CodePushReleaseCommand(args);
@@ -116,7 +137,10 @@ describe("CodePush release tests", () => {
         // Arrange
         const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
         nockPlatformRequest("Cordova", fakeParamsForRequests, nockedApiGatewayRequests);
-        const args: CommandArgs = getCommandArgsForReleaseCommand(["-c", releaseFilePath, "-k", "fakePrivateKey.pem"], fakeParamsForRequests);
+        const args: CommandArgs = getCommandArgsForReleaseCommand(
+          ["-c", releaseFilePath, "-k", "fakePrivateKey.pem"],
+          fakeParamsForRequests
+        );
 
         // Act
         const testRelaseSkeleton = new CodePushReleaseCommand(args);
@@ -133,7 +157,10 @@ describe("CodePush release tests", () => {
         // Arrange
         const releaseFilePath = createFile(tmpFolderPath, releaseFileName, releaseFileContent);
         nockPlatformRequest("Electron", fakeParamsForRequests, nockedApiGatewayRequests);
-        const args: CommandArgs = getCommandArgsForReleaseCommand(["-c", releaseFilePath, "-k", "fakePrivateKey.pem"], fakeParamsForRequests);
+        const args: CommandArgs = getCommandArgsForReleaseCommand(
+          ["-c", releaseFilePath, "-k", "fakePrivateKey.pem"],
+          fakeParamsForRequests
+        );
 
         // Act
         const testRelaseSkeleton = new CodePushReleaseCommand(args);

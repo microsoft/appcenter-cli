@@ -5,7 +5,6 @@ import { Messages } from "../lib/help-messages";
 
 @help(Messages.TestCloud.Commands.RunEspresso)
 export default class RunEspressoTestsCommand extends RunTestsCommand {
-
   @help(Messages.TestCloud.Arguments.EspressoBuildDir)
   @longName("build-dir")
   @hasArg

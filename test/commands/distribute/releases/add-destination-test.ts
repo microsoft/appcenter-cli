@@ -39,8 +39,10 @@ describe("releases add-destination command", () => {
   describe("validate input parameters", () => {
     describe("when the release id is not a number", () => {
       it("reports the command as failed", async () => {
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", "lol", "--type", "group", "--destination", fakeDistributionGroupName]));
-        const result: CommandFailedResult = await command.execute() as CommandFailedResult;
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", "lol", "--type", "group", "--destination", fakeDistributionGroupName])
+        );
+        const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
 
         expect(result.succeeded).to.be.false;
         expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
@@ -50,8 +52,10 @@ describe("releases add-destination command", () => {
 
     describe("when an invalid destination type is provided", () => {
       it("reports the command as failed", async () => {
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "not-a-type", "--destination", fakeDistributionGroupName]));
-        const result: CommandFailedResult = await command.execute() as CommandFailedResult;
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", fakeReleaseId, "--type", "not-a-type", "--destination", fakeDistributionGroupName])
+        );
+        const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
 
         expect(result.succeeded).to.be.false;
         expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
@@ -67,35 +71,35 @@ describe("releases add-destination command", () => {
 
     describe("when the distribution is successful", function () {
       beforeEach(() => {
-        nockScope.get(getDistributionGroupUrl)
-        .reply(200, {
+        nockScope.get(getDistributionGroupUrl).reply(200, {
           id: fakeGroupId,
           name: fakeDistributionGroupName,
           dismay_name: "my group",
           origin: "appcenter",
-          is_public: false
+          is_public: false,
         });
       });
 
-      function successfulGroupMock(options: { mandatory: boolean, silent: boolean}) {
+      function successfulGroupMock(options: { mandatory: boolean; silent: boolean }) {
         const expectedBody = {
           id: fakeGroupId,
           mandatory_update: options.mandatory,
-          notify_testers: !options.silent
+          notify_testers: !options.silent,
         };
 
-        nockScope.post(postAddReleaseGroupDestinationUrl, expectedBody)
-        .reply(201, {
+        nockScope.post(postAddReleaseGroupDestinationUrl, expectedBody).reply(201, {
           id: fakeGroupId,
           mandatory_update: options.mandatory,
-          notify_testers: !options.silent
+          notify_testers: !options.silent,
         });
       }
 
       it("reports the command as succeeded", async () => {
         successfulGroupMock({ mandatory: false, silent: false });
 
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName]));
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName])
+        );
         const result = await command.execute();
 
         expect(result.succeeded).to.be.true;
@@ -106,7 +110,9 @@ describe("releases add-destination command", () => {
       it("reports the command as succeeded with --mandatory", async () => {
         successfulGroupMock({ mandatory: true, silent: false });
 
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName, "--mandatory"]));
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName, "--mandatory"])
+        );
         const result = await command.execute();
 
         expect(result.succeeded).to.be.true;
@@ -115,7 +121,9 @@ describe("releases add-destination command", () => {
       it("reports the command as succeeded with --silent", async () => {
         successfulGroupMock({ mandatory: false, silent: true });
 
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName, "--silent"]));
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName, "--silent"])
+        );
         const result = await command.execute();
 
         expect(result.succeeded).to.be.true;
@@ -123,22 +131,34 @@ describe("releases add-destination command", () => {
 
       it("reports the command as succeeded with --silent and --mandatory", async () => {
         successfulGroupMock({ mandatory: true, silent: true });
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName, "--mandatory", "--silent"]));
+        const command = new AddDestinationCommand(
+          getCommandArgs([
+            "--release-id",
+            fakeReleaseId,
+            "--type",
+            "group",
+            "--destination",
+            fakeDistributionGroupName,
+            "--mandatory",
+            "--silent",
+          ])
+        );
         const result = await command.execute();
 
         expect(result.succeeded).to.be.true;
       });
     });
 
-  describe("when the distribution group does not exist", () => {
+    describe("when the distribution group does not exist", () => {
       beforeEach(() => {
-        nockScope.get(getDistributionGroupUrl)
-          .reply(404, {});
+        nockScope.get(getDistributionGroupUrl).reply(404, {});
       });
 
       it("reports the command as failed", async () => {
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName]));
-        const result: CommandFailedResult = await command.execute() as CommandFailedResult;
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName])
+        );
+        const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
 
         expect(result.succeeded).to.be.false;
         expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
@@ -148,30 +168,28 @@ describe("releases add-destination command", () => {
 
     describe("when the release does not exist", function () {
       beforeEach(() => {
-        nockScope.get(getDistributionGroupUrl)
-          .reply(200, {
-            id: "00000000-0000-0000-0000-000000000000",
-            name: fakeDistributionGroupName,
-            dismay_name: "my group",
-            origin: "appcenter",
-            is_public: false
-          });
+        nockScope.get(getDistributionGroupUrl).reply(200, {
+          id: "00000000-0000-0000-0000-000000000000",
+          name: fakeDistributionGroupName,
+          dismay_name: "my group",
+          origin: "appcenter",
+          is_public: false,
+        });
 
-          nockScope.post(postAddReleaseGroupDestinationUrl)
-          .reply(404, {
-          });
+        nockScope.post(postAddReleaseGroupDestinationUrl).reply(404, {});
       });
 
       it("reports the command as failed", async () => {
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName]));
-        const result: CommandFailedResult = await command.execute() as CommandFailedResult;
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", fakeReleaseId, "--type", "group", "--destination", fakeDistributionGroupName])
+        );
+        const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
 
         expect(result.succeeded).to.be.false;
         expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
         expect(result.errorMessage).to.eql(`Could not find release ${fakeReleaseId}`);
       });
     });
-
   });
 
   describe("when distributing a store", () => {
@@ -181,31 +199,31 @@ describe("releases add-destination command", () => {
 
     describe("when the distribution is successful", function () {
       beforeEach(() => {
-        nockScope.get(getStoreUrl)
-        .reply(200, {
+        nockScope.get(getStoreUrl).reply(200, {
           id: fakeStoreId,
           name: fakeStoreName,
           display_name: "my store",
           origin: "appcenter",
-          is_public: false
+          is_public: false,
         });
       });
 
       function successfulStoreMock() {
         const expectedBody = {
-          id: fakeStoreId
+          id: fakeStoreId,
         };
 
-        nockScope.post(postAddReleaseStoreDestinationUrl, expectedBody)
-        .reply(201, {
-          id: fakeStoreId
+        nockScope.post(postAddReleaseStoreDestinationUrl, expectedBody).reply(201, {
+          id: fakeStoreId,
         });
       }
 
       it("reports the command as succeeded", async () => {
         successfulStoreMock();
 
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "store", "--destination", fakeStoreName]));
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", fakeReleaseId, "--type", "store", "--destination", fakeStoreName])
+        );
         const result = await command.execute();
 
         expect(result.succeeded).to.be.true;
@@ -214,15 +232,16 @@ describe("releases add-destination command", () => {
       });
     });
 
-  describe("when the store does not exist", () => {
+    describe("when the store does not exist", () => {
       beforeEach(() => {
-        nockScope.get(getStoreUrl)
-          .reply(404, {});
+        nockScope.get(getStoreUrl).reply(404, {});
       });
 
       it("reports the command as failed", async () => {
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "store", "--destination", fakeStoreName]));
-        const result: CommandFailedResult = await command.execute() as CommandFailedResult;
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", fakeReleaseId, "--type", "store", "--destination", fakeStoreName])
+        );
+        const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
 
         expect(result.succeeded).to.be.false;
         expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
@@ -232,23 +251,22 @@ describe("releases add-destination command", () => {
 
     describe("when the release does not exist", function () {
       beforeEach(() => {
-        nockScope.get(getStoreUrl)
-          .reply(200, {
-            id: "00000000-0000-0000-0000-000000000000",
-            name: fakeStoreName,
-            display_name: "my store",
-            origin: "appcenter",
-            is_public: false
-          });
+        nockScope.get(getStoreUrl).reply(200, {
+          id: "00000000-0000-0000-0000-000000000000",
+          name: fakeStoreName,
+          display_name: "my store",
+          origin: "appcenter",
+          is_public: false,
+        });
 
-          nockScope.post(postAddReleaseStoreDestinationUrl)
-          .reply(404, {
-          });
+        nockScope.post(postAddReleaseStoreDestinationUrl).reply(404, {});
       });
 
       it("reports the command as failed", async () => {
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "store", "--destination", fakeStoreName]));
-        const result: CommandFailedResult = await command.execute() as CommandFailedResult;
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", fakeReleaseId, "--type", "store", "--destination", fakeStoreName])
+        );
+        const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
 
         expect(result.succeeded).to.be.false;
         expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
@@ -263,26 +281,26 @@ describe("releases add-destination command", () => {
 
     describe("when the release doesn't exist", () => {
       it("reports the command as failed", async () => {
-        nockScope
-          .post(addReleaseTesterDestinationUrl)
-          .reply(404);
+        nockScope.post(addReleaseTesterDestinationUrl).reply(404);
 
-          const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail]));
-          const result: CommandFailedResult = await command.execute() as CommandFailedResult;
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail])
+        );
+        const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
 
-          expect(result.succeeded).to.be.false;
-          expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
-          expect(result.errorMessage).to.eql(`Could not find release ${fakeReleaseId}`);
+        expect(result.succeeded).to.be.false;
+        expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
+        expect(result.errorMessage).to.eql(`Could not find release ${fakeReleaseId}`);
       });
     });
     describe("when the distribution failed", () => {
       it("reports the command as failed", async () => {
-        nockScope
-          .post(addReleaseTesterDestinationUrl)
-          .reply(400);
+        nockScope.post(addReleaseTesterDestinationUrl).reply(400);
 
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail]));
-        const result: CommandFailedResult = await command.execute() as CommandFailedResult;
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail])
+        );
+        const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
 
         expect(result.succeeded).to.be.false;
         expect(result.errorCode).to.eql(ErrorCodes.Exception);
@@ -295,16 +313,20 @@ describe("releases add-destination command", () => {
       it("reports the command as succeeded", async () => {
         successfulTesterMock({ mandatory: false, silent: false });
 
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail]));
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail])
+        );
         const result = await command.execute();
 
         expect(result.succeeded).to.be.true;
       });
 
-       it("reports the command as succeeded with --mandatory", async () => {
+      it("reports the command as succeeded with --mandatory", async () => {
         successfulTesterMock({ mandatory: true, silent: false });
 
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail, "--mandatory"]));
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail, "--mandatory"])
+        );
         const result = await command.execute();
 
         expect(result.succeeded).to.be.true;
@@ -313,7 +335,9 @@ describe("releases add-destination command", () => {
       it("reports the command as succeeded with --silent", async () => {
         successfulTesterMock({ mandatory: false, silent: true });
 
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail, "--silent"]));
+        const command = new AddDestinationCommand(
+          getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail, "--silent"])
+        );
         const result = await command.execute();
 
         expect(result.succeeded).to.be.true;
@@ -321,25 +345,34 @@ describe("releases add-destination command", () => {
 
       it("reports the command as succeeded with --silent and --mandatory", async () => {
         successfulTesterMock({ mandatory: true, silent: true });
-        const command = new AddDestinationCommand(getCommandArgs(["--release-id", fakeReleaseId, "--type", "tester", "--destination", fakeTesterEmail, "--mandatory", "--silent"]));
+        const command = new AddDestinationCommand(
+          getCommandArgs([
+            "--release-id",
+            fakeReleaseId,
+            "--type",
+            "tester",
+            "--destination",
+            fakeTesterEmail,
+            "--mandatory",
+            "--silent",
+          ])
+        );
         const result = await command.execute();
 
         expect(result.succeeded).to.be.true;
       });
     });
-    function successfulTesterMock(options: { mandatory: boolean, silent: boolean }) {
+    function successfulTesterMock(options: { mandatory: boolean; silent: boolean }) {
       const expectedBody = {
         email: fakeTesterEmail,
         mandatory_update: options.mandatory,
-        notify_testers: !options.silent
+        notify_testers: !options.silent,
       };
-      nockScope
-        .post(addReleaseTesterDestinationUrl, expectedBody)
-        .reply(201, {
-          email: fakeTesterEmail,
-          mandatory_update: options.mandatory,
-          notify_testers: !options.silent
-        });
+      nockScope.post(addReleaseTesterDestinationUrl, expectedBody).reply(201, {
+        email: fakeTesterEmail,
+        mandatory_update: options.mandatory,
+        notify_testers: !options.silent,
+      });
     }
   });
 
@@ -348,7 +381,7 @@ describe("releases add-destination command", () => {
     return {
       args,
       command: ["distribute", "releases", "add-destination"],
-      commandPath: "FAKE"
+      commandPath: "FAKE",
     };
   }
 });

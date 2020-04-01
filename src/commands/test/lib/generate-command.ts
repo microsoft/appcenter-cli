@@ -1,6 +1,15 @@
-import { Command, CommandArgs, CommandResult,
-         help, success, longName, required, hasArg,
-         failure, ErrorCodes } from "../../../util/commandline";
+import {
+  Command,
+  CommandArgs,
+  CommandResult,
+  help,
+  success,
+  longName,
+  required,
+  hasArg,
+  failure,
+  ErrorCodes,
+} from "../../../util/commandline";
 import { Messages } from "../lib/help-messages";
 import * as pfs from "../../../util/misc/promisfied-fs";
 
@@ -32,11 +41,11 @@ export abstract class GenerateCommand extends Command {
   protected abstract async processTemplate(): Promise<void>;
 
   protected isIOS(): boolean {
-    return (this.platform.toLowerCase() === "ios");
+    return this.platform.toLowerCase() === "ios";
   }
 
   protected isAndroid(): boolean {
-    return (this.platform.toLowerCase() === "android");
+    return this.platform.toLowerCase() === "android";
   }
 
   protected async copyTemplates(): Promise<void> {

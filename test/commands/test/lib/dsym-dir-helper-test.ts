@@ -18,7 +18,7 @@ describe("getDSymDirectory", () => {
   });
 
   it("should fail if dSYM dir doesn't exist", async () => {
-    testDirPath = await fsLayout.createLayout({ });
+    testDirPath = await fsLayout.createLayout({});
     const dSymPath = path.join(testDirPath, "Symbols.dSYM");
 
     await expect(getDSymFile(dSymPath)).to.eventually.be.rejected;
@@ -30,11 +30,11 @@ describe("getDSymDirectory", () => {
         Contents: {
           Resources: {
             DWARF: {
-              file1: "DSym 1"
-            }
-          }
-        }
-      }
+              file1: "DSym 1",
+            },
+          },
+        },
+      },
     });
 
     const dSymPath = path.join(testDirPath, "Symbols");
@@ -45,9 +45,9 @@ describe("getDSymDirectory", () => {
     testDirPath = await fsLayout.createLayout({
       "Symbols.dSYM": {
         Contents: {
-          Resources: { }
-        }
-      }
+          Resources: {},
+        },
+      },
     });
 
     const dSymPath = path.join(testDirPath, "Symbols.dSYM");
@@ -59,10 +59,10 @@ describe("getDSymDirectory", () => {
       "Symbols.dSYM": {
         Contents: {
           Resources: {
-            DWARF: { }
-          }
-        }
-      }
+            DWARF: {},
+          },
+        },
+      },
     });
 
     const dSymPath = path.join(testDirPath, "Symbols.dSYM");
@@ -76,11 +76,11 @@ describe("getDSymDirectory", () => {
           Resources: {
             DWARF: {
               file1: "DSym 1",
-              file2: "DSym 2"
-            }
-          }
-        }
-      }
+              file2: "DSym 2",
+            },
+          },
+        },
+      },
     });
 
     const dSymPath = path.join(testDirPath, "Symbols.dSYM");
@@ -93,11 +93,11 @@ describe("getDSymDirectory", () => {
         Contents: {
           Resources: {
             DWARF: {
-              file1: "DSym 1"
-            }
-          }
-        }
-      }
+              file1: "DSym 1",
+            },
+          },
+        },
+      },
     });
 
     const dSymPath = path.join(testDirPath, "Symbols.dSYM");

@@ -27,7 +27,9 @@ describe("distribute groups update command", () => {
     const expectedErrorMessage = `distribution group ${updatedFakeDistributionGroupName} already exists`;
 
     // Act
-    const command = new UpdateDistributionGroupCommand(getCommandArgs(["-g", fakeDistributionGroupName, "-n", updatedFakeDistributionGroupName]));
+    const command = new UpdateDistributionGroupCommand(
+      getCommandArgs(["-g", fakeDistributionGroupName, "-n", updatedFakeDistributionGroupName])
+    );
 
     try {
       await command.execute();
@@ -46,7 +48,9 @@ describe("distribute groups update command", () => {
     const skippedScope = setupDistributionGroupFoundResponse(Nock(fakeHost));
 
     // Act
-    const command = new UpdateDistributionGroupCommand(getCommandArgs(["-g", fakeDistributionGroupName, "-n", updatedFakeDistributionGroupName]));
+    const command = new UpdateDistributionGroupCommand(
+      getCommandArgs(["-g", fakeDistributionGroupName, "-n", updatedFakeDistributionGroupName])
+    );
     const result = await command.execute();
 
     // Assert
@@ -78,39 +82,40 @@ describe("distribute groups update command", () => {
     return {
       args,
       command: ["distribute", "groups", "update"],
-      commandPath: "FAKE_COMMAND_PATH"
+      commandPath: "FAKE_COMMAND_PATH",
     };
   }
 
   function setupDistributionGroupFoundResponse(nockScope: Nock.Scope) {
-    return nockScope.get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${updatedFakeDistributionGroupName}`)
+    return nockScope
+      .get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${updatedFakeDistributionGroupName}`)
       .reply(200, {
         id: "7dbdfd81-342b-4a38-a4dd-d05379abe19d",
         name: updatedFakeDistributionGroupName,
         origin: "appcenter",
         display_name: updatedFakeDistributionGroupName,
-        is_public: false
+        is_public: false,
       });
   }
 
   function setupDistributionGroupNotFoundResponse(nockScope: Nock.Scope) {
-    return nockScope.get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${updatedFakeDistributionGroupName}`)
+    return nockScope
+      .get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${updatedFakeDistributionGroupName}`)
       .reply(404, {
         error: {
           code: "NotFound",
-          message: `Could not find distribution group with name ${updatedFakeDistributionGroupName}`
-        }
+          message: `Could not find distribution group with name ${updatedFakeDistributionGroupName}`,
+        },
       });
   }
 
   function setupDistributionGroupUpdateResponse(nockScope: Nock.Scope) {
-    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}`)
-      .reply(200, {
-        id: "7dbdfd81-342b-4a38-a4dd-d05379abe19d",
-        name: updatedFakeDistributionGroupName,
-        origin: "appcenter",
-        display_name: updatedFakeDistributionGroupName,
-        is_public: false
-      });
+    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}`).reply(200, {
+      id: "7dbdfd81-342b-4a38-a4dd-d05379abe19d",
+      name: updatedFakeDistributionGroupName,
+      origin: "appcenter",
+      display_name: updatedFakeDistributionGroupName,
+      is_public: false,
+    });
   }
 });

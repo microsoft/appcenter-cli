@@ -13,7 +13,7 @@ describe("filterIncludedFiles", () => {
     sandbox = Sinon.createSandbox();
   });
   afterEach(() => {
-      sandbox.restore();
+    sandbox.restore();
   });
 
   it("should do nothing if null include is sent", async () => {
@@ -34,7 +34,9 @@ describe("filterIncludedFiles", () => {
     context("when valid", function () {
       it("should add something.dll.config if something.dll doesn't exist in include", async () => {
         const expected = ["something.dll.config"];
-        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
+        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => {
+          return true;
+        });
         const output = await filterIncludedFiles(input, ["something.dll.config"]);
 
         expect(output).to.deep.equal(expected);
@@ -42,7 +44,9 @@ describe("filterIncludedFiles", () => {
 
       it("should add something.dll.config", async () => {
         const expected = ["something.dll.config"];
-        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
+        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => {
+          return true;
+        });
         const output = await filterIncludedFiles(input, ["something.dll.config"]);
 
         expect(output).to.deep.equal(expected);
@@ -50,7 +54,9 @@ describe("filterIncludedFiles", () => {
 
       it("should add something.dll and something.dll.config", async () => {
         const expected = ["something.dll", "something.dll.config"];
-        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
+        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => {
+          return true;
+        });
         const output = await filterIncludedFiles(input, ["something.dll", "something.dll.config"]);
 
         expect(output).to.deep.equal(expected);
@@ -62,7 +68,9 @@ describe("filterIncludedFiles", () => {
     context("when invalid", function () {
       it("should add something.dll.config if something.dll doesn't exist in include", async () => {
         const expected = ["something.dll.config"];
-        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return false; });
+        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => {
+          return false;
+        });
         const output = await filterIncludedFiles(input, ["something.dll.config"]);
 
         expect(output).to.deep.equal(expected);
@@ -70,7 +78,9 @@ describe("filterIncludedFiles", () => {
 
       it("should add something.dll but not something.dll.config", async () => {
         const expected = ["something.dll"];
-        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return false; });
+        sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => {
+          return false;
+        });
         const output = await filterIncludedFiles(input, ["something.dll", "something.dll.config"]);
 
         expect(output).to.deep.equal(expected);
@@ -80,7 +90,9 @@ describe("filterIncludedFiles", () => {
 
   it("should add file if something.dll exists in include", async () => {
     const expected = ["something.dll"];
-    sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => { return true; });
+    sandbox.stub(xmlUtil, "validXmlFile").callsFake(() => {
+      return true;
+    });
     const output = await filterIncludedFiles(input, ["something.dll"]);
 
     expect(output).to.deep.equal(expected);
@@ -99,7 +111,7 @@ describe("parseIncludedFiles", () => {
     return descriptions.map((d) => {
       return {
         targetPath: normalizePath(d.targetPath),
-        sourcePath: normalizePath(d.sourcePath)
+        sourcePath: normalizePath(d.sourcePath),
       };
     });
   }
@@ -110,32 +122,32 @@ describe("parseIncludedFiles", () => {
     let rootDir: string = null;
 
     if (os.platform() === "win32") {
-      rawIncludedFiles = [ "data\\foo=d:\\Temp\\Data", "data\\bar=bar" ];
+      rawIncludedFiles = ["data\\foo=d:\\Temp\\Data", "data\\bar=bar"];
 
       expected = [
         {
           targetPath: "data/foo",
-          sourcePath: "d:/Temp/Data"
+          sourcePath: "d:/Temp/Data",
         },
         {
           targetPath: "data/bar",
-          sourcePath: "d:/workspace/bar"
-        }
+          sourcePath: "d:/workspace/bar",
+        },
       ];
 
       rootDir = windowsRootDir;
     } else {
-      rawIncludedFiles = [ "data/foo=/tmp/data", "data/bar=bar" ];
+      rawIncludedFiles = ["data/foo=/tmp/data", "data/bar=bar"];
 
       expected = [
         {
           targetPath: "data/foo",
-          sourcePath: "/tmp/data"
+          sourcePath: "/tmp/data",
         },
         {
           targetPath: "data/bar",
-          sourcePath: "/home/user/workspace/bar"
-        }
+          sourcePath: "/home/user/workspace/bar",
+        },
       ];
 
       rootDir = unixRootDir;
@@ -146,14 +158,14 @@ describe("parseIncludedFiles", () => {
   });
 
   it("should accept single absolute, deep path under root dir", () => {
-    const rawIncludedFiles = [ "/home/user/workspace/somewhere/myAbsoluteData" ];
+    const rawIncludedFiles = ["/home/user/workspace/somewhere/myAbsoluteData"];
     const parsedIncludedFiles = normalizeFileDescriptions(parseIncludedFiles(rawIncludedFiles, unixRootDir));
 
     const expected = [
       {
         targetPath: "somewhere/myAbsoluteData",
-        sourcePath: "/home/user/workspace/somewhere/myAbsoluteData"
-      }
+        sourcePath: "/home/user/workspace/somewhere/myAbsoluteData",
+      },
     ];
 
     expect(parsedIncludedFiles).to.deep.equal(expected);
@@ -161,7 +173,7 @@ describe("parseIncludedFiles", () => {
 
   it("should reject pairs with invalid target path", () => {
     expect(() => {
-      parseIncludedFiles(["\"|ff=bar"], windowsRootDir);
+      parseIncludedFiles(['"|ff=bar'], windowsRootDir);
     }).to.throw();
   });
 
@@ -178,18 +190,18 @@ describe("parseIncludedFiles", () => {
   });
 
   it("should accept single relative path or absolute path under root dir", () => {
-    const rawIncludedFiles = [ "myRelativeData", "/home/user/workspace/myAbsoluteData" ];
+    const rawIncludedFiles = ["myRelativeData", "/home/user/workspace/myAbsoluteData"];
     const parsedIncludedFiles = normalizeFileDescriptions(parseIncludedFiles(rawIncludedFiles, unixRootDir));
 
     const expected = [
       {
         targetPath: "myRelativeData",
-        sourcePath: "/home/user/workspace/myRelativeData"
+        sourcePath: "/home/user/workspace/myRelativeData",
       },
       {
         targetPath: "myAbsoluteData",
-        sourcePath: "/home/user/workspace/myAbsoluteData"
-      }
+        sourcePath: "/home/user/workspace/myAbsoluteData",
+      },
     ];
 
     expect(parsedIncludedFiles).to.deep.equal(expected);

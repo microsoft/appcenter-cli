@@ -11,13 +11,18 @@ function getAutoCompleteObject() {
 
 export function executeAutoComplete() {
   const autoCompleteObject = getAutoCompleteObject();
-  autoCompleteObject.on("complete", function (fragment: string, data: { before: string, fragment: number, line: string, reply: (answer: any) => void }) {
+  autoCompleteObject.on("complete", function (
+    fragment: string,
+    data: { before: string; fragment: number; line: string; reply: (answer: any) => void }
+  ) {
     const line = data.line;
     const reply = data.reply;
     const argsLine = line.substring(appName.length);
     const args = argsLine.match(/\S+/g) || [];
     const lineEndsWithWhitespaceChar = /\s{1}/.test(last(line));
-    const autocompleteTree = JSON.parse(Fs.readFileSync(Path.join(__dirname, "..", "..", "autocomplete-tree.json"), "utf8")) as IAutocompleteTree;
+    const autocompleteTree = JSON.parse(
+      Fs.readFileSync(Path.join(__dirname, "..", "..", "autocomplete-tree.json"), "utf8")
+    ) as IAutocompleteTree;
     const expandedAutoCompleteTree = getAutoCompleteTreeWithExpandedHelp(autocompleteTree);
     const getReply = getReplyHandler(lineEndsWithWhitespaceChar);
 
@@ -145,7 +150,7 @@ interface IAutocompleteTree {
 
 function getAutoCompleteTreeWithExpandedHelp(originalTree: IAutocompleteTree): IAutocompleteTree {
   // "help" command prefixes command path to show help for it
-  const helpTree = cloneDeep(originalTree, (entry) => entry instanceof Array ? cloneDeep(originalTree["help"]) : undefined);
+  const helpTree = cloneDeep(originalTree, (entry) => (entry instanceof Array ? cloneDeep(originalTree["help"]) : undefined));
   delete helpTree["help"];
 
   const expandedTree = cloneDeep(originalTree);
@@ -183,7 +188,7 @@ function cloneDeep(...args: any[]): any {
   }
 
   if (item instanceof Object) {
-    const cloneObject: {[key: string]: any} = {};
+    const cloneObject: { [key: string]: any } = {};
     const keys = Object.keys(item);
     for (const key of keys) {
       cloneObject[key] = cloneDeep(item[key], handler);

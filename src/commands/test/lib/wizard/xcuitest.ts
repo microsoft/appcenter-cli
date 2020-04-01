@@ -4,7 +4,6 @@ import { out } from "../../../../util/interaction";
 import RunXCUITestCommand from "../../run/xcuitest";
 
 export default class RunXCUIWizardTestCommand extends AppCommand {
-
   private _args: CommandArgs;
   constructor(args: CommandArgs, interactiveArgs: string[]) {
     super(args);

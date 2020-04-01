@@ -2,7 +2,19 @@
 import * as os from "os";
 const opener = require("opener");
 import * as qs from "qs";
-import { Command, CommandArgs, CommandResult, success, failure, succeeded, ErrorCodes, help, shortName, longName, hasArg } from "../util/commandline";
+import {
+  Command,
+  CommandArgs,
+  CommandResult,
+  success,
+  failure,
+  succeeded,
+  ErrorCodes,
+  help,
+  shortName,
+  longName,
+  hasArg,
+} from "../util/commandline";
 import { environments, getUser, saveUser, getTokenFromEnvironmentVar, appCenterAccessTokenEnvVar } from "../util/profile";
 import { prompt, out } from "../util/interaction";
 import { models, clientRequest, ClientResponse } from "../util/apis";
@@ -34,7 +46,6 @@ export default class LoginCommand extends Command {
     let userSuppliedToken = false;
     try {
       if (succeeded(result)) {
-
         await this.removeLoggedInUser();
 
         let token: TokenValueType;
@@ -57,18 +68,21 @@ export default class LoginCommand extends Command {
         result = success();
       }
     } catch (err) {
-     result =  failure(ErrorCodes.Exception, err.message);
+      result = failure(ErrorCodes.Exception, err.message);
     }
     return result;
   }
 
   private get isInteractiveEnvironment(): boolean {
-    return !!(environments(this.environmentName).loginEndpoint);
+    return !!environments(this.environmentName).loginEndpoint;
   }
 
   private validateArguments(): CommandResult {
     if (this.isInteractiveEnvironment && (this.userName || this.password) && !this.token) {
-      return failure(ErrorCodes.InvalidParameter, "this environment requires interactive login, do not use the --user or --password switches");
+      return failure(
+        ErrorCodes.InvalidParameter,
+        "this environment requires interactive login, do not use the --user or --password switches"
+      );
     }
     if (!this.isInteractiveEnvironment && (this.userName || this.password) && this.token) {
       return failure(ErrorCodes.InvalidParameter, "you must specify either a token or a user/password, not both");
@@ -89,8 +103,10 @@ export default class LoginCommand extends Command {
     const endpoint = environments(this.environmentName).endpoint;
     const client = this.clientFactory.fromUserNameAndPassword(this.userName, this.password, endpoint);
 
-    const createTokenResponse = await out.progress("Logging in...",
-      clientRequest<models.ApiTokensCreateResponse>((cb) => client.apiTokens.newMethod({ description: "AppCenter CLI"}, cb)));
+    const createTokenResponse = await out.progress(
+      "Logging in...",
+      clientRequest<models.ApiTokensCreateResponse>((cb) => client.apiTokens.newMethod({ description: "AppCenter CLI" }, cb))
+    );
 
     if (createTokenResponse.response.statusCode >= 400) {
       throw new Error("login was not successful");
@@ -99,7 +115,7 @@ export default class LoginCommand extends Command {
   }
 
   private async doInteractiveLogin(): Promise<TokenValueType> {
-    const loginUrl = environments(this.environmentName).loginEndpoint + "?" + qs.stringify({ hostname: os.hostname()});
+    const loginUrl = environments(this.environmentName).loginEndpoint + "?" + qs.stringify({ hostname: os.hostname() });
 
     out.text(`Opening your browser... ${os.EOL}? Visit ${loginUrl} and enter the code:`);
     opener(loginUrl);
@@ -113,21 +129,25 @@ export default class LoginCommand extends Command {
 
   private get userNameQuestion(): any[] {
     if (!this.token && !this.userName) {
-      return [{
-        name: "userName",
-        message: "Username or email: "
-      }];
+      return [
+        {
+          name: "userName",
+          message: "Username or email: ",
+        },
+      ];
     }
     return [];
   }
 
   private get passwordQuestion(): any[] {
     if (!this.token && !this.password) {
-      return [{
-        type: "password",
-        name: "password",
-        message: "Password: "
-      }];
+      return [
+        {
+          type: "password",
+          name: "password",
+          message: "Password: ",
+        },
+      ];
     }
     return [];
   }

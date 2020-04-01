@@ -35,7 +35,9 @@ describe("distribute groups publish command", () => {
   beforeEach(() => {
     runReleaseStub = sandbox.stub(FakeReleaseBinaryCommand.prototype, "run");
     runReleaseStub.returns(notFound("42"));
-    createReleaseStub = sandbox.stub().callsFake((args) => { return new FakeReleaseBinaryCommand(args); });
+    createReleaseStub = sandbox.stub().callsFake((args) => {
+      return new FakeReleaseBinaryCommand(args);
+    });
     Object.setPrototypeOf(ReleaseBinaryCommand, createReleaseStub);
   });
 
@@ -49,7 +51,9 @@ describe("distribute groups publish command", () => {
   });
 
   it("passes all non-common parameters to distribute release", async () => {
-    const command = new PublishToGroupCommand(getCommandArgs(["-b", buildVersion, "-n", buildNumber, "-r", releaseNotes, "-R", fakeReleaseNotesFile]));
+    const command = new PublishToGroupCommand(
+      getCommandArgs(["-b", buildVersion, "-n", buildNumber, "-r", releaseNotes, "-R", fakeReleaseNotesFile])
+    );
     await command.execute();
 
     // Make sure it created a ReleaseBinaryCommand and ran it
@@ -86,15 +90,21 @@ describe("distribute groups publish command", () => {
 
   function getCommandArgs(additionalArgs: string[]): CommandArgs {
     const args: string[] = [
-      "-a", fakeAppIdentifier,
-      "-f", fakeFilePath,
-      "-g", fakeGroupName,
-      "--token", fakeToken,
-      "--env", "local"].concat(additionalArgs);
+      "-a",
+      fakeAppIdentifier,
+      "-f",
+      fakeFilePath,
+      "-g",
+      fakeGroupName,
+      "--token",
+      fakeToken,
+      "--env",
+      "local",
+    ].concat(additionalArgs);
     return {
       args,
       command: ["distribute", "groups", "publish"],
-      commandPath: fakeCommandPath
+      commandPath: fakeCommandPath,
     };
   }
 });

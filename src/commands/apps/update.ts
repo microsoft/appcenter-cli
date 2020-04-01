@@ -1,6 +1,17 @@
 // apps create command
 
-import { AppCommand, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg } from "../../util/commandline";
+import {
+  AppCommand,
+  CommandArgs,
+  CommandResult,
+  help,
+  success,
+  failure,
+  ErrorCodes,
+  shortName,
+  longName,
+  hasArg,
+} from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportApp } from "./lib/format-app";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
@@ -29,7 +40,9 @@ export default class AppUpdateCommand extends AppCommand {
   @hasArg
   name: string;
 
-  @help("The app release type. Suggested values are Alpha, Beta, Production, Store, Enterprise. Custom values are allowed and must be must be one word, alphanumeric, first letter capitalized.")
+  @help(
+    "The app release type. Suggested values are Alpha, Beta, Production, Store, Enterprise. Custom values are allowed and must be must be one word, alphanumeric, first letter capitalized."
+  )
   @shortName("r")
   @longName("release-type")
   @hasArg
@@ -61,7 +74,8 @@ export default class AppUpdateCommand extends AppCommand {
     }
 
     const app = this.app;
-    const updateAppResponse = await out.progress("Updating app ...",
+    const updateAppResponse = await out.progress(
+      "Updating app ...",
       clientRequest<models.AppResponse>((cb) => client.apps.update(app.appName, app.ownerName, { app: appAttributes }, cb))
     );
 

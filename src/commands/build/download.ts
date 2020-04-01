@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  hasArg,
+  help,
+  longName,
+  required,
+  shortName,
+  success,
+} from "../../util/commandline";
 import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
@@ -33,7 +44,9 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   @hasArg
   public buildId: string;
 
-  @help(`Type of download. '${DownloadBuildStatusCommand.buildType}', '${DownloadBuildStatusCommand.logsType}', and '${DownloadBuildStatusCommand.symbolsType}' are allowed values`)
+  @help(
+    `Type of download. '${DownloadBuildStatusCommand.buildType}', '${DownloadBuildStatusCommand.logsType}', and '${DownloadBuildStatusCommand.symbolsType}' are allowed values`
+  )
   @shortName("t")
   @longName("type")
   @required
@@ -85,7 +98,10 @@ export default class DownloadBuildStatusCommand extends AppCommand {
 
       if (payloadZipEntry.dir) {
         // xcarchive
-        outputPath = await out.progress("Unpacking .xcarchive folder...", this.unpackAndWriteDirectory(zip, extension, buildInfo.sourceBranch, payloadZipEntry.name));
+        outputPath = await out.progress(
+          "Unpacking .xcarchive folder...",
+          this.unpackAndWriteDirectory(zip, extension, buildInfo.sourceBranch, payloadZipEntry.name)
+        );
       } else {
         // IPA or APK
         const payload = await out.progress("Extracting application package...", payloadZipEntry.async("nodebuffer"));
@@ -95,18 +111,18 @@ export default class DownloadBuildStatusCommand extends AppCommand {
       outputPath = await this.writeFile(downloadedContent, "zip", buildInfo.sourceBranch);
     }
 
-    out.text((pathObject) => `Downloaded content was saved to ${pathObject.path}`,  {path: Path.resolve(outputPath)});
+    out.text((pathObject) => `Downloaded content was saved to ${pathObject.path}`, { path: Path.resolve(outputPath) });
 
     return success();
   }
 
   private downloadFile(uri: string): Promise<ClientResponse<Buffer>> {
     return new Promise<ClientResponse<Buffer>>((resolve, reject) => {
-      Request.get(uri, {encoding: null}, (error, response, body: Buffer) => {
+      Request.get(uri, { encoding: null }, (error, response, body: Buffer) => {
         if (error) {
           reject(error);
         } else {
-          resolve({result: body, response});
+          resolve({ result: body, response });
         }
       });
     });
@@ -124,19 +140,22 @@ export default class DownloadBuildStatusCommand extends AppCommand {
     do {
       const encodedBranchName = encodeURIComponent(branchName);
       newFileName = `${this.type}_${encodedBranchName}_${this.buildId}_${id++}.${extension}`;
-    }
-    while (_.includes(filesInDirectory, newFileName.toLowerCase()));
+    } while (_.includes(filesInDirectory, newFileName.toLowerCase()));
 
     return newFileName;
   }
 
   private getNormalizedTypeValue(type: string): string {
     const lowerCaseType = type.toLowerCase();
-    if (lowerCaseType !== DownloadBuildStatusCommand.buildType
-          && lowerCaseType !== DownloadBuildStatusCommand.logsType
-          && lowerCaseType !== DownloadBuildStatusCommand.symbolsType) {
-      throw failure(ErrorCodes.InvalidParameter,
-        `download type should be '${DownloadBuildStatusCommand.buildType}', '${DownloadBuildStatusCommand.logsType}' or '${DownloadBuildStatusCommand.symbolsType}'`);
+    if (
+      lowerCaseType !== DownloadBuildStatusCommand.buildType &&
+      lowerCaseType !== DownloadBuildStatusCommand.logsType &&
+      lowerCaseType !== DownloadBuildStatusCommand.symbolsType
+    ) {
+      throw failure(
+        ErrorCodes.InvalidParameter,
+        `download type should be '${DownloadBuildStatusCommand.buildType}', '${DownloadBuildStatusCommand.logsType}' or '${DownloadBuildStatusCommand.symbolsType}'`
+      );
     }
 
     return lowerCaseType;
@@ -154,8 +173,10 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   private async getBuildStatus(client: AppCenterClient, app: DefaultApp, buildIdNumber: number): Promise<models.Build> {
     let buildStatusRequestResponse: ClientResponse<models.Build>;
     try {
-      buildStatusRequestResponse = await out.progress(`Getting status of build ${this.buildId}...`,
-        clientRequest<models.Build>((cb) => client.builds.get(buildIdNumber, app.ownerName, app.appName, cb)));
+      buildStatusRequestResponse = await out.progress(
+        `Getting status of build ${this.buildId}...`,
+        clientRequest<models.Build>((cb) => client.builds.get(buildIdNumber, app.ownerName, app.appName, cb))
+      );
     } catch (error) {
       if (error.statusCode === 404) {
         throw failure(ErrorCodes.InvalidParameter, `build ${buildIdNumber} was not found`);
@@ -180,8 +201,12 @@ export default class DownloadBuildStatusCommand extends AppCommand {
   private async getDownloadUri(client: AppCenterClient, app: DefaultApp, buildIdNumber: number): Promise<string> {
     let downloadDataResponse: ClientResponse<models.DownloadContainer>;
     try {
-      downloadDataResponse = await out.progress(`Getting ${this.type} download URL for build ${this.buildId}...`,
-        clientRequest<models.DownloadContainer>((cb) => client.builds.getDownloadUri(buildIdNumber, this.type, app.ownerName, app.appName, cb)));
+      downloadDataResponse = await out.progress(
+        `Getting ${this.type} download URL for build ${this.buildId}...`,
+        clientRequest<models.DownloadContainer>((cb) =>
+          client.builds.getDownloadUri(buildIdNumber, this.type, app.ownerName, app.appName, cb)
+        )
+      );
     } catch (error) {
       debug(`Request failed - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, `failed to get ${this.type} downloading URL for build ${this.buildId}`);
@@ -205,7 +230,10 @@ export default class DownloadBuildStatusCommand extends AppCommand {
         case 404:
           throw failure(ErrorCodes.Exception, `unable to find ${this.type} for build ${this.buildId}`);
         default:
-          throw failure(ErrorCodes.Exception, `failed to load file with ${this.type} for build ${this.buildId} - HTTP ${statusCode} ${downloadFileRequestResponse.response.statusMessage}`);
+          throw failure(
+            ErrorCodes.Exception,
+            `failed to load file with ${this.type} for build ${this.buildId} - HTTP ${statusCode} ${downloadFileRequestResponse.response.statusMessage}`
+          );
       }
     }
 
@@ -214,9 +242,9 @@ export default class DownloadBuildStatusCommand extends AppCommand {
 
   private getPayload(zip: JsZip): JsZip.JSZipObject {
     // looking for apk, ipa or xcarchive
-    return  _.find(
-         _.values(zip.files) as JsZip.JSZipObject[],
-        (file) => _.includes(DownloadBuildStatusCommand.applicationPackagesExtensions, Path.extname(file.name).toLowerCase()));
+    return _.find(_.values(zip.files) as JsZip.JSZipObject[], (file) =>
+      _.includes(DownloadBuildStatusCommand.applicationPackagesExtensions, Path.extname(file.name).toLowerCase())
+    );
   }
 
   private async writeFile(buffer: Buffer, extension: string, sourceBranch: string): Promise<string> {

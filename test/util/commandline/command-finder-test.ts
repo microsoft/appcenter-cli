@@ -34,7 +34,9 @@ describe("Finding commands", function () {
     const result = commandFinder(commandLine);
     expect(result).to.have.property("found", false);
     expect(result.commandParts).to.have.lengthOf(commandLine.length);
-    commandLine.forEach((part, index) => { expect(result.commandParts[index]).to.equal(part); });
+    commandLine.forEach((part, index) => {
+      expect(result.commandParts[index]).to.equal(part);
+    });
   });
 
   it("should ignore additional illegal parameters until finding command", function () {

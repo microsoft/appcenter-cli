@@ -9,7 +9,6 @@ import { RunTestsDownloadResultCommand } from "../lib/run-tests-download-result-
 
 @help(Messages.TestCloud.Commands.RunManifest)
 export default class RunManifestTestsCommand extends RunTestsDownloadResultCommand {
-
   @help("Path to manifest file")
   @longName("manifest-path")
   @hasArg
@@ -54,7 +53,7 @@ export default class RunManifestTestsCommand extends RunTestsDownloadResultComma
     });
 
     if (!archive) {
-      throw new Error("\"test-output-dir\" doesn't contain any mergeable test results (.zip archives containing .xml documents)");
+      throw new Error('"test-output-dir" doesn\'t contain any mergeable test results (.zip archives containing .xml documents)');
     }
 
     const xmlUtil: XmlUtil = XmlUtilBuilder.buildXmlUtilByString(path.basename(archive));

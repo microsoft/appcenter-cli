@@ -9,7 +9,6 @@ import { RunTestsDownloadResultCommand } from "../lib/run-tests-download-result-
 
 @help(Messages.TestCloud.Commands.RunAppium)
 export default class RunAppiumTestsCommand extends RunTestsDownloadResultCommand {
-
   @help(Messages.TestCloud.Arguments.AppiumBuildDir)
   @longName("build-dir")
   @hasArg

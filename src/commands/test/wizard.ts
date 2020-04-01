@@ -20,7 +20,7 @@ enum TestFramework {
   "XCUITest" = 3,
   "Xamarin.UITest" = 4,
   "Calabash" = 5,
-  "Manifest" = 6
+  "Manifest" = 6,
 }
 
 interface AppFile {
@@ -30,7 +30,6 @@ interface AppFile {
 
 @help(Messages.TestCloud.Commands.Wizard)
 export default class WizardTestCommand extends AppCommand {
-
   private interactiveArgs: string[] = [];
   private _args: CommandArgs;
   private isAndroidApp: boolean;
@@ -101,32 +100,35 @@ export default class WizardTestCommand extends AppCommand {
         this.printManifestHelp();
         return { succeeded: true };
       }
-      default: throw new Error("Unknown framework name!");
+      default:
+        throw new Error("Unknown framework name!");
     }
   }
 
   private async promptFramework(): Promise<TestFramework> {
-    const choices = Object.keys(TestFramework).filter((framework) => {
-      if (this.isAndroidApp && framework === "XCUITest") {
-        return false;
-      }
-      if (!this.isAndroidApp && framework === "Espresso") {
-        return false;
-      }
-      return typeof TestFramework[framework as any] === "number";
-    }).map((framework) => {
-      return {
-        name: framework,
-        value: TestFramework[framework as any]
-      };
-    });
+    const choices = Object.keys(TestFramework)
+      .filter((framework) => {
+        if (this.isAndroidApp && framework === "XCUITest") {
+          return false;
+        }
+        if (!this.isAndroidApp && framework === "Espresso") {
+          return false;
+        }
+        return typeof TestFramework[framework as any] === "number";
+      })
+      .map((framework) => {
+        return {
+          name: framework,
+          value: TestFramework[framework as any],
+        };
+      });
     const questions = [
       {
         type: "list",
         name: "framework",
         message: "Pick a test framework",
-        choices: choices
-      }
+        choices: choices,
+      },
     ];
     const answers: any = await prompt.question(questions);
     return answers.framework;
@@ -134,26 +136,28 @@ export default class WizardTestCommand extends AppCommand {
 
   private async promptAppFile(listOfAppFiles: AppFile[], forTest: boolean = false): Promise<string> {
     if (listOfAppFiles.length === 0) {
-      return await prompt(`We could not find any app files inside the current folder. Please provide the path to the ${forTest ? "test app" : "app"}.`);
+      return await prompt(
+        `We could not find any app files inside the current folder. Please provide the path to the ${forTest ? "test app" : "app"}.`
+      );
     }
     const choices = listOfAppFiles.map((appName) => {
       return {
         name: appName.name,
-        value: appName.path
+        value: appName.path,
       };
     });
 
     choices.push({
       name: "Enter path manually",
-      value: "manual"
+      value: "manual",
     });
     const questions = [
       {
         type: "list",
         name: "appPath",
         message: forTest ? "Pick a test app" : "Pick an app",
-        choices: choices
-      }
+        choices: choices,
+      },
     ];
     const answers: any = await prompt.question(questions);
     if (answers.appPath === "manual") {
@@ -178,14 +182,17 @@ export default class WizardTestCommand extends AppCommand {
         type: "list",
         name: "isAsync",
         message: "Should tests run in async mode?",
-        choices: [{
-          name: "Yes",
-          value: "true"
-        }, {
-          name: "No",
-          value: "false"
-        }]
-      }
+        choices: [
+          {
+            name: "Yes",
+            value: "true",
+          },
+          {
+            name: "No",
+            value: "false",
+          },
+        ],
+      },
     ];
     const answers: any = await prompt.question(questions);
     return answers.isAsync === "true" ? true : false;
@@ -209,11 +216,14 @@ export default class WizardTestCommand extends AppCommand {
   }
 
   private async getApps(client: AppCenterClient): Promise<DefaultApp> {
-    const apps = await out.progress("Getting list of apps...", clientCall<models.AppResponse[]>((cb) => client.apps.list(cb)));
+    const apps = await out.progress(
+      "Getting list of apps...",
+      clientCall<models.AppResponse[]>((cb) => client.apps.list(cb))
+    );
     const choices = apps.map((app: models.AppResponse) => {
       return {
         name: app.name,
-        value: `${app.owner.name}/${app.name}`
+        value: `${app.owner.name}/${app.name}`,
       };
     });
 
@@ -222,8 +232,8 @@ export default class WizardTestCommand extends AppCommand {
         type: "list",
         name: "app",
         message: "Pick an app to use",
-        choices: choices
-      }
+        choices: choices,
+      },
     ];
 
     const answer: any = await prompt.question(question);
@@ -239,7 +249,7 @@ export default class WizardTestCommand extends AppCommand {
       choices = devices.map((config: DeviceConfiguration) => {
         return {
           name: config.name,
-          value: config.id
+          value: config.id,
         };
       });
     } else {
@@ -247,12 +257,12 @@ export default class WizardTestCommand extends AppCommand {
       choices = deviceSets.map((config: DeviceSet) => {
         return {
           name: config.name,
-          value: config.slug
+          value: config.slug,
         };
       });
       choices.push({
         name: "I want to use a single device",
-        value: "manual"
+        value: "manual",
       });
     }
     const questions = [
@@ -260,8 +270,8 @@ export default class WizardTestCommand extends AppCommand {
         type: "list",
         name: "deviceSlug",
         message: noDeviceSets ? "Pick a device to use" : "Pick a device set to use",
-        choices: choices
-      }
+        choices: choices,
+      },
     ];
     const answers: any = await prompt.question(questions);
     let deviceId: string;
@@ -296,7 +306,7 @@ export default class WizardTestCommand extends AppCommand {
         if (this.isApplicationFile(dir)) {
           const foundApp = {
             name: path.relative(process.cwd(), fullDir),
-            path: fullDir
+            path: fullDir,
           };
           if (!appNames) {
             appNames = [foundApp];
@@ -314,19 +324,36 @@ export default class WizardTestCommand extends AppCommand {
   }
 
   private printCalabashHelp() {
-    out.text(os.EOL + `Interactive mode is not supported. Usage: appcenter test run calabash ${this.interactiveArgs.join(" ")}` +
-      os.EOL + os.EOL + "Additional parameters: " +
-      os.EOL + `--project-dir: ${Messages.TestCloud.Arguments.CalabashProjectDir}` +
-      os.EOL + `--sign-info: ${Messages.TestCloud.Arguments.CalabashSignInfo}` +
-      os.EOL + `--config-path: ${Messages.TestCloud.Arguments.CalabashConfigPath}` +
-      os.EOL + `--profile: ${Messages.TestCloud.Arguments.CalabashProfile}` +
-      os.EOL + `--skip-config-check: ${Messages.TestCloud.Arguments.CalabashSkipConfigCheck}`);
+    out.text(
+      os.EOL +
+        `Interactive mode is not supported. Usage: appcenter test run calabash ${this.interactiveArgs.join(" ")}` +
+        os.EOL +
+        os.EOL +
+        "Additional parameters: " +
+        os.EOL +
+        `--project-dir: ${Messages.TestCloud.Arguments.CalabashProjectDir}` +
+        os.EOL +
+        `--sign-info: ${Messages.TestCloud.Arguments.CalabashSignInfo}` +
+        os.EOL +
+        `--config-path: ${Messages.TestCloud.Arguments.CalabashConfigPath}` +
+        os.EOL +
+        `--profile: ${Messages.TestCloud.Arguments.CalabashProfile}` +
+        os.EOL +
+        `--skip-config-check: ${Messages.TestCloud.Arguments.CalabashSkipConfigCheck}`
+    );
   }
 
   private printManifestHelp() {
-    out.text(os.EOL + `Interactive mode is not supported. Usage: appcenter test run manifest ${this.interactiveArgs.join(" ")}` +
-      os.EOL + os.EOL + "Additional parameters: " +
-      os.EOL + `--manifest-path: Path to manifest file` +
-      os.EOL + `--merged-file-name: ${Messages.TestCloud.Arguments.MergedFileName}`);
+    out.text(
+      os.EOL +
+        `Interactive mode is not supported. Usage: appcenter test run manifest ${this.interactiveArgs.join(" ")}` +
+        os.EOL +
+        os.EOL +
+        "Additional parameters: " +
+        os.EOL +
+        `--manifest-path: Path to manifest file` +
+        os.EOL +
+        `--merged-file-name: ${Messages.TestCloud.Arguments.MergedFileName}`
+    );
   }
 }

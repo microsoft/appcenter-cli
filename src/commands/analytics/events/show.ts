@@ -1,4 +1,16 @@
-import { AppCommand, CommandArgs, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success, defaultValue } from "../../../util/commandline";
+import {
+  AppCommand,
+  CommandArgs,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  hasArg,
+  help,
+  longName,
+  shortName,
+  success,
+  defaultValue,
+} from "../../../util/commandline";
 import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
 import { out, supportsCsv } from "../../../util/interaction";
 import { inspect } from "util";
@@ -66,15 +78,18 @@ export default class ShowCommand extends AppCommand {
 
     const appVersion = this.toArrayWithSingleElement(this.appVersion);
     const eventName = this.toArrayWithSingleElement(this.eventName);
-    const startDate = parseDate(this.startDate,
+    const startDate = parseDate(
+      this.startDate,
       new Date(new Date().setHours(0, 0, 0, 0)),
-      `start date value ${this.startDate} is not a valid date string`);
-    const endDate = parseDate(this.endDate,
-      new Date(),
-      `end date value ${this.endDate} is not a valid date string`);
+      `start date value ${this.startDate} is not a valid date string`
+    );
+    const endDate = parseDate(this.endDate, new Date(), `end date value ${this.endDate} is not a valid date string`);
     const eventCount = this.getEventCount();
 
-    const events: IEventStatistics[] = await out.progress(`Loading statistics...`, this.getEvents(client, app, startDate, endDate, eventCount, this.properties, appVersion, eventName));
+    const events: IEventStatistics[] = await out.progress(
+      `Loading statistics...`,
+      this.getEvents(client, app, startDate, endDate, eventCount, this.properties, appVersion, eventName)
+    );
 
     this.outputStatistics(events);
 
@@ -94,18 +109,35 @@ export default class ShowCommand extends AppCommand {
     }
   }
 
-  private async getEvents(client: AppCenterClient, app: DefaultApp, startDate: Date, endDate: Date, eventCount: number, loadProperties: boolean, appVersions: string[] | undefined, eventNames: string[] | undefined): Promise<IEventStatistics[]> {
+  private async getEvents(
+    client: AppCenterClient,
+    app: DefaultApp,
+    startDate: Date,
+    endDate: Date,
+    eventCount: number,
+    loadProperties: boolean,
+    appVersions: string[] | undefined,
+    eventNames: string[] | undefined
+  ): Promise<IEventStatistics[]> {
     let eventsStatistics: IEventStatistics[];
     try {
-      const httpContent = await clientRequest<models.Events>((cb) => client.analytics.eventsMethod(startDate, app.ownerName, app.appName, {
-        end: endDate,
-        versions: appVersions,
-        orderby: "count desc",
-        top: eventCount,
-        skip: 0,
-        eventName: eventNames,
-        inlinecount: "allpages"
-      }, cb));
+      const httpContent = await clientRequest<models.Events>((cb) =>
+        client.analytics.eventsMethod(
+          startDate,
+          app.ownerName,
+          app.appName,
+          {
+            end: endDate,
+            versions: appVersions,
+            orderby: "count desc",
+            top: eventCount,
+            skip: 0,
+            eventName: eventNames,
+            inlinecount: "allpages",
+          },
+          cb
+        )
+      );
 
       eventsStatistics = httpContent.result.events.map((event) => ({
         name: event.name,
@@ -114,7 +146,7 @@ export default class ShowCommand extends AppCommand {
         users: event.deviceCount,
         userChange: calculatePercentChange(event.deviceCount, event.previousDeviceCount),
         perUser: event.countPerDevice,
-        perSession: event.countPerSession
+        perSession: event.countPerSession,
       }));
     } catch (error) {
       debug(`Failed to get events statistics - ${inspect(error)}`);
@@ -123,18 +155,32 @@ export default class ShowCommand extends AppCommand {
 
     if (loadProperties) {
       const limit = pLimit(ShowCommand.numberOfParallelRequests);
-      const propertiesPromises = eventsStatistics.map((eventStats) => this.getProperties(client, app, eventStats.name, startDate, endDate, appVersions, limit));
+      const propertiesPromises = eventsStatistics.map((eventStats) =>
+        this.getProperties(client, app, eventStats.name, startDate, endDate, appVersions, limit)
+      );
 
-      (await Promise.all(propertiesPromises)).forEach((properties, index) => eventsStatistics[index].properties = properties);
+      (await Promise.all(propertiesPromises)).forEach((properties, index) => (eventsStatistics[index].properties = properties));
     }
 
     return eventsStatistics;
   }
 
-  private async getProperties(client: AppCenterClient, app: DefaultApp, eventName: string, startDate: Date, endDate: Date, appVersions: string[] | undefined, limit: any): Promise<IPropertyStatistics[]> {
+  private async getProperties(
+    client: AppCenterClient,
+    app: DefaultApp,
+    eventName: string,
+    startDate: Date,
+    endDate: Date,
+    appVersions: string[] | undefined,
+    limit: any
+  ): Promise<IPropertyStatistics[]> {
     let propertiesNames: string[];
     try {
-      const httpContent = await (limit(() => clientRequest<models.EventProperties>((cb) => client.analytics.eventPropertiesMethod(eventName, app.ownerName, app.appName, cb))) as Promise<ClientResponse<models.EventProperties>>);
+      const httpContent = await (limit(() =>
+        clientRequest<models.EventProperties>((cb) =>
+          client.analytics.eventPropertiesMethod(eventName, app.ownerName, app.appName, cb)
+        )
+      ) as Promise<ClientResponse<models.EventProperties>>);
 
       propertiesNames = httpContent.result.eventProperties;
     } catch (error) {
@@ -142,20 +188,43 @@ export default class ShowCommand extends AppCommand {
       throw failure(ErrorCodes.Exception, `failed to get event properties of event ${eventName}`);
     }
 
-    const valuesStatsPromises = propertiesNames.map((propertyName) => this.getPropertyValueStatistics(client, app, eventName, propertyName, startDate, endDate, appVersions, limit));
+    const valuesStatsPromises = propertiesNames.map((propertyName) =>
+      this.getPropertyValueStatistics(client, app, eventName, propertyName, startDate, endDate, appVersions, limit)
+    );
 
     return (await Promise.all(valuesStatsPromises)).map((valueStats, index) => ({
       name: propertiesNames[index],
-      valuesStatistics: valueStats
+      valuesStatistics: valueStats,
     }));
   }
 
-  private async getPropertyValueStatistics(client: AppCenterClient, app: DefaultApp, eventName: string, eventPropertyName: string, startDate: Date, endDate: Date, appVersions: string[] | undefined, limit: any): Promise<IPropertyValueStatistics[]> {
+  private async getPropertyValueStatistics(
+    client: AppCenterClient,
+    app: DefaultApp,
+    eventName: string,
+    eventPropertyName: string,
+    startDate: Date,
+    endDate: Date,
+    appVersions: string[] | undefined,
+    limit: any
+  ): Promise<IPropertyValueStatistics[]> {
     try {
-      const httpContent = await (limit(() => clientRequest<models.EventPropertyValues>((cb) => client.analytics.eventPropertyCounts(eventName, eventPropertyName, startDate, app.ownerName, app.appName, {
-        end: endDate,
-        versions: appVersions
-      }, cb))) as Promise<ClientResponse<models.EventPropertyValues>>);
+      const httpContent = await (limit(() =>
+        clientRequest<models.EventPropertyValues>((cb) =>
+          client.analytics.eventPropertyCounts(
+            eventName,
+            eventPropertyName,
+            startDate,
+            app.ownerName,
+            app.appName,
+            {
+              end: endDate,
+              versions: appVersions,
+            },
+            cb
+          )
+        )
+      ) as Promise<ClientResponse<models.EventPropertyValues>>);
 
       return httpContent.result.values.map((value) => ({
         value: value.name,
@@ -173,21 +242,33 @@ export default class ShowCommand extends AppCommand {
       const table: out.NamedTables = [];
       const eventsTable: out.INamedTable = {
         name: "Events",
-        content: [["Name", "Count", "Count Change", "Users", "User Change", "Per User", "Per Session"]]
+        content: [["Name", "Count", "Count Change", "Users", "User Change", "Per User", "Per Session"]],
       };
 
       table.push(eventsTable);
 
       for (const event of events) {
-        eventsTable.content.push([event.name, numberFormatter(event.count), percentageFormatter(event.countChange),
-          numberFormatter(event.users), percentageFormatter(event.userChange), numberFormatter(event.perUser), numberFormatter(event.perSession)]);
+        eventsTable.content.push([
+          event.name,
+          numberFormatter(event.count),
+          percentageFormatter(event.countChange),
+          numberFormatter(event.users),
+          percentageFormatter(event.userChange),
+          numberFormatter(event.perUser),
+          numberFormatter(event.perSession),
+        ]);
 
         if (event.properties) {
           for (const property of event.properties) {
             eventsTable.content.push({
               name: property.name,
               content: [["Value", "Count", "Count Change"]].concat(
-                property.valuesStatistics.map((valueStats) => [valueStats.value, numberFormatter(valueStats.count), percentageFormatter(valueStats.countChange)]))
+                property.valuesStatistics.map((valueStats) => [
+                  valueStats.value,
+                  numberFormatter(valueStats.count),
+                  percentageFormatter(valueStats.countChange),
+                ])
+              ),
             });
           }
         }

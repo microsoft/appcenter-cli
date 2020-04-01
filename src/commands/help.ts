@@ -1,4 +1,15 @@
-import { Command, CommandArgs, CommandResult, help, runner, name, position, isCommandFailedResult, ErrorCodes, failure } from "../util/commandline";
+import {
+  Command,
+  CommandArgs,
+  CommandResult,
+  help,
+  runner,
+  name,
+  position,
+  isCommandFailedResult,
+  ErrorCodes,
+  failure,
+} from "../util/commandline";
 import { scriptName } from "../util/misc";
 
 const debug = require("debug")("appcenter-cli:commands:help");
@@ -6,7 +17,6 @@ import { inspect } from "util";
 
 @help(`Get help using ${scriptName} commands`)
 export default class HelpCommand extends Command {
-
   @name("command...")
   @position(null)
   @help("Command to get help on")

@@ -1,17 +1,17 @@
 /**
-* Copyright (c) Microsoft.  All rights reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*   http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (c) Microsoft.  All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 //
 // Tests to verify the parsing used to handle the output of the
@@ -28,19 +28,16 @@ import { WinTokenStore } from "../../../src/util/token-store/win32/win-token-sto
 
 // Dummy data for parsing tests
 const entries = {
-  entry1:
-`Target Name: AppCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/
+  entry1: `Target Name: AppCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/
 Type: Generic
 User Name: creds.exe`,
-  entry2:
-`Target Name: AzureXplatCli:target=userId:someotheruser@domain.example::resourceId:https\\://management.core.windows.net/
+  entry2: `Target Name: AzureXplatCli:target=userId:someotheruser@domain.example::resourceId:https\\://management.core.windows.net/
 Type: Generic
 User Name: creds.exe`,
-  entry1WithCredential:
-`Target Name: AzureXplatCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/
+  entry1WithCredential: `Target Name: AzureXplatCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/
 Type: Generic
 User Name: creds.exe
-Credential: 00010203AABBCCDD`
+Credential: 00010203AABBCCDD`,
 };
 
 describe("credstore output parsing", function () {
@@ -69,8 +66,9 @@ describe("credstore output parsing", function () {
     });
 
     it("should have expected target", function () {
-      expect(parsingResult[0].targetName).to
-        .equal("AppCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/");
+      expect(parsingResult[0].targetName).to.equal(
+        "AppCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/"
+      );
     });
 
     it("should not have a credential", function () {
@@ -96,10 +94,12 @@ describe("credstore output parsing", function () {
     });
 
     it("should have expected targets", function () {
-      expect(parsingResult[0].targetName).to
-        .equal("AppCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/");
-      expect(parsingResult[1].targetName).to
-        .equal("AzureXplatCli:target=userId:someotheruser@domain.example::resourceId:https\\://management.core.windows.net/");
+      expect(parsingResult[0].targetName).to.equal(
+        "AppCenterCli:target=userId:someuser@domain.example::resourceId:https\\://management.core.windows.net/"
+      );
+      expect(parsingResult[1].targetName).to.equal(
+        "AzureXplatCli:target=userId:someotheruser@domain.example::resourceId:https\\://management.core.windows.net/"
+      );
     });
   });
 
@@ -128,10 +128,9 @@ describe("Parsing output of creds child process", function () {
   const credStore = new WinTokenStore();
 
   before(function () {
-    return credStore.set(testTargetName, testToken)
-      .then(() => {
-        return runAndParseOutput();
-      });
+    return credStore.set(testTargetName, testToken).then(() => {
+      return runAndParseOutput();
+    });
   });
 
   after(function () {
@@ -144,17 +143,20 @@ describe("Parsing output of creds child process", function () {
 
   function runAndParseOutput(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      credStore.list()
-        .subscribe(
-          (entry: TokenEntry) => {
-            parseResults.push(entry);
-            if (entry.key === testTargetName) {
-              expectedEntry = entry;
-            }
-          },
-          (err: Error) => { reject(err); },
-          () => { resolve(); }
-        );
+      credStore.list().subscribe(
+        (entry: TokenEntry) => {
+          parseResults.push(entry);
+          if (entry.key === testTargetName) {
+            expectedEntry = entry;
+          }
+        },
+        (err: Error) => {
+          reject(err);
+        },
+        () => {
+          resolve();
+        }
+      );
     });
   }
 
@@ -174,7 +176,7 @@ describe("Parsing output of creds child process", function () {
     expect(expectedEntry.accessToken.id).to.equal(testToken.id);
   });
 
-  it ("should have expected credential token", function () {
+  it("should have expected credential token", function () {
     expect(expectedEntry.accessToken.token).to.equal(testToken.token);
   });
 });

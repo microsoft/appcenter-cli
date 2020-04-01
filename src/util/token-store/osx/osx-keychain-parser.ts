@@ -1,17 +1,17 @@
 /**
-* Copyright (c) Microsoft.  All rights reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*   http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (c) Microsoft.  All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 //
 // Parser for the output of the security(1) command line.
@@ -51,12 +51,12 @@ export class OsxSecurityParsingStream extends stream.Transform {
   inAttributes: boolean;
 
   constructor() {
-    super({objectMode: true});
+    super({ objectMode: true });
     this.currentEntry = null;
     this.inAttributes = false;
   }
 
-  _transform(chunk: any, encoding: string, callback: {(err?: Error): void}): void {
+  _transform(chunk: any, encoding: string, callback: { (err?: Error): void }): void {
     const line = chunk.toString();
 
     debug(`Parsing line [${line}]`);
@@ -80,7 +80,7 @@ export class OsxSecurityParsingStream extends stream.Transform {
     callback();
   }
 
-  _flush(callback: {(err?: Error): void}): void {
+  _flush(callback: { (err?: Error): void }): void {
     this.emitCurrentEntry();
     callback();
   }
@@ -109,7 +109,7 @@ export class OsxSecurityParsingStream extends stream.Transform {
     }
   }
 
-  processAttributeLine(key: string, value: string): void  {
+  processAttributeLine(key: string, value: string): void {
     debug(`adding attribute ${key} with value ${value} to object`);
     this.currentEntry[key] = value;
   }

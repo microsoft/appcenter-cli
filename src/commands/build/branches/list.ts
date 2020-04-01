@@ -9,15 +9,16 @@ const debug = require("debug")("appcenter-cli:commands:build:branches:list");
 
 @help("Show list of branches")
 export default class ShowBranchesListBuildStatusCommand extends AppCommand {
-
   async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
     const app = this.app;
 
     debug(`Getting list of branches for app ${app.appName}`);
     let branchesStatusesRequestResponse: ClientResponse<models.BranchStatus[]>;
     try {
-      branchesStatusesRequestResponse = await out.progress(`Getting statuses for branches of app ${app.appName}...`,
-        clientRequest<models.BranchStatus[]>((cb) => client.builds.listBranches(app.ownerName, app.appName, cb)));
+      branchesStatusesRequestResponse = await out.progress(
+        `Getting statuses for branches of app ${app.appName}...`,
+        clientRequest<models.BranchStatus[]>((cb) => client.builds.listBranches(app.ownerName, app.appName, cb))
+      );
     } catch (error) {
       debug(`Request failed - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, "failed to fetch branches list");
@@ -50,8 +51,10 @@ export default class ShowBranchesListBuildStatusCommand extends AppCommand {
     debug("Getting commit info for the last builds of the branches");
     let commitInfoRequestResponse: ClientResponse<models.CommitDetails[]>;
     try {
-      commitInfoRequestResponse = await out.progress("Getting commit info for the last builds of branches...",
-        clientRequest<models.CommitDetails[]>((cb) => client.commits.listByShaList(buildShas, app.ownerName, app.appName, cb)));
+      commitInfoRequestResponse = await out.progress(
+        "Getting commit info for the last builds of branches...",
+        clientRequest<models.CommitDetails[]>((cb) => client.commits.listByShaList(buildShas, app.ownerName, app.appName, cb))
+      );
     } catch (error) {
       debug(`Request failed - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, "failed to get commit details");
@@ -59,7 +62,9 @@ export default class ShowBranchesListBuildStatusCommand extends AppCommand {
 
     const commits = commitInfoRequestResponse.result;
 
-    const buildReportObjects = branchesWithBuilds.map((branch, index) => getBuildReportObject(branch.lastBuild, commits[index], app, portalBaseUrl));
+    const buildReportObjects = branchesWithBuilds.map((branch, index) =>
+      getBuildReportObject(branch.lastBuild, commits[index], app, portalBaseUrl)
+    );
     reportBuilds(buildReportObjects);
 
     return success();

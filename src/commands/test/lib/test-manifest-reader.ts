@@ -60,10 +60,7 @@ export class TestManifestReader {
       json.cliVersion,
       applicationFile,
       files,
-      new TestFrameworkData(
-        json.testFramework.name,
-        json.testFramework.data
-      )
+      new TestFrameworkData(json.testFramework.name, json.testFramework.data)
     );
   }
 
@@ -80,20 +77,18 @@ export class TestManifestReader {
   private async readApplicationFile(pattern: string): Promise<TestRunFile> {
     const inputFile = await this.resolveSinglePathPattern(pattern);
 
-    return await TestRunFile.create(
-      path.join(this.pathResolver.workspace, inputFile),
-      path.basename(inputFile),
-      "app-file"
-    );
+    return await TestRunFile.create(path.join(this.pathResolver.workspace, inputFile), path.basename(inputFile), "app-file");
   }
 
   private async readFilePatterns(patterns: string[]): Promise<TestRunFile[]> {
     const filePaths = await this.pathResolver.resolve(patterns);
 
-    return await Promise.all(filePaths.map((relativePath) => {
-      const fullPath = path.join(this.pathResolver.workspace, relativePath);
-      return TestRunFile.create(fullPath, relativePath, "test-file");
-    }));
+    return await Promise.all(
+      filePaths.map((relativePath) => {
+        const fullPath = path.join(this.pathResolver.workspace, relativePath);
+        return TestRunFile.create(fullPath, relativePath, "test-file");
+      })
+    );
   }
 
   private async readFileDescriptions(descriptions: IFileDescriptionJson[]): Promise<TestRunFile[]> {
@@ -103,10 +98,7 @@ export class TestManifestReader {
   private async readFileDescription(description: IFileDescriptionJson): Promise<TestRunFile> {
     const inputFile = await this.resolveSinglePathPattern(description.sourcePath);
 
-    return await TestRunFile.create(
-      path.join(this.pathResolver.workspace, inputFile),
-      description.targetPath,
-      "test-file");
+    return await TestRunFile.create(path.join(this.pathResolver.workspace, inputFile), description.targetPath, "test-file");
   }
 
   private async resolveSinglePathPattern(pattern: string): Promise<string> {

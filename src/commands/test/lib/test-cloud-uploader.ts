@@ -28,7 +28,7 @@ export class TestCloudUploader {
   private readonly _appName: string;
   private readonly _manifestPath: string;
   private readonly _devices: string;
-  private readonly _portalBaseUrl : string;
+  private readonly _portalBaseUrl: string;
 
   public appPath: string;
   public testParameters: { [key: string]: any };
@@ -36,7 +36,14 @@ export class TestCloudUploader {
   public language: string;
   public locale: string;
 
-  constructor(client: AppCenterClient, userName: string, appName: string, manifestPath: string, devices: string, portalBaseUrl: string) {
+  constructor(
+    client: AppCenterClient,
+    userName: string,
+    appName: string,
+    manifestPath: string,
+    devices: string,
+    portalBaseUrl: string
+  ) {
     if (!client) {
       throw new Error("Argument client is required");
     }
@@ -73,9 +80,7 @@ export class TestCloudUploader {
       }
     }
 
-    const manifest = await progressWithResult<TestManifest>(
-      "Validating arguments",
-      this.validateAndParseManifest());
+    const manifest = await progressWithResult<TestManifest>("Validating arguments", this.validateAndParseManifest());
 
     const testRun = await progressWithResult("Creating new test run", this.createTestRun(isOrg));
     debug(`Test run id: ${testRun.testRunId}`);
@@ -99,8 +104,8 @@ export class TestCloudUploader {
   }
 
   private async validateAndCreateAppFile(manifest: TestManifest): Promise<TestRunFile> {
-    const result = manifest.applicationFile ?
-      manifest.applicationFile
+    const result = manifest.applicationFile
+      ? manifest.applicationFile
       : await TestRunFile.create(this.appPath, path.basename(this.appPath), "app-file");
 
     if (!result) {
@@ -113,11 +118,11 @@ export class TestCloudUploader {
   }
 
   private createTestRun(isOrg: boolean): Promise<StartedTestRun> {
-     return new Promise<StartedTestRun>((resolve, reject) => {
-       this._client.test.createTestRun(
-         this._userName,
-         this._appName,
-         (err: Error, _result: any, _request: any, response: http.IncomingMessage) => {
+    return new Promise<StartedTestRun>((resolve, reject) => {
+      this._client.test.createTestRun(
+        this._userName,
+        this._appName,
+        (err: Error, _result: any, _request: any, response: http.IncomingMessage) => {
           if (err) {
             if ((err as any).statusCode === 404) {
               err.message = `The app named ${this._appName} does not exist in the organization or user: ${this._userName}`;
@@ -127,18 +132,31 @@ export class TestCloudUploader {
             const location: string = response.headers["location"];
             const testRunId = _.last(location.split("/"));
             resolve({
-                acceptedDevices: [],
-                rejectedDevices: [],
-                testRunId: testRunId,
-                testRunUrl: PortalHelper.getPortalTestLink(this._portalBaseUrl, isOrg, this._userName, this._appName, this.testSeries, testRunId)
-              });
+              acceptedDevices: [],
+              rejectedDevices: [],
+              testRunId: testRunId,
+              testRunUrl: PortalHelper.getPortalTestLink(
+                this._portalBaseUrl,
+                isOrg,
+                this._userName,
+                this._appName,
+                this.testSeries,
+                testRunId
+              ),
+            });
           }
-      });
+        }
+      );
     });
   }
 
   private async uploadFilesUsingBatch(testRunId: string, files: TestRunFile[]): Promise<void> {
-    const checkHashesResult = await this.uploadHashesBatch(testRunId, files.map((f) => { return { file: f }; }));
+    const checkHashesResult = await this.uploadHashesBatch(
+      testRunId,
+      files.map((f) => {
+        return { file: f };
+      })
+    );
 
     const limit = pLimit(paralleRequests);
     const uploadNewFilesTasks = checkHashesResult
@@ -148,26 +166,26 @@ export class TestCloudUploader {
     await Promise.all(uploadNewFilesTasks);
   }
 
-  private async uploadHashesBatch(testRunId: string, files: { file: TestRunFile, byteRange?: string }[]): Promise<{ file: TestRunFile, response: models.TestCloudFileHashResponse }[]> {
+  private async uploadHashesBatch(
+    testRunId: string,
+    files: { file: TestRunFile; byteRange?: string }[]
+  ): Promise<{ file: TestRunFile; response: models.TestCloudFileHashResponse }[]> {
     const mappedFiles = files.map((f) => this.testRunFileToFileHash(f.file, f.byteRange));
 
     const clientResponse = await clientRequest<models.TestCloudFileHashResponse[]>((cb) => {
-      this._client.test.uploadHashesBatch(
-        testRunId,
-        mappedFiles,
-        this._userName,
-        this._appName,
-        cb);
+      this._client.test.uploadHashesBatch(testRunId, mappedFiles, this._userName, this._appName, cb);
     });
 
-    return _.zip<any>(files, clientResponse.result).map((fr: any) => { return { file: fr[0].file, response: fr[1] }; });
+    return _.zip<any>(files, clientResponse.result).map((fr: any) => {
+      return { file: fr[0].file, response: fr[1] };
+    });
   }
 
   private testRunFileToFileHash(file: TestRunFile, byteRange: string = null): models.TestCloudFileHash {
     return {
       checksum: file.sha256,
       fileType: file.fileType,
-      relativePath: file.targetRelativePath
+      relativePath: file.targetRelativePath,
     };
   }
 
@@ -178,19 +196,14 @@ export class TestCloudUploader {
 
   private getDirectUploadUrl(client: AppCenterClient, testRunId: string, file: TestRunFile): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      client.test.startUploadingFile(
-        testRunId,
-        this._userName,
-        this._appName,
-        (err, _result, _request, response) => {
-          if (err) {
-            reject(err);
-          } else {
-            const location: string = response.headers["location"];
-            resolve(location);
-          }
+      client.test.startUploadingFile(testRunId, this._userName, this._appName, (err, _result, _request, response) => {
+        if (err) {
+          reject(err);
+        } else {
+          const location: string = response.headers["location"];
+          resolve(location);
         }
-      );
+      });
     });
   }
 
@@ -200,12 +213,13 @@ export class TestCloudUploader {
         const formData = {
           relative_path: file.targetRelativePath,
           file: fs.createReadStream(file.sourcePath),
-          file_type: file.fileType
+          file_type: file.fileType,
         };
 
-        request.post({
+        request.post(
+          {
             url: directUrl,
-            formData: formData
+            formData: formData,
           },
           (err, response, body) => {
             if (err) {
@@ -224,7 +238,7 @@ export class TestCloudUploader {
   }
 
   private startTestRun(testRunId: string, manifest: TestManifest): Promise<models.TestCloudStartTestRunResult> {
-    const allTestParameters = _.merge(manifest.testFramework.data || { }, this.testParameters || { });
+    const allTestParameters = _.merge(manifest.testFramework.data || {}, this.testParameters || {});
 
     const startOptions: models.TestCloudStartTestRunOptions = {
       testFramework: manifest.testFramework.name,
@@ -232,16 +246,11 @@ export class TestCloudUploader {
       locale: this.locale,
       language: this.language,
       testSeries: this.testSeries,
-      testParameters: allTestParameters
+      testParameters: allTestParameters,
     };
 
     return clientCall((cb) => {
-      this._client.test.startTestRun(
-        testRunId,
-        startOptions,
-        this._userName,
-        this._appName,
-        cb);
+      this._client.test.startTestRun(testRunId, startOptions, this._userName, this._appName, cb);
     });
   }
 }

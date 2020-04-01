@@ -1,6 +1,15 @@
-import { AppCommand, CommandArgs, CommandResult,
-         help, success, longName, shortName, required, hasArg,
-         failure } from "../../util/commandline";
+import {
+  AppCommand,
+  CommandArgs,
+  CommandResult,
+  help,
+  success,
+  longName,
+  shortName,
+  required,
+  hasArg,
+  failure,
+} from "../../util/commandline";
 import { StateChecker } from "./lib/state-checker";
 import { AppCenterClient } from "../../util/apis";
 import { Messages } from "./lib/help-messages";

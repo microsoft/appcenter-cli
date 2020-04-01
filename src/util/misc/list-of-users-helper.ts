@@ -34,5 +34,5 @@ async function getUserListString(listOfUsers: string, pathToListOfUsers: string,
 }
 
 function extractUsersFromString(listString: string) {
-    return _.chain(listString).words(/\S+/g).uniq().value();
+  return _.chain(listString).words(/\S+/g).uniq().value();
 }

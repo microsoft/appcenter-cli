@@ -10,7 +10,11 @@ export function getCordovaProjectAppVersion(projectRoot?: string): Promise<strin
       projectRoot = projectRoot || process.cwd();
       configString = fs.readFileSync(path.join(projectRoot, "config.xml"), { encoding: "utf8" });
     } catch (error) {
-      return reject(new Error(`Unable to find or read "config.xml" in the CWD. The "release-cordova" command must be executed in a Cordova project folder.`));
+      return reject(
+        new Error(
+          `Unable to find or read "config.xml" in the CWD. The "release-cordova" command must be executed in a Cordova project folder.`
+        )
+      );
     }
 
     xml2js.parseString(configString, (err: Error, parsedConfig: any) => {

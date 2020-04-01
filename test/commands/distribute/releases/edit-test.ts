@@ -178,43 +178,38 @@ describe("distribute releases edit command", async () => {
     return {
       args,
       command: ["distribute", "releases", "edit"],
-      commandPath: "FAKE_COMMAND_PATH"
+      commandPath: "FAKE_COMMAND_PATH",
     };
   }
 
   function setupReleaseDetailsNotFoundResponse(nockScope: Nock.Scope) {
-    return nockScope.get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`)
-      .reply(404, {
-        error: {
-          code: "NotFound",
-          message: `Could not find release with id ${fakeReleaseId}`
-        }
-      });
+    return nockScope.get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`).reply(404, {
+      error: {
+        code: "NotFound",
+        message: `Could not find release with id ${fakeReleaseId}`,
+      },
+    });
   }
 
   function setupReleaseDetailsResponse(nockScope: Nock.Scope) {
-    return nockScope.get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`)
-      .reply(200, {
-        shortVersion: "1.1",
-        version: "1.1"
-      });
+    return nockScope.get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`).reply(200, {
+      shortVersion: "1.1",
+      version: "1.1",
+    });
   }
 
   function setupReleaseDetailsServiceUnavailableResponse(nockScope: Nock.Scope) {
-    return nockScope.get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`)
-      .reply(400);
+    return nockScope.get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`).reply(400);
   }
 
   function setupUpdateReleaseServiceUnavailableResponse(nockScope: Nock.Scope) {
-    return nockScope.put(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`)
-      .reply(400);
+    return nockScope.put(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`).reply(400);
   }
 
   function setupUpdateReleaseResponse(nockScope: Nock.Scope) {
-    return nockScope.put(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`)
-      .reply(200, {
-        shortVersion: "1.1",
-        version: "1.1"
-      });
+    return nockScope.put(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`).reply(200, {
+      shortVersion: "1.1",
+      version: "1.1",
+    });
   }
 });

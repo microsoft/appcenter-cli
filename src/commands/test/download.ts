@@ -1,6 +1,18 @@
 import { AppCenterClient } from "../../util/apis";
 import { TestReport } from "../../util/apis/generated/models";
-import { AppCommand, CommandArgs, CommandResult, ErrorCodes, hasArg, help, longName, required, shortName, success, failure } from "../../util/commandline";
+import {
+  AppCommand,
+  CommandArgs,
+  CommandResult,
+  ErrorCodes,
+  hasArg,
+  help,
+  longName,
+  required,
+  shortName,
+  success,
+  failure,
+} from "../../util/commandline";
 import { StreamingArrayOutput } from "../../util/interaction";
 import { downloadArtifacts } from "../../util/misc/download";
 import { generateAbsolutePath } from "../../util/misc/fs-helper";
@@ -15,7 +27,6 @@ import * as path from "path";
 
 @help(Messages.TestCloud.Commands.Download)
 export default class DownloadTestsCommand extends AppCommand {
-
   @help(Messages.TestCloud.Arguments.DownloadTestRunId)
   @longName("test-run-id")
   @hasArg
@@ -57,7 +68,10 @@ export default class DownloadTestsCommand extends AppCommand {
 
         // undefined - in progress (validation, running, etc)
         if (typeof result === "undefined") {
-          return failure(1, `The test run ${this.testRunId} is not complete, please try again once the test has completed successfully`);
+          return failure(
+            1,
+            `The test run ${this.testRunId} is not complete, please try again once the test has completed successfully`
+          );
         }
       }
 
@@ -87,7 +101,7 @@ export default class DownloadTestsCommand extends AppCommand {
 
       return success();
     } catch (err) {
-      const errInfo: { message: string, exitCode: number } = buildErrorInfo(err, getUser(), this);
+      const errInfo: { message: string; exitCode: number } = buildErrorInfo(err, getUser(), this);
       return failure(errInfo.exitCode, errInfo.message);
     } finally {
       this.streamingOutput.finish();

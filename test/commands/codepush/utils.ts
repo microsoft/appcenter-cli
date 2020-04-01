@@ -31,7 +31,7 @@ export function getFakeParamsForRequest(): FakeParamsForRequests {
 export const releaseUploadResponse = {
   id: "id",
   token: "token",
-  upload_domain: "https://uploadDomain.test"
+  upload_domain: "https://uploadDomain.test",
 };
 
 export const setMetadataResponse = {
@@ -40,7 +40,7 @@ export const setMetadataResponse = {
   chunk_size: 512,
   resume_restart: false,
   blob_partitions: 1,
-  chunk_list: [1]
+  chunk_list: [1],
 };
 
 export function createTempPathWithFakeLastFolder(nameTmpFolder: string, lastFolderName: string): string {
@@ -56,8 +56,17 @@ export function createFile(folderPath: string, fileName: string, fileContent: st
   return finalPath;
 }
 
-export function getCommandArgsForReleaseCommand(additionalArgs: string[], fakeConsts: FakeParamsForRequests, ): CommandArgs {
-  const args: string[] = ["-a", `${fakeConsts.userName}/${fakeConsts.appName}`, "-d", "Staging", "-t", "1.0", "--token", fakeConsts.token].concat(additionalArgs);
+export function getCommandArgsForReleaseCommand(additionalArgs: string[], fakeConsts: FakeParamsForRequests): CommandArgs {
+  const args: string[] = [
+    "-a",
+    `${fakeConsts.userName}/${fakeConsts.appName}`,
+    "-d",
+    "Staging",
+    "-t",
+    "1.0",
+    "--token",
+    fakeConsts.token,
+  ].concat(additionalArgs);
   return {
     args,
     command: ["codepush", "release"],
@@ -68,13 +77,17 @@ export function getCommandArgsForReleaseCommand(additionalArgs: string[], fakeCo
 export function nockRequestForValidation(fakeConsts: FakeParamsForRequests): Nock.Scope {
   return Nock(fakeConsts.host)
     .get(`/${fakeConsts.appVersion}/apps/${fakeConsts.userName}/${fakeConsts.appName}/deployments/Staging`)
-    .reply(200, (uri: any, requestBody: any) => { return {}; });
+    .reply(200, (uri: any, requestBody: any) => {
+      return {};
+    });
 }
 
 export function nockPlatformRequest(fakePlatform: string, fakeConsts: FakeParamsForRequests, nockedRequests: Nock.Scope) {
-  nockedRequests.get(`/${fakeConsts.appVersion}/apps/${fakeConsts.userName}/${fakeConsts.appName}`).reply(200, (uri: any, requestBody: any) => {
-    return { platform: fakePlatform };
-  });
+  nockedRequests
+    .get(`/${fakeConsts.appVersion}/apps/${fakeConsts.userName}/${fakeConsts.appName}`)
+    .reply(200, (uri: any, requestBody: any) => {
+      return { platform: fakePlatform };
+    });
 }
 
 export function getLastFolderForSignPath(stubedSign: Sinon.SinonStub): string {

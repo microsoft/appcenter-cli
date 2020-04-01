@@ -17,7 +17,7 @@ describe("releases show command", () => {
   const fakeToken = "c1o3d3e7";
   const fakeReleaseId = 1;
   const fakeVersion = "1.0";
-  const fakeUploadAt = (new Date()).toISOString();
+  const fakeUploadAt = new Date().toISOString();
   /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const releaseUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`;
@@ -51,26 +51,26 @@ describe("releases show command", () => {
       {
         name: "destination 1",
         id: "12345",
-        destinationType: "group"
+        destinationType: "group",
       },
       {
         name: "destination 2",
         id: "12345",
-        destinationType: "tester"
-      }
+        destinationType: "tester",
+      },
     ];
     // These models are here because the serialized property names are snake_case.
     const apiDestinations = [
       {
         name: "destination 1",
         id: "12345",
-        destination_type: "group"
+        destination_type: "group",
       },
       {
         name: "destination 2",
         id: "12345",
-        destination_type: "tester"
-      }
+        destination_type: "tester",
+      },
     ];
 
     const apiReleaseDetails = {
@@ -83,7 +83,7 @@ describe("releases show command", () => {
       short_version: fakeVersion,
       uploaded_at: fakeUploadAt,
       app_icon_url: "icon_url",
-      enabled: true
+      enabled: true,
     };
 
     const releaseDetails: ReleaseDetailsResponse = {
@@ -96,12 +96,11 @@ describe("releases show command", () => {
       shortVersion: apiReleaseDetails.short_version,
       uploadedAt: apiReleaseDetails.uploaded_at,
       appIconUrl: apiReleaseDetails.app_icon_url,
-      enabled: apiReleaseDetails.enabled
+      enabled: apiReleaseDetails.enabled,
     };
 
     beforeEach(() => {
-      nockScope.get(releaseUrl)
-      .reply(200, apiReleaseDetails);
+      nockScope.get(releaseUrl).reply(200, apiReleaseDetails);
     });
 
     it("reports the command as succeeded", async () => {
@@ -117,25 +116,28 @@ describe("releases show command", () => {
       const command = new ShowReleasesCommand(getCommandArgs(["--release-id", fakeReleaseId.toString()]));
       await command.execute();
 
-      sinon.assert.calledWithExactly(reportStub, [
-        ["ID", "id"],
-        ["Status", "status"],
-        ["Name", "appName"],
-        ["Display Name", "appDisplayName"],
-        ["Version", "version"],
-        ["Short Version", "shortVersion"],
-        ["Enabled", "enabled"],
-        ["Release Notes", "releaseNotes"],
-        ["Size", "size"],
-        ["OS Required", "minOs"],
-        ["Android API Required", "androidMinApiLevel"],
-        ["Bundle Identifier", "bundleIdentifier"],
-        ["Fingerprint", "fingerprint"],
-        ["Uploaded At", "uploadedAt", out.report.asDate],
-        ["Download URL", "downloadUrl"],
-        ["Install URL", "installUrl"],
-        ["Icon URL", "appIconUrl"],
-        ["Destinations", "destinations", sinon.match.func]],
+      sinon.assert.calledWithExactly(
+        reportStub,
+        [
+          ["ID", "id"],
+          ["Status", "status"],
+          ["Name", "appName"],
+          ["Display Name", "appDisplayName"],
+          ["Version", "version"],
+          ["Short Version", "shortVersion"],
+          ["Enabled", "enabled"],
+          ["Release Notes", "releaseNotes"],
+          ["Size", "size"],
+          ["OS Required", "minOs"],
+          ["Android API Required", "androidMinApiLevel"],
+          ["Bundle Identifier", "bundleIdentifier"],
+          ["Fingerprint", "fingerprint"],
+          ["Uploaded At", "uploadedAt", out.report.asDate],
+          ["Download URL", "downloadUrl"],
+          ["Install URL", "installUrl"],
+          ["Icon URL", "appIconUrl"],
+          ["Destinations", "destinations", sinon.match.func],
+        ],
         releaseDetails
       );
 
@@ -145,14 +147,12 @@ describe("releases show command", () => {
 
   describe("when the release does not exist", () => {
     beforeEach(() => {
-      nockScope.get(releaseUrl)
-      .reply(404, {
-      });
+      nockScope.get(releaseUrl).reply(404, {});
     });
 
     it("reports the command as failed", async () => {
       const command = new ShowReleasesCommand(getCommandArgs(["--release-id", fakeReleaseId.toString()]));
-      const result = await command.execute() as CommandFailedResult;
+      const result = (await command.execute()) as CommandFailedResult;
 
       expect(result.succeeded).to.be.false;
       expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
@@ -164,14 +164,12 @@ describe("releases show command", () => {
 
   describe("when the API returns an error", () => {
     beforeEach(() => {
-      nockScope.get(releaseUrl)
-      .reply(403, {
-      });
+      nockScope.get(releaseUrl).reply(403, {});
     });
 
     it("reports the command as failed", async () => {
       const command = new ShowReleasesCommand(getCommandArgs(["--release-id", fakeReleaseId.toString()]));
-      const result = await command.execute() as CommandFailedResult;
+      const result = (await command.execute()) as CommandFailedResult;
 
       expect(result.succeeded).to.be.false;
       expect(result.errorCode).to.eql(ErrorCodes.Exception);
@@ -184,7 +182,7 @@ describe("releases show command", () => {
   describe("when the release id is not a number", () => {
     it("reports the command as failed", async () => {
       const command = new ShowReleasesCommand(getCommandArgs(["--release-id", "lol"]));
-      const result: CommandFailedResult = await command.execute() as CommandFailedResult;
+      const result: CommandFailedResult = (await command.execute()) as CommandFailedResult;
 
       expect(result.succeeded).to.be.false;
       expect(result.errorCode).to.eql(ErrorCodes.InvalidParameter);
@@ -199,7 +197,7 @@ describe("releases show command", () => {
     return {
       args,
       command: ["distribute", "releases", "show"],
-      commandPath: "FAKE"
+      commandPath: "FAKE",
     };
   }
 });

@@ -6,7 +6,6 @@ import { out } from "../../../util/interaction";
 
 @help(Messages.TestCloud.Commands.RunCalabash)
 export default class RunCalabashTestsCommand extends RunTestsCommand {
-
   @help(Messages.TestCloud.Arguments.CalabashProjectDir)
   @longName("project-dir")
   @required

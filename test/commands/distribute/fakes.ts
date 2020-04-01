@@ -30,15 +30,13 @@ export class FakeReleaseBinaryCommand extends AppCommand {
   @shortName("r")
   @longName("release-notes")
   @hasArg
-
   public releaseNotes: string;
   @shortName("R")
   @longName("release-notes-file")
   @hasArg
-
   public releaseNotesFile: string;
 
-  public async run(client: AppCenterClient) : Promise<CommandResult> {
+  public async run(client: AppCenterClient): Promise<CommandResult> {
     return null;
   }
 }

@@ -1,4 +1,15 @@
-import { Command, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
+import {
+  Command,
+  CommandResult,
+  help,
+  success,
+  failure,
+  ErrorCodes,
+  shortName,
+  longName,
+  hasArg,
+  required,
+} from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
@@ -17,24 +28,37 @@ export default class OrgShowCommand extends Command {
   name: string;
 
   async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
-    const [users, apps, organizationDetails] = await out.progress("Loading organization information...", Promise.all([getOrgUsers(client, this.name, debug), this.getOrgApps(client, this.name), this.getOrgDetails(client, this.name)]));
+    const [users, apps, organizationDetails] = await out.progress(
+      "Loading organization information...",
+      Promise.all([getOrgUsers(client, this.name, debug), this.getOrgApps(client, this.name), this.getOrgDetails(client, this.name)])
+    );
 
     const admins = pickAdmins(users);
 
-    out.report([
-      ["Display name", "displayName"],
-      ["URL", "url"],
-      ["Admins", "admins", (adminsArray: models.OrganizationUserResponse[]) => adminsArray.map((admin) => admin.name).join(", ")],
-      ["Apps", "appsCount"],
-      ["Collaborators", "collaboratorsCount"],
-    ], { displayName: organizationDetails.displayName, url: getPortalOrgLink(portalBaseUrl, this.name), admins, appsCount: apps.length, collaboratorsCount: users.length, origin: organizationDetails.origin });
+    out.report(
+      [
+        ["Display name", "displayName"],
+        ["URL", "url"],
+        ["Admins", "admins", (adminsArray: models.OrganizationUserResponse[]) => adminsArray.map((admin) => admin.name).join(", ")],
+        ["Apps", "appsCount"],
+        ["Collaborators", "collaboratorsCount"],
+      ],
+      {
+        displayName: organizationDetails.displayName,
+        url: getPortalOrgLink(portalBaseUrl, this.name),
+        admins,
+        appsCount: apps.length,
+        collaboratorsCount: users.length,
+        origin: organizationDetails.origin,
+      }
+    );
 
     return success();
   }
 
   private async getOrgApps(client: AppCenterClient, organization: string): Promise<models.AppResponse[]> {
     try {
-      const httpResponse = await clientRequest<models.AppResponse[]> ((cb) => client.apps.listForOrg(organization, cb));
+      const httpResponse = await clientRequest<models.AppResponse[]>((cb) => client.apps.listForOrg(organization, cb));
       if (httpResponse.response.statusCode < 400) {
         return httpResponse.result;
       } else {

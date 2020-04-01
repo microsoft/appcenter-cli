@@ -10,26 +10,33 @@ MockRequire("../../../../src/util/misc/process-helper", {
   execAndWait: async (command: string, onStdOut?: (text: string) => void, onStdErr?: (text: string) => void): Promise<number> => {
     testCloudCommand = command;
     return 0;
-  }
+  },
 });
 
 import RunUITestsCommand from "../../../../src/commands/test/run/uitest";
 
 describe("Validating UITest run", () => {
-
   it("should include sign-info for test-cloud prepare command", async () => {
     // Arrange
     const args: CommandArgs = {
       command: ["test", "run", "uitest"],
       commandPath: "Test",
       args: [
-        "--app", "test_org/SampleApp",
-        "--devices", "test_org/latest",
-        "--app-path", "test-apps/Android/SampleApp.apk",
-        "--test-series", "master",
-        "--build-dir", "test_dir",
-        "--uitest-tools-dir", path.join(__dirname, "../sample-test-workspace"),
-        "--sign-info", "testserver.si" ]
+        "--app",
+        "test_org/SampleApp",
+        "--devices",
+        "test_org/latest",
+        "--app-path",
+        "test-apps/Android/SampleApp.apk",
+        "--test-series",
+        "master",
+        "--build-dir",
+        "test_dir",
+        "--uitest-tools-dir",
+        path.join(__dirname, "../sample-test-workspace"),
+        "--sign-info",
+        "testserver.si",
+      ],
     };
 
     const command = new RunUITestsCommand(args);
