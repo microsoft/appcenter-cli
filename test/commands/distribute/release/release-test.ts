@@ -28,7 +28,6 @@ describe("release command", () => {
   const fakeStoreId = "00000000-0000-0000-0000-000000000000";
   const fakeStoreType = "googleplay";
   const fakeStoreTrack = "alpha";
-  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const version = "1.0";
   const shortVersion = "1";

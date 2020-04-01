@@ -28,7 +28,6 @@ describe("CodePush deployment list tests", () => {
   const fakeReleasesTotalActive = 3;
   const successfulStatus = 200;
   const unsuccessfulStatus = 404;
-  // tslint:disable-next-line:no-http-string
   const fakeHost = "http://localhost:1700";
 
   const fakeParamsForRequest: FakeParamsForRequests = getFakeParamsForRequest();

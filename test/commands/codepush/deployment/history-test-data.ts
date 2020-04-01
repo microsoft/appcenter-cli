@@ -12,7 +12,6 @@ export const fakeDeploymentName = "Staging";
 export const fakeNonExistentDeploymentName = "Dev";
 export const fakeEmail = "fake@email.com";
 export const fakeToken = "c1o3d3e7";
-// tslint:disable-next-line:no-http-string
 export const fakeHost = "http://localhost:1700";
 
 const fakeCommandArgs = {

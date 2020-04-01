@@ -116,8 +116,6 @@ export class StateChecker {
 
   private async delay(milliseconds: number): Promise<void> {
     return new Promise<void>((resolve) => {
-      // Turn off tslint false error
-      /* tslint:disable-next-line:no-string-based-set-timeout */
       setTimeout(resolve, milliseconds);
     });
   }

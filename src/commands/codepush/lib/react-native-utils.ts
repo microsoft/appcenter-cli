@@ -12,7 +12,7 @@ const g2js = require("gradle-to-js/lib/parser");
 const properties = require("properties");
 const childProcess = require("child_process");
 
-export let spawn = childProcess.spawn;
+export const spawn = childProcess.spawn;
 
 export interface VersionSearchParams {
   os: string; // ios or android
@@ -35,7 +35,7 @@ export async function getReactNativeProjectAppVersion(
   projectRoot?: string
 ): Promise<string> {
   projectRoot = projectRoot || process.cwd();
-  /* tslint:disable-next-line:non-literal-require */
+  // eslint-disable-next-line security/detect-non-literal-require
   const projectPackageJson: any = require(path.join(projectRoot, "package.json"));
   const projectName: string = projectPackageJson.name;
 
@@ -165,8 +165,7 @@ export async function getReactNativeProjectAppVersion(
         // In this case 'buildGradle.android' prop represents array instead of object
         // due to parsing issue in 'g2js.parseFile' method.
         if (buildGradle.android instanceof Array) {
-          for (let i = 0; i < buildGradle.android.length; i++) {
-            const gradlePart = buildGradle.android[i];
+          for (const gradlePart of buildGradle.android) {
             if (gradlePart.defaultConfig && gradlePart.defaultConfig.versionName) {
               versionName = gradlePart.defaultConfig.versionName;
               break;
@@ -204,8 +203,7 @@ export async function getReactNativeProjectAppVersion(
 
         // Search for gradle properties across all `gradle.properties` files
         let propertiesFile: string = null;
-        for (let i = 0; i < knownLocations.length; i++) {
-          propertiesFile = knownLocations[i];
+        for (propertiesFile of knownLocations) {
           if (fileExists(propertiesFile)) {
             const propertiesContent: string = fs.readFileSync(propertiesFile).toString();
             try {
@@ -479,7 +477,7 @@ export function isValidPlatform(platform: string): boolean {
 
 export function isReactNativeProject(): boolean {
   try {
-    /* tslint:disable-next-line:non-literal-require */
+    // eslint-disable-next-line security/detect-non-literal-require
     const projectPackageJson: any = require(path.join(process.cwd(), "package.json"));
     const projectName: string = projectPackageJson.name;
     if (!projectName) {

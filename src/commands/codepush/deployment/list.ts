@@ -95,14 +95,13 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
   }
 
   private async getMetricsString(deployment: models.Deployment, client: AppCenterClient): Promise<string> {
-    let metrics: models.CodePushReleaseMetric[];
     const httpRequest = await out.progress(
       "Getting CodePush deployments metrics...",
       clientRequest<models.CodePushReleaseMetric[]>((cb) =>
         client.codePushDeploymentMetrics.get(deployment.name, this.app.ownerName, this.app.appName, cb)
       )
     );
-    metrics = httpRequest.result;
+    const metrics: models.CodePushReleaseMetric[] = httpRequest.result;
 
     let releasesTotalActive: number = 0;
     metrics.forEach((metric) => (releasesTotalActive += metric.active));

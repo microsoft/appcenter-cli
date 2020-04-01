@@ -87,7 +87,7 @@ export class TestCloudUploader {
 
     const appFile = await progressWithResult("Validating application file", this.validateAndCreateAppFile(manifest));
 
-    const allFiles = _.concat(manifest.testFiles, [appFile]);
+    const allFiles = manifest.testFiles.concat(appFile);
 
     await progressWithResult("Uploading files", this.uploadFilesUsingBatch(testRun.testRunId, allFiles));
 

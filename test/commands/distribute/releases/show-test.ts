@@ -18,7 +18,6 @@ describe("releases show command", () => {
   const fakeReleaseId = 1;
   const fakeVersion = "1.0";
   const fakeUploadAt = new Date().toISOString();
-  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const releaseUrl = `/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`;
 

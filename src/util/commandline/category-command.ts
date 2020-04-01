@@ -94,8 +94,8 @@ export class CategoryCommand extends Command {
   commandHelp(item: [string, fs.Stats]): string {
     const fullCommandPath = path.join(this.commandPath, item[0]);
     try {
-      // Turn off tslint error, string is validated above
-      /* tslint:disable-next-line:non-literal-require */
+      // Turn off lint error, string is validated above
+      // eslint-disable-next-line security/detect-non-literal-require
       const cmd = require(fullCommandPath).default;
       return getClassHelpText(cmd);
     } catch (err) {

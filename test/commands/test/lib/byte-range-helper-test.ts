@@ -28,7 +28,7 @@ function getRandomBytes(length: number): number[] {
   const result: number[] = [];
 
   for (let i = 0; i < length; i++) {
-    /* tslint:disable-next-line:insecure-random */
+    // eslint-disable-next-line no-restricted-properties
     result.push(Math.floor(Math.random() * 256));
   }
 

@@ -75,8 +75,7 @@ export class AppiumPreparer {
 
   private async hasClassFile(rootPath: string): Promise<boolean> {
     const entries = await pfs.readdir(rootPath);
-    for (let i = 0; i < entries.length; i++) {
-      const entry = entries[i];
+    for (const entry of entries) {
       const fullEntryPath = path.join(rootPath, entry);
       const stats = await pfs.stat(fullEntryPath);
       if (stats.isFile() && entry.endsWith(".class")) {

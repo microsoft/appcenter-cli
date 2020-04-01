@@ -29,7 +29,6 @@ describe("upload-mappings command", () => {
   const fakeToken = "c1o3d3e7";
   const fakeSymbolUploadingId = "fakeSymbolUploadingId";
   const fakeUploadUrl = "/upload/here";
-  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const fakeFullUploadUrl = fakeHost + fakeUploadUrl;
 
@@ -258,7 +257,7 @@ describe("upload-mappings command", () => {
           status: "committed",
           symbol_type: "AndroidProguard",
           symbol_upload_id: fakeSymbolUploadingId,
-          symbols: new Array(),
+          symbols: [],
         };
       });
   }
@@ -275,7 +274,7 @@ describe("upload-mappings command", () => {
           status: "aborted",
           symbol_type: "AndroidProguard",
           symbol_upload_id: fakeSymbolUploadingId,
-          symbols: new Array(),
+          symbols: [],
         };
       });
   }

@@ -31,7 +31,6 @@ describe("upload-symbols command", () => {
   const fakeToken = "c1o3d3e7";
   const fakeSymbolUploadingId = "fakeSymbolUploadingId";
   const fakeUploadUrl = "/upload/here";
-  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const fakeFullUploadUrl = fakeHost + fakeUploadUrl;
 
@@ -507,7 +506,7 @@ describe("upload-symbols command", () => {
           status: "committed",
           symbol_type: "Apple",
           symbol_upload_id: fakeSymbolUploadingId,
-          symbols: new Array(),
+          symbols: [],
         };
       });
   }
@@ -524,7 +523,7 @@ describe("upload-symbols command", () => {
           status: "committed",
           symbol_type: "Breakpad",
           symbol_upload_id: fakeSymbolUploadingId,
-          symbols: new Array(),
+          symbols: [],
         };
       });
   }
@@ -541,7 +540,7 @@ describe("upload-symbols command", () => {
           status: "committed",
           symbol_type: "UWP",
           symbol_upload_id: fakeSymbolUploadingId,
-          symbols: new Array(),
+          symbols: [],
         };
       });
   }
@@ -558,7 +557,7 @@ describe("upload-symbols command", () => {
           status: "aborted",
           symbol_type: "Apple",
           symbol_upload_id: fakeSymbolUploadingId,
-          symbols: new Array(),
+          symbols: [],
         };
       });
   }
@@ -575,7 +574,7 @@ describe("upload-symbols command", () => {
           status: "aborted",
           symbol_type: "Breakpad",
           symbol_upload_id: fakeSymbolUploadingId,
-          symbols: new Array(),
+          symbols: [],
         };
       });
   }
@@ -592,7 +591,7 @@ describe("upload-symbols command", () => {
           status: "aborted",
           symbol_type: "UWP",
           symbol_upload_id: fakeSymbolUploadingId,
-          symbols: new Array(),
+          symbols: [],
         };
       });
   }

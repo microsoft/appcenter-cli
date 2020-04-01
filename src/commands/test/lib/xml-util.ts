@@ -48,8 +48,8 @@ export abstract class XmlUtil {
       return 0;
     }
     let result = element.childNodes.length;
-    for (let i: number = 0; i < element.childNodes.length; ++i) {
-      result += this.countChildren(element.childNodes[i] as Element);
+    for (const childNode of element.childNodes) {
+      result += this.countChildren(childNode as Element);
     }
     return result;
   }

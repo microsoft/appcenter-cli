@@ -10,7 +10,7 @@ import { isValidOS, isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectA
 import * as childProcess from "child_process";
 import * as chalk from "chalk";
 
-export let execSync = childProcess.execSync;
+export const execSync = childProcess.execSync;
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-cordova");
 

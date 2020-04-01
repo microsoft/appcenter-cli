@@ -66,8 +66,9 @@ function createParsingStream(): NodeJS.ReadWriteStream {
   return new Pumpify.obj(split(), new WinCredStoreParsingStream());
 }
 
+// eslint-disable-next-line no-redeclare
 namespace createParsingStream {
-  export let ParsingStream = WinCredStoreParsingStream;
+  export const ParsingStream = WinCredStoreParsingStream;
 }
 
 export { createParsingStream };

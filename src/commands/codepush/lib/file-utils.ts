@@ -59,7 +59,7 @@ export function generateRandomFilename(length: number): string {
   const validChar: string = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   for (let i = 0; i < length; i++) {
-    /* tslint:disable-next-line:insecure-random */
+    // eslint-disable-next-line no-restricted-properties
     filename += validChar.charAt(Math.floor(Math.random() * validChar.length));
   }
 

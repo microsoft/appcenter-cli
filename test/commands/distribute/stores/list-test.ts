@@ -16,7 +16,6 @@ describe("stores list command", () => {
   const fakeAppName = "fakeAppName";
   const fakeAppIdentifier = `${fakeAppOwner}/${fakeAppName}`;
   const fakeToken = "c1o3d3e7";
-  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const storesListUrl = `/v0.1/apps/${fakeAppIdentifier}/distribution_stores`;
 

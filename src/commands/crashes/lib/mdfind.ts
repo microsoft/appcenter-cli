@@ -42,7 +42,6 @@ export function mdfind({
   let times = 0;
 
   return {
-    /* tslint:disable:no-octal-literal */
     output: child.stdout
       .pipe(split("\0"))
       .pipe(through(filterEmpty))

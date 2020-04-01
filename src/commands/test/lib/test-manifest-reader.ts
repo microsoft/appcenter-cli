@@ -68,8 +68,7 @@ export class TestManifestReader {
     const filePatterns = json.filter((f) => typeof f === "string");
     const fileDescriptions = json.filter((f) => typeof f !== "string");
 
-    return _.concat<TestRunFile>(
-      await this.readFilePatterns(filePatterns as string[]),
+    return await (await this.readFilePatterns(filePatterns as string[])).concat(
       await this.readFileDescriptions(fileDescriptions as IFileDescriptionJson[])
     );
   }

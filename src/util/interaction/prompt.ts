@@ -14,6 +14,7 @@ export function prompt(message: string): Promise<string> {
     .then((answers) => answers["result"].toString());
 }
 
+// eslint-disable-next-line no-redeclare
 export namespace prompt {
   export function confirm(message: string, defaultResponse?: boolean): Promise<boolean> {
     return prompt
@@ -46,7 +47,6 @@ export namespace prompt {
       });
 
       const timeoutPromise: Promise<boolean> = new Promise((resolve, reject) => {
-        /* tslint:disable-next-line:no-string-based-set-timeout */
         timerId = setTimeout(resolve, timeoutMS);
       }).then(() => {
         (confirmPrompt as any).ui.close();

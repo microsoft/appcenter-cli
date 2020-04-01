@@ -4,12 +4,12 @@ import * as chalk from "chalk";
 
 const childProcess = require("child_process");
 
-export let spawn = childProcess.spawn;
+export const spawn = childProcess.spawn;
 
 export function getElectronProjectAppVersion(projectRoot?: string): string {
   projectRoot = projectRoot || process.cwd();
   try {
-    /* tslint:disable-next-line:non-literal-require */
+    // eslint-disable-next-line security/detect-non-literal-require
     const projectPackageJson: any = require(path.join(projectRoot, "package.json"));
     const projectVersion: string = projectPackageJson.version;
 
@@ -102,7 +102,7 @@ export function isValidPlatform(platform: string): boolean {
 
 export function isElectronProject(): boolean {
   try {
-    /* tslint:disable-next-line:non-literal-require */
+    // eslint-disable-next-line security/detect-non-literal-require
     const projectPackageJson: any = require(path.join(process.cwd(), "package.json"));
     const projectName: string = projectPackageJson.name;
     if (!projectName) {

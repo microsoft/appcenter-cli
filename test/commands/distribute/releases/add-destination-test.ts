@@ -15,7 +15,6 @@ describe("releases add-destination command", () => {
   const fakeReleaseId = "1";
   const fakeDistributionGroupName = "fakeDistributionGroupName";
   const fakeStoreName = "fakeStore";
-  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
 
   let nockScope: Nock.Scope;

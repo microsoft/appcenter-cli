@@ -12,7 +12,6 @@ describe("distribute groups update command", () => {
   const fakeToken = "c1o3d3e7";
   const fakeDistributionGroupName = "fakeDistributionGroupName";
   const updatedFakeDistributionGroupName = "updatedFakeDistributionGroupName";
-  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
 
   before(() => {

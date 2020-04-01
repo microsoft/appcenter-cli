@@ -14,7 +14,6 @@ describe("distribute releases edit command", async () => {
   const fakeAppIdentifier = `${fakeAppOwner}/${fakeAppName}`;
   const fakeToken = "c1o3d3e7";
   const fakeReleaseId = "5";
-  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const releaseIdOption = "--release-id";
 

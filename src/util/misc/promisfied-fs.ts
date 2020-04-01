@@ -86,9 +86,9 @@ export async function cpDir(source: string, target: string): Promise<void> {
   }
   const files = await readdir(source);
 
-  for (let i = 0; i < files.length; i++) {
-    const sourceEntry = path.join(source, files[i]);
-    const targetEntry = path.join(target, files[i]);
+  for (const file of files) {
+    const sourceEntry = path.join(source, file);
+    const targetEntry = path.join(target, file);
 
     await cp(sourceEntry, targetEntry);
   }
@@ -204,7 +204,7 @@ function callFs(func: (...args: any[]) => void, ...args: any[]): Promise<any[]> 
   return new Promise<any[]>((resolve, reject) => {
     func.apply(
       fs,
-      _.concat(args, [
+      args.concat([
         (err: any, ...args: any[]) => {
           if (err) {
             reject(err);
@@ -221,7 +221,7 @@ function callTemp<TResult>(func: (...args: any[]) => void, ...args: any[]): Prom
   return new Promise<TResult>((resolve, reject) => {
     func.apply(
       temp,
-      _.concat(args, [
+      args.concat([
         (err: any, result: TResult) => {
           if (err) {
             reject(err);
