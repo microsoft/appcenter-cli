@@ -48,8 +48,9 @@ export abstract class XmlUtil {
       return 0;
     }
     let result = element.childNodes.length;
-    for (const childNode of element.childNodes) {
-      result += this.countChildren(childNode as Element);
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+    for (let i: number = 0; i < element.childNodes.length; ++i) {
+      result += this.countChildren(element.childNodes[i] as Element);
     }
     return result;
   }
