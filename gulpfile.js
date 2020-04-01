@@ -7,7 +7,7 @@ const sourcemaps = require("gulp-sourcemaps");
 const ts = require("gulp-typescript");
 const autocompleteTree = require("./scripts/autocomplete-tree");
 
-let tsProject = ts.createProject("tsconfig.json");
+const tsProject = ts.createProject("tsconfig.json");
 
 //
 // General compile
@@ -18,13 +18,13 @@ gulp.task("clean", function (done) {
 });
 
 gulp.task("build-ts", function () {
-  let tsResult = gulp.src(["src/**/*.ts", "typings/**/*.d.ts"]).pipe(tsProject());
+  const tsResult = gulp.src(["src/**/*.ts", "typings/**/*.d.ts"]).pipe(tsProject());
 
   return tsResult.js.pipe(gulp.dest("dist"));
 });
 
 gulp.task("build-ts-sourcemaps", function () {
-  let tsResult = gulp.src(["src/**/*.ts", "typings/**/*.d.ts"]).pipe(sourcemaps.init()).pipe(tsProject());
+  const tsResult = gulp.src(["src/**/*.ts", "typings/**/*.d.ts"]).pipe(sourcemaps.init()).pipe(tsProject());
 
   return tsResult.js.pipe(sourcemaps.write(".", { includeContent: false, sourceRoot: "." })).pipe(gulp.dest("dist"));
 });
@@ -67,7 +67,7 @@ gulp.task("clean-sourcemaps", function () {
 });
 
 //
-// Stop people from using gulp build to skip tslint
+// Stop people from using gulp build to skip linting
 //
 gulp.task("build", function () {
   throw new Error('Do not use gulp build! Run "npm run build" instead!');

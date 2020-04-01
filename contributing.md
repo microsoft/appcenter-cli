@@ -67,34 +67,40 @@ then please check out [this tutorial](https://docs.npmjs.com/getting-started/fix
 
 After installing node and cloning the repo, do:
 
- 1. `npm install`
- 2. `npm run build`
+1.  `npm install`
+2.  `npm run build`
 
 To run the test suite, do:
- 3. `npm test`
+
+3.  `npm test`
 
 ## Running the cli in development
 
 If you're using node directly, do:
 
- 1. `npm run build`
- 2. `node dist/index.js <command...> <args...>`
+1.  `npm run build`
+2.  `node dist/index.js <command...> <args...>`
 
 If you've installed `ts-node` as mentioned above, you can skip the build step and do:
 
- 1. `ts-node src/index.ts <command...> <args...>`
+1.  `ts-node src/index.ts <command...> <args...>`
 
 ## Enabling debug logs
 
 In the code you'll find debug logs such as the following:
+
 ```typescript
 debug(`Failed to get list of application versions - ${inspect(error)}`);
 ```
+
 Those are not visible even with `--debug` enabled. To see these logs, pass on the `DEBUG` environment variable. Example:
+
 ```bash
 DEBUG="appcenter-cli:*" appcenter
 ```
+
 More precise filtering can be enabled, as for example:
+
 ```bash
 DEBUG="appcenter-cli:commands:*" appcenter apps list
 ```
@@ -103,14 +109,14 @@ DEBUG="appcenter-cli:commands:*" appcenter apps list
 
 There are a bunch of scripts in package.json file. Here's what they are and what they do:
 
-| Script command | What it does |
-|----------------|------------- |
-| `npm run build` | Runs tslint, compiles the typescript into javascript, creates `dist` directory |
-| `npm run test` | Runs tslint, runs the test suite. Can also be run with `npm test` |
-| `npm run watch-test` | Runs a watcher on the test file that will rerun tests automatically on save |
-| `npm run clean` | Cleans up any compilation output |
-| `npm run autorest` | Regenerate the HTTP client libraries. Downloads required tools as part of this process |
-| `npm run tslint` | Run tslint over the codebase |
+| Script command       | What it does                                                                           |
+| -------------------- | -------------------------------------------------------------------------------------- |
+| `npm run build`      | Runs the linter, compiles the typescript into javascript, creates `dist` directory     |
+| `npm run test`       | Runs the linter, runs the test suite. Can also be run with `npm test`                  |
+| `npm run watch-test` | Runs a watcher on the test file that will rerun tests automatically on save            |
+| `npm run clean`      | Cleans up any compilation output                                                       |
+| `npm run autorest`   | Regenerate the HTTP client libraries. Downloads required tools as part of this process |
+| `npm run lint`       | Run the linter over the codebase                                                       |
 
 There will be more over time.
 
@@ -118,18 +124,18 @@ There will be more over time.
 
 The gulpfile.js file contains the following targets that can be called manually if you desire
 
-| Target | npm script | What it does |
-|--------|------------|--------------|
-| `default` | | Runs the `build` task |
-| `build:raw` | `build` | Runs the build (build-ts, copy-assets, copy-generated-clients) |
-| `build-sourcemaps` | | Create sourcemap files for the compiled typescript to aid in debugging |
-| `build-ts-sourcemaps` | | Run Typescript compiler to output sourcemap files |
-| `build-ts` | | Runs typesscript compiler, using settings in tsconfig.json |
-| `clean`  | `clean` | Deletes the dist folder |
-| `clean-sourcemaps` | | Delete generated source map files from dist directory |
-| `copy-assets` | | Copies .txt files from src to dist (category descriptions) |
-| `copy-generated-client` | | Copies the generated HTTP client code to dist |
-| `prepublish` | `prepublish` | Runs the `clean` and `build:raw` tasks before publishing to npm |
+| Target                  | npm script   | What it does                                                           |
+| ----------------------- | ------------ | ---------------------------------------------------------------------- |
+| `default`               |              | Runs the `build` task                                                  |
+| `build:raw`             | `build`      | Runs the build (build-ts, copy-assets, copy-generated-clients)         |
+| `build-sourcemaps`      |              | Create sourcemap files for the compiled typescript to aid in debugging |
+| `build-ts-sourcemaps`   |              | Run Typescript compiler to output sourcemap files                      |
+| `build-ts`              |              | Runs typesscript compiler, using settings in tsconfig.json             |
+| `clean`                 | `clean`      | Deletes the dist folder                                                |
+| `clean-sourcemaps`      |              | Delete generated source map files from dist directory                  |
+| `copy-assets`           |              | Copies .txt files from src to dist (category descriptions)             |
+| `copy-generated-client` |              | Copies the generated HTTP client code to dist                          |
+| `prepublish`            | `prepublish` | Runs the `clean` and `build:raw` tasks before publishing to npm        |
 
 ## Touring the codebase
 
@@ -160,11 +166,11 @@ this directory. Each command lives in an individual source file with the same na
 
 For example:
 
-| Command | Source File |
-| ------- | ----------- |
-| `appcenter login` | src/commands/login.ts |
+| Command                       | Source File                       |
+| ----------------------------- | --------------------------------- |
+| `appcenter login`             | src/commands/login.ts             |
 | `appcenter profile configure` | src/commands/profile/configure.ts |
-| `appcenter apps list` | src/commands/apps/list.ts |
+| `appcenter apps list`         | src/commands/apps/list.ts         |
 
 The command line parser and dispatcher uses the directory structure and file names to determine which code to run, so the
 naming conventions are important.
@@ -218,7 +224,7 @@ you tests to keep things consistent across the entire codebase.
 #### test/functional
 
 Tests that call the appcenter-cli from PowerShell to execute against an App Center internal test environment live here.
-Files called *Tests.ps1 run automatically. The [Pester test runner](https://github.com/pester/Pester/wiki/Pester) is used
+Files called \*Tests.ps1 run automatically. The [Pester test runner](https://github.com/pester/Pester/wiki/Pester) is used
 to run the tests. You can run theses tests locally by running the Main.ps1 file in test/functional using PowerShell.
 
 #### typings
@@ -227,12 +233,14 @@ Stores type definitions for the external Javascript libraries used. These are ch
 downloaded in case we need to edit them.
 
 ## Naming conventions
+
 To get consistent user experience among commands for all beacons, the command line argument names should follow
 the following conventions.
 
 1. **All argument names**: lower-case nouns, separated by dash "-".
 
    Examples:
+
    - `--app-path`
    - `--dsym-dir`
    - `--debug`
@@ -240,12 +248,14 @@ the following conventions.
 1. **Arguments that describe application**: the first noun is "app".
 
    Examples:
+
    - `--app`
    - `--app-path`
 
 1. **Arguments that point to directories**: the last noun is "dir".
 
    Examples:
+
    - `--tests-dir`
    - `--build-dir`
    - `--dsym-dir`
@@ -253,6 +263,7 @@ the following conventions.
 1. **Arguments that point to a single file**: the last noun is "path".
 
    Examples:
+
    - `--manifest-path`
    - `--app-path`
 
