@@ -21,7 +21,7 @@ function trim(s) {
 
 function checkStats(dir, fileName, checker) {
   try {
-    let s = fs.statSync(path.join(dir, fileName));
+    const s = fs.statSync(path.join(dir, fileName));
     return checker(s);
   } catch (err) {
     return false;
@@ -33,6 +33,7 @@ function isFile(dir, fileName) {
 }
 
 function loadCommand(dir, cmdFileName) {
+  // eslint-disable-next-line security/detect-non-literal-require
   return require(path.join(dir, cmdFileName)).default;
 }
 

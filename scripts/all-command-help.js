@@ -20,7 +20,7 @@ const {
 const { getOptionsForTwoColumnTableWithNoBorders } = require("../dist/util/interaction/out");
 function checkStats(dir, fileName, checker) {
   try {
-    let s = fs.statSync(path.join(dir, fileName));
+    const s = fs.statSync(path.join(dir, fileName));
     return checker(s);
   } catch (err) {
     return false;
@@ -34,7 +34,7 @@ function isFile(dir, fileName) {
 function getCommands(rootDirName, parentCategory, currentDirName) {
   const thisCategory = categoryInfo(rootDirName, parentCategory, currentDirName);
 
-  let files = fs.readdirSync(currentDirName);
+  const files = fs.readdirSync(currentDirName);
   const [commands, categories] = _.partition(files, (n) => isFile(currentDirName, n));
   const thisCategoryCommands = commands
     .filter((cmd) => path.extname(cmd) === ".js")
@@ -129,6 +129,7 @@ function switchOptions(commandObj) {
 }
 
 function commandInfo(categoryInfo, dir, commandFile) {
+  // eslint-disable-next-line security/detect-non-literal-require
   const command = require(path.join(dir, commandFile)).default;
   const commandName = path.basename(commandFile).slice(0, -path.extname(commandFile).length);
   const help = getClassHelpText(command);
@@ -146,11 +147,11 @@ function commandInfo(categoryInfo, dir, commandFile) {
 //
 
 function usage(commandInfo) {
-  let lines = [];
+  const lines = [];
   let currentLine = `    appcenter ${commandInfo.category.name} ${commandInfo.commandName}`;
 
-  let maxWidth = 120;
-  let rightMargin = 4;
+  const maxWidth = 120;
+  const rightMargin = 4;
   optionUsages(commandInfo).forEach((example) => {
     if (currentLine.length + example.length + 1 > maxWidth - rightMargin) {
       lines.push(currentLine);
@@ -166,16 +167,16 @@ function usage(commandInfo) {
 }
 
 function optionUsages(commandInfo) {
-  let [positionalOpts, switchOpts] = _.partition(commandInfo.options, (opt) => opt.name);
+  const [positionalOpts, switchOpts] = _.partition(commandInfo.options, (opt) => opt.name);
 
-  let positionalUsages = _.sortBy(positionalOpts, "position").map((desc) => {
+  const positionalUsages = _.sortBy(positionalOpts, "position").map((desc) => {
     if (desc.position !== null) {
       return `<${desc.name}>`;
     }
     return `<desc.name>...`;
   });
 
-  let switchUsages = switchOpts.map((desc) => {
+  const switchUsages = switchOpts.map((desc) => {
     let result = desc.switchText;
     if (desc.hasArg) {
       result += " <arg>";
@@ -190,7 +191,7 @@ function optionUsages(commandInfo) {
 }
 
 function optionsText(commandInfo) {
-  let optionInfo = commandInfo.options.map((desc) => {
+  const optionInfo = commandInfo.options.map((desc) => {
     if (desc.name) {
       return [desc.name, desc.help];
     } else {
@@ -222,7 +223,7 @@ ${optionsText(commandInfo)}
 }
 
 const root = path.join(__dirname, "../dist/commands");
-let text = getCommands(root, null, root)
+const text = getCommands(root, null, root)
   .map(formatCommand)
   .join("----------" + os.EOL);
 console.log(text);

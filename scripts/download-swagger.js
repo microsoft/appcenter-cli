@@ -52,7 +52,7 @@ function downloadSwagger(environment, version) {
     const swaggerUrl = `${endpoints[environment]}/${version}/swagger.json`;
     console.log(`Downloading swagger from ${swaggerUrl}`);
     return new Promise((resolve, reject) => {
-      let sd = streamDone(resolve, reject);
+      const sd = streamDone(resolve, reject);
       const rs = request(swaggerUrl);
       const s = rs.pipe(fs.createWriteStream(swaggerDest(environment, version)));
 

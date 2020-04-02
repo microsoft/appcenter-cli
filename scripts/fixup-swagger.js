@@ -8,8 +8,8 @@ const path = require("path");
 //
 
 function fixupRawSwagger(rawSwaggerPath, fixedSwaggerPath) {
-  let swagger = JSON.parse(fs.readFileSync(rawSwaggerPath, "utf8"));
-  let urlPaths = Object.keys(swagger.paths);
+  const swagger = JSON.parse(fs.readFileSync(rawSwaggerPath, "utf8"));
+  const urlPaths = Object.keys(swagger.paths);
   urlPaths.forEach((urlPath) => {
     if (_.isEmpty(swagger.paths[urlPath])) {
       delete swagger.paths[urlPath];
@@ -17,7 +17,7 @@ function fixupRawSwagger(rawSwaggerPath, fixedSwaggerPath) {
       // These paths are only for consumption by the device SDKs
       delete swagger.paths[urlPath];
     } else {
-      let operations = _.toPairs(swagger.paths[urlPath]);
+      const operations = _.toPairs(swagger.paths[urlPath]);
       operations.forEach(([method, operationObj]) => {
         // Fix up malformed/missing operation Ids
         if (!operationIdIsValid(operationObj)) {
@@ -86,24 +86,24 @@ function urlPathToOperation(urlPath) {
 }
 
 function fixupGetCommits(operations) {
-  let getCommits = operations["get"];
+  const getCommits = operations["get"];
   if (!getCommits) {
     console.error("Could not find getCommits operation!");
     return;
   }
 
-  let parameters = getCommits.parameters;
+  const parameters = getCommits.parameters;
   if (!parameters) {
     console.error("Could not find parameters for get operation!");
     return;
   }
 
-  let shaCollection = parameters.filter((p) => p.name && p.name === "sha_collection");
+  const shaCollection = parameters.filter((p) => p.name && p.name === "sha_collection");
   if (shaCollection.length !== 1) {
     return;
   }
 
-  let shaCollectionParam = shaCollection[0];
+  const shaCollectionParam = shaCollection[0];
   if (!shaCollectionParam["x-ms-skip-url-encoding"]) {
     shaCollectionParam["x-ms-skip-url-encoding"] = true;
   }
@@ -116,7 +116,7 @@ function operationIsNotJson(operation) {
 function setOperationToFile(operation) {
   delete operation.produces;
 
-  let response200 = operation.responses["200"];
+  const response200 = operation.responses["200"];
   if (response200) {
     if (response200.schema) {
       delete response200.schema;

@@ -20,7 +20,7 @@ function runAutorest() {
   console.log(`Running ${autorestScript} "${configFilePath}"`);
 
   return new Promise((resolve, reject) => {
-    let arp = childProcess.spawn(path.join(__dirname, "..", "node_modules", ".bin", autorestScript), [configFilePath], {
+    const arp = childProcess.spawn(path.join(__dirname, "..", "node_modules", ".bin", autorestScript), [configFilePath], {
       cwd: path.join(__dirname, ".."),
     });
 

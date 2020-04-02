@@ -69,6 +69,7 @@ function getDirEntriesOrNull(path) {
  * @returns {object[]}
  */
 function getOptionsForCommand(path) {
+  // eslint-disable-next-line security/detect-non-literal-require
   const command = require(path).default;
 
   // getting command options
