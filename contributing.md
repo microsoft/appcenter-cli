@@ -227,11 +227,6 @@ Tests that call the appcenter-cli from PowerShell to execute against an App Cent
 Files called \*Tests.ps1 run automatically. The [Pester test runner](https://github.com/pester/Pester/wiki/Pester) is used
 to run the tests. You can run theses tests locally by running the Main.ps1 file in test/functional using PowerShell.
 
-#### typings
-
-Stores type definitions for the external Javascript libraries used. These are checked in rather than dynamically
-downloaded in case we need to edit them.
-
 ## Naming conventions
 
 To get consistent user experience among commands for all beacons, the command line argument names should follow

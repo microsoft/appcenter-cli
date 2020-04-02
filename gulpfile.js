@@ -18,13 +18,13 @@ gulp.task("clean", function (done) {
 });
 
 gulp.task("build-ts", function () {
-  const tsResult = gulp.src(["src/**/*.ts", "typings/**/*.d.ts"]).pipe(tsProject());
+  const tsResult = gulp.src(["src/**/*.ts"]).pipe(tsProject());
 
   return tsResult.js.pipe(gulp.dest("dist"));
 });
 
 gulp.task("build-ts-sourcemaps", function () {
-  const tsResult = gulp.src(["src/**/*.ts", "typings/**/*.d.ts"]).pipe(sourcemaps.init()).pipe(tsProject());
+  const tsResult = gulp.src(["src/**/*.ts"]).pipe(sourcemaps.init()).pipe(tsProject());
 
   return tsResult.js.pipe(sourcemaps.write(".", { includeContent: false, sourceRoot: "." })).pipe(gulp.dest("dist"));
 });
