@@ -1,24 +1,24 @@
 #!/usr/bin/env node
 
-var util = require("util");
+const util = require("util");
 
 // Verify user has minimum required version of node installed
-var minMajorVersion = 10;
-var minMinorVersion = 0;
+const minMajorVersion = 10;
+const minMinorVersion = 0;
 
 function getCurrentVersion() {
-  var matches = process.version.match(/v?(\d+)\.(\d+)\.(\d+)/);
+  const matches = process.version.match(/v?(\d+)\.(\d+)\.(\d+)/);
   return [+matches[1], +matches[2]];
 }
 
 function ensureNodeVersion() {
-  var currentVersion = getCurrentVersion();
-  var major = currentVersion[0];
-  var minor = currentVersion[1];
+  const currentVersion = getCurrentVersion();
+  const major = currentVersion[0];
+  const minor = currentVersion[1];
   if (major > minMajorVersion) {
     return true;
   }
-  if (major == minMajorVersion && minor >= minMinorVersion) {
+  if (major === minMajorVersion && minor >= minMinorVersion) {
     return true;
   }
 
@@ -29,14 +29,15 @@ function ensureNodeVersion() {
 }
 
 function runCli() {
-  var path = require("path");
-  var commandLine = require("../dist/util/commandline");
+  const path = require("path");
+  const commandLine = require("../dist/util/commandline");
 
-  var runner = commandLine.runner(path.join(__dirname, "..", "dist", "commands"));
-  var args = process.argv.slice(2);
+  const runner = commandLine.runner(path.join(__dirname, "..", "dist", "commands"));
+  const args = process.argv.slice(2);
 
   if (args.indexOf("--quiet") === -1) {
     const updateNotifier = require("update-notifier");
+    // eslint-disable-next-line security/detect-non-literal-require
     const pkg = require(path.join(__dirname, "..", "package.json"));
 
     const notifier = updateNotifier({ pkg });
@@ -53,7 +54,7 @@ function runCli() {
 }
 
 if (ensureNodeVersion()) {
-  var commandLine = require("../dist/util/commandline");
+  const commandLine = require("../dist/util/commandline");
   commandLine.executeAutoComplete(); // if it is an autocomplete run, then it exits here
   runCli();
 } else {
