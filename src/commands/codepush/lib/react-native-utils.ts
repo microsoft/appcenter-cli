@@ -165,7 +165,8 @@ export async function getReactNativeProjectAppVersion(
         // In this case 'buildGradle.android' prop represents array instead of object
         // due to parsing issue in 'g2js.parseFile' method.
         if (buildGradle.android instanceof Array) {
-          for (const gradlePart of buildGradle.android) {
+          for (let i = 0; i < buildGradle.android.length; i++) {
+            const gradlePart = buildGradle.android[i];
             if (gradlePart.defaultConfig && gradlePart.defaultConfig.versionName) {
               versionName = gradlePart.defaultConfig.versionName;
               break;
@@ -203,7 +204,8 @@ export async function getReactNativeProjectAppVersion(
 
         // Search for gradle properties across all `gradle.properties` files
         let propertiesFile: string = null;
-        for (propertiesFile of knownLocations) {
+        for (let i = 0; i < knownLocations.length; i++) {
+          propertiesFile = knownLocations[i];
           if (fileExists(propertiesFile)) {
             const propertiesContent: string = fs.readFileSync(propertiesFile).toString();
             try {

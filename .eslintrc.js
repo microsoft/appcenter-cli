@@ -30,7 +30,7 @@ module.exports = {
     // Please keep sorted alphabetically to avoid confusion due to rules occurring multiple times.
     "@typescript-eslint/no-array-constructor": "error",
     //"@typescript-eslint/no-floating-promises": ["error", { ignoreVoid: true }],
-    "@typescript-eslint/prefer-for-of": "error",
+    //"@typescript-eslint/prefer-for-of": "error",
     curly: "error",
     eqeqeq: ["error", "always", { null: "ignore" }],
     "eol-last": "error",

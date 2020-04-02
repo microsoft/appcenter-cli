@@ -36,7 +36,8 @@ export class PathResolver {
     const matches = await glob(workspacePattern);
     const result: string[] = [];
 
-    for (const match of matches) {
+    for (let i = 0; i < matches.length; i++) {
+      const match = matches[i];
       const validatedRelativePath = await this.validateAndMakeRelative(match);
       if (validatedRelativePath) {
         result.push(validatedRelativePath);

@@ -86,9 +86,9 @@ export async function cpDir(source: string, target: string): Promise<void> {
   }
   const files = await readdir(source);
 
-  for (const file of files) {
-    const sourceEntry = path.join(source, file);
-    const targetEntry = path.join(target, file);
+  for (let i = 0; i < files.length; i++) {
+    const sourceEntry = path.join(source, files[i]);
+    const targetEntry = path.join(target, files[i]);
 
     await cp(sourceEntry, targetEntry);
   }
