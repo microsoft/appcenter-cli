@@ -6,7 +6,7 @@ export function buildErrorInfo(err: any, profile: Profile, command: AppCommand):
   const exitCode = err.exitCode || err.errorCode || ErrorCodes.Exception;
   let message : string = null;
 
-  let helpMessage = `Further error details: For help, please send both the reported error above and the following environment information to us by going to https://appcenter.ms/apps and open a support ticket (using the "?" menu in the top right corner of the screen)${os.EOL}
+  let helpMessage = `Further error details: For help, please send both the reported error above and the following environment information to us by going to https://appcenter.ms/apps and opening a support ticket (using the "?" menu in the upper right corner of the screen)${os.EOL}
     Environment: ${os.platform()}
     App Upload Id: ${command.identifier}
     Timestamp: ${Date.now()}
