@@ -22,7 +22,7 @@ To get a top level list of the available commands, run `appcenter help`.
 
 To get help on a specific command or category, run `appcenter help command` or pass the `-h` flag to any command or category name.
 
-App Center provides SDK support directly within the App Center portal. Any time you need help, just sign in to [App Center](https://appcenter.ms), then click on **'Contact support'** inside the "?" menu on the upper right of the App Center portal and our dedicated support team will respond to your questions and feedback. 
+App Center provides SDK support directly within the App Center portal. Any time you need help, just sign in to [App Center](https://appcenter.ms), then choose **'Contact support'** inside the "?" menu on the upper right of the App Center portal and our dedicated support team will respond to your questions and feedback. 
 
 ## Commands
 
