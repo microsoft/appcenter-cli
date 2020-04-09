@@ -22,7 +22,7 @@ To get a top level list of the available commands, run `appcenter help`.
 
 To get help on a specific command or category, run `appcenter help command` or pass the `-h` flag to any command or category name.
 
-App Center SDK support is provided directly within the App Center portal. Any time you need help, just log in to [App Center](https://appcenter.ms), then click the blue chat button in the lower-right corner of any page and our dedicated support team will respond to your questions and feedback. For additional information, see the [App Center Help Center](https://intercom.help/appcenter/getting-started/welcome-to-app-center-support).
+App Center SDK support is provided directly within the App Center portal. Any time you need help, just log in to [App Center](https://appcenter.ms), then click on **'Contact support'** inside the "?" menu on the top right of the App Center portal and our dedicated support team will respond to your questions and feedback. 
 
 ## Commands
 
