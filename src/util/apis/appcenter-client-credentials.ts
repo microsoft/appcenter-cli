@@ -6,14 +6,14 @@ import { WebResource } from "ms-rest";
 const debug = require("debug")("appcenter-cli:util:apis:appcenter-client-credentials");
 
 export class AppCenterClientCredentials {
-  private getToken: {(): Promise<string>};
+  private getToken: { (): Promise<string> };
 
-  constructor(getToken: {(): Promise<string>}) {
+  constructor(getToken: { (): Promise<string> }) {
     debug(`Constructor with getToken = ${getToken} of type ${typeof getToken}`);
     this.getToken = getToken;
   }
 
-  signRequest(request: WebResource, callback: {(err: Error): void}): void {
+  signRequest(request: WebResource, callback: { (err: Error): void }): void {
     debug("Getting token for request");
     this.getToken()
       .then((token) => {

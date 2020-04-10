@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, help, success, shortName, longName, required, hasArg, ErrorCodes, failure } from "../../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  help,
+  success,
+  shortName,
+  longName,
+  required,
+  hasArg,
+  ErrorCodes,
+  failure,
+} from "../../../util/commandline";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
@@ -18,18 +29,24 @@ export default class ShowDistributionGroupCommand extends AppCommand {
     const app = this.app;
 
     // creating distribution group users list request
-    const distributionGroupMembersRequestResponse = clientRequest<models.DistributionGroupUserGetResponse[]>(
-      (cb) => client.distributionGroups.listUsers(app.ownerName, app.appName, this.distributionGroup, cb));
+    const distributionGroupMembersRequestResponse = clientRequest<models.DistributionGroupUserGetResponse[]>((cb) =>
+      client.distributionGroups.listUsers(app.ownerName, app.appName, this.distributionGroup, cb)
+    );
 
     // creating releases information request
-    const basicReleasesDetailsRequestResponse = clientRequest<models.BasicReleaseDetailsResponse[]>(
-      (cb) => client.releases.listByDistributionGroup(this.distributionGroup, app.ownerName, app.appName, cb));
+    const basicReleasesDetailsRequestResponse = clientRequest<models.BasicReleaseDetailsResponse[]>((cb) =>
+      client.releases.listByDistributionGroup(this.distributionGroup, app.ownerName, app.appName, cb)
+    );
 
     // show spinner and wait for the requests to finish
-    await out.progress("Loading distribution group information...",
-      Promise.all([distributionGroupMembersRequestResponse, basicReleasesDetailsRequestResponse].map(
-        (p: Promise<any>) => p.catch(() => Promise.resolve())
-      )));
+    await out.progress(
+      "Loading distribution group information...",
+      Promise.all(
+        [distributionGroupMembersRequestResponse, basicReleasesDetailsRequestResponse].map((p: Promise<any>) =>
+          p.catch(() => Promise.resolve())
+        )
+      )
+    );
 
     let distributionGroupMembers: models.DistributionGroupUserGetResponse[];
     try {
@@ -63,23 +80,26 @@ export default class ShowDistributionGroupCommand extends AppCommand {
       throw failure(ErrorCodes.Exception, "failed to retrieve releases details for the distribution group");
     }
 
-    out.reportTitledGroupsOfTables([{
-      reportFormat: [
-        ["Display Name", "displayName"],
-        ["Email", "email"]
-      ],
-      tables: distributionGroupMembers,
-      title: "Users:"
-    }, {
-      reportFormat: [
-        ["ID", "id"],
-        ["Short Version", "shortVersion"],
-        ["Version", "version"],
-        ["Uploaded At", "uploadedAt", out.report.asDate]
-      ],
-      tables: basicReleasesDetails,
-      title: "Releases:"
-    }]);
+    out.reportTitledGroupsOfTables([
+      {
+        reportFormat: [
+          ["Display Name", "displayName"],
+          ["Email", "email"],
+        ],
+        tables: distributionGroupMembers,
+        title: "Users:",
+      },
+      {
+        reportFormat: [
+          ["ID", "id"],
+          ["Short Version", "shortVersion"],
+          ["Version", "version"],
+          ["Uploaded At", "uploadedAt", out.report.asDate],
+        ],
+        tables: basicReleasesDetails,
+        title: "Releases:",
+      },
+    ]);
 
     return success();
   }

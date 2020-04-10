@@ -14,7 +14,6 @@ const stripAnsi = require("strip-ansi");
 // In future, we could look at creating a test account for integration tests as a full suite of these
 // tests could be difficult to maintain (you can't just update the json and you're done).
 describe("Validating orgs command", () => {
-
   let stubbedOutput: Sinon.SinonStub;
 
   beforeEach(() => {
@@ -28,21 +27,19 @@ describe("Validating orgs command", () => {
   it("should list orgs correctly", async () => {
     const nockHelper: NockHelper = new NockHelper();
 
-    await nockHelper.runTest(
-      "org-list-data.json",
-      async () => {
+    await nockHelper.runTest("org-list-data.json", async () => {
       const expectedOutTableRows = [
         ["org 1", "org-1"],
         ["org 2", "org-2"],
         ["org 3", "org-3"],
         ["org 4", "org-4"],
-        ["org 5", "org-5"]
+        ["org 5", "org-5"],
       ];
 
       const args: CommandArgs = {
         command: ["orgs", "list"],
         commandPath: "",
-        args: ["--token", "fakeToken"]
+        args: ["--token", "fakeToken"],
       };
       const command = new OrgListCommand(args);
       const result = await command.execute();

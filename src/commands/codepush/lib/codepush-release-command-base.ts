@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, shortName, success, defaultValue } from "../../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  hasArg,
+  help,
+  longName,
+  shortName,
+  success,
+  defaultValue,
+} from "../../../util/commandline";
 import { CommandArgs } from "../../../util/commandline/command";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
@@ -37,13 +48,19 @@ export default class CodePushReleaseCommandBase extends AppCommand {
   @longName("mandatory")
   public mandatory: boolean;
 
-  @help("Specifies the location of a RSA private key to sign the release with." + chalk.yellow("NOTICE:") + " use it for react native applications only, client SDK on other platforms will be ignoring signature verification for now!")
+  @help(
+    "Specifies the location of a RSA private key to sign the release with." +
+      chalk.yellow("NOTICE:") +
+      " use it for react native applications only, client SDK on other platforms will be ignoring signature verification for now!"
+  )
   @shortName("k")
   @longName("private-key-path")
   @hasArg
   public privateKeyPath: string;
 
-  @help("When this flag is set, releasing a package that is identical to the latest release will produce a warning instead of an error")
+  @help(
+    "When this flag is set, releasing a package that is identical to the latest release will produce a warning instead of an error"
+  )
   @longName("disable-duplicate-release-error")
   public disableDuplicateReleaseError: boolean;
 
@@ -78,20 +95,31 @@ export default class CodePushReleaseCommandBase extends AppCommand {
   protected async release(client: AppCenterClient): Promise<CommandResult> {
     this.rollout = Number(this.specifiedRollout);
 
-    const validationResult: CommandResult =  await this.validate(client);
-    if (!validationResult.succeeded) { return validationResult; }
+    const validationResult: CommandResult = await this.validate(client);
+    if (!validationResult.succeeded) {
+      return validationResult;
+    }
 
     this.deploymentName = this.specifiedDeploymentName;
 
     if (this.privateKeyPath) {
-      const appInfo = (await out.progress("Getting app info...", clientRequest<models.AppResponse>(
-        (cb) => client.apps.get(this.app.ownerName, this.app.appName, cb)))).result;
+      const appInfo = (
+        await out.progress(
+          "Getting app info...",
+          clientRequest<models.AppResponse>((cb) => client.apps.get(this.app.ownerName, this.app.appName, cb))
+        )
+      ).result;
       const platform = appInfo.platform.toLowerCase();
 
       // In React-Native case we should add "CodePush" name folder as root for relase files for keeping sync with React Native client SDK.
       // Also single file also should be in "CodePush" folder.
-      if (platform === "react-native" && (getLastFolderInPath(this.updateContentsPath) !== "CodePush" || !isDirectory(this.updateContentsPath))) {
-        await moveReleaseFilesInTmpFolder(this.updateContentsPath).then((tmpPath: string) => { this.updateContentsPath = tmpPath; });
+      if (
+        platform === "react-native" &&
+        (getLastFolderInPath(this.updateContentsPath) !== "CodePush" || !isDirectory(this.updateContentsPath))
+      ) {
+        await moveReleaseFilesInTmpFolder(this.updateContentsPath).then((tmpPath: string) => {
+          this.updateContentsPath = tmpPath;
+        });
       }
 
       await sign(this.privateKeyPath, this.updateContentsPath);
@@ -106,18 +134,23 @@ export default class CodePushReleaseCommandBase extends AppCommand {
 
       const releaseUpload = this.upload(client, app, this.deploymentName, updateContentsZipPath);
       await out.progress("Uploading bundle...", releaseUpload);
-      await out.progress("Creating CodePush release...",  this.createRelease(client, app, this.deploymentName, {
-        releaseUpload: await releaseUpload,
-        targetBinaryVersion: this.targetBinaryVersion,
-        description: this.description,
-        disabled: this.disabled,
-        mandatory: this.mandatory,
-        rollout: this.rollout
-      }));
+      await out.progress(
+        "Creating CodePush release...",
+        this.createRelease(client, app, this.deploymentName, {
+          releaseUpload: await releaseUpload,
+          targetBinaryVersion: this.targetBinaryVersion,
+          description: this.description,
+          disabled: this.disabled,
+          mandatory: this.mandatory,
+          rollout: this.rollout,
+        })
+      );
 
-      out.text(`Successfully released an update containing the "${this.updateContentsPath}" `
-        + `${fs.lstatSync(this.updateContentsPath).isDirectory() ? "directory" : "file"}`
-        + ` to the "${this.deploymentName}" deployment of the "${this.app.appName}" app.`);
+      out.text(
+        `Successfully released an update containing the "${this.updateContentsPath}" ` +
+          `${fs.lstatSync(this.updateContentsPath).isDirectory() ? "directory" : "file"}` +
+          ` to the "${this.deploymentName}" deployment of the "${this.app.appName}" app.`
+      );
 
       return success();
     } catch (error) {
@@ -135,33 +168,34 @@ export default class CodePushReleaseCommandBase extends AppCommand {
     }
   }
 
-  private async upload(client: AppCenterClient, app: DefaultApp, deploymentName: string, updateContentsZipPath: string): Promise<models.CodePushReleaseUpload> {
+  private async upload(
+    client: AppCenterClient,
+    app: DefaultApp,
+    deploymentName: string,
+    updateContentsZipPath: string
+  ): Promise<models.CodePushReleaseUpload> {
     debug(`Starting release upload on deployment: ${deploymentName} with zip file: ${updateContentsZipPath}`);
 
-    const releaseUpload = (await clientRequest<models.CodePushReleaseUpload>(
-      (cb) => client.codePushDeploymentUpload.create(
-        deploymentName,
-        app.ownerName,
-        app.appName,
-        cb
+    const releaseUpload = (
+      await clientRequest<models.CodePushReleaseUpload>((cb) =>
+        client.codePushDeploymentUpload.create(deploymentName, app.ownerName, app.appName, cb)
       )
-    )).result;
+    ).result;
 
     await this.uploadBundle(releaseUpload, updateContentsZipPath);
     return releaseUpload;
   }
 
-  public async createRelease(client: AppCenterClient, app: DefaultApp, deploymentName: string, uploadedRelease: models.CodePushUploadedRelease): Promise<void> {
+  public async createRelease(
+    client: AppCenterClient,
+    app: DefaultApp,
+    deploymentName: string,
+    uploadedRelease: models.CodePushUploadedRelease
+  ): Promise<void> {
     debug(`Starting release process on deployment: ${deploymentName} with uploaded release metadata: ${inspect(uploadedRelease)}`);
 
-    await clientRequest<models.CodePushRelease>(
-      (cb) => client.codePushDeploymentReleases.create(
-        deploymentName,
-        uploadedRelease,
-        app.ownerName,
-        app.appName,
-        cb
-      )
+    await clientRequest<models.CodePushRelease>((cb) =>
+      client.codePushDeploymentReleases.create(deploymentName, uploadedRelease, app.ownerName, app.appName, cb)
     );
   }
 
@@ -175,7 +209,7 @@ export default class CodePushReleaseCommandBase extends AppCommand {
       file: bundleZipPath,
       onMessage: (message: string, level: MessageLevel) => {
         debug(`Upload client message: ${message}`);
-      }
+      },
     });
   }
 
@@ -189,7 +223,10 @@ export default class CodePushReleaseCommandBase extends AppCommand {
 
   private async validate(client: AppCenterClient): Promise<CommandResult> {
     if (isBinaryOrZip(this.updateContentsPath)) {
-      return failure(ErrorCodes.InvalidParameter, "It is unnecessary to package releases in a .zip or binary file. Please specify the direct path to the update content's directory (e.g. /platforms/ios/www) or file (e.g. main.jsbundle).");
+      return failure(
+        ErrorCodes.InvalidParameter,
+        "It is unnecessary to package releases in a .zip or binary file. Please specify the direct path to the update content's directory (e.g. /platforms/ios/www) or file (e.g. main.jsbundle)."
+      );
     }
 
     if (!isValidRange(this.targetBinaryVersion)) {
@@ -197,7 +234,10 @@ export default class CodePushReleaseCommandBase extends AppCommand {
     }
 
     if (!Number.isSafeInteger(this.rollout) || !isValidRollout(this.rollout)) {
-      return failure(ErrorCodes.InvalidParameter, `Rollout value should be integer value between ${chalk.bold("0")} or ${chalk.bold("100")}.`);
+      return failure(
+        ErrorCodes.InvalidParameter,
+        `Rollout value should be integer value between ${chalk.bold("0")} or ${chalk.bold("100")}.`
+      );
     }
 
     if (!this.deploymentName && !(await isValidDeployment(client, this.app, this.specifiedDeploymentName))) {

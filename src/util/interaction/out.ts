@@ -23,15 +23,16 @@ export function progress<T>(title: string, action: Promise<T>): Promise<T> {
   if (!formatIsParsingCompatible() && !isQuiet() && stdoutIsTerminal) {
     const spinner = new Spinner(title);
     spinner.start();
-    return action.then((result) => {
-      spinner.stop(true);
-      return result;
-    })
-    .catch((ex) => {
-      spinner.stop(true);
-      throw ex;
-    });
-  }  else {
+    return action
+      .then((result) => {
+        spinner.stop(true);
+        return result;
+      })
+      .catch((ex) => {
+        spinner.stop(true);
+        throw ex;
+      });
+  } else {
     return action;
   }
 }
@@ -40,9 +41,11 @@ export function progress<T>(title: string, action: Promise<T>): Promise<T> {
 // Output an array of items, passing each item through a formatting
 // function.
 //
-export function list<T>(formatter: {(item: T): string}, items: T[]): void {
+export function list<T>(formatter: { (item: T): string }, items: T[]): void {
   console.assert(!formatIsCsv(), "this function doesn't support CSV mode");
-  if (!items || Object.keys(items).length === 0) { return; }
+  if (!items || Object.keys(items).length === 0) {
+    return;
+  }
 
   if (!formatIsJson()) {
     items.map(formatter).forEach((text) => console.log(text));
@@ -56,7 +59,7 @@ export function list<T>(formatter: {(item: T): string}, items: T[]): void {
 //
 export function help(t: string): void;
 export function help(): void;
-export function help(...args: any[]) : void {
+export function help(...args: any[]): void {
   console.assert(!formatIsCsv(), "this function doesn't support CSV mode");
   let t: string;
   if (args.length === 0) {
@@ -71,11 +74,11 @@ export function help(...args: any[]) : void {
 // Output a line of plain text. Only outputs if the format is regular text.
 // If passing a converter, then the raw data is output in json format instead.
 //
-export function text<T>(converter: {(data: T): string}, data: T): void;
+export function text<T>(converter: { (data: T): string }, data: T): void;
 export function text(t: string): void;
 export function text(...args: any[]): void {
   console.assert(!formatIsCsv(), "this function doesn't support CSV mode");
-  let converter: {(data: any): string};
+  let converter: { (data: any): string };
   let data: any;
   if (args.length === 1) {
     converter = null;
@@ -123,8 +126,8 @@ export function getCommandOutputTableOptions(header: string[]): object {
   return {
     head: header,
     style: {
-      head: []
-    }
+      head: [],
+    },
   };
 }
 
@@ -140,14 +143,25 @@ export function getOptionsForTwoColumnTableWithNoBorders(firstColumnWidth: numbe
 
   return {
     chars: {
-      top: "", "top-mid": "", "top-left": "", "top-right": "",
-      bottom: "", "bottom-mid": "", "bottom-left": "", "bottom-right": "",
-      left: "", "left-mid": "", mid: "", "mid-mid": "",
-      right: "", "right-mid": "", middle: ""
+      top: "",
+      "top-mid": "",
+      "top-left": "",
+      "top-right": "",
+      bottom: "",
+      "bottom-mid": "",
+      "bottom-left": "",
+      "bottom-right": "",
+      left: "",
+      "left-mid": "",
+      mid: "",
+      "mid-mid": "",
+      right: "",
+      "right-mid": "",
+      middle: "",
     },
     style: { "padding-left": 0, "padding-right": 0 },
     colWidths: [firstColumnWidth, secondColumnWidth],
-    wordWrap: true
+    wordWrap: true,
   };
 }
 
@@ -285,7 +299,7 @@ function getProperty(value: any, propertyName: string): any {
   return getProperty(value[first], rest);
 }
 
-function doReport(indentation: number, reportFormat: any[], data: any, outfn: {(message: string): void}): void {
+function doReport(indentation: number, reportFormat: any[], data: any, outfn: { (message: string): void }): void {
   if (reportFormat.length === 0) {
     return;
   }
@@ -295,8 +309,12 @@ function doReport(indentation: number, reportFormat: any[], data: any, outfn: {(
     maxWidth = (process.stdout as any).columns;
   }
 
-  const headerWidth = Math.max.apply(null,
-    reportFormat.map(function (item) { return item[0].length; })
+  const headerWidth =
+    Math.max.apply(
+      null,
+      reportFormat.map(function (item) {
+        return item[0].length;
+      })
     ) + 2;
 
   reportFormat.forEach(function (item) {
@@ -311,8 +329,7 @@ function doReport(indentation: number, reportFormat: any[], data: any, outfn: {(
     } else {
       const leftIndentation = "verbose: ".length + indentation + headerWidth;
       let formatted = wrap.hard(leftIndentation, maxWidth)(formatter(value));
-      formatted = spaces(indentation) + toWidth(title, headerWidth) +
-        formatted.slice(leftIndentation);
+      formatted = spaces(indentation) + toWidth(title, headerWidth) + formatted.slice(leftIndentation);
       outfn(formatted);
     }
   });
@@ -321,9 +338,9 @@ function doReport(indentation: number, reportFormat: any[], data: any, outfn: {(
 interface ReportFunc {
   (reportFormat: any, nullMessage: string, data: any): void;
   (reportFormat: any, data: any): void;
-  allProperties: {(data: any): string };
-  asDate: {(data: any): string };
-  inspect: {(data: any): string };
+  allProperties: { (data: any): string };
+  asDate: { (data: any): string };
+  inspect: { (data: any): string };
 }
 
 function makeReport(reportFormat: any, nullMessage: string, data: any): void;
@@ -348,7 +365,7 @@ function makeReport(...args: any[]): void {
       doReport(0, reportFormat, data, console.log);
     }
   } else {
-     console.log(JSON.stringify(data));
+    console.log(JSON.stringify(data));
   }
 }
 
@@ -362,7 +379,9 @@ report.allProperties = function (data: any): any {
     return [key, key];
   });
   const result: string[] = [];
-  doReport(0, subreport, data, function (o) { result.push(o); });
+  doReport(0, subreport, data, function (o) {
+    result.push(o);
+  });
   result.push("");
   return result.join(os.EOL);
 };
@@ -377,7 +396,7 @@ report.asDate = function (data: any): string {
 };
 
 report.inspect = function (data: any): string {
-  return inspect(data, {depth: null});
+  return inspect(data, { depth: null });
 };
 
 export function reportNewLineSeparatedArray(reportFormat: any, data: any[]) {
@@ -395,7 +414,7 @@ export function reportNewLineSeparatedArray(reportFormat: any, data: any[]) {
   }
 }
 
-export function reportTitledGroupsOfTables(dataGroups: Array<{title: string, reportFormat: any, tables: any[]}>) {
+export function reportTitledGroupsOfTables(dataGroups: Array<{ title: string; reportFormat: any; tables: any[] }>) {
   console.assert(!formatIsCsv(), "this function doesn't support CSV mode");
   if (!formatIsJson()) {
     dataGroups.forEach((dataGroup, index) => {
@@ -422,24 +441,24 @@ function getMarginStringFromLevel(level: number) {
 function getTableWithLeftMarginOptions(leftMargin: string) {
   return {
     chars: {
-       top: "─"
-      , "top-mid": "┬"
-      , "top-left":  leftMargin + "┌"
-      , "top-right": "┐"
-      , bottom: "─"
-      , "bottom-mid": "┴"
-      , "bottom-left": leftMargin + "└"
-      , "bottom-right": "┘"
-      , left: leftMargin + "│"
-      , "left-mid": leftMargin + "├"
-      , mid: "─"
-      , "mid-mid": "┼"
-      , right: "│"
-      , "right-mid": "┤"
-      , middle: "│"
+      top: "─",
+      "top-mid": "┬",
+      "top-left": leftMargin + "┌",
+      "top-right": "┐",
+      bottom: "─",
+      "bottom-mid": "┴",
+      "bottom-left": leftMargin + "└",
+      "bottom-right": "┘",
+      left: leftMargin + "│",
+      "left-mid": leftMargin + "├",
+      mid: "─",
+      "mid-mid": "┼",
+      right: "│",
+      "right-mid": "┤",
+      middle: "│",
     },
     style: { "padding-left": 0, "padding-right": 0 },
-    wordWrap: true
+    wordWrap: true,
   };
 }
 
@@ -536,11 +555,11 @@ function calculateTableCellsMaxWidthAcrossLevels(wholeTable: INamedTable): Map<s
       } else {
         // inner table
         calculate(entry, level + 1, levelAndCellIndexToMaxWidth);
+      }
     }
-  }
 
     return levelAndCellIndexToMaxWidth;
-    }
+  }
   return calculate(wholeTable, 0, new Map<string, number>());
 }
 
@@ -553,17 +572,19 @@ function padTableCells(wholeTable: INamedTable): INamedTable {
     const paddedContent = table.content.map((entry) => {
       if (entry instanceof Array) {
         // row
-        return entry.map((cellContent, cellIndex) => _.padEnd(cellContent, levelAndCellIndexToMaxWidth.get(getMapKey(level, cellIndex))));
+        return entry.map((cellContent, cellIndex) =>
+          _.padEnd(cellContent, levelAndCellIndexToMaxWidth.get(getMapKey(level, cellIndex)))
+        );
       } else {
         // inner table
         return pad(entry, level + 1);
-  }
+      }
     });
 
-  return {
-    name: table.name,
-      content: paddedContent
-  };
+    return {
+      name: table.name,
+      content: paddedContent,
+    };
   }
 
   return pad(wholeTable, 0);
@@ -571,13 +592,15 @@ function padTableCells(wholeTable: INamedTable): INamedTable {
 
 function calculateNumberOfColumns(tables: Array<INamedTable | string[]>): number {
   if (tables.length) {
-    return _.max(tables.map((table) => {
-      if (table instanceof Array) {
-        return table.length || 1;
-      } else {
-        return calculateNumberOfColumns(table.content);
-      }
-    }));
+    return _.max(
+      tables.map((table) => {
+        if (table instanceof Array) {
+          return table.length || 1;
+        } else {
+          return calculateNumberOfColumns(table.content);
+        }
+      })
+    );
   } else {
     return 1;
   }
@@ -589,18 +612,24 @@ export interface INamedTable {
 }
 
 function isINamedTable(object: any): object is INamedTable {
-  return object != null
-    && typeof(object.name) === "string"
-    && object.content instanceof Array
-    && object.content.every((item: any) => isINamedTable(item) || (item instanceof Array && item.every((itemComponent) => typeof(itemComponent) === "string")));
+  return (
+    object != null &&
+    typeof object.name === "string" &&
+    object.content instanceof Array &&
+    object.content.every(
+      (item: any) => isINamedTable(item) || (item instanceof Array && item.every((itemComponent) => typeof itemComponent === "string"))
+    )
+  );
 }
 
 // number - level of the table (controls left padding of the table and name)
 export type NamedTables = INamedTable[];
-type ObjectToNamedTablesConvertor<T> = (object: T,
-                                numberFormatter: (num: number) => string,
-                                dateFormatter: (date: Date) => string,
-                                        percentageFormatter: (percentage: number) => string) => NamedTables;
+type ObjectToNamedTablesConvertor<T> = (
+  object: T,
+  numberFormatter: (num: number) => string,
+  dateFormatter: (date: Date) => string,
+  percentageFormatter: (percentage: number) => string
+) => NamedTables;
 
 export function reportObjectAsTitledTables<T>(toNamedTables: ObjectToNamedTablesConvertor<T>, object: T) {
   if (formatIsJson()) {
@@ -608,10 +637,20 @@ export function reportObjectAsTitledTables<T>(toNamedTables: ObjectToNamedTables
   } else {
     let output: string;
     if (formatIsCsv()) {
-      const stringTables = toNamedTables(object, (num) => num.toString(), (date) => date.toISOString(), (percentage) => percentage.toString());
+      const stringTables = toNamedTables(
+        object,
+        (num) => num.toString(),
+        (date) => date.toISOString(),
+        (percentage) => percentage.toString()
+      );
       output = convertNamedTablesToCsvString(stringTables);
     } else {
-      const stringTables = toNamedTables(object, (num) => _.round(num, 2).toString(), (date) => date.toString(), (percentage) => _.round(percentage, 2).toString() + "%");
+      const stringTables = toNamedTables(
+        object,
+        (num) => _.round(num, 2).toString(),
+        (date) => date.toString(),
+        (percentage) => _.round(percentage, 2).toString() + "%"
+      );
       output = convertNamedTablesToListString(stringTables);
     }
 

@@ -45,7 +45,7 @@ export default class PublishToStoreCommand extends AppCommand {
     const releaseCommandArgs: CommandArgs = {
       args: releaseArgs,
       command: ["distribute", "release"],
-      commandPath: undefined
+      commandPath: undefined,
     };
 
     debug("Forwarding to distribute release command");

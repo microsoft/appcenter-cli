@@ -40,12 +40,18 @@ export default class UploadMissingSymbols extends AppCommand {
 
     await this.validateParameters();
 
-    const missingSymbolsIds: string[] = await out.progress("Getting list of missing symbols...", this.getMissingSymbolsIds(client, app));
+    const missingSymbolsIds: string[] = await out.progress(
+      "Getting list of missing symbols...",
+      this.getMissingSymbolsIds(client, app)
+    );
 
-    let output: { missingSymbols: number, found: number };
+    let output: { missingSymbols: number; found: number };
     if (missingSymbolsIds.length) {
       // there are missing symbols - find and upload them
-      const uuidToPath = await out.progress("Searching for missing symbols...", this.searchForMissingSymbols(missingSymbolsIds, client, app));
+      const uuidToPath = await out.progress(
+        "Searching for missing symbols...",
+        this.searchForMissingSymbols(missingSymbolsIds, client, app)
+      );
       const found = await out.progress("Uploading found symbols...", this.uploadFoundSymbols(uuidToPath, client, app));
 
       output = { missingSymbols: missingSymbolsIds.length, found };
@@ -54,8 +60,11 @@ export default class UploadMissingSymbols extends AppCommand {
     }
 
     out.text((result) => {
-      return `${result.missingSymbols} symbols are needed to symbolicate all crashes` + Os.EOL +
-             `${result.found} of these symbols were found and uploaded`;
+      return (
+        `${result.missingSymbols} symbols are needed to symbolicate all crashes` +
+        Os.EOL +
+        `${result.found} of these symbols were found and uploaded`
+      );
     }, output);
 
     return success();
@@ -64,25 +73,43 @@ export default class UploadMissingSymbols extends AppCommand {
   private async validateParameters(): Promise<void> {
     if (!_.isNil(this.symbolsPath)) {
       if (!(await Pfs.exists(this.symbolsPath))) {
-         throw failure(ErrorCodes.InvalidParameter, `path ${this.symbolsPath} doesn't exist`);
+        throw failure(ErrorCodes.InvalidParameter, `path ${this.symbolsPath} doesn't exist`);
       }
     }
   }
 
   private async getMissingSymbolsIds(client: AppCenterClient, app: DefaultApp): Promise<string[]> {
     try {
-      const httpResponse = await clientRequest<models.V2MissingSymbolCrashGroupsResponse>((cb) => client.missingSymbolGroups.list(MAX_SQL_INTEGER, app.ownerName, app.appName, cb));
-      return _.flatten(httpResponse.result.groups
-        .map((crashGroup) => crashGroup.missingSymbols.filter((s) => s.status === "missing").map((s) => s.symbolId)));
+      const httpResponse = await clientRequest<models.V2MissingSymbolCrashGroupsResponse>((cb) =>
+        client.missingSymbolGroups.list(MAX_SQL_INTEGER, app.ownerName, app.appName, cb)
+      );
+      return _.flatten(
+        httpResponse.result.groups.map((crashGroup) =>
+          crashGroup.missingSymbols.filter((s) => s.status === "missing").map((s) => s.symbolId)
+        )
+      );
     } catch (error) {
       debug(`Failed to get list of missing symbols - ${inspect(error)}`);
       throw failure(ErrorCodes.Exception, "failed to get list of missing symbols");
     }
   }
 
-  private async searchForMissingSymbols(missingSymbolsIds: string[], client: AppCenterClient, app: DefaultApp): Promise<Map<string, string>> {
-    console.assert(missingSymbolsIds.every((id) => /^[0-9a-f]{32}$/g.test(id)), "the API has returned abnormal missing symbols IDs");
-    const missingSymbolsUuids: string[] = missingSymbolsIds.map((id) => id.toUpperCase().match(/(.{8})(.{4})(.{4})(.{4})(.{12})/).slice(1).join("-"));
+  private async searchForMissingSymbols(
+    missingSymbolsIds: string[],
+    client: AppCenterClient,
+    app: DefaultApp
+  ): Promise<Map<string, string>> {
+    console.assert(
+      missingSymbolsIds.every((id) => /^[0-9a-f]{32}$/g.test(id)),
+      "the API has returned abnormal missing symbols IDs"
+    );
+    const missingSymbolsUuids: string[] = missingSymbolsIds.map((id) =>
+      id
+        .toUpperCase()
+        .match(/(.{8})(.{4})(.{4})(.{4})(.{12})/)
+        .slice(1)
+        .join("-")
+    );
 
     let uuidToPath: Map<string, string>;
     if (_.isNil(this.symbolsPath)) {
@@ -110,7 +137,9 @@ export default class UploadMissingSymbols extends AppCommand {
   private async uploadFoundSymbols(uuidToPath: Map<string, string>, client: AppCenterClient, app: DefaultApp): Promise<number> {
     // packing and uploading each found dSYM package
     const helper = new UploadSymbolsHelper(client, app, debug);
-    const paths = Array.from(uuidToPath.values()).filter((path) => !_.isNull(path)).map((path) => Path.resolve(path));
+    const paths = Array.from(uuidToPath.values())
+      .filter((path) => !_.isNull(path))
+      .map((path) => Path.resolve(path));
     const uniquePaths = _.uniq(paths);
     for (const path of uniquePaths) {
       await this.uploadSymbolsZip(path, helper);
@@ -130,7 +159,7 @@ export default class UploadMissingSymbols extends AppCommand {
 
   private executeMdfindSearch(uuid: string): Promise<string | null> {
     return new Promise<string>((resolve, reject) => {
-      const context = mdfind({query: `com_apple_xcode_dsym_uuids == ${uuid}`});
+      const context = mdfind({ query: `com_apple_xcode_dsym_uuids == ${uuid}` });
       let result: string = null;
       context.output
         .on("data", (data: any) => {
@@ -266,6 +295,6 @@ export default class UploadMissingSymbols extends AppCommand {
 
     const tempFilePath = await createTempFileFromZip(zip);
 
-    await helper.uploadSymbolsArtifact(tempFilePath, { symbolType: SymbolType.Apple} );
+    await helper.uploadSymbolsArtifact(tempFilePath, { symbolType: SymbolType.Apple });
   }
 }

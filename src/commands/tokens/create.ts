@@ -1,6 +1,17 @@
 // token create command
 
-import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg } from "../../util/commandline";
+import {
+  Command,
+  CommandArgs,
+  CommandResult,
+  help,
+  success,
+  failure,
+  ErrorCodes,
+  shortName,
+  longName,
+  hasArg,
+} from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportToken } from "./lib/format-token";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
@@ -22,7 +33,8 @@ export default class TokenCreateCommand extends Command {
       description: this.description,
     };
 
-    const createTokenResponse = await out.progress("Creating token ...",
+    const createTokenResponse = await out.progress(
+      "Creating token ...",
       clientRequest<models.ApiTokensCreateResponse>((cb) => client.apiTokens.newMethod(tokenAttributes, cb))
     );
 

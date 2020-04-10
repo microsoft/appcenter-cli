@@ -8,13 +8,9 @@ import * as chalk from "chalk";
 const debug = require("debug")("appcenter-cli:util:commandline:help");
 const Table = require("cli-table3");
 
-import {
-  getClassHelpText, getOptionsDescription, getPositionalOptionsDescription
-} from "./option-decorators";
+import { getClassHelpText, getOptionsDescription, getPositionalOptionsDescription } from "./option-decorators";
 
-import {
-  OptionDescription, PositionalOptionDescription
-} from "./option-parser";
+import { OptionDescription, PositionalOptionDescription } from "./option-parser";
 
 import { out } from "../interaction";
 
@@ -63,7 +59,7 @@ function toSwitchOptionHelp(option: OptionDescription): SwitchOptionHelp {
     shortName: option.shortName ? `-${option.shortName}` : "",
     longName: option.longName ? `--${option.longName}` : "",
     helpText: option.helpText || "",
-    argName: option.hasArg ? "<arg>" : ""
+    argName: option.hasArg ? "<arg>" : "",
   };
 }
 
@@ -108,7 +104,7 @@ interface PositionalOptionHelp {
 function toPositionalOptionHelp(option: PositionalOptionDescription): PositionalOptionHelp {
   return {
     name: option.name,
-    helpText: option.helpText
+    helpText: option.helpText,
   };
 }
 
@@ -130,10 +126,10 @@ function switchText(switchOption: SwitchOptionHelp): string {
   //  -y <arg>
   //  -y|--yopt <arg>
   //     --yopt <arg>
-  const start = switchOption.shortName ? [ switchOption.shortName ] : [ "  " ];
-  const sep = switchOption.shortName && switchOption.longName ? [ "|" ] : [ " " ];
-  const long = switchOption.longName ? [ switchOption.longName ] : [];
-  const arg = switchOption.argName ? [ " " + switchOption.argName ] : [];
+  const start = switchOption.shortName ? [switchOption.shortName] : ["  "];
+  const sep = switchOption.shortName && switchOption.longName ? ["|"] : [" "];
+  const long = switchOption.longName ? [switchOption.longName] : [];
+  const arg = switchOption.argName ? [" " + switchOption.argName] : [];
   return start.concat(sep).concat(long).concat(arg).join("");
 }
 
@@ -159,15 +155,14 @@ function getCommandExample(commandPrototype: any, commandObj: any): string {
   const firstLineFreeSpace = maxWidth - usageConst.length - separatorLength;
   const freeSpace = firstLineFreeSpace - lastLinesLeftMargin.length;
   const leftMargin = _.repeat(" ", usageConst.length);
-  getAllOptionExamples(commandPrototype)
-    .forEach((example) => {
-      if (currentLine.length + example.length + 1 > (lines.length ? freeSpace : firstLineFreeSpace)) {
-        lines.push(currentLine);
-        currentLine = leftMargin + example;
-      } else {
-        currentLine += ` ${example}`;
-      }
-    });
+  getAllOptionExamples(commandPrototype).forEach((example) => {
+    if (currentLine.length + example.length + 1 > (lines.length ? freeSpace : firstLineFreeSpace)) {
+      lines.push(currentLine);
+      currentLine = leftMargin + example;
+    } else {
+      currentLine += ` ${example}`;
+    }
+  });
 
   lines.push(currentLine);
 
@@ -187,40 +182,37 @@ function getCommandName(commandObj: any): string {
 }
 
 function getAllOptionExamples(commandPrototype: any): string[] {
-  return getSwitchOptionExamples(commandPrototype, false)
-    .concat(getPositionalOptionExamples(commandPrototype));
+  return getSwitchOptionExamples(commandPrototype, false).concat(getPositionalOptionExamples(commandPrototype));
 }
 
 function getSwitchOptionExamples(commandPrototype: any, includeCommon: boolean = true): string[] {
   const switchOptions = getOptionsDescription(commandPrototype);
   const switchOptionDescriptions = includeCommon ? _.values(switchOptions) : filterOptionDescriptions(_.values(switchOptions), false);
 
-  return sortOptionDescriptions(switchOptionDescriptions)
-    .map((description: OptionDescription): string => {
-      const result: string[] = [];
-      result.push(description.shortName ? `-${description.shortName}` : "");
-      result.push(description.shortName && description.longName ? "|" : "");
-      result.push(description.longName ? `--${description.longName}` : "");
-      result.push(description.hasArg ? " <arg>" : "");
-      if (!description.required) {
-        result.unshift("[");
-        result.push("]");
-      }
-      return result.join("");
-    });
+  return sortOptionDescriptions(switchOptionDescriptions).map((description: OptionDescription): string => {
+    const result: string[] = [];
+    result.push(description.shortName ? `-${description.shortName}` : "");
+    result.push(description.shortName && description.longName ? "|" : "");
+    result.push(description.longName ? `--${description.longName}` : "");
+    result.push(description.hasArg ? " <arg>" : "");
+    if (!description.required) {
+      result.unshift("[");
+      result.push("]");
+    }
+    return result.join("");
+  });
 }
 
 function getPositionalOptionExamples(commandPrototype: any): string[] {
   const positionalOptions = getPositionalOptionsDescription(commandPrototype);
 
-  return _.sortBy(positionalOptions, "position")
-    .map((description): string => {
-      if (description.position !== null) {
-        return `<${description.name}>`;
-      }
-      // Output for "rest" parameter. sortBy will push it to the end.
-      return `<${description.name}...>`;
-    });
+  return _.sortBy(positionalOptions, "position").map((description): string => {
+    if (description.position !== null) {
+      return `<${description.name}>`;
+    }
+    // Output for "rest" parameter. sortBy will push it to the end.
+    return `<${description.name}...>`;
+  });
 }
 
 function styleOptsTable(table: string[][]): string[][] {
@@ -230,10 +222,16 @@ function styleOptsTable(table: string[][]): string[][] {
 function sortOptionDescriptions(options: OptionDescription[]): OptionDescription[] {
   return _(options)
     .reverse() // options from a top prototype are added first, reversing order
-    .sortBy([(opt: OptionDescription) => opt.required ? 0 : 1]) // required options should be shown first
+    .sortBy([(opt: OptionDescription) => (opt.required ? 0 : 1)]) // required options should be shown first
     .value();
 }
 
 function filterOptionDescriptions(options: OptionDescription[], isCommon: boolean): OptionDescription[] {
-  return isCommon ? options.filter((option) => { return option.common; }) :  options.filter((option) => { return !option.common; });
+  return isCommon
+    ? options.filter((option) => {
+        return option.common;
+      })
+    : options.filter((option) => {
+        return !option.common;
+      });
 }

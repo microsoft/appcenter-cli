@@ -56,7 +56,9 @@ export function unescape(s: string): string {
 export function encodeObject(obj: any): string {
   return _.chain(obj)
     .toPairs()
-    .sortBy(function (p) { return p[0]; })
+    .sortBy(function (p) {
+      return p[0];
+    })
     .map(function (p) {
       if (_.isBoolean(p[1])) {
         return [p[0], p[1].toString()];
@@ -66,8 +68,12 @@ export function encodeObject(obj: any): string {
       }
       return [p[0], p[1] ? p[1].toString() : ""];
     })
-    .map(function (p) { return p.map(escape); })
-    .map(function (p) { return p.join(":"); })
+    .map(function (p) {
+      return p.map(escape);
+    })
+    .map(function (p) {
+      return p.join(":");
+    })
     .value()
     .join("::");
 }
@@ -90,14 +96,18 @@ function partToKeyValue(part: string): string[] {
         accumulator[1] = value;
       }
       return accumulator;
-    }, [null, null]);
+    },
+    [null, null]
+  );
   return value;
 }
 
 export function decodeObject(key: string): any {
   return _.chain(key.split("::"))
     .map(partToKeyValue)
-    .map(function (pairs) { return pairs.map(unescape); })
+    .map(function (pairs) {
+      return pairs.map(unescape);
+    })
     .fromPairs()
     .value();
 }

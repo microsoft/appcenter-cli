@@ -12,7 +12,7 @@ const g2js = require("gradle-to-js/lib/parser");
 const properties = require("properties");
 const childProcess = require("child_process");
 
-export let spawn = childProcess.spawn;
+export const spawn = childProcess.spawn;
 
 export interface VersionSearchParams {
   os: string; // ios or android
@@ -30,14 +30,21 @@ interface XCBuildConfiguration {
   name: string;
 }
 
-export async function getReactNativeProjectAppVersion(versionSearchParams: VersionSearchParams, projectRoot?: string): Promise<string> {
+export async function getReactNativeProjectAppVersion(
+  versionSearchParams: VersionSearchParams,
+  projectRoot?: string
+): Promise<string> {
   projectRoot = projectRoot || process.cwd();
-  /* tslint:disable-next-line:non-literal-require */
+  // eslint-disable-next-line security/detect-non-literal-require
   const projectPackageJson: any = require(path.join(projectRoot, "package.json"));
   const projectName: string = projectPackageJson.name;
 
   const fileExists = (file: string): boolean => {
-    try { return fs.statSync(file).isFile(); } catch (e) { return false; }
+    try {
+      return fs.statSync(file).isFile();
+    } catch (e) {
+      return false;
+    }
   };
 
   out.text(chalk.cyan(`Detecting ${versionSearchParams.os} app version:\n`));
@@ -61,15 +68,16 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
       const iOSDirectory: string = "ios";
       const plistFileName = `${versionSearchParams.plistFilePrefix || ""}Info.plist`;
 
-      const knownLocations = [
-        path.join(iOSDirectory, projectName, plistFileName),
-        path.join(iOSDirectory, plistFileName)
-      ];
+      const knownLocations = [path.join(iOSDirectory, projectName, plistFileName), path.join(iOSDirectory, plistFileName)];
 
       resolvedPlistFile = (knownLocations as any).find(fileExists);
 
       if (!resolvedPlistFile) {
-        throw new Error(`Unable to find either of the following plist files in order to infer your app's binary version: "${knownLocations.join("\", \"")}". If your plist has a different name, or is located in a different directory, consider using either the "--plist-file" or "--plist-file-prefix" parameters to help inform the CLI how to find it.`);
+        throw new Error(
+          `Unable to find either of the following plist files in order to infer your app's binary version: "${knownLocations.join(
+            '", "'
+          )}". If your plist has a different name, or is located in a different directory, consider using either the "--plist-file" or "--plist-file-prefix" parameters to help inform the CLI how to find it.`
+        );
       }
     }
 
@@ -88,7 +96,9 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         return Promise.resolve(parsedPlist.CFBundleShortVersionString);
       } else {
         if (parsedPlist.CFBundleShortVersionString !== "$(MARKETING_VERSION)") {
-          throw new Error(`The "CFBundleShortVersionString" key in the "${resolvedPlistFile}" file needs to specify a valid semver string, containing both a major and minor version (e.g. 1.3.2, 1.1).`);
+          throw new Error(
+            `The "CFBundleShortVersionString" key in the "${resolvedPlistFile}" file needs to specify a valid semver string, containing both a major and minor version (e.g. 1.3.2, 1.1).`
+          );
         }
 
         const iOSDirectory = "ios";
@@ -96,11 +106,15 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         const pbxprojFileName = "project.pbxproj";
         const pbxprojKnownLocations = [
           path.join(iOSDirectory, xcodeprojDirectory, pbxprojFileName),
-          path.join(iOSDirectory, pbxprojFileName)
+          path.join(iOSDirectory, pbxprojFileName),
         ];
         const resolvedPbxprojFile = pbxprojKnownLocations.find(fileExists);
         if (!resolvedPbxprojFile) {
-          throw new Error(`Unable to find either of the following pbxproj files in order to infer your app's binary version: "${pbxprojKnownLocations.join("\", \"")}".`);
+          throw new Error(
+            `Unable to find either of the following pbxproj files in order to infer your app's binary version: "${pbxprojKnownLocations.join(
+              '", "'
+            )}".`
+          );
         }
 
         const xcodeProj = xcode.project(resolvedPbxprojFile).parseSync();
@@ -111,9 +125,12 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
           throw new Error(`Unable to find the build configuration with "${buildConfigurationName}" name.`);
         }
 
-        const marketingVersion = Object.values(configsObj).find((c) => c.buildSettings["MARKETING_VERSION"]).buildSettings.MARKETING_VERSION;
+        const marketingVersion = Object.values(configsObj).find((c) => c.buildSettings["MARKETING_VERSION"]).buildSettings
+          .MARKETING_VERSION;
         if (!isValidVersion(marketingVersion)) {
-          throw new Error(`The "MARKETING_VERSION" key in the "${resolvedPbxprojFile}" file needs to specify a valid semver string, containing both a major and minor version (e.g. 1.3.2, 1.1).`);
+          throw new Error(
+            `The "MARKETING_VERSION" key in the "${resolvedPbxprojFile}" file needs to specify a valid semver string, containing both a major and minor version (e.g. 1.3.2, 1.1).`
+          );
         }
         out.text(`Using the target binary version value "${marketingVersion}" from "${resolvedPbxprojFile}".\n`);
 
@@ -135,7 +152,8 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
       throw new Error(`Unable to find gradle file "${buildGradlePath}".`);
     }
 
-    return g2js.parseFile(buildGradlePath)
+    return g2js
+      .parseFile(buildGradlePath)
       .catch(() => {
         throw new Error(`Unable to parse the "${buildGradlePath}" file. Please ensure it is a well-formed Gradle file.`);
       })
@@ -157,11 +175,15 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         } else if (buildGradle.android && buildGradle.android.defaultConfig && buildGradle.android.defaultConfig.versionName) {
           versionName = buildGradle.android.defaultConfig.versionName;
         } else {
-          throw new Error(`The "${buildGradlePath}" file doesn't specify a value for the "android.defaultConfig.versionName" property.`);
+          throw new Error(
+            `The "${buildGradlePath}" file doesn't specify a value for the "android.defaultConfig.versionName" property.`
+          );
         }
 
         if (typeof versionName !== "string") {
-          throw new Error(`The "android.defaultConfig.versionName" property value in "${buildGradlePath}" is not a valid string. If this is expected, consider using the --target-binary-version option to specify the value manually.`);
+          throw new Error(
+            `The "android.defaultConfig.versionName" property value in "${buildGradlePath}" is not a valid string. If this is expected, consider using the --target-binary-version option to specify the value manually.`
+          );
         }
 
         let appVersion: string = versionName.replace(/"/g, "").trim();
@@ -178,10 +200,7 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         const propertyName = appVersion.replace("project.", "");
         const propertiesFileName = "gradle.properties";
 
-        const knownLocations = [
-          path.join("android", "app", propertiesFileName),
-          path.join("android", propertiesFileName)
-        ];
+        const knownLocations = [path.join("android", "app", propertiesFileName), path.join("android", propertiesFileName)];
 
         // Search for gradle properties across all `gradle.properties` files
         let propertiesFile: string = null;
@@ -206,10 +225,14 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
         }
 
         if (!isValidVersion(appVersion)) {
-          throw new Error(`The "${propertyName}" property in the "${propertiesFile}" file needs to specify a valid semver string, containing both a major and minor version (e.g. 1.3.2, 1.1).`);
+          throw new Error(
+            `The "${propertyName}" property in the "${propertiesFile}" file needs to specify a valid semver string, containing both a major and minor version (e.g. 1.3.2, 1.1).`
+          );
         }
 
-        out.text(`Using the target binary version value "${appVersion}" from the "${propertyName}" key in the "${propertiesFile}" file.\n`);
+        out.text(
+          `Using the target binary version value "${appVersion}" from the "${propertyName}" key in the "${propertiesFile}" file.\n`
+        );
         return appVersion.toString();
       });
   } else {
@@ -226,15 +249,25 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
     return new Promise<string>((resolve, reject) => {
       xml2js.parseString(appxManifestContents, (err: Error, parsedAppxManifest: any) => {
         if (err) {
-          reject(new Error(`Unable to parse the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file, it could be malformed.`));
+          reject(
+            new Error(
+              `Unable to parse the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file, it could be malformed.`
+            )
+          );
           return;
         }
         try {
           const appVersion: string = parsedAppxManifest.Package.Identity[0]["$"].Version.match(/^\d+\.\d+\.\d+/)[0];
-          out.text(`Using the target binary version value "${appVersion}" from the "Identity" key in the "${appxManifestFileName}" file.\n`);
+          out.text(
+            `Using the target binary version value "${appVersion}" from the "Identity" key in the "${appxManifestFileName}" file.\n`
+          );
           return resolve(appVersion);
         } catch (e) {
-          reject(new Error(`Unable to parse the package version from the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file.`));
+          reject(
+            new Error(
+              `Unable to parse the package version from the "${path.join(appxManifestContainingFolder, appxManifestFileName)}" file.`
+            )
+          );
           return;
         }
       });
@@ -242,7 +275,15 @@ export async function getReactNativeProjectAppVersion(versionSearchParams: Versi
   }
 }
 
-export function runReactNativeBundleCommand(bundleName: string, development: boolean, entryFile: string, outputFolder: string, platform: string, sourcemapOutput: string, extraBundlerOptions: string[]): Promise<void> {
+export function runReactNativeBundleCommand(
+  bundleName: string,
+  development: boolean,
+  entryFile: string,
+  outputFolder: string,
+  platform: string,
+  sourcemapOutput: string,
+  extraBundlerOptions: string[]
+): Promise<void> {
   const reactNativeBundleArgs: string[] = [];
   const envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
 
@@ -251,12 +292,18 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
   }
 
   Array.prototype.push.apply(reactNativeBundleArgs, [
-    getCliPath(), "bundle",
-    "--assets-dest", outputFolder,
-    "--bundle-output", path.join(outputFolder, bundleName),
-    "--dev", development,
-    "--entry-file", entryFile,
-    "--platform", platform,
+    getCliPath(),
+    "bundle",
+    "--assets-dest",
+    outputFolder,
+    "--bundle-output",
+    path.join(outputFolder, bundleName),
+    "--dev",
+    development,
+    "--entry-file",
+    entryFile,
+    "--platform",
+    platform,
     ...extraBundlerOptions,
   ]);
 
@@ -264,7 +311,7 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
     reactNativeBundleArgs.push("--sourcemap-output", sourcemapOutput);
   }
 
-  out.text(chalk.cyan("Running \"react-native bundle\" command:\n"));
+  out.text(chalk.cyan('Running "react-native bundle" command:\n'));
   const reactNativeBundleProcess = spawn("node", reactNativeBundleArgs);
   out.text(`node ${reactNativeBundleArgs.join(" ")}`);
 
@@ -287,7 +334,12 @@ export function runReactNativeBundleCommand(bundleName: string, development: boo
   });
 }
 
-export function runHermesEmitBinaryCommand(bundleName: string, outputFolder: string, sourcemapOutput: string, extraHermesFlags: string[]): Promise<void> {
+export function runHermesEmitBinaryCommand(
+  bundleName: string,
+  outputFolder: string,
+  sourcemapOutput: string,
+  extraHermesFlags: string[]
+): Promise<void> {
   const hermesArgs: string[] = [];
   const envNodeArgs: string = process.env.CODE_PUSH_NODE_ARGS;
 
@@ -297,7 +349,8 @@ export function runHermesEmitBinaryCommand(bundleName: string, outputFolder: str
 
   Array.prototype.push.apply(hermesArgs, [
     "-emit-binary",
-    "-out", path.join(outputFolder, bundleName + ".hbc"),
+    "-out",
+    path.join(outputFolder, bundleName + ".hbc"),
     path.join(outputFolder, bundleName),
     ...extraHermesFlags,
   ]);
@@ -331,21 +384,19 @@ export function runHermesEmitBinaryCommand(bundleName: string, outputFolder: str
       // Copy HBC bundle to overwrite JS bundle
       const source = path.join(outputFolder, bundleName + ".hbc");
       const destination = path.join(outputFolder, bundleName);
-      fs.copyFile(source, destination,
-        (err) => {
+      fs.copyFile(source, destination, (err) => {
+        if (err) {
+          console.error(err);
+          reject(new Error(`Copying file ${source} to ${destination} failed. "hermes" previously exited with code ${exitCode}.`));
+        }
+        fs.unlink(source, (err) => {
           if (err) {
             console.error(err);
-            reject(new Error(`Copying file ${source} to ${destination} failed. "hermes" previously exited with code ${exitCode}.`));
+            reject(err);
           }
-          fs.unlink(source, (err) => {
-            if (err) {
-              console.error(err);
-              reject(err);
-            }
-            resolve(null as void);
-          });
-        }
-      );
+          resolve(null as void);
+        });
+      });
     });
   });
 }
@@ -363,7 +414,8 @@ export function getHermesEnabled(gradleFile: string): boolean {
     throw new Error(`Unable to find gradle file "${buildGradlePath}".`);
   }
 
-  return g2js.parseFile(buildGradlePath)
+  return g2js
+    .parseFile(buildGradlePath)
     .catch(() => {
       throw new Error(`Unable to parse the "${buildGradlePath}" file. Please ensure it is a well-formed Gradle file.`);
     })
@@ -388,7 +440,11 @@ function getHermesOSBin(): string {
 
 function getHermesCommand(): string {
   const fileExists = (file: string): boolean => {
-    try { return fs.statSync(file).isFile(); } catch (e) { return false; }
+    try {
+      return fs.statSync(file).isFile();
+    } catch (e) {
+      return false;
+    }
   };
   // assume if hermes-engine exists it should be used instead of hermesvm
   const hermesEngine = path.join("node_modules", "hermes-engine", getHermesOSBin(), "hermes");
@@ -423,15 +479,20 @@ export function isValidPlatform(platform: string): boolean {
 
 export function isReactNativeProject(): boolean {
   try {
-    /* tslint:disable-next-line:non-literal-require */
+    // eslint-disable-next-line security/detect-non-literal-require
     const projectPackageJson: any = require(path.join(process.cwd(), "package.json"));
     const projectName: string = projectPackageJson.name;
     if (!projectName) {
       throw new Error(`The "package.json" file in the CWD does not have the "name" field set.`);
     }
 
-    return projectPackageJson.dependencies["react-native"] || (projectPackageJson.devDependencies && projectPackageJson.devDependencies["react-native"]);
+    return (
+      projectPackageJson.dependencies["react-native"] ||
+      (projectPackageJson.devDependencies && projectPackageJson.devDependencies["react-native"])
+    );
   } catch (error) {
-    throw new Error(`Unable to find or read "package.json" in the CWD. The "release-react" command must be executed in a React Native project folder.`);
+    throw new Error(
+      `Unable to find or read "package.json" in the CWD. The "release-react" command must be executed in a React Native project folder.`
+    );
   }
 }

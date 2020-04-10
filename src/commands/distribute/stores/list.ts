@@ -8,15 +8,16 @@ const debug = require("debug")("appcenter-cli:commands:distribute:stores:list");
 
 @help("Lists all stores of the app")
 export default class ListStoresCommand extends AppCommand {
-
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     debug("Getting list of the stores");
     let storesListRequestResponse: ClientResponse<models.ExternalStoreResponse[]>;
     try {
-      storesListRequestResponse = await out.progress("Getting list of the stores...",
-        clientRequest<models.ExternalStoreResponse[]>((cb) => client.stores.list(app.ownerName, app.appName, cb)));
+      storesListRequestResponse = await out.progress(
+        "Getting list of the stores...",
+        clientRequest<models.ExternalStoreResponse[]>((cb) => client.stores.list(app.ownerName, app.appName, cb))
+      );
     } catch (error) {
       debug(`Failed to get list of the stores - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, "failed to fetch list of all stores");
@@ -26,8 +27,7 @@ export default class ListStoresCommand extends AppCommand {
       return failure(ErrorCodes.Exception, "failed to fetch list of all stores");
     }
 
-    const sortedStores = _(storesListRequestResponse.result)
-      .sortBy((store) => [store.type, store.track, store.name]);
+    const sortedStores = _(storesListRequestResponse.result).sortBy((store) => [store.type, store.track, store.name]);
 
     const storesNames = sortedStores.map((store) => store.name).value();
     const storesTypes = sortedStores.map((store) => store.type).value();

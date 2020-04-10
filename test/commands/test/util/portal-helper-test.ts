@@ -2,7 +2,6 @@ import { getPortalTestLink } from "../../../../src/util/portal/portal-helper";
 import { expect } from "chai";
 
 describe("portal helper test", function () {
-
   function generateUrl(isOrg: boolean): string {
     return getPortalTestLink("domain.any", isOrg, "owner", "appName", "Series with spaces", "uuid");
   }

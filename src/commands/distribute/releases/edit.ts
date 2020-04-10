@@ -1,4 +1,17 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg, position, name } from "../../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  help,
+  success,
+  shortName,
+  longName,
+  required,
+  hasArg,
+  position,
+  name,
+} from "../../../util/commandline";
 import { AppCenterClient, clientRequest, models } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
@@ -31,28 +44,40 @@ export default class EditReleaseCommand extends AppCommand {
 
     const state = this.state;
     if (state !== "enabled" && state !== "disabled") {
-      return failure(ErrorCodes.InvalidParameter, `"${state}" is not a valid release state. Available states are "enabled" or "disabled".`);
+      return failure(
+        ErrorCodes.InvalidParameter,
+        `"${state}" is not a valid release state. Available states are "enabled" or "disabled".`
+      );
     }
 
     let releaseDetails: models.ReleaseDetailsResponse;
     try {
       debug("Loading release details");
-      const httpRequest = await out.progress("Loading release details...", clientRequest<models.ReleaseDetailsResponse>(
-        (cb) => client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
-      ));
+      const httpRequest = await out.progress(
+        "Loading release details...",
+        clientRequest<models.ReleaseDetailsResponse>((cb) =>
+          client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
+        )
+      );
       if (httpRequest.response.statusCode >= 400) {
-        return httpRequest.response.statusCode === 404 ? failure(ErrorCodes.InvalidParameter, `release ${this.releaseId} doesn't exist`) : failure(ErrorCodes.Exception, "failed to load release details");
+        return httpRequest.response.statusCode === 404
+          ? failure(ErrorCodes.InvalidParameter, `release ${this.releaseId} doesn't exist`)
+          : failure(ErrorCodes.Exception, "failed to load release details");
       } else {
         releaseDetails = httpRequest.result;
       }
     } catch (error) {
-        handleHttpError(error, false, "failed to load release details");
+      handleHttpError(error, false, "failed to load release details");
     }
 
     try {
       debug(`Updating release state to "${state}"`);
-      const httpResponse = await out.progress(`${state === "enabled" ? "Enabling" : "Disabling"} the release...`,
-        clientRequest((cb) => client.releases.updateDetails(releaseId, app.ownerName, app.appName, { enabled: state === "enabled" }, cb)));
+      const httpResponse = await out.progress(
+        `${state === "enabled" ? "Enabling" : "Disabling"} the release...`,
+        clientRequest((cb) =>
+          client.releases.updateDetails(releaseId, app.ownerName, app.appName, { enabled: state === "enabled" }, cb)
+        )
+      );
       if (httpResponse.response.statusCode >= 400) {
         return failure(ErrorCodes.Exception, `failed to ${state === "enabled" ? "enable" : "disable"} the release`);
       }

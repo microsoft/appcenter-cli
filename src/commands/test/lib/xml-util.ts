@@ -12,7 +12,7 @@ export abstract class XmlUtil {
     locator: {},
     errorHandler: function (level: string, msg: string) {
       throw `DOMParser${level}: ${msg}`;
-    }
+    },
   };
 
   public collectAllElements(element: Element, name: string): Element[] {
@@ -54,15 +54,23 @@ export abstract class XmlUtil {
     return result;
   }
 
-  public getMergeXmlResultsPromise(pathToArchive: string, tempPath: string, processXml: Function, resolvePromise: Function): Promise<Document> {
+  public getMergeXmlResultsPromise(
+    pathToArchive: string,
+    tempPath: string,
+    processXml: Function,
+    resolvePromise: Function
+  ): Promise<Document> {
     return new Promise<Document>((resolve, reject) => {
-        fs.createReadStream(pathToArchive)
-        .pipe(unzipper.Extract({ path: tempPath })).on("close", () => {
+      fs.createReadStream(pathToArchive)
+        .pipe(unzipper.Extract({ path: tempPath }))
+        .on("close", () => {
           try {
             const files = fs.readdirSync(tempPath);
-            files.filter((fileName)  => {
-              return fileName.endsWith(".xml");
-            }).forEach((file) => processXml(path.join(tempPath, file), file));
+            files
+              .filter((fileName) => {
+                return fileName.endsWith(".xml");
+              })
+              .forEach((file) => processXml(path.join(tempPath, file), file));
 
             resolvePromise(resolve);
           } catch (e) {

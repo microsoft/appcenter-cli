@@ -9,7 +9,6 @@ import { XCUITestPreparer } from "../lib/xcuitest-preparer";
 
 @help(Messages.TestCloud.Commands.RunXCUITest)
 export default class RunXCUITestCommand extends RunTestsCommand {
-
   @help(Messages.TestCloud.Arguments.XCUITestBuildDir)
   @longName("build-dir")
   @hasArg
@@ -59,9 +58,7 @@ export default class RunXCUITestCommand extends RunTestsCommand {
   }
 
   private async generateAppIpa(): Promise<void> {
-    const appPaths = (await pfs.readdir(this.buildDir)).filter(
-      (appPath) => /^(?:.(?!-Runner\.app))+\.app$/.test(appPath)
-    );
+    const appPaths = (await pfs.readdir(this.buildDir)).filter((appPath) => /^(?:.(?!-Runner\.app))+\.app$/.test(appPath));
 
     if (appPaths.length === 0) {
       throw new TestCloudError(`unable to find app within ${this.buildDir}`);
@@ -70,7 +67,7 @@ export default class RunXCUITestCommand extends RunTestsCommand {
       throw new TestCloudError(`multiple apps found within ${this.buildDir}`);
     }
 
-    this.appPath = path.join((await this.getArtifactsDir()), `${path.parse(appPaths[0]).name}.ipa`);
+    this.appPath = path.join(await this.getArtifactsDir(), `${path.parse(appPaths[0]).name}.ipa`);
 
     await iba.archiveAppBundle(path.join(this.buildDir, appPaths[0]), this.appPath);
   }

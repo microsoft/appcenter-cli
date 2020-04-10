@@ -71,15 +71,17 @@ export class CategoryCommand extends Command {
   }
 
   subCategories(contents: [string, fs.Stats][]): string[][] {
-    return contents.filter((item) => item[1].isDirectory() && item[0] !== "lib")
+    return contents
+      .filter((item) => item[1].isDirectory() && item[0] !== "lib")
       .map((item) => {
-         return [chalk.bold(`    ${item[0]}    `), this.categoryHelp(item[0])];
+        return [chalk.bold(`    ${item[0]}    `), this.categoryHelp(item[0])];
       });
   }
 
   categoryCommands(contents: [string, fs.Stats][]): string[][] {
     // Locate commands in category directory
-    return contents.filter((item) => item[1].isFile() && /\.[tj]s$/.test(item[0]))
+    return contents
+      .filter((item) => item[1].isFile() && /\.[tj]s$/.test(item[0]))
       .map((item) => {
         return [chalk.bold(`    ${this.commandName(item)}    `), this.commandHelp(item)];
       });
@@ -92,8 +94,8 @@ export class CategoryCommand extends Command {
   commandHelp(item: [string, fs.Stats]): string {
     const fullCommandPath = path.join(this.commandPath, item[0]);
     try {
-      // Turn off tslint error, string is validated above
-      /* tslint:disable-next-line:non-literal-require */
+      // Turn off lint error, string is validated above
+      // eslint-disable-next-line security/detect-non-literal-require
       const cmd = require(fullCommandPath).default;
       return getClassHelpText(cmd);
     } catch (err) {

@@ -4,7 +4,6 @@ import { CommandArgs } from "../../../src/util/commandline";
 import { expect } from "chai";
 
 describe("Validating help command", function () {
-
   let stubbedConsole: Sinon.SinonStub;
 
   this.timeout(5000);
@@ -21,12 +20,14 @@ describe("Validating help command", function () {
     const args: CommandArgs = {
       command: ["help"],
       commandPath: "",
-      args: []
+      args: [],
     };
     const command = new HelpCommand(args);
     const result = await command.execute();
 
     expect(result.succeeded).to.be.true;
-    expect(stubbedConsole.getCall(1).args[0]).to.contain("Visual Studio App Center helps you build, test, distribute, and monitor mobile apps.");
+    expect(stubbedConsole.getCall(1).args[0]).to.contain(
+      "Visual Studio App Center helps you build, test, distribute, and monitor mobile apps."
+    );
   });
 });

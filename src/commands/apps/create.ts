@@ -1,6 +1,18 @@
 // apps create command
 
-import { Command, CommandArgs, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
+import {
+  Command,
+  CommandArgs,
+  CommandResult,
+  help,
+  success,
+  failure,
+  ErrorCodes,
+  shortName,
+  longName,
+  hasArg,
+  required,
+} from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { reportApp } from "./lib/format-app";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
@@ -27,7 +39,9 @@ export default class AppCreateCommand extends Command {
   @hasArg
   displayName: string;
 
-  @help("The name of the app used in URLs. Can optionally be provided specifically, otherwise a generated name will be derived from display-name")
+  @help(
+    "The name of the app used in URLs. Can optionally be provided specifically, otherwise a generated name will be derived from display-name"
+  )
   @shortName("n")
   @longName("name")
   @hasArg
@@ -40,14 +54,18 @@ export default class AppCreateCommand extends Command {
   @hasArg
   os: string;
 
-  @help("The platform of the app. Supported values: Cordova, Java, Objective-C-Swift, React-Native, Unity, UWP, WinForms, WPF, Xamarin, Custom")
+  @help(
+    "The platform of the app. Supported values: Cordova, Java, Objective-C-Swift, React-Native, Unity, UWP, WinForms, WPF, Xamarin, Custom"
+  )
   @shortName("p")
   @longName("platform")
   @required
   @hasArg
   platform: string;
 
-  @help("The app release type. Suggested values are Alpha, Beta, Production, Store, Enterprise. Custom values are allowed and must be must be one word, alphanumeric, first letter capitalized.")
+  @help(
+    "The app release type. Suggested values are Alpha, Beta, Production, Store, Enterprise. Custom values are allowed and must be must be one word, alphanumeric, first letter capitalized."
+  )
   @shortName("r")
   @longName("release-type")
   @hasArg
@@ -73,7 +91,8 @@ export default class AppCreateCommand extends Command {
     }
 
     debug(`Creating app with attributes: ${inspect(appAttributes)}`);
-    const createAppResponse = await out.progress("Creating app ...",
+    const createAppResponse = await out.progress(
+      "Creating app ...",
       clientRequest<models.AppResponse>((cb) => client.apps.create(appAttributes, cb))
     );
     const statusCode = createAppResponse.response.statusCode;

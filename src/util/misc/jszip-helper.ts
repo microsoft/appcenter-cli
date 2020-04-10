@@ -33,7 +33,7 @@ export async function unpackZipToPath(path: string, zip: JSZip, root: string = "
 export async function writeZipToPath(path: string, zip: JSZip, compression: "STORE" | "DEFLATE"): Promise<void> {
   const zipBuffer = await (zip.generateAsync({
     type: "nodebuffer",
-    compression
+    compression,
   }) as Promise<Buffer>);
 
   await Pfs.writeFile(path, zipBuffer);

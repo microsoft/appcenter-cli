@@ -2,7 +2,7 @@ import * as path from "path";
 import * as pfs from "../../../src/util/misc/promisfied-fs";
 
 export type IFileSpec = Buffer | string | number[];
-export type IDirSpec = { [name: string]: (IDirSpec | IFileSpec) };
+export type IDirSpec = { [name: string]: IDirSpec | IFileSpec };
 
 /*
   Creates directories and files, described by the spec, and returns
@@ -31,7 +31,7 @@ async function createFile(spec: IFileSpec, filePath: string): Promise<string> {
 }
 
 async function createDir(spec: IDirSpec, dirPath: string): Promise<string> {
-  if (!await pfs.exists(dirPath)) {
+  if (!(await pfs.exists(dirPath))) {
     await pfs.mkdir(dirPath);
   }
 

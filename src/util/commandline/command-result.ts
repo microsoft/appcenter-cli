@@ -18,10 +18,12 @@ export interface CommandFailedResult {
 }
 
 export function isCommandFailedResult(object: any): object is CommandFailedResult {
-  return object != null
-    && typeof(object.succeeded) === "boolean"
-    && typeof(object.errorCode) === "number"
-    && typeof(object.errorMessage) === "string";
+  return (
+    object != null &&
+    typeof object.succeeded === "boolean" &&
+    typeof object.errorCode === "number" &&
+    typeof object.errorMessage === "string"
+  );
 }
 
 export type CommandResult = CommandSucceededResult | CommandFailedResult;
@@ -57,12 +59,12 @@ export enum ErrorCodes {
   // Command requires logged in user
   NotLoggedIn,
   // The requested resource was not found
-  NotFound
+  NotFound,
 }
 
 // Cache this, we only ever need one
 const successResult = {
-  succeeded: true
+  succeeded: true,
 };
 
 // Factory functions for various results
@@ -76,23 +78,23 @@ export function failure(errorCode: number, errorMessage: string): CommandResult 
   return {
     succeeded: false,
     errorCode,
-    errorMessage
+    errorMessage,
   };
 }
 
 export function illegal(command: string): CommandResult {
-  return failure(ErrorCodes.IllegalCommand,
-    `Command ${command} is invalid`);
+  return failure(ErrorCodes.IllegalCommand, `Command ${command} is invalid`);
 }
 
 export function notFound(command: string): CommandResult {
-  return failure(ErrorCodes.NoSuchCommand,
-    `Command ${command} not found`);
+  return failure(ErrorCodes.NoSuchCommand, `Command ${command} not found`);
 }
 
 export function notLoggedIn(command: string): CommandResult {
-  return failure(ErrorCodes.NotLoggedIn,
-    `Command '${command}' requires a logged in user. Use the '${scriptName} login' command to log in.`);
+  return failure(
+    ErrorCodes.NotLoggedIn,
+    `Command '${command}' requires a logged in user. Use the '${scriptName} login' command to log in.`
+  );
 }
 
 export function exception(command: string, ex: Error): CommandResult {
@@ -100,7 +102,7 @@ export function exception(command: string, ex: Error): CommandResult {
     succeeded: false,
     errorCode: ErrorCodes.Exception,
     errorMessage: `Command '${command}' failed with exception "${ex.message}"`,
-    exception: ex
+    exception: ex,
   };
 }
 

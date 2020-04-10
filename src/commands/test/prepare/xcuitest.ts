@@ -5,7 +5,6 @@ import { Messages } from "../lib/help-messages";
 
 @help(Messages.TestCloud.Commands.PrepareXCUITest)
 export default class PrepareXCUITestCommand extends PrepareTestsCommand {
-
   @help(Messages.TestCloud.Arguments.XCUITestBuildDir)
   @longName("build-dir")
   @hasArg

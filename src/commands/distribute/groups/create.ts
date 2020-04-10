@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  help,
+  success,
+  shortName,
+  longName,
+  required,
+  hasArg,
+} from "../../../util/commandline";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
@@ -48,11 +59,15 @@ export default class CreateDistributionGroupCommand extends AppCommand {
       const addTestersResult = await this.addTestersToDistributionGroup(client, app, testersEmails);
       // filtering users which were actually added
       const addedUsers = addTestersResult.filter((userResult) => userResult.status < 400);
-      out.text((obj) => `Successfully created the ${obj.distributionGroupName} distribution group with ${obj.testersAdded.length} testers`,
-        {distributionGroupName: this.distributionGroup, testersAdded: addedUsers});
+      out.text(
+        (obj) => `Successfully created the ${obj.distributionGroupName} distribution group with ${obj.testersAdded.length} testers`,
+        { distributionGroupName: this.distributionGroup, testersAdded: addedUsers }
+      );
     } else {
-      out.text((obj) => `Successfully created the ${obj.distributionGroupName} distribution group`,
-        {distributionGroupName: this.distributionGroup, testersAdded: []});
+      out.text((obj) => `Successfully created the ${obj.distributionGroupName} distribution group`, {
+        distributionGroupName: this.distributionGroup,
+        testersAdded: [],
+      });
     }
 
     return success();
@@ -66,8 +81,10 @@ export default class CreateDistributionGroupCommand extends AppCommand {
 
   private async createDistributionGroup(client: AppCenterClient, app: DefaultApp) {
     try {
-      const createDistributionGroupRequestResponse = await out.progress("Creating distribution group...",
-        clientRequest((cb) => client.distributionGroups.create(app.ownerName, app.appName, this.distributionGroup, cb)));
+      const createDistributionGroupRequestResponse = await out.progress(
+        "Creating distribution group...",
+        clientRequest((cb) => client.distributionGroups.create(app.ownerName, app.appName, this.distributionGroup, cb))
+      );
       if (createDistributionGroupRequestResponse.response.statusCode >= 400) {
         throw createDistributionGroupRequestResponse.response.statusCode;
       }
@@ -81,12 +98,26 @@ export default class CreateDistributionGroupCommand extends AppCommand {
     }
   }
 
-  private async addTestersToDistributionGroup(client: AppCenterClient, app: DefaultApp, users: string[]): Promise<models.DistributionGroupUserPostResponse[]> {
+  private async addTestersToDistributionGroup(
+    client: AppCenterClient,
+    app: DefaultApp,
+    users: string[]
+  ): Promise<models.DistributionGroupUserPostResponse[]> {
     try {
-      const addUsersToDistributionGroupRequestResponse = await out.progress("Adding testers to the distribution group...",
-        clientRequest<models.DistributionGroupUserPostResponse[]>((cb) => client.distributionGroups.addUser(app.ownerName, app.appName, this.distributionGroup, {
-          userEmails: users
-        }, cb)));
+      const addUsersToDistributionGroupRequestResponse = await out.progress(
+        "Adding testers to the distribution group...",
+        clientRequest<models.DistributionGroupUserPostResponse[]>((cb) =>
+          client.distributionGroups.addUser(
+            app.ownerName,
+            app.appName,
+            this.distributionGroup,
+            {
+              userEmails: users,
+            },
+            cb
+          )
+        )
+      );
       if (addUsersToDistributionGroupRequestResponse.response.statusCode >= 400) {
         throw addUsersToDistributionGroupRequestResponse.response.statusCode;
       }

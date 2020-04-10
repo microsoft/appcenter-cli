@@ -13,15 +13,16 @@ import * as wrap from "wordwrap";
 const telemetryOptionFile: string = "telemetryEnabled.json";
 const telemetryDisableEnvironmentVar = "MOBILE_CENTER_TELEMETRY";
 
-const telemetryPromptText = os.EOL +
-"App Center CLI would like to collect data about how users use CLI commands " +
- "and some problems they encounter. Participation is voluntary and when you choose to participate your " +
- "device automatically sends information to Microsoft about how you use App Center CLI." +
- os.EOL +
- "For more information, please see our privacy policy at https://aka.ms/mobilecenterprivacy" +
- os.EOL;
+const telemetryPromptText =
+  os.EOL +
+  "App Center CLI would like to collect data about how users use CLI commands " +
+  "and some problems they encounter. Participation is voluntary and when you choose to participate your " +
+  "device automatically sends information to Microsoft about how you use App Center CLI." +
+  os.EOL +
+  "For more information, please see our privacy policy at https://aka.ms/mobilecenterprivacy" +
+  os.EOL;
 
- function promptForTelemetryEnable() : Promise<boolean> {
+function promptForTelemetryEnable(): Promise<boolean> {
   const width = terminal.columns() - 2;
 
   const promptText = wrap(width)(telemetryPromptText);
@@ -48,11 +49,10 @@ export function telemetryIsEnabled(disableTelemetrySwitch: boolean): Promise<boo
     return Promise.resolve(false);
   }
 
-  return promptForTelemetryEnable()
-    .then((enabled: boolean) => {
-      saveTelemetryOption(enabled);
-      return enabled;
-    });
+  return promptForTelemetryEnable().then((enabled: boolean) => {
+    saveTelemetryOption(enabled);
+    return enabled;
+  });
 }
 
 function telemetryFileName(): string {

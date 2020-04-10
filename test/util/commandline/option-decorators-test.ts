@@ -1,9 +1,18 @@
 import { expect } from "chai";
 
 import {
-  getOptionsDescription, getPositionalOptionsDescription, getClassHelpText,
-  shortName, longName, name, defaultValue, required, hasArg, help, position,
-  common
+  getOptionsDescription,
+  getPositionalOptionsDescription,
+  getClassHelpText,
+  shortName,
+  longName,
+  name,
+  defaultValue,
+  required,
+  hasArg,
+  help,
+  position,
+  common,
 } from "../../../src/util/commandline/option-decorators";
 
 describe("Command line option parsing", function () {
@@ -87,16 +96,12 @@ describe("Command line option parsing", function () {
       }
 
       const opts = getOptionsDescription(Sample.prototype);
-      expect(Object.keys(opts)).to.include("help")
-        .and.to.include("logLevel")
-        .and.to.include("input");
+      expect(Object.keys(opts)).to.include("help").and.to.include("logLevel").and.to.include("input");
     });
 
     it("should return help string for command", function () {
-
       @help("This is the help text")
-      class SampleWithHelp {
-      }
+      class SampleWithHelp {}
 
       const text = getClassHelpText(SampleWithHelp);
       expect(text).to.equal("This is the help text");

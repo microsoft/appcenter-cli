@@ -31,20 +31,30 @@ export default class ShowAppVersionsCommand extends AppCommand {
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app: DefaultApp = this.app;
 
-    const startDate = parseDate(this.startDate,
+    const startDate = parseDate(
+      this.startDate,
       new Date(new Date().setHours(0, 0, 0, 0)),
-      `start date value ${this.startDate} is not a valid date string`);
+      `start date value ${this.startDate} is not a valid date string`
+    );
 
-    const endDate = parseDate(this.endDate,
-      new Date(),
-      `end date value ${this.endDate} is not a valid date string`);
+    const endDate = parseDate(this.endDate, new Date(), `end date value ${this.endDate} is not a valid date string`);
 
     let listOfVersions: models.Version[];
     try {
-      const httpRequest = await out.progress("Getting list of application versions...",
-        clientRequest<models.Versions>((cb) => client.analytics.versionsMethod(startDate, app.ownerName, app.appName, {
-          end: endDate
-        }, cb)));
+      const httpRequest = await out.progress(
+        "Getting list of application versions...",
+        clientRequest<models.Versions>((cb) =>
+          client.analytics.versionsMethod(
+            startDate,
+            app.ownerName,
+            app.appName,
+            {
+              end: endDate,
+            },
+            cb
+          )
+        )
+      );
       listOfVersions = httpRequest.result.versions;
     } catch (error) {
       debug(`Failed to get list of application versions - ${inspect(error)}`);
@@ -55,7 +65,10 @@ export default class ShowAppVersionsCommand extends AppCommand {
       const outputArray = listOfVersions.map((version) => [version.version, String(version.count)]);
       out.table(out.getCommandOutputTableOptions(["Version", "Number Of Devices"]), outputArray);
     } else {
-      out.text((versions) => versions.join(Os.EOL), listOfVersions.map((version) => version.version));
+      out.text(
+        (versions) => versions.join(Os.EOL),
+        listOfVersions.map((version) => version.version)
+      );
     }
 
     return success();

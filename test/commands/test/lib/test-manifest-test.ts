@@ -6,7 +6,8 @@ describe("TestFile.create", function () {
     const testFile = await TestRunFile.create(
       "./test/commands/test/sample-test-workspace/resources/ReadMe.txt",
       "resources/ReadMe.txt",
-      "test-file");
+      "test-file"
+    );
 
     expect(testFile.sourcePath).to.eql("./test/commands/test/sample-test-workspace/resources/ReadMe.txt");
     expect(testFile.targetRelativePath).to.eql("resources/ReadMe.txt");

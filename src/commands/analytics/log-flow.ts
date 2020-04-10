@@ -39,31 +39,38 @@ export default class ShowLogFlowCommand extends AppCommand {
     const streamingOutput = new StreamingArrayOutput();
     streamingOutput.start();
 
-    let options: {start: Date} = null;
-    await ContinuousPollingHelper.pollContinuously(async () => {
-      try {
-        debug ("Loading logs");
-        // start time is not specified for the first request
-        return await clientRequest((cb) => client.analytics.genericLogFlow(app.ownerName, app.appName, options, cb));
-      } catch (error) {
-        debug(`Failed to load the logs - ${inspect(error)}`);
-        throw failure(ErrorCodes.Exception, "failed to load the logs");
-      }
-    }, (response: ClientResponse<models.GenericLogContainer>, responsesProcessed: number) => {
-      // processing http response
-      const result = response.result;
-      if (result.logs.length) {
-        // new logs were received
-        options = { start: result.lastReceivedLogTimestamp };
-
-        // take no more than specified number of logs from the first request response
-        const filteredLogs = responsesProcessed ? this.filterLogs(result.logs, this.installationId) :
-          _.takeRight(this.filterLogs(result.logs, this.installationId), logsCount);
-        for (const logEntry of filteredLogs) {
-          this.showLogEntry(streamingOutput, logEntry);
+    let options: { start: Date } = null;
+    await ContinuousPollingHelper.pollContinuously(
+      async () => {
+        try {
+          debug("Loading logs");
+          // start time is not specified for the first request
+          return await clientRequest((cb) => client.analytics.genericLogFlow(app.ownerName, app.appName, options, cb));
+        } catch (error) {
+          debug(`Failed to load the logs - ${inspect(error)}`);
+          throw failure(ErrorCodes.Exception, "failed to load the logs");
         }
-      }
-    }, this.showContinuously, ShowLogFlowCommand.delayBetweenRequests, "Loading logs...");
+      },
+      (response: ClientResponse<models.GenericLogContainer>, responsesProcessed: number) => {
+        // processing http response
+        const result = response.result;
+        if (result.logs.length) {
+          // new logs were received
+          options = { start: result.lastReceivedLogTimestamp };
+
+          // take no more than specified number of logs from the first request response
+          const filteredLogs = responsesProcessed
+            ? this.filterLogs(result.logs, this.installationId)
+            : _.takeRight(this.filterLogs(result.logs, this.installationId), logsCount);
+          for (const logEntry of filteredLogs) {
+            this.showLogEntry(streamingOutput, logEntry);
+          }
+        }
+      },
+      this.showContinuously,
+      ShowLogFlowCommand.delayBetweenRequests,
+      "Loading logs..."
+    );
 
     streamingOutput.finish();
 
@@ -100,7 +107,7 @@ export default class ShowLogFlowCommand extends AppCommand {
     const jsonObject: ILogEntryJsonObject = {
       date: logEntry.timestamp,
       installId: logEntry.installId,
-      logType: logEntry.type
+      logType: logEntry.type,
     };
 
     // adding log id

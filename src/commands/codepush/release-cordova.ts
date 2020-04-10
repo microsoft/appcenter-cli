@@ -10,7 +10,7 @@ import { isValidOS, isValidPlatform, getCordovaOrPhonegapCLI, getCordovaProjectA
 import * as childProcess from "child_process";
 import * as chalk from "chalk";
 
-export let execSync = childProcess.execSync;
+export const execSync = childProcess.execSync;
 
 const debug = require("debug")("appcenter-cli:commands:codepush:release-cordova");
 
@@ -21,7 +21,7 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
   @longName("build")
   public build: boolean;
 
-  @help("If \"build\" option is true specifies whether perform a release build")
+  @help('If "build" option is true specifies whether perform a release build')
   @longName("is-release-build-type")
   public isReleaseBuildType: boolean;
 
@@ -42,8 +42,12 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
       this.deploymentName = this.specifiedDeploymentName;
     }
 
-    const appInfo = (await out.progress("Getting app info...", clientRequest<models.AppResponse>(
-      (cb) => client.apps.get(this.app.ownerName, this.app.appName, cb)))).result;
+    const appInfo = (
+      await out.progress(
+        "Getting app info...",
+        clientRequest<models.AppResponse>((cb) => client.apps.get(this.app.ownerName, this.app.appName, cb))
+      )
+    ).result;
     this.os = appInfo.os.toLowerCase();
     this.platform = appInfo.platform.toLowerCase();
 
@@ -71,7 +75,10 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
     try {
       cordovaCLI = getCordovaOrPhonegapCLI();
     } catch (e) {
-      return failure(ErrorCodes.Exception, `Unable to ${cordovaCommand} project. Please ensure that either the Cordova or PhoneGap CLI is installed.`);
+      return failure(
+        ErrorCodes.Exception,
+        `Unable to ${cordovaCommand} project. Please ensure that either the Cordova or PhoneGap CLI is installed.`
+      );
     }
 
     out.text(chalk.cyan(`Running "${cordovaCLI} ${cordovaCommand}" command:\n`));
@@ -79,14 +86,20 @@ export default class CodePushReleaseCordovaCommand extends CodePushReleaseComman
       execSync([cordovaCLI, cordovaCommand, this.os, "--verbose"].join(" "), { stdio: "inherit" });
     } catch (error) {
       debug(`Failed to release a CodePush update - ${inspect(error)}`);
-      return failure(ErrorCodes.Exception, `Unable to ${cordovaCommand} project. Please ensure that the CWD represents a Cordova project and that the "${this.os}" platform was added by running "${cordovaCLI} platform add ${this.os}".`);
+      return failure(
+        ErrorCodes.Exception,
+        `Unable to ${cordovaCommand} project. Please ensure that the CWD represents a Cordova project and that the "${this.os}" platform was added by running "${cordovaCLI} platform add ${this.os}".`
+      );
     }
 
     try {
       this.updateContentsPath = this.getOutputFolder();
     } catch (error) {
       debug(`Failed to release a CodePush update - ${inspect(error)}`);
-      return failure(ErrorCodes.Exception, `No output folder found. Please ensure that the CWD represents a Cordova project and that the "${this.os}" platform was added by running "${cordovaCLI} platform add ${this.os}".`);
+      return failure(
+        ErrorCodes.Exception,
+        `No output folder found. Please ensure that the CWD represents a Cordova project and that the "${this.os}" platform was added by running "${cordovaCLI} platform add ${this.os}".`
+      );
     }
 
     out.text(chalk.cyan("\nReleasing update contents to CodePush:\n"));

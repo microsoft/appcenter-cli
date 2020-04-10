@@ -15,7 +15,7 @@ use(ChaiAsPromised);
 // Mocking AzureBlobUploadHelper
 import AzureBlobUploadHelperMock from "../lib/azure-blob-uploader-helper-mock";
 MockRequire("../../../../src/commands/crashes/lib/azure-blob-upload-helper", {
-  default: AzureBlobUploadHelperMock
+  default: AzureBlobUploadHelperMock,
 });
 import UploadSymbolsCommand from "../../../../src/commands/crashes/upload-symbols";
 MockRequire.stopAll();
@@ -31,7 +31,6 @@ describe("upload-symbols command", () => {
   const fakeToken = "c1o3d3e7";
   const fakeSymbolUploadingId = "fakeSymbolUploadingId";
   const fakeUploadUrl = "/upload/here";
-  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const fakeFullUploadUrl = fakeHost + fakeUploadUrl;
 
@@ -71,7 +70,10 @@ describe("upload-symbols command", () => {
 
   describe("when Breakpad network requests are successful", () => {
     beforeEach(() => {
-      expectedRequestsScope = _.flow(setupSuccessfulBreakpadPatchUploadResponse, setupSuccessfulBreakpadPostUploadResponse)(Nock(fakeHost));
+      expectedRequestsScope = _.flow(
+        setupSuccessfulBreakpadPatchUploadResponse,
+        setupSuccessfulBreakpadPostUploadResponse
+      )(Nock(fakeHost));
       skippedRequestsScope = setupSuccessfulBreakpadAbortUploadResponse(Nock(fakeHost));
     });
 
@@ -110,8 +112,8 @@ describe("upload-symbols command", () => {
     });
 
     beforeEach(() => {
-        expectedRequestsScope = _.flow(setupSuccessfulUWPAbortUploadResponse, setupSuccessfulUWPPostUploadResponse)(Nock(fakeHost));
-        skippedRequestsScope = setupSuccessfulUWPPatchUploadResponse(Nock(fakeHost));
+      expectedRequestsScope = _.flow(setupSuccessfulUWPAbortUploadResponse, setupSuccessfulUWPPostUploadResponse)(Nock(fakeHost));
+      skippedRequestsScope = setupSuccessfulUWPPatchUploadResponse(Nock(fakeHost));
     });
 
     it("aborts the symbol uploading", async () => {
@@ -161,7 +163,10 @@ describe("upload-symbols command", () => {
 
       const uploadedZipEntries = getEntitiesList(await getUploadedZip(zipPath));
       expect(uploadedZipEntries.length).to.eql(2, "Only two entries are expected to be in the ZIP");
-      expect(uploadedZipEntries).to.contain(Path.join(dSymFolder1Name, symbolsFile1Name), "Test file should be inside the uploaded ZIP");
+      expect(uploadedZipEntries).to.contain(
+        Path.join(dSymFolder1Name, symbolsFile1Name),
+        "Test file should be inside the uploaded ZIP"
+      );
       expect(uploadedZipEntries).to.contain(dSymFolder1Name + Path.sep, ".dSYM folder should be inside the uploaded ZIP");
     });
 
@@ -181,8 +186,14 @@ describe("upload-symbols command", () => {
       expect(uploadedZipEntries.length).to.eql(4, "Only four entries are expected to be in the ZIP");
       expect(uploadedZipEntries).to.contain(dSymFolder1Name + Path.sep, "First .dSYM folder should be inside the uploaded ZIP");
       expect(uploadedZipEntries).to.contain(dSymFolder2Name + Path.sep, "Second .dSYM folder should be inside the uploaded ZIP");
-      expect(uploadedZipEntries).to.contain(Path.join(dSymFolder1Name, symbolsFile1Name), "Symbols file 1 should be inside the first dsym folder of ZIP");
-      expect(uploadedZipEntries).to.contain(Path.join(dSymFolder2Name, symbolsFile2Name), "Symbols file 2 should be inside the second dsym folder of ZIP");
+      expect(uploadedZipEntries).to.contain(
+        Path.join(dSymFolder1Name, symbolsFile1Name),
+        "Symbols file 1 should be inside the first dsym folder of ZIP"
+      );
+      expect(uploadedZipEntries).to.contain(
+        Path.join(dSymFolder2Name, symbolsFile2Name),
+        "Symbols file 2 should be inside the second dsym folder of ZIP"
+      );
     });
 
     it("uploads xcarchive folder", async () => {
@@ -201,8 +212,14 @@ describe("upload-symbols command", () => {
       expect(uploadedZipEntries.length).to.eql(4, "Only four entries are expected to be in the ZIP");
       expect(uploadedZipEntries).to.contain(dSymFolder1Name + Path.sep, "First .dSYM folder should be inside the uploaded ZIP");
       expect(uploadedZipEntries).to.contain(dSymFolder2Name + Path.sep, "Second .dSYM folder should be inside the uploaded ZIP");
-      expect(uploadedZipEntries).to.contain(Path.join(dSymFolder1Name, symbolsFile1Name), "Symbols file 1 should be inside the first dsym folder of ZIP");
-      expect(uploadedZipEntries).to.contain(Path.join(dSymFolder2Name, symbolsFile2Name), "Symbols file 2 should be inside the second dsym folder of ZIP");
+      expect(uploadedZipEntries).to.contain(
+        Path.join(dSymFolder1Name, symbolsFile1Name),
+        "Symbols file 1 should be inside the first dsym folder of ZIP"
+      );
+      expect(uploadedZipEntries).to.contain(
+        Path.join(dSymFolder2Name, symbolsFile2Name),
+        "Symbols file 2 should be inside the second dsym folder of ZIP"
+      );
     });
 
     it("uploads ZIP with added sourcemap file", async () => {
@@ -253,8 +270,8 @@ describe("upload-symbols command", () => {
     });
 
     beforeEach(() => {
-        expectedRequestsScope = _.flow(setupSuccessfulAppleAbortUploadResponse, setupSuccessfulApplePostUploadResponse)(Nock(fakeHost));
-        skippedRequestsScope = setupSuccessfulApplePatchUploadResponse(Nock(fakeHost));
+      expectedRequestsScope = _.flow(setupSuccessfulAppleAbortUploadResponse, setupSuccessfulApplePostUploadResponse)(Nock(fakeHost));
+      skippedRequestsScope = setupSuccessfulApplePatchUploadResponse(Nock(fakeHost));
     });
 
     it("aborts the symbol uploading", async () => {
@@ -279,8 +296,11 @@ describe("upload-symbols command", () => {
     });
 
     beforeEach(() => {
-        expectedRequestsScope = _.flow(setupSuccessfulBreakpadAbortUploadResponse, setupSuccessfulBreakpadPostUploadResponse)(Nock(fakeHost));
-        skippedRequestsScope = setupSuccessfulBreakpadPatchUploadResponse(Nock(fakeHost));
+      expectedRequestsScope = _.flow(
+        setupSuccessfulBreakpadAbortUploadResponse,
+        setupSuccessfulBreakpadPostUploadResponse
+      )(Nock(fakeHost));
+      skippedRequestsScope = setupSuccessfulBreakpadPatchUploadResponse(Nock(fakeHost));
     });
 
     it("aborts the symbol uploading", async () => {
@@ -310,15 +330,15 @@ describe("upload-symbols command", () => {
   }
 
   function testCommandSuccess(result: CommandResult, executionScope: Nock.Scope, abortScope: Nock.Scope) {
-      expect(result.succeeded).to.eql(true, "Command should be successfully completed");
-      expect(abortScope.isDone()).to.eql(false, "Upload should not be aborted");
-      executionScope.done(); // All normal API calls are executed
+    expect(result.succeeded).to.eql(true, "Command should be successfully completed");
+    expect(abortScope.isDone()).to.eql(false, "Upload should not be aborted");
+    executionScope.done(); // All normal API calls are executed
   }
 
   function testUploadFailure(result: CommandResult, executionScope: Nock.Scope, patchScope: Nock.Scope) {
-      expect(result.succeeded).to.eql(false, "Command should fail");
-      expect(patchScope.isDone()).to.eql(false, "Upload should not be completed");
-      executionScope.done(); // All normal API calls are executed
+    expect(result.succeeded).to.eql(false, "Command should fail");
+    expect(patchScope.isDone()).to.eql(false, "Upload should not be completed");
+    executionScope.done(); // All normal API calls are executed
   }
 
   async function createZipWithFile(zipFileName?: string): Promise<string> {
@@ -333,9 +353,12 @@ describe("upload-symbols command", () => {
     zip.file(symbolsFile1Name, testFileContent);
 
     // writing zip file
-    await Pfs.writeFile(testZipFilePath, await zip.generateAsync({
-        type: "nodebuffer"
-    }));
+    await Pfs.writeFile(
+      testZipFilePath,
+      await zip.generateAsync({
+        type: "nodebuffer",
+      })
+    );
 
     return testZipFilePath;
   }
@@ -349,7 +372,7 @@ describe("upload-symbols command", () => {
     const zip = await new JsZip().loadAsync(zipContentBuffer);
     zip.file(mappingsFileName, mappingsFileContent);
     const updatedZipContentBuffer = await zip.generateAsync({
-      type: "nodebuffer"
+      type: "nodebuffer",
     });
     await Pfs.writeFile(zipFilePath, updatedZipContentBuffer);
 
@@ -400,7 +423,7 @@ describe("upload-symbols command", () => {
     return {
       args,
       command: ["crashes", "upload-symbols"],
-      commandPath: "FAKE"
+      commandPath: "FAKE",
     };
   }
 
@@ -410,7 +433,7 @@ describe("upload-symbols command", () => {
   }
 
   function getEntitiesList(zip: JsZip): string[] {
-    return  Object.getOwnPropertyNames(zip.files).map((entity) => Path.normalize(entity));
+    return Object.getOwnPropertyNames(zip.files).map((entity) => Path.normalize(entity));
   }
 
   function createSymbolsFileInsideFolder(folderPath: string, fileName: string, fileContent: string) {
@@ -427,131 +450,149 @@ describe("upload-symbols command", () => {
   }
 
   function setupSuccessfulApplePostUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads`, {
-      symbol_type: "Apple"
-    }).reply(200, ((uri: any, requestBody: any) => {
-      postSymbolSpy(requestBody);
-      return {
-        expiration_date: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-        symbol_upload_id: fakeSymbolUploadingId,
-        upload_url: fakeHost + fakeUploadUrl
-      };
-    }));
+    return nockScope
+      .post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads`, {
+        symbol_type: "Apple",
+      })
+      .reply(200, (uri: any, requestBody: any) => {
+        postSymbolSpy(requestBody);
+        return {
+          expiration_date: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+          symbol_upload_id: fakeSymbolUploadingId,
+          upload_url: fakeHost + fakeUploadUrl,
+        };
+      });
   }
 
   function setupSuccessfulBreakpadPostUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads`, {
-      symbol_type: "Breakpad"
-    }).reply(200, ((uri: any, requestBody: any) => {
-      postSymbolSpy(requestBody);
-      return {
-        expiration_date: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-        symbol_upload_id: fakeSymbolUploadingId,
-        upload_url: fakeHost + fakeUploadUrl
-      };
-    }));
+    return nockScope
+      .post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads`, {
+        symbol_type: "Breakpad",
+      })
+      .reply(200, (uri: any, requestBody: any) => {
+        postSymbolSpy(requestBody);
+        return {
+          expiration_date: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+          symbol_upload_id: fakeSymbolUploadingId,
+          upload_url: fakeHost + fakeUploadUrl,
+        };
+      });
   }
 
   function setupSuccessfulUWPPostUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads`, {
-      symbol_type: "UWP"
-    }).reply(200, ((uri: any, requestBody: any) => {
-      postSymbolSpy(requestBody);
-      return {
-        expiration_date: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
-        symbol_upload_id: fakeSymbolUploadingId,
-        upload_url: fakeHost + fakeUploadUrl
-      };
-    }));
+    return nockScope
+      .post(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads`, {
+        symbol_type: "UWP",
+      })
+      .reply(200, (uri: any, requestBody: any) => {
+        postSymbolSpy(requestBody);
+        return {
+          expiration_date: new Date(new Date().setFullYear(new Date().getFullYear() + 1)),
+          symbol_upload_id: fakeSymbolUploadingId,
+          upload_url: fakeHost + fakeUploadUrl,
+        };
+      });
   }
 
   function setupSuccessfulApplePatchUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
-      status: "committed"
-    }).reply(200, ((uri: any, requestBody: any) => {
-      patchSymbolSpy(requestBody);
-      return {
-        origin: "User",
+    return nockScope
+      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
         status: "committed",
-        symbol_type: "Apple",
-        symbol_upload_id: fakeSymbolUploadingId,
-        symbols: new Array()
-      };
-    }));
+      })
+      .reply(200, (uri: any, requestBody: any) => {
+        patchSymbolSpy(requestBody);
+        return {
+          origin: "User",
+          status: "committed",
+          symbol_type: "Apple",
+          symbol_upload_id: fakeSymbolUploadingId,
+          symbols: [],
+        };
+      });
   }
 
   function setupSuccessfulBreakpadPatchUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
-      status: "committed"
-    }).reply(200, ((uri: any, requestBody: any) => {
-      patchSymbolSpy(requestBody);
-      return {
-        origin: "User",
+    return nockScope
+      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
         status: "committed",
-        symbol_type: "Breakpad",
-        symbol_upload_id: fakeSymbolUploadingId,
-        symbols: new Array()
-      };
-    }));
+      })
+      .reply(200, (uri: any, requestBody: any) => {
+        patchSymbolSpy(requestBody);
+        return {
+          origin: "User",
+          status: "committed",
+          symbol_type: "Breakpad",
+          symbol_upload_id: fakeSymbolUploadingId,
+          symbols: [],
+        };
+      });
   }
 
   function setupSuccessfulUWPPatchUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
-      status: "committed"
-    }).reply(200, ((uri: any, requestBody: any) => {
-      patchSymbolSpy(requestBody);
-      return {
-        origin: "User",
+    return nockScope
+      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
         status: "committed",
-        symbol_type: "UWP",
-        symbol_upload_id: fakeSymbolUploadingId,
-        symbols: new Array()
-      };
-    }));
+      })
+      .reply(200, (uri: any, requestBody: any) => {
+        patchSymbolSpy(requestBody);
+        return {
+          origin: "User",
+          status: "committed",
+          symbol_type: "UWP",
+          symbol_upload_id: fakeSymbolUploadingId,
+          symbols: [],
+        };
+      });
   }
 
   function setupSuccessfulAppleAbortUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
-      status: "aborted"
-    }).reply(200, ((uri: any, requestBody: any) => {
-      abortSymbolUploadSpy(requestBody);
-      return {
-        origin: "User",
+    return nockScope
+      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
         status: "aborted",
-        symbol_type: "Apple",
-        symbol_upload_id: fakeSymbolUploadingId,
-        symbols: new Array()
-      };
-    }));
+      })
+      .reply(200, (uri: any, requestBody: any) => {
+        abortSymbolUploadSpy(requestBody);
+        return {
+          origin: "User",
+          status: "aborted",
+          symbol_type: "Apple",
+          symbol_upload_id: fakeSymbolUploadingId,
+          symbols: [],
+        };
+      });
   }
 
   function setupSuccessfulBreakpadAbortUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
-      status: "aborted"
-    }).reply(200, ((uri: any, requestBody: any) => {
-      abortSymbolUploadSpy(requestBody);
-      return {
-        origin: "User",
+    return nockScope
+      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
         status: "aborted",
-        symbol_type: "Breakpad",
-        symbol_upload_id: fakeSymbolUploadingId,
-        symbols: new Array()
-      };
-    }));
+      })
+      .reply(200, (uri: any, requestBody: any) => {
+        abortSymbolUploadSpy(requestBody);
+        return {
+          origin: "User",
+          status: "aborted",
+          symbol_type: "Breakpad",
+          symbol_upload_id: fakeSymbolUploadingId,
+          symbols: [],
+        };
+      });
   }
 
   function setupSuccessfulUWPAbortUploadResponse(nockScope: Nock.Scope): Nock.Scope {
-    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
-      status: "aborted"
-    }).reply(200, ((uri: any, requestBody: any) => {
-      abortSymbolUploadSpy(requestBody);
-      return {
-        origin: "User",
+    return nockScope
+      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/symbol_uploads/${fakeSymbolUploadingId}`, {
         status: "aborted",
-        symbol_type: "UWP",
-        symbol_upload_id: fakeSymbolUploadingId,
-        symbols: new Array()
-      };
-    }));
+      })
+      .reply(200, (uri: any, requestBody: any) => {
+        abortSymbolUploadSpy(requestBody);
+        return {
+          origin: "User",
+          status: "aborted",
+          symbol_type: "UWP",
+          symbol_upload_id: fakeSymbolUploadingId,
+          symbols: [],
+        };
+      });
   }
 });

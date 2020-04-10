@@ -7,7 +7,12 @@ import _ = require("lodash");
 
 const invalidCharactersRegexp = /['"!#$%&+^<=>`|]/;
 
-export async function processIncludedFiles(manifest: ITestCloudManifestJson, include: string[], destinationDir: string, sourceRootDir: string) {
+export async function processIncludedFiles(
+  manifest: ITestCloudManifestJson,
+  include: string[],
+  destinationDir: string,
+  sourceRootDir: string
+) {
   if (!include) {
     return;
   }
@@ -17,7 +22,11 @@ export async function processIncludedFiles(manifest: ITestCloudManifestJson, inc
   await this.copyIncludedFiles(manifest, includedFiles, destinationDir);
 }
 
-export async function copyIncludedFiles(manifest: ITestCloudManifestJson, includedFiles: IFileDescriptionJson[], destinationDir: string) {
+export async function copyIncludedFiles(
+  manifest: ITestCloudManifestJson,
+  includedFiles: IFileDescriptionJson[],
+  destinationDir: string
+) {
   for (const includedFile of includedFiles) {
     const copyTarget = path.join(destinationDir, includedFile.targetPath);
     await pfs.cp(includedFile.sourcePath, copyTarget);
@@ -38,7 +47,7 @@ export function filterIncludedFiles(manifestFiles: string[], include: string[]):
   return include.filter((f) => validFile(f, allFiles));
 }
 
-function validFile(fileName: string, allIncludedFiles: string[]) : boolean {
+function validFile(fileName: string, allIncludedFiles: string[]): boolean {
   if (_.endsWith(fileName, ".dll.config")) {
     const assemblyName = fileName.slice(0, -7);
     const hasCorrespondingAssembly = allIncludedFiles.indexOf(assemblyName) > -1;
@@ -66,18 +75,19 @@ function parseIncludedFileFromSinglePath(includedFile: string, rootDir: string):
   if (path.isAbsolute(includedFile)) {
     const targetPath = path.relative(rootDir, includedFile);
     if (targetPath.indexOf("..") !== -1) {
-      throw new Error(`Invalid included file: "${includedFile}". ` +
-        `If only a single path is used, it must be inside directory "${rootDir}"`);
+      throw new Error(
+        `Invalid included file: "${includedFile}". ` + `If only a single path is used, it must be inside directory "${rootDir}"`
+      );
     }
 
     return {
       targetPath: path.relative(rootDir, includedFile),
-      sourcePath: includedFile
+      sourcePath: includedFile,
     };
   } else {
     return {
       targetPath: includedFile,
-      sourcePath: path.join(rootDir, includedFile)
+      sourcePath: path.join(rootDir, includedFile),
     };
   }
 }
@@ -99,7 +109,7 @@ function parseIncludedFileFromPathsPair(includedFile: string, rootDir: string, s
 
   return {
     targetPath: targetPath,
-    sourcePath: sourcePath
+    sourcePath: sourcePath,
   };
 }
 

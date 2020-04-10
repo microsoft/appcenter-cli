@@ -19,7 +19,6 @@ export default async function sign(privateKeyPath: string, updateContentsPath: s
   }
 
   let privateKey: Buffer;
-  let signatureFilePath: string;
 
   try {
     privateKey = await pfs.readFile(privateKeyPath);
@@ -36,7 +35,7 @@ export default async function sign(privateKeyPath: string, updateContentsPath: s
     Promise.reject(error);
   }
 
-  signatureFilePath = path.join(updateContentsPath, METADATA_FILE_NAME);
+  const signatureFilePath: string = path.join(updateContentsPath, METADATA_FILE_NAME);
   let prevSignatureExists = true;
   try {
     await pfs.access(signatureFilePath, fs.constants.F_OK);
@@ -44,9 +43,11 @@ export default async function sign(privateKeyPath: string, updateContentsPath: s
     if (err.code === "ENOENT") {
       prevSignatureExists = false;
     } else {
-      return Promise.reject<void>(new Error(
-        `Could not delete previous release signature at ${signatureFilePath}.
-                Please, check your access rights.`)
+      return Promise.reject<void>(
+        new Error(
+          `Could not delete previous release signature at ${signatureFilePath}.
+                Please, check your access rights.`
+        )
       );
     }
   }
@@ -59,7 +60,7 @@ export default async function sign(privateKeyPath: string, updateContentsPath: s
   const hash: string = await hashUtils.generatePackageHashFromDirectory(updateContentsPath, path.join(updateContentsPath, ".."));
   const claims: CodeSigningClaims = {
     claimVersion: CURRENT_CLAIM_VERSION,
-    contentHash: hash
+    contentHash: hash,
   };
 
   return new Promise<void>((resolve, reject) => {

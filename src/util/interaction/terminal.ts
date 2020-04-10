@@ -10,7 +10,7 @@ export namespace terminal {
     }
 
     // Not interactive, default to 80 columns arbitrarily.
-    return  80;
+    return 80;
   }
 
   // Is this an interactive session or not?

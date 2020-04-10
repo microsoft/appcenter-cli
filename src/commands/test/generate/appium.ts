@@ -5,7 +5,6 @@ import * as path from "path";
 
 @help(Messages.TestCloud.Commands.GenerateAppium)
 export default class GenerateAppiumCommand extends GenerateCommand {
-
   constructor(args: CommandArgs) {
     super(args);
   }

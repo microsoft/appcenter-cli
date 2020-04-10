@@ -6,7 +6,7 @@ export default class AzureBlobUploadHelperMock {
   public static getUploadedArtifactUrlAndPath(): [string, string] {
     const url = AzureBlobUploadHelperMock.uploadUrl;
     const path = AzureBlobUploadHelperMock.uploadedArtifactPath;
-    AzureBlobUploadHelperMock.uploadUrl =  AzureBlobUploadHelperMock.uploadedArtifactPath = null;
+    AzureBlobUploadHelperMock.uploadUrl = AzureBlobUploadHelperMock.uploadedArtifactPath = null;
     return [url, path];
   }
 

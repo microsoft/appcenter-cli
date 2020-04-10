@@ -28,7 +28,7 @@ function getRandomBytes(length: number): number[] {
   const result: number[] = [];
 
   for (let i = 0; i < length; i++) {
-    /* tslint:disable-next-line:insecure-random */
+    // eslint-disable-next-line no-restricted-properties
     result.push(Math.floor(Math.random() * 256));
   }
 
@@ -57,25 +57,23 @@ describe("parseRange", () => {
 
 describe("getByteRange", () => {
   it("should return correct range is within file size", async () => {
-    const expectedRange = [ 1, 1, 3, 4, 5 ];
+    const expectedRange = [1, 1, 3, 4, 5];
     const testFile = await createFileWithByteRange(10, expectedRange, 1024);
     try {
       const actualRange = await getByteRange(testFile, 10, expectedRange.length);
       expect(actualRange).to.deep.equal(expectedRange);
-    }
-    finally {
+    } finally {
       await pfs.unlink(testFile);
     }
   });
 
   it("should remove bytes outside of file size", async () => {
-    const expectedRange = [ 1, 1, 3 ];
+    const expectedRange = [1, 1, 3];
     const testFile = await createFileWithByteRange(0, expectedRange, expectedRange.length);
     try {
       const actualRange = await getByteRange(testFile, 0, 1024);
       expect(actualRange).to.deep.equal(expectedRange);
-    }
-    finally {
+    } finally {
       await pfs.unlink(testFile);
     }
   });

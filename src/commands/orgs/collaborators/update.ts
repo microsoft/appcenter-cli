@@ -1,4 +1,15 @@
-import { Command, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
+import {
+  Command,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  help,
+  success,
+  shortName,
+  longName,
+  required,
+  hasArg,
+} from "../../../util/commandline";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
@@ -80,8 +91,24 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
     const usersJoinedOrgPromise = getOrgUsers(client, this.name, debug);
 
     // showing spinner while prerequisites are being loaded
-    const [collaboratorsToAdd, collaboratorsToDelete, collaboratorsToMakeAdmins, adminsToMakeCollaborators, usersInvitedToOrg, usersJoinedOrg] = await out.progress("Loading prerequisites...",
-      Promise.all([collaboratorsToAddPromise, collaboratorsToDeletePromise, collaboratorsToMakeAdminsPromise, adminsToMakeCollaboratorsPromise, usersInvitedToOrgPromise, usersJoinedOrgPromise]));
+    const [
+      collaboratorsToAdd,
+      collaboratorsToDelete,
+      collaboratorsToMakeAdmins,
+      adminsToMakeCollaborators,
+      usersInvitedToOrg,
+      usersJoinedOrg,
+    ] = await out.progress(
+      "Loading prerequisites...",
+      Promise.all([
+        collaboratorsToAddPromise,
+        collaboratorsToDeletePromise,
+        collaboratorsToMakeAdminsPromise,
+        adminsToMakeCollaboratorsPromise,
+        usersInvitedToOrgPromise,
+        usersJoinedOrgPromise,
+      ])
+    );
 
     let addedCollaborators: string[];
     let deletedCollaborators: string[];
@@ -89,7 +116,10 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
       const joinedUserEmailsToUserObject = this.toUserEmailMap(usersJoinedOrg);
       const userJoinedOrgEmails = Array.from(joinedUserEmailsToUserObject.keys());
 
-      addedCollaborators = await out.progress("Adding collaborators...", this.addCollaborators(client, collaboratorsToAdd, usersInvitedToOrg, userJoinedOrgEmails));
+      addedCollaborators = await out.progress(
+        "Adding collaborators...",
+        this.addCollaborators(client, collaboratorsToAdd, usersInvitedToOrg, userJoinedOrgEmails)
+      );
 
       // updating list of invited users
       addedCollaborators.forEach((collaborator) => {
@@ -98,7 +128,10 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
         }
       });
 
-      deletedCollaborators = await out.progress("Deleting collaborators...", this.deleteCollaborators(client, collaboratorsToDelete, usersInvitedToOrg, joinedUserEmailsToUserObject));
+      deletedCollaborators = await out.progress(
+        "Deleting collaborators...",
+        this.deleteCollaborators(client, collaboratorsToDelete, usersInvitedToOrg, joinedUserEmailsToUserObject)
+      );
     } else {
       addedCollaborators = [];
       deletedCollaborators = [];
@@ -108,65 +141,97 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
     let toCollaborators: string[];
     if (collaboratorsToMakeAdmins.length || adminsToMakeCollaborators.length) {
       // just deleted org users should be excluded from role changing
-      const joinedUserEmailsToUserObject = this.toUserEmailMap(usersJoinedOrg.filter((user) => deletedCollaborators.indexOf(user.email) === -1));
+      const joinedUserEmailsToUserObject = this.toUserEmailMap(
+        usersJoinedOrg.filter((user) => deletedCollaborators.indexOf(user.email) === -1)
+      );
 
-      toAdmins = await out.progress("Changing role to admins...", this.changeUsersRole(client, collaboratorsToMakeAdmins, joinedUserEmailsToUserObject, "admin"));
+      toAdmins = await out.progress(
+        "Changing role to admins...",
+        this.changeUsersRole(client, collaboratorsToMakeAdmins, joinedUserEmailsToUserObject, "admin")
+      );
 
       // updating roles after setting admins
-      Array.from(joinedUserEmailsToUserObject.values()).filter((user) => collaboratorsToMakeAdmins.indexOf(user.email) > -1).forEach((user) => user.role = "admin");
+      Array.from(joinedUserEmailsToUserObject.values())
+        .filter((user) => collaboratorsToMakeAdmins.indexOf(user.email) > -1)
+        .forEach((user) => (user.role = "admin"));
 
-      toCollaborators = await out.progress("Changing role to collaborator...", this.changeUsersRole(client, adminsToMakeCollaborators, joinedUserEmailsToUserObject, "collaborator"));
+      toCollaborators = await out.progress(
+        "Changing role to collaborator...",
+        this.changeUsersRole(client, adminsToMakeCollaborators, joinedUserEmailsToUserObject, "collaborator")
+      );
     } else {
       toAdmins = [];
       toCollaborators = [];
     }
 
-    out.text((result) => {
-      const stringArray: string[] = [];
+    out.text(
+      (result) => {
+        const stringArray: string[] = [];
 
-      if (result.addedCollaborators.length) {
-        stringArray.push(`Successfully added ${result.addedCollaborators.length} collaborators to organization`);
-      }
-      if (result.deletedCollaborators.length) {
-        stringArray.push(`Successfully deleted ${result.deletedCollaborators.length} collaborators from organization`);
-      }
-      if (result.toAdmins.length) {
-        stringArray.push(`Successfully changed roles for ${result.toAdmins.length} collaborators to "admin"`);
-      }
-      if (result.toCollaborators.length) {
-        stringArray.push(`Successfully changed roles for ${result.toCollaborators.length} admins to "collaborator"`);
-      }
+        if (result.addedCollaborators.length) {
+          stringArray.push(`Successfully added ${result.addedCollaborators.length} collaborators to organization`);
+        }
+        if (result.deletedCollaborators.length) {
+          stringArray.push(`Successfully deleted ${result.deletedCollaborators.length} collaborators from organization`);
+        }
+        if (result.toAdmins.length) {
+          stringArray.push(`Successfully changed roles for ${result.toAdmins.length} collaborators to "admin"`);
+        }
+        if (result.toCollaborators.length) {
+          stringArray.push(`Successfully changed roles for ${result.toCollaborators.length} admins to "collaborator"`);
+        }
 
-      return stringArray.join(Os.EOL);
-    }, {addedCollaborators, deletedCollaborators, toAdmins, toCollaborators});
+        return stringArray.join(Os.EOL);
+      },
+      { addedCollaborators, deletedCollaborators, toAdmins, toCollaborators }
+    );
 
     return success();
   }
 
   private validateParameters() {
-    if (!(this.collaboratorsToAdd || this.collaboratorsToAddFile
-        || this.collaboratorsToDelete || this.collaboratorsToDeleteFile
-        || this.collaboratorsToMakeAdmins || this.collaboratorsToMakeAdminsFile
-        || this.adminsToMakeCollaborators || this.adminsToMakeCollaboratorsFile)) {
+    if (
+      !(
+        this.collaboratorsToAdd ||
+        this.collaboratorsToAddFile ||
+        this.collaboratorsToDelete ||
+        this.collaboratorsToDeleteFile ||
+        this.collaboratorsToMakeAdmins ||
+        this.collaboratorsToMakeAdminsFile ||
+        this.adminsToMakeCollaborators ||
+        this.adminsToMakeCollaboratorsFile
+      )
+    ) {
       throw failure(ErrorCodes.InvalidParameter, "nothing to update");
     }
     if (this.collaboratorsToAdd && this.collaboratorsToAddFile) {
-      throw failure(ErrorCodes.InvalidParameter, "parameters '--add-collaborators' and '--add-collaborators-file' are mutually exclusive");
+      throw failure(
+        ErrorCodes.InvalidParameter,
+        "parameters '--add-collaborators' and '--add-collaborators-file' are mutually exclusive"
+      );
     }
     if (this.collaboratorsToDelete && this.collaboratorsToDeleteFile) {
-      throw failure(ErrorCodes.InvalidParameter, "parameters '--delete-collaborators' and '--delete-collaborators-file' are mutually exclusive");
+      throw failure(
+        ErrorCodes.InvalidParameter,
+        "parameters '--delete-collaborators' and '--delete-collaborators-file' are mutually exclusive"
+      );
     }
     if (this.collaboratorsToMakeAdmins && this.collaboratorsToMakeAdminsFile) {
       throw failure(ErrorCodes.InvalidParameter, "parameters '--make-admins' and '--make-admins-file' are mutually exclusive");
     }
     if (this.adminsToMakeCollaborators && this.adminsToMakeCollaboratorsFile) {
-      throw failure(ErrorCodes.InvalidParameter, "parameters '--make-collaborators' and '--make-collaborators-file' are mutually exclusive");
+      throw failure(
+        ErrorCodes.InvalidParameter,
+        "parameters '--make-collaborators' and '--make-collaborators-file' are mutually exclusive"
+      );
     }
   }
 
   private async getUsersInvitedToOrg(client: AppCenterClient): Promise<string[]> {
     try {
-      const httpRequest = await clientRequest<models.AppInvitationDetailResponse[]>((cb) => client.orgInvitations.listPending(this.name, cb));
+      const httpRequest = await clientRequest<models.AppInvitationDetailResponse[]>((cb) =>
+        client.orgInvitations.listPending(this.name, cb)
+      );
       if (httpRequest.response.statusCode < 400) {
         return httpRequest.result.map((invitation) => invitation.email);
       } else {
@@ -186,13 +251,24 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
     return pLimit(10);
   }
 
-  private async addCollaborators(client: AppCenterClient, collaborators: string[], usersInvitedToOrg: string[], usersJoinedOrg: string[]): Promise<string[]> {
+  private async addCollaborators(
+    client: AppCenterClient,
+    collaborators: string[],
+    usersInvitedToOrg: string[],
+    usersJoinedOrg: string[]
+  ): Promise<string[]> {
     const limiter = this.getLimiter();
     const filteredCollaborators = _.difference(collaborators, usersJoinedOrg); // no need to add users already joined org
 
-    await Promise.all(filteredCollaborators
-      .map((collaborator) =>
-        limiter(() => usersInvitedToOrg.some((invited) => invited === collaborator) ? this.resendInvitationToUser(client, collaborator) : this.sendInvitationToUser(client, collaborator))));
+    await Promise.all(
+      filteredCollaborators.map((collaborator) =>
+        limiter(() =>
+          usersInvitedToOrg.some((invited) => invited === collaborator)
+            ? this.resendInvitationToUser(client, collaborator)
+            : this.sendInvitationToUser(client, collaborator)
+        )
+      )
+    );
 
     return filteredCollaborators;
   }
@@ -229,7 +305,12 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
     }
   }
 
-  private async deleteCollaborators(client: AppCenterClient, collaborators: string[], usersInvitedToOrg: string[], joinedUserEmailsToUserObject: Map<string, models.OrganizationUserResponse>): Promise<string[]> {
+  private async deleteCollaborators(
+    client: AppCenterClient,
+    collaborators: string[],
+    usersInvitedToOrg: string[],
+    joinedUserEmailsToUserObject: Map<string, models.OrganizationUserResponse>
+  ): Promise<string[]> {
     const limiter = this.getLimiter();
     const userActions: Array<Promise<void>> = [];
     const collaboratorsForDeletion: string[] = [];
@@ -284,23 +365,37 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
     }
   }
 
-  private async changeUsersRole(client: AppCenterClient, collaborators: string[], userJoinedOrgToRole: Map<string, models.OrganizationUserResponse>, role: UserRole): Promise<string[]> {
+  private async changeUsersRole(
+    client: AppCenterClient,
+    collaborators: string[],
+    userJoinedOrgToRole: Map<string, models.OrganizationUserResponse>,
+    role: UserRole
+  ): Promise<string[]> {
     const limiter = this.getLimiter();
     // no need to change role for non-collaborators and collaborators with target role
     const filteredCollaboratorsNames = collaborators
       .filter((collaborator) => userJoinedOrgToRole.has(collaborator) && userJoinedOrgToRole.get(collaborator).role !== role)
       .map((collaborator) => userJoinedOrgToRole.get(collaborator).name);
 
-    await Promise.all(filteredCollaboratorsNames.map((collaboratorName) => limiter(() => this.changeUserRole(client, collaboratorName, role))));
+    await Promise.all(
+      filteredCollaboratorsNames.map((collaboratorName) => limiter(() => this.changeUserRole(client, collaboratorName, role)))
+    );
 
     return filteredCollaboratorsNames;
   }
 
   private async changeUserRole(client: AppCenterClient, collaboratorName: string, role: UserRole): Promise<void> {
     try {
-      const httpResponse = await clientRequest((cb) => client.users.updateOrgRole(this.name, collaboratorName, {
-        role
-      }, cb));
+      const httpResponse = await clientRequest((cb) =>
+        client.users.updateOrgRole(
+          this.name,
+          collaboratorName,
+          {
+            role,
+          },
+          cb
+        )
+      );
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.response;
       }
@@ -315,7 +410,9 @@ export default class OrgCollaboratorsUpdateCommand extends Command {
   }
 
   private toUserEmailMap(users: models.OrganizationUserResponse[]): Map<string, models.OrganizationUserResponse> {
-    return new Map<string, models.OrganizationUserResponse>(users.map((user) => [user.email, user] as [string, models.OrganizationUserResponse]));
+    return new Map<string, models.OrganizationUserResponse>(
+      users.map((user) => [user.email, user] as [string, models.OrganizationUserResponse])
+    );
   }
 }
 

@@ -1,5 +1,16 @@
-import { Command, CommandArgs, CommandResult,
-         help, success, shortName, longName, required, hasArg, failure, ErrorCodes } from "../../../util/commandline";
+import {
+  Command,
+  CommandArgs,
+  CommandResult,
+  help,
+  success,
+  shortName,
+  longName,
+  required,
+  hasArg,
+  failure,
+  ErrorCodes,
+} from "../../../util/commandline";
 import { out } from "../../../util/interaction";
 import { parseTestParameters } from "./parameters-parser";
 import { processIncludedFiles } from "./included-files-parser";
@@ -10,7 +21,6 @@ import * as _ from "lodash";
 import * as pfs from "../../../util/misc/promisfied-fs";
 
 export class PrepareTestsCommand extends Command {
-
   @help(Messages.TestCloud.Arguments.PrepareArtifactsDir)
   @longName("artifacts-dir")
   @hasArg
@@ -32,11 +42,11 @@ export class PrepareTestsCommand extends Command {
     super(args);
 
     if (typeof this.testParameters === "string") {
-      this.testParameters = [ this.testParameters ];
+      this.testParameters = [this.testParameters];
     }
 
     if (typeof this.include === "string") {
-      this.include = [ this.include ];
+      this.include = [this.include];
     }
   }
 

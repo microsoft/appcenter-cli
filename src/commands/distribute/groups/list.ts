@@ -10,15 +10,16 @@ const debug = require("debug")("appcenter-cli:commands:distribute:groups:list");
 
 @help("Lists all distribution groups of the app")
 export default class ListDistributionGroupsCommand extends AppCommand {
-
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
     debug("Getting list of the distribution groups");
     let distributionGroupsListRequestResponse: ClientResponse<models.DistributionGroupResponse[]>;
     try {
-      distributionGroupsListRequestResponse = await out.progress("Getting list of the distribution groups...",
-        clientRequest<models.DistributionGroupResponse[]>((cb) => client.distributionGroups.list(app.ownerName, app.appName, cb)));
+      distributionGroupsListRequestResponse = await out.progress(
+        "Getting list of the distribution groups...",
+        clientRequest<models.DistributionGroupResponse[]>((cb) => client.distributionGroups.list(app.ownerName, app.appName, cb))
+      );
     } catch (error) {
       debug(`Failed to get list of the distribution groups - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, "failed to fetch list of all distribution groups");
@@ -30,20 +31,28 @@ export default class ListDistributionGroupsCommand extends AppCommand {
 
     const distributionGroupsNames = _(distributionGroupsListRequestResponse.result)
       .sortBy((distributionGroup) => distributionGroup.name)
-      .map((distributionGroup) => distributionGroup.name).value();
+      .map((distributionGroup) => distributionGroup.name)
+      .value();
 
     const limit = pLimit(10);
 
     debug("Creating requests for retrieving user counts of distribution groups");
     const distributionGroupUsersPromises: Array<Promise<ClientResponse<models.DistributionGroupUserGetResponse[]>>> = [];
     for (const distributionGroupName of distributionGroupsNames) {
-      distributionGroupUsersPromises.push(limit(() => clientRequest<models.DistributionGroupUserGetResponse[]>(
-          (cb) => client.distributionGroups.listUsers(this.app.ownerName, this.app.appName, distributionGroupName, cb))));
+      distributionGroupUsersPromises.push(
+        limit(() =>
+          clientRequest<models.DistributionGroupUserGetResponse[]>((cb) =>
+            client.distributionGroups.listUsers(this.app.ownerName, this.app.appName, distributionGroupName, cb)
+          )
+        )
+      );
     }
 
     // Showing progress spinner while requests are being sent
-    const requestsCompletedPromise = out.progress("Getting number of users for distribution groups",
-      Promise.all(distributionGroupUsersPromises.map((dg) => dg.catch((res) => Promise.resolve()))));
+    const requestsCompletedPromise = out.progress(
+      "Getting number of users for distribution groups",
+      Promise.all(distributionGroupUsersPromises.map((dg) => dg.catch((res) => Promise.resolve())))
+    );
 
     const userCounts: string[] = [];
     for (let i = 0; i < distributionGroupUsersPromises.length; i++) {

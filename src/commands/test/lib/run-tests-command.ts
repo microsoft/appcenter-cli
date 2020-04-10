@@ -1,7 +1,14 @@
 import {
-  AppCommand, CommandArgs, CommandResult,
-  help, success, shortName, longName, required, hasArg,
-  failure
+  AppCommand,
+  CommandArgs,
+  CommandResult,
+  help,
+  success,
+  shortName,
+  longName,
+  required,
+  hasArg,
+  failure,
 } from "../../../util/commandline";
 
 import { TestCloudUploader, StartedTestRun } from "./test-cloud-uploader";
@@ -21,7 +28,6 @@ import * as os from "os";
 import { buildErrorInfo } from "../lib/error-info-builder";
 
 export abstract class RunTestsCommand extends AppCommand {
-
   @help(Messages.TestCloud.Arguments.AppPath)
   @longName("app-path")
   @hasArg
@@ -97,8 +103,12 @@ export abstract class RunTestsCommand extends AppCommand {
     return;
   }
 
-    // Override this if additional processing is needed need after test run completes
-  protected async afterCompletion(client: AppCenterClient, testRun: StartedTestRun, streamingOutput: StreamingArrayOutput): Promise<void> {
+  // Override this if additional processing is needed need after test run completes
+  protected async afterCompletion(
+    client: AppCenterClient,
+    testRun: StartedTestRun,
+    streamingOutput: StreamingArrayOutput
+  ): Promise<void> {
     return;
   }
 
@@ -125,13 +135,13 @@ export abstract class RunTestsCommand extends AppCommand {
             report = `##vso[task.setvariable variable=${vstsIdVariable}]${testRun.testRunId}` + os.EOL;
           }
           report += "Accepted devices: " + os.EOL;
-          testRun.acceptedDevices.map((item) => `  - ${item}`).forEach((text) => report += text + os.EOL);
+          testRun.acceptedDevices.map((item) => `  - ${item}`).forEach((text) => (report += text + os.EOL));
           if (testRun.rejectedDevices && testRun.rejectedDevices.length > 0) {
             report += "Rejected devices: " + os.EOL;
-            testRun.rejectedDevices.map((item) => `  - ${item}`).forEach((text) => report += text + os.EOL);
+            testRun.rejectedDevices.map((item) => `  - ${item}`).forEach((text) => (report += text + os.EOL));
           }
           return report;
-        }, testRun );
+        }, testRun);
 
         if (!this.async) {
           const exitCode = await this.waitForCompletion(client, testRun.testRunId);
@@ -141,8 +151,11 @@ export abstract class RunTestsCommand extends AppCommand {
             case 1:
               return failure(exitCode, `There were Test Failures.${os.EOL}Test Report: ${testRun.testRunUrl}`);
             case 2:
-              return failure(exitCode, `Cannot run tests. Returning exit code ${exitCode}.
-                ${os.EOL}Test Report: ${testRun.testRunUrl}`);
+              return failure(
+                exitCode,
+                `Cannot run tests. Returning exit code ${exitCode}.
+                ${os.EOL}Test Report: ${testRun.testRunUrl}`
+              );
           }
         }
 
@@ -150,17 +163,16 @@ export abstract class RunTestsCommand extends AppCommand {
           this.streamingOutput.text(function (testRun) {
             const report: string = `Test Report: ${testRun.testRunUrl}` + os.EOL;
             return report;
-          }, testRun );
+          }, testRun);
         }
 
         return success();
-      }
-      finally {
+      } finally {
         await this.cleanupArtifactsDir(artifactsDir);
         this.streamingOutput.finish();
       }
     } catch (err) {
-      const errInfo: { message: string, exitCode: number } = buildErrorInfo(err, getUser(), this);
+      const errInfo: { message: string; exitCode: number } = buildErrorInfo(err, getUser(), this);
       return failure(errInfo.exitCode, errInfo.message);
     }
   }
@@ -186,7 +198,9 @@ export abstract class RunTestsCommand extends AppCommand {
 
   protected async cleanupArtifactsDir(artifactsDir: string): Promise<void> {
     await pfs.rmDir(artifactsDir, true).catch(function (err) {
-      console.warn(`${err} while cleaning up artifacts directory ${artifactsDir}. This is often due to files being locked or in use. Please check your virus scan settings and any local security policies you might have in place for this directory. Continuing without cleanup.`);
+      console.warn(
+        `${err} while cleaning up artifacts directory ${artifactsDir}. This is often due to files being locked or in use. Please check your virus scan settings and any local security policies you might have in place for this directory. Continuing without cleanup.`
+      );
     });
   }
 
@@ -197,13 +211,7 @@ export abstract class RunTestsCommand extends AppCommand {
   }
 
   protected async uploadAndStart(client: AppCenterClient, manifestPath: string, portalBaseUrl: string): Promise<StartedTestRun> {
-    const uploader = new TestCloudUploader(
-      client,
-      this.app.ownerName,
-      this.app.appName,
-      manifestPath,
-      this.devices,
-      portalBaseUrl);
+    const uploader = new TestCloudUploader(client, this.app.ownerName, this.app.appName, manifestPath, this.devices, portalBaseUrl);
 
     uploader.appPath = this.appPath;
     uploader.language = this.language;
@@ -218,7 +226,7 @@ export abstract class RunTestsCommand extends AppCommand {
     return await uploader.uploadAndStart();
   }
 
-  private combinedParameters() : {} {
+  private combinedParameters(): {} {
     const parameters = this.getParametersFromOptions();
 
     if (this.testParameters) {
@@ -228,7 +236,7 @@ export abstract class RunTestsCommand extends AppCommand {
     }
   }
 
-  protected getParametersFromOptions() : {} {
+  protected getParametersFromOptions(): {} {
     return {};
   }
 

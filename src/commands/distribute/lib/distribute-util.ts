@@ -45,12 +45,14 @@ export async function getDistributionGroup(options: GetDistributionGroupOptions)
       throw failure(ErrorCodes.InvalidParameter, `Could not find group ${destination}`);
     } else {
       debug(`Failed to distribute the release - ${inspect(error)}`);
-      throw failure( ErrorCodes.Exception, `Could not add ${destinationType} ${destination} to release ${releaseId}`);
+      throw failure(ErrorCodes.Exception, `Could not add ${destinationType} ${destination} to release ${releaseId}`);
     }
   }
 }
 
-export async function getExternalStoreToDistributeRelease(options: GetExternalStoreToDistributeReleaseOptions): Promise<models.ExternalStoreResponse> {
+export async function getExternalStoreToDistributeRelease(
+  options: GetExternalStoreToDistributeReleaseOptions
+): Promise<models.ExternalStoreResponse> {
   const { client, app, storeName, releaseId } = options;
   try {
     const { result } = await clientRequest<models.ExternalStoreResponse>(async (cb) => {
@@ -63,7 +65,7 @@ export async function getExternalStoreToDistributeRelease(options: GetExternalSt
       throw failure(ErrorCodes.InvalidParameter, `Could not find store ${storeName}`);
     } else {
       debug(`Failed to distribute the release - ${inspect(error)}`);
-      throw failure( ErrorCodes.Exception, `Could not add store ${storeName} to release ${releaseId}`);
+      throw failure(ErrorCodes.Exception, `Could not add store ${storeName} to release ${releaseId}`);
     }
   }
 }
@@ -72,10 +74,17 @@ export async function addGroupToRelease(options: AddGroupToReleaseOptions): Prom
   const { client, app, distributionGroup, releaseId, mandatory, silent, destination, destinationType } = options;
 
   const { result, response } = await clientRequest<models.ReleaseDestinationResponse>(async (cb) => {
-    client.releases.addDistributionGroup(releaseId, app.ownerName, app.appName, distributionGroup.id, {
-      mandatoryUpdate: !!mandatory,
-      notifyTesters: !silent
-    }, cb);
+    client.releases.addDistributionGroup(
+      releaseId,
+      app.ownerName,
+      app.appName,
+      distributionGroup.id,
+      {
+        mandatoryUpdate: !!mandatory,
+        notifyTesters: !silent,
+      },
+      cb
+    );
   });
 
   if (response.statusCode >= 200 && response.statusCode < 400) {
