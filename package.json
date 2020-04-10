@@ -51,7 +51,7 @@
     "@types/from2": "2.3.0",
     "@types/glob": "7.1.1",
     "@types/inquirer": "6.5.0",
-    "@types/jsonwebtoken": "8.3.8",
+    "@types/jsonwebtoken": "8.3.9",
     "@types/jszip": "3.1.7",
     "@types/lodash": "4.14.149",
     "@types/minimist": "1.2.0",
