@@ -101,7 +101,7 @@
     "appcenter-file-upload-client": "0.0.24",
     "azure-storage": "2.10.3",
     "bplist": "0.0.4",
-    "chalk": "3.0.0",
+    "chalk": "4.0.0",
     "cli-spinner": "0.2.10",
     "cli-table3": "0.6.0",
     "date-fns": "2.12.0",
