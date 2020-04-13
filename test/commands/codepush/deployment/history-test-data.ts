@@ -12,13 +12,12 @@ export const fakeDeploymentName = "Staging";
 export const fakeNonExistentDeploymentName = "Dev";
 export const fakeEmail = "fake@email.com";
 export const fakeToken = "c1o3d3e7";
-// tslint:disable-next-line:no-http-string
 export const fakeHost = "http://localhost:1700";
 
 const fakeCommandArgs = {
   command: ["codepush", "deployment", "history"],
   args: ["-a", "FAKE/FAKE", "FAKE", "--token", fakeToken, "--env", "local"],
-  commandPath: "FAKE"
+  commandPath: "FAKE",
 };
 
 export const fakeCommand = new CodePushDeploymentHistoryCommand(fakeCommandArgs);
@@ -43,7 +42,7 @@ export const fakeMetrics: models.CodePushReleaseMetric[] = [
   { label: "v7", active: 0 },
 ];
 
-export const fakeReleasesTotalActive = fakeMetrics.reduce((sum, releaseMetrics) => sum += releaseMetrics.active, 0);
+export const fakeReleasesTotalActive = fakeMetrics.reduce((sum, releaseMetrics) => (sum += releaseMetrics.active), 0);
 
 export const expectedAdditionalInfoStrings = [
   "",
@@ -53,7 +52,7 @@ export const expectedAdditionalInfoStrings = [
   "",
   "",
   "",
-  ""
+  "",
 ];
 
 export const expectedMetricsStrings = [
@@ -81,7 +80,7 @@ export const fakeReleasesResponse = [
     rollout: 100,
     size: 5000,
     upload_time: 1538122280000,
-    diff_package_map: {}
+    diff_package_map: {},
   },
   {
     target_binary_range: "1.0",
@@ -96,7 +95,7 @@ export const fakeReleasesResponse = [
     rollout: 55,
     size: 10000,
     upload_time: 1538122288888,
-    diff_package_map: {}
+    diff_package_map: {},
   },
   {
     target_binary_range: "1.1",
@@ -113,20 +112,34 @@ export const fakeReleasesResponse = [
     rollout: 33,
     size: 15000,
     upload_time: 1538122289999,
-    diff_package_map: {}
+    diff_package_map: {},
   },
 ];
 
 export const fakeMetricsResponse = [
   { label: "1.0", active: 1, installed: 2, downloaded: 0, failed: 0 },
   { label: "v1", active: 1, installed: 1, downloaded: 2, failed: 0 },
-  { label: "v2", active: 0, installed: 1, downloaded: 1, failed: 0 }
+  { label: "v2", active: 0, installed: 1, downloaded: 1, failed: 0 },
 ];
 
 export const expectedOutTableRows = [
   ["v1", formatDate(fakeReleasesResponse[0].upload_time), "1.0", "No", "", "Active: 50% (1 of 2)\nInstalled: 1 (1 pending)"],
-  ["v2", formatDate(fakeReleasesResponse[1].upload_time), "1.0", "Yes", "Description", "Active: 0% (0 of 2)\nInstalled: 1\nRollout: 55%\nDisabled: Yes"],
-  ["v3", formatDate(fakeReleasesResponse[2].upload_time) + "\n(Promoted v1 from TestDep)", "1.1", "Yes", "", "No installs recorded\nRollout: 33%"]
+  [
+    "v2",
+    formatDate(fakeReleasesResponse[1].upload_time),
+    "1.0",
+    "Yes",
+    "Description",
+    "Active: 0% (0 of 2)\nInstalled: 1\nRollout: 55%\nDisabled: Yes",
+  ],
+  [
+    "v3",
+    formatDate(fakeReleasesResponse[2].upload_time) + "\n(Promoted v1 from TestDep)",
+    "1.1",
+    "Yes",
+    "",
+    "No installs recorded\nRollout: 33%",
+  ],
 ];
 
 export const appNotExistMessage = "The app Non/Existent does not exist.";

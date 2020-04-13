@@ -1,4 +1,15 @@
-import { Command, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
+import {
+  Command,
+  CommandResult,
+  help,
+  success,
+  failure,
+  ErrorCodes,
+  shortName,
+  longName,
+  hasArg,
+  required,
+} from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
@@ -32,10 +43,19 @@ export default class OrgUpdateCommand extends Command {
     }
 
     try {
-      const httpContent = await out.progress("Updating organization...", clientRequest<models.OrganizationResponse>((cb) => client.organizations.update(this.name, {
-        displayName: this.newDisplayName,
-        name: this.newName
-      }, cb)));
+      const httpContent = await out.progress(
+        "Updating organization...",
+        clientRequest<models.OrganizationResponse>((cb) =>
+          client.organizations.update(
+            this.name,
+            {
+              displayName: this.newDisplayName,
+              name: this.newName,
+            },
+            cb
+          )
+        )
+      );
       if (httpContent.response.statusCode < 400) {
         if (this.newDisplayName) {
           out.text(`Successfully changed display name of ${this.name} to ${this.newDisplayName}`);

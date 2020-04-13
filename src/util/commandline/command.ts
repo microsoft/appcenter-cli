@@ -1,11 +1,27 @@
 // Base class for all command handlers
 import * as Result from "./command-result";
-import { shortName, longName, help, hasArg, getOptionsDescription, getPositionalOptionsDescription, common } from "./option-decorators";
+import {
+  shortName,
+  longName,
+  help,
+  hasArg,
+  getOptionsDescription,
+  getPositionalOptionsDescription,
+  common,
+} from "./option-decorators";
 import { parseOptions, OptionsDescription } from "./option-parser";
 import { setDebug, setQuiet, OutputFormatSupport, setFormatJson, out } from "../interaction";
 import { runHelp } from "./help";
 import { scriptName } from "../misc";
-import { getUser, environments, telemetryIsEnabled, getPortalUrlForEndpoint, getEnvFromEnvironmentVar, getTokenFromEnvironmentVar, appCenterAccessTokenEnvVar } from "../profile";
+import {
+  getUser,
+  environments,
+  telemetryIsEnabled,
+  getPortalUrlForEndpoint,
+  getEnvFromEnvironmentVar,
+  getTokenFromEnvironmentVar,
+  appCenterAccessTokenEnvVar,
+} from "../profile";
 import { AppCenterClient, createAppCenterClient, AppCenterClientFactory } from "../apis";
 import * as path from "path";
 
@@ -19,7 +35,6 @@ export interface CommandArgs {
 
 export class Command {
   constructor(args: CommandArgs) {
-
     const proto = Object.getPrototypeOf(this);
     const flags = getOptionsDescription(proto);
     const positionals = getPositionalOptionsDescription(proto);
@@ -40,7 +55,7 @@ export class Command {
 
   // Additional output formats (except "list" which is used by default) which are supported by this command
   protected readonly additionalSupportedOutputFormats: OutputFormatSupport = {
-    json: setFormatJson
+    json: setFormatJson,
   };
 
   // Default arguments supported by every command
@@ -145,8 +160,14 @@ export class Command {
       const tokenFromEnvVar = getTokenFromEnvironmentVar();
       const envFromEnvVar = getEnvFromEnvironmentVar();
       const isLogoutCommand = this.command[0] === "logout";
-      if (user && tokenFromEnvVar && !isLogoutCommand) { // logout command should be executed even if both user and env token are set - it just logs out user
-        return Promise.resolve(Result.failure(Result.ErrorCodes.IllegalCommand, `logged in user and token in environment variable ${appCenterAccessTokenEnvVar} cannot be used together`));
+      if (user && tokenFromEnvVar && !isLogoutCommand) {
+        // logout command should be executed even if both user and env token are set - it just logs out user
+        return Promise.resolve(
+          Result.failure(
+            Result.ErrorCodes.IllegalCommand,
+            `logged in user and token in environment variable ${appCenterAccessTokenEnvVar} cannot be used together`
+          )
+        );
       } else if (user) {
         debug(`Creating appcenter client for command for current logged in user`);
         client = this.clientFactory.fromProfile(user);
@@ -182,7 +203,7 @@ export class Command {
 
   protected getVersion(): string {
     const packageJsonPath = path.join(__dirname, "../../../package.json");
-    /* tslint:disable-next-line:non-literal-require */
+    // eslint-disable-next-line security/detect-non-literal-require
     const packageJson: any = require(packageJsonPath);
     return packageJson.version;
   }
@@ -191,7 +212,7 @@ export class Command {
     if (!input) {
       return [];
     } else if (typeof input === "string") {
-      return [ input ];
+      return [input];
     }
 
     return input;

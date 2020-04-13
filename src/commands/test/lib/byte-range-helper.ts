@@ -17,8 +17,7 @@ export async function getByteRange(path: string, start: number, length: number):
       result.push(buffer[i]);
     }
     return result;
-  }
-  finally {
+  } finally {
     await pfs.close(fd);
   }
 }

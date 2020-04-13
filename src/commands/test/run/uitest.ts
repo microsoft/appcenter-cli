@@ -10,7 +10,6 @@ import { RunTestsDownloadResultCommand } from "../lib/run-tests-download-result-
 
 @help(Messages.TestCloud.Commands.RunUITests)
 export default class RunUITestsCommand extends RunTestsDownloadResultCommand {
-
   @help(Messages.TestCloud.Arguments.UITestsBuildDir)
   @longName("build-dir")
   @hasArg
@@ -124,11 +123,11 @@ export default class RunUITestsCommand extends RunTestsDownloadResultCommand {
     return preparer.prepare();
   }
 
-  protected getParametersFromOptions() : {} {
+  protected getParametersFromOptions(): {} {
     if (this.fixtureChunk) {
-        return {chunker : "fixture"};
+      return { chunker: "fixture" };
     } else if (this.testChunk) {
-      return {chunker : "method"};
+      return { chunker: "method" };
     }
     return {};
   }

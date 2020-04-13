@@ -8,7 +8,7 @@ export interface CodePushEnvironmentInfo {
 interface EnvironmentsFile {
   defaultEnvironment: string;
   environments: {
-    [environmentName: string]: CodePushEnvironmentInfo
+    [environmentName: string]: CodePushEnvironmentInfo;
   };
 }
 
@@ -19,26 +19,28 @@ const codePushEnvironmentsData: EnvironmentsFile = {
     dev: {
       acquisitionEndpoint: "https://codepush-int-legacy.azurewebsites.net/",
       managementEndpoint: "https://codepush-management-int-legacy.azurewebsites.net/",
-      description: "Development"
+      description: "Development",
     },
     int: {
       acquisitionEndpoint: "https://codepush-int-legacy.azurewebsites.net/",
       managementEndpoint: "https://codepush-management-int-legacy.azurewebsites.net/",
-      description: "Integration"
+      description: "Integration",
     },
     staging: {
       acquisitionEndpoint: "https://codepush-staging.azurewebsites.net/",
       managementEndpoint: "https://codepush-management-staging.azurewebsites.net/",
-      description: "Staging"
+      description: "Staging",
     },
     prod: {
       acquisitionEndpoint: "https://codepush.azurewebsites.net/",
       managementEndpoint: "https://codepush-management.azurewebsites.net/",
-      description: "Production"
-    }
-  }
+      description: "Production",
+    },
+  },
 };
 
-export function environments(environmentName: string = codePushEnvironmentsData.defaultEnvironment): CodePushEnvironmentInfo | undefined {
+export function environments(
+  environmentName: string = codePushEnvironmentsData.defaultEnvironment
+): CodePushEnvironmentInfo | undefined {
   return codePushEnvironmentsData.environments[environmentName];
 }

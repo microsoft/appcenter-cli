@@ -20,7 +20,10 @@ function createFakeAppFile(appFilePath: string, entryNames: string[]): Promise<s
           zip.file(entryName, Buffer.from("Fake file"));
         }
 
-        JsZipHelper.writeZipToPath(inputFile, zip, "STORE").then(() => resolve(inputFile), (writingError) => reject(writingError));
+        JsZipHelper.writeZipToPath(inputFile, zip, "STORE").then(
+          () => resolve(inputFile),
+          (writingError) => reject(writingError)
+        );
       } catch (err) {
         reject(err);
       }

@@ -83,7 +83,10 @@ export class StateChecker {
     if (timeoutSec) {
       const elapsedSeconds = process.hrtime(startTime)[0];
       if (elapsedSeconds + waitTime > timeoutSec) {
-        this.streamingOutput.text((timeoutSec) => `After ${timeoutSec} seconds, command timed out waiting for tests to finish.`, timeoutSec);
+        this.streamingOutput.text(
+          (timeoutSec) => `After ${timeoutSec} seconds, command timed out waiting for tests to finish.`,
+          timeoutSec
+        );
         return true;
       }
     }
@@ -107,19 +110,12 @@ export class StateChecker {
 
   private getTestRunState(client: AppCenterClient, testRunId: string): Promise<models.TestRunState> {
     return clientCall((cb) => {
-      client.test.getTestRunState(
-        testRunId,
-        this.ownerName,
-        this.appName,
-        cb
-      );
+      client.test.getTestRunState(testRunId, this.ownerName, this.appName, cb);
     });
   }
 
   private async delay(milliseconds: number): Promise<void> {
     return new Promise<void>((resolve) => {
-      // Turn off tslint false error
-      /* tslint:disable-next-line:no-string-based-set-timeout */
       setTimeout(resolve, milliseconds);
     });
   }

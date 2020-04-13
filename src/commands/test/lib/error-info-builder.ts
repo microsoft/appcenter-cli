@@ -2,11 +2,14 @@ import { ErrorCodes, AppCommand } from "../../../util/commandline";
 import { Profile } from "../../../util/profile";
 import * as os from "os";
 
-export function buildErrorInfo(err: any, profile: Profile, command: AppCommand): { message: string, exitCode: number } {
+export function buildErrorInfo(err: any, profile: Profile, command: AppCommand): { message: string; exitCode: number } {
   const exitCode = err.exitCode || err.errorCode || ErrorCodes.Exception;
-  let message : string = null;
+  let message: string = null;
 
-  let helpMessage = `Further error details: For help, please send both the reported error above and the following environment information to us by going to https://appcenter.ms/apps and opening a support ticket (using the help menu in the upper right corner of the screen)${os.EOL}
+  let helpMessage = `Further error details: For help, please send both the reported error above and the following environment information to us by going to https://appcenter.ms/apps and opening a support ticket (using the help menu in the upper right corner of the screen)${
+    os.EOL
+  }
+
     Environment: ${os.platform()}
     App Upload Id: ${command.identifier}
     Timestamp: ${Date.now()}

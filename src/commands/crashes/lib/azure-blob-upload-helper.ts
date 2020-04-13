@@ -16,26 +16,32 @@ export default class AzureBlobUploadHelper {
   }
 
   private uploadBlockBlob(blobService: AzureStorage.BlobService, container: string, blob: string, file: string): Promise<void> {
-    return new Promise<void> ((resolve, reject) => {
-      blobService.createBlockBlobFromLocalFile(container, blob, file, {
-        contentSettings: {
-          contentType: "application/zip"
+    return new Promise<void>((resolve, reject) => {
+      blobService.createBlockBlobFromLocalFile(
+        container,
+        blob,
+        file,
+        {
+          contentSettings: {
+            contentType: "application/zip",
+          },
+        },
+        (error, result, response) => {
+          if (error) {
+            this.debug(`Failed to upload ZIP with symbols - ${inspect(error)}`);
+            reject(failure(ErrorCodes.Exception, "failed to upload ZIP with symbols"));
+          } else {
+            resolve();
+          }
         }
-      }, (error, result, response) => {
-        if (error) {
-          this.debug(`Failed to upload ZIP with symbols - ${inspect(error)}`);
-          reject(failure(ErrorCodes.Exception, "failed to upload ZIP with symbols"));
-        } else {
-          resolve();
-        }
-      });
+      );
     });
   }
 
   private getBlobService(urlObject: Url.Url): AzureStorage.BlobService {
     const blobEndpoint = Url.format({
       protocol: urlObject.protocol,
-      host: urlObject.host
+      host: urlObject.host,
     });
     const sharedAccessSignature = urlObject.query as string;
 

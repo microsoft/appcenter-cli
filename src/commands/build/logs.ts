@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  hasArg,
+  help,
+  longName,
+  required,
+  shortName,
+  success,
+} from "../../util/commandline";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 import { StreamingArrayOutput } from "../../util/interaction";
 import { inspect } from "util";
@@ -54,41 +65,47 @@ export default class DisplayLogsStatusCommand extends AppCommand {
     streamingOutput.start();
 
     let skippedAndShownLogsCount: number;
-    await ContinuousPollingHelper.pollContinuously(async () => {
-      try {
-        debug(`Downloading logs for build ${this.buildId}`);
-        return await clientRequest<models.BuildLog>((cb) => client.builds.getLog(buildIdNumber, app.ownerName, app.appName, cb));
-      } catch (error) {
-        debug(`Request failed - ${inspect(error)}`);
-        switch (error.statusCode) {
-          case 401:
-            throw failure(ErrorCodes.Exception, "failed to get build logs because the authentication has failed");
-          case 404:
-            throw failure(ErrorCodes.InvalidParameter, `failed to get build logs because build ${buildIdNumber} doesn't exist`);
-          default:
-            throw failure(ErrorCodes.Exception, "failed to get build logs");
+    await ContinuousPollingHelper.pollContinuously(
+      async () => {
+        try {
+          debug(`Downloading logs for build ${this.buildId}`);
+          return await clientRequest<models.BuildLog>((cb) => client.builds.getLog(buildIdNumber, app.ownerName, app.appName, cb));
+        } catch (error) {
+          debug(`Request failed - ${inspect(error)}`);
+          switch (error.statusCode) {
+            case 401:
+              throw failure(ErrorCodes.Exception, "failed to get build logs because the authentication has failed");
+            case 404:
+              throw failure(ErrorCodes.InvalidParameter, `failed to get build logs because build ${buildIdNumber} doesn't exist`);
+            default:
+              throw failure(ErrorCodes.Exception, "failed to get build logs");
+          }
         }
-      }
-    }, (response, responsesProcessed) => {
-      // processing response
-      const logs = response.result.value;
-      let filteredLogs: string[];
-      if (responsesProcessed) {
-        filteredLogs = _.drop(logs, skippedAndShownLogsCount);
-        skippedAndShownLogsCount += filteredLogs.length;
-      } else {
-        filteredLogs = _.takeRight(logs, Math.min(numberOfLines, logs.length));
-        skippedAndShownLogsCount = logs.length;
-      }
+      },
+      (response, responsesProcessed) => {
+        // processing response
+        const logs = response.result.value;
+        let filteredLogs: string[];
+        if (responsesProcessed) {
+          filteredLogs = _.drop(logs, skippedAndShownLogsCount);
+          skippedAndShownLogsCount += filteredLogs.length;
+        } else {
+          filteredLogs = _.takeRight(logs, Math.min(numberOfLines, logs.length));
+          skippedAndShownLogsCount = logs.length;
+        }
 
-      if (!this.showContinuously && filteredLogs.length === 0) {
-        streamingOutput.text(_.constant(""), "No log entries were found");
-      } else {
-        for (const log of filteredLogs) {
-          streamingOutput.text(_.constant(log), log);
+        if (!this.showContinuously && filteredLogs.length === 0) {
+          streamingOutput.text(_.constant(""), "No log entries were found");
+        } else {
+          for (const log of filteredLogs) {
+            streamingOutput.text(_.constant(log), log);
+          }
         }
-      }
-    }, this.showContinuously, DisplayLogsStatusCommand.delayBetweenRequests, `Downloading logs for build ${this.buildId}...`);
+      },
+      this.showContinuously,
+      DisplayLogsStatusCommand.delayBetweenRequests,
+      `Downloading logs for build ${this.buildId}...`
+    );
 
     streamingOutput.finish();
 

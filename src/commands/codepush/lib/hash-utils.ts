@@ -38,9 +38,7 @@ export class PackageManifest {
     // can also compute this hash easily given the update contents.
     entries = entries.sort();
 
-    return crypto.createHash(HASH_ALGORITHM)
-                  .update(JSON.stringify(entries))
-                  .digest("hex");
+    return crypto.createHash(HASH_ALGORITHM).update(JSON.stringify(entries)).digest("hex");
   }
 
   public serialize(): string {
@@ -78,11 +76,13 @@ export class PackageManifest {
     const __MACOSX = "__MACOSX/";
     const DS_STORE = ".DS_Store";
     const CODEPUSH_METADATA = ".codepushrelease";
-    return _.startsWith(relativeFilePath, __MACOSX)
-      || relativeFilePath === DS_STORE
-      || _.endsWith(relativeFilePath, "/" + DS_STORE)
-      || relativeFilePath === CODEPUSH_METADATA
-      || _.endsWith(relativeFilePath, "/" + CODEPUSH_METADATA);
+    return (
+      _.startsWith(relativeFilePath, __MACOSX) ||
+      relativeFilePath === DS_STORE ||
+      _.endsWith(relativeFilePath, "/" + DS_STORE) ||
+      relativeFilePath === CODEPUSH_METADATA ||
+      _.endsWith(relativeFilePath, "/" + CODEPUSH_METADATA)
+    );
   }
 }
 
@@ -112,22 +112,19 @@ export function generatePackageManifestFromDirectory(directoryPath: string, base
 
     // Hash the files sequentially, because streaming them in parallel is not necessarily faster
     const generateManifestPromise: Promise<void> = files.reduce((soFar: Promise<void>, filePath: string) => {
-      return soFar
-        .then(() => {
-          const relativePath: string = PackageManifest.normalizePath(path.relative(basePath, filePath));
-          if (!PackageManifest.isIgnored(relativePath)) {
-            return hashFile(filePath)
-              .then((hash: string) => {
-                fileHashesMap.set(relativePath, hash);
-              });
-          }
-        });
+      return soFar.then(() => {
+        const relativePath: string = PackageManifest.normalizePath(path.relative(basePath, filePath));
+        if (!PackageManifest.isIgnored(relativePath)) {
+          return hashFile(filePath).then((hash: string) => {
+            fileHashesMap.set(relativePath, hash);
+          });
+        }
+      });
     }, Promise.resolve(null as void));
 
-    generateManifestPromise
-      .then(() => {
-        resolve(new PackageManifest(fileHashesMap));
-      }, reject);
+    generateManifestPromise.then(() => {
+      resolve(new PackageManifest(fileHashesMap));
+    }, reject);
   });
 }
 
@@ -138,7 +135,7 @@ export function hashFile(filePath: string): Promise<string> {
 
 export function hashStream(readStream: stream.Readable): Promise<string> {
   return new Promise<string>((resolve, reject) => {
-    const hashStream = crypto.createHash(HASH_ALGORITHM) as any as stream.Transform;
+    const hashStream = (crypto.createHash(HASH_ALGORITHM) as any) as stream.Transform;
 
     readStream
       .on("error", (error: any): void => {

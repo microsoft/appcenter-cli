@@ -8,21 +8,25 @@ import * as downloadUtil from "../../../util/misc/download";
 import { StreamingArrayOutput } from "../../../util/interaction";
 
 export abstract class RunTestsDownloadResultCommand extends RunTestsCommand {
-    @help(Messages.TestCloud.Arguments.TestOutputDir)
-    @longName("test-output-dir")
-    @hasArg
-    testOutputDir: string;
+  @help(Messages.TestCloud.Arguments.TestOutputDir)
+  @longName("test-output-dir")
+  @hasArg
+  testOutputDir: string;
 
-    protected abstract async mergeTestArtifacts(): Promise<void>;
+  protected abstract async mergeTestArtifacts(): Promise<void>;
 
-    protected async afterCompletion(client: AppCenterClient, testRun: StartedTestRun, streamingOutput: StreamingArrayOutput): Promise<void> {
-        if (this.testOutputDir) {
-            // Download json test result
-            const testReport: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
-            if (testReport.stats.artifacts) {
-                await downloadUtil.downloadArtifacts(this, streamingOutput, this.testOutputDir, testRun.testRunId, testReport.stats.artifacts);
-                await this.mergeTestArtifacts();
-            }
-        }
+  protected async afterCompletion(
+    client: AppCenterClient,
+    testRun: StartedTestRun,
+    streamingOutput: StreamingArrayOutput
+  ): Promise<void> {
+    if (this.testOutputDir) {
+      // Download json test result
+      const testReport: TestReport = await client.test.getTestReport(testRun.testRunId, this.app.ownerName, this.app.appName);
+      if (testReport.stats.artifacts) {
+        await downloadUtil.downloadArtifacts(this, streamingOutput, this.testOutputDir, testRun.testRunId, testReport.stats.artifacts);
+        await this.mergeTestArtifacts();
+      }
     }
+  }
 }

@@ -17,7 +17,6 @@ describe("distribute groups download command", () => {
   const fakeToken = "c1o3d3e7";
   const fakeReleaseId = "1";
   const fakeDistributionGroupName = "fakeDistributionGroupName";
-  /* tslint:disable-next-line:no-http-string */
   const fakeHost = "http://localhost:1700";
   const fakeDownloadUrl = "/fake/download/url?format=apk";
   const fakeDownloadUrl2 = "/fake/download/url2?format=ipa";
@@ -37,13 +36,18 @@ describe("distribute groups download command", () => {
 
   it("gets the latest release when no release is specified", async () => {
     // Arrange
-    const releaseFilePath = Temp.path({prefix: "releaseFile", dir: tmpFolderPath});
+    const releaseFilePath = Temp.path({ prefix: "releaseFile", dir: tmpFolderPath });
     const executionScope = _.flow(setupGetLatestReleaseDetailsResponse, setupGetReleaseFileResponse)(Nock(fakeHost));
-    const skippedScope = _.flow(setupGetReleasesForDistributionGroupResponse, setupGetReleaseDetailsResponse, setupGetReleaseFile2Response)(Nock(fakeHost));
+    const skippedScope = _.flow(
+      setupGetReleasesForDistributionGroupResponse,
+      setupGetReleaseDetailsResponse,
+      setupGetReleaseFile2Response
+    )(Nock(fakeHost));
 
     // Act
     const command = new DownloadBinaryFromDistributionGroupCommand(
-      getCommandArgs(["-g", fakeDistributionGroupName, "-f", Path.basename(releaseFilePath), "-d", Path.dirname(releaseFilePath)]));
+      getCommandArgs(["-g", fakeDistributionGroupName, "-f", Path.basename(releaseFilePath), "-d", Path.dirname(releaseFilePath)])
+    );
     const result = await command.execute();
 
     // Assert
@@ -54,13 +58,27 @@ describe("distribute groups download command", () => {
 
   it("gets the specified release and checks that it was released to the distribution group", async () => {
     // Arrange
-    const releaseFilePath = Temp.path({prefix: "releaseFile", dir: tmpFolderPath});
-    const executionScope = _.flow(setupGetReleasesForDistributionGroupResponse, setupGetReleaseDetailsResponse, setupGetReleaseFile2Response)(Nock(fakeHost));
+    const releaseFilePath = Temp.path({ prefix: "releaseFile", dir: tmpFolderPath });
+    const executionScope = _.flow(
+      setupGetReleasesForDistributionGroupResponse,
+      setupGetReleaseDetailsResponse,
+      setupGetReleaseFile2Response
+    )(Nock(fakeHost));
     const skippedScope = _.flow(setupGetLatestReleaseDetailsResponse, setupGetReleaseFileResponse)(Nock(fakeHost));
 
     // Act
     const command = new DownloadBinaryFromDistributionGroupCommand(
-      getCommandArgs(["-g", fakeDistributionGroupName, "-f", Path.basename(releaseFilePath), "-d", Path.dirname(releaseFilePath), "-i", fakeReleaseId]));
+      getCommandArgs([
+        "-g",
+        fakeDistributionGroupName,
+        "-f",
+        Path.basename(releaseFilePath),
+        "-d",
+        Path.dirname(releaseFilePath),
+        "-i",
+        fakeReleaseId,
+      ])
+    );
     const result = await command.execute();
 
     // Assert
@@ -88,38 +106,39 @@ describe("distribute groups download command", () => {
     return {
       args,
       command: ["distribute", "groups", "download"],
-      commandPath: "FAKE_COMMAND_PATH"
+      commandPath: "FAKE_COMMAND_PATH",
     };
   }
 
   function setupGetLatestReleaseDetailsResponse(nockScope: Nock.Scope) {
-    return nockScope.get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}/releases/latest`)
+    return nockScope
+      .get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}/releases/latest`)
       .reply(200, {
-        download_url: fakeHost + fakeDownloadUrl
+        download_url: fakeHost + fakeDownloadUrl,
       });
   }
 
   function setupGetReleaseFileResponse(nockScope: Nock.Scope) {
-    return nockScope.get(fakeDownloadUrl)
-      .reply(200, releaseFileContent);
+    return nockScope.get(fakeDownloadUrl).reply(200, releaseFileContent);
   }
 
   function setupGetReleasesForDistributionGroupResponse(nockScope: Nock.Scope) {
-    return nockScope.get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}/releases`)
-      .reply(200, [{
-        id: Number(fakeReleaseId)
-      }]);
+    return nockScope
+      .get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}/releases`)
+      .reply(200, [
+        {
+          id: Number(fakeReleaseId),
+        },
+      ]);
   }
 
   function setupGetReleaseDetailsResponse(nockScope: Nock.Scope) {
-    return nockScope.get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`)
-      .reply(200, {
-        download_url: fakeHost + fakeDownloadUrl2
-      });
+    return nockScope.get(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/releases/${fakeReleaseId}`).reply(200, {
+      download_url: fakeHost + fakeDownloadUrl2,
+    });
   }
 
   function setupGetReleaseFile2Response(nockScope: Nock.Scope) {
-    return nockScope.get(fakeDownloadUrl2)
-      .reply(200, releaseFileContent2);
+    return nockScope.get(fakeDownloadUrl2).reply(200, releaseFileContent2);
   }
 });

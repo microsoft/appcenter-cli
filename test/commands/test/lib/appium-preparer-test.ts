@@ -11,10 +11,10 @@ const expect = chai.expect;
 function createValidBuildDirSpec(): fsLayout.IDirSpec {
   return {
     "pom.xml": '<?xml version="1.0" encoding="utf-8"><foo></foo>',
-    "dependency-jars": { },
+    "dependency-jars": {},
     "test-classes": {
-      "test.class": "Fake *.class file"
-    }
+      "test.class": "Fake *.class file",
+    },
   };
 }
 
@@ -67,7 +67,7 @@ describe("Preparing Appium workspace", () => {
 
   it("should fail when there is no *.class file inside test-classes directory", async () => {
     const spec = createValidBuildDirSpec();
-    spec["test-classes"] = { };
+    spec["test-classes"] = {};
 
     buildDir = await fsLayout.createLayout(spec);
 

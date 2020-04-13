@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  hasArg,
+  help,
+  longName,
+  required,
+  shortName,
+  success,
+} from "../../util/commandline";
 import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
@@ -8,7 +19,6 @@ const debug = require("debug")("appcenter-cli:commands:build:queue");
 
 @help("Queue a new build")
 export default class QueueBuildCommand extends AppCommand {
-
   @help("Branch to be built")
   @shortName("b")
   @longName("branch")
@@ -33,11 +43,21 @@ export default class QueueBuildCommand extends AppCommand {
     debug(`Queuing build for branch ${this.branchName}`);
     let queueBuildRequestResponse: ClientResponse<models.Build>;
     try {
-      queueBuildRequestResponse = await out.progress(`Queueing build for branch ${this.branchName}...`,
-        clientRequest<models.Build>((cb) => client.builds.create(this.branchName, app.ownerName, app.appName, {
-          debug: this.debugLogs,
-          sourceVersion: this.sourceVersion
-        }, cb)));
+      queueBuildRequestResponse = await out.progress(
+        `Queueing build for branch ${this.branchName}...`,
+        clientRequest<models.Build>((cb) =>
+          client.builds.create(
+            this.branchName,
+            app.ownerName,
+            app.appName,
+            {
+              debug: this.debugLogs,
+              sourceVersion: this.sourceVersion,
+            },
+            cb
+          )
+        )
+      );
     } catch (error) {
       if (error.statusCode === 400) {
         return failure(ErrorCodes.IllegalCommand, `app ${app.appName} is not configured for building`);
@@ -52,10 +72,13 @@ export default class QueueBuildCommand extends AppCommand {
 
     const url = PortalHelper.getPortalBuildLink(portalBaseUrl, app.ownerName, app.appName, realBranchName, buildId.toString());
 
-    out.report([
-      ["Build ID", "buildId"],
-      ["Build URL", "url"]
-    ], {buildId, url});
+    out.report(
+      [
+        ["Build ID", "buildId"],
+        ["Build URL", "url"],
+      ],
+      { buildId, url }
+    );
 
     return success();
   }

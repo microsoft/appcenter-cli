@@ -95,7 +95,7 @@ export default class PrepareUITestCommand extends PrepareTestsCommand {
     }
 
     if (this.testChunk && this.fixtureChunk) {
-        throw new Error("Arguments --fixture-chunk and test-chunk cannot be combined.");
+      throw new Error("Arguments --fixture-chunk and test-chunk cannot be combined.");
     }
   }
 

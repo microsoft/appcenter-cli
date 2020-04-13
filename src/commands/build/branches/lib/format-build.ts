@@ -15,15 +15,32 @@ const reportFormat = [
   ["Commit SHA", "sha"],
 ];
 
-export type BuildReportObject = { sourceBranch: string, buildNumber: string, status: string, result: string, author: string, message: string, sha: string, url: string };
+export type BuildReportObject = {
+  sourceBranch: string;
+  buildNumber: string;
+  status: string;
+  result: string;
+  author: string;
+  message: string;
+  sha: string;
+  url: string;
+};
 
-export function getBuildReportObject(build: models.Build, commitInfo: models.CommitDetails, app: DefaultApp, portalBaseUrl: string): BuildReportObject {
-  return _(build).pick(["sourceBranch", "buildNumber", "status", "result"]).extend({
-    author: `${commitInfo.commit.author.name} <${commitInfo.commit.author.email}>`,
-    message: commitInfo.commit.message,
-    sha: commitInfo.sha,
-    url: PortalHelper.getPortalBuildLink(portalBaseUrl, app.ownerName, app.appName, build.sourceBranch, build.id.toString())
-  }).value() as BuildReportObject;
+export function getBuildReportObject(
+  build: models.Build,
+  commitInfo: models.CommitDetails,
+  app: DefaultApp,
+  portalBaseUrl: string
+): BuildReportObject {
+  return _(build)
+    .pick(["sourceBranch", "buildNumber", "status", "result"])
+    .extend({
+      author: `${commitInfo.commit.author.name} <${commitInfo.commit.author.email}>`,
+      message: commitInfo.commit.message,
+      sha: commitInfo.sha,
+      url: PortalHelper.getPortalBuildLink(portalBaseUrl, app.ownerName, app.appName, build.sourceBranch, build.id.toString()),
+    })
+    .value() as BuildReportObject;
 }
 
 export function reportBuild(outputObject: BuildReportObject) {

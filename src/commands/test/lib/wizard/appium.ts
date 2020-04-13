@@ -14,7 +14,7 @@ enum FolderMatchLevel {
   NoTargetFolder = 3, // Partly conforms to the needed structure (somefolder/upload/..) and has a .jar file under somefolder.
   NoTargetFolderNoJar = 4, // Partly conforms to the needed structure (somefolder/upload/..) but has no .jar file under somefolder.
   NoTargetNoUpload = 5, // Doesn't conform to the needed structure (target/upload/..) but has a .jar file in the parent.
-  NoTargetNoUploadNoJar = 6 // Doesn't conform to the needed structure (target/upload/..) and has no .jar file in parent.
+  NoTargetNoUploadNoJar = 6, // Doesn't conform to the needed structure (target/upload/..) and has no .jar file in parent.
 }
 
 interface UploadFolder {
@@ -24,7 +24,6 @@ interface UploadFolder {
 }
 
 export default class RunAppiumWizardTestCommand extends AppCommand {
-
   private _args: CommandArgs;
 
   constructor(args: CommandArgs, interactiveArgs: string[]) {
@@ -55,14 +54,17 @@ export default class RunAppiumWizardTestCommand extends AppCommand {
         type: "list",
         name: "merge",
         message: "Should the xml files be merged in to the <output.xml> file?",
-        choices: [{
-          name: "Yes",
-          value: "true"
-        }, {
-          name: "No",
-          value: "false"
-        }]
-      }
+        choices: [
+          {
+            name: "Yes",
+            value: "true",
+          },
+          {
+            name: "No",
+            value: "false",
+          },
+        ],
+      },
     ];
     const answers: any = await prompt.question(questions);
     return answers.merge === "true" ? true : false;
@@ -74,14 +76,19 @@ export default class RunAppiumWizardTestCommand extends AppCommand {
     return foundFolders;
   }
 
-  private scanRecurse(dirname: string, folders: UploadFolder[], targetFolderParentLevel: number, uploadFolderIsParent: boolean, jarFileParentLevel: number) {
+  private scanRecurse(
+    dirname: string,
+    folders: UploadFolder[],
+    targetFolderParentLevel: number,
+    uploadFolderIsParent: boolean,
+    jarFileParentLevel: number
+  ) {
     const dirContent = fs.readdirSync(dirname);
     let containsPartRequiredData: boolean;
     for (const dir of dirContent) {
       const fullDir = path.join(dirname, dir);
       if (fs.lstatSync(fullDir).isDirectory()) {
         if (dir !== "node_modules") {
-
           if (targetFolderParentLevel >= 0) {
             targetFolderParentLevel++;
           }
@@ -102,12 +109,17 @@ export default class RunAppiumWizardTestCommand extends AppCommand {
             return path.parse(dir).ext === ".class";
           });
           if (dir === "dependency-jars" || (dir === "test-classes" && containsClassFiles)) {
-            if (containsPartRequiredData) { // If already contains either "dependency-jars" or "test-classes"
-              const matchLevel: FolderMatchLevel = this.calculateMatchLevel(targetFolderParentLevel, uploadFolderIsParent, jarFileParentLevel);
+            if (containsPartRequiredData) {
+              // If already contains either "dependency-jars" or "test-classes"
+              const matchLevel: FolderMatchLevel = this.calculateMatchLevel(
+                targetFolderParentLevel,
+                uploadFolderIsParent,
+                jarFileParentLevel
+              );
               const foundFolder: UploadFolder = {
                 name: path.relative(process.cwd(), fullDir.split(dir)[0]),
                 path: fullDir.split(dir)[0],
-                matchLevel: matchLevel
+                matchLevel: matchLevel,
               };
               if (!folders) {
                 folders = [foundFolder];
@@ -129,7 +141,11 @@ export default class RunAppiumWizardTestCommand extends AppCommand {
     }
   }
 
-  private calculateMatchLevel(targetFolderParentLevel: number, uploadFolderIsParent: boolean, jarFileParentLevel: number): FolderMatchLevel {
+  private calculateMatchLevel(
+    targetFolderParentLevel: number,
+    uploadFolderIsParent: boolean,
+    jarFileParentLevel: number
+  ): FolderMatchLevel {
     if (jarFileParentLevel === 2) {
       if (targetFolderParentLevel === 2) {
         if (uploadFolderIsParent) {
@@ -176,20 +192,20 @@ export default class RunAppiumWizardTestCommand extends AppCommand {
     const choices = shownFolders.map((folder) => {
       return {
         name: folder.name,
-        value: folder.path
+        value: folder.path,
       };
     });
     choices.push({
       name: "Enter path manually",
-      value: "manual"
+      value: "manual",
     });
     const questions = [
       {
         type: "list",
         name: "folderPath",
         message: "Pick a folder with the packed Appium tests",
-        choices: choices
-      }
+        choices: choices,
+      },
     ];
     const answers: any = await prompt.question(questions);
     if (answers.folderPath === "manual") {

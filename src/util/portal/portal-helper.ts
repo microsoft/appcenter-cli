@@ -1,9 +1,22 @@
-export function getPortalBuildLink(portalBaseUrl: string, appOwner: string, appName: string, branchName: string, buildId: string): string {
+export function getPortalBuildLink(
+  portalBaseUrl: string,
+  appOwner: string,
+  appName: string,
+  branchName: string,
+  buildId: string
+): string {
   const encodedBranchName = encodeURIComponent(branchName);
   return `${portalBaseUrl}/users/${appOwner}/apps/${appName}/build/branches/${encodedBranchName}/builds/${buildId}`;
 }
 
-export function getPortalTestLink(portalBaseUrl: string, isOrg: boolean, appOwner: string, appName: string, seriesName: string, testRunId: string): string {
+export function getPortalTestLink(
+  portalBaseUrl: string,
+  isOrg: boolean,
+  appOwner: string,
+  appName: string,
+  seriesName: string,
+  testRunId: string
+): string {
   if (isOrg) {
     return encodeURI(`${portalBaseUrl}/orgs/${appOwner}/apps/${appName}/test/series/${seriesName}/runs/${testRunId}`);
   } else {

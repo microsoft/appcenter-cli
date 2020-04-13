@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  help,
+  success,
+  shortName,
+  longName,
+  required,
+  hasArg,
+} from "../../../util/commandline";
 import { AppCenterClient, clientRequest, models } from "../../../util/apis";
 import { out, prompt } from "../../../util/interaction";
 import { inspect } from "util";
@@ -22,7 +33,7 @@ export default class DeleteReleaseCommand extends AppCommand {
       return failure(ErrorCodes.InvalidParameter, `${this.releaseId} is not a valid release id`);
     }
 
-    if (!await prompt.confirm(`Do you really want to delete release ${this.releaseId}?`)) {
+    if (!(await prompt.confirm(`Do you really want to delete release ${this.releaseId}?`))) {
       out.text(`Deletion of release ${this.releaseId} was cancelled`);
       return success();
     }
@@ -30,9 +41,12 @@ export default class DeleteReleaseCommand extends AppCommand {
     let releaseDetails: models.ReleaseDetailsResponse;
     try {
       debug("Loading release details");
-      const httpRequest = await out.progress("Loading release details...", clientRequest<models.ReleaseDetailsResponse>(
-        (cb) => client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
-      ));
+      const httpRequest = await out.progress(
+        "Loading release details...",
+        clientRequest<models.ReleaseDetailsResponse>((cb) =>
+          client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
+        )
+      );
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;
       } else {
@@ -49,14 +63,19 @@ export default class DeleteReleaseCommand extends AppCommand {
 
     try {
       debug("Removing release");
-      const httpResponse = await out.progress(`Removing the release...`,
-        clientRequest((cb) => client.releases.deleteMethod(releaseId, app.ownerName, app.appName, cb)));
+      const httpResponse = await out.progress(
+        `Removing the release...`,
+        clientRequest((cb) => client.releases.deleteMethod(releaseId, app.ownerName, app.appName, cb))
+      );
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.result;
       }
     } catch (error) {
       if (error.code === "partially_deleted") {
-        return failure(ErrorCodes.Exception, `release ${this.releaseId} was removed from all distribution groups, but couldn't be deleted from AppCenter`);
+        return failure(
+          ErrorCodes.Exception,
+          `release ${this.releaseId} was removed from all distribution groups, but couldn't be deleted from AppCenter`
+        );
       } else {
         debug(`Failed to remove the release - ${inspect(error)}`);
         return failure(ErrorCodes.Exception, `failed to delete the release`);

@@ -71,7 +71,10 @@ export class CalabashPreparer {
   }
 
   private generateTestParameterArgs(): string {
-    return this.testParameters.map(parseTestParameter).map((p) => `"${p.key}:${p.value}"`).join(" ");
+    return this.testParameters
+      .map(parseTestParameter)
+      .map((p) => `"${p.key}:${p.value}"`)
+      .join(" ");
   }
 
   /*

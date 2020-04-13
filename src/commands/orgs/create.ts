@@ -1,4 +1,15 @@
-import { Command, CommandResult, help, success, failure, ErrorCodes, shortName, longName, hasArg, required } from "../../util/commandline";
+import {
+  Command,
+  CommandResult,
+  help,
+  success,
+  failure,
+  ErrorCodes,
+  shortName,
+  longName,
+  hasArg,
+  required,
+} from "../../util/commandline";
 import { out } from "../../util/interaction";
 import { AppCenterClient, models, clientRequest } from "../../util/apis";
 
@@ -23,13 +34,20 @@ export default class OrgCreateCommand extends Command {
   name: string;
 
   async run(client: AppCenterClient, portalBaseUrl: string): Promise<CommandResult> {
-
     let organizationInfo: models.OrganizationResponse;
     try {
-      const httpResponse = await out.progress("Creating new organization...", clientRequest<models.OrganizationResponse>((cb) => client.organizations.createOrUpdate({
-        displayName: this.displayName,
-        name: this.name
-      }, cb)));
+      const httpResponse = await out.progress(
+        "Creating new organization...",
+        clientRequest<models.OrganizationResponse>((cb) =>
+          client.organizations.createOrUpdate(
+            {
+              displayName: this.displayName,
+              name: this.name,
+            },
+            cb
+          )
+        )
+      );
       if (httpResponse.response.statusCode < 400) {
         organizationInfo = httpResponse.result;
       } else {
@@ -47,12 +65,20 @@ export default class OrgCreateCommand extends Command {
     const admins: models.OrganizationUserResponse[] = pickAdmins(await getOrgUsers(client, organizationInfo.name, debug));
 
     out.text(`Successfully created organization ${organizationInfo.name}`);
-    out.report([
-      ["Name", "name"],
-      ["Display name", "displayName"],
-      ["URL", "url"],
-      ["Admins", "admins", (adminsArray: models.OrganizationUserResponse[]) => adminsArray.map((admin) => admin.name).join(", ")]
-    ], { name: organizationInfo.name, displayName: organizationInfo.displayName, url: getPortalOrgLink(portalBaseUrl, organizationInfo.name), admins});
+    out.report(
+      [
+        ["Name", "name"],
+        ["Display name", "displayName"],
+        ["URL", "url"],
+        ["Admins", "admins", (adminsArray: models.OrganizationUserResponse[]) => adminsArray.map((admin) => admin.name).join(", ")],
+      ],
+      {
+        name: organizationInfo.name,
+        displayName: organizationInfo.displayName,
+        url: getPortalOrgLink(portalBaseUrl, organizationInfo.name),
+        admins,
+      }
+    );
 
     return success();
   }

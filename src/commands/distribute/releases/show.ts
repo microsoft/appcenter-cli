@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, help, success, shortName, longName, required, hasArg } from "../../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  help,
+  success,
+  shortName,
+  longName,
+  required,
+  hasArg,
+} from "../../../util/commandline";
 import { AppCenterClient, models, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
@@ -26,9 +37,12 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
     let releaseDetails: models.ReleaseDetailsResponse;
     try {
       debug("Loading release details");
-      const httpRequest = await out.progress("Loading release details...", clientRequest<models.ReleaseDetailsResponse>(
-        (cb) => client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
-      ));
+      const httpRequest = await out.progress(
+        "Loading release details...",
+        clientRequest<models.ReleaseDetailsResponse>((cb) =>
+          client.releases.getLatestByUser(this.releaseId, app.ownerName, app.appName, cb)
+        )
+      );
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;
       } else {
@@ -43,26 +57,36 @@ export default class ShowReleaseDetailsCommand extends AppCommand {
       }
     }
 
-    out.report([
-      ["ID", "id"],
-      ["Status", "status"],
-      ["Name", "appName"],
-      ["Display Name", "appDisplayName"],
-      ["Version", "version"],
-      ["Short Version", "shortVersion"],
-      ["Enabled", "enabled"],
-      ["Release Notes", "releaseNotes"],
-      ["Size", "size"],
-      ["OS Required", "minOs"],
-      releaseDetails.androidMinApiLevel ? ["Android API Required", "androidMinApiLevel"] : ["Provisioning Profile Name", "provisioningProfileName"],
-      ["Bundle Identifier", "bundleIdentifier"],
-      ["Fingerprint", "fingerprint"],
-      ["Uploaded At", "uploadedAt", out.report.asDate],
-      ["Download URL", "downloadUrl"],
-      ["Install URL", "installUrl"],
-      ["Icon URL", "appIconUrl"],
-      ["Destinations", "destinations", (destinations: models.Destination[]) => destinations && destinations.length > 0 ? JSON.stringify(destinations, null, 2) : noDestinations]
-    ], releaseDetails);
+    out.report(
+      [
+        ["ID", "id"],
+        ["Status", "status"],
+        ["Name", "appName"],
+        ["Display Name", "appDisplayName"],
+        ["Version", "version"],
+        ["Short Version", "shortVersion"],
+        ["Enabled", "enabled"],
+        ["Release Notes", "releaseNotes"],
+        ["Size", "size"],
+        ["OS Required", "minOs"],
+        releaseDetails.androidMinApiLevel
+          ? ["Android API Required", "androidMinApiLevel"]
+          : ["Provisioning Profile Name", "provisioningProfileName"],
+        ["Bundle Identifier", "bundleIdentifier"],
+        ["Fingerprint", "fingerprint"],
+        ["Uploaded At", "uploadedAt", out.report.asDate],
+        ["Download URL", "downloadUrl"],
+        ["Install URL", "installUrl"],
+        ["Icon URL", "appIconUrl"],
+        [
+          "Destinations",
+          "destinations",
+          (destinations: models.Destination[]) =>
+            destinations && destinations.length > 0 ? JSON.stringify(destinations, null, 2) : noDestinations,
+        ],
+      ],
+      releaseDetails
+    );
 
     return success();
   }

@@ -1,4 +1,15 @@
-import { AppCommand, CommandArgs, CommandResult, help, failure, ErrorCodes, success, required, position, name } from "../../../util/commandline";
+import {
+  AppCommand,
+  CommandArgs,
+  CommandResult,
+  help,
+  failure,
+  ErrorCodes,
+  success,
+  required,
+  position,
+  name,
+} from "../../../util/commandline";
 import { AppCenterClient, clientRequest } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
@@ -7,7 +18,6 @@ const debug = require("debug")("appcenter-cli:commands:codepush:deployment:renam
 
 @help("Rename CodePush deployment")
 export default class CodePushRenameDeploymentCommand extends AppCommand {
-
   @help("Specifies CodePush deployment name to be renamed")
   @name("current-deployment-name")
   @position(0)
@@ -29,14 +39,18 @@ export default class CodePushRenameDeploymentCommand extends AppCommand {
 
     try {
       debug("Renaming CodePush deployments");
-      await out.progress(`Renaming CodePush deployments...`,
-        clientRequest((cb) => client.codePushDeployments.update(this.currentDeploymentName, app.ownerName, app.appName, this.newDeploymentName, cb)));
+      await out.progress(
+        `Renaming CodePush deployments...`,
+        clientRequest((cb) =>
+          client.codePushDeployments.update(this.currentDeploymentName, app.ownerName, app.appName, this.newDeploymentName, cb)
+        )
+      );
     } catch (error) {
       debug(`Failed to rename deployments - ${inspect(error)}`);
       if (error.statusCode === 404) {
         const appNotFoundErrorMsg = `The deployemnt ${this.currentDeploymentName} for app ${this.identifier} does not exist.`;
         return failure(ErrorCodes.NotFound, appNotFoundErrorMsg);
-      } else if (error.statusCode = 409) {
+      } else if ((error.statusCode = 409)) {
         const alreadyExistErrorMsg = `The deployment with name ${this.newDeploymentName} already exist.`;
         return failure(ErrorCodes.Exception, alreadyExistErrorMsg);
       } else {
@@ -44,7 +58,9 @@ export default class CodePushRenameDeploymentCommand extends AppCommand {
       }
     }
 
-    out.text(`Successfully renamed the ${this.currentDeploymentName} deployment to ${this.newDeploymentName} for the ${this.identifier} app.`);
+    out.text(
+      `Successfully renamed the ${this.currentDeploymentName} deployment to ${this.newDeploymentName} for the ${this.identifier} app.`
+    );
     return success();
   }
 }

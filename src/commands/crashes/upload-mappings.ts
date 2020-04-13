@@ -42,17 +42,23 @@ export default class UploadMappings extends AppCommand {
 
     this.getStatsForFsPath(this.mappingPath);
     if (Path.extname(this.mappingPath).toLowerCase() !== ".txt") {
-      throw failure(ErrorCodes.InvalidParameter, `path ${this.mappingPath} does not point to valid mapping file – only .txt files are supported`);
+      throw failure(
+        ErrorCodes.InvalidParameter,
+        `path ${this.mappingPath} does not point to valid mapping file – only .txt files are supported`
+      );
     }
     const uploadRequest: models.SymbolUploadBeginRequest = {
       symbolType: SymbolType.AndroidProGuard,
       fileName: Path.basename(this.mappingPath),
       version: this.versionName,
-      build: String(this.versionCode)
+      build: String(this.versionCode),
     };
 
     // upload mappings
-    await out.progress("Uploading mappings...", new UploadSymbolsHelper(client, app, debug).uploadSymbolsArtifact(this.mappingPath, uploadRequest));
+    await out.progress(
+      "Uploading mappings...",
+      new UploadSymbolsHelper(client, app, debug).uploadSymbolsArtifact(this.mappingPath, uploadRequest)
+    );
 
     return success();
   }
@@ -82,5 +88,4 @@ export default class UploadMappings extends AppCommand {
       throw failure(ErrorCodes.InvalidParameter, "--version-code|-c must be a positive non-zero integer");
     }
   }
-
 }

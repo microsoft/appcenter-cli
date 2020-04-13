@@ -3,7 +3,13 @@ import { out } from "../interaction";
 
 const ctrlCPressed: Symbol = Symbol("Ctrl+C was pressed by user");
 
-export async function pollContinuously<T>(executeRequest: () => PromiseLike<T>, processResponse: (response: T, responsesProcessed: number) => void, pollContinuously: boolean, delayBetweenRequests: number, progressMessage: string): Promise<void> {
+export async function pollContinuously<T>(
+  executeRequest: () => PromiseLike<T>,
+  processResponse: (response: T, responsesProcessed: number) => void,
+  pollContinuously: boolean,
+  delayBetweenRequests: number,
+  progressMessage: string
+): Promise<void> {
   let requestsDone: number = 0;
   const readline = Readline.createInterface(process.stdin, process.stdout);
   const waitingForCtrlC = waitForCtrlC(readline);

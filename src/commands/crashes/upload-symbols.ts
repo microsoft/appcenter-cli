@@ -25,7 +25,7 @@ enum SymbolFsEntryType {
   DsymFolder,
   DsymParentFolder,
   XcArchive,
-  ZipFile
+  ZipFile,
 }
 
 @help("Upload the crash symbols for the application")
@@ -92,7 +92,7 @@ export default class UploadSymbols extends AppCommand {
     }
 
     let pathToZipToUpload: string;
-    if (typeof(zip) === "string") {
+    if (typeof zip === "string") {
       // path to zip can be passed as it is
       pathToZipToUpload = zip;
     } else {
@@ -101,7 +101,10 @@ export default class UploadSymbols extends AppCommand {
     }
 
     // upload symbols
-    await out.progress("Uploading symbols...", new UploadSymbolsHelper(client, app, debug).uploadSymbolsArtifact(pathToZipToUpload, { symbolType }));
+    await out.progress(
+      "Uploading symbols...",
+      new UploadSymbolsHelper(client, app, debug).uploadSymbolsArtifact(pathToZipToUpload, { symbolType })
+    );
 
     return success();
   }
@@ -133,7 +136,9 @@ export default class UploadSymbols extends AppCommand {
           return SymbolFsEntryType.XcArchive;
         default:
           // test if folder contains .dsym sub-folders
-          return getChildrenDsymFolderPaths(filePath, debug).length > 0 ? SymbolFsEntryType.DsymParentFolder : SymbolFsEntryType.Unknown;
+          return getChildrenDsymFolderPaths(filePath, debug).length > 0
+            ? SymbolFsEntryType.DsymParentFolder
+            : SymbolFsEntryType.Unknown;
       }
     } else if (fsEntryStats.isFile()) {
       // check if it is a ZIP file
@@ -187,7 +192,7 @@ export default class UploadSymbols extends AppCommand {
       return `${commaJoinedArgs} ${cnj} ${_.last(args)}`;
     };
 
-    const mutuallyExclusivePropsNames : (keyof UploadSymbols)[] = ["symbolsPath", "breakpadPath", "xcarchivePath", "appxSymPath"];
+    const mutuallyExclusivePropsNames: (keyof UploadSymbols)[] = ["symbolsPath", "breakpadPath", "xcarchivePath", "appxSymPath"];
     const mutuallyExclusiveProps = mutuallyExclusivePropsNames.reduce((prev, next) => {
       prev[next] = this[next];
       return prev;
@@ -198,7 +203,7 @@ export default class UploadSymbols extends AppCommand {
       throw failure(ErrorCodes.InvalidParameter, `specify either ${args} switch`);
     }
 
-    if (providedOptions.length  > 1) {
+    if (providedOptions.length > 1) {
       const args = joinArgs(providedOptions, "and");
       throw failure(ErrorCodes.InvalidParameter, `${args} switches are mutually exclusive`);
     }
@@ -206,7 +211,6 @@ export default class UploadSymbols extends AppCommand {
     if (!_.isNil(this.breakpadPath) && !_.isNil(this.sourceMapPath)) {
       throw failure(ErrorCodes.InvalidParameter, "'--breakpad' and '--sourcemap' switches are mutually exclusive");
     }
-
   }
 
   private async addSourceMapFileToZip(path: string, zip: JsZip | string): Promise<JsZip> {
@@ -226,7 +230,7 @@ export default class UploadSymbols extends AppCommand {
     }
 
     let zipToChange: JsZip;
-    if (typeof(zip) === "string") {
+    if (typeof zip === "string") {
       // loading ZIP to add file to it
       debug("Loading ZIP into the memory to add files");
       try {
@@ -243,7 +247,11 @@ export default class UploadSymbols extends AppCommand {
 
     // adding (or replacing) source map file
     const sourceMapFileBaseName = Path.basename(path);
-    debug(zipToChange.file(sourceMapFileBaseName) ? "Replacing existing mappings file with the same name in the ZIP" : "Adding the specified mappings file to the ZIP");
+    debug(
+      zipToChange.file(sourceMapFileBaseName)
+        ? "Replacing existing mappings file with the same name in the ZIP"
+        : "Adding the specified mappings file to the ZIP"
+    );
     try {
       const sourceMapFileBuffer = await Pfs.readFile(path);
       zipToChange.file(sourceMapFileBaseName, sourceMapFileBuffer);

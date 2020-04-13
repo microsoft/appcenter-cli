@@ -32,14 +32,14 @@ export class XCUITestPreparer {
   }
 
   public async prepare(): Promise<string> {
-    if (!await pfs.exists(this.artifactsDir)) {
+    if (!(await pfs.exists(this.artifactsDir))) {
       await pfs.mkdir(this.artifactsDir);
     }
 
     if (this.buildDir) {
       await this.generateTestIpa();
     } else {
-      if (!await pfs.fileExists(this.testIpaPath)) {
+      if (!(await pfs.fileExists(this.testIpaPath))) {
         throw new Error(`File not found for test ipa path: "${this.testIpaPath}"`);
       }
       await pfs.cpFile(this.testIpaPath, path.join(this.artifactsDir, path.basename(this.testIpaPath)));
@@ -60,8 +60,8 @@ export class XCUITestPreparer {
       files: [ipaArtifactsPath],
       testFramework: {
         name: "xcuitest",
-        data: { }
-      }
+        data: {},
+      },
     };
 
     return result;

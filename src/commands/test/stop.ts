@@ -1,5 +1,4 @@
-import { AppCommand, CommandArgs, CommandResult,
-         help, success, longName, required, hasArg } from "../../util/commandline";
+import { AppCommand, CommandArgs, CommandResult, help, success, longName, required, hasArg } from "../../util/commandline";
 import { AppCenterClient, clientCall } from "../../util/apis";
 import { Messages } from "./lib/help-messages";
 
@@ -16,7 +15,6 @@ export default class StopCommand extends AppCommand {
   }
 
   async run(client: AppCenterClient): Promise<CommandResult> {
-
     await this.stopTestRun(client, this.testRunId);
 
     return success();
@@ -24,12 +22,7 @@ export default class StopCommand extends AppCommand {
 
   private stopTestRun(client: AppCenterClient, testRunId: string): Promise<VoidFunction> {
     return clientCall((cb) => {
-      client.test.stopTestRun(
-        testRunId,
-        this.app.ownerName,
-        this.app.appName,
-        cb
-      );
+      client.test.stopTestRun(testRunId, this.app.ownerName, this.app.appName, cb);
     });
   }
 }

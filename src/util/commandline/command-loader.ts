@@ -27,8 +27,8 @@ export function loader(commandFinder: CommandFinder): CommandLoader {
     const commandPath = findResult.commandPath;
 
     if (!findResult.isCategory) {
-      // Turn off tslint warning - string is sufficiently validated
-      /* tslint:disable-next-line:non-literal-require */
+      // Turn off lint warning - string is sufficiently validated
+      // eslint-disable-next-line security/detect-non-literal-require
       commandFactory = require(findResult.commandPath).default as typeof Command;
     } else {
       commandFactory = CategoryCommand;

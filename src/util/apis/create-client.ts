@@ -19,7 +19,7 @@ import { failure, ErrorCodes } from "../../util/commandline/command-result";
 
 export interface AppCenterClientFactory {
   fromUserNameAndPassword(userName: string, password: string, endpoint: string): AppCenterClient;
-  fromToken(token: string | Promise<string> | {(): Promise<string>}, endpoint: string): AppCenterClient;
+  fromToken(token: string | Promise<string> | { (): Promise<string> }, endpoint: string): AppCenterClient;
   fromProfile(user: Profile): AppCenterClient;
 }
 
@@ -28,7 +28,7 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
     debug(`Creating client options, isDebug = ${isDebug()}`);
     const filters = [userAgentFilter, telemetryFilter(command.join(" "), telemetryEnabled)];
     return {
-      filters: isDebug() ? [createLogger()].concat(filters) : filters
+      filters: isDebug() ? [createLogger()].concat(filters) : filters,
     };
   }
 
@@ -38,9 +38,9 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
       return new AppCenterClient(new BasicAuthenticationCredentials(userName, password), endpoint, createClientOptions());
     },
 
-    fromToken(token: string | Promise<string> | {(): Promise<string>}, endpoint: string): AppCenterClient {
+    fromToken(token: string | Promise<string> | { (): Promise<string> }, endpoint: string): AppCenterClient {
       debug(`Creating client from token for endpoint ${endpoint}`);
-      let tokenFunc: {(): Promise<string>};
+      let tokenFunc: { (): Promise<string> };
 
       if (typeof token === "string") {
         debug("Creating from token as string");
@@ -63,15 +63,19 @@ export function createAppCenterClient(command: string[], telemetryEnabled: boole
       }
       debug(`Creating client from user for user ${inspect(user)}`);
       return new AppCenterClient(new AppCenterClientCredentials(() => user.accessToken), user.endpoint, createClientOptions());
-    }
+    },
   };
 }
 
 // Helper function to wrap client calls into promises while maintaining some type safety.
-export function clientCall<T>(action: {(cb: ServiceCallback<any>): void}): Promise<T> {
+export function clientCall<T>(action: { (cb: ServiceCallback<any>): void }): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     action((err: Error, result: T) => {
-      if (err) { reject(err); } else { resolve(result); }
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
     });
   });
 }
@@ -84,8 +88,13 @@ export interface ClientResponse<T> {
   response: IncomingMessage;
 }
 
-export async function handleHttpError(error: any, check404: boolean,
-    messageDefault: string, message404: string = `404 Error received from api`, message401: string = `401 Error received from api`): Promise<void> {
+export async function handleHttpError(
+  error: any,
+  check404: boolean,
+  messageDefault: string,
+  message404: string = `404 Error received from api`,
+  message401: string = `401 Error received from api`
+): Promise<void> {
   if (check404 && error.statusCode === 404) {
     throw failure(ErrorCodes.InvalidParameter, message404);
   }
@@ -99,11 +108,13 @@ export async function handleHttpError(error: any, check404: boolean,
 }
 
 // Helper function to wrap client calls into pormises and returning both HTTP response and parsed result
-export function clientRequest<T>(action: {(cb: ServiceCallback<any>): void}): Promise<ClientResponse<T>> {
+export function clientRequest<T>(action: { (cb: ServiceCallback<any>): void }): Promise<ClientResponse<T>> {
   return new Promise<ClientResponse<T>>((resolve, reject) => {
     action((err: Error | ServiceError, result: T, request: WebResource, response: IncomingMessage) => {
-      if (err) { reject(err); } else {
-        resolve({ result, response});
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ result, response });
       }
     });
   });

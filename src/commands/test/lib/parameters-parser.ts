@@ -23,12 +23,12 @@ export function parseTestParameter(testParameter: string) {
   if (separatorIndex !== -1) {
     return {
       key: testParameter.substr(0, separatorIndex),
-      value: testParameter.substr(separatorIndex + 1, testParameter.length - separatorIndex - 1)
+      value: testParameter.substr(separatorIndex + 1, testParameter.length - separatorIndex - 1),
     };
   } else {
     return {
       key: testParameter,
-      value: null
+      value: null,
     };
   }
 }

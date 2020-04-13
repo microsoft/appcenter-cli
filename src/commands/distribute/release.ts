@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  hasArg,
+  help,
+  longName,
+  required,
+  shortName,
+  success,
+} from "../../util/commandline";
 import { AppCenterClient, models, clientRequest, ClientResponse } from "../../util/apis";
 import { out } from "../../util/interaction";
 import { inspect } from "util";
@@ -72,7 +83,13 @@ export default class ReleaseBinaryCommand extends AppCommand {
     this.validateParameters();
 
     debug("Loading prerequisites");
-    const [distributionGroupUsersCount, storeInformation, releaseBinaryFileStream, releaseBinaryFileStats, releaseNotesString] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
+    const [
+      distributionGroupUsersCount,
+      storeInformation,
+      releaseBinaryFileStream,
+      releaseBinaryFileStats,
+      releaseNotesString,
+    ] = await out.progress("Loading prerequisites...", this.getPrerequisites(client));
 
     this.validateParametersWithPrerequisites(storeInformation);
 
@@ -84,7 +101,10 @@ export default class ReleaseBinaryCommand extends AppCommand {
     let releaseUrl: string;
     try {
       debug("Uploading release binary");
-      await out.progress("Uploading release binary...", this.uploadFileToUri(uploadUri, releaseBinaryFileStream, releaseBinaryFileStats, Path.basename(this.filePath)));
+      await out.progress(
+        "Uploading release binary...",
+        this.uploadFileToUri(uploadUri, releaseBinaryFileStream, releaseBinaryFileStats, Path.basename(this.filePath))
+      );
 
       debug("Finishing release upload");
       releaseUrl = await this.finishReleaseUpload(client, app, uploadId);
@@ -120,7 +140,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
         await this.publishToStore(client, app, storeInformation, releaseId);
       } catch (error) {
         if (!_.isNil(this.distributionGroup)) {
-          out.text(`Release was successfully distributed to group '${this.distributionGroup}' but could not be published to store '${this.storeName}'.`);
+          out.text(
+            `Release was successfully distributed to group '${this.distributionGroup}' but could not be published to store '${this.storeName}'.`
+          );
         }
         throw error;
       }
@@ -131,14 +153,24 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
     if (releaseDetails) {
       if (!_.isNil(this.distributionGroup)) {
-        const storeComment = (!_.isNil(this.storeName)) ? ` and to store '${this.storeName}'` : "";
+        const storeComment = !_.isNil(this.storeName) ? ` and to store '${this.storeName}'` : "";
         if (_.isNull(distributionGroupUsersCount)) {
-          out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${this.distributionGroup}${storeComment}`, releaseDetails);
+          out.text(
+            (rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${this.distributionGroup}${storeComment}`,
+            releaseDetails
+          );
         } else {
-          out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${distributionGroupUsersCount} testers in ${this.distributionGroup}${storeComment}`, releaseDetails);
+          out.text(
+            (rd) =>
+              `Release ${rd.shortVersion} (${rd.version}) was successfully released to ${distributionGroupUsersCount} testers in ${this.distributionGroup}${storeComment}`,
+            releaseDetails
+          );
         }
       } else {
-        out.text((rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to store '${this.storeName}'`, releaseDetails);
+        out.text(
+          (rd) => `Release ${rd.shortVersion} (${rd.version}) was successfully released to store '${this.storeName}'`,
+          releaseDetails
+        );
       }
     } else {
       out.text(`Release was successfully released.`);
@@ -166,12 +198,18 @@ export default class ReleaseBinaryCommand extends AppCommand {
     }
     if (_.isNil(this.buildVersion)) {
       if ([".zip", ".msi"].includes(this.fileExtension)) {
-        throw failure(ErrorCodes.InvalidParameter, `--build-version parameter must be specified when uploading ${this.fileExtension} files`);
+        throw failure(
+          ErrorCodes.InvalidParameter,
+          `--build-version parameter must be specified when uploading ${this.fileExtension} files`
+        );
       }
     }
     if (_.isNil(this.buildNumber) || _.isNil(this.buildVersion)) {
       if ([".pkg", ".dmg"].includes(this.fileExtension)) {
-        throw failure(ErrorCodes.InvalidParameter, `--build-version and --build-number must both be specified when uploading ${this.fileExtension} files`);
+        throw failure(
+          ErrorCodes.InvalidParameter,
+          `--build-version and --build-number must both be specified when uploading ${this.fileExtension} files`
+        );
       }
     }
   }
@@ -179,11 +217,16 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private validateParametersWithPrerequisites(storeInformation: models.ExternalStoreResponse): void {
     debug("Checking for invalid parameter combinations with prerequisites");
     if (storeInformation && storeInformation.type === "apple" && _.isNil(this.releaseNotes) && _.isNil(this.releaseNotesFile)) {
-      throw failure(ErrorCodes.InvalidParameter, "At least one of '--release-notes' or '--release-notes-file' must be specified when publishing to an Apple store.");
+      throw failure(
+        ErrorCodes.InvalidParameter,
+        "At least one of '--release-notes' or '--release-notes-file' must be specified when publishing to an Apple store."
+      );
     }
   }
 
-  private async getPrerequisites(client: AppCenterClient): Promise<[number | null, models.ExternalStoreResponse | null, stream.Stream, fs.Stats, string]> {
+  private async getPrerequisites(
+    client: AppCenterClient
+  ): Promise<[number | null, models.ExternalStoreResponse | null, stream.Stream, fs.Stats, string]> {
     // load release binary file
     const [fileStats, fileStream] = await this.getReleaseFileStream();
 
@@ -238,8 +281,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async getDistributionGroupUsersNumber(client: AppCenterClient): Promise<number | null> {
     let distributionGroupUsersRequestResponse: ClientResponse<models.DistributionGroupUserGetResponse[]>;
     try {
-      distributionGroupUsersRequestResponse = await clientRequest<models.DistributionGroupUserGetResponse[]>(
-        (cb) => client.distributionGroups.listUsers(this.app.ownerName, this.app.appName, this.distributionGroup, cb));
+      distributionGroupUsersRequestResponse = await clientRequest<models.DistributionGroupUserGetResponse[]>((cb) =>
+        client.distributionGroups.listUsers(this.app.ownerName, this.app.appName, this.distributionGroup, cb)
+      );
       const statusCode = distributionGroupUsersRequestResponse.response.statusCode;
       if (statusCode >= 400) {
         throw statusCode;
@@ -258,8 +302,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
   private async getStoreDetails(client: AppCenterClient): Promise<models.ExternalStoreResponse | null> {
     try {
-      const storeDetailsResponse = await clientRequest<models.ExternalStoreResponse>(
-        (cb) => client.stores.get(this.storeName, this.app.ownerName, this.app.appName, cb));
+      const storeDetailsResponse = await clientRequest<models.ExternalStoreResponse>((cb) =>
+        client.stores.get(this.storeName, this.app.ownerName, this.app.appName, cb)
+      );
       const statusCode = storeDetailsResponse.response.statusCode;
       if (statusCode >= 400) {
         throw { statusCode };
@@ -280,10 +325,12 @@ export default class ReleaseBinaryCommand extends AppCommand {
     try {
       const options = {
         buildVersion: this.buildVersion,
-        buildNumber: this.buildNumber
+        buildNumber: this.buildNumber,
       };
-      createReleaseUploadRequestResponse = await out.progress("Creating release upload...",
-        clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.releaseUploads.create(app.ownerName, app.appName, options, cb)));
+      createReleaseUploadRequestResponse = await out.progress(
+        "Creating release upload...",
+        clientRequest<models.ReleaseUploadBeginResponse>((cb) => client.releaseUploads.create(app.ownerName, app.appName, options, cb))
+      );
     } catch (error) {
       throw failure(ErrorCodes.Exception, `failed to create release upload for ${this.filePath}`);
     }
@@ -300,31 +347,40 @@ export default class ReleaseBinaryCommand extends AppCommand {
             options: {
               filename,
               contentType: "application/octet-stream",
-              knownLength: fileStats.size
+              knownLength: fileStats.size,
             },
-            value: fileStream
-          }
+            value: fileStream,
+          },
         },
-        url: uploadUrl
+        url: uploadUrl,
       })
-      .on("error", (error) => {
-        reject(failure(ErrorCodes.Exception, `release binary uploading failed: ${error.message}`));
-      })
-      .on("response", (response) => {
-        if (response.statusCode < 400) {
-          resolve();
-        } else {
-          reject(failure(ErrorCodes.Exception, `release binary file uploading failed: HTTP ${response.statusCode} ${response.statusMessage}`));
-        }
-      });
+        .on("error", (error) => {
+          reject(failure(ErrorCodes.Exception, `release binary uploading failed: ${error.message}`));
+        })
+        .on("response", (response) => {
+          if (response.statusCode < 400) {
+            resolve();
+          } else {
+            reject(
+              failure(
+                ErrorCodes.Exception,
+                `release binary file uploading failed: HTTP ${response.statusCode} ${response.statusMessage}`
+              )
+            );
+          }
+        });
     });
   }
 
   private async finishReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<string> {
     let finishReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadEndResponse>;
     try {
-      finishReleaseUploadRequestResponse = await out.progress("Finishing release upload...",
-        clientRequest<models.ReleaseUploadEndResponse>((cb) => client.releaseUploads.complete(uploadId, app.ownerName, app.appName, "committed", cb)));
+      finishReleaseUploadRequestResponse = await out.progress(
+        "Finishing release upload...",
+        clientRequest<models.ReleaseUploadEndResponse>((cb) =>
+          client.releaseUploads.complete(uploadId, app.ownerName, app.appName, "committed", cb)
+        )
+      );
     } catch (error) {
       throw failure(ErrorCodes.Exception, `failed to finish release upload for ${this.filePath}`);
     }
@@ -335,10 +391,16 @@ export default class ReleaseBinaryCommand extends AppCommand {
   private async abortReleaseUpload(client: AppCenterClient, app: DefaultApp, uploadId: string): Promise<void> {
     let abortReleaseUploadRequestResponse: ClientResponse<models.ReleaseUploadEndResponse>;
     try {
-      abortReleaseUploadRequestResponse = await out.progress("Aborting release upload...",
-        clientRequest<models.ReleaseUploadEndResponse>((cb) => client.releaseUploads.complete(uploadId, app.ownerName, app.appName, "aborted", cb)));
+      abortReleaseUploadRequestResponse = await out.progress(
+        "Aborting release upload...",
+        clientRequest<models.ReleaseUploadEndResponse>((cb) =>
+          client.releaseUploads.complete(uploadId, app.ownerName, app.appName, "aborted", cb)
+        )
+      );
     } catch (error) {
-      throw new Error(`HTTP ${abortReleaseUploadRequestResponse.response.statusCode} - ${abortReleaseUploadRequestResponse.response.statusMessage}`);
+      throw new Error(
+        `HTTP ${abortReleaseUploadRequestResponse.response.statusCode} - ${abortReleaseUploadRequestResponse.response.statusMessage}`
+      );
     }
   }
 
@@ -348,12 +410,19 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return releaseId;
   }
 
-  private async getDistributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number): Promise<models.ReleaseDetailsResponse> {
+  private async getDistributeRelease(
+    client: AppCenterClient,
+    app: DefaultApp,
+    releaseId: number
+  ): Promise<models.ReleaseDetailsResponse> {
     let releaseRequestResponse: ClientResponse<models.ReleaseDetailsResponse>;
     try {
-      releaseRequestResponse = await out.progress(`Retrieving the release...`,
-        clientRequest<models.ReleaseDetailsResponse>(async (cb) => client.releases.getLatestByUser(releaseId.toString(),
-          app.ownerName, app.appName, cb)));
+      releaseRequestResponse = await out.progress(
+        `Retrieving the release...`,
+        clientRequest<models.ReleaseDetailsResponse>(async (cb) =>
+          client.releases.getLatestByUser(releaseId.toString(), app.ownerName, app.appName, cb)
+        )
+      );
     } catch (error) {
       if (error === 400) {
         throw failure(ErrorCodes.Exception, "release_id is not an integer or the string latest");
@@ -367,12 +436,26 @@ export default class ReleaseBinaryCommand extends AppCommand {
     return releaseRequestResponse.result;
   }
 
-  private async putReleaseDetails(client: AppCenterClient, app: DefaultApp, releaseId: number, releaseNotesString?: string): Promise<models.ReleaseUpdateResponse> {
+  private async putReleaseDetails(
+    client: AppCenterClient,
+    app: DefaultApp,
+    releaseId: number,
+    releaseNotesString?: string
+  ): Promise<models.ReleaseUpdateResponse> {
     try {
-      const { result, response } = await out.progress(`Updating release details...`,
-        clientRequest<models.ReleaseUpdateResponse>(async (cb) => client.releases.updateDetails(releaseId, app.ownerName, app.appName, {
-          releaseNotes: releaseNotesString,
-        }, cb))
+      const { result, response } = await out.progress(
+        `Updating release details...`,
+        clientRequest<models.ReleaseUpdateResponse>(async (cb) =>
+          client.releases.updateDetails(
+            releaseId,
+            app.ownerName,
+            app.appName,
+            {
+              releaseNotes: releaseNotesString,
+            },
+            cb
+          )
+        )
       );
 
       const statusCode = response.statusCode;
@@ -393,16 +476,33 @@ export default class ReleaseBinaryCommand extends AppCommand {
 
   private async distributeRelease(client: AppCenterClient, app: DefaultApp, releaseId: number, silent: boolean): Promise<void> {
     const distributionGroupResponse = await getDistributionGroup({
-      client, releaseId, app: this.app, destination: this.distributionGroup, destinationType: "group"
+      client,
+      releaseId,
+      app: this.app,
+      destination: this.distributionGroup,
+      destinationType: "group",
     });
     await addGroupToRelease({
-      client, releaseId, distributionGroup: distributionGroupResponse, app: this.app, destination: this.distributionGroup, destinationType: "group", mandatory: this.mandatory, silent: silent
+      client,
+      releaseId,
+      distributionGroup: distributionGroupResponse,
+      app: this.app,
+      destination: this.distributionGroup,
+      destinationType: "group",
+      mandatory: this.mandatory,
+      silent: silent,
     });
   }
 
-  private async publishToStore(client: AppCenterClient, app: DefaultApp, storeInformation: models.ExternalStoreResponse, releaseId: number): Promise<void> {
+  private async publishToStore(
+    client: AppCenterClient,
+    app: DefaultApp,
+    storeInformation: models.ExternalStoreResponse,
+    releaseId: number
+  ): Promise<void> {
     try {
-      const { result, response } = await out.progress(`Publishing to store '${storeInformation.name}'...`,
+      const { result, response } = await out.progress(
+        `Publishing to store '${storeInformation.name}'...`,
         clientRequest<void>(async (cb) => client.releases.addStore(releaseId, app.ownerName, app.appName, storeInformation.id, cb))
       );
 

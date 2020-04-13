@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, help, success, failure, shortName, longName, required, hasArg, ErrorCodes } from "../../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  help,
+  success,
+  failure,
+  shortName,
+  longName,
+  required,
+  hasArg,
+  ErrorCodes,
+} from "../../../util/commandline";
 import { AppCenterClient, clientRequest, models } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { DefaultApp } from "../../../util/profile";
@@ -49,7 +60,12 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     let downloadUrl: string;
     if (!_.isNil(this.releaseId)) {
       // distribute.getReleaseForDistributionGroup doesn't support the specific release id now, using two parallel requests instead
-      const validateReleaseBelongsToReleaseGroup = this.verifyReleaseBelongsToDistributionGroup(client, app, Number(this.releaseId), this.distributionGroup);
+      const validateReleaseBelongsToReleaseGroup = this.verifyReleaseBelongsToDistributionGroup(
+        client,
+        app,
+        Number(this.releaseId),
+        this.distributionGroup
+      );
       const releaseUrl = this.getReleaseUrl(client, app, this.releaseId);
 
       // showing spinner while getting download url and verifying that the specified release was distributed to this distribution group
@@ -64,7 +80,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     const filePath = this.getFileFullPath(this.fileName, directoryPath, downloadUrl);
 
     await out.progress("Downloading release...", this.downloadReleasePackageToFile(downloadUrl, filePath));
-    out.text((obj) => `Release was saved to ${obj.path}`, {path: filePath});
+    out.text((obj) => `Release was saved to ${obj.path}`, { path: filePath });
 
     return success();
   }
@@ -82,11 +98,18 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     }
   }
 
-  private async verifyReleaseBelongsToDistributionGroup(client: AppCenterClient, app: DefaultApp, releaseId: number, distributionGroup: string) {
+  private async verifyReleaseBelongsToDistributionGroup(
+    client: AppCenterClient,
+    app: DefaultApp,
+    releaseId: number,
+    distributionGroup: string
+  ) {
     debug("Verifying that release was distributed to the specified distribution group");
     let releasesIds: number[];
     try {
-      const httpRequest = await clientRequest<models.BasicReleaseDetailsResponse[]>((cb) => client.releases.listByDistributionGroup(distributionGroup, app.ownerName, app.appName, cb));
+      const httpRequest = await clientRequest<models.BasicReleaseDetailsResponse[]>((cb) =>
+        client.releases.listByDistributionGroup(distributionGroup, app.ownerName, app.appName, cb)
+      );
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;
       } else {
@@ -102,14 +125,19 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     }
 
     if (releasesIds.indexOf(releaseId) === -1) {
-      throw failure(ErrorCodes.InvalidParameter, `release ${releaseId} was not distributed to distribution group ${distributionGroup}`);
+      throw failure(
+        ErrorCodes.InvalidParameter,
+        `release ${releaseId} was not distributed to distribution group ${distributionGroup}`
+      );
     }
   }
 
   private async getReleaseUrl(client: AppCenterClient, app: DefaultApp, releaseId: string): Promise<string> {
     debug("Getting download URL for the specified release");
     try {
-      const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) => client.releases.getLatestByUser(releaseId, app.ownerName, app.appName, cb));
+      const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) =>
+        client.releases.getLatestByUser(releaseId, app.ownerName, app.appName, cb)
+      );
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;
       } else {
@@ -129,7 +157,8 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     debug("Getting download URL for the latest release of the specified distribution group");
     try {
       const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) =>
-        client.releases.getLatestByDistributionGroup(app.ownerName, app.appName, distributionGroup, "latest", cb));
+        client.releases.getLatestByDistributionGroup(app.ownerName, app.appName, distributionGroup, "latest", cb)
+      );
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.result;
       } else {
@@ -189,17 +218,18 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     debug("Downloading the release package to the path");
     return new Promise<void>((resolve, reject) => {
       Request.get(downloadUrl)
-      .on("error", (error) => {
-        debug(`Failed to download the release from ${downloadUrl} - ${inspect(error)}`);
-        reject(failure(ErrorCodes.Exception, `failed to download the release from ${downloadUrl}`));
-      })
-      .pipe(
-        Fs.createWriteStream(filePath)
-        .on("error", (error: Error) => {
-          debug(`Failed to save the release to ${filePath} - ${inspect(error)}`);
-          reject(failure(ErrorCodes.Exception, `failed to save the release to ${filePath}`));
+        .on("error", (error) => {
+          debug(`Failed to download the release from ${downloadUrl} - ${inspect(error)}`);
+          reject(failure(ErrorCodes.Exception, `failed to download the release from ${downloadUrl}`));
         })
-        .on("finish", () => resolve()));
+        .pipe(
+          Fs.createWriteStream(filePath)
+            .on("error", (error: Error) => {
+              debug(`Failed to save the release to ${filePath} - ${inspect(error)}`);
+              reject(failure(ErrorCodes.Exception, `failed to save the release to ${filePath}`));
+            })
+            .on("finish", () => resolve())
+        );
     });
   }
 }

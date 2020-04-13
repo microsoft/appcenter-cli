@@ -6,13 +6,13 @@ const debug = require("debug")("appcenter-cli:util:commandline:option-parser");
 // Flag arguments
 
 export interface OptionDescription {
-  shortName?: string;               // Short flag for option, single character
-  longName?: string;                // long name for option
-  required?: boolean;               // Is this is a required parameter, if not present defaults to false
+  shortName?: string; // Short flag for option, single character
+  longName?: string; // long name for option
+  required?: boolean; // Is this is a required parameter, if not present defaults to false
   defaultValue?: string | string[]; // Default value for this option if it's not present
-  hasArg?: boolean;                 // Does this option take an argument?
-  helpText?: string;                // Help text for this parameter
-  common?: boolean;                 // Is this option an common option?
+  hasArg?: boolean; // Does this option take an argument?
+  helpText?: string; // Help text for this parameter
+  common?: boolean; // Is this option an common option?
 }
 
 export interface OptionsDescription {
@@ -26,24 +26,23 @@ function optionKey(option: OptionDescription): string {
 function optionDisplayName(options: OptionDescription): string {
   const short = options.shortName ? "-" + options.shortName : null;
   const long = options.longName ? "--" + options.longName : null;
-  return [ short, long ].filter((x) => !!x).join(" / ");
+  return [short, long].filter((x) => !!x).join(" / ");
 }
 
 // Positional arguments
 
 export interface PositionalOptionDescription {
-  name: string;          // Name used in error messages & help
-  propertyName: string;  // Name of property in target object this goes it
-  position: number;      // if null, is the "rest" argument and consumes any leftover positional args
-  required?: boolean;    // Is this a required parameter?
+  name: string; // Name used in error messages & help
+  propertyName: string; // Name of property in target object this goes it
+  position: number; // if null, is the "rest" argument and consumes any leftover positional args
+  required?: boolean; // Is this a required parameter?
   defaultValue?: string; // Default value for this arg if not present
-  helpText?: string;     // Help text for this parameter
+  helpText?: string; // Help text for this parameter
 }
 
 export type PositionalOptionsDescription = PositionalOptionDescription[];
 
 function descriptionToMinimistOpts(options: OptionsDescription): minimist.Opts {
-
   const parseOpts: minimist.Opts = {
     boolean: [] as string[],
     string: [] as string[],
@@ -54,37 +53,39 @@ function descriptionToMinimistOpts(options: OptionsDescription): minimist.Opts {
         throw new Error(`Unknown argument ${arg}`);
       }
       return true;
-    }
+    },
   };
 
   Object.keys(options)
     .map((key) => options[key])
     .forEach((option) => {
-    const key = optionKey(option);
+      const key = optionKey(option);
 
-    // Is option a boolean or has a value?
-    if (option.hasArg) {
-      (parseOpts.string as string[]).push(key);
-    } else {
-      (parseOpts.boolean as string[]).push(key);
-    }
+      // Is option a boolean or has a value?
+      if (option.hasArg) {
+        (parseOpts.string as string[]).push(key);
+      } else {
+        (parseOpts.boolean as string[]).push(key);
+      }
 
-    // If both names are given, set up alias
-    if (option.shortName && option.longName) {
-      parseOpts.alias[option.shortName] = option.longName;
-    }
+      // If both names are given, set up alias
+      if (option.shortName && option.longName) {
+        parseOpts.alias[option.shortName] = option.longName;
+      }
 
-    if (option.defaultValue !== undefined) {
-      parseOpts.default[key] = option.defaultValue;
-    }
-
-  });
+      if (option.defaultValue !== undefined) {
+        parseOpts.default[key] = option.defaultValue;
+      }
+    });
   return parseOpts;
 }
 
-export function parseOptions(flagOptions: OptionsDescription,
+export function parseOptions(
+  flagOptions: OptionsDescription,
   positionalOptions: PositionalOptionsDescription,
-  target: any, args: string[]): void;
+  target: any,
+  args: string[]
+): void;
 export function parseOptions(flagOptions: OptionsDescription, target: any, args: string[]): void;
 export function parseOptions(...params: any[]): void {
   let flagOptions: OptionsDescription;
@@ -124,8 +125,12 @@ export function parseOptions(...params: any[]): void {
   const positionalArgs = parsed["_"] || [];
 
   positionalOptions.sort((a, b) => {
-    if (a.position === null) { return +1; }
-    if (b.position === null) { return -1; }
+    if (a.position === null) {
+      return +1;
+    }
+    if (b.position === null) {
+      return -1;
+    }
     return b.position - a.position;
   });
 
@@ -137,7 +142,7 @@ export function parseOptions(...params: any[]): void {
   }
 
   positionalOptions.forEach((opt, index) => {
-    debug(`Checking for ${opt.required ? "required" : "optional" } option ${opt.name} at position ${opt.position}`);
+    debug(`Checking for ${opt.required ? "required" : "optional"} option ${opt.name} at position ${opt.position}`);
 
     if (positionalArgs.length - 1 < opt.position) {
       if (!parsed["help"] && opt.required) {

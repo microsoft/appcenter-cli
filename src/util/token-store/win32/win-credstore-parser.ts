@@ -30,12 +30,11 @@ class WinCredStoreParsingStream extends Transform {
   currentEntry: any;
 
   constructor() {
-    super({objectMode: true});
+    super({ objectMode: true });
     this.currentEntry = null;
   }
 
-  _transform(chunk: any, encoding: string, callback: {(err?: Error): void}): void {
-
+  _transform(chunk: any, encoding: string, callback: { (err?: Error): void }): void {
     const line = chunk.toString();
 
     if (line === "") {
@@ -54,7 +53,7 @@ class WinCredStoreParsingStream extends Transform {
     return callback();
   }
 
-  _flush(callback: {(err?: Error): void}): void {
+  _flush(callback: { (err?: Error): void }): void {
     if (this.currentEntry) {
       this.push(this.currentEntry);
       this.currentEntry = null;
@@ -67,8 +66,9 @@ function createParsingStream(): NodeJS.ReadWriteStream {
   return new Pumpify.obj(split(), new WinCredStoreParsingStream());
 }
 
+// eslint-disable-next-line no-redeclare
 namespace createParsingStream {
-  export let ParsingStream = WinCredStoreParsingStream;
+  export const ParsingStream = WinCredStoreParsingStream;
 }
 
 export { createParsingStream };

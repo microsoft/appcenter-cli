@@ -3,7 +3,6 @@ import * as path from "path";
 import { validXmlFile } from "../../../../src/commands/test/lib/xml-util";
 
 describe("xml util", function () {
-
   it("should return positive validation result for the correct xml file", async () => {
     const pathToXml: string = path.join(__dirname, "../resources/nunit2_report.xml");
 

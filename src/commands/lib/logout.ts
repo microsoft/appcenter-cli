@@ -17,24 +17,26 @@ async function performLogout(client: AppCenterClient, user: Profile): Promise<vo
     let tokenId: string;
     try {
       await Promise.race([
-          clientRequest(async (cb) => {
-            try {
-              tokenId = await user.accessTokenId;
-              if (!tokenId || tokenId === "null") {
-                tokenId = "current";
-              }
-              debug(`Attempting to delete token id ${tokenId} off server`);
-              client.apiTokens.deleteMethod(tokenId, cb);
-            } catch (err) {
-              debug("Could not retrieve current token from token store");
-              cb(err, null, null, null);
+        clientRequest(async (cb) => {
+          try {
+            tokenId = await user.accessTokenId;
+            if (!tokenId || tokenId === "null") {
+              tokenId = "current";
             }
-          }),
-          new Promise((resolve, reject) => setTimeout(() => {
+            debug(`Attempting to delete token id ${tokenId} off server`);
+            client.apiTokens.deleteMethod(tokenId, cb);
+          } catch (err) {
+            debug("Could not retrieve current token from token store");
+            cb(err, null, null, null);
+          }
+        }),
+        new Promise((resolve, reject) =>
+          setTimeout(() => {
             // TODO: Investigate if there's a way to explicitly cancel the outstanding call.
             resolve();
-          }, maxTokenDeletionTimeoutSec * 1000))
-        ]);
+          }, maxTokenDeletionTimeoutSec * 1000)
+        ),
+      ]);
     } catch (err) {
       // Noop, it's ok if deletion fails
       debug(`Deletion of token id ${tokenId} from server failed, error ${err}`);

@@ -26,34 +26,17 @@ describe("Resolving paths", () => {
 
   it("should resolve all files in directory", async () => {
     const result = await pathResolver.resolve("resources/");
-    verifyResult(
-      result,
-      [
-        "resources/pl-PL/messages.csv",
-        "resources/messages.csv",
-        "resources/ReadMe.txt"
-      ]
-    );
+    verifyResult(result, ["resources/pl-PL/messages.csv", "resources/messages.csv", "resources/ReadMe.txt"]);
   });
 
   it("should resolve files with asterisk (*)", async () => {
     const result = await pathResolver.resolve("resources/*");
-    verifyResult(
-      result,
-      [
-        "resources/messages.csv",
-        "resources/ReadMe.txt"
-      ]);
+    verifyResult(result, ["resources/messages.csv", "resources/ReadMe.txt"]);
   });
 
   it("should resolve files with double asterisk (**)", async () => {
     const result = await pathResolver.resolve("**/*.csv");
-    verifyResult(
-      result,
-      [
-        "resources/messages.csv",
-        "resources/pl-PL/messages.csv"
-      ]);
+    verifyResult(result, ["resources/messages.csv", "resources/pl-PL/messages.csv"]);
   });
 
   it("should reject files outside of workspace", async () => {
@@ -80,12 +63,6 @@ describe("Resolving paths", () => {
 
   it("should return all files for multiple patterns", async () => {
     const result = await pathResolver.resolve(["**/*.csv", "**/*.rb", "lib"]);
-    verifyResult(
-      result,
-      [
-        "lib/tests.rb",
-        "resources/messages.csv",
-        "resources/pl-PL/messages.csv"
-      ]);
+    verifyResult(result, ["lib/tests.rb", "resources/messages.csv", "resources/pl-PL/messages.csv"]);
   });
 });

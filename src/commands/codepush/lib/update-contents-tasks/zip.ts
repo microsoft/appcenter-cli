@@ -34,7 +34,7 @@ export default function zip(updateContentsPath: string): Promise<string> {
       const relativePath: string = path.relative(baseDirectoryPath, filePath);
       releaseFiles.push({
         sourceLocation: filePath,
-        targetLocation: normalizePath(relativePath)
+        targetLocation: normalizePath(relativePath),
       });
     });
 
@@ -42,17 +42,17 @@ export default function zip(updateContentsPath: string): Promise<string> {
     const zipFile = new yazl.ZipFile();
     const writeStream: fs.WriteStream = fs.createWriteStream(packagePath);
 
-    zipFile.outputStream.pipe(writeStream)
-        .on("error", (error: Error): void => {
-            reject(error);
-        })
-        .on("close", (): void => {
-
-            resolve(packagePath);
-        });
+    zipFile.outputStream
+      .pipe(writeStream)
+      .on("error", (error: Error): void => {
+        reject(error);
+      })
+      .on("close", (): void => {
+        resolve(packagePath);
+      });
 
     releaseFiles.forEach((releaseFile: ReleaseFile) => {
-        zipFile.addFile(releaseFile.sourceLocation, releaseFile.targetLocation);
+      zipFile.addFile(releaseFile.sourceLocation, releaseFile.targetLocation);
     });
 
     zipFile.end();

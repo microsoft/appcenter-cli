@@ -26,7 +26,7 @@ export class TestRunFile {
     });
   }
 
-  constructor (sourcePath: string, targetRelativePath: string, sha256: string, fileType: TestRunFileType) {
+  constructor(sourcePath: string, targetRelativePath: string, sha256: string, fileType: TestRunFileType) {
     if (!sourcePath) {
       throw new Error("Argument sourcePath is required");
     }
@@ -64,7 +64,13 @@ export class TestManifest {
   readonly applicationFile?: TestRunFile;
   readonly testFramework: TestFrameworkData;
 
-  constructor(version: string, cliVersion: string, applicationFile: TestRunFile, files: TestRunFile[], testFramework: TestFrameworkData) {
+  constructor(
+    version: string,
+    cliVersion: string,
+    applicationFile: TestRunFile,
+    files: TestRunFile[],
+    testFramework: TestFrameworkData
+  ) {
     if (!version) {
       throw new Error("Argument version is required");
     }

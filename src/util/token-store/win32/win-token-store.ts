@@ -60,54 +60,54 @@ function credToTokenEntry(cred: any): TokenEntry {
   debug(`Converting credential ${inspect(cred)} to TokenEntry`);
   return {
     key: cred.targetName,
-    accessToken: decodeTokenValueFromHex(cred.credential)
+    accessToken: decodeTokenValueFromHex(cred.credential),
   };
 }
 
 export class WinTokenStore implements TokenStore {
-/**
- * list the contents of the credential store, parsing each value.
- *
- * We ignore everything that wasn't put there by us, we look
- * for target names starting with the target name prefix.
- *
- *
- * @return {Observable<TokenEntry>} stream of credentials.
- */
+  /**
+   * list the contents of the credential store, parsing each value.
+   *
+   * We ignore everything that wasn't put there by us, we look
+   * for target names starting with the target name prefix.
+   *
+   *
+   * @return {Observable<TokenEntry>} stream of credentials.
+   */
   list(): Observable<TokenEntry> {
     const prefixer = new Prefixer(false);
     return Observable.create((observer: Observer<TokenEntry>) => {
       const credsProcess = childProcess.spawn(credExePath, ["-s", "-g", "-t", `${targetNamePrefix}*`]);
 
       debug("Creds process started for list, monitoring output");
-      const credStream = credsProcess.stdout
-        .pipe(parser.createParsingStream())
-        .pipe(through.obj(function (chunk: Buffer, enc: any, done: Function) {
+      const credStream = credsProcess.stdout.pipe(parser.createParsingStream()).pipe(
+        through.obj(function (chunk: Buffer, enc: any, done: Function) {
           done(null, prefixer.removePrefixFromCred(chunk));
-        }));
+        })
+      );
 
-        credStream.on("data", (cred: any) => {
-          debug(`Got data from creds: ${cred}`);
-          observer.next(credToTokenEntry(cred));
-        });
-        credStream.on("end", () => {
-          debug(`output list completed`);
-          observer.complete();
-        });
+      credStream.on("data", (cred: any) => {
+        debug(`Got data from creds: ${cred}`);
+        observer.next(credToTokenEntry(cred));
+      });
+      credStream.on("end", () => {
+        debug(`output list completed`);
+        observer.complete();
+      });
 
-        credStream.on("error", (err: Error) => observer.error(err));
+      credStream.on("error", (err: Error) => observer.error(err));
     });
   }
 
-/**
- * Get details for a specific credential. Assumes generic credential.
- *
- * @param {tokenKeyType} key target name for credential
- * @return {Promise<TokenEntry>} Returned credential or null if not found.
- */
+  /**
+   * Get details for a specific credential. Assumes generic credential.
+   *
+   * @param {tokenKeyType} key target name for credential
+   * @return {Promise<TokenEntry>} Returned credential or null if not found.
+   */
   get(key: TokenKeyType, useOldName: boolean = false): Promise<TokenEntry> {
     const prefixer = new Prefixer(useOldName);
-    const args = [ "-s", "-t", prefixer.ensurePrefix(key) ];
+    const args = ["-s", "-t", prefixer.ensurePrefix(key)];
 
     const credsProcess = childProcess.spawn(credExePath, args);
     let result: any = null;
@@ -115,19 +115,21 @@ export class WinTokenStore implements TokenStore {
 
     debug(`Getting key with args ${inspect(args)}`);
     return new Promise<TokenEntry>((resolve, reject) => {
-      credsProcess.stdout.pipe(parser.createParsingStream())
-        .pipe(through.obj(function (chunk: Buffer, enc: any, done: Function) {
-          done(null, prefixer.removePrefixFromCred(chunk));
-        }))
+      credsProcess.stdout
+        .pipe(parser.createParsingStream())
+        .pipe(
+          through.obj(function (chunk: Buffer, enc: any, done: Function) {
+            done(null, prefixer.removePrefixFromCred(chunk));
+          })
+        )
         .on("data", (credential: any) => {
           result = credential;
           result.targetName = prefixer.removePrefix(result.targetName);
         });
 
-      credsProcess.stderr.pipe(split())
-        .on("data", (line: string) => {
-          errors.push(line);
-        });
+      credsProcess.stderr.pipe(split()).on("data", (line: string) => {
+        errors.push(line);
+      });
 
       credsProcess.on("exit", (code: number) => {
         if (code === 0) {
@@ -151,34 +153,33 @@ export class WinTokenStore implements TokenStore {
    */
   set(key: TokenKeyType, credential: TokenValueType): Promise<void> {
     const prefixer = new Prefixer(false);
-    const args = [ "-a", "-t", prefixer.ensurePrefix(key), "-p", encodeTokenValueAsHex(credential) ];
+    const args = ["-a", "-t", prefixer.ensurePrefix(key), "-p", encodeTokenValueAsHex(credential)];
 
     debug(`Saving token with args ${inspect(args)}`);
     return new Promise<void>((resolve, reject) => {
-      childProcess.execFile(credExePath, args,
-        function (err) {
-          if (err) {
-            debug(`Token store failed, ${inspect(err)}`);
-            return reject(err);
-          }
-          debug(`Token successfully stored`);
-          return resolve();
-        });
-     });
+      childProcess.execFile(credExePath, args, function (err) {
+        if (err) {
+          debug(`Token store failed, ${inspect(err)}`);
+          return reject(err);
+        }
+        debug(`Token successfully stored`);
+        return resolve();
+      });
+    });
   }
 
- /**
-  * Remove the given key from the credential store.
-  *
-  * @param {TokenKeyType} key  target name to remove.
-  *                            if ends with "*" character,
-  *                            will delete all targets
-  *                            starting with that prefix
-  * @param {Function(err)} callback completion callback
-  */
+  /**
+   * Remove the given key from the credential store.
+   *
+   * @param {TokenKeyType} key  target name to remove.
+   *                            if ends with "*" character,
+   *                            will delete all targets
+   *                            starting with that prefix
+   * @param {Function(err)} callback completion callback
+   */
   remove(key: TokenKeyType): Promise<void> {
     const prefixer = new Prefixer(false);
-    const args = [ "-d", "-t", prefixer.ensurePrefix(key) ];
+    const args = ["-d", "-t", prefixer.ensurePrefix(key)];
 
     if (key.slice(-1) === "*") {
       args.push("-g");
@@ -186,11 +187,12 @@ export class WinTokenStore implements TokenStore {
 
     debug(`Deleting token with args ${inspect(args)}`);
     return new Promise<void>((resolve, reject) => {
-      childProcess.execFile(credExePath, args,
-        function (err) {
-          if (err) { return reject(err); }
-          resolve();
-        });
+      childProcess.execFile(credExePath, args, function (err) {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
     });
   }
 }

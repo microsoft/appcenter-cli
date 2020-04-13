@@ -43,14 +43,17 @@ export default class RunUitestWizardTestCommand extends AppCommand {
         type: "list",
         name: "merge",
         message: "Should the xml files be merged in to the <output.xml> file?",
-        choices: [{
-          name: "Yes",
-          value: "true"
-        }, {
-          name: "No",
-          value: "false"
-        }]
-      }
+        choices: [
+          {
+            name: "Yes",
+            value: "true",
+          },
+          {
+            name: "No",
+            value: "false",
+          },
+        ],
+      },
     ];
     const answers: any = await prompt.question(questions);
     return answers.merge === "true" ? true : false;
@@ -84,7 +87,7 @@ export default class RunUitestWizardTestCommand extends AppCommand {
       } else {
         const foundFolder: BuildFolder = {
           name: path.relative(process.cwd(), fullDir),
-          path: fullDir
+          path: fullDir,
         };
         if (!folders) {
           folders = [foundFolder];
@@ -106,20 +109,20 @@ export default class RunUitestWizardTestCommand extends AppCommand {
     const choices = listOfFolders.map((folder) => {
       return {
         name: folder.name,
-        value: folder.path
+        value: folder.path,
       };
     });
     choices.push({
       name: "Enter path manually",
-      value: "manual"
+      value: "manual",
     });
     const questions = [
       {
         type: "list",
         name: "folderPath",
         message: "Pick the folder containing your compiled Xamarin.UITest tests",
-        choices: choices
-      }
+        choices: choices,
+      },
     ];
     const answers: any = await prompt.question(questions);
     if (answers.folderPath === "manual") {

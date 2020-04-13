@@ -1,4 +1,15 @@
-import { AppCommand, CommandResult, ErrorCodes, failure, hasArg, help, longName, required, shortName, success } from "../../../util/commandline";
+import {
+  AppCommand,
+  CommandResult,
+  ErrorCodes,
+  failure,
+  hasArg,
+  help,
+  longName,
+  required,
+  shortName,
+  success,
+} from "../../../util/commandline";
 import { AppCenterClient, models, clientRequest, ClientResponse } from "../../../util/apis";
 import { out } from "../../../util/interaction";
 import { inspect } from "util";
@@ -9,7 +20,6 @@ const debug = require("debug")("appcenter-cli:commands:build:branches:show");
 
 @help("Show branch build status")
 export default class ShowBranchBuildStatusCommand extends AppCommand {
-
   @help("Branch name for status check")
   @shortName("b")
   @longName("branch")
@@ -23,8 +33,10 @@ export default class ShowBranchBuildStatusCommand extends AppCommand {
     debug(`Getting builds for branch ${this.branchName}`);
     let branchBuildsRequestResponse: ClientResponse<models.Build[]>;
     try {
-      branchBuildsRequestResponse = await out.progress(`Getting builds for branch ${this.branchName}...`,
-        clientRequest<models.Build[]>((cb) => client.builds.listByBranch(this.branchName, app.ownerName, app.appName, cb)));
+      branchBuildsRequestResponse = await out.progress(
+        `Getting builds for branch ${this.branchName}...`,
+        clientRequest<models.Build[]>((cb) => client.builds.listByBranch(this.branchName, app.ownerName, app.appName, cb))
+      );
     } catch (error) {
       if (error.statusCode === 400) {
         return failure(ErrorCodes.IllegalCommand, `app ${app.appName} is not configured for building`);
@@ -47,8 +59,12 @@ export default class ShowBranchBuildStatusCommand extends AppCommand {
     debug(`Getting commit info for commit ${lastBuild.sourceVersion}`);
     let commitInfoRequestResponse: ClientResponse<models.CommitDetails[]>;
     try {
-      commitInfoRequestResponse = await out.progress(`Getting commit info for ${lastBuild.sourceVersion}...`,
-        clientRequest<models.CommitDetails[]>((cb) => client.commits.listByShaList([lastBuild.sourceVersion], app.ownerName, app.appName, cb)));
+      commitInfoRequestResponse = await out.progress(
+        `Getting commit info for ${lastBuild.sourceVersion}...`,
+        clientRequest<models.CommitDetails[]>((cb) =>
+          client.commits.listByShaList([lastBuild.sourceVersion], app.ownerName, app.appName, cb)
+        )
+      );
     } catch (error) {
       debug(`Request failed - ${inspect(error)}`);
       return failure(ErrorCodes.Exception, "the Branch Builds request was rejected for an unknown reason");
