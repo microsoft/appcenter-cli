@@ -34,7 +34,7 @@ class AppCenterClient extends ServiceClient {
    * @param {boolean} [options.noRetryPolicy] - If set to true, turn off default retry policy
    */
   constructor(credentials, baseUri, options) {
-    if (credentials === null || credentials === undefined) {
+    if (credentials == null) {
       throw new Error('\'credentials\' cannot be null.');
     }
 
