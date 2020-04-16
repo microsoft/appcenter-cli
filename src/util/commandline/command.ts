@@ -137,7 +137,12 @@ export class Command {
         return Promise.resolve(Result.failure(Result.ErrorCodes.InvalidParameter, `Unknown output format ${this.format}`));
       }
     }
-    this.clientFactory = createAppCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry));
+
+    this.clientFactory = createAppCenterClient(
+      this.command,
+      await telemetryIsEnabled(this.disableTelemetry || this.command[0] === "telemetry")
+    );
+
     return this.runNoClient();
   }
 
