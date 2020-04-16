@@ -138,10 +138,7 @@ export class Command {
       }
     }
 
-    this.clientFactory = createAppCenterClient(
-      this.command,
-      await telemetryIsEnabled(this.disableTelemetry || this.command[0] === "telemetry")
-    );
+    this.clientFactory = createAppCenterClient(this.command, await telemetryIsEnabled(this.disableTelemetry));
 
     return this.runNoClient();
   }

@@ -9,6 +9,7 @@ import { out } from "../../util/interaction";
 export default class TelemetryOnCommand extends Command {
   constructor(args: CommandArgs) {
     super(args);
+    this.disableTelemetry = true;
   }
 
   async runNoClient(): Promise<CommandResult> {
