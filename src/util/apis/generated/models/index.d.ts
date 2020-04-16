@@ -10914,6 +10914,7 @@ export interface CodePushRelease extends CodePushReleaseInfo {
   releaseMethod?: string;
   size?: number;
   uploadTime?: number;
+  metrics?: CodePushReleaseMetric;
 }
 
 export interface Deployment {
@@ -10947,6 +10948,7 @@ export interface CodePushReleaseMetric {
   downloaded?: number;
   failed?: number;
   installed?: number;
+  totalActive?: number;
 }
 
 export interface CodePushStatusMetricMetadata {
