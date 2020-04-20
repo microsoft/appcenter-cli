@@ -441,9 +441,9 @@ function getHermesOSBin(): string {
 function getHermesOSExe(): string {
   switch (process.platform) {
     case "win32":
-      return ".exe";
+      return "hermes.exe";
     default:
-      return "";
+      return "hermes";
   }
 }
 
@@ -456,7 +456,7 @@ function getHermesCommand(): string {
     }
   };
   // assume if hermes-engine exists it should be used instead of hermesvm
-  const hermesEngine = path.join("node_modules", "hermes-engine", getHermesOSBin(), `hermes${getHermesOSExe()}`);
+  const hermesEngine = path.join("node_modules", "hermes-engine", getHermesOSBin(), getHermesOSExe());
   if (fileExists(hermesEngine)) {
     return hermesEngine;
   }
