@@ -73,10 +73,10 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
     return tableTitles.map((title) => chalk.cyan(title));
   }
 
-  private async generateInfo(deployments: models.Deployment[], client: AppCenterClient): Promise<(models.Deployment[] | string[])[]> {
+  private async generateInfo(deployments: models.Deployment[], client: AppCenterClient): Promise<(models.Deployment | string[])[]> {
     return await Promise.all(
       deployments.map(
-        async (deployment: models.Deployment): Promise<models.Deployment[] | string[]> => {
+        async (deployment: models.Deployment): Promise<models.Deployment | string[]> => {
           let metadataString: string = "";
           let metricsString: string = "";
 
@@ -94,7 +94,7 @@ export default class CodePushDeploymentListListCommand extends AppCommand {
             if (metricsJSON) {
               deployment.latestRelease.metrics = metricsJSON;
             }
-            return [deployment];
+            return deployment;
           }
           return [deployment.name, metadataString, metricsString];
         }
