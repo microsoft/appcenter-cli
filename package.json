@@ -94,7 +94,7 @@
     "nock": "12.0.3",
     "prettier": "2.0.4",
     "sinon": "9.0.2",
-    "ts-node": "8.8.1",
+    "ts-node": "8.8.2",
     "typescript": "3.8.3"
   },
   "dependencies": {
