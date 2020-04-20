@@ -5,7 +5,7 @@ import * as _ from "lodash";
 import UpdateDistributionGroupCommand from "../../../../src/commands/distribute/groups/update";
 import { CommandArgs, CommandResult } from "../../../../src/util/commandline";
 
-describe("distribute groups update command", () => {
+describe.only("distribute groups update command", () => {
   const fakeAppOwner = "fakeAppOwner";
   const fakeAppName = "fakeAppName";
   const fakeAppIdentifier = `${fakeAppOwner}/${fakeAppName}`;
@@ -18,7 +18,7 @@ describe("distribute groups update command", () => {
     Nock.disableNetConnect();
   });
 
-  it("throws an exception when distribution group exists in AppCenter", async () => {
+  it("throws an exception when trying to rename distribution group to name of other group which already exists in AppCenter", async () => {
     // Arrange
     let errorMessage: string;
     const executionScope = setupDistributionGroupFoundResponse(Nock(fakeHost));
@@ -41,7 +41,7 @@ describe("distribute groups update command", () => {
     testCommandFailure(executionScope, skippedScope);
   });
 
-  it("updates distribution group when distribution group does not exists in AppCenter", async () => {
+  it("renames distribution group when no distribution group with new name exists in AppCenter", async () => {
     // Arrange
     const executionScope = _.flow(setupDistributionGroupNotFoundResponse, setupDistributionGroupUpdateResponse)(Nock(fakeHost));
     const skippedScope = setupDistributionGroupFoundResponse(Nock(fakeHost));
@@ -49,6 +49,24 @@ describe("distribute groups update command", () => {
     // Act
     const command = new UpdateDistributionGroupCommand(
       getCommandArgs(["-g", fakeDistributionGroupName, "-n", updatedFakeDistributionGroupName])
+    );
+    const result = await command.execute();
+
+    // Assert
+    testCommandSuccess(result, executionScope, skippedScope);
+  });
+
+  it("can rename a group and set its public status at the same time", async () => {
+    // Arrange
+    const newIsPublic = true;
+    const executionScope = setupDistributionGroupNotFoundResponse(
+      setupDistributionGroupUpdateNameAndPublicResponse(Nock(fakeHost), updatedFakeDistributionGroupName, newIsPublic)
+    );
+    const skippedScope = setupDistributionGroupFoundResponse(Nock(fakeHost));
+
+    // Act
+    const command = new UpdateDistributionGroupCommand(
+      getCommandArgs(["-g", fakeDistributionGroupName, "-n", updatedFakeDistributionGroupName, "--public", "true"])
     );
     const result = await command.execute();
 
@@ -71,8 +89,8 @@ describe("distribute groups update command", () => {
     executionScope.done(); // All normal API calls are executed
   }
 
-  function testCommandFailure(executionScope: Nock.Scope, abortScope?: Nock.Scope) {
-    expect(abortScope.isDone()).to.eql(false, "Unexpected requests were made");
+  function testCommandFailure(executionScope: Nock.Scope, skippedScope?: Nock.Scope) {
+    expect(skippedScope.isDone()).to.eql(false, "Unexpected requests were made");
     executionScope.done(); // All normal API calls are executed
   }
 
@@ -116,5 +134,21 @@ describe("distribute groups update command", () => {
       display_name: updatedFakeDistributionGroupName,
       is_public: false,
     });
+  }
+
+  function setupDistributionGroupUpdateNameAndPublicResponse(nockScope: Nock.Scope, newName: string, newIsPublic: boolean) {
+    return nockScope
+      .log(console.log)
+      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}`, {
+        name: newName,
+        is_public: newIsPublic,
+      })
+      .reply(200, {
+        id: "7dbdfd81-342b-4a38-a4dd-d05379abe19d",
+        name: newName,
+        origin: "appcenter",
+        display_name: newName,
+        is_public: newIsPublic,
+      });
   }
 });

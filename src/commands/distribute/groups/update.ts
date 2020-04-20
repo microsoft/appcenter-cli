@@ -60,7 +60,7 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
 
   @help("Whether the distribution group is public (allowing anyone to download the releases)")
   @shortName("p")
-  @longName("isPublic")
+  @longName("public")
   @hasArg
   public isPublic: string;
 
