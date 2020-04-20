@@ -101,9 +101,9 @@ export module Messages {
       export const TestOutputDir =
         "Path to the directory for test results. This parameter won't work when you run using --async because we have to wait for test results. The results will be saved in the working directory if a relative path is specified";
       export const MergeNUnitXml =
-        "Merge the xml files into the <arg> file. Requires --test-output-dir to specify the directory where the <arg> file will be. This parameter is ignored when used with the --async option.";
+        "Merge the xml files into the <arg> file. Requires --test-output-dir to specify the directory where the <arg> file will be. This parameter is ignored when used with the --async option because we have to wait for test results.";
       export const MergeJUnitXml =
-        "Merge the xml files into the <arg> file. Requires --test-output-dir to specify the directory where the <arg> file will be. This parameter is ignored when used with the --async option.";
+        "Merge the xml files into the <arg> file. Requires --test-output-dir to specify the directory where the <arg> file will be. This parameter is ignored when used with the --async option because we have to wait for test results.";
 
       export const DownloadTestRunId = "ID of the started test run";
       export const DownloadTestOutputDir = "Directory to download the .zip file(s) into for merging";
