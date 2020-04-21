@@ -58,11 +58,14 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
   @hasArg
   public testersToDeleteListFile: string;
 
-  @help("Whether the distribution group is public (allowing anyone to download the releases)")
+  @help("Make the distribution group public (allowing anyone to download the releases)")
   @shortName("p")
   @longName("public")
-  @hasArg
-  public isPublic: string;
+  public makePublic: boolean;
+
+  @help("Make the distribution group private (allowing only members to download the releases)")
+  @longName("no-public")
+  public makePrivate: boolean;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
@@ -111,9 +114,14 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
       currentGroupName = this.distributionGroup;
     }
 
-    if (!_.isNil(this.isPublic)) {
-      debug("Setting distribution group public status to " + this.isPublic);
-      options.isPublic = JSON.parse(this.isPublic);
+    if (this.makePublic) {
+      debug("Setting distribution group public status to true");
+      options.isPublic = true;
+    }
+
+    if (this.makePrivate) {
+      debug("Setting distribution group public status to false");
+      options.isPublic = false;
     }
 
     if (!_.isNil(options.name) || !_.isNil(options.isPublic)) {
@@ -136,7 +144,8 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
       _.isNil(this.testersToAddListFile) &&
       _.isNil(this.testersToDelete) &&
       _.isNil(this.testersToDeleteListFile) &&
-      _.isNil(this.isPublic)
+      _.isNil(this.makePublic) &&
+      _.isNil(this.makePrivate)
     ) {
       throw failure(ErrorCodes.InvalidParameter, "nothing to update");
     }
@@ -146,8 +155,8 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     if (!_.isNil(this.testersToDelete) && !_.isNil(this.testersToDeleteListFile)) {
       throw failure(ErrorCodes.InvalidParameter, "parameters 'delete-testers' and 'delete-testers-file' are mutually exclusive");
     }
-    if (!_.isNil(this.isPublic) && this.isPublic.toLowerCase() !== "true" && this.isPublic.toLowerCase() !== "false") {
-      throw failure(ErrorCodes.InvalidParameter, "boolean parameter 'is-public' must be either 'true' or 'false'");
+    if (this.makePublic && this.makePrivate) {
+      throw failure(ErrorCodes.InvalidParameter, "parameters 'public' and 'no-public' are mutually exclusive");
     }
   }
 

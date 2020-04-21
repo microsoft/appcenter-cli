@@ -5,7 +5,7 @@ import * as _ from "lodash";
 import UpdateDistributionGroupCommand from "../../../../src/commands/distribute/groups/update";
 import { CommandArgs, CommandResult } from "../../../../src/util/commandline";
 
-describe.only("distribute groups update command", () => {
+describe("distribute groups update command", () => {
   const fakeAppOwner = "fakeAppOwner";
   const fakeAppName = "fakeAppName";
   const fakeAppIdentifier = `${fakeAppOwner}/${fakeAppName}`;
@@ -66,7 +66,25 @@ describe.only("distribute groups update command", () => {
 
     // Act
     const command = new UpdateDistributionGroupCommand(
-      getCommandArgs(["-g", fakeDistributionGroupName, "-n", updatedFakeDistributionGroupName, "--public", "true"])
+      getCommandArgs(["-g", fakeDistributionGroupName, "-n", updatedFakeDistributionGroupName, "--public"])
+    );
+    const result = await command.execute();
+
+    // Assert
+    testCommandSuccess(result, executionScope, skippedScope);
+  });
+
+  it("doesn't change the public status of a group when neither related switches are provided", async () => {
+    // Arrange
+    const newIsPublic = true;
+    const executionScope = setupDistributionGroupNotFoundResponse(
+      setupDistributionGroupUpdateNameOnlyResponse(Nock(fakeHost), updatedFakeDistributionGroupName, newIsPublic)
+    );
+    const skippedScope = setupDistributionGroupFoundResponse(Nock(fakeHost));
+
+    // Act
+    const command = new UpdateDistributionGroupCommand(
+      getCommandArgs(["-g", fakeDistributionGroupName, "-n", updatedFakeDistributionGroupName])
     );
     const result = await command.execute();
 
@@ -142,6 +160,21 @@ describe.only("distribute groups update command", () => {
       .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}`, {
         name: newName,
         is_public: newIsPublic,
+      })
+      .reply(200, {
+        id: "7dbdfd81-342b-4a38-a4dd-d05379abe19d",
+        name: newName,
+        origin: "appcenter",
+        display_name: newName,
+        is_public: newIsPublic,
+      });
+  }
+
+  function setupDistributionGroupUpdateNameOnlyResponse(nockScope: Nock.Scope, newName: string, newIsPublic: boolean) {
+    return nockScope
+      .log(console.log)
+      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}`, {
+        name: newName,
       })
       .reply(200, {
         id: "7dbdfd81-342b-4a38-a4dd-d05379abe19d",
