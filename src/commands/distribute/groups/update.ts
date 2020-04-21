@@ -58,13 +58,13 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
   @hasArg
   public testersToDeleteListFile: string;
 
-  @help("Make the distribution group public (allowing anyone to download the releases)")
+  @help("Make the distribution group public (allowing anyone to download the releases). Don't use with opposite --private.")
   @shortName("p")
   @longName("public")
   public makePublic: boolean;
 
-  @help("Make the distribution group private (allowing only members to download the releases)")
-  @longName("no-public")
+  @help("Make the distribution group private (allowing only members to download the releases). Don't use with opposite --public.")
+  @longName("private")
   public makePrivate: boolean;
 
   public async run(client: AppCenterClient): Promise<CommandResult> {
