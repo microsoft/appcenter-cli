@@ -18,7 +18,7 @@ describe("distribute groups update command", () => {
     Nock.disableNetConnect();
   });
 
-  it("throws an exception when distribution group exists in AppCenter", async () => {
+  it("throws an exception when trying to rename distribution group to name of other group which already exists in AppCenter", async () => {
     // Arrange
     let errorMessage: string;
     const executionScope = setupDistributionGroupFoundResponse(Nock(fakeHost));
@@ -41,9 +41,68 @@ describe("distribute groups update command", () => {
     testCommandFailure(executionScope, skippedScope);
   });
 
-  it("updates distribution group when distribution group does not exists in AppCenter", async () => {
+  it("renames distribution group when no distribution group with new name exists in AppCenter", async () => {
     // Arrange
     const executionScope = _.flow(setupDistributionGroupNotFoundResponse, setupDistributionGroupUpdateResponse)(Nock(fakeHost));
+    const skippedScope = setupDistributionGroupFoundResponse(Nock(fakeHost));
+
+    // Act
+    const command = new UpdateDistributionGroupCommand(
+      getCommandArgs(["-g", fakeDistributionGroupName, "-n", updatedFakeDistributionGroupName])
+    );
+    const result = await command.execute();
+
+    // Assert
+    testCommandSuccess(result, executionScope, skippedScope);
+  });
+
+  it("can make a group public", async () => {
+    // Arrange
+    const executionScope = setupDistributionGroupUpdateResponse(Nock(fakeHost), { is_public: true });
+
+    // Act
+    const command = new UpdateDistributionGroupCommand(getCommandArgs(["-g", fakeDistributionGroupName, "--public"]));
+    const result = await command.execute();
+
+    // Assert
+    testCommandSuccess(result, executionScope);
+  });
+
+  it("can make a group private", async () => {
+    // Arrange
+    const executionScope = setupDistributionGroupUpdateResponse(Nock(fakeHost), { is_public: false });
+
+    // Act
+    const command = new UpdateDistributionGroupCommand(getCommandArgs(["-g", fakeDistributionGroupName, "--private"]));
+    const result = await command.execute();
+
+    // Assert
+    testCommandSuccess(result, executionScope);
+  });
+
+  it("can rename a group and set its public status at the same time", async () => {
+    // Arrange
+    const executionScope = setupDistributionGroupNotFoundResponse(
+      setupDistributionGroupUpdateResponse(Nock(fakeHost), { name: updatedFakeDistributionGroupName, is_public: true })
+    );
+
+    // Act
+    const command = new UpdateDistributionGroupCommand(
+      getCommandArgs(["-g", fakeDistributionGroupName, "-n", updatedFakeDistributionGroupName, "--public"])
+    );
+    const result = await command.execute();
+
+    // Assert
+    testCommandSuccess(result, executionScope);
+  });
+
+  it("doesn't change the public status of a group when neither related switches are provided", async () => {
+    // Arrange
+    const executionScope = setupDistributionGroupNotFoundResponse(
+      setupDistributionGroupUpdateResponse(Nock(fakeHost), {
+        name: updatedFakeDistributionGroupName,
+      })
+    );
     const skippedScope = setupDistributionGroupFoundResponse(Nock(fakeHost));
 
     // Act
@@ -67,12 +126,14 @@ describe("distribute groups update command", () => {
   function testCommandSuccess(result: CommandResult, executionScope: Nock.Scope, abortScope?: Nock.Scope) {
     console.log(result);
     expect(result.succeeded).to.eql(true, "Command should be successfully completed");
-    expect(abortScope.isDone()).to.eql(false, "Unexpected requests were made");
+    if (abortScope) {
+      expect(abortScope.isDone()).to.eql(false, "Unexpected requests were made");
+    }
     executionScope.done(); // All normal API calls are executed
   }
 
-  function testCommandFailure(executionScope: Nock.Scope, abortScope?: Nock.Scope) {
-    expect(abortScope.isDone()).to.eql(false, "Unexpected requests were made");
+  function testCommandFailure(executionScope: Nock.Scope, skippedScope?: Nock.Scope) {
+    expect(skippedScope.isDone()).to.eql(false, "Unexpected requests were made");
     executionScope.done(); // All normal API calls are executed
   }
 
@@ -108,13 +169,16 @@ describe("distribute groups update command", () => {
       });
   }
 
-  function setupDistributionGroupUpdateResponse(nockScope: Nock.Scope) {
-    return nockScope.patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}`).reply(200, {
-      id: "7dbdfd81-342b-4a38-a4dd-d05379abe19d",
-      name: updatedFakeDistributionGroupName,
-      origin: "appcenter",
-      display_name: updatedFakeDistributionGroupName,
-      is_public: false,
-    });
+  function setupDistributionGroupUpdateResponse(nockScope: Nock.Scope, options: { name?: string; is_public?: boolean }) {
+    return nockScope
+      .log(console.log)
+      .patch(`/v0.1/apps/${fakeAppOwner}/${fakeAppName}/distribution_groups/${fakeDistributionGroupName}`, options)
+      .reply(200, {
+        id: "7dbdfd81-342b-4a38-a4dd-d05379abe19d",
+        name: options?.name ?? fakeDistributionGroupName,
+        origin: "appcenter",
+        display_name: options?.name ?? fakeDistributionGroupName,
+        is_public: options?.is_public ?? false,
+      });
   }
 });

@@ -58,6 +58,15 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
   @hasArg
   public testersToDeleteListFile: string;
 
+  @help("Make the distribution group public (allowing anyone to download the releases). Don't use with opposite --private.")
+  @shortName("p")
+  @longName("public")
+  public makePublic: boolean;
+
+  @help("Make the distribution group private (allowing only members to download the releases). Don't use with opposite --public.")
+  @longName("private")
+  public makePrivate: boolean;
+
   public async run(client: AppCenterClient): Promise<CommandResult> {
     const app = this.app;
 
@@ -91,16 +100,32 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
       addedTestersEmails = [];
     }
 
+    if (deletedTestersEmails.length !== testersToDeleteEmails.length || addedTestersEmails.length !== testersToAddEmails.length) {
+      out.text("Updating the list of testers was partially successful");
+    }
+
     let currentGroupName: string;
+    const options: { name?: string; isPublic?: boolean } = {};
     if (!_.isNil(this.newDistributionGroupName)) {
       debug("Renaming the distribution group");
-      currentGroupName = await this.renameDistributionGroup(client, app, this.newDistributionGroupName);
+      options.name = this.newDistributionGroupName;
+      currentGroupName = this.newDistributionGroupName;
     } else {
       currentGroupName = this.distributionGroup;
     }
 
-    if (deletedTestersEmails.length !== testersToDeleteEmails.length || addedTestersEmails.length !== testersToAddEmails.length) {
-      out.text("Updating the list of testers was partially successful");
+    if (this.makePublic) {
+      debug("Setting distribution group public status to true");
+      options.isPublic = true;
+    }
+
+    if (this.makePrivate) {
+      debug("Setting distribution group public status to false");
+      options.isPublic = false;
+    }
+
+    if (!_.isNil(options.name) || !_.isNil(options.isPublic)) {
+      await this.updateDistributionGroup(client, app, options);
     }
 
     out.text((result) => `Distribution group ${result.name} was successfully updated`, {
@@ -118,7 +143,9 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
       _.isNil(this.testersToAdd) &&
       _.isNil(this.testersToAddListFile) &&
       _.isNil(this.testersToDelete) &&
-      _.isNil(this.testersToDeleteListFile)
+      _.isNil(this.testersToDeleteListFile) &&
+      _.isNil(this.makePublic) &&
+      _.isNil(this.makePrivate)
     ) {
       throw failure(ErrorCodes.InvalidParameter, "nothing to update");
     }
@@ -127,6 +154,9 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     }
     if (!_.isNil(this.testersToDelete) && !_.isNil(this.testersToDeleteListFile)) {
       throw failure(ErrorCodes.InvalidParameter, "parameters 'delete-testers' and 'delete-testers-file' are mutually exclusive");
+    }
+    if (this.makePublic && this.makePrivate) {
+      throw failure(ErrorCodes.InvalidParameter, "parameters 'public' and 'no-public' are mutually exclusive");
     }
   }
 
@@ -217,36 +247,32 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
     }
   }
 
-  private async renameDistributionGroup(client: AppCenterClient, app: DefaultApp, newName: string): Promise<string> {
+  private async updateDistributionGroup(
+    client: AppCenterClient,
+    app: DefaultApp,
+    options: { name?: string; isPublic?: boolean }
+  ): Promise<void> {
     try {
       const httpResponse = await out.progress(
-        "Renaming the distribution group...",
+        "Updating the distribution group...",
         clientRequest<models.DistributionGroupResponse>((cb) =>
-          client.distributionGroups.update(
-            app.ownerName,
-            app.appName,
-            this.distributionGroup,
-            {
-              name: newName,
-            },
-            cb
-          )
+          client.distributionGroups.update(app.ownerName, app.appName, this.distributionGroup, options, cb)
         )
       );
       if (httpResponse.response.statusCode >= 400) {
         throw httpResponse.response.statusCode;
       } else {
-        return newName;
+        return;
       }
     } catch (error) {
       switch (error) {
         case 400:
-          throw failure(ErrorCodes.InvalidParameter, `${this.distributionGroup} group can't be renamed`);
+          throw failure(ErrorCodes.InvalidParameter, `Can't update ${this.distributionGroup} group`);
         case 404:
           throw failure(ErrorCodes.InvalidParameter, `distribution group ${this.distributionGroup} doesn't exist`);
         default:
-          debug(`Failed to rename the distribution group ${this.distributionGroup} - ${inspect(error)}`);
-          throw failure(ErrorCodes.Exception, `failed to rename the distribution group`);
+          debug(`Failed to update distribution group ${this.distributionGroup} - ${inspect(error)}`);
+          throw failure(ErrorCodes.Exception, `failed to update the distribution group`);
       }
     }
   }
