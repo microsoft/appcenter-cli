@@ -156,7 +156,7 @@ export default class UpdateDistributionGroupCommand extends AppCommand {
       throw failure(ErrorCodes.InvalidParameter, "parameters 'delete-testers' and 'delete-testers-file' are mutually exclusive");
     }
     if (this.makePublic && this.makePrivate) {
-      throw failure(ErrorCodes.InvalidParameter, "parameters 'public' and 'no-public' are mutually exclusive");
+      throw failure(ErrorCodes.InvalidParameter, "parameters 'public' and 'private' are mutually exclusive");
     }
   }
 
