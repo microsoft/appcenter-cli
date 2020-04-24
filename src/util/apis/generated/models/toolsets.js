@@ -17,9 +17,9 @@
 class Toolsets {
   /**
    * Create a Toolsets.
-   * @property {array} [xamarin]
-   * @property {array} [xcode]
-   * @property {array} [node]
+   * @property {array} [xamarin] A list of Xamarin SDK bundles
+   * @property {array} [xcode] A list of Xcode versions
+   * @property {array} [node] A list of Node versions
    */
   constructor() {
   }
@@ -45,10 +45,10 @@ class Toolsets {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'XamarinSDKBundleElementType',
+                  serializedName: 'ToolsetsXamarinItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'XamarinSDKBundle'
+                    className: 'ToolsetsXamarinItem'
                   }
               }
             }
@@ -60,10 +60,10 @@ class Toolsets {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'XcodeVersionElementType',
+                  serializedName: 'ToolsetsXcodeItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'XcodeVersion'
+                    className: 'ToolsetsXcodeItem'
                   }
               }
             }
@@ -75,10 +75,10 @@ class Toolsets {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'NodeVersionElementType',
+                  serializedName: 'ToolsetsNodeItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'NodeVersion'
+                    className: 'ToolsetsNodeItem'
                   }
               }
             }

@@ -25,8 +25,10 @@ class BranchConfiguration {
    * @property {string} [cloneFromBranch] A configured branch name to clone
    * from. If provided, all other parameters will be ignored. Only supported in
    * POST requests.
-   * @property {object} [toolsets]
-   * @property {object} [toolsets.xcode]
+   * @property {object} [toolsets] The branch build configuration for each
+   * toolset
+   * @property {object} [toolsets.xcode] Build configuration when Xcode is part
+   * of the build steps
    * @property {string} [toolsets.xcode.projectOrWorkspacePath] Xcode
    * project/workspace path
    * @property {string} [toolsets.xcode.podfilePath] Path to CococaPods file,
@@ -60,7 +62,8 @@ class BranchConfiguration {
    * setting from workspace settings is used.
    * By default new build system is used if workspace setting is not committed
    * to the repository. Only used for iOS React Native app, with Xcode 10.
-   * @property {object} [toolsets.javascript]
+   * @property {object} [toolsets.javascript] Build configuration when React
+   * Native, or other JavaScript tech, is part of the build steps
    * @property {string} [toolsets.javascript.packageJsonPath] Path to
    * package.json file for the main project, e.g. "package.json" or
    * "myapp/package.json"
@@ -68,7 +71,8 @@ class BranchConfiguration {
    * unit tests, via npm test, during the build
    * @property {string} [toolsets.javascript.reactNativeVersion] Version of
    * React Native from package.json files
-   * @property {object} [toolsets.xamarin]
+   * @property {object} [toolsets.xamarin] Build configuration for Xamarin
+   * projects
    * @property {string} [toolsets.xamarin.slnPath]
    * @property {boolean} [toolsets.xamarin.isSimBuild]
    * @property {string} [toolsets.xamarin.args]
@@ -84,7 +88,8 @@ class BranchConfiguration {
    * If both symlink and monoVersion or sdkBundle are passed, the symlink is
    * taking precedence. If non-existing symlink is passed, the current stable
    * Mono version will be configured for building.
-   * @property {object} [toolsets.android]
+   * @property {object} [toolsets.android] Build configuration for Android
+   * projects
    * @property {string} [toolsets.android.gradleWrapperPath] Path to the Gradle
    * wrapper script
    * @property {string} [toolsets.android.module] The Gradle module to build
@@ -106,7 +111,8 @@ class BranchConfiguration {
    * keystore file
    * @property {string} [toolsets.android.keystoreEncoded] The keystore encoded
    * value
-   * @property {object} [artifactVersioning]
+   * @property {object} [artifactVersioning] The versioning configuration for
+   * artifacts built for this branch
    * @property {string} [artifactVersioning.buildNumberFormat] Possible values
    * include: 'buildId', 'timestamp'
    */
@@ -130,10 +136,10 @@ class BranchConfiguration {
             name: 'Dictionary',
             value: {
                 required: false,
-                serializedName: 'BranchPropertiesElementType',
+                serializedName: 'BranchConfigurationValueElementType',
                 type: {
                   name: 'Composite',
-                  className: 'BranchProperties'
+                  className: 'BranchConfigurationValue'
                 }
             }
           }

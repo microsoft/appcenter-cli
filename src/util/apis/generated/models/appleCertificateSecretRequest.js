@@ -10,23 +10,26 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Apple certificate secrets
  *
- * @extends models['AppleConnectionSecretRequest']
  */
-class AppleCertificateSecretRequest extends models['AppleConnectionSecretRequest'] {
+class AppleCertificateSecretRequest {
   /**
    * Create a AppleCertificateSecretRequest.
+   * @property {string} [displayName] display name of shared connection
+   * @property {string} serviceType service type of shared connection can be
+   * apple|gitlab|googleplay|jira|applecertificate. Possible values include:
+   * 'apple', 'jira', 'googleplay', 'gitlab'
+   * @property {string} [credentialType] credential type of the shared
+   * connection. Values can be credentials|certificate. Possible values
+   * include: 'credentials', 'certificate'. Default value: 'credentials' .
    * @property {object} data apple secret details
    * @property {string} [data.base64Certificate] The certificate contents in
    * base 64 encoded string
    * @property {string} [data.password] The password for the certificate
    */
   constructor() {
-    super();
   }
 
   /**
@@ -41,16 +44,18 @@ class AppleCertificateSecretRequest extends models['AppleConnectionSecretRequest
       serializedName: 'certificate',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'serviceType',
-          clientName: 'serviceType'
-        },
-        uberParent: 'SharedConnectionRequest',
         className: 'AppleCertificateSecretRequest',
         modelProperties: {
           displayName: {
             required: false,
             serializedName: 'displayName',
+            type: {
+              name: 'String'
+            }
+          },
+          serviceType: {
+            required: true,
+            serializedName: 'serviceType',
             type: {
               name: 'String'
             }
@@ -63,20 +68,12 @@ class AppleCertificateSecretRequest extends models['AppleConnectionSecretRequest
               name: 'String'
             }
           },
-          serviceType: {
-            required: true,
-            serializedName: 'serviceType',
-            isPolymorphicDiscriminator: true,
-            type: {
-              name: 'String'
-            }
-          },
           data: {
             required: true,
             serializedName: 'data',
             type: {
               name: 'Composite',
-              className: 'AppleCertificateDetails'
+              className: 'AppleCertificateSecretRequestData'
             }
           }
         }

@@ -64,15 +64,15 @@ class LogContainer {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'LogElementType',
+                  serializedName: 'LogContainerLogsItemElementType',
                   type: {
                     name: 'Composite',
                     polymorphicDiscriminator: {
                       serializedName: 'type',
                       clientName: 'type'
                     },
-                    uberParent: 'Log',
-                    className: 'Log'
+                    uberParent: 'LogContainerLogsItem',
+                    className: 'LogContainerLogsItem'
                   }
               }
             }

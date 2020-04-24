@@ -108,7 +108,7 @@ function _deleteMethod(deploymentName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['DeleteErrorModel4']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -221,7 +221,7 @@ function _get(deploymentName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['GetErrorModel5']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -248,10 +248,10 @@ function _get(deploymentName, ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'CodePushReleaseElementType',
+                  serializedName: 'GetOKResponseItemModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'CodePushRelease'
+                    className: 'GetOKResponseItemModel'
                   }
               }
             }
@@ -330,7 +330,8 @@ function _get(deploymentName, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link CodePushRelease} for more information.
+ *                      See {@link CreateCreatedResponseModelModelModel} for
+ *                      more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -390,7 +391,7 @@ function _create(deploymentName, uploadedRelease, ownerName, appName, options, c
   let requestModel = null;
   try {
     if (uploadedRelease !== null && uploadedRelease !== undefined) {
-      let requestModelMapper = new client.models['CodePushUploadedRelease']().mapper();
+      let requestModelMapper = new client.models['UploadedRelease']().mapper();
       requestModel = client.serialize(requestModelMapper, uploadedRelease, 'uploadedRelease');
       requestContent = JSON.stringify(requestModel);
     }
@@ -422,7 +423,7 @@ function _create(deploymentName, uploadedRelease, ownerName, appName, options, c
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['Failure']().mapper();
+          let resultMapper = new client.models['CreateErrorModel4']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -442,7 +443,7 @@ function _create(deploymentName, uploadedRelease, ownerName, appName, options, c
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['CodePushRelease']().mapper();
+          let resultMapper = new client.models['CreateCreatedResponseModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -703,7 +704,7 @@ class CodePushDeploymentReleases {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<CodePushRelease>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateCreatedResponseModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -781,7 +782,7 @@ class CodePushDeploymentReleases {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {CodePushRelease} - The deserialized result object.
+   *                      @resolve {CreateCreatedResponseModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -790,7 +791,8 @@ class CodePushDeploymentReleases {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link CodePushRelease} for more information.
+   *                      See {@link CreateCreatedResponseModelModelModel} for
+   *                      more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

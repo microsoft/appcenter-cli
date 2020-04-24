@@ -19,7 +19,7 @@ class ReleaseRealTimeStatusResponse {
    * Create a ReleaseRealTimeStatusResponse.
    * @property {string} [releaseId] release id
    * @property {string} [appId] app id
-   * @property {object} [status]
+   * @property {object} [status] Status Data from store
    * @property {string} [status.status] status from store
    * @property {string} [status.storetype] store type
    * @property {string} [status.track] track information from store
@@ -61,7 +61,7 @@ class ReleaseRealTimeStatusResponse {
             serializedName: 'status',
             type: {
               name: 'Composite',
-              className: 'StatusData'
+              className: 'ReleaseRealTimeStatusResponseStatus'
             }
           }
         }

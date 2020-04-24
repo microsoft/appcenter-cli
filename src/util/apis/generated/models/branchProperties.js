@@ -46,7 +46,7 @@ class BranchProperties {
             serializedName: 'branch',
             type: {
               name: 'Composite',
-              className: 'Branch'
+              className: 'BranchPropertiesBranch'
             }
           },
           enabled: {

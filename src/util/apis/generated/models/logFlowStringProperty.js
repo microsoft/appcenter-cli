@@ -10,20 +10,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * String property.
  *
- * @extends models['LogFlowCustomProperty']
  */
-class LogFlowStringProperty extends models['LogFlowCustomProperty'] {
+class LogFlowStringProperty {
   /**
    * Create a LogFlowStringProperty.
+   * @property {string} type
+   * @property {string} name
    * @property {string} value String property value.
    */
   constructor() {
-    super();
   }
 
   /**
@@ -38,13 +36,15 @@ class LogFlowStringProperty extends models['LogFlowCustomProperty'] {
       serializedName: 'string',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'LogFlowCustomProperty',
         className: 'LogFlowStringProperty',
         modelProperties: {
+          type: {
+            required: true,
+            serializedName: 'type',
+            type: {
+              name: 'String'
+            }
+          },
           name: {
             required: true,
             serializedName: 'name',
@@ -52,14 +52,6 @@ class LogFlowStringProperty extends models['LogFlowCustomProperty'] {
               MaxLength: 128,
               Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
-            type: {
-              name: 'String'
-            }
-          },
-          type: {
-            required: true,
-            serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

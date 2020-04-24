@@ -24,6 +24,8 @@ class HandledError {
    * @property {string} [country]
    * @property {string} [language]
    * @property {string} [userId]
+   * @property {boolean} [hasBreadcrumbs]
+   * @property {boolean} [hasAttachments]
    */
   constructor() {
   }
@@ -96,6 +98,20 @@ class HandledError {
             serializedName: 'userId',
             type: {
               name: 'String'
+            }
+          },
+          hasBreadcrumbs: {
+            required: false,
+            serializedName: 'hasBreadcrumbs',
+            type: {
+              name: 'Boolean'
+            }
+          },
+          hasAttachments: {
+            required: false,
+            serializedName: 'hasAttachments',
+            type: {
+              name: 'Boolean'
             }
           }
         }

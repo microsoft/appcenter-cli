@@ -45,10 +45,10 @@ class CrashGroupContainer {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'CrashGroupAndVersionElementType',
+                  serializedName: 'CrashGroupContainerCrashGroupsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'CrashGroupAndVersion'
+                    className: 'CrashGroupContainerCrashGroupsItem'
                   }
               }
             }

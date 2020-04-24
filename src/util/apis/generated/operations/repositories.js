@@ -153,7 +153,7 @@ function _list(sourceHost, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ValidationErrorResponse']().mapper();
+          let resultMapper = new client.models['ListErrorModel2']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -180,10 +180,10 @@ function _list(sourceHost, ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'SourceRepositoryElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'SourceRepository'
+                    className: 'ListOKResponseItemModelModelModelModel'
                   }
               }
             }

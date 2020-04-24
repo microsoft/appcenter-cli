@@ -10,15 +10,15 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a ErrorGroup.
- * @extends models['ErrorGroupState']
  */
-class ErrorGroup extends models['ErrorGroupState'] {
+class ErrorGroup {
   /**
    * Create a ErrorGroup.
+   * @property {string} state Possible values include: 'open', 'closed',
+   * 'ignored'
+   * @property {string} [annotation]
    * @property {string} errorGroupId
    * @property {string} appVersion
    * @property {string} [appBuild]
@@ -36,9 +36,9 @@ class ErrorGroup extends models['ErrorGroupState'] {
    * @property {string} [exceptionLine]
    * @property {string} [codeRaw]
    * @property {array} [reasonFrames]
+   * @property {boolean} [hidden]
    */
   constructor() {
-    super();
   }
 
   /**
@@ -188,12 +188,19 @@ class ErrorGroup extends models['ErrorGroupState'] {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'HandledErrorReasonFrameElementType',
+                  serializedName: 'ErrorGroupReasonFramesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'HandledErrorReasonFrame'
+                    className: 'ErrorGroupReasonFramesItem'
                   }
               }
+            }
+          },
+          hidden: {
+            required: false,
+            serializedName: 'hidden',
+            type: {
+              name: 'Boolean'
             }
           }
         }

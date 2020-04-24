@@ -10,23 +10,20 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Alerting webhook ping operation result
  *
- * @extends models['AlertOperationResult']
  */
-class AlertWebhookPingResult extends models['AlertOperationResult'] {
+class AlertWebhookPingResult {
   /**
    * Create a AlertWebhookPingResult.
+   * @property {string} requestId Unique request identifier for tracking
    * @property {number} responseStatusCode HTTP status code returned in
    * response from calling webhook
    * @property {string} [responseReason] Reason returned in response from
    * calling webhook
    */
   constructor() {
-    super();
   }
 
   /**

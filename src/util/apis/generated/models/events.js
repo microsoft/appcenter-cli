@@ -44,10 +44,10 @@ class Events {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'EventElementType',
+                  serializedName: 'EventsEventsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'Event'
+                    className: 'EventsEventsItem'
                   }
               }
             }

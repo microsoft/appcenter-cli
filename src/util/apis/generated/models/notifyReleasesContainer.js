@@ -45,10 +45,10 @@ class NotifyReleasesContainer {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ReleaseWithDistributionGroupAndUserIdElementType',
+                  serializedName: 'NotifyReleasesContainerReleasesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ReleaseWithDistributionGroupAndUserId'
+                    className: 'NotifyReleasesContainerReleasesItem'
                   }
               }
             }

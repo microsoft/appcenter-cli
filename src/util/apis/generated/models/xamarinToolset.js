@@ -42,10 +42,10 @@ class XamarinToolset {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'XamarinSolutionElementType',
+                  serializedName: 'XamarinToolsetXamarinSolutionsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'XamarinSolution'
+                    className: 'XamarinToolsetXamarinSolutionsItem'
                   }
               }
             }

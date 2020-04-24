@@ -50,10 +50,10 @@ class ServiceBusStatusResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'SubscriptionMetricsElementType',
+                  serializedName: 'ServiceBusStatusResponseSubscriptionsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'SubscriptionMetrics'
+                    className: 'ServiceBusStatusResponseSubscriptionsItem'
                   }
               }
             }

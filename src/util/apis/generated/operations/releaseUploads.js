@@ -38,7 +38,7 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ReleaseUploadEndResponse} for more
+ *                      See {@link CompleteOKResponseModel} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -74,7 +74,7 @@ function _complete(uploadId, ownerName, appName, status, options, callback) {
   }
   let body;
   if (status !== null && status !== undefined) {
-    body = new client.models['ReleaseUploadEndRequest']();
+    body = new client.models['BodyModelModelModelModelModelModelModelModel']();
     body.status = status;
   }
 
@@ -104,7 +104,7 @@ function _complete(uploadId, ownerName, appName, status, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['ReleaseUploadEndRequest']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -152,7 +152,7 @@ function _complete(uploadId, ownerName, appName, status, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ReleaseUploadEndResponse']().mapper();
+          let resultMapper = new client.models['CompleteOKResponseModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -176,13 +176,14 @@ function _complete(uploadId, ownerName, appName, status, options, callback) {
  *
  * @param {object} [options] Optional Parameters.
  *
- * @param {number} [options.releaseId] The ID of the release.
+ * @param {number} [options.releaseId] Optional value for explicitly specifying
+ * the ID of existing release.
  *
  * @param {string} [options.buildVersion] The build version of the uploaded
- * binary
+ * binary, used for macOS, Windows and Custom app support.
  *
  * @param {string} [options.buildNumber] The build number of the uploaded
- * binary
+ * binary, used with build_version for macOS app support.
  *
  * @param {object} [options.customHeaders] Headers that will be added to the
  * request
@@ -194,8 +195,7 @@ function _complete(uploadId, ownerName, appName, status, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ReleaseUploadBeginResponse} for more
- *                      information.
+ *                      See {@link CreateCreatedResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -236,7 +236,7 @@ function _create(ownerName, appName, options, callback) {
   }
   let body;
   if ((releaseId !== null && releaseId !== undefined) || (buildVersion !== null && buildVersion !== undefined) || (buildNumber !== null && buildNumber !== undefined)) {
-    body = new client.models['ReleaseUploadBeginRequest']();
+    body = new client.models['BodyModelModelModelModelModelModelModelModelModel']();
     body.releaseId = releaseId;
     body.buildVersion = buildVersion;
     body.buildNumber = buildNumber;
@@ -267,7 +267,7 @@ function _create(ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (body !== null && body !== undefined) {
-      let requestModelMapper = new client.models['ReleaseUploadBeginRequest']().mapper();
+      let requestModelMapper = new client.models['BodyModelModelModelModelModelModelModelModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, body, 'body');
       requestContent = JSON.stringify(requestModel);
     }
@@ -315,7 +315,7 @@ function _create(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ReleaseUploadBeginResponse']().mapper();
+          let resultMapper = new client.models['CreateCreatedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -362,7 +362,7 @@ class ReleaseUploads {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ReleaseUploadEndResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CompleteOKResponseModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -405,7 +405,7 @@ class ReleaseUploads {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ReleaseUploadEndResponse} - The deserialized result object.
+   *                      @resolve {CompleteOKResponseModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -414,7 +414,7 @@ class ReleaseUploads {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ReleaseUploadEndResponse} for more
+   *                      See {@link CompleteOKResponseModel} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -450,20 +450,21 @@ class ReleaseUploads {
    *
    * @param {object} [options] Optional Parameters.
    *
-   * @param {number} [options.releaseId] The ID of the release.
+   * @param {number} [options.releaseId] Optional value for explicitly specifying
+   * the ID of existing release.
    *
    * @param {string} [options.buildVersion] The build version of the uploaded
-   * binary
+   * binary, used for macOS, Windows and Custom app support.
    *
    * @param {string} [options.buildNumber] The build number of the uploaded
-   * binary
+   * binary, used with build_version for macOS app support.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ReleaseUploadBeginResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateCreatedResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -490,13 +491,14 @@ class ReleaseUploads {
    *
    * @param {object} [options] Optional Parameters.
    *
-   * @param {number} [options.releaseId] The ID of the release.
+   * @param {number} [options.releaseId] Optional value for explicitly specifying
+   * the ID of existing release.
    *
    * @param {string} [options.buildVersion] The build version of the uploaded
-   * binary
+   * binary, used for macOS, Windows and Custom app support.
    *
    * @param {string} [options.buildNumber] The build number of the uploaded
-   * binary
+   * binary, used with build_version for macOS app support.
    *
    * @param {object} [options.customHeaders] Headers that will be added to the
    * request
@@ -508,7 +510,7 @@ class ReleaseUploads {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ReleaseUploadBeginResponse} - The deserialized result object.
+   *                      @resolve {CreateCreatedResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -517,8 +519,7 @@ class ReleaseUploads {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ReleaseUploadBeginResponse} for more
-   *                      information.
+   *                      See {@link CreateCreatedResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

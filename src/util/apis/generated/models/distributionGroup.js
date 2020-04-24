@@ -10,20 +10,18 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a DistributionGroup.
- * @extends models['DistributionGroupWithoutIsLatest']
  */
-class DistributionGroup extends models['DistributionGroupWithoutIsLatest'] {
+class DistributionGroup {
   /**
    * Create a DistributionGroup.
+   * @property {string} id ID identifying a unique distribution group.
+   * @property {string} [name] A name identifying a unique distribution group.
    * @property {boolean} [isLatest] Is the containing release the latest one in
    * this distribution group.
    */
   constructor() {
-    super();
   }
 
   /**

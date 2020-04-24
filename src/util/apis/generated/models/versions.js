@@ -43,10 +43,10 @@ class Versions {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'VersionElementType',
+                  serializedName: 'VersionsVersionsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'Version'
+                    className: 'VersionsVersionsItem'
                   }
               }
             }

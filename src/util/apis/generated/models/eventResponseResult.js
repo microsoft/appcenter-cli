@@ -10,19 +10,16 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Object returned in response to accepting an event occurance
  *
- * @extends models['AlertOperationResult']
  */
-class EventResponseResult extends models['AlertOperationResult'] {
+class EventResponseResult {
   /**
    * Create a EventResponseResult.
+   * @property {string} requestId Unique request identifier for tracking
    */
   constructor() {
-    super();
   }
 
   /**

@@ -58,7 +58,7 @@ export default class OrgShowCommand extends Command {
 
   private async getOrgApps(client: AppCenterClient, organization: string): Promise<models.AppResponse[]> {
     try {
-      const httpResponse = await clientRequest<models.AppResponse[]>((cb) => client.apps.listForOrg(organization, cb));
+      const httpResponse = await clientRequest<models.AppResponse[]>((cb) => client.appsOperations.listForOrg(organization, cb));
       if (httpResponse.response.statusCode < 400) {
         return httpResponse.result;
       } else {

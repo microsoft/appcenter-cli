@@ -420,7 +420,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       releaseRequestResponse = await out.progress(
         `Retrieving the release...`,
         clientRequest<models.ReleaseDetailsResponse>(async (cb) =>
-          client.releases.getLatestByUser(releaseId.toString(), app.ownerName, app.appName, cb)
+          client.releasesOperations.getLatestByUser(releaseId.toString(), app.ownerName, app.appName, cb)
         )
       );
     } catch (error) {
@@ -446,7 +446,7 @@ export default class ReleaseBinaryCommand extends AppCommand {
       const { result, response } = await out.progress(
         `Updating release details...`,
         clientRequest<models.ReleaseUpdateResponse>(async (cb) =>
-          client.releases.updateDetails(
+          client.releasesOperations.updateDetails(
             releaseId,
             app.ownerName,
             app.appName,
@@ -503,7 +503,9 @@ export default class ReleaseBinaryCommand extends AppCommand {
     try {
       const { result, response } = await out.progress(
         `Publishing to store '${storeInformation.name}'...`,
-        clientRequest<void>(async (cb) => client.releases.addStore(releaseId, app.ownerName, app.appName, storeInformation.id, cb))
+        clientRequest<void>(async (cb) =>
+          client.releasesOperations.addStore(releaseId, app.ownerName, app.appName, storeInformation.id, cb)
+        )
       );
 
       const statusCode = response.statusCode;

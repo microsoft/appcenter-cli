@@ -17,7 +17,7 @@
 class V2MissingSymbolCrashGroupsResponse {
   /**
    * Create a V2MissingSymbolCrashGroupsResponse.
-   * @property {number} totalCrashCount total number of cashes for all the
+   * @property {number} totalCrashCount total number of crashes for all the
    * groups
    * @property {array} groups list of crash groups formed by missing symbols
    * combination
@@ -53,10 +53,10 @@ class V2MissingSymbolCrashGroupsResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'V2MissingSymbolCrashGroupElementType',
+                  serializedName: 'V2MissingSymbolCrashGroupsResponseGroupsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'V2MissingSymbolCrashGroup'
+                    className: 'V2MissingSymbolCrashGroupsResponseGroupsItem'
                   }
               }
             }

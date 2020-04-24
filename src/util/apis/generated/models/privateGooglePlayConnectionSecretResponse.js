@@ -10,20 +10,21 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * private google connection secrets response
  *
- * @extends models['PrivateSharedConnectionResponse']
  */
-class PrivateGooglePlayConnectionSecretResponse extends models['PrivateSharedConnectionResponse'] {
+class PrivateGooglePlayConnectionSecretResponse {
   /**
    * Create a PrivateGooglePlayConnectionSecretResponse.
+   * @property {string} id id of the shared connection
+   * @property {string} [displayName] display name of shared connection
+   * @property {boolean} [isValid] whether the credentials are valid or not
+   * @property {boolean} [is2FA] if the account is a 2FA account or not
    * @property {object} data google secret details
+   * @property {string} serviceType Polymorphic Discriminator
    */
   constructor() {
-    super();
   }
 
   /**
@@ -42,7 +43,7 @@ class PrivateGooglePlayConnectionSecretResponse extends models['PrivateSharedCon
           serializedName: 'serviceType',
           clientName: 'serviceType'
         },
-        uberParent: 'PrivateSharedConnectionResponse',
+        uberParent: 'PrivateGooglePlayConnectionSecretResponse',
         className: 'PrivateGooglePlayConnectionSecretResponse',
         modelProperties: {
           id: {
@@ -73,19 +74,19 @@ class PrivateGooglePlayConnectionSecretResponse extends models['PrivateSharedCon
               name: 'Boolean'
             }
           },
+          data: {
+            required: true,
+            serializedName: 'data',
+            type: {
+              name: 'Object'
+            }
+          },
           serviceType: {
             required: true,
             serializedName: 'serviceType',
             isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
-            }
-          },
-          data: {
-            required: true,
-            serializedName: 'data',
-            type: {
-              name: 'Object'
             }
           }
         }

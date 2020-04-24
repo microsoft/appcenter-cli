@@ -51,10 +51,10 @@ class BranchStatus {
             name: 'Dictionary',
             value: {
                 required: false,
-                serializedName: 'BranchPropertiesElementType',
+                serializedName: 'BranchStatusValueElementType',
                 type: {
                   name: 'Composite',
-                  className: 'BranchProperties'
+                  className: 'BranchStatusValue'
                 }
             }
           }
@@ -73,7 +73,7 @@ class BranchStatus {
             serializedName: 'lastBuild',
             type: {
               name: 'Composite',
-              className: 'Build'
+              className: 'BranchStatusLastBuild'
             }
           }
         }

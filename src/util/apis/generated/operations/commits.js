@@ -140,10 +140,10 @@ function _listByShaList(hashes, ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'CommitDetailsElementType',
+                  serializedName: 'ListByShaListOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'CommitDetails'
+                    className: 'ListByShaListOKResponseItem'
                   }
               }
             }

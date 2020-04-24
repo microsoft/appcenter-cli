@@ -97,7 +97,7 @@ function _listAllTestersForOrg(orgName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListAllTestersForOrgErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -124,10 +124,10 @@ function _listAllTestersForOrg(orgName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupTesterGetResponseElementType',
+                  serializedName: 'ListAllTestersForOrgOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionGroupTesterGetResponse'
+                    className: 'ListAllTestersForOrgOKResponseItem'
                   }
               }
             }
@@ -243,7 +243,7 @@ function _detailsForOrg(orgName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DetailsForOrgErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -270,10 +270,10 @@ function _detailsForOrg(orgName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'OrgDistributionGroupDetailsResponseElementType',
+                  serializedName: 'DetailsForOrgOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'OrgDistributionGroupDetailsResponse'
+                    className: 'DetailsForOrgOKResponseItem'
                   }
               }
             }
@@ -356,7 +356,7 @@ function _resendSharedInvite(orgName, distributionGroupName, options, callback) 
   }
   let members;
   if (userEmails !== null && userEmails !== undefined) {
-    members = new client.models['DistributionGroupUserRequest']();
+    members = new client.models['Members']();
     members.userEmails = userEmails;
   }
 
@@ -385,7 +385,7 @@ function _resendSharedInvite(orgName, distributionGroupName, options, callback) 
   let requestModel = null;
   try {
     if (members !== null && members !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupUserRequest']().mapper();
+      let requestModelMapper = new client.models['Members']().mapper();
       requestModel = client.serialize(requestModelMapper, members, 'members');
       requestContent = JSON.stringify(requestModel);
     }
@@ -417,7 +417,7 @@ function _resendSharedInvite(orgName, distributionGroupName, options, callback) 
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ResendSharedInviteErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -498,7 +498,7 @@ function _bulkDeleteUsers(orgName, distributionGroupName, options, callback) {
   }
   let members;
   if (userEmails !== null && userEmails !== undefined) {
-    members = new client.models['DistributionGroupUserRequest']();
+    members = new client.models['Members']();
     members.userEmails = userEmails;
   }
 
@@ -527,7 +527,7 @@ function _bulkDeleteUsers(orgName, distributionGroupName, options, callback) {
   let requestModel = null;
   try {
     if (members !== null && members !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupUserRequest']().mapper();
+      let requestModelMapper = new client.models['Members']().mapper();
       requestModel = client.serialize(requestModelMapper, members, 'members');
       requestContent = JSON.stringify(requestModel);
     }
@@ -662,7 +662,7 @@ function _listUsersForOrg(orgName, distributionGroupName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListUsersForOrgErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -689,10 +689,10 @@ function _listUsersForOrg(orgName, distributionGroupName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupUserGetResponseElementType',
+                  serializedName: 'ListUsersForOrgOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionGroupUserGetResponse'
+                    className: 'ListUsersForOrgOKResponseItem'
                   }
               }
             }
@@ -774,7 +774,7 @@ function _addUsersForOrg(orgName, distributionGroupName, options, callback) {
   }
   let memberEmails;
   if (userEmails !== null && userEmails !== undefined) {
-    memberEmails = new client.models['DistributionGroupUserRequest']();
+    memberEmails = new client.models['MemberEmails']();
     memberEmails.userEmails = userEmails;
   }
 
@@ -803,7 +803,7 @@ function _addUsersForOrg(orgName, distributionGroupName, options, callback) {
   let requestModel = null;
   try {
     if (memberEmails !== null && memberEmails !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupUserRequest']().mapper();
+      let requestModelMapper = new client.models['MemberEmails']().mapper();
       requestModel = client.serialize(requestModelMapper, memberEmails, 'memberEmails');
       requestContent = JSON.stringify(requestModel);
     }
@@ -835,7 +835,7 @@ function _addUsersForOrg(orgName, distributionGroupName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['AddUsersForOrgErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -862,10 +862,10 @@ function _addUsersForOrg(orgName, distributionGroupName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupUserPostResponseElementType',
+                  serializedName: 'AddUsersForOrgOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionGroupUserPostResponse'
+                    className: 'AddUsersForOrgOKResponseItem'
                   }
               }
             }
@@ -941,7 +941,7 @@ function _bulkDeleteApps(orgName, distributionGroupName, options, callback) {
   }
   let apps1;
   if (apps !== null && apps !== undefined) {
-    apps1 = new client.models['DistributionGroupAppsDeleteRequest']();
+    apps1 = new client.models['Apps']();
     apps1.apps = apps;
   }
 
@@ -970,7 +970,7 @@ function _bulkDeleteApps(orgName, distributionGroupName, options, callback) {
   let requestModel = null;
   try {
     if (apps1 !== null && apps1 !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupAppsDeleteRequest']().mapper();
+      let requestModelMapper = new client.models['Apps']().mapper();
       requestModel = client.serialize(requestModelMapper, apps1, 'apps1');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1128,10 +1128,10 @@ function _getApps(orgName, distributionGroupName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'OrgDistributionGroupAppResponseElementType',
+                  serializedName: 'GetAppsOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'OrgDistributionGroupAppResponse'
+                    className: 'GetAppsOKResponseItem'
                   }
               }
             }
@@ -1200,7 +1200,7 @@ function _addApps(orgName, distributionGroupName, options, callback) {
   }
   let apps1;
   if (apps !== null && apps !== undefined) {
-    apps1 = new client.models['DistributionGroupAppAddRequest']();
+    apps1 = new client.models['AppsModel']();
     apps1.apps = apps;
   }
 
@@ -1229,7 +1229,7 @@ function _addApps(orgName, distributionGroupName, options, callback) {
   let requestModel = null;
   try {
     if (apps1 !== null && apps1 !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupAppAddRequest']().mapper();
+      let requestModelMapper = new client.models['AppsModel']().mapper();
       requestModel = client.serialize(requestModelMapper, apps1, 'apps1');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1295,7 +1295,7 @@ function _addApps(orgName, distributionGroupName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link DistributionGroupResponse} for more
+ *                      See {@link GetForOrgOKResponseModel} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -1367,7 +1367,7 @@ function _getForOrg(orgName, distributionGroupName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['GetForOrgErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1387,7 +1387,7 @@ function _getForOrg(orgName, distributionGroupName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DistributionGroupResponse']().mapper();
+          let resultMapper = new client.models['GetForOrgOKResponseModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1425,8 +1425,7 @@ function _getForOrg(orgName, distributionGroupName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link DistributionGroupResponse} for more
- *                      information.
+ *                      See {@link PatchForOrgOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1463,7 +1462,7 @@ function _patchForOrg(orgName, distributionGroupName, options, callback) {
   }
   let distributionGroup;
   if ((name !== null && name !== undefined) || (isPublic !== null && isPublic !== undefined)) {
-    distributionGroup = new client.models['DistributionGroupPatchRequest']();
+    distributionGroup = new client.models['DistributionGroupModel']();
     distributionGroup.name = name;
     distributionGroup.isPublic = isPublic;
   }
@@ -1493,7 +1492,7 @@ function _patchForOrg(orgName, distributionGroupName, options, callback) {
   let requestModel = null;
   try {
     if (distributionGroup !== null && distributionGroup !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupPatchRequest']().mapper();
+      let requestModelMapper = new client.models['DistributionGroupModel']().mapper();
       requestModel = client.serialize(requestModelMapper, distributionGroup, 'distributionGroup');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1525,7 +1524,7 @@ function _patchForOrg(orgName, distributionGroupName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['PatchForOrgErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1545,7 +1544,7 @@ function _patchForOrg(orgName, distributionGroupName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DistributionGroupResponse']().mapper();
+          let resultMapper = new client.models['PatchForOrgOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1650,7 +1649,7 @@ function _deleteForOrg(orgName, distributionGroupName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteForOrgErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1691,7 +1690,7 @@ function _deleteForOrg(orgName, distributionGroupName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link DistributionGroupResponse} for more
+ *                      See {@link CreateForOrgCreatedResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -1725,7 +1724,7 @@ function _createForOrg(orgName, name, options, callback) {
   }
   let distributionGroup;
   if ((name !== null && name !== undefined) || (displayName !== null && displayName !== undefined)) {
-    distributionGroup = new client.models['DistributionGroupRequest']();
+    distributionGroup = new client.models['DistributionGroupModelModel']();
     distributionGroup.name = name;
     distributionGroup.displayName = displayName;
   }
@@ -1754,7 +1753,7 @@ function _createForOrg(orgName, name, options, callback) {
   let requestModel = null;
   try {
     if (distributionGroup !== null && distributionGroup !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupRequest']().mapper();
+      let requestModelMapper = new client.models['DistributionGroupModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, distributionGroup, 'distributionGroup');
       requestContent = JSON.stringify(requestModel);
     }
@@ -1786,7 +1785,7 @@ function _createForOrg(orgName, name, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['CreateForOrgErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1806,7 +1805,7 @@ function _createForOrg(orgName, name, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DistributionGroupResponse']().mapper();
+          let resultMapper = new client.models['CreateForOrgCreatedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1904,7 +1903,7 @@ function _listForOrg(orgName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListForOrgErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1931,10 +1930,10 @@ function _listForOrg(orgName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupResponseElementType',
+                  serializedName: 'ListForOrgCreatedResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionGroupResponse'
+                    className: 'ListForOrgCreatedResponseItem'
                   }
               }
             }
@@ -2022,7 +2021,7 @@ function _resendInvite(ownerName, appName, distributionGroupName, options, callb
   }
   let members;
   if (userEmails !== null && userEmails !== undefined) {
-    members = new client.models['DistributionGroupUserRequest']();
+    members = new client.models['Members']();
     members.userEmails = userEmails;
   }
 
@@ -2052,7 +2051,7 @@ function _resendInvite(ownerName, appName, distributionGroupName, options, callb
   let requestModel = null;
   try {
     if (members !== null && members !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupUserRequest']().mapper();
+      let requestModelMapper = new client.models['Members']().mapper();
       requestModel = client.serialize(requestModelMapper, members, 'members');
       requestContent = JSON.stringify(requestModel);
     }
@@ -2084,7 +2083,7 @@ function _resendInvite(ownerName, appName, distributionGroupName, options, callb
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ResendInviteErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -2170,7 +2169,7 @@ function _removeUser(ownerName, appName, distributionGroupName, options, callbac
   }
   let members;
   if (userEmails !== null && userEmails !== undefined) {
-    members = new client.models['DistributionGroupUserRequest']();
+    members = new client.models['Members']();
     members.userEmails = userEmails;
   }
 
@@ -2200,7 +2199,7 @@ function _removeUser(ownerName, appName, distributionGroupName, options, callbac
   let requestModel = null;
   try {
     if (members !== null && members !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupUserRequest']().mapper();
+      let requestModelMapper = new client.models['Members']().mapper();
       requestModel = client.serialize(requestModelMapper, members, 'members');
       requestContent = JSON.stringify(requestModel);
     }
@@ -2232,7 +2231,7 @@ function _removeUser(ownerName, appName, distributionGroupName, options, callbac
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['RemoveUserErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -2259,10 +2258,10 @@ function _removeUser(ownerName, appName, distributionGroupName, options, callbac
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupUserDeleteResponseElementType',
+                  serializedName: 'RemoveUserOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionGroupUserDeleteResponse'
+                    className: 'RemoveUserOKResponseItem'
                   }
               }
             }
@@ -2390,7 +2389,7 @@ function _listUsers(ownerName, appName, distributionGroupName, options, callback
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListUsersErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -2417,10 +2416,10 @@ function _listUsers(ownerName, appName, distributionGroupName, options, callback
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupUserGetResponseElementType',
+                  serializedName: 'ListUsersOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionGroupUserGetResponse'
+                    className: 'ListUsersOKResponseItem'
                   }
               }
             }
@@ -2507,7 +2506,7 @@ function _addUser(ownerName, appName, distributionGroupName, options, callback) 
   }
   let members;
   if (userEmails !== null && userEmails !== undefined) {
-    members = new client.models['DistributionGroupUserRequest']();
+    members = new client.models['Members']();
     members.userEmails = userEmails;
   }
 
@@ -2537,7 +2536,7 @@ function _addUser(ownerName, appName, distributionGroupName, options, callback) 
   let requestModel = null;
   try {
     if (members !== null && members !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupUserRequest']().mapper();
+      let requestModelMapper = new client.models['Members']().mapper();
       requestModel = client.serialize(requestModelMapper, members, 'members');
       requestContent = JSON.stringify(requestModel);
     }
@@ -2569,7 +2568,7 @@ function _addUser(ownerName, appName, distributionGroupName, options, callback) 
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['AddUserErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -2596,10 +2595,10 @@ function _addUser(ownerName, appName, distributionGroupName, options, callback) 
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupUserPostResponseElementType',
+                  serializedName: 'AddUserOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionGroupUserPostResponse'
+                    className: 'AddUserOKResponseItem'
                   }
               }
             }
@@ -2639,8 +2638,9 @@ function _addUser(ownerName, appName, distributionGroupName, options, callback) 
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link DistributionGroupResponse} for more
- *                      information.
+ *                      See {@link
+ *                      GetOKResponseModelModelModelModelModelModelModel} for
+ *                      more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -2715,7 +2715,7 @@ function _get(ownerName, appName, distributionGroupName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['GetErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -2735,7 +2735,7 @@ function _get(ownerName, appName, distributionGroupName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DistributionGroupResponse']().mapper();
+          let resultMapper = new client.models['GetOKResponseModelModelModelModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -2775,8 +2775,8 @@ function _get(ownerName, appName, distributionGroupName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link DistributionGroupResponse} for more
- *                      information.
+ *                      See {@link UpdateOKResponseModelModelModelModel} for
+ *                      more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -2816,7 +2816,7 @@ function _update(ownerName, appName, distributionGroupName, options, callback) {
   }
   let distributionGroup;
   if ((name !== null && name !== undefined) || (isPublic !== null && isPublic !== undefined)) {
-    distributionGroup = new client.models['DistributionGroupPatchRequest']();
+    distributionGroup = new client.models['DistributionGroupModel']();
     distributionGroup.name = name;
     distributionGroup.isPublic = isPublic;
   }
@@ -2847,7 +2847,7 @@ function _update(ownerName, appName, distributionGroupName, options, callback) {
   let requestModel = null;
   try {
     if (distributionGroup !== null && distributionGroup !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupPatchRequest']().mapper();
+      let requestModelMapper = new client.models['DistributionGroupModel']().mapper();
       requestModel = client.serialize(requestModelMapper, distributionGroup, 'distributionGroup');
       requestContent = JSON.stringify(requestModel);
     }
@@ -2879,7 +2879,7 @@ function _update(ownerName, appName, distributionGroupName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['UpdateErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -2899,7 +2899,7 @@ function _update(ownerName, appName, distributionGroupName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DistributionGroupResponse']().mapper();
+          let resultMapper = new client.models['UpdateOKResponseModelModelModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3009,7 +3009,7 @@ function _deleteMethod(appName, ownerName, distributionGroupName, options, callb
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -3116,7 +3116,7 @@ function _list(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -3143,10 +3143,10 @@ function _list(ownerName, appName, options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupResponseElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionGroupResponse'
+                    className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModel'
                   }
               }
             }
@@ -3189,7 +3189,7 @@ function _list(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link DistributionGroupResponse} for more
+ *                      See {@link CreateCreatedResponseModelModel} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -3226,7 +3226,7 @@ function _create(ownerName, appName, name, options, callback) {
   }
   let distributionGroup;
   if ((name !== null && name !== undefined) || (displayName !== null && displayName !== undefined)) {
-    distributionGroup = new client.models['DistributionGroupRequest']();
+    distributionGroup = new client.models['DistributionGroupModelModel']();
     distributionGroup.name = name;
     distributionGroup.displayName = displayName;
   }
@@ -3256,7 +3256,7 @@ function _create(ownerName, appName, name, options, callback) {
   let requestModel = null;
   try {
     if (distributionGroup !== null && distributionGroup !== undefined) {
-      let requestModelMapper = new client.models['DistributionGroupRequest']().mapper();
+      let requestModelMapper = new client.models['DistributionGroupModelModel']().mapper();
       requestModel = client.serialize(requestModelMapper, distributionGroup, 'distributionGroup');
       requestContent = JSON.stringify(requestModel);
     }
@@ -3288,7 +3288,7 @@ function _create(ownerName, appName, name, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['CreateErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -3308,7 +3308,7 @@ function _create(ownerName, appName, name, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['DistributionGroupResponse']().mapper();
+          let resultMapper = new client.models['CreateCreatedResponseModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -4160,7 +4160,7 @@ class DistributionGroups {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetForOrgOKResponseModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -4198,7 +4198,7 @@ class DistributionGroups {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+   *                      @resolve {GetForOrgOKResponseModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -4207,7 +4207,7 @@ class DistributionGroups {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link DistributionGroupResponse} for more
+   *                      See {@link GetForOrgOKResponseModel} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -4252,7 +4252,7 @@ class DistributionGroups {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<PatchForOrgOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -4293,7 +4293,7 @@ class DistributionGroups {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+   *                      @resolve {PatchForOrgOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -4302,8 +4302,7 @@ class DistributionGroups {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link DistributionGroupResponse} for more
-   *                      information.
+   *                      See {@link PatchForOrgOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -4434,7 +4433,7 @@ class DistributionGroups {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateForOrgCreatedResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -4475,7 +4474,7 @@ class DistributionGroups {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+   *                      @resolve {CreateForOrgCreatedResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -4484,7 +4483,7 @@ class DistributionGroups {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link DistributionGroupResponse} for more
+   *                      See {@link CreateForOrgCreatedResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -4984,7 +4983,7 @@ class DistributionGroups {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetOKResponseModelModelModelModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -5023,7 +5022,7 @@ class DistributionGroups {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+   *                      @resolve {GetOKResponseModelModelModelModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -5032,8 +5031,9 @@ class DistributionGroups {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link DistributionGroupResponse} for more
-   *                      information.
+   *                      See {@link
+   *                      GetOKResponseModelModelModelModelModelModelModel} for
+   *                      more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -5079,7 +5079,7 @@ class DistributionGroups {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<UpdateOKResponseModelModelModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -5122,7 +5122,7 @@ class DistributionGroups {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+   *                      @resolve {UpdateOKResponseModelModelModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -5131,8 +5131,8 @@ class DistributionGroups {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link DistributionGroupResponse} for more
-   *                      information.
+   *                      See {@link UpdateOKResponseModelModelModelModel} for
+   *                      more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -5351,7 +5351,7 @@ class DistributionGroups {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<DistributionGroupResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateCreatedResponseModelModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -5393,7 +5393,7 @@ class DistributionGroups {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {DistributionGroupResponse} - The deserialized result object.
+   *                      @resolve {CreateCreatedResponseModelModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -5402,7 +5402,7 @@ class DistributionGroups {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link DistributionGroupResponse} for more
+   *                      See {@link CreateCreatedResponseModelModel} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.

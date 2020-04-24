@@ -45,10 +45,10 @@ class NotificationsListResult {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'NotificationOverviewResultElementType',
+                  serializedName: 'NotificationsListResultValuesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'NotificationOverviewResult'
+                    className: 'NotificationsListResultValuesItem'
                   }
               }
             }

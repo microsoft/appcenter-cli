@@ -58,10 +58,10 @@ class JavaScriptToolset {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'JavaScriptSolutionElementType',
+                  serializedName: 'JavaScriptToolsetJavascriptSolutionsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'JavaScriptSolution'
+                    className: 'JavaScriptToolsetJavascriptSolutionsItem'
                   }
               }
             }

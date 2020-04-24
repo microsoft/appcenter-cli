@@ -10,20 +10,17 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Google notification configuration result.
  *
- * @extends models['NotificationConfigResult']
  */
-class NotificationConfigGoogleResult extends models['NotificationConfigResult'] {
+class NotificationConfigGoogleResult {
   /**
    * Create a NotificationConfigGoogleResult.
+   * @property {string} type
    * @property {string} googleApiKey GCM API key.
    */
   constructor() {
-    super();
   }
 
   /**
@@ -38,17 +35,11 @@ class NotificationConfigGoogleResult extends models['NotificationConfigResult'] 
       serializedName: 'gcm_config',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'NotificationConfigResult',
         className: 'NotificationConfigGoogleResult',
         modelProperties: {
           type: {
             required: true,
             serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

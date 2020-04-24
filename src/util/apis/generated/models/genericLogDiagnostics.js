@@ -27,7 +27,7 @@ class GenericLogDiagnostics {
    * @property {string} [eventName] Event name.
    * @property {string} [messageId] Message ID.
    * @property {object} [properties] event specific properties.
-   * @property {object} device
+   * @property {object} device Device characteristics.
    * @property {string} [device.sdkName] Name of the SDK. Consists of the name
    * of the SDK and the platform, e.g. "appcenter.ios", "hockeysdk.android".
    * @property {string} [device.sdkVersion] Version of the SDK in semver
@@ -163,7 +163,7 @@ class GenericLogDiagnostics {
             serializedName: 'device',
             type: {
               name: 'Composite',
-              className: 'DeviceDiagnostics'
+              className: 'GenericLogDiagnosticsDevice'
             }
           }
         }

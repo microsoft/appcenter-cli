@@ -128,10 +128,10 @@ class XcodeBranchConfigurationProperties {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ProvisioningProfileFileElementType',
+                  serializedName: 'XcodeBranchConfigurationPropertiesAppExtensionProvisioningProfileFilesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ProvisioningProfileFile'
+                    className: 'XcodeBranchConfigurationPropertiesAppExtensionProvisioningProfileFilesItem'
                   }
               }
             }

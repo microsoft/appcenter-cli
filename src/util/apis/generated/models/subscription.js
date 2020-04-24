@@ -22,7 +22,7 @@ class Subscription {
    * @property {string} [startsAt] The date the subscription began
    * @property {string} [endsAt] The date the subscription will end or ended
    * @property {number} [daysLeft] The number of days left in the subscription
-   * @property {object} [tier]
+   * @property {object} [tier] Subscription Tier.
    * @property {string} [tier.name] The name of the tier
    * @property {boolean} [active] Is the subscription currently active?
    * @property {uuid} [id] Id of the subscription
@@ -70,7 +70,7 @@ class Subscription {
             serializedName: 'tier',
             type: {
               name: 'Composite',
-              className: 'Tier'
+              className: 'SubscriptionTier'
             }
           },
           active: {

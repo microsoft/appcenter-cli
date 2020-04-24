@@ -16,7 +16,7 @@ export default class AppShowCommand extends AppCommand {
 
     const appDetailsResponse = await out.progress(
       "Getting app details ...",
-      clientRequest<models.AppResponse>((cb) => client.apps.get(app.ownerName, app.appName, cb))
+      clientRequest<models.AppResponse>((cb) => client.appsOperations.get(app.ownerName, app.appName, cb))
     );
 
     const statusCode = appDetailsResponse.response.statusCode;

@@ -24,7 +24,7 @@ class DeviceSet {
    * device set's device selection
    * @property {string} name Name of the device set
    * @property {string} [slug] Slug of the device set
-   * @property {object} owner
+   * @property {object} owner Device Set Owner. The owner of a device set
    * @property {string} [owner.type] Type of account
    * @property {string} [owner.id] Account ID
    * @property {string} [owner.displayName] Display name of the account
@@ -100,10 +100,10 @@ class DeviceSet {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DeviceSetConfigurationElementType',
+                  serializedName: 'DeviceSetDeviceConfigurationsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DeviceSetConfiguration'
+                    className: 'DeviceSetDeviceConfigurationsItem'
                   }
               }
             }

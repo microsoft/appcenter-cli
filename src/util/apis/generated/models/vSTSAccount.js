@@ -22,7 +22,7 @@ class VSTSAccount {
    * @property {string} [accountName] Account name
    * @property {string} [accountType] Account type
    * @property {string} [accountStatus] Account status
-   * @property {object} [user]
+   * @property {object} [user] VSTS user profile
    * @property {string} [user.id] Profile id
    * @property {string} [user.displayName] Profile display name
    * @property {string} [user.publicAlias] Profile alias
@@ -86,7 +86,7 @@ class VSTSAccount {
             serializedName: 'user',
             type: {
               name: 'Composite',
-              className: 'VSTSProfile'
+              className: 'VSTSAccountUser'
             }
           },
           projects: {
@@ -96,10 +96,10 @@ class VSTSAccount {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'VSTSProjectElementType',
+                  serializedName: 'VSTSAccountProjectsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'VSTSProject'
+                    className: 'VSTSAccountProjectsItem'
                   }
               }
             }

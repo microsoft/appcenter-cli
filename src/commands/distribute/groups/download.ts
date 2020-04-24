@@ -108,7 +108,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     let releasesIds: number[];
     try {
       const httpRequest = await clientRequest<models.BasicReleaseDetailsResponse[]>((cb) =>
-        client.releases.listByDistributionGroup(distributionGroup, app.ownerName, app.appName, cb)
+        client.releasesOperations.listByDistributionGroup(distributionGroup, app.ownerName, app.appName, cb)
       );
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;
@@ -136,7 +136,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     debug("Getting download URL for the specified release");
     try {
       const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) =>
-        client.releases.getLatestByUser(releaseId, app.ownerName, app.appName, cb)
+        client.releasesOperations.getLatestByUser(releaseId, app.ownerName, app.appName, cb)
       );
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.response.statusCode;
@@ -157,7 +157,7 @@ export default class DownloadBinaryFromDistributionGroupCommand extends AppComma
     debug("Getting download URL for the latest release of the specified distribution group");
     try {
       const httpRequest = await clientRequest<models.ReleaseDetailsResponse>((cb) =>
-        client.releases.getLatestByDistributionGroup(app.ownerName, app.appName, distributionGroup, "latest", cb)
+        client.releasesOperations.getLatestByDistributionGroup(app.ownerName, app.appName, distributionGroup, "latest", cb)
       );
       if (httpRequest.response.statusCode >= 400) {
         throw httpRequest.result;

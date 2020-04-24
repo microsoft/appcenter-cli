@@ -19,7 +19,7 @@ class NotificationContent {
    * Create a NotificationContent.
    * @property {string} name Notification name
    * @property {string} [title] Notification title
-   * @property {string} body Notification body
+   * @property {string} [body] Notification body
    * @property {object} [customData] Notification custom data (such as badge,
    * color, sound, etc.)
    */
@@ -62,7 +62,7 @@ class NotificationContent {
             }
           },
           body: {
-            required: true,
+            required: false,
             serializedName: 'body',
             constraints: {
               MaxLength: 4000,

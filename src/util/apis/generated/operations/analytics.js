@@ -42,7 +42,7 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Versions} for more information.
+ *                      See {@link VersionsOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -158,7 +158,7 @@ function _versionsMethod(start, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['VersionsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -178,7 +178,7 @@ function _versionsMethod(start, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Versions']().mapper();
+          let resultMapper = new client.models['VersionsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -223,7 +223,8 @@ function _versionsMethod(start, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link SessionsPerDevice} for more information.
+ *                      See {@link PerDeviceCountsOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -326,7 +327,7 @@ function _perDeviceCounts(start, interval, ownerName, appName, options, callback
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['PerDeviceCountsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -346,7 +347,7 @@ function _perDeviceCounts(start, interval, ownerName, appName, options, callback
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['SessionsPerDevice']().mapper();
+          let resultMapper = new client.models['PerDeviceCountsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -387,8 +388,8 @@ function _perDeviceCounts(start, interval, ownerName, appName, options, callback
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link SessionDurationsDistribution} for more
- *                      information.
+ *                      See {@link SessionDurationsDistributionOKResponse} for
+ *                      more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -487,7 +488,7 @@ function _sessionDurationsDistributionMethod(start, ownerName, appName, options,
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['SessionDurationsDistributionErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -507,7 +508,7 @@ function _sessionDurationsDistributionMethod(start, ownerName, appName, options,
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['SessionDurationsDistribution']().mapper();
+          let resultMapper = new client.models['SessionDurationsDistributionOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -654,7 +655,7 @@ function _sessionCounts(start, interval, ownerName, appName, options, callback) 
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['SessionCountsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -681,10 +682,10 @@ function _sessionCounts(start, interval, ownerName, appName, options, callback) 
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DateTimeCountsElementType',
+                  serializedName: 'SessionCountsOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DateTimeCounts'
+                    className: 'SessionCountsOKResponseItem'
                   }
               }
             }
@@ -732,7 +733,7 @@ function _sessionCounts(start, interval, ownerName, appName, options, callback) 
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Places} for more information.
+ *                      See {@link PlaceCountsOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -848,7 +849,7 @@ function _placeCounts(start, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['PlaceCountsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -868,7 +869,7 @@ function _placeCounts(start, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Places']().mapper();
+          let resultMapper = new client.models['PlaceCountsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -912,7 +913,8 @@ function _placeCounts(start, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link OSes} for more information.
+ *                      See {@link OperatingSystemCountsOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1028,7 +1030,7 @@ function _operatingSystemCounts(start, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['OperatingSystemCountsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1048,7 +1050,7 @@ function _operatingSystemCounts(start, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['OSes']().mapper();
+          let resultMapper = new client.models['OperatingSystemCountsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1092,7 +1094,7 @@ function _operatingSystemCounts(start, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AnalyticsModels} for more information.
+ *                      See {@link ModelCountsOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1208,7 +1210,7 @@ function _modelCounts(start, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['ModelCountsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1228,7 +1230,7 @@ function _modelCounts(start, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AnalyticsModels']().mapper();
+          let resultMapper = new client.models['ModelCountsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1267,7 +1269,7 @@ function _modelCounts(start, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link LogFlowLogContainer} for more information.
+ *                      See {@link LogFlowOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1350,7 +1352,7 @@ function _logFlow(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['LogFlowErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1370,7 +1372,7 @@ function _logFlow(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['LogFlowLogContainer']().mapper();
+          let resultMapper = new client.models['LogFlowOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1414,7 +1416,8 @@ function _logFlow(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Languages} for more information.
+ *                      See {@link LanguageCountsOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1530,7 +1533,7 @@ function _languageCounts(start, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['LanguageCountsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1550,7 +1553,7 @@ function _languageCounts(start, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Languages']().mapper();
+          let resultMapper = new client.models['LanguageCountsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1589,7 +1592,7 @@ function _languageCounts(start, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link LogFlowGenericLogContainer} for more
+ *                      See {@link GenericLogFlowOKResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -1673,7 +1676,7 @@ function _genericLogFlow(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['GenericLogFlowErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1693,7 +1696,7 @@ function _genericLogFlow(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['LogFlowGenericLogContainer']().mapper();
+          let resultMapper = new client.models['GenericLogFlowOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1741,7 +1744,8 @@ function _genericLogFlow(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link EventPropertyValues} for more information.
+ *                      See {@link EventPropertyCountsOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1861,7 +1865,7 @@ function _eventPropertyCounts(eventName, eventPropertyName, start, ownerName, ap
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['EventPropertyCountsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -1881,7 +1885,7 @@ function _eventPropertyCounts(eventName, eventPropertyName, start, ownerName, ap
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['EventPropertyValues']().mapper();
+          let resultMapper = new client.models['EventPropertyCountsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -1917,7 +1921,8 @@ function _eventPropertyCounts(eventName, eventPropertyName, start, ownerName, ap
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link EventProperties} for more information.
+ *                      See {@link EventPropertiesOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -1992,7 +1997,7 @@ function _eventPropertiesMethod(eventName, ownerName, appName, options, callback
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['EventPropertiesErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -2012,7 +2017,7 @@ function _eventPropertiesMethod(eventName, ownerName, appName, options, callback
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['EventProperties']().mapper();
+          let resultMapper = new client.models['EventPropertiesOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -2055,7 +2060,7 @@ function _eventPropertiesMethod(eventName, ownerName, appName, options, callback
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link EventCount} for more information.
+ *                      See {@link EventCountOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -2158,7 +2163,7 @@ function _eventCountMethod(eventName, start, ownerName, appName, options, callba
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['EventCountErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -2178,7 +2183,7 @@ function _eventCountMethod(eventName, start, ownerName, appName, options, callba
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['EventCount']().mapper();
+          let resultMapper = new client.models['EventCountOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -2221,7 +2226,8 @@ function _eventCountMethod(eventName, start, ownerName, appName, options, callba
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link EventDeviceCount} for more information.
+ *                      See {@link EventDeviceCountOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -2324,7 +2330,7 @@ function _eventDeviceCountMethod(eventName, start, ownerName, appName, options, 
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['EventDeviceCountErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -2344,7 +2350,7 @@ function _eventDeviceCountMethod(eventName, start, ownerName, appName, options, 
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['EventDeviceCount']().mapper();
+          let resultMapper = new client.models['EventDeviceCountOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -2387,7 +2393,8 @@ function _eventDeviceCountMethod(eventName, start, ownerName, appName, options, 
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link EventCountPerSession} for more information.
+ *                      See {@link EventPerSessionCountOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -2490,7 +2497,7 @@ function _eventPerSessionCount(eventName, start, ownerName, appName, options, ca
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['EventPerSessionCountErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -2510,7 +2517,7 @@ function _eventPerSessionCount(eventName, start, ownerName, appName, options, ca
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['EventCountPerSession']().mapper();
+          let resultMapper = new client.models['EventPerSessionCountOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -2553,7 +2560,8 @@ function _eventPerSessionCount(eventName, start, ownerName, appName, options, ca
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link EventCountPerDevice} for more information.
+ *                      See {@link EventPerDeviceCountOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -2656,7 +2664,7 @@ function _eventPerDeviceCount(eventName, start, ownerName, appName, options, cal
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['EventPerDeviceCountErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -2676,7 +2684,7 @@ function _eventPerDeviceCount(eventName, start, ownerName, appName, options, cal
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['EventCountPerDevice']().mapper();
+          let resultMapper = new client.models['EventPerDeviceCountOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -2786,7 +2794,7 @@ function _eventsDelete(eventName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['EventsDeleteErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -2846,7 +2854,7 @@ function _eventsDelete(eventName, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Events} for more information.
+ *                      See {@link EventsOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -3000,7 +3008,7 @@ function _eventsMethod(start, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['EventsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -3020,7 +3028,7 @@ function _eventsMethod(start, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Events']().mapper();
+          let resultMapper = new client.models['EventsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3130,7 +3138,7 @@ function _eventsDeleteLogs(eventName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['EventsDeleteLogsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -3169,7 +3177,8 @@ function _eventsDeleteLogs(eventName, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ReleaseCounts} for more information.
+ *                      See {@link DistributionReleaseCountsOKResponse} for
+ *                      more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -3204,7 +3213,7 @@ function _distributionReleaseCounts(ownerName, appName, releases, options, callb
   }
   let releases1;
   if (releases !== null && releases !== undefined) {
-    releases1 = new client.models['GetReleasesContainer']();
+    releases1 = new client.models['Releases']();
     releases1.releases = releases;
   }
 
@@ -3233,7 +3242,7 @@ function _distributionReleaseCounts(ownerName, appName, releases, options, callb
   let requestModel = null;
   try {
     if (releases1 !== null && releases1 !== undefined) {
-      let requestModelMapper = new client.models['GetReleasesContainer']().mapper();
+      let requestModelMapper = new client.models['Releases']().mapper();
       requestModel = client.serialize(requestModelMapper, releases1, 'releases1');
       requestContent = JSON.stringify(requestModel);
     }
@@ -3265,7 +3274,7 @@ function _distributionReleaseCounts(ownerName, appName, releases, options, callb
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DistributionReleaseCountsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -3285,7 +3294,7 @@ function _distributionReleaseCounts(ownerName, appName, releases, options, callb
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ReleaseCounts']().mapper();
+          let resultMapper = new client.models['DistributionReleaseCountsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3328,8 +3337,8 @@ function _distributionReleaseCounts(ownerName, appName, releases, options, callb
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link CrashFreeDevicePercentages} for more
- *                      information.
+ *                      See {@link CrashFreeDevicePercentagesOKResponse} for
+ *                      more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -3421,7 +3430,7 @@ function _crashFreeDevicePercentagesMethod(start, version, ownerName, appName, o
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['CrashFreeDevicePercentagesErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -3441,7 +3450,7 @@ function _crashFreeDevicePercentagesMethod(start, version, ownerName, appName, o
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['CrashFreeDevicePercentages']().mapper();
+          let resultMapper = new client.models['CrashFreeDevicePercentagesOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3482,7 +3491,8 @@ function _crashFreeDevicePercentagesMethod(start, version, ownerName, appName, o
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link CrashOverall} for more information.
+ *                      See {@link CrashGroupTotalsOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -3565,7 +3575,7 @@ function _crashGroupTotals(crashGroupId, version, ownerName, appName, options, c
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['CrashGroupTotalsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -3585,7 +3595,7 @@ function _crashGroupTotals(crashGroupId, version, ownerName, appName, options, c
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['CrashOverall']().mapper();
+          let resultMapper = new client.models['CrashGroupTotalsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3629,8 +3639,8 @@ function _crashGroupTotals(crashGroupId, version, ownerName, appName, options, c
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link CrashGroupOperatingSystems} for more
- *                      information.
+ *                      See {@link CrashGroupOperatingSystemCountsOKResponse}
+ *                      for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -3730,7 +3740,7 @@ function _crashGroupOperatingSystemCounts(crashGroupId, version, ownerName, appN
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['CrashGroupOperatingSystemCountsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -3750,7 +3760,7 @@ function _crashGroupOperatingSystemCounts(crashGroupId, version, ownerName, appN
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['CrashGroupOperatingSystems']().mapper();
+          let resultMapper = new client.models['CrashGroupOperatingSystemCountsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3794,7 +3804,8 @@ function _crashGroupOperatingSystemCounts(crashGroupId, version, ownerName, appN
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link CrashGroupModels} for more information.
+ *                      See {@link CrashGroupModelCountsOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -3894,7 +3905,7 @@ function _crashGroupModelCounts(crashGroupId, version, ownerName, appName, optio
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['CrashGroupModelCountsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -3914,7 +3925,7 @@ function _crashGroupModelCounts(crashGroupId, version, ownerName, appName, optio
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['CrashGroupModels']().mapper();
+          let resultMapper = new client.models['CrashGroupModelCountsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -3960,7 +3971,8 @@ function _crashGroupModelCounts(crashGroupId, version, ownerName, appName, optio
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link CrashCounts} for more information.
+ *                      See {@link CrashGroupCountsOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -4056,7 +4068,7 @@ function _crashGroupCounts(crashGroupId, version, start, ownerName, appName, opt
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['CrashGroupCountsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -4076,7 +4088,7 @@ function _crashGroupCounts(crashGroupId, version, start, ownerName, appName, opt
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['CrashCounts']().mapper();
+          let resultMapper = new client.models['CrashGroupCountsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -4147,7 +4159,7 @@ function _crashGroupsTotals(ownerName, appName, crashGroups, options, callback) 
   }
   let crashGroups1;
   if (crashGroups !== null && crashGroups !== undefined) {
-    crashGroups1 = new client.models['CrashGroupContainer']();
+    crashGroups1 = new client.models['CrashGroups']();
     crashGroups1.crashGroups = crashGroups;
   }
 
@@ -4176,7 +4188,7 @@ function _crashGroupsTotals(ownerName, appName, crashGroups, options, callback) 
   let requestModel = null;
   try {
     if (crashGroups1 !== null && crashGroups1 !== undefined) {
-      let requestModelMapper = new client.models['CrashGroupContainer']().mapper();
+      let requestModelMapper = new client.models['CrashGroups']().mapper();
       requestModel = client.serialize(requestModelMapper, crashGroups1, 'crashGroups1');
       requestContent = JSON.stringify(requestModel);
     }
@@ -4208,7 +4220,7 @@ function _crashGroupsTotals(ownerName, appName, crashGroups, options, callback) 
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['CrashGroupsTotalsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -4235,10 +4247,10 @@ function _crashGroupsTotals(ownerName, appName, crashGroups, options, callback) 
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'CrashesOverallItemElementType',
+                  serializedName: 'CrashGroupsTotalsOKResponseItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'CrashesOverallItem'
+                    className: 'CrashGroupsTotalsOKResponseItem'
                   }
               }
             }
@@ -4286,7 +4298,7 @@ function _crashGroupsTotals(ownerName, appName, crashGroups, options, callback) 
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link CrashCounts} for more information.
+ *                      See {@link CrashCountsOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -4385,7 +4397,7 @@ function _crashCountsMethod(start, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['CrashCountsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -4405,7 +4417,7 @@ function _crashCountsMethod(start, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['CrashCounts']().mapper();
+          let resultMapper = new client.models['CrashCountsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -4525,7 +4537,7 @@ function _audienceNameExists(audienceName, ownerName, appName, options, callback
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['AudienceNameExistsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -4648,7 +4660,7 @@ function _deleteAudience(audienceName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteAudienceErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -4687,7 +4699,7 @@ function _deleteAudience(audienceName, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Audience} for more information.
+ *                      See {@link GetAudienceOKResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -4772,7 +4784,7 @@ function _getAudience(audienceName, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['GetAudienceErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -4792,7 +4804,7 @@ function _getAudience(audienceName, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Audience']().mapper();
+          let resultMapper = new client.models['GetAudienceOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -4839,7 +4851,8 @@ function _getAudience(audienceName, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link Audience} for more information.
+ *                      See {@link CreateOrUpdateAudienceOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -4909,7 +4922,7 @@ function _createOrUpdateAudience(audienceName, audience, ownerName, appName, opt
   let requestModel = null;
   try {
     if (audience !== null && audience !== undefined) {
-      let requestModelMapper = new client.models['AudienceDefinition']().mapper();
+      let requestModelMapper = new client.models['AudienceModel']().mapper();
       requestModel = client.serialize(requestModelMapper, audience, 'audience');
       requestContent = JSON.stringify(requestModel);
     }
@@ -4941,7 +4954,7 @@ function _createOrUpdateAudience(audienceName, audience, ownerName, appName, opt
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['CreateOrUpdateAudienceErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -4961,7 +4974,7 @@ function _createOrUpdateAudience(audienceName, audience, ownerName, appName, opt
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['Audience']().mapper();
+          let resultMapper = new client.models['CreateOrUpdateAudienceOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -4999,8 +5012,8 @@ function _createOrUpdateAudience(audienceName, audience, ownerName, appName, opt
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AudienceDevicePropertyValuesListResult} for
- *                      more information.
+ *                      See {@link ListDevicePropertyValuesOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -5086,7 +5099,7 @@ function _listDevicePropertyValues(propertyName, ownerName, appName, options, ca
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListDevicePropertyValuesErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -5106,7 +5119,7 @@ function _listDevicePropertyValues(propertyName, ownerName, appName, options, ca
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AudienceDevicePropertyValuesListResult']().mapper();
+          let resultMapper = new client.models['ListDevicePropertyValuesOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -5140,7 +5153,7 @@ function _listDevicePropertyValues(propertyName, ownerName, appName, options, ca
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AudienceDevicePropertiesListResult} for more
+ *                      See {@link ListDevicePropertiesOKResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -5212,7 +5225,7 @@ function _listDeviceProperties(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListDevicePropertiesErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -5232,7 +5245,7 @@ function _listDeviceProperties(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AudienceDevicePropertiesListResult']().mapper();
+          let resultMapper = new client.models['ListDevicePropertiesOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -5266,7 +5279,7 @@ function _listDeviceProperties(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AudienceDevicePropertiesListResult} for more
+ *                      See {@link ListCustomPropertiesOKResponse} for more
  *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -5338,7 +5351,7 @@ function _listCustomProperties(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListCustomPropertiesErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -5358,7 +5371,7 @@ function _listCustomProperties(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AudienceDevicePropertiesListResult']().mapper();
+          let resultMapper = new client.models['ListCustomPropertiesOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -5403,7 +5416,8 @@ function _listCustomProperties(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AudienceTestResult} for more information.
+ *                      See {@link TestAudienceOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -5459,7 +5473,7 @@ function _testAudience(audience, ownerName, appName, options, callback) {
   let requestModel = null;
   try {
     if (audience !== null && audience !== undefined) {
-      let requestModelMapper = new client.models['AudienceDefinition']().mapper();
+      let requestModelMapper = new client.models['AudienceModel']().mapper();
       requestModel = client.serialize(requestModelMapper, audience, 'audience');
       requestContent = JSON.stringify(requestModel);
     }
@@ -5491,7 +5505,7 @@ function _testAudience(audience, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['TestAudienceErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -5511,7 +5525,7 @@ function _testAudience(audience, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AudienceTestResult']().mapper();
+          let resultMapper = new client.models['TestAudienceOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -5548,7 +5562,8 @@ function _testAudience(audience, ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link AudienceListResult} for more information.
+ *                      See {@link ListAudiencesOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -5630,7 +5645,7 @@ function _listAudiences(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListAudiencesErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -5650,7 +5665,7 @@ function _listAudiences(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['AudienceListResult']().mapper();
+          let resultMapper = new client.models['ListAudiencesOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -5693,7 +5708,8 @@ function _listAudiences(ownerName, appName, options, callback) {
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ActiveDeviceCounts} for more information.
+ *                      See {@link DeviceCountsOKResponse} for more
+ *                      information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -5796,7 +5812,7 @@ function _deviceCounts(start, appBuild, ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorModel']().mapper();
+          let resultMapper = new client.models['DeviceCountsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -5816,7 +5832,7 @@ function _deviceCounts(start, appBuild, ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ActiveDeviceCounts']().mapper();
+          let resultMapper = new client.models['DeviceCountsOKResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -5902,7 +5918,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Versions>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<VersionsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -5949,7 +5965,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Versions} - The deserialized result object.
+   *                      @resolve {VersionsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -5958,7 +5974,7 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Versions} for more information.
+   *                      See {@link VersionsOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -6009,7 +6025,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<SessionsPerDevice>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<PerDeviceCountsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6057,7 +6073,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {SessionsPerDevice} - The deserialized result object.
+   *                      @resolve {PerDeviceCountsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -6066,7 +6082,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link SessionsPerDevice} for more information.
+   *                      See {@link PerDeviceCountsOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -6113,7 +6130,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<SessionDurationsDistribution>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<SessionDurationsDistributionOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6157,7 +6174,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {SessionDurationsDistribution} - The deserialized result object.
+   *                      @resolve {SessionDurationsDistributionOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -6166,8 +6183,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link SessionDurationsDistribution} for more
-   *                      information.
+   *                      See {@link SessionDurationsDistributionOKResponse} for
+   *                      more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -6324,7 +6341,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Places>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<PlaceCountsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6371,7 +6388,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Places} - The deserialized result object.
+   *                      @resolve {PlaceCountsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -6380,7 +6397,7 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Places} for more information.
+   *                      See {@link PlaceCountsOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -6430,7 +6447,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<OSes>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<OperatingSystemCountsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6477,7 +6494,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {OSes} - The deserialized result object.
+   *                      @resolve {OperatingSystemCountsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -6486,7 +6503,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link OSes} for more information.
+   *                      See {@link OperatingSystemCountsOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -6536,7 +6554,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AnalyticsModels>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ModelCountsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6583,7 +6601,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AnalyticsModels} - The deserialized result object.
+   *                      @resolve {ModelCountsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -6592,7 +6610,7 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AnalyticsModels} for more information.
+   *                      See {@link ModelCountsOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -6637,7 +6655,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<LogFlowLogContainer>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<LogFlowOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6679,7 +6697,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {LogFlowLogContainer} - The deserialized result object.
+   *                      @resolve {LogFlowOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -6688,7 +6706,7 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link LogFlowLogContainer} for more information.
+   *                      See {@link LogFlowOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -6738,7 +6756,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Languages>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<LanguageCountsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6785,7 +6803,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Languages} - The deserialized result object.
+   *                      @resolve {LanguageCountsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -6794,7 +6812,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Languages} for more information.
+   *                      See {@link LanguageCountsOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -6839,7 +6858,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<LogFlowGenericLogContainer>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GenericLogFlowOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6881,7 +6900,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {LogFlowGenericLogContainer} - The deserialized result object.
+   *                      @resolve {GenericLogFlowOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -6890,7 +6909,7 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link LogFlowGenericLogContainer} for more
+   *                      See {@link GenericLogFlowOKResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -6945,7 +6964,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<EventPropertyValues>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<EventPropertyCountsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -6996,7 +7015,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {EventPropertyValues} - The deserialized result object.
+   *                      @resolve {EventPropertyCountsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7005,7 +7024,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link EventPropertyValues} for more information.
+   *                      See {@link EventPropertyCountsOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7047,7 +7067,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<EventProperties>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<EventPropertiesOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7086,7 +7106,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {EventProperties} - The deserialized result object.
+   *                      @resolve {EventPropertiesOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7095,7 +7115,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link EventProperties} for more information.
+   *                      See {@link EventPropertiesOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7144,7 +7165,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<EventCount>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<EventCountOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7190,7 +7211,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {EventCount} - The deserialized result object.
+   *                      @resolve {EventCountOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7199,7 +7220,7 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link EventCount} for more information.
+   *                      See {@link EventCountOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7248,7 +7269,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<EventDeviceCount>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<EventDeviceCountOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7294,7 +7315,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {EventDeviceCount} - The deserialized result object.
+   *                      @resolve {EventDeviceCountOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7303,7 +7324,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link EventDeviceCount} for more information.
+   *                      See {@link EventDeviceCountOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7352,7 +7374,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<EventCountPerSession>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<EventPerSessionCountOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7398,7 +7420,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {EventCountPerSession} - The deserialized result object.
+   *                      @resolve {EventPerSessionCountOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7407,7 +7429,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link EventCountPerSession} for more information.
+   *                      See {@link EventPerSessionCountOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7456,7 +7479,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<EventCountPerDevice>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<EventPerDeviceCountOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7502,7 +7525,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {EventCountPerDevice} - The deserialized result object.
+   *                      @resolve {EventPerDeviceCountOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7511,7 +7534,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link EventCountPerDevice} for more information.
+   *                      See {@link EventPerDeviceCountOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7663,7 +7687,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Events>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<EventsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7723,7 +7747,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Events} - The deserialized result object.
+   *                      @resolve {EventsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7732,7 +7756,7 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Events} for more information.
+   *                      See {@link EventsOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7863,7 +7887,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ReleaseCounts>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<DistributionReleaseCountsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -7902,7 +7926,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ReleaseCounts} - The deserialized result object.
+   *                      @resolve {DistributionReleaseCountsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -7911,7 +7935,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ReleaseCounts} for more information.
+   *                      See {@link DistributionReleaseCountsOKResponse} for
+   *                      more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -7960,7 +7985,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<CrashFreeDevicePercentages>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CrashFreeDevicePercentagesOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -8006,7 +8031,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {CrashFreeDevicePercentages} - The deserialized result object.
+   *                      @resolve {CrashFreeDevicePercentagesOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -8015,8 +8040,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link CrashFreeDevicePercentages} for more
-   *                      information.
+   *                      See {@link CrashFreeDevicePercentagesOKResponse} for
+   *                      more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -8063,7 +8088,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<CrashOverall>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CrashGroupTotalsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -8107,7 +8132,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {CrashOverall} - The deserialized result object.
+   *                      @resolve {CrashGroupTotalsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -8116,7 +8141,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link CrashOverall} for more information.
+   *                      See {@link CrashGroupTotalsOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -8166,7 +8192,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<CrashGroupOperatingSystems>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CrashGroupOperatingSystemCountsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -8213,7 +8239,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {CrashGroupOperatingSystems} - The deserialized result object.
+   *                      @resolve {CrashGroupOperatingSystemCountsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -8222,8 +8248,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link CrashGroupOperatingSystems} for more
-   *                      information.
+   *                      See {@link CrashGroupOperatingSystemCountsOKResponse}
+   *                      for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -8273,7 +8299,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<CrashGroupModels>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CrashGroupModelCountsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -8320,7 +8346,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {CrashGroupModels} - The deserialized result object.
+   *                      @resolve {CrashGroupModelCountsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -8329,7 +8355,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link CrashGroupModels} for more information.
+   *                      See {@link CrashGroupModelCountsOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -8381,7 +8408,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<CrashCounts>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CrashGroupCountsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -8430,7 +8457,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {CrashCounts} - The deserialized result object.
+   *                      @resolve {CrashGroupCountsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -8439,7 +8466,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link CrashCounts} for more information.
+   *                      See {@link CrashGroupCountsOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -8580,7 +8608,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<CrashCounts>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CrashCountsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -8627,7 +8655,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {CrashCounts} - The deserialized result object.
+   *                      @resolve {CrashCountsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -8636,7 +8664,7 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link CrashCounts} for more information.
+   *                      See {@link CrashCountsOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -8856,7 +8884,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Audience>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<GetAudienceOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -8895,7 +8923,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Audience} - The deserialized result object.
+   *                      @resolve {GetAudienceOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -8904,7 +8932,7 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Audience} for more information.
+   *                      See {@link GetAudienceOKResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -8957,7 +8985,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<Audience>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateOrUpdateAudienceOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -9007,7 +9035,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {Audience} - The deserialized result object.
+   *                      @resolve {CreateOrUpdateAudienceOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -9016,7 +9044,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link Audience} for more information.
+   *                      See {@link CreateOrUpdateAudienceOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -9060,7 +9089,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AudienceDevicePropertyValuesListResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ListDevicePropertyValuesOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -9101,7 +9130,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AudienceDevicePropertyValuesListResult} - The deserialized result object.
+   *                      @resolve {ListDevicePropertyValuesOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -9110,8 +9139,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AudienceDevicePropertyValuesListResult} for
-   *                      more information.
+   *                      See {@link ListDevicePropertyValuesOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -9151,7 +9180,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AudienceDevicePropertiesListResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ListDevicePropertiesOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -9188,7 +9217,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AudienceDevicePropertiesListResult} - The deserialized result object.
+   *                      @resolve {ListDevicePropertiesOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -9197,7 +9226,7 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AudienceDevicePropertiesListResult} for more
+   *                      See {@link ListDevicePropertiesOKResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -9238,7 +9267,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AudienceDevicePropertiesListResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ListCustomPropertiesOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -9275,7 +9304,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AudienceDevicePropertiesListResult} - The deserialized result object.
+   *                      @resolve {ListCustomPropertiesOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -9284,7 +9313,7 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AudienceDevicePropertiesListResult} for more
+   *                      See {@link ListCustomPropertiesOKResponse} for more
    *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
@@ -9336,7 +9365,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AudienceTestResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<TestAudienceOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -9384,7 +9413,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AudienceTestResult} - The deserialized result object.
+   *                      @resolve {TestAudienceOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -9393,7 +9422,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AudienceTestResult} for more information.
+   *                      See {@link TestAudienceOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -9436,7 +9466,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<AudienceListResult>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<ListAudiencesOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -9476,7 +9506,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {AudienceListResult} - The deserialized result object.
+   *                      @resolve {ListAudiencesOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -9485,7 +9515,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link AudienceListResult} for more information.
+   *                      See {@link ListAudiencesOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *
@@ -9534,7 +9565,7 @@ class Analytics {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ActiveDeviceCounts>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<DeviceCountsOKResponse>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -9580,7 +9611,7 @@ class Analytics {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ActiveDeviceCounts} - The deserialized result object.
+   *                      @resolve {DeviceCountsOKResponse} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -9589,7 +9620,8 @@ class Analytics {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ActiveDeviceCounts} for more information.
+   *                      See {@link DeviceCountsOKResponse} for more
+   *                      information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

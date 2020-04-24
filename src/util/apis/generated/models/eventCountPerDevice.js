@@ -58,10 +58,10 @@ class EventCountPerDevice {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DateTimeDecimalCountsElementType',
+                  serializedName: 'EventCountPerDeviceCountPerDeviceItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DateTimeDecimalCounts'
+                    className: 'EventCountPerDeviceCountPerDeviceItem'
                   }
               }
             }

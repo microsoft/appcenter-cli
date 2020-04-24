@@ -50,10 +50,10 @@ class IntuneCategories {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'IntuneCategoryValueElementType',
+                  serializedName: 'IntuneCategoriesValueItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'IntuneCategoryValue'
+                    className: 'IntuneCategoriesValueItem'
                   }
               }
             }

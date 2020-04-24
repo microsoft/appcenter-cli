@@ -20,24 +20,24 @@ class DeviceModel {
    * @property {string} [manufacturer]
    * @property {string} [model]
    * @property {string} [platform]
-   * @property {object} [dimensions]
+   * @property {object} [dimensions] Physical device dimensions
    * @property {object} [dimensions.depth]
    * @property {object} [dimensions.height]
    * @property {object} [dimensions.width]
-   * @property {object} [resolution]
+   * @property {object} [resolution] Device screen resolution
    * @property {string} [resolution.height]
    * @property {string} [resolution.width]
    * @property {string} [resolution.ppi]
    * @property {string} [releaseDate]
    * @property {string} [formFactor]
-   * @property {object} [screenSize]
+   * @property {object} [screenSize] Physical device screen dimensions
    * @property {string} [screenSize.cm]
    * @property {string} [screenSize.inProperty]
-   * @property {object} [cpu]
+   * @property {object} [cpu] CPU data for device
    * @property {string} [cpu.frequency]
    * @property {string} [cpu.core]
    * @property {string} [cpu.text]
-   * @property {object} [memory]
+   * @property {object} [memory] Memory data for device
    * @property {string} [memory.formattedSize]
    * @property {number} [screenRotation]
    * @property {object} [deviceFrame]
@@ -103,7 +103,7 @@ class DeviceModel {
             serializedName: 'dimensions',
             type: {
               name: 'Composite',
-              className: 'DeviceDimensions'
+              className: 'DeviceModelDimensions'
             }
           },
           resolution: {
@@ -111,7 +111,7 @@ class DeviceModel {
             serializedName: 'resolution',
             type: {
               name: 'Composite',
-              className: 'DeviceResolution'
+              className: 'DeviceModelResolution'
             }
           },
           releaseDate: {
@@ -133,7 +133,7 @@ class DeviceModel {
             serializedName: 'screenSize',
             type: {
               name: 'Composite',
-              className: 'DeviceScreenSize'
+              className: 'DeviceModelScreenSize'
             }
           },
           cpu: {
@@ -141,7 +141,7 @@ class DeviceModel {
             serializedName: 'cpu',
             type: {
               name: 'Composite',
-              className: 'DeviceCpu'
+              className: 'DeviceModelCpu'
             }
           },
           memory: {
@@ -149,7 +149,7 @@ class DeviceModel {
             serializedName: 'memory',
             type: {
               name: 'Composite',
-              className: 'DeviceMemory'
+              className: 'DeviceModelMemory'
             }
           },
           screenRotation: {
@@ -164,7 +164,7 @@ class DeviceModel {
             serializedName: 'deviceFrame',
             type: {
               name: 'Composite',
-              className: 'DeviceFrame'
+              className: 'DeviceModelDeviceFrame'
             }
           },
           availabilityCount: {

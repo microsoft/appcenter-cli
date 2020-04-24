@@ -44,7 +44,7 @@ class ErrorResponse {
             serializedName: 'error',
             type: {
               name: 'Composite',
-              className: 'ErrorDetails'
+              className: 'ErrorResponseError'
             }
           }
         }

@@ -19,7 +19,7 @@ class GitHubBranchLite {
    * Create a GitHubBranchLite.
    * @property {string} [ref] The repository name
    * @property {string} [sha] The discription of repository
-   * @property {object} [repo]
+   * @property {object} [repo] The lite version of GitHub repository
    * @property {number} [repo.id] The repository id
    */
   constructor() {
@@ -58,7 +58,7 @@ class GitHubBranchLite {
             serializedName: 'repo',
             type: {
               name: 'Composite',
-              className: 'GitHubRepositoryLite'
+              className: 'GitHubBranchLiteRepo'
             }
           }
         }

@@ -44,10 +44,10 @@ class LegacyDeploymentMetricsResponse {
               name: 'Dictionary',
               value: {
                   required: false,
-                  serializedName: 'LegacyDeploymentMetricElementType',
+                  serializedName: 'LegacyDeploymentMetricsResponseMetricsValueElementType',
                   type: {
                     name: 'Composite',
-                    className: 'LegacyDeploymentMetric'
+                    className: 'LegacyDeploymentMetricsResponseMetricsValue'
                   }
               }
             }

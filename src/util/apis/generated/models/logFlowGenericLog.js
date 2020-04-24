@@ -27,7 +27,7 @@ class LogFlowGenericLog {
    * @property {string} [eventName] Event name.
    * @property {string} [messageId] Message ID.
    * @property {object} [properties] event specific properties.
-   * @property {object} device
+   * @property {object} device Device characteristics.
    * @property {string} [device.sdkName] Name of the SDK. Consists of the name
    * of the SDK and the platform, e.g. "appcenter.ios", "hockeysdk.android".
    * @property {string} [device.sdkVersion] Version of the SDK in semver
@@ -77,6 +77,8 @@ class LogFlowGenericLog {
    * technology framework (Xamarin runtime version or ReactNative or Cordova
    * etc...). See wrapper_sdk_name to see if this version refers to Xamarin or
    * ReactNative or other.
+   * @property {string} [authProvider] Auth service provider.
+   * @property {string} [accountId] Account ID of the authenticated user.
    */
   constructor() {
   }
@@ -163,7 +165,21 @@ class LogFlowGenericLog {
             serializedName: 'device',
             type: {
               name: 'Composite',
-              className: 'LogFlowDevice'
+              className: 'LogFlowGenericLogDevice'
+            }
+          },
+          authProvider: {
+            required: false,
+            serializedName: 'auth_provider',
+            type: {
+              name: 'String'
+            }
+          },
+          accountId: {
+            required: false,
+            serializedName: 'account_id',
+            type: {
+              name: 'String'
             }
           }
         }

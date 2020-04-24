@@ -50,7 +50,7 @@ class Branch {
             serializedName: 'commit',
             type: {
               name: 'Composite',
-              className: 'Commit'
+              className: 'BranchCommit'
             }
           }
         }

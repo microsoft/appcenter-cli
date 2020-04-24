@@ -46,10 +46,10 @@ class DistributionGroupAppsDeleteRequest {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'AppDeleteRequestElementType',
+                  serializedName: 'DistributionGroupAppsDeleteRequestAppsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'AppDeleteRequest'
+                    className: 'DistributionGroupAppsDeleteRequestAppsItem'
                   }
               }
             }

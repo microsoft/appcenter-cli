@@ -45,7 +45,7 @@ class PrivateIntuneStoreRequest {
             serializedName: 'target_audience',
             type: {
               name: 'Composite',
-              className: 'IntuneTargetAudience'
+              className: 'PrivateIntuneStoreRequestTargetAudience'
             }
           },
           appCategory: {
@@ -53,7 +53,7 @@ class PrivateIntuneStoreRequest {
             serializedName: 'app_category',
             type: {
               name: 'Composite',
-              className: 'IntuneAppCategory'
+              className: 'PrivateIntuneStoreRequestAppCategory'
             }
           },
           tenantId: {

@@ -85,7 +85,7 @@ function _connections(options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ErrorDetails']().mapper();
+          let resultMapper = new client.models['ConnectionsErrorModel']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -112,15 +112,15 @@ function _connections(options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'SharedConnectionResponseElementType',
+                  serializedName: 'ConnectionsOKResponseItemElementType',
                   type: {
                     name: 'Composite',
                     polymorphicDiscriminator: {
                       serializedName: 'serviceType',
                       clientName: 'serviceType'
                     },
-                    uberParent: 'SharedConnectionResponse',
-                    className: 'SharedConnectionResponse'
+                    uberParent: 'ConnectionsOKResponseItem',
+                    className: 'ConnectionsOKResponseItem'
                   }
               }
             }

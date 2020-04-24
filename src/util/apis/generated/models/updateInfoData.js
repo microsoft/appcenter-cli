@@ -10,15 +10,17 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Class representing a UpdateInfoData.
- * @extends models['CodePushReleaseInfo']
  */
-class UpdateInfoData extends models['CodePushReleaseInfo'] {
+class UpdateInfoData {
   /**
    * Create a UpdateInfoData.
+   * @property {string} [targetBinaryRange]
+   * @property {string} [description]
+   * @property {boolean} [isDisabled]
+   * @property {boolean} [isMandatory]
+   * @property {number} [rollout]
    * @property {string} [downloadUrl]
    * @property {boolean} isAvailable
    * @property {number} [packageSize]
@@ -28,7 +30,6 @@ class UpdateInfoData extends models['CodePushReleaseInfo'] {
    * @property {string} [label]
    */
   constructor() {
-    super();
   }
 
   /**

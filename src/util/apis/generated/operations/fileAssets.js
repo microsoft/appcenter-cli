@@ -34,7 +34,7 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link FileAsset} for more information.
+ *                      See {@link CreateOKResponseModel} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -129,7 +129,7 @@ function _create(ownerName, appName, options, callback) {
           error.message = internalError ? internalError.message : parsedErrorResponse.message;
         }
         if (parsedErrorResponse !== null && parsedErrorResponse !== undefined) {
-          let resultMapper = new client.models['ValidationErrorResponse']().mapper();
+          let resultMapper = new client.models['CreateErrorModel1']().mapper();
           error.body = client.deserialize(resultMapper, parsedErrorResponse, 'error.body');
         }
       } catch (defaultError) {
@@ -149,7 +149,7 @@ function _create(ownerName, appName, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['FileAsset']().mapper();
+          let resultMapper = new client.models['CreateOKResponseModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -191,7 +191,7 @@ class FileAssets {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<FileAsset>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<CreateOKResponseModel>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -230,7 +230,7 @@ class FileAssets {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {FileAsset} - The deserialized result object.
+   *                      @resolve {CreateOKResponseModel} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -239,7 +239,7 @@ class FileAssets {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link FileAsset} for more information.
+   *                      See {@link CreateOKResponseModel} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

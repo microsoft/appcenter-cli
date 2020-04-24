@@ -30,7 +30,7 @@ class TestCloudProjectFrameworkProperties {
   mapper() {
     return {
       required: false,
-      serializedName: 'TestCloudProjectFrameworkProperties',
+      serializedName: 'TestCloudProject_frameworkProperties',
       type: {
         name: 'Composite',
         className: 'TestCloudProjectFrameworkProperties',

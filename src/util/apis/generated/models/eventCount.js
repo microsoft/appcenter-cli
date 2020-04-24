@@ -58,10 +58,10 @@ class EventCount {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DateTimeCountsElementType',
+                  serializedName: 'EventCountCountItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DateTimeCounts'
+                    className: 'EventCountCountItem'
                   }
               }
             }

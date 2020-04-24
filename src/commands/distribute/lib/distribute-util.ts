@@ -74,7 +74,7 @@ export async function addGroupToRelease(options: AddGroupToReleaseOptions): Prom
   const { client, app, distributionGroup, releaseId, mandatory, silent, destination, destinationType } = options;
 
   const { result, response } = await clientRequest<models.ReleaseDestinationResponse>(async (cb) => {
-    client.releases.addDistributionGroup(
+    client.releasesOperations.addDistributionGroup(
       releaseId,
       app.ownerName,
       app.appName,

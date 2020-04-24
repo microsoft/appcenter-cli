@@ -50,10 +50,10 @@ class CrashFreeDevicePercentages {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DateTimePercentagesElementType',
+                  serializedName: 'CrashFreeDevicePercentagesDailyPercentagesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DateTimePercentages'
+                    className: 'CrashFreeDevicePercentagesDailyPercentagesItem'
                   }
               }
             }

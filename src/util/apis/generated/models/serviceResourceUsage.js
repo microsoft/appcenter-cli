@@ -17,13 +17,15 @@
 class ServiceResourceUsage {
   /**
    * Create a ServiceResourceUsage.
-   * @property {object} [currentUsagePeriod]
+   * @property {object} [currentUsagePeriod] Usage for a single period
    * @property {string} [currentUsagePeriod.startTime] Inclusive start time of
    * the usage period
    * @property {string} [currentUsagePeriod.endTime] Exclusive end time of the
    * usage period.
-   * @property {object} [currentUsagePeriod.byAccount]
-   * @property {object} [currentUsagePeriod.byApp]
+   * @property {object} [currentUsagePeriod.byAccount] A collection of named
+   * numeric values
+   * @property {object} [currentUsagePeriod.byApp] A collection of  named
+   * numeric values grouped by app
    */
   constructor() {
   }
@@ -47,7 +49,7 @@ class ServiceResourceUsage {
             serializedName: 'currentUsagePeriod',
             type: {
               name: 'Composite',
-              className: 'UsagePeriod'
+              className: 'ServiceResourceUsageCurrentUsagePeriod'
             }
           }
         }

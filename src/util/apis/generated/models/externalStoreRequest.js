@@ -87,7 +87,7 @@ class ExternalStoreRequest {
             serializedName: 'intune_details',
             type: {
               name: 'Composite',
-              className: 'IntuneStoreRequest'
+              className: 'ExternalStoreRequestIntuneDetails'
             }
           },
           serviceConnectionId: {

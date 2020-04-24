@@ -17,7 +17,7 @@
 class AppInvitationDetailResponseDistributionGroup {
   /**
    * Create a AppInvitationDetailResponseDistributionGroup.
-   * @property {object} [owner]
+   * @property {object} [owner] The information about the app's owner
    * @property {uuid} [owner.id] The unique id (UUID) of the owner
    * @property {string} [owner.avatarUrl] The avatar URL of the owner
    * @property {string} [owner.displayName] The owner's display name
@@ -49,7 +49,7 @@ class AppInvitationDetailResponseDistributionGroup {
             serializedName: 'owner',
             type: {
               name: 'Composite',
-              className: 'Owner'
+              className: 'AppInvitationDetailResponseDistributionGroupOwner'
             }
           }
         }

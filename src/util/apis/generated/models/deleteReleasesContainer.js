@@ -45,10 +45,10 @@ class DeleteReleasesContainer {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ReleaseElementType',
+                  serializedName: 'DeleteReleasesContainerReleasesItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'Release'
+                    className: 'DeleteReleasesContainerReleasesItem'
                   }
               }
             }

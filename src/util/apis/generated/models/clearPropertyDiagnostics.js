@@ -10,19 +10,17 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Clear an existing property.
  *
- * @extends models['CustomPropertyDiagnostics']
  */
-class ClearPropertyDiagnostics extends models['CustomPropertyDiagnostics'] {
+class ClearPropertyDiagnostics {
   /**
    * Create a ClearPropertyDiagnostics.
+   * @property {string} type
+   * @property {string} name
    */
   constructor() {
-    super();
   }
 
   /**
@@ -37,13 +35,15 @@ class ClearPropertyDiagnostics extends models['CustomPropertyDiagnostics'] {
       serializedName: 'clear',
       type: {
         name: 'Composite',
-        polymorphicDiscriminator: {
-          serializedName: 'type',
-          clientName: 'type'
-        },
-        uberParent: 'CustomPropertyDiagnostics',
         className: 'ClearPropertyDiagnostics',
         modelProperties: {
+          type: {
+            required: true,
+            serializedName: 'type',
+            type: {
+              name: 'String'
+            }
+          },
           name: {
             required: true,
             serializedName: 'name',
@@ -51,14 +51,6 @@ class ClearPropertyDiagnostics extends models['CustomPropertyDiagnostics'] {
               MaxLength: 128,
               Pattern: /^[a-zA-Z][a-zA-Z0-9\-_]*$/
             },
-            type: {
-              name: 'String'
-            }
-          },
-          type: {
-            required: true,
-            serializedName: 'type',
-            isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
             }

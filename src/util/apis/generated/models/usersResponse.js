@@ -42,10 +42,10 @@ class UsersResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'UserResponseElementType',
+                  serializedName: 'UsersResponseValueItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'UserResponse'
+                    className: 'UsersResponseValueItem'
                   }
               }
             }

@@ -10,20 +10,23 @@
 
 'use strict';
 
-const models = require('./index');
-
 /**
  * Google Play connection secrets
  *
- * @extends models['SharedConnectionResponse']
  */
-class GooglePlayConnectionSecretResponse extends models['SharedConnectionResponse'] {
+class GooglePlayConnectionSecretResponse {
   /**
    * Create a GooglePlayConnectionSecretResponse.
+   * @property {string} id id of the shared connection
+   * @property {string} [displayName] display name of shared connection
+   * @property {string} credentialType the type of the credential. Possible
+   * values include: 'credentials', 'certificate'
+   * @property {boolean} [isValid] whether the credentials are valid or not
+   * @property {boolean} [is2FA] if the account is a 2FA account or not
    * @property {object} data google play secret details
+   * @property {string} serviceType Polymorphic Discriminator
    */
   constructor() {
-    super();
   }
 
   /**
@@ -42,7 +45,7 @@ class GooglePlayConnectionSecretResponse extends models['SharedConnectionRespons
           serializedName: 'serviceType',
           clientName: 'serviceType'
         },
-        uberParent: 'SharedConnectionResponse',
+        uberParent: 'GooglePlayConnectionSecretResponse',
         className: 'GooglePlayConnectionSecretResponse',
         modelProperties: {
           id: {
@@ -80,19 +83,19 @@ class GooglePlayConnectionSecretResponse extends models['SharedConnectionRespons
               name: 'Boolean'
             }
           },
+          data: {
+            required: true,
+            serializedName: 'data',
+            type: {
+              name: 'Object'
+            }
+          },
           serviceType: {
             required: true,
             serializedName: 'serviceType',
             isPolymorphicDiscriminator: true,
             type: {
               name: 'String'
-            }
-          },
-          data: {
-            required: true,
-            serializedName: 'data',
-            type: {
-              name: 'Object'
             }
           }
         }

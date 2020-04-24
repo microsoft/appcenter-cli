@@ -18,9 +18,12 @@
 class ReleaseUploadBeginRequest {
   /**
    * Create a ReleaseUploadBeginRequest.
-   * @property {number} [releaseId] The ID of the release.
-   * @property {string} [buildVersion] The build version of the uploaded binary
-   * @property {string} [buildNumber] The build number of the uploaded binary
+   * @property {number} [releaseId] Optional value for explicitly specifying
+   * the ID of existing release.
+   * @property {string} [buildVersion] The build version of the uploaded
+   * binary, used for macOS, Windows and Custom app support.
+   * @property {string} [buildNumber] The build number of the uploaded binary,
+   * used with build_version for macOS app support.
    */
   constructor() {
   }

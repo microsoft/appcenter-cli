@@ -59,10 +59,10 @@ class CrashGroupsContainer {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'CrashGroupElementType',
+                  serializedName: 'CrashGroupsContainerCrashGroupsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'CrashGroup'
+                    className: 'CrashGroupsContainerCrashGroupsItem'
                   }
               }
             }

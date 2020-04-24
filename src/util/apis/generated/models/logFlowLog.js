@@ -18,7 +18,7 @@ class LogFlowLog {
    * Create a LogFlowLog.
    * @property {date} timestamp Log creation timestamp.
    * @property {uuid} installId Install ID.
-   * @property {object} device
+   * @property {object} device Device characteristics.
    * @property {string} [device.sdkName] Name of the SDK. Consists of the name
    * of the SDK and the platform, e.g. "appcenter.ios", "hockeysdk.android".
    * @property {string} [device.sdkVersion] Version of the SDK in semver
@@ -111,7 +111,7 @@ class LogFlowLog {
             serializedName: 'device',
             type: {
               name: 'Composite',
-              className: 'LogFlowDevice'
+              className: 'LogFlowLogDevice'
             }
           },
           type: {

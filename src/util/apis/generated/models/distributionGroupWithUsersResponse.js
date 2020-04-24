@@ -94,10 +94,10 @@ class DistributionGroupWithUsersResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupUserGetResponseElementType',
+                  serializedName: 'DistributionGroupWithUsersResponseUsersItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionGroupUserGetResponse'
+                    className: 'DistributionGroupWithUsersResponseUsersItem'
                   }
               }
             }
@@ -109,10 +109,10 @@ class DistributionGroupWithUsersResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DistributionGroupAADGroupPostResponseElementType',
+                  serializedName: 'DistributionGroupWithUsersResponseAadGroupsItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DistributionGroupAADGroupPostResponse'
+                    className: 'DistributionGroupWithUsersResponseAadGroupsItem'
                   }
               }
             }

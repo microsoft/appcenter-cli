@@ -30,7 +30,6 @@ const WebResource = msRest.WebResource;
  *                      {Error}  err        - The Error object if an error occurred, null otherwise.
  *
  *                      {object} [result]   - The deserialized result object if an error did not occur.
- *                      See {@link ErrorResponse} for more information.
  *
  *                      {object} [request]  - The HTTP Request object if an error did not occur.
  *
@@ -113,7 +112,7 @@ function _deleteMethod(apiTokenId, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -130,7 +129,7 @@ function _deleteMethod(apiTokenId, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteUnauthorizedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -147,7 +146,7 @@ function _deleteMethod(apiTokenId, options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['DeleteNotFoundResponseModelModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -257,10 +256,10 @@ function _list(options, callback) {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ApiTokensGetResponseElementType',
+                  serializedName: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModelElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ApiTokensGetResponse'
+                    className: 'ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModel'
                   }
               }
             }
@@ -281,7 +280,7 @@ function _list(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListBadRequestResponseModel']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -298,7 +297,7 @@ function _list(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['ListUnauthorizedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -366,7 +365,7 @@ function _newMethod(options, callback) {
   }
   let description1;
   if ((description !== null && description !== undefined) || (scope !== null && scope !== undefined)) {
-    description1 = new client.models['ApiTokensCreateRequest']();
+    description1 = new client.models['Description']();
     description1.description = description;
     description1.scope = scope;
   }
@@ -394,7 +393,7 @@ function _newMethod(options, callback) {
   let requestModel = null;
   try {
     if (description1 !== null && description1 !== undefined) {
-      let requestModelMapper = new client.models['ApiTokensCreateRequest']().mapper();
+      let requestModelMapper = new client.models['Description']().mapper();
       requestModel = client.serialize(requestModelMapper, description1, 'description1');
       requestContent = JSON.stringify(requestModel);
     }
@@ -442,7 +441,7 @@ function _newMethod(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ApiTokensCreateResponse']().mapper();
+          let resultMapper = new client.models['NewCreatedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -459,7 +458,7 @@ function _newMethod(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['NewBadRequestResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -476,7 +475,7 @@ function _newMethod(options, callback) {
         parsedResponse = JSON.parse(responseBody);
         result = JSON.parse(responseBody);
         if (parsedResponse !== null && parsedResponse !== undefined) {
-          let resultMapper = new client.models['ErrorResponse']().mapper();
+          let resultMapper = new client.models['NewUnauthorizedResponse']().mapper();
           result = client.deserialize(resultMapper, parsedResponse, 'result');
         }
       } catch (error) {
@@ -516,7 +515,7 @@ class ApiTokens {
    *
    * @returns {Promise} A promise is returned
    *
-   * @resolve {HttpOperationResponse<ErrorResponse>} - The deserialized result object.
+   * @resolve {HttpOperationResponse<Object>} - The deserialized result object.
    *
    * @reject {Error} - The error object.
    */
@@ -551,7 +550,7 @@ class ApiTokens {
    *
    * {Promise} A promise is returned
    *
-   *                      @resolve {ErrorResponse} - The deserialized result object.
+   *                      @resolve {Object} - The deserialized result object.
    *
    *                      @reject {Error} - The error object.
    *
@@ -560,7 +559,6 @@ class ApiTokens {
    *                      {Error}  err        - The Error object if an error occurred, null otherwise.
    *
    *                      {object} [result]   - The deserialized result object if an error did not occur.
-   *                      See {@link ErrorResponse} for more information.
    *
    *                      {object} [request]  - The HTTP Request object if an error did not occur.
    *

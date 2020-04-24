@@ -42,10 +42,10 @@ class ScopesResponse {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'ScopeResponseElementType',
+                  serializedName: 'ScopesResponseValueItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'ScopeResponse'
+                    className: 'ScopesResponseValueItem'
                   }
               }
             }

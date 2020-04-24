@@ -58,10 +58,10 @@ class EventCountPerSession {
               name: 'Sequence',
               element: {
                   required: false,
-                  serializedName: 'DateTimeDecimalCountsElementType',
+                  serializedName: 'EventCountPerSessionCountPerSessionItemElementType',
                   type: {
                     name: 'Composite',
-                    className: 'DateTimeDecimalCounts'
+                    className: 'EventCountPerSessionCountPerSessionItem'
                   }
               }
             }
