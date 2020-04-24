@@ -3483,8 +3483,7 @@ export interface AppMembershipsValidationResponseExcessAppMembershipsAppUsersMem
   sourceId?: string;
 }
 
-export interface
-AppMembershipsValidationResponseExcessAppMembershipsDistributionGroupMembershipsItem {
+export interface AppMembershipsValidationResponseExcessAppMembershipsDistributionGroupMembershipsItem {
   appId?: string;
   userId?: string;
   permissions?: string[];
@@ -3500,8 +3499,7 @@ AppMembershipsValidationResponseExcessAppMembershipsDistributionGroupMemberships
   sourceId?: string;
 }
 
-export interface
-AppMembershipsValidationResponseExcessAppMembershipsOrganizationAdminMembershipsItem {
+export interface AppMembershipsValidationResponseExcessAppMembershipsOrganizationAdminMembershipsItem {
   appId?: string;
   userId?: string;
   permissions?: string[];
@@ -26904,8 +26902,7 @@ export interface AlertingError {
 /**
  * Billing Plan
 */
-export interface
-AggregatedBillingInformationBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan {
+export interface AggregatedBillingInformationBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan {
   /**
    * The Billing Plan ID
   */
@@ -26992,8 +26989,7 @@ export interface AggregatedBillingInformationBillingPlansBuildService {
 /**
  * Billing Plan
 */
-export interface
-AggregatedBillingInformationBillingPlansTestServiceCurrentBillingPeriodByAccountPlan {
+export interface AggregatedBillingInformationBillingPlansTestServiceCurrentBillingPeriodByAccountPlan {
   /**
    * The Billing Plan ID
   */
@@ -27206,8 +27202,7 @@ export interface AggregatedBillingInformation {
 /**
  * Billing Plan
 */
-export interface
-AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan
 {
   /**
    * The Billing Plan ID
@@ -27244,8 +27239,7 @@ AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildServic
 /**
  * Selection of a billing plan
 */
-export interface
-AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccount
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccount
 {
   /**
    * Number of instances of the billing plan.
@@ -27261,8 +27255,7 @@ AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildServic
 /**
  * Billing plans for a given period
 */
-export interface
-AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriod
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriod
 {
   /**
    * Inclusive start of the period
@@ -27302,8 +27295,7 @@ export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillin
 /**
  * Billing Plan
 */
-export interface
-AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccountPlan
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccountPlan
 {
   /**
    * The Billing Plan ID
@@ -27340,8 +27332,7 @@ AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestService
 /**
  * Selection of a billing plan
 */
-export interface
-AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccount
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccount
 {
   /**
    * Number of instances of the billing plan.
@@ -27357,8 +27348,7 @@ AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestService
 /**
  * Billing plans for a given period
 */
-export interface
-AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriod
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriod
 {
   /**
    * Inclusive start of the period
@@ -27411,8 +27401,7 @@ export interface AllAccountsAggregatedBillingInformationAggregatedBillingsBillin
 /**
  * Usage for a single period
 */
-export interface
-AllAccountsAggregatedBillingInformationAggregatedBillingsUsageBuildServiceCurrentUsagePeriod {
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsUsageBuildServiceCurrentUsagePeriod {
   /**
    * Inclusive start time of the usage period
   */
@@ -27445,8 +27434,7 @@ export interface AllAccountsAggregatedBillingInformationAggregatedBillingsUsageB
 /**
  * Usage for a single period
 */
-export interface
-AllAccountsAggregatedBillingInformationAggregatedBillingsUsageTestServiceCurrentUsagePeriod {
+export interface AllAccountsAggregatedBillingInformationAggregatedBillingsUsageTestServiceCurrentUsagePeriod {
   /**
    * Inclusive start time of the usage period
   */
@@ -33127,8 +33115,7 @@ export interface SentErrorModel {
 /**
  * Billing Plan
 */
-export interface
-GetAllOKResponseAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan {
+export interface GetAllOKResponseAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccountPlan {
   /**
    * The Billing Plan ID
   */
@@ -33164,8 +33151,7 @@ GetAllOKResponseAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodBy
 /**
  * Selection of a billing plan
 */
-export interface
-GetAllOKResponseAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccount {
+export interface GetAllOKResponseAggregatedBillingsBillingPlansBuildServiceCurrentBillingPeriodByAccount {
   /**
    * Number of instances of the billing plan.
   */
@@ -33218,8 +33204,7 @@ export interface GetAllOKResponseAggregatedBillingsBillingPlansBuildService {
 /**
  * Billing Plan
 */
-export interface
-GetAllOKResponseAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccountPlan {
+export interface GetAllOKResponseAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccountPlan {
   /**
    * The Billing Plan ID
   */
@@ -33255,8 +33240,7 @@ GetAllOKResponseAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByA
 /**
  * Selection of a billing plan
 */
-export interface
-GetAllOKResponseAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccount {
+export interface GetAllOKResponseAggregatedBillingsBillingPlansTestServiceCurrentBillingPeriodByAccount {
   /**
    * Number of instances of the billing plan.
   */
@@ -43144,8 +43128,7 @@ export interface GetSettingsErrorModel {
   message?: string;
 }
 
-export interface
-ListToolsetProjectsOKResponseXcodeXcodeSchemeContainersItemSharedSchemesItemArchiveProject {
+export interface ListToolsetProjectsOKResponseXcodeXcodeSchemeContainersItemSharedSchemesItemArchiveProject {
   /**
    * The Id of the target to archive
   */
@@ -43278,8 +43261,7 @@ export interface ListToolsetProjectsOKResponseXamarin {
 /**
  * Android signing config. Null if not specified
 */
-export interface
-ListToolsetProjectsOKResponseAndroidAndroidModulesItemBuildConfigurationsItemSigningConfig {
+export interface ListToolsetProjectsOKResponseAndroidAndroidModulesItemBuildConfigurationsItemSigningConfig {
   /**
    * Indicates if storeFile is specified in the signing configuration
   */
@@ -47108,8 +47090,7 @@ export interface GetOKResponseAzureSubscription {
   isMicrosoftInternal?: boolean;
 }
 
-export interface
-GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModelModel {
+export interface GetOKResponseModelModelModelModelModelModelModelModelModelModelModelModelModelModel {
   /**
    * The unique ID (UUID) of the app
   */
@@ -47623,8 +47604,7 @@ export interface DeleteNotFoundResponseModelModel {
   error: DeleteNotFoundResponseError;
 }
 
-export interface
-ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModel {
+export interface ListOKResponseItemModelModelModelModelModelModelModelModelModelModelModelModelModel {
   /**
    * The unique id (UUID) of the api token
   */
